@@ -91,8 +91,8 @@ describe("computeScores", () => {
   describe("Clean repo — no findings, all modules success", () => {
     test("trustworthiness is clamped to 0 after trust credits applied", () => {
       const moduleResults = [
-        makeModuleResult("universal.governance-trust"),
-        makeModuleResult("universal.ci-cd"),
+        makeModuleResult("governance_trust"),
+        makeModuleResult("ci_cd"),
       ];
       const scores = computeScores([], makeProfile(), makeContext(), moduleResults, minimalContract);
 
@@ -112,8 +112,8 @@ describe("computeScores", () => {
   });
 
   describe("Single critical finding with high confidence and full axis impacts", () => {
-    // severity_weight(critical) = 10, confidence_mult(high) = 1.0
-    // axis_impact = 10 → weighted = 10 * 10 * 1.0 / 10 = 10
+    // severity_weight(critical) = 25, confidence_mult(high) = 1.0
+    // axis_impact = 10 → weighted = 10 * 25 * 1.0 / 10 = 25
 
     const criticalFinding = makeFinding({
       severity: "critical",
@@ -155,8 +155,8 @@ describe("computeScores", () => {
     });
 
     test("formula: trustworthiness = round(axis_impact * severity_weight * confidence_mult / 10)", () => {
-      const sw = SEVERITY_WEIGHTS.critical;
-      const cm = CONFIDENCE_MULTIPLIERS.high;
+      const sw = SEVERITY_WEIGHTS.critical!;
+      const cm = CONFIDENCE_MULTIPLIERS.high!;
       const expected = Math.max(0, Math.min(100, Math.round((10 * sw * cm) / 10)));
 
       const scores = computeScores(
@@ -186,9 +186,9 @@ describe("computeScores", () => {
 
   describe("Environment multiplier applies to abuse_potential ONLY", () => {
     const finding = makeFinding({
-      severity: "critical",
+      severity: "high",
       confidence: "high",
-      axis_impacts: { trustworthiness: 5, exploitability: 5, abuse_potential: 5 },
+      axis_impacts: { trustworthiness: 10, exploitability: 10, abuse_potential: 10 },
     });
 
     test("offline_analysis reduces abuse_potential relative to developer_laptop", () => {
@@ -206,8 +206,7 @@ describe("computeScores", () => {
         [],
         minimalContract,
       );
-      // offline_analysis multiplier (0.5) < developer_laptop multiplier (0.6) — both below 1
-      // abuse_potential for offline_analysis should be <= developer_laptop
+      // offline_analysis multiplier (0.20) < developer_laptop multiplier (1.25)
       expect(offlineScores.abuse_potential).toBeLessThanOrEqual(laptopScores.abuse_potential);
     });
 
@@ -226,7 +225,7 @@ describe("computeScores", () => {
         [],
         minimalContract,
       );
-      // ci_runner multiplier (1.0) > developer_laptop (0.6)
+      // ci_runner multiplier (1.30) > developer_laptop (1.25)
       expect(ciScores.abuse_potential).toBeGreaterThan(laptopScores.abuse_potential);
     });
 
@@ -288,25 +287,27 @@ describe("computeScores", () => {
       axis_impacts: { trustworthiness: 10, exploitability: 10, abuse_potential: 10 },
     });
 
-    const govModule = makeModuleResult("universal.governance-trust");
+    const govModule = makeModuleResult("governance_trust");
 
     test("SECURITY.md credit reduces trustworthiness", () => {
-      // No SGS-GOV-001 finding emitted → security_md_present credit is applied
-      const withCreditModules = [govModule];
-      const noCreditModules: ModuleResult[] = [];
+      // CR4: credit derived from repo_profile artifacts, not finding absence
+      const profileWithSecurityMd = makeProfile({
+        artifacts: { manifests: ["SECURITY.md"], workflows: [], containers: [], infra: [], binaries: [] },
+      });
+      const profileWithout = makeProfile();
 
       const withCredit = computeScores(
         [finding],
-        makeProfile(),
+        profileWithSecurityMd,
         makeContext(),
-        withCreditModules,
+        [govModule],
         minimalContract,
       );
       const noCredit = computeScores(
         [finding],
-        makeProfile(),
+        profileWithout,
         makeContext(),
-        noCreditModules,
+        [govModule],
         minimalContract,
       );
 
@@ -372,8 +373,8 @@ describe("computeScores", () => {
         axis_impacts: { trustworthiness: 5, exploitability: 5, abuse_potential: 5 },
       });
       const moduleResults = [
-        makeModuleResult("universal.governance-trust", "success"),
-        makeModuleResult("universal.ci-cd", "success"),
+        makeModuleResult("governance_trust", "success"),
+        makeModuleResult("ci_cd", "success"),
       ];
       const scores = computeScores(
         [criticalStaticFinding],
@@ -392,9 +393,9 @@ describe("computeScores", () => {
 
     test("many failures (>30%) → low confidence", () => {
       const moduleResults = [
-        makeModuleResult("universal.governance-trust", "failed"),
-        makeModuleResult("universal.ci-cd", "failed"),
-        makeModuleResult("universal.secrets", "failed"),
+        makeModuleResult("governance_trust", "failed"),
+        makeModuleResult("ci_cd", "failed"),
+        makeModuleResult("secrets", "failed"),
         makeModuleResult("typed.web", "success"),
       ];
       const scores = computeScores([], makeProfile(), makeContext(), moduleResults, minimalContract);
@@ -403,9 +404,9 @@ describe("computeScores", () => {
 
     test("moderate failures (>10% ≤30%) → medium confidence", () => {
       const moduleResults = [
-        makeModuleResult("universal.governance-trust", "success"),
-        makeModuleResult("universal.ci-cd", "success"),
-        makeModuleResult("universal.secrets", "success"),
+        makeModuleResult("governance_trust", "success"),
+        makeModuleResult("ci_cd", "success"),
+        makeModuleResult("secrets", "success"),
         makeModuleResult("typed.web", "success"),
         makeModuleResult("typed.api", "success"),
         makeModuleResult("typed.mcp", "failed"),

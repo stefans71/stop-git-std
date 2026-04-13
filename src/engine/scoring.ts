@@ -8,27 +8,27 @@ import type { Severity, Confidence } from "../models/enums.ts";
 
 // ── Lookup tables ─────────────────────────────────────────────────────────────
 
-export const SEVERITY_WEIGHTS = {
+export const SEVERITY_WEIGHTS: Record<string, number> = {
   info: 1,
-  low: 2,
-  medium: 4,
-  high: 7,
-  critical: 10,
-} as const satisfies Record<Severity, number>;
+  low: 3,
+  medium: 8,
+  high: 15,
+  critical: 25,
+};
 
-export const CONFIDENCE_MULTIPLIERS = {
-  low: 0.5,
-  medium: 0.75,
-  high: 1.0,
-} as const satisfies Record<Confidence, number>;
+export const CONFIDENCE_MULTIPLIERS: Record<string, number> = {
+  low: 0.60,
+  medium: 0.85,
+  high: 1.00,
+};
 
-export const ENVIRONMENT_ABUSE_MULTIPLIERS = {
-  developer_laptop: 0.6,
-  ci_runner: 1.0,
-  container_isolated: 0.8,
-  offline_analysis: 0.5,
-  production_service: 1.5,
-} as const satisfies Record<string, number>;
+export const ENVIRONMENT_ABUSE_MULTIPLIERS: Record<string, number> = {
+  developer_laptop: 1.25,
+  ci_runner: 1.30,
+  container_isolated: 0.80,
+  offline_analysis: 0.20,
+  production_service: 1.40,
+};
 
 /** Trust credit values awarded from repo_profile signals (C1/C10). */
 export const TRUST_CREDITS = {
@@ -37,6 +37,17 @@ export const TRUST_CREDITS = {
   codeowners_present: 2,
   pinned_actions_ratio_high: 4,
 } as const satisfies Record<string, number>;
+
+// ── Universal module names (CR6) ─────────────────────────────────────────────
+
+const UNIVERSAL_MODULE_NAMES = [
+  "governance_trust",
+  "supply_chain",
+  "secrets",
+  "dangerous_execution",
+  "ci_cd",
+  "infrastructure",
+];
 
 // ── Confidence model (MVP) ────────────────────────────────────────────────────
 
@@ -50,9 +61,12 @@ function computeConfidence(
   const failed = moduleResults.filter((m) => m.status === "failed").length;
   const failedRatio = failed / total;
 
-  const universalSuccess = moduleResults
-    .filter((m) => m.module_name.startsWith("universal"))
-    .every((m) => m.status === "success" || m.status === "partial");
+  const universalModules = moduleResults.filter((m) =>
+    UNIVERSAL_MODULE_NAMES.includes(m.module_name),
+  );
+  const universalSuccess =
+    universalModules.length > 0 &&
+    universalModules.every((m) => m.status === "success" || m.status === "partial");
 
   const hasCriticalStatic = findings.some(
     (f) => f.severity === "critical" && f.proof_type === "static",
@@ -106,7 +120,7 @@ export function computeScores(
   // Apply environment multiplier to abuse_potential only
   rawAbuse *= envMultiplier;
 
-  // Compute trust credits — subtracted from trustworthiness only
+  // Compute trust credits — subtracted from trustworthiness only (CR4: derive from repo_profile, NOT finding absence)
   // Credits are awarded only when the corresponding module completed (success or partial)
   const completedModules = new Set(
     moduleResults
@@ -116,25 +130,29 @@ export function computeScores(
 
   let trustCredit = 0;
 
-  if (profile.signed_tags_count > 0 && completedModules.has("universal.governance-trust")) {
-    trustCredit += TRUST_CREDITS.signed_tags_present;
-  }
-  if (profile.pinned_actions_ratio >= 0.8 && completedModules.has("universal.governance-trust")) {
-    trustCredit += TRUST_CREDITS.pinned_actions_ratio_high;
-  }
-  // security_md and codeowners credits require the governance-trust module
-  // Credits are granted when the module ran but did NOT emit the corresponding
-  // missing-file findings (SGS-GOV-001 for SECURITY.md, SGS-GOV-002 for CODEOWNERS)
-  const govModule = moduleResults.find((m) => m.module_name === "universal.governance-trust");
-  if (govModule && (govModule.status === "success" || govModule.status === "partial")) {
-    const hasSecurityMdFinding = findings.some(
-      (f) => f.id === "SGS-GOV-001" && !f.suppressed,
+  if (completedModules.has("governance_trust")) {
+    // Signed tags: derive from repo_profile field directly
+    if (profile.signed_tags_count > 0) {
+      trustCredit += TRUST_CREDITS.signed_tags_present;
+    }
+    // Pinned actions ratio: derive from repo_profile field directly (threshold 0.9 per contract)
+    if (profile.pinned_actions_ratio >= 0.9) {
+      trustCredit += TRUST_CREDITS.pinned_actions_ratio_high;
+    }
+    // SECURITY.md: derive from repo_profile artifacts
+    const hasSecurityMd = profile.artifacts?.manifests?.some(
+      (m) => m.toLowerCase().includes("security.md"),
     );
-    const hasCodOwnersFinding = findings.some(
-      (f) => f.id === "SGS-GOV-002" && !f.suppressed,
+    if (hasSecurityMd) {
+      trustCredit += TRUST_CREDITS.security_md_present;
+    }
+    // CODEOWNERS: derive from repo_profile artifacts
+    const hasCodeowners = profile.artifacts?.manifests?.some(
+      (m) => m.toLowerCase().includes("codeowners"),
     );
-    if (!hasSecurityMdFinding) trustCredit += TRUST_CREDITS.security_md_present;
-    if (!hasCodOwnersFinding) trustCredit += TRUST_CREDITS.codeowners_present;
+    if (hasCodeowners) {
+      trustCredit += TRUST_CREDITS.codeowners_present;
+    }
   }
 
   // Clamp to [0, 100]

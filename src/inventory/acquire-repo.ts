@@ -23,7 +23,7 @@ export async function cloneRepo(
   if (ref !== "default_branch") {
     args.push("--branch", ref);
   }
-  args.push(url, destDir);
+  args.push("--", url, destDir);
   const proc = Bun.spawn(["git", ...args], { stdout: "pipe", stderr: "pipe" });
   const exitCode = await proc.exited;
   if (exitCode !== 0) {
@@ -50,7 +50,7 @@ export async function collectGitMetadata(repoPath: string): Promise<GitMetadata>
 
   const signedTags: string[] = [];
   for (const tag of tags) {
-    const verifyProc = Bun.spawn(["git", "tag", "-v", tag], {
+    const verifyProc = Bun.spawn(["git", "tag", "-v", "--", tag], {
       cwd: repoPath,
       stdout: "pipe",
       stderr: "pipe",
@@ -66,7 +66,12 @@ export async function acquireRepo(
   context: AuditContext,
   runId: string,
 ): Promise<LocalWorkspace> {
-  const targetType = classifyTarget(context.repo_target);
+  const target = context.repo_target;
+  if (target.startsWith("-")) {
+    throw new Error(`Invalid repo target: "${target}" — must not start with "-"`);
+  }
+
+  const targetType = classifyTarget(target);
 
   let rootPath: string;
   let isLocal: boolean;
