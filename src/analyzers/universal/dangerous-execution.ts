@@ -177,12 +177,6 @@ export const dangerousExecutionAnalyzer: AnalyzerModule = {
 
         case "GHA-EXEC-004": {
           // Unsafe deserialization
-          const deserialRegex =
-            /\b(pickle\.loads?\s*\(|yaml\.load\s*\([^,)]*(?!\s*Loader\s*=\s*yaml\.(?:Safe|Full)Loader)|serialize\.[a-z]*eval\b)/;
-
-          // Also match yaml.load without SafeLoader
-          const yamlUnsafeRegex = /yaml\.load\s*\([^)]*\)/;
-
           const matches: Array<{ path: string; lineNumber: number; line: string; type: string }> =
             [];
           const affectedFiles: string[] = [];

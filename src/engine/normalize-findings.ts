@@ -29,6 +29,7 @@ export type SuppressionsFile = z.infer<typeof SuppressionsFileSchema>;
 
 function globToRegex(pattern: string): RegExp {
   const regexStr = pattern
+    .replace(/\./g, "\\.")
     .replace(/\*\*/g, "___GLOBSTAR___")
     .replace(/\*/g, "[^/]*")
     .replace(/___GLOBSTAR___/g, ".*")
@@ -140,12 +141,16 @@ export function loadSuppressions(workspacePath: string): SuppressionEntry[] {
   let parsed: unknown;
   try {
     parsed = parseYaml(raw);
-  } catch {
+  } catch (err) {
+    console.warn(`[suppressions] Failed to parse ${filePath}: ${err}`);
     return [];
   }
 
   const result = SuppressionsFileSchema.safeParse(parsed);
-  if (!result.success) return [];
+  if (!result.success) {
+    console.warn(`[suppressions] Schema validation failed for ${filePath}: ${result.error.message}`);
+    return [];
+  }
 
   const now = new Date();
   return result.data.suppressions.filter((s) => {

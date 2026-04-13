@@ -46,15 +46,20 @@ async function githubGet(path: string): Promise<unknown | null> {
         ...authHeaders(),
       },
     });
-  } catch {
+  } catch (err) {
+    console.warn(`[github-api] Request to ${path} failed: ${err}`);
     return null;
   }
 
-  if (!res.ok) return null;
+  if (!res.ok) {
+    console.warn(`[github-api] ${path} returned HTTP ${res.status}`);
+    return null;
+  }
 
   try {
     return await res.json();
-  } catch {
+  } catch (err) {
+    console.warn(`[github-api] Failed to parse response from ${path}: ${err}`);
     return null;
   }
 }

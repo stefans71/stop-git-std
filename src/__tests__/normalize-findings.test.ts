@@ -228,6 +228,50 @@ describe("applySuppressions", () => {
     });
   });
 
+  describe("Glob-to-regex dot escaping", () => {
+    test("path_glob *.ts does NOT match files with non-dot characters (e.g. fooXts)", () => {
+      const finding = makeFinding({
+        id: "RULE-001",
+        files: ["src/fooXts"],
+      });
+      const suppression: SuppressionEntry = {
+        rule_id: "RULE-001",
+        path_globs: ["src/*.ts"],
+        justification: "Should only match .ts files",
+      };
+      const result = applySuppressions([finding], [suppression], HARD_STOP_PATTERNS);
+      expect(result[0]!.suppressed).toBe(false);
+    });
+
+    test("path_glob *.ts matches actual .ts files", () => {
+      const finding = makeFinding({
+        id: "RULE-001",
+        files: ["src/foo.ts"],
+      });
+      const suppression: SuppressionEntry = {
+        rule_id: "RULE-001",
+        path_globs: ["src/*.ts"],
+        justification: "Match .ts files",
+      };
+      const result = applySuppressions([finding], [suppression], HARD_STOP_PATTERNS);
+      expect(result[0]!.suppressed).toBe(true);
+    });
+
+    test("path_glob with ** and dot extension matches nested paths", () => {
+      const finding = makeFinding({
+        id: "RULE-001",
+        files: ["src/deep/nested/file.test.ts"],
+      });
+      const suppression: SuppressionEntry = {
+        rule_id: "RULE-001",
+        path_globs: ["src/**/*.test.ts"],
+        justification: "Test files",
+      };
+      const result = applySuppressions([finding], [suppression], HARD_STOP_PATTERNS);
+      expect(result[0]!.suppressed).toBe(true);
+    });
+  });
+
   describe("Hard-stop suppression accepted with all override fields", () => {
     test("hard-stop finding WITH all three override fields IS suppressed", () => {
       const finding = makeFinding({ id: "GHA-SECRETS-001" });

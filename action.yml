@@ -31,10 +31,16 @@ runs:
       run: cd ${{ github.action_path }} && bun install --frozen-lockfile
     - name: Run audit
       shell: bash
+      env:
+        INPUT_REPO: ${{ inputs.repo }}
+        INPUT_REF: ${{ inputs.ref }}
+        INPUT_POLICY: ${{ inputs.policy }}
+        INPUT_FORMAT: ${{ inputs.format }}
+        INPUT_RUNTIME_MODE: ${{ inputs.runtime-mode }}
       run: |
         bun run ${{ github.action_path }}/src/cli.ts \
-          ${{ inputs.repo }} \
-          --ref "${{ inputs.ref }}" \
-          --policy "${{ inputs.policy }}" \
-          --format ${{ inputs.format }} \
-          --runtime-mode "${{ inputs.runtime-mode }}"
+          "$INPUT_REPO" \
+          --ref "$INPUT_REF" \
+          --policy "$INPUT_POLICY" \
+          --format "$INPUT_FORMAT" \
+          --runtime-mode "$INPUT_RUNTIME_MODE"

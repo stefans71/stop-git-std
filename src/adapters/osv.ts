@@ -57,18 +57,21 @@ export async function queryOsv(
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),
     });
-  } catch {
+  } catch (err) {
+    console.warn(`[osv] Failed to query OSV for ${ecosystem}/${packageName}: ${err}`);
     return { vulns: [] };
   }
 
   if (!response.ok) {
+    console.warn(`[osv] OSV query for ${ecosystem}/${packageName} returned HTTP ${response.status}`);
     return { vulns: [] };
   }
 
   let data: unknown;
   try {
     data = await response.json();
-  } catch {
+  } catch (err) {
+    console.warn(`[osv] Failed to parse OSV response for ${ecosystem}/${packageName}: ${err}`);
     return { vulns: [] };
   }
 

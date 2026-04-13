@@ -162,7 +162,6 @@ export const secretsAnalyzer: AnalyzerModule = {
               /\/\.env(\.[a-z]+)?$/.test(f),
           );
 
-          const secretEntryRegex = /^(.*?)(KEY|SECRET|TOKEN|PASSWORD|PASSWD|CREDENTIAL).*?=.+$/im;
           const matches: Array<{ path: string; lineNumber: number; entry_type: string }> = [];
           const affectedFiles: string[] = [];
 

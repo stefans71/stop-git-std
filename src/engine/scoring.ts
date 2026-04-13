@@ -123,10 +123,8 @@ export function computeScores(
     trustCredit += TRUST_CREDITS.pinned_actions_ratio_high;
   }
   // security_md and codeowners credits require the governance-trust module
-  // Their presence is inferred from the profile's high_risk_files (absence of risk signals)
-  // For now, check governance-trust module ran; actual file checks happen in the analyzer
-  // These signals are surfaced via findings absence — grant credits when module ran with no
-  // corresponding findings emitted
+  // Credits are granted when the module ran but did NOT emit the corresponding
+  // missing-file findings (SGS-GOV-001 for SECURITY.md, SGS-GOV-002 for CODEOWNERS)
   const govModule = moduleResults.find((m) => m.module_name === "universal.governance-trust");
   if (govModule && (govModule.status === "success" || govModule.status === "partial")) {
     const hasSecurityMdFinding = findings.some(

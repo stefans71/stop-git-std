@@ -27,7 +27,6 @@ function getWorkflowFiles(root: string, profileWorkflows: string[]): string[] {
  * Returns the raw text content of a field by scanning lines.
  */
 function extractYamlField(content: string, field: string): string[] {
-  const regex = new RegExp(`^\\s*${field}\\s*:(.*)$`, "m");
   const results: string[] = [];
   const lines = content.split("\n");
   for (const line of lines) {
@@ -92,10 +91,7 @@ export const ciCdAnalyzer: AnalyzerModule = {
           const matches: Array<{ path: string; lineNumber: number; line: string }> = [];
           const affectedFiles: string[] = [];
 
-          // Match: permissions: write-all  OR  permissions:\n  ...\n  write-all
           const writeAllRegex = /permissions\s*:\s*write-all/i;
-          // Also catch contents: write under permissions block (broad write)
-          const broadWriteRegex = /^\s*(contents|actions|packages|deployments|pull-requests|security-events)\s*:\s*write\s*$/i;
 
           for (const wf of workflowFiles) {
             const writeAllHits = scanFileContent(wf, writeAllRegex);
@@ -135,7 +131,7 @@ export const ciCdAnalyzer: AnalyzerModule = {
           // A pinned ref looks like: uses: owner/action@abcdef1234567890abcdef1234567890abcdef12
           // Unpinned: uses: owner/action@v1, @main, @master, @latest, etc.
           const unpinnedRegex = /^\s*uses\s*:\s*(.+)$/;
-          const sha256Regex = /^[a-f0-9]{40}$/;
+          const sha1Regex = /^[a-f0-9]{40}$/;
 
           const matches: Array<{ path: string; lineNumber: number; uses: string }> = [];
           const affectedFiles: string[] = [];
@@ -167,7 +163,7 @@ export const ciCdAnalyzer: AnalyzerModule = {
               }
 
               const ref = usesValue.slice(atIdx + 1).trim();
-              if (!sha256Regex.test(ref)) {
+              if (!sha1Regex.test(ref)) {
                 matches.push({
                   path: wf.replace(root + "/", ""),
                   lineNumber: hit.lineNumber,
