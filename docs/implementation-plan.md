@@ -279,6 +279,9 @@ export const RepoProfileSchema = z.object({
   counts: RepoCountsSchema.optional(),
   high_risk_files: z.array(z.string()),
   capability_summary: CapabilitySummarySchema.optional(),
+  // Trust signal fields — populated during inventory/classification
+  signed_tags_count: z.number().default(0),
+  pinned_actions_ratio: z.number().min(0).max(1).default(0),
 });
 
 export type RepoProfile = z.infer<typeof RepoProfileSchema>;
@@ -1968,23 +1971,22 @@ function deriveTrustCredits(
     }
   }
 
-  // Signed tags — check via workspace git metadata (exposed in profile)
+  // Signed tags — derived from repo_profile (populated during inventory phase)
+  // repo_profile.signed_tags_count is set by classify-repo.ts from git tag -v output
   if (moduleCompleted("governance_trust")) {
-    // Profile's high_risk_files or external git metadata indicates signed tags
-    // This is populated during inventory from git tag -v output
-    credits += 0; // Placeholder: actual check uses workspace.gitMetadata.signedTags.length > 0
-    // When signedTags data is available on profile (via extended field or context), award:
-    // credits += TRUST_CREDITS.signed_tags_present;
+    if (profile.signed_tags_count > 0) {
+      credits += TRUST_CREDITS.signed_tags_present;
+    }
   }
 
-  // Pinned actions ratio — check via CI/CD module
+  // Pinned actions ratio — derived from repo_profile (populated during inventory phase)
+  // repo_profile.pinned_actions_ratio is set by classify-repo.ts from workflow YAML parsing
+  // This is a repo_profile signal, NOT derived from finding absence
   if (moduleCompleted("ci_cd")) {
-    // If profile.artifacts.workflows exist but no unpinned action refs found,
-    // award credit. This requires the ci_cd module to have scanned successfully.
-    // Actual ratio check is done by examining profile.artifacts.workflows
-    // and correlating with ci_cd module findings count for GHA-CI-003.
-    // For now, this credit is only awarded if workflows exist and the module
-    // found zero GHA-CI-003 findings (checked externally).
+    const workflows = profile.artifacts?.workflows ?? [];
+    if (workflows.length > 0 && profile.pinned_actions_ratio >= 0.9) {
+      credits += TRUST_CREDITS.pinned_actions_ratio_high;
+    }
   }
 
   return credits;
