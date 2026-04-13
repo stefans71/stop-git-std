@@ -1,0 +1,312 @@
+## stop-git-std Rule Catalog
+## Source of truth for all detection rules
+
+categories:
+  secrets:
+    name: Secrets Detection
+    description: Detect exposed credentials, keys, and sensitive values
+    rules:
+      - id: SEC-001
+        title: Private key detected
+        severity: critical
+        pattern: "-----BEGIN (RSA|DSA|EC|OPENSSH|PGP) PRIVATE KEY-----"
+        description: Private cryptographic key found in repository
+        remediation: Remove the key and rotate it immediately
+
+      - id: SEC-002
+        title: Environment file committed
+        severity: high
+        pattern: "^\\.(env|env\\.local|env\\.production)"
+        filePattern: true
+        description: Environment file with potential secrets committed
+        remediation: Add to .gitignore and remove from history
+
+      - id: SEC-003
+        title: API token or key detected
+        severity: high
+        pattern: "(api[_-]?key|api[_-]?secret|access[_-]?token|auth[_-]?token)\\s*[:=]\\s*['\"][^'\"]{8,}['\"]"
+        description: Hardcoded API token or key found
+        remediation: Use environment variables or a secrets manager
+
+      - id: SEC-004
+        title: Connection string detected
+        severity: high
+        pattern: "(mongodb|postgres|mysql|redis|amqp)://[^\\s'\"]{10,}"
+        description: Database or service connection string with credentials
+        remediation: Use environment variables for connection strings
+
+      - id: SEC-005
+        title: High-entropy string detected
+        severity: medium
+        pattern: "[A-Za-z0-9+/=]{40,}"
+        entropyCheck: true
+        minEntropy: 4.5
+        description: High-entropy string that may be a secret
+        remediation: Review and move to secrets management if sensitive
+
+  dangerous-execution:
+    name: Dangerous Execution
+    description: Detect risky code execution patterns
+    rules:
+      - id: EXEC-001
+        title: Curl-pipe-bash pattern
+        severity: critical
+        pattern: "curl\\s.*\\|\\s*(bash|sh|zsh)"
+        description: Remote script fetched and piped to shell
+        remediation: Download, review, then execute scripts separately
+
+      - id: EXEC-002
+        title: Install lifecycle hook
+        severity: high
+        pattern: "(preinstall|postinstall|preuninstall)\\s*:"
+        fileGlob: "package.json"
+        description: NPM lifecycle hook that runs on install
+        remediation: Review hook contents for malicious behavior
+
+      - id: EXEC-003
+        title: Shell execution with user input
+        severity: high
+        pattern: "(subprocess\\.call|subprocess\\.Popen|os\\.system|exec\\(|execSync\\().*shell\\s*[:=]\\s*[Tt]rue"
+        description: Shell execution that may accept untrusted input
+        remediation: Use parameterized commands instead of shell=True
+
+      - id: EXEC-004
+        title: Unsafe deserialization
+        severity: high
+        pattern: "(pickle\\.loads?|yaml\\.load\\((?!.*Loader)|eval\\(|Function\\()"
+        description: Deserializing untrusted data can lead to code execution
+        remediation: Use safe deserialization methods
+
+      - id: EXEC-005
+        title: Dynamic import or require
+        severity: medium
+        pattern: "(import\\(.*\\$|require\\(.*\\+|__import__\\()"
+        description: Dynamic module loading from potentially untrusted source
+        remediation: Use static imports or validate module paths
+
+  ci-cd:
+    name: CI/CD Security
+    description: Detect risky CI/CD configurations
+    rules:
+      - id: CI-001
+        title: pull_request_target trigger
+        severity: critical
+        pattern: "pull_request_target"
+        fileGlob: ".github/workflows/*.yml"
+        description: Workflow triggered on pull_request_target can access secrets from forked PRs
+        remediation: Use pull_request trigger or add strict conditions
+
+      - id: CI-002
+        title: Broad GITHUB_TOKEN permissions
+        severity: high
+        pattern: "permissions:\\s*write-all|permissions:\\s*\\{\\}"
+        fileGlob: ".github/workflows/*.yml"
+        description: Workflow has overly broad token permissions
+        remediation: Use least-privilege permissions
+
+      - id: CI-003
+        title: Unpinned third-party action
+        severity: high
+        pattern: "uses:\\s+[^@]+@(main|master|latest|v\\d+)\\s*$"
+        fileGlob: ".github/workflows/*.yml"
+        description: Third-party GitHub Action not pinned to a specific SHA
+        remediation: Pin actions to full commit SHA
+
+      - id: CI-004
+        title: Shell injection in workflow
+        severity: critical
+        pattern: "run:.*\\$\\{\\{\\s*(github\\.event\\.(issue|pull_request|comment)\\.(title|body)|github\\.head_ref)"
+        fileGlob: ".github/workflows/*.yml"
+        description: Workflow step interpolates untrusted input into shell command
+        remediation: Use intermediate environment variables
+
+  supply-chain:
+    name: Supply Chain
+    description: Detect dependency and supply chain risks
+    rules:
+      - id: SC-001
+        title: Missing lockfile
+        severity: high
+        description: No lockfile found — dependency versions are not pinned
+        remediation: Generate and commit a lockfile
+
+      - id: SC-002
+        title: Floating dependency version
+        severity: medium
+        pattern: "\"\\*\"|\"latest\"|\">=|\">[^=]"
+        fileGlob: "package.json"
+        description: Dependency version is not pinned
+        remediation: Pin dependencies to specific versions
+
+      - id: SC-003
+        title: Git or URL dependency
+        severity: high
+        pattern: "\"(git\\+|git://|https?://|github:)"
+        fileGlob: "package.json"
+        description: Dependency pulled directly from Git or URL
+        remediation: Use published registry packages
+
+      - id: SC-004
+        title: Vendored binary
+        severity: high
+        filePattern: true
+        pattern: "\\.(exe|dll|so|dylib|bin|wasm)$"
+        description: Opaque binary file committed to repository
+        remediation: Review binary provenance or build from source
+
+  governance-trust:
+    name: Governance & Trust
+    description: Assess repository governance and trustworthiness
+    rules:
+      - id: GOV-001
+        title: Missing SECURITY.md
+        severity: medium
+        description: No security policy file found
+        remediation: Add a SECURITY.md with vulnerability reporting instructions
+
+      - id: GOV-002
+        title: Missing CODEOWNERS
+        severity: low
+        description: No CODEOWNERS file to enforce review requirements
+        remediation: Add a CODEOWNERS file
+
+      - id: GOV-003
+        title: Archived repository
+        severity: high
+        description: Repository is archived and no longer maintained
+        remediation: Consider alternative maintained projects
+
+      - id: GOV-004
+        title: No signed releases
+        severity: medium
+        description: No signed tags or releases found
+        remediation: Sign releases for supply chain integrity
+
+  infrastructure:
+    name: Infrastructure Security
+    description: Detect risky container and deployment configurations
+    rules:
+      - id: INFRA-001
+        title: Docker runs as root
+        severity: high
+        pattern: "^(?!.*USER\\s+\\S)"
+        fileGlob: "Dockerfile*"
+        description: Container runs as root user
+        remediation: Add USER directive to run as non-root
+
+      - id: INFRA-002
+        title: Latest tag base image
+        severity: medium
+        pattern: "FROM\\s+\\S+:latest"
+        fileGlob: "Dockerfile*"
+        description: Base image uses mutable :latest tag
+        remediation: Pin to a specific image digest or version
+
+      - id: INFRA-003
+        title: Broad Kubernetes RBAC
+        severity: high
+        pattern: "resources:\\s*\\[\"\\*\"\\]|verbs:\\s*\\[\"\\*\"\\]"
+        fileGlob: "*.yaml"
+        description: Kubernetes RBAC grants overly broad permissions
+        remediation: Use least-privilege RBAC rules
+
+  # Typed rule packs
+  api:
+    name: API Security
+    description: Checks for API-type repositories
+    rules:
+      - id: API-001
+        title: Missing authentication guard
+        severity: high
+        description: API route without authentication middleware
+        remediation: Add authentication middleware to all routes
+
+      - id: API-002
+        title: Permissive CORS configuration
+        severity: medium
+        pattern: "cors\\(\\)|origin:\\s*['\"]\\*['\"]|Access-Control-Allow-Origin.*\\*"
+        description: CORS allows all origins
+        remediation: Restrict CORS to specific allowed origins
+
+      - id: API-003
+        title: Missing request validation
+        severity: medium
+        description: Request body used without validation/schema
+        remediation: Add input validation using a schema library
+
+  ai-llm:
+    name: AI/LLM Security
+    description: Checks for AI/LLM-type repositories
+    rules:
+      - id: AI-001
+        title: Model output controls execution
+        severity: critical
+        description: LLM output directly used in shell/eval/exec
+        remediation: Add output sanitization and approval gates
+
+      - id: AI-002
+        title: Secrets in prompts
+        severity: high
+        pattern: "(api[_-]?key|password|secret|token).*prompt|prompt.*(api[_-]?key|password|secret|token)"
+        description: Sensitive values may be included in LLM prompts
+        remediation: Strip secrets from prompt context
+
+      - id: AI-003
+        title: Missing rate/budget controls
+        severity: medium
+        description: No rate limiting or cost controls on LLM API calls
+        remediation: Add rate limiting and budget caps
+
+  agent-framework:
+    name: Agent Framework Security
+    description: Checks for agent framework repositories
+    rules:
+      - id: AGENT-001
+        title: Unrestricted tool capabilities
+        severity: critical
+        description: Agent has shell+write+network without approval gate
+        remediation: Add human-in-the-loop approval for dangerous operations
+
+      - id: AGENT-002
+        title: Shared state without isolation
+        severity: high
+        description: Multiple agents share state without isolation boundaries
+        remediation: Implement per-agent state isolation
+
+  mcp-server:
+    name: MCP Server Security
+    description: Checks for MCP server repositories
+    rules:
+      - id: MCP-001
+        title: Unrestricted shell tool
+        severity: critical
+        description: MCP server exposes shell execution without restrictions
+        remediation: Add command allowlisting and approval gates
+
+      - id: MCP-002
+        title: SSRF-capable fetch
+        severity: high
+        description: MCP server fetch tool allows arbitrary URL targets
+        remediation: Validate and restrict fetch targets
+
+      - id: MCP-003
+        title: Credential forwarding
+        severity: high
+        description: Credentials forwarded into tool execution context
+        remediation: Use scoped, minimal credential delegation
+
+  skills-plugins:
+    name: Skills/Plugins Security
+    description: Checks for skills and plugin repositories
+    rules:
+      - id: SKILL-001
+        title: Broad manifest permissions
+        severity: high
+        description: Plugin manifest requests overly broad permissions
+        remediation: Request minimum necessary permissions
+
+      - id: SKILL-002
+        title: Instruction override
+        severity: critical
+        description: Plugin content attempts to override safety boundaries
+        remediation: Sanitize plugin-provided instructions

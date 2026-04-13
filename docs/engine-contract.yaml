@@ -1,0 +1,95 @@
+## stop-git-std Engine Contract
+## Defines the audit pipeline stages and analyzer interface
+
+pipeline:
+  stages:
+    - name: acquire
+      description: Clone or resolve local repo path
+      input: AuditRequest
+      output: repoPath
+
+    - name: inventory
+      description: Enumerate files and detect languages
+      input: repoPath
+      output: FileInventory
+
+    - name: classify
+      description: Determine repo types and frameworks
+      input: FileInventory
+      output: RepoProfile
+
+    - name: activate
+      description: Select analyzers based on repo profile
+      input: RepoProfile
+      output: AnalyzerSet
+
+    - name: analyze-universal
+      description: Run universal security analyzers
+      input: [RepoProfile, AnalyzerSet, RuleCatalog]
+      output: Finding[]
+
+    - name: analyze-typed
+      description: Run type-specific analyzers
+      input: [RepoProfile, AnalyzerSet, RuleCatalog]
+      output: Finding[]
+
+    - name: normalize
+      description: Deduplicate and normalize findings
+      input: Finding[]
+      output: Finding[]
+
+    - name: score
+      description: Calculate risk scores across axes
+      input: Finding[]
+      output: ScoringResult
+
+    - name: decide
+      description: Apply policy to produce verdict
+      input: [ScoringResult, Finding[]]
+      output: Decision
+
+    - name: report
+      description: Emit output in requested formats
+      input: [Decision, Finding[], RepoProfile, ScoringResult]
+      output: Report[]
+
+analyzer:
+  interface:
+    name: AnalyzerBackend
+    methods:
+      - name: analyze
+        input:
+          profile: RepoProfile
+          rules: Rule[]
+          files: string[]
+        output: Finding[]
+
+  backends:
+    - name: builtin-ts
+      description: Built-in TypeScript analyzers (MVP)
+      status: implemented
+
+    - name: python-subprocess
+      description: Python analyzers via subprocess
+      status: stub
+
+    - name: external-tool
+      description: External tool integration
+      status: planned
+
+categories:
+  universal:
+    - secrets
+    - dangerous-execution
+    - ci-cd
+    - supply-chain
+    - governance-trust
+    - infrastructure
+
+  typed:
+    - api
+    - ai-llm
+    - agent-framework
+    - mcp-server
+    - skills-plugins
+    - library-package
