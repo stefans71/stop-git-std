@@ -97,7 +97,7 @@ Three risk axes scored 0-100 (higher is worse):
 ### Formula (MVP)
 
 ```
-weighted_axis_value = axis_impact * severity_weight * confidence_multiplier / 20
+weighted_axis_value = axis_impact * severity_weight * confidence_multiplier / 10
 ```
 
 **Severity weights**: info=1, low=3, medium=8, high=15, critical=25
@@ -111,7 +111,7 @@ weighted_axis_value = axis_impact * severity_weight * confidence_multiplier / 20
 - offline_analysis: 0.20
 - production_service: 1.40
 
-**Trust signal subtraction** (derived from repo_profile):
+**Trust signal subtraction** (derived from repo_profile, only when corresponding module completed with status "success" or "partial"):
 - signed_tags_present: -8
 - security_md_present: -3
 - codeowners_present: -2
@@ -119,13 +119,15 @@ weighted_axis_value = axis_impact * severity_weight * confidence_multiplier / 20
 
 Each axis clamped to [0, 100].
 
-**Note**: The divisor is `/20` for MVP (overridden from the engine contract's `/10` for calibration). Tunable with real-world data.
+**Note**: The divisor is `/10` as specified in the engine contract.
 
-### Confidence Model
+### Confidence Model (MVP — version "mvp-1")
 
-- **high**: AST supported for major languages, failed_modules_ratio <= 0.10, runtime or critical static findings
+- **high**: failed_modules_ratio <= 0.10 AND (critical_static_findings >= 1 OR all universal modules completed successfully)
 - **medium**: failed_modules_ratio <= 0.30
 - **low**: fallback
+
+> MVP confidence model — AST requirement added when parser support ships.
 
 ## Policy Decision
 
