@@ -1,0 +1,1587 @@
+version: 2
+name: gh-audit-rule-catalog
+status: draft
+purpose: >-
+  Machine-readable rule catalog for gh-audit. Designed for fast ingestion by LLMs,
+  rule engines, and build tooling. Rules are grouped by module and include severity,
+  confidence, detection method, evidence expectations, and policy hints.
+
+meta:
+  decision_values:
+    - PROCEED
+    - PROCEED_WITH_CONSTRAINTS
+    - CAUTION
+    - ABORT
+  severity_values:
+    - info
+    - low
+    - medium
+    - high
+    - critical
+  confidence_values:
+    - low
+    - medium
+    - high
+  proof_types:
+    - static
+    - heuristic
+    - runtime
+  axes:
+    - trustworthiness
+    - exploitability
+    - abuse_potential
+  environments:
+    - developer_laptop
+    - ci_runner
+    - container_isolated
+    - offline_analysis
+    - production_service
+
+scoring_defaults:
+  severity_weights:
+    info: 1
+    low: 3
+    medium: 8
+    high: 15
+    critical: 25
+  confidence_multipliers:
+    low: 0.6
+    medium: 0.85
+    high: 1.0
+  environment_abuse_multipliers:
+    developer_laptop: 1.25
+    ci_runner: 1.30
+    container_isolated: 0.80
+    offline_analysis: 0.20
+    production_service: 1.40
+
+modules:
+  governance_trust:
+    description: Source attribution, maintainer hygiene, governance, and provenance signals.
+    recommended_methods:
+      - path_check
+      - git_metadata_analysis
+      - github_api_lookup
+      - tag_signature_verification
+    rules:
+      - id: GHA-TRUST-001
+        title: SECURITY.md missing
+        category: governance
+        subcategory: disclosure_hygiene
+        default_severity: low
+        default_confidence: high
+        proof_type: static
+        rationale: Missing security disclosure process lowers trustworthiness.
+        detection:
+          primary_method: path_check
+          file_patterns:
+            - SECURITY.md
+            - .github/SECURITY.md
+          logic: emit_if_missing
+        evidence_shape:
+          type: missing_file
+          fields:
+            - expected_paths
+        axis_impacts:
+          trustworthiness: 6
+          exploitability: 0
+          abuse_potential: 0
+        remediation: Add SECURITY.md with reporting instructions and support policy.
+        policy_hints:
+          hard_stop: false
+          constrain_if_present: false
+
+      - id: GHA-TRUST-002
+        title: CODEOWNERS missing
+        category: governance
+        subcategory: review_hygiene
+        default_severity: low
+        default_confidence: high
+        proof_type: static
+        detection:
+          primary_method: path_check
+          file_patterns:
+            - CODEOWNERS
+            - .github/CODEOWNERS
+          logic: emit_if_missing
+        evidence_shape:
+          type: missing_file
+          fields:
+            - expected_paths
+        axis_impacts:
+          trustworthiness: 4
+          exploitability: 0
+          abuse_potential: 0
+        remediation: Add CODEOWNERS to clarify review responsibility.
+        policy_hints:
+          hard_stop: false
+          constrain_if_present: false
+
+      - id: GHA-TRUST-003
+        title: Repository appears archived or abandoned
+        category: governance
+        subcategory: maintenance_posture
+        default_severity: medium
+        default_confidence: medium
+        proof_type: heuristic
+        detection:
+          primary_method: github_api_lookup
+          secondary_methods:
+            - git_metadata_analysis
+          logic: emit_if_repo_archived_or_no_release_activity_over_threshold
+          params:
+            stale_months: 18
+        evidence_shape:
+          type: metadata_summary
+          fields:
+            - archived_flag
+            - last_commit_date
+            - last_release_date
+        axis_impacts:
+          trustworthiness: 12
+          exploitability: 4
+          abuse_potential: 0
+        remediation: Prefer maintained forks or alternatives; review dependency freshness before adoption.
+        policy_hints:
+          hard_stop: false
+          constrain_if_present: true
+
+      - id: GHA-TRUST-004
+        title: Signed tags or releases absent
+        category: governance
+        subcategory: provenance
+        default_severity: medium
+        default_confidence: medium
+        proof_type: heuristic
+        detection:
+          primary_method: tag_signature_verification
+          secondary_methods:
+            - github_api_lookup
+          logic: emit_if_no_signed_tags_or_release_artifacts_detected
+        evidence_shape:
+          type: provenance_summary
+          fields:
+            - inspected_tags
+            - signed_tags_count
+        axis_impacts:
+          trustworthiness: 10
+          exploitability: 1
+          abuse_potential: 1
+        remediation: Publish signed tags/releases and document provenance.
+        policy_hints:
+          hard_stop: false
+          constrain_if_present: true
+
+      - id: GHA-TRUST-005
+        title: Suspicious recent contributor shift
+        category: governance
+        subcategory: maintainer_anomaly
+        default_severity: medium
+        default_confidence: low
+        proof_type: heuristic
+        detection:
+          primary_method: git_metadata_analysis
+          logic: emit_if_new_contributor_dominates_recent_sensitive_commits
+          params:
+            lookback_days: 30
+            dominance_threshold: 0.6
+            sensitive_paths:
+              - .github/workflows/**
+              - scripts/**
+              - install/**
+              - Dockerfile
+        evidence_shape:
+          type: commit_anomaly
+          fields:
+            - author_summary
+            - changed_sensitive_paths
+            - lookback_days
+        axis_impacts:
+          trustworthiness: 14
+          exploitability: 2
+          abuse_potential: 4
+        remediation: Manually review recent sensitive commits and validate maintainer legitimacy.
+        policy_hints:
+          hard_stop: false
+          constrain_if_present: true
+
+  supply_chain:
+    description: Dependency posture, provenance, and supply-chain execution risk.
+    recommended_methods:
+      - manifest_parse
+      - osv_lookup
+      - file_signature_scan
+      - scorecard_lookup
+    rules:
+      - id: GHA-SUPPLY-001
+        title: Lockfile missing
+        category: supply_chain
+        subcategory: dependency_reproducibility
+        default_severity: medium
+        default_confidence: high
+        proof_type: static
+        applies_to:
+          ecosystems:
+            - npm
+            - pnpm
+            - yarn
+            - pip
+            - poetry
+            - cargo
+            - gomod
+        detection:
+          primary_method: manifest_parse
+          logic: emit_if_manifest_present_and_lockfile_missing
+        evidence_shape:
+          type: manifest_lockfile_state
+          fields:
+            - manifest_files
+            - expected_lockfiles
+        axis_impacts:
+          trustworthiness: 4
+          exploitability: 6
+          abuse_potential: 1
+        remediation: Add and commit a lockfile for reproducible dependency resolution.
+        policy_hints:
+          hard_stop: false
+          constrain_if_present: true
+
+      - id: GHA-SUPPLY-002
+        title: Floating dependency versions
+        category: supply_chain
+        subcategory: dependency_pinning
+        default_severity: medium
+        default_confidence: high
+        proof_type: static
+        detection:
+          primary_method: manifest_parse
+          logic: emit_for_each_dependency_with_non_pinned_version
+          params:
+            floating_tokens:
+              - "^"
+              - "~"
+              - "*"
+              - latest
+        evidence_shape:
+          type: dependency_list
+          fields:
+            - package_name
+            - version_spec
+            - manifest_file
+        axis_impacts:
+          trustworthiness: 4
+          exploitability: 6
+          abuse_potential: 1
+        remediation: Pin direct dependencies to reviewed versions.
+        policy_hints:
+          hard_stop: false
+          constrain_if_present: true
+
+      - id: GHA-SUPPLY-003
+        title: Direct Git or URL dependency source
+        category: supply_chain
+        subcategory: dependency_source_risk
+        default_severity: high
+        default_confidence: high
+        proof_type: static
+        detection:
+          primary_method: manifest_parse
+          logic: emit_for_git_or_url_sourced_dependency
+        evidence_shape:
+          type: dependency_source
+          fields:
+            - package_name
+            - source_url
+            - manifest_file
+        axis_impacts:
+          trustworthiness: 6
+          exploitability: 10
+          abuse_potential: 4
+        remediation: Replace with registry-published, pinned dependencies or pin exact commit SHAs with provenance review.
+        policy_hints:
+          hard_stop: false
+          constrain_if_present: true
+
+      - id: GHA-SUPPLY-004
+        title: Known vulnerable dependency in direct dependency graph
+        category: supply_chain
+        subcategory: vulnerability
+        default_severity: high
+        default_confidence: medium
+        proof_type: heuristic
+        detection:
+          primary_method: osv_lookup
+          logic: emit_for_each_direct_dependency_with_unfixed_or_critical_vuln
+          params:
+            min_severity: high
+        evidence_shape:
+          type: vulnerability_record
+          fields:
+            - package_name
+            - affected_version
+            - advisory_id
+            - advisory_severity
+            - fix_version
+        axis_impacts:
+          trustworthiness: 2
+          exploitability: 20
+          abuse_potential: 4
+        remediation: Upgrade to a fixed version or document mitigating controls.
+        policy_hints:
+          hard_stop: false
+          constrain_if_present: true
+
+      - id: GHA-SUPPLY-005
+        title: Opaque vendored binary present
+        category: supply_chain
+        subcategory: opaque_artifact
+        default_severity: high
+        default_confidence: medium
+        proof_type: heuristic
+        detection:
+          primary_method: file_signature_scan
+          logic: emit_if_executable_or_binary_present_without_source_or_checksum_metadata
+          params:
+            binary_extensions:
+              - .exe
+              - .dll
+              - .so
+              - .dylib
+              - .bin
+        evidence_shape:
+          type: binary_artifact
+          fields:
+            - path
+            - mime_type
+            - checksum
+            - nearby_metadata
+        axis_impacts:
+          trustworthiness: 10
+          exploitability: 8
+          abuse_potential: 10
+        remediation: Require source provenance, checksum, signature, or rebuild path before adoption.
+        policy_hints:
+          hard_stop: false
+          constrain_if_present: true
+
+  secrets:
+    description: Committed secrets or sensitive material.
+    recommended_methods:
+      - regex_scan
+      - entropy_scan
+      - path_risk_scan
+    rules:
+      - id: GHA-SECRETS-001
+        title: Private key material committed
+        category: secrets
+        subcategory: private_key
+        default_severity: critical
+        default_confidence: high
+        proof_type: static
+        detection:
+          primary_method: regex_scan
+          logic: emit_for_private_key_pem_block
+          params:
+            patterns:
+              - '-----BEGIN (RSA|EC|OPENSSH|DSA) PRIVATE KEY-----'
+        evidence_shape:
+          type: matched_snippet
+          fields:
+            - path
+            - line_number
+            - snippet_redacted
+        axis_impacts:
+          trustworthiness: 8
+          exploitability: 8
+          abuse_potential: 15
+        remediation: Remove the key, rotate credentials immediately, purge history if needed.
+        policy_hints:
+          hard_stop: true
+          constrain_if_present: false
+
+      - id: GHA-SECRETS-002
+        title: Committed environment file likely contains secrets
+        category: secrets
+        subcategory: env_file
+        default_severity: high
+        default_confidence: medium
+        proof_type: heuristic
+        detection:
+          primary_method: path_risk_scan
+          secondary_methods:
+            - regex_scan
+          logic: emit_if_env_file_present_with_secret_like_entries
+          params:
+            risky_paths:
+              - .env
+              - .env.*
+        evidence_shape:
+          type: file_with_matches
+          fields:
+            - path
+            - matched_keys
+        axis_impacts:
+          trustworthiness: 8
+          exploitability: 6
+          abuse_potential: 10
+        remediation: Remove secrets from repo, rotate them, and commit only sanitized examples.
+        policy_hints:
+          hard_stop: false
+          constrain_if_present: true
+
+      - id: GHA-SECRETS-003
+        title: High-entropy token-like string detected
+        category: secrets
+        subcategory: token_exposure
+        default_severity: medium
+        default_confidence: low
+        proof_type: heuristic
+        detection:
+          primary_method: entropy_scan
+          secondary_methods:
+            - regex_scan
+          logic: emit_for_high_entropy_string_near_auth_keywords
+          params:
+            min_entropy: 4.0
+            auth_keywords:
+              - token
+              - secret
+              - api_key
+              - password
+        evidence_shape:
+          type: matched_snippet
+          fields:
+            - path
+            - line_number
+            - snippet_redacted
+        axis_impacts:
+          trustworthiness: 4
+          exploitability: 4
+          abuse_potential: 6
+        remediation: Verify whether the value is a secret, then rotate/remove as needed.
+        policy_hints:
+          hard_stop: false
+          constrain_if_present: false
+
+  dangerous_execution:
+    description: Install/run-path behaviors that can immediately cause harm.
+    recommended_methods:
+      - regex_scan
+      - ast_scan
+      - script_semantics
+    rules:
+      - id: GHA-EXEC-001
+        title: curl pipe shell pattern
+        category: dangerous_execution
+        subcategory: remote_code_execution
+        default_severity: critical
+        default_confidence: high
+        proof_type: static
+        detection:
+          primary_method: regex_scan
+          logic: emit_for_regex_match
+          params:
+            file_patterns:
+              - '*.sh'
+              - '*.bash'
+              - Dockerfile
+              - package.json
+            regex: 'curl\s+[^\n|]+\|\s*(bash|sh)'
+        evidence_shape:
+          type: matched_snippet
+          fields:
+            - path
+            - line_number
+            - snippet
+        axis_impacts:
+          trustworthiness: 2
+          exploitability: 10
+          abuse_potential: 20
+        remediation: Replace pipe-to-shell execution with verified downloads and explicit execution steps.
+        policy_hints:
+          hard_stop: true
+          constrain_if_present: false
+
+      - id: GHA-EXEC-002
+        title: Install lifecycle hook executes script
+        category: dangerous_execution
+        subcategory: install_hook
+        default_severity: high
+        default_confidence: high
+        proof_type: static
+        detection:
+          primary_method: manifest_parse
+          logic: emit_if_install_lifecycle_hooks_present
+          params:
+            hook_names:
+              - preinstall
+              - install
+              - postinstall
+        evidence_shape:
+          type: manifest_script_entry
+          fields:
+            - manifest_file
+            - hook_name
+            - command
+        axis_impacts:
+          trustworthiness: 2
+          exploitability: 8
+          abuse_potential: 12
+        remediation: Remove install hooks or isolate them for manual review and explicit invocation.
+        policy_hints:
+          hard_stop: false
+          constrain_if_present: true
+
+      - id: GHA-EXEC-003
+        title: Python subprocess with shell=True
+        category: dangerous_execution
+        subcategory: shell_execution
+        default_severity: high
+        default_confidence: high
+        proof_type: static
+        detection:
+          primary_method: ast_scan
+          secondary_methods:
+            - regex_scan
+          logic: emit_for_subprocess_shell_true
+          params:
+            languages:
+              - python
+        evidence_shape:
+          type: ast_match
+          fields:
+            - path
+            - line_number
+            - function_name
+            - sink
+        axis_impacts:
+          trustworthiness: 0
+          exploitability: 12
+          abuse_potential: 10
+        remediation: Avoid shell=True or fully validate and constrain inputs.
+        policy_hints:
+          hard_stop: false
+          constrain_if_present: true
+
+      - id: GHA-EXEC-004
+        title: Unsafe deserialization primitive
+        category: dangerous_execution
+        subcategory: deserialization
+        default_severity: high
+        default_confidence: high
+        proof_type: static
+        detection:
+          primary_method: ast_scan
+          secondary_methods:
+            - regex_scan
+          logic: emit_for_known_unsafe_deserialization_sink
+          params:
+            sinks:
+              - python: pickle.loads
+              - python: yaml.load
+              - node: serialize-javascript unsafe_eval
+        evidence_shape:
+          type: ast_match
+          fields:
+            - path
+            - line_number
+            - sink
+        axis_impacts:
+          trustworthiness: 0
+          exploitability: 15
+          abuse_potential: 6
+        remediation: Replace with safe parsing APIs and validate untrusted input.
+        policy_hints:
+          hard_stop: false
+          constrain_if_present: true
+
+      - id: GHA-EXEC-005
+        title: Remote code or config fetched at runtime
+        category: dangerous_execution
+        subcategory: dynamic_remote_loading
+        default_severity: high
+        default_confidence: medium
+        proof_type: heuristic
+        detection:
+          primary_method: ast_scan
+          secondary_methods:
+            - regex_scan
+          logic: emit_if_remote_content_downloaded_then_executed_or_loaded_as_code
+        evidence_shape:
+          type: code_flow_summary
+          fields:
+            - path
+            - fetch_call
+            - sink_call
+        axis_impacts:
+          trustworthiness: 4
+          exploitability: 10
+          abuse_potential: 18
+        remediation: Vendor or sign remote content; avoid executing or blindly loading remote code/config.
+        policy_hints:
+          hard_stop: true
+          constrain_if_present: false
+
+  ci_cd:
+    description: GitHub Actions and other pipeline trust-boundary risks.
+    recommended_methods:
+      - yaml_parse
+      - workflow_semantics
+      - regex_scan
+    rules:
+      - id: GHA-CI-001
+        title: Workflow uses pull_request_target
+        category: ci_cd
+        subcategory: workflow_trigger_risk
+        default_severity: high
+        default_confidence: high
+        proof_type: static
+        detection:
+          primary_method: yaml_parse
+          logic: emit_if_workflow_trigger_contains_pull_request_target
+          params:
+            file_patterns:
+              - .github/workflows/*.yml
+              - .github/workflows/*.yaml
+        evidence_shape:
+          type: workflow_summary
+          fields:
+            - path
+            - triggers
+        axis_impacts:
+          trustworthiness: 2
+          exploitability: 10
+          abuse_potential: 16
+        remediation: Use pull_request where possible and avoid running untrusted code in privileged contexts.
+        policy_hints:
+          hard_stop: false
+          constrain_if_present: true
+
+      - id: GHA-CI-002
+        title: Over-broad GITHUB_TOKEN permissions
+        category: ci_cd
+        subcategory: token_scope
+        default_severity: high
+        default_confidence: high
+        proof_type: static
+        detection:
+          primary_method: yaml_parse
+          logic: emit_if_permissions_write_all_or_equivalent_broad_scope
+        evidence_shape:
+          type: workflow_permissions
+          fields:
+            - path
+            - permissions_block
+        axis_impacts:
+          trustworthiness: 0
+          exploitability: 8
+          abuse_potential: 18
+        remediation: Scope GITHUB_TOKEN to the minimum required permissions.
+        policy_hints:
+          hard_stop: false
+          constrain_if_present: true
+
+      - id: GHA-CI-003
+        title: Unpinned third-party action reference
+        category: ci_cd
+        subcategory: action_pin
+        default_severity: medium
+        default_confidence: high
+        proof_type: static
+        detection:
+          primary_method: yaml_parse
+          logic: emit_for_uses_reference_not_pinned_to_commit_sha
+          params:
+            allow_patterns:
+              - actions/checkout@v4
+        evidence_shape:
+          type: workflow_action_ref
+          fields:
+            - path
+            - uses
+        axis_impacts:
+          trustworthiness: 4
+          exploitability: 6
+          abuse_potential: 6
+        remediation: Pin third-party actions by full commit SHA.
+        policy_hints:
+          hard_stop: false
+          constrain_if_present: true
+
+      - id: GHA-CI-004
+        title: Workflow step interpolates untrusted input into shell command
+        category: ci_cd
+        subcategory: shell_injection
+        default_severity: critical
+        default_confidence: medium
+        proof_type: heuristic
+        detection:
+          primary_method: workflow_semantics
+          secondary_methods:
+            - regex_scan
+          logic: emit_if_github_context_fields_flow_directly_into_run_step
+          params:
+            risky_contexts:
+              - github.event.pull_request.title
+              - github.event.issue.title
+              - github.head_ref
+        evidence_shape:
+          type: workflow_injection_trace
+          fields:
+            - path
+            - run_step
+            - interpolated_context
+        axis_impacts:
+          trustworthiness: 0
+          exploitability: 14
+          abuse_potential: 22
+        remediation: Pass untrusted values as quoted data and validate before shell execution.
+        policy_hints:
+          hard_stop: true
+          constrain_if_present: false
+
+      - id: GHA-CI-005
+        title: Self-hosted runner used for untrusted trigger path
+        category: ci_cd
+        subcategory: runner_exposure
+        default_severity: high
+        default_confidence: medium
+        proof_type: heuristic
+        detection:
+          primary_method: yaml_parse
+          secondary_methods:
+            - workflow_semantics
+          logic: emit_if_runs_on_self_hosted_and_trigger_is_untrusted
+        evidence_shape:
+          type: workflow_runner_summary
+          fields:
+            - path
+            - trigger
+            - runs_on
+        axis_impacts:
+          trustworthiness: 0
+          exploitability: 8
+          abuse_potential: 18
+        remediation: Do not run untrusted code on self-hosted runners.
+        policy_hints:
+          hard_stop: false
+          constrain_if_present: true
+
+  infrastructure:
+    description: Container and deployment safety posture.
+    recommended_methods:
+      - dockerfile_parse
+      - yaml_parse
+      - terraform_parse
+    rules:
+      - id: GHA-INFRA-001
+        title: Container runs as root by default
+        category: infrastructure
+        subcategory: container_user
+        default_severity: medium
+        default_confidence: medium
+        proof_type: heuristic
+        detection:
+          primary_method: dockerfile_parse
+          logic: emit_if_no_user_directive_present
+        evidence_shape:
+          type: dockerfile_summary
+          fields:
+            - path
+            - user_directive_present
+        axis_impacts:
+          trustworthiness: 0
+          exploitability: 6
+          abuse_potential: 8
+        remediation: Set a non-root USER in the container image.
+        policy_hints:
+          hard_stop: false
+          constrain_if_present: true
+
+      - id: GHA-INFRA-002
+        title: Container base image uses latest tag
+        category: infrastructure
+        subcategory: image_reproducibility
+        default_severity: medium
+        default_confidence: high
+        proof_type: static
+        detection:
+          primary_method: dockerfile_parse
+          logic: emit_if_from_uses_latest_tag
+        evidence_shape:
+          type: docker_base_image
+          fields:
+            - path
+            - base_image
+        axis_impacts:
+          trustworthiness: 2
+          exploitability: 4
+          abuse_potential: 1
+        remediation: Pin container images to reviewed versions or immutable digests.
+        policy_hints:
+          hard_stop: false
+          constrain_if_present: true
+
+      - id: GHA-INFRA-003
+        title: Kubernetes manifest grants broad RBAC permissions
+        category: infrastructure
+        subcategory: rbac
+        default_severity: high
+        default_confidence: medium
+        proof_type: heuristic
+        detection:
+          primary_method: yaml_parse
+          logic: emit_if_role_or_clusterrole_contains_wildcards_or_sensitive_verbs
+        evidence_shape:
+          type: k8s_rbac_summary
+          fields:
+            - path
+            - resources
+            - verbs
+        axis_impacts:
+          trustworthiness: 0
+          exploitability: 10
+          abuse_potential: 12
+        remediation: Narrow RBAC resources and verbs to least privilege.
+        policy_hints:
+          hard_stop: false
+          constrain_if_present: true
+
+  web:
+    description: Web application security signals.
+    recommended_methods:
+      - ast_scan
+      - config_parse
+      - route_extract
+    rules:
+      - id: GHA-WEB-001
+        title: Debug mode enabled in production-like config
+        category: web
+        subcategory: debug_config
+        default_severity: medium
+        default_confidence: medium
+        proof_type: heuristic
+        detection:
+          primary_method: config_parse
+          secondary_methods:
+            - regex_scan
+          logic: emit_if_debug_true_in_non_test_context
+        evidence_shape:
+          type: config_entry
+          fields:
+            - path
+            - key
+            - value
+        axis_impacts:
+          trustworthiness: 0
+          exploitability: 8
+          abuse_potential: 2
+        remediation: Disable debug mode outside local development.
+        policy_hints:
+          hard_stop: false
+          constrain_if_present: false
+
+      - id: GHA-WEB-002
+        title: Templated output includes unescaped user-controlled content
+        category: web
+        subcategory: xss
+        default_severity: high
+        default_confidence: medium
+        proof_type: heuristic
+        detection:
+          primary_method: ast_scan
+          secondary_methods:
+            - template_scan
+          logic: emit_if_user_input_reaches_unescaped_template_sink
+        evidence_shape:
+          type: code_flow_summary
+          fields:
+            - path
+            - source
+            - sink
+        axis_impacts:
+          trustworthiness: 0
+          exploitability: 14
+          abuse_potential: 3
+        remediation: Apply contextual output encoding and use safe template APIs.
+        policy_hints:
+          hard_stop: false
+          constrain_if_present: false
+
+  api:
+    description: API-specific auth, validation, and exposure checks.
+    recommended_methods:
+      - route_extract
+      - ast_scan
+      - config_parse
+    rules:
+      - id: GHA-API-001
+        title: Sensitive route lacks obvious authentication guard
+        category: api
+        subcategory: authn
+        default_severity: high
+        default_confidence: medium
+        proof_type: heuristic
+        detection:
+          primary_method: route_extract
+          secondary_methods:
+            - ast_scan
+          logic: emit_if_sensitive_route_missing_auth_dependency_or_middleware
+          params:
+            sensitive_route_keywords:
+              - admin
+              - token
+              - secret
+              - billing
+              - user
+        evidence_shape:
+          type: route_summary
+          fields:
+            - path
+            - method
+            - handler
+            - auth_signals
+        axis_impacts:
+          trustworthiness: 0
+          exploitability: 16
+          abuse_potential: 6
+        remediation: Require authentication and explicit authorization on sensitive routes.
+        policy_hints:
+          hard_stop: false
+          constrain_if_present: true
+
+      - id: GHA-API-002
+        title: Overly permissive CORS configuration
+        category: api
+        subcategory: cors
+        default_severity: medium
+        default_confidence: high
+        proof_type: static
+        detection:
+          primary_method: config_parse
+          secondary_methods:
+            - regex_scan
+          logic: emit_if_allow_all_origins_with_credentials_or_equivalent
+        evidence_shape:
+          type: config_entry
+          fields:
+            - path
+            - cors_config
+        axis_impacts:
+          trustworthiness: 0
+          exploitability: 10
+          abuse_potential: 2
+        remediation: Restrict origins and avoid credentialed wildcard CORS.
+        policy_hints:
+          hard_stop: false
+          constrain_if_present: false
+
+      - id: GHA-API-003
+        title: Request body bound directly to model/object without validation
+        category: api
+        subcategory: input_validation
+        default_severity: medium
+        default_confidence: medium
+        proof_type: heuristic
+        detection:
+          primary_method: ast_scan
+          logic: emit_if_request_data_flows_directly_to_model_or_update_call_without_schema_validation
+        evidence_shape:
+          type: code_flow_summary
+          fields:
+            - path
+            - source
+            - sink
+        axis_impacts:
+          trustworthiness: 0
+          exploitability: 10
+          abuse_potential: 2
+        remediation: Validate request bodies with explicit schemas and field allowlists.
+        policy_hints:
+          hard_stop: false
+          constrain_if_present: false
+
+  ai_llm:
+    description: LLM integration safety posture.
+    recommended_methods:
+      - ast_scan
+      - manifest_parse
+      - regex_scan
+    rules:
+      - id: GHA-AI-001
+        title: Model output directly controls tool or shell execution
+        category: ai_llm
+        subcategory: unsafe_tool_control
+        default_severity: critical
+        default_confidence: medium
+        proof_type: heuristic
+        detection:
+          primary_method: ast_scan
+          secondary_methods:
+            - regex_scan
+          logic: emit_if_model_output_flows_into_tool_dispatch_or_exec_sink_without_validation
+        evidence_shape:
+          type: code_flow_summary
+          fields:
+            - path
+            - model_output_var
+            - sink
+            - validation_signals
+        axis_impacts:
+          trustworthiness: 0
+          exploitability: 12
+          abuse_potential: 24
+        remediation: Enforce strict structured output validation and approval gates before tool execution.
+        policy_hints:
+          hard_stop: true
+          constrain_if_present: false
+
+      - id: GHA-AI-002
+        title: Secrets or sensitive context embedded into prompts
+        category: ai_llm
+        subcategory: prompt_data_leakage
+        default_severity: high
+        default_confidence: low
+        proof_type: heuristic
+        detection:
+          primary_method: ast_scan
+          secondary_methods:
+            - regex_scan
+          logic: emit_if_secret_sources_concatenated_into_prompt_like_variables
+        evidence_shape:
+          type: code_flow_summary
+          fields:
+            - path
+            - secret_source
+            - prompt_var
+        axis_impacts:
+          trustworthiness: 0
+          exploitability: 8
+          abuse_potential: 12
+        remediation: Remove secrets from prompts and minimize sensitive context exposure.
+        policy_hints:
+          hard_stop: false
+          constrain_if_present: true
+
+      - id: GHA-AI-003
+        title: No obvious consumption or rate bound around model calls
+        category: ai_llm
+        subcategory: resource_control
+        default_severity: medium
+        default_confidence: low
+        proof_type: heuristic
+        detection:
+          primary_method: ast_scan
+          secondary_methods:
+            - config_parse
+          logic: emit_if_loop_or_public_endpoint_calls_model_without_rate_or_budget_controls
+        evidence_shape:
+          type: code_pattern_summary
+          fields:
+            - path
+            - call_site
+            - surrounding_control_signals
+        axis_impacts:
+          trustworthiness: 0
+          exploitability: 4
+          abuse_potential: 8
+        remediation: Add request limits, quotas, and timeout/budget controls.
+        policy_hints:
+          hard_stop: false
+          constrain_if_present: false
+
+  agent_framework:
+    description: Agentic system permissions, approval gates, and autonomy controls.
+    recommended_methods:
+      - ast_scan
+      - manifest_parse
+      - capability_matrix_eval
+    rules:
+      - id: GHA-AGENT-001
+        title: Agent has shell, write, and network capabilities without approval gate
+        category: agent_framework
+        subcategory: excessive_agency
+        default_severity: critical
+        default_confidence: medium
+        proof_type: heuristic
+        detection:
+          primary_method: capability_matrix_eval
+          secondary_methods:
+            - ast_scan
+          logic: emit_if_capabilities_include_shell_write_network_and_no_gate_signal
+        evidence_shape:
+          type: capability_summary
+          fields:
+            - path
+            - capabilities
+            - gate_signals
+        axis_impacts:
+          trustworthiness: 0
+          exploitability: 8
+          abuse_potential: 25
+        remediation: Add mandatory human approval or policy gates before destructive or external actions.
+        policy_hints:
+          hard_stop: true
+          constrain_if_present: false
+
+      - id: GHA-AGENT-002
+        title: Shared memory or state used across tasks without isolation
+        category: agent_framework
+        subcategory: memory_isolation
+        default_severity: medium
+        default_confidence: low
+        proof_type: heuristic
+        detection:
+          primary_method: ast_scan
+          logic: emit_if_global_or_persistent_agent_memory_reused_across_task_contexts_without_partitioning
+        evidence_shape:
+          type: code_pattern_summary
+          fields:
+            - path
+            - state_store
+            - isolation_signals
+        axis_impacts:
+          trustworthiness: 0
+          exploitability: 4
+          abuse_potential: 8
+        remediation: Partition memory/state by task, user, or run scope.
+        policy_hints:
+          hard_stop: false
+          constrain_if_present: false
+
+  skills_plugins:
+    description: Skills, plugins, extension manifests, and hidden behavior checks.
+    recommended_methods:
+      - path_check
+      - manifest_parse
+      - regex_scan
+      - ast_scan
+    rules:
+      - id: GHA-PLUGIN-001
+        title: Plugin/skill manifest requests broad permissions
+        category: skills_plugins
+        subcategory: permission_scope
+        default_severity: high
+        default_confidence: medium
+        proof_type: heuristic
+        detection:
+          primary_method: manifest_parse
+          logic: emit_if_manifest_permissions_exceed_low_risk_baseline
+        evidence_shape:
+          type: manifest_permissions
+          fields:
+            - path
+            - requested_permissions
+        axis_impacts:
+          trustworthiness: 2
+          exploitability: 4
+          abuse_potential: 16
+        remediation: Reduce manifest permissions to least privilege and document justification.
+        policy_hints:
+          hard_stop: false
+          constrain_if_present: true
+
+      - id: GHA-PLUGIN-002
+        title: Plugin/skill instructions attempt to alter identity or safety boundaries
+        category: skills_plugins
+        subcategory: instruction_tampering
+        default_severity: high
+        default_confidence: low
+        proof_type: heuristic
+        detection:
+          primary_method: regex_scan
+          logic: emit_if_instruction_files_contain_identity_override_or_guardrail_bypass_patterns
+          params:
+            file_patterns:
+              - SKILL.md
+              - SOUL.md
+              - MEMORY.md
+        evidence_shape:
+          type: matched_snippet
+          fields:
+            - path
+            - line_number
+            - snippet
+        axis_impacts:
+          trustworthiness: 10
+          exploitability: 2
+          abuse_potential: 12
+        remediation: Remove instruction content that attempts to override identity, memory, or security policy.
+        policy_hints:
+          hard_stop: false
+          constrain_if_present: true
+
+  mcp_server:
+    description: MCP tool exposure, scope, and bridge risks.
+    recommended_methods:
+      - ast_scan
+      - manifest_parse
+      - capability_matrix_eval
+    rules:
+      - id: GHA-MCP-001
+        title: MCP server exposes unrestricted shell execution tool
+        category: mcp_server
+        subcategory: shell_tool
+        default_severity: critical
+        default_confidence: high
+        proof_type: static
+        detection:
+          primary_method: capability_matrix_eval
+          secondary_methods:
+            - ast_scan
+          logic: emit_if_tool_capability_includes_arbitrary_shell_exec_without_allowlist
+        evidence_shape:
+          type: tool_capability_summary
+          fields:
+            - path
+            - tool_name
+            - capability
+            - constraints
+        axis_impacts:
+          trustworthiness: 0
+          exploitability: 8
+          abuse_potential: 25
+        remediation: Remove arbitrary shell execution or constrain it with allowlists and approval gates.
+        policy_hints:
+          hard_stop: true
+          constrain_if_present: false
+
+      - id: GHA-MCP-002
+        title: MCP fetch tool appears SSRF-capable
+        category: mcp_server
+        subcategory: ssrf
+        default_severity: high
+        default_confidence: medium
+        proof_type: heuristic
+        detection:
+          primary_method: ast_scan
+          logic: emit_if_fetch_tool_accepts_arbitrary_url_without_allowlist_or_private_network_blocking
+        evidence_shape:
+          type: tool_capability_summary
+          fields:
+            - path
+            - tool_name
+            - url_validation_signals
+        axis_impacts:
+          trustworthiness: 0
+          exploitability: 12
+          abuse_potential: 14
+        remediation: Restrict destinations, block private IP ranges, and enforce allowlists.
+        policy_hints:
+          hard_stop: false
+          constrain_if_present: true
+
+      - id: GHA-MCP-003
+        title: MCP server forwards credentials or tokens to tool layer
+        category: mcp_server
+        subcategory: credential_forwarding
+        default_severity: critical
+        default_confidence: medium
+        proof_type: heuristic
+        detection:
+          primary_method: ast_scan
+          secondary_methods:
+            - regex_scan
+          logic: emit_if_env_tokens_or_auth_headers_passed_directly_into_tool_requests
+        evidence_shape:
+          type: code_flow_summary
+          fields:
+            - path
+            - credential_source
+            - tool_or_request_sink
+        axis_impacts:
+          trustworthiness: 0
+          exploitability: 8
+          abuse_potential: 22
+        remediation: Avoid forwarding credentials to tool calls; mint scoped tokens or proxy requests safely.
+        policy_hints:
+          hard_stop: true
+          constrain_if_present: false
+
+  library_package:
+    description: Reusable package/library safety.
+    recommended_methods:
+      - manifest_parse
+      - ast_scan
+      - import_side_effect_scan
+    rules:
+      - id: GHA-PKG-001
+        title: Package performs network or process side effect at import/init time
+        category: library_package
+        subcategory: import_side_effect
+        default_severity: high
+        default_confidence: medium
+        proof_type: heuristic
+        detection:
+          primary_method: import_side_effect_scan
+          secondary_methods:
+            - ast_scan
+          logic: emit_if_module_top_level_code_invokes_network_or_process_sinks
+        evidence_shape:
+          type: code_pattern_summary
+          fields:
+            - path
+            - sink
+            - module_scope
+        axis_impacts:
+          trustworthiness: 4
+          exploitability: 6
+          abuse_potential: 14
+        remediation: Remove side effects from import/init paths and require explicit user action.
+        policy_hints:
+          hard_stop: false
+          constrain_if_present: true
+
+runtime_rules:
+  description: Findings emitted only from sandbox/runtime observation.
+  recommended_methods:
+    - network_observation
+    - filesystem_observation
+    - process_observation
+  rules:
+    - id: GHA-RUNTIME-001
+      title: Install/build process reads SSH or cloud credential paths
+      category: runtime
+      subcategory: credential_access
+      default_severity: critical
+      default_confidence: high
+      proof_type: runtime
+      detection:
+        primary_method: filesystem_observation
+        logic: emit_if_process_reads_sensitive_paths_unexpectedly
+        params:
+          sensitive_paths:
+            - ~/.ssh
+            - ~/.aws
+            - ~/.config/gcloud
+            - ~/.npmrc
+      evidence_shape:
+        type: runtime_observation
+        fields:
+          - process
+          - path
+          - phase
+      axis_impacts:
+        trustworthiness: 6
+        exploitability: 6
+        abuse_potential: 28
+      remediation: Treat as hostile until proven otherwise; isolate execution and investigate exact code path.
+      policy_hints:
+        hard_stop: true
+        constrain_if_present: false
+
+    - id: GHA-RUNTIME-002
+      title: Unexpected outbound network to unknown domain during install
+      category: runtime
+      subcategory: exfiltration_or_remote_fetch
+      default_severity: high
+      default_confidence: medium
+      proof_type: runtime
+      detection:
+        primary_method: network_observation
+        logic: emit_if_non_registry_or_non_allowlisted_domain_contacted_during_install
+      evidence_shape:
+        type: runtime_observation
+        fields:
+          - process
+          - destination_host
+          - port
+          - phase
+      axis_impacts:
+        trustworthiness: 4
+        exploitability: 8
+        abuse_potential: 18
+      remediation: Block egress, inspect fetched payloads, and verify whether the domain is legitimate.
+      policy_hints:
+        hard_stop: false
+        constrain_if_present: true
+
+    - id: GHA-RUNTIME-003
+      title: Runtime-observed download followed by shell execution
+      category: runtime
+      subcategory: observed_remote_execution
+      default_severity: critical
+      default_confidence: high
+      proof_type: runtime
+      detection:
+        primary_method: process_observation
+        secondary_methods:
+          - network_observation
+        logic: emit_if_download_process_precedes_shell_execution_in_same_phase
+      evidence_shape:
+        type: runtime_trace
+        fields:
+          - process_tree
+          - destination_host
+          - phase
+      axis_impacts:
+        trustworthiness: 6
+        exploitability: 12
+        abuse_potential: 30
+      remediation: Abort adoption and investigate exact install/run path.
+      policy_hints:
+        hard_stop: true
+        constrain_if_present: false
+
+categorization_matrix:
+  description: Routing matrix from detected repo characteristics to module activation.
+  routes:
+    - category: web_app
+      activate_modules:
+        - governance_trust
+        - supply_chain
+        - secrets
+        - dangerous_execution
+        - ci_cd
+        - infrastructure
+        - web
+    - category: api
+      activate_modules:
+        - governance_trust
+        - supply_chain
+        - secrets
+        - dangerous_execution
+        - ci_cd
+        - infrastructure
+        - api
+    - category: ai_llm
+      activate_modules:
+        - governance_trust
+        - supply_chain
+        - secrets
+        - dangerous_execution
+        - ci_cd
+        - ai_llm
+    - category: agent_framework
+      activate_modules:
+        - governance_trust
+        - supply_chain
+        - secrets
+        - dangerous_execution
+        - ci_cd
+        - ai_llm
+        - agent_framework
+    - category: skills_plugins
+      activate_modules:
+        - governance_trust
+        - supply_chain
+        - secrets
+        - dangerous_execution
+        - skills_plugins
+    - category: mcp_server
+      activate_modules:
+        - governance_trust
+        - supply_chain
+        - secrets
+        - dangerous_execution
+        - mcp_server
+    - category: library_package
+      activate_modules:
+        - governance_trust
+        - supply_chain
+        - secrets
+        - dangerous_execution
+        - library_package
+
+tool_method_matrix:
+  description: Suggested implementation choices per method.
+  methods:
+    path_check:
+      implementation:
+        - pathlib
+        - glob
+      good_for:
+        - file presence
+        - directory presence
+    manifest_parse:
+      implementation:
+        - json
+        - tomllib
+        - yaml
+      good_for:
+        - dependencies
+        - scripts
+        - permissions
+    regex_scan:
+      implementation:
+        - python re
+        - ripgrep optional
+      good_for:
+        - high-signal patterns
+        - quick coverage
+    entropy_scan:
+      implementation:
+        - custom shannon entropy
+      good_for:
+        - secret heuristics
+    ast_scan:
+      implementation:
+        - python ast
+        - tree-sitter
+      good_for:
+        - sink detection
+        - route extraction
+        - semantic patterns
+    yaml_parse:
+      implementation:
+        - PyYAML
+        - ruamel.yaml
+      good_for:
+        - workflows
+        - kubernetes manifests
+    dockerfile_parse:
+      implementation:
+        - custom parser
+        - lightweight line parser
+      good_for:
+        - base image
+        - USER and RUN checks
+    osv_lookup:
+      implementation:
+        - OSV API client
+      good_for:
+        - known vulnerability enrichment
+    scorecard_lookup:
+      implementation:
+        - OpenSSF Scorecard adapter
+      good_for:
+        - governance and repo posture
+    capability_matrix_eval:
+      implementation:
+        - manifest + AST merged analysis
+      good_for:
+        - agent and MCP capability risk
+    workflow_semantics:
+      implementation:
+        - YAML parse plus context flow rules
+      good_for:
+        - CI trigger and shell injection analysis
+
+policy_baselines:
+  hard_stop_patterns:
+    - GHA-SECRETS-001
+    - GHA-EXEC-001
+    - GHA-EXEC-005
+    - GHA-CI-004
+    - GHA-AI-001
+    - GHA-AGENT-001
+    - GHA-MCP-001
+    - GHA-MCP-003
+    - GHA-RUNTIME-001
+    - GHA-RUNTIME-003
+  proceed_with_constraints_examples:
+    - pin_to_reviewed_commit_sha
+    - run_in_disposable_container
+    - disable_install_scripts
+    - restrict_network_egress
+    - use_read_only_mounts
+    - use_scoped_throwaway_tokens
+    - block_self_hosted_runner_execution
+
+next_expansion_candidates:
+  - add language-specific sink libraries for js_ts, rust, and go
+  - add explicit CWE mappings for every rule
+  - add SARIF rule metadata
+  - add suppression and allowlist schema
+  - split API/web rules by framework
+  - add more runtime correlation rules

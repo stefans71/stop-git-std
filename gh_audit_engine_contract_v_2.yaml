@@ -1,0 +1,1032 @@
+version: 2
+name: gh-audit-engine-contract
+status: draft
+purpose: >-
+  Execution contract for gh-audit. Defines engine inputs, outputs, phase ordering,
+  module activation, rule evaluation lifecycle, scoring semantics, policy decisions,
+  and artifact schemas. Intended to pair with gh-audit-rule-catalog-v2.yaml.
+
+references:
+  rule_catalog: gh-audit-rule-catalog-v2.yaml
+  technical_design: gh-audit-technical-design-v2.md
+
+meta:
+  contract_version: 2
+  compatibility:
+    minimum_rule_catalog_version: 2
+  output_formats:
+    - json
+    - yaml
+    - markdown
+    - sarif
+  deterministic_fields:
+    - run_id
+    - started_at
+    - completed_at
+    - repo_target
+    - ref
+    - engine_version
+    - rule_catalog_version
+
+execution_defaults:
+  clone:
+    strategy: shallow
+    depth: 1
+    recurse_submodules: false
+  performance:
+    max_file_size_bytes: 5242880
+    max_files_default: 50000
+    max_ast_files_per_language: 5000
+    timeout_seconds_per_phase:
+      context_capture: 15
+      inventory: 60
+      universal_analysis: 300
+      typed_analysis: 300
+      runtime_validation: 900
+      scoring: 30
+      reporting: 60
+  behavior:
+    continue_on_module_error: true
+    emit_partial_results_on_failure: true
+    fail_closed_on_runtime_hard_stop: true
+
+enums:
+  environments:
+    - developer_laptop
+    - ci_runner
+    - container_isolated
+    - offline_analysis
+    - production_service
+  runtime_modes:
+    - off
+    - install_only
+    - build
+    - smoke
+  severity_values:
+    - info
+    - low
+    - medium
+    - high
+    - critical
+  confidence_values:
+    - low
+    - medium
+    - high
+  proof_types:
+    - static
+    - heuristic
+    - runtime
+  decision_values:
+    - PROCEED
+    - PROCEED_WITH_CONSTRAINTS
+    - CAUTION
+    - ABORT
+  module_status_values:
+    - pending
+    - running
+    - success
+    - partial
+    - failed
+    - skipped
+
+inputs:
+  audit_request:
+    type: object
+    required:
+      - repo_target
+    properties:
+      repo_target:
+        type: string
+        description: GitHub URL, git URL, or local path.
+      ref:
+        type: string
+        default: default_branch
+      target_environment:
+        type: string
+        enum_ref: environments
+        default: offline_analysis
+      expected_permissions:
+        type: array
+        items:
+          type: string
+        default: []
+      runtime_mode:
+        type: string
+        enum_ref: runtime_modes
+        default: off
+      adoption_mode:
+        type: string
+        allowed_values:
+          - third_party
+          - internal
+          - fork_review
+          - pre_merge
+        default: third_party
+      output_formats:
+        type: array
+        items:
+          type: string
+          allowed_values:
+            - json
+            - yaml
+            - markdown
+            - sarif
+        default:
+          - json
+          - markdown
+      enabled_modules:
+        type: array
+        items:
+          type: string
+        default: []
+      disabled_modules:
+        type: array
+        items:
+          type: string
+        default: []
+      include_paths:
+        type: array
+        items:
+          type: string
+        default: []
+      exclude_paths:
+        type: array
+        items:
+          type: string
+        default:
+          - .git/**
+          - node_modules/**
+          - vendor/**
+          - dist/**
+          - build/**
+          - target/**
+      allow_network_during_runtime:
+        type: boolean
+        default: false
+      policy_profile:
+        type: string
+        allowed_values:
+          - strict
+          - balanced
+          - advisory
+        default: balanced
+      notes:
+        type: string
+        default: ""
+
+artifacts:
+  run_manifest:
+    type: object
+    required:
+      - run_id
+      - engine_version
+      - rule_catalog_version
+      - started_at
+      - repo_target
+      - ref
+    properties:
+      run_id:
+        type: string
+      engine_version:
+        type: string
+      rule_catalog_version:
+        type: integer
+      started_at:
+        type: string
+      completed_at:
+        type: string
+      repo_target:
+        type: string
+      ref:
+        type: string
+      target_environment:
+        type: string
+      runtime_mode:
+        type: string
+      policy_profile:
+        type: string
+      status:
+        type: string
+        allowed_values:
+          - success
+          - partial
+          - failed
+
+  audit_context:
+    type: object
+    required:
+      - repo_target
+      - ref
+      - target_environment
+      - expected_permissions
+      - runtime_validation_enabled
+    properties:
+      repo_target:
+        type: string
+      ref:
+        type: string
+      target_environment:
+        type: string
+      expected_permissions:
+        type: array
+        items:
+          type: string
+      runtime_validation_enabled:
+        type: boolean
+      runtime_mode:
+        type: string
+      adoption_mode:
+        type: string
+      notes:
+        type: string
+
+  repo_profile:
+    type: object
+    required:
+      - languages
+      - frameworks
+      - detected_categories
+      - artifacts
+      - high_risk_files
+    properties:
+      languages:
+        type: array
+        items:
+          type: string
+      frameworks:
+        type: array
+        items:
+          type: string
+      ecosystems:
+        type: array
+        items:
+          type: string
+      detected_categories:
+        type: array
+        items:
+          type: string
+      artifacts:
+        type: object
+        properties:
+          manifests:
+            type: array
+            items:
+              type: string
+          workflows:
+            type: array
+            items:
+              type: string
+          containers:
+            type: array
+            items:
+              type: string
+          infra:
+            type: array
+            items:
+              type: string
+          binaries:
+            type: array
+            items:
+              type: string
+      counts:
+        type: object
+        properties:
+          total_files:
+            type: integer
+          scanned_files:
+            type: integer
+          skipped_files:
+            type: integer
+      high_risk_files:
+        type: array
+        items:
+          type: string
+      capability_summary:
+        type: object
+        properties:
+          shell_exec:
+            type: boolean
+          filesystem_read:
+            type: boolean
+          filesystem_write:
+            type: boolean
+          network_access:
+            type: boolean
+          credential_access_signals:
+            type: boolean
+          ci_privileged_signals:
+            type: boolean
+
+  module_result:
+    type: object
+    required:
+      - module_name
+      - status
+      - findings_emitted
+      - started_at
+    properties:
+      module_name:
+        type: string
+      status:
+        type: string
+        enum_ref: module_status_values
+      started_at:
+        type: string
+      completed_at:
+        type: string
+      findings_emitted:
+        type: integer
+      warnings:
+        type: array
+        items:
+          type: string
+      errors:
+        type: array
+        items:
+          type: string
+      coverage:
+        type: object
+        properties:
+          files_considered:
+            type: integer
+          files_scanned:
+            type: integer
+          parser_supported:
+            type: boolean
+          confidence_modifier:
+            type: number
+
+  finding:
+    type: object
+    required:
+      - id
+      - title
+      - category
+      - severity
+      - confidence
+      - proof_type
+      - axis_impacts
+      - evidence
+      - remediation
+    properties:
+      id:
+        type: string
+      title:
+        type: string
+      category:
+        type: string
+      subcategory:
+        type: string
+      severity:
+        type: string
+        enum_ref: severity_values
+      confidence:
+        type: string
+        enum_ref: confidence_values
+      proof_type:
+        type: string
+        enum_ref: proof_types
+      module_name:
+        type: string
+      files:
+        type: array
+        items:
+          type: string
+      line_numbers:
+        type: array
+        items:
+          type: integer
+      axis_impacts:
+        type: object
+        required:
+          - trustworthiness
+          - exploitability
+          - abuse_potential
+        properties:
+          trustworthiness:
+            type: number
+          exploitability:
+            type: number
+          abuse_potential:
+            type: number
+      evidence:
+        type: object
+        required:
+          - type
+          - records
+        properties:
+          type:
+            type: string
+          records:
+            type: array
+            items:
+              type: object
+      remediation:
+        type: string
+      mapped_standards:
+        type: array
+        items:
+          type: string
+      tags:
+        type: array
+        items:
+          type: string
+      suppressed:
+        type: boolean
+        default: false
+      suppression_reason:
+        type: string
+        default: ""
+
+  scores:
+    type: object
+    required:
+      - trustworthiness
+      - exploitability
+      - abuse_potential
+      - confidence
+    properties:
+      trustworthiness:
+        type: integer
+        minimum: 0
+        maximum: 100
+      exploitability:
+        type: integer
+        minimum: 0
+        maximum: 100
+      abuse_potential:
+        type: integer
+        minimum: 0
+        maximum: 100
+      confidence:
+        type: string
+        enum_ref: confidence_values
+      component_breakdown:
+        type: object
+      environment_multiplier_applied:
+        type: number
+
+  decision:
+    type: object
+    required:
+      - value
+      - reasons
+      - constraints
+    properties:
+      value:
+        type: string
+        enum_ref: decision_values
+      reasons:
+        type: array
+        items:
+          type: string
+      constraints:
+        type: array
+        items:
+          type: string
+      hard_stop_triggered:
+        type: boolean
+      triggered_by_rules:
+        type: array
+        items:
+          type: string
+      manual_review_required:
+        type: boolean
+
+phase_order:
+  - context_capture
+  - repository_acquisition
+  - inventory_classification
+  - module_routing
+  - universal_analysis
+  - typed_analysis
+  - runtime_validation
+  - finding_normalization
+  - scoring
+  - policy_decision
+  - reporting
+
+phases:
+  context_capture:
+    description: Normalize request into audit context.
+    inputs:
+      - audit_request
+    outputs:
+      - audit_context
+    required: true
+    actions:
+      - normalize_defaults
+      - validate_enums
+      - derive_runtime_validation_enabled
+
+  repository_acquisition:
+    description: Clone/fetch repo or open local path.
+    inputs:
+      - audit_context
+    outputs:
+      - local_workspace
+    required: true
+    actions:
+      - clone_or_open
+      - checkout_ref
+      - apply_include_exclude_paths
+      - collect_git_metadata
+
+  inventory_classification:
+    description: Build repo profile and detect categories.
+    inputs:
+      - local_workspace
+      - audit_context
+    outputs:
+      - repo_profile
+    required: true
+    actions:
+      - enumerate_files
+      - identify_languages
+      - parse_manifests
+      - detect_frameworks
+      - detect_categories
+      - summarize_capabilities
+
+  module_routing:
+    description: Activate modules based on detected categories and user overrides.
+    inputs:
+      - repo_profile
+      - audit_context
+    outputs:
+      - active_modules
+    required: true
+    actions:
+      - start_with_universal_modules
+      - expand_with_category_routes
+      - apply_enabled_module_overrides
+      - apply_disabled_module_overrides
+      - deduplicate_modules
+
+  universal_analysis:
+    description: Run universal rule modules.
+    inputs:
+      - repo_profile
+      - audit_context
+      - active_modules
+    outputs:
+      - universal_findings
+      - module_results
+    required: true
+    modules:
+      - governance_trust
+      - supply_chain
+      - secrets
+      - dangerous_execution
+      - ci_cd
+      - infrastructure
+    actions:
+      - evaluate_rules
+      - capture_module_coverage
+      - record_errors_without_aborting
+
+  typed_analysis:
+    description: Run category-specific rule modules.
+    inputs:
+      - repo_profile
+      - audit_context
+      - active_modules
+    outputs:
+      - typed_findings
+      - module_results
+    required: true
+    modules:
+      - web
+      - api
+      - ai_llm
+      - agent_framework
+      - skills_plugins
+      - mcp_server
+      - library_package
+    actions:
+      - evaluate_rules
+      - capture_module_coverage
+      - record_errors_without_aborting
+
+  runtime_validation:
+    description: Optional sandboxed execution and observation.
+    inputs:
+      - repo_profile
+      - audit_context
+    outputs:
+      - runtime_findings
+      - runtime_observations
+      - module_results
+    required: false
+    run_if:
+      any:
+        - audit_context.runtime_validation_enabled == true
+        - repo_profile.capability_summary.shell_exec == true
+        - repo_profile.capability_summary.credential_access_signals == true
+    actions:
+      - provision_isolated_runtime
+      - execute_selected_runtime_mode
+      - observe_network_filesystem_processes
+      - correlate_runtime_events_to_runtime_rules
+
+  finding_normalization:
+    description: Merge, dedupe, and normalize all findings.
+    inputs:
+      - universal_findings
+      - typed_findings
+      - runtime_findings
+    outputs:
+      - normalized_findings
+    required: true
+    actions:
+      - merge_findings
+      - deduplicate_by_rule_and_evidence
+      - attach_module_names
+      - attach_default_mappings
+      - apply_suppressions
+
+  scoring:
+    description: Compute axis scores and confidence.
+    inputs:
+      - normalized_findings
+      - repo_profile
+      - audit_context
+      - module_results
+    outputs:
+      - scores
+    required: true
+    actions:
+      - compute_axis_totals
+      - apply_confidence_modifiers
+      - apply_environment_multiplier
+      - subtract_positive_trust_signals
+      - clamp_0_to_100
+
+  policy_decision:
+    description: Convert findings and scores into final decision.
+    inputs:
+      - normalized_findings
+      - scores
+      - audit_context
+    outputs:
+      - decision
+    required: true
+    actions:
+      - check_hard_stop_rules
+      - evaluate_score_thresholds
+      - generate_constraints
+      - compose_reasons
+
+  reporting:
+    description: Generate requested report formats.
+    inputs:
+      - run_manifest
+      - audit_context
+      - repo_profile
+      - normalized_findings
+      - scores
+      - decision
+      - module_results
+    outputs:
+      - report_bundle
+    required: true
+    actions:
+      - emit_json
+      - emit_yaml
+      - emit_markdown
+      - emit_sarif
+
+module_routing:
+  universal_modules:
+    - governance_trust
+    - supply_chain
+    - secrets
+    - dangerous_execution
+    - ci_cd
+    - infrastructure
+  category_routes:
+    web_app:
+      - web
+    api:
+      - api
+    ai_llm:
+      - ai_llm
+    agent_framework:
+      - ai_llm
+      - agent_framework
+    skills_plugins:
+      - skills_plugins
+    mcp_server:
+      - mcp_server
+    library_package:
+      - library_package
+    infrastructure:
+      - infrastructure
+    ci_cd:
+      - ci_cd
+
+rule_evaluation_contract:
+  discovery:
+    description: Load rule catalog and filter to active modules.
+    actions:
+      - validate_rule_schema
+      - discard_unknown_modules
+      - tag_rules_with_module_name
+  execution_order:
+    within_module:
+      - static_exact_match_rules
+      - semantic_config_rules
+      - ast_rules
+      - heuristic_rules
+    module_order:
+      - governance_trust
+      - supply_chain
+      - secrets
+      - dangerous_execution
+      - ci_cd
+      - infrastructure
+      - web
+      - api
+      - ai_llm
+      - agent_framework
+      - skills_plugins
+      - mcp_server
+      - library_package
+      - runtime
+  rule_result_contract:
+    emit_when:
+      - all_required_conditions_met
+    must_include:
+      - rule_id
+      - severity
+      - confidence
+      - proof_type
+      - evidence
+      - remediation
+    may_override:
+      - severity
+      - confidence
+      - axis_impacts
+  deduplication:
+    key_fields:
+      - id
+      - files
+      - evidence.type
+    merge_strategy: combine_evidence_records
+
+confidence_model:
+  description: Derive overall score confidence from module coverage and proof quality.
+  inputs:
+    - module_results
+    - normalized_findings
+    - repo_profile
+  rules:
+    - name: high_confidence_condition
+      when:
+        all:
+          - ast_supported_for_major_languages == true
+          - failed_modules_ratio <= 0.10
+          - runtime_mode in [build, smoke] or critical_static_findings_count >= 1
+      output: high
+    - name: medium_confidence_condition
+      when:
+        all:
+          - failed_modules_ratio <= 0.30
+      output: medium
+    - name: low_confidence_fallback
+      output: low
+
+scoring_model:
+  description: Compute 0..100 risk scores per axis where higher is worse.
+  steps:
+    - initialize_all_axes_to_zero
+    - for_each_unsuppressed_finding:
+        apply_rule_axis_impacts
+    - apply_severity_weighting:
+        info: 1
+        low: 3
+        medium: 8
+        high: 15
+        critical: 25
+    - apply_confidence_multiplier:
+        low: 0.60
+        medium: 0.85
+        high: 1.00
+    - apply_environment_multiplier_to_abuse_potential:
+        developer_laptop: 1.25
+        ci_runner: 1.30
+        container_isolated: 0.80
+        offline_analysis: 0.20
+        production_service: 1.40
+    - subtract_positive_trust_signals:
+        examples:
+          signed_tags_present: 8
+          security_md_present: 3
+          codeowners_present: 2
+          pinned_actions_ratio_high: 4
+    - clamp_each_axis_to_range_0_100
+  formulas:
+    finding_contribution: >-
+      weighted_axis_value = axis_impact * severity_weight * confidence_multiplier / 10
+    final_axis_score: >-
+      min(100, max(0, round(sum(weighted_axis_values) - trust_credits)))
+
+policy_profiles:
+  strict:
+    hard_stop_behavior: abort
+    thresholds:
+      abort:
+        abuse_potential_gte: 75
+        or_critical_findings_gte: 1
+      caution:
+        exploitability_gte: 35
+        or_high_findings_gte: 2
+      proceed_with_constraints:
+        abuse_potential_gte: 20
+        or_any_runtime_findings: true
+  balanced:
+    hard_stop_behavior: abort
+    thresholds:
+      abort:
+        abuse_potential_gte: 85
+        or_critical_findings_gte: 1
+      caution:
+        exploitability_gte: 45
+        or_high_findings_gte: 2
+      proceed_with_constraints:
+        abuse_potential_gte: 25
+        or_any_runtime_findings: true
+  advisory:
+    hard_stop_behavior: caution
+    thresholds:
+      abort:
+        disabled: true
+      caution:
+        exploitability_gte: 55
+        or_high_findings_gte: 3
+      proceed_with_constraints:
+        abuse_potential_gte: 20
+        or_any_runtime_findings: true
+
+hard_stop_logic:
+  source:
+    from_rule_catalog_policy_baselines: true
+  behavior:
+    strict: ABORT
+    balanced: ABORT
+    advisory: CAUTION
+  exceptions:
+    allowed_only_with_manual_override: true
+    override_requires:
+      - override_reason
+      - reviewer_identity
+      - reviewed_commit_sha
+
+decision_generation:
+  precedence:
+    - hard_stop
+    - policy_profile_abort_threshold
+    - policy_profile_caution_threshold
+    - policy_profile_proceed_with_constraints_threshold
+    - default_proceed
+  default_constraints:
+    if_abuse_potential_high:
+      - run_in_disposable_container
+      - restrict_network_egress
+      - use_scoped_throwaway_tokens
+    if_supply_chain_findings_present:
+      - pin_to_reviewed_commit_sha
+      - vendor_or_pin_dependencies
+    if_ci_cd_findings_present:
+      - disable_self_hosted_runner_paths
+      - minimize_github_token_permissions
+    if_runtime_findings_present:
+      - block_adoption_until_manual_review
+  reason_templates:
+    - 'Triggered by rule {rule_id}: {title}'
+    - 'Abuse potential score {score} exceeded threshold for profile {policy_profile}'
+    - 'Critical finding count {count} met abort threshold'
+
+suppressions:
+  description: Local or org-specific allowlisting with audit trail.
+  input_schema:
+    type: object
+    properties:
+      suppressions:
+        type: array
+        items:
+          type: object
+          required:
+            - rule_id
+            - justification
+          properties:
+            rule_id:
+              type: string
+            path_globs:
+              type: array
+              items:
+                type: string
+            expires_at:
+              type: string
+            justification:
+              type: string
+            approved_by:
+              type: string
+  behavior:
+    do_not_suppress_hard_stop_rules_by_default: true
+    expired_suppressions_are_ignored: true
+    suppressed_findings_remain_in_output: true
+    mark_suppressed_true: true
+
+error_handling:
+  philosophy: best_effort_with_transparency
+  cases:
+    rule_parse_error:
+      action: mark_module_partial_and_continue
+    parser_not_supported:
+      action: downgrade_module_coverage_confidence
+    github_api_unavailable:
+      action: continue_without_metadata_enrichment
+    osv_lookup_failed:
+      action: emit_warning_and_continue
+    runtime_sandbox_failed:
+      action: mark_runtime_module_failed_and_continue_unless_hard_stop_already_triggered
+
+coverage_contract:
+  description: Every run should explain what was and was not actually analyzed.
+  required_report_fields:
+    - files_considered
+    - files_scanned
+    - files_skipped
+    - unsupported_languages
+    - failed_modules
+    - partial_modules
+    - runtime_executed
+
+sarif_mapping:
+  description: Optional SARIF export mapping for findings.
+  fields:
+    ruleId: finding.id
+    level:
+      info: note
+      low: note
+      medium: warning
+      high: error
+      critical: error
+    message: finding.title
+    locations: finding.files
+
+example_run:
+  audit_request:
+    repo_target: https://github.com/example/repo
+    ref: main
+    target_environment: developer_laptop
+    expected_permissions:
+      - filesystem_read
+      - network
+      - github_token
+    runtime_mode: off
+    policy_profile: balanced
+    output_formats:
+      - json
+      - markdown
+  expected_phase_path:
+    - context_capture
+    - repository_acquisition
+    - inventory_classification
+    - module_routing
+    - universal_analysis
+    - typed_analysis
+    - finding_normalization
+    - scoring
+    - policy_decision
+    - reporting
+
+implementation_notes:
+  recommended_project_files:
+    - config.py
+    - models.py
+    - engine.py
+    - router.py
+    - scoring.py
+    - policy.py
+    - reporters/json_report.py
+    - reporters/markdown_report.py
+    - reporters/sarif_report.py
+  build_order:
+    - implement request/context schema validation
+    - implement repo inventory/profile generation
+    - implement module router
+    - implement universal modules
+    - implement typed modules
+    - implement normalization/dedup
+    - implement scoring and policy
+    - implement reporting
+    - implement runtime sandbox last
+
+next_expansion_candidates:
+  - explicit JSON Schema files generated from this contract
+  - per-rule evidence record schemas
+  - richer policy profiles by repo criticality tier
+  - multi-repo dependency graph support
+  - attestation and provenance verification contract
