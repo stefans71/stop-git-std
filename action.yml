@@ -1,0 +1,40 @@
+name: "stop-git-std"
+description: "Git repository safety auditor — detection-first security analysis"
+inputs:
+  repo:
+    description: "Repository path or URL to audit"
+    required: false
+    default: "."
+  ref:
+    description: "Git ref to audit"
+    required: false
+    default: "default_branch"
+  policy:
+    description: "Policy profile (strict, balanced, advisory)"
+    required: false
+    default: "balanced"
+  format:
+    description: "Output formats (json, markdown, sarif)"
+    required: false
+    default: "json markdown"
+  runtime-mode:
+    description: "Runtime validation mode (off, install_only, build, smoke)"
+    required: false
+    default: "off"
+runs:
+  using: "composite"
+  steps:
+    - name: Setup Bun
+      uses: oven-sh/setup-bun@v2
+    - name: Install dependencies
+      shell: bash
+      run: cd ${{ github.action_path }} && bun install --frozen-lockfile
+    - name: Run audit
+      shell: bash
+      run: |
+        bun run ${{ github.action_path }}/src/cli.ts \
+          ${{ inputs.repo }} \
+          --ref "${{ inputs.ref }}" \
+          --policy "${{ inputs.policy }}" \
+          --format ${{ inputs.format }} \
+          --runtime-mode "${{ inputs.runtime-mode }}"
