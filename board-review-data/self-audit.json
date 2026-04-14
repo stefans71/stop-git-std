@@ -1,0 +1,120 @@
+
+════════════════════════════════════════════════════════════════════
+  stop-git-std — Repository Safety Audit
+════════════════════════════════════════════════════════════════════
+
+  ✗ ABORT
+
+  This repo triggered one or more hard-stop rules. These indicate
+  dangerous patterns that make the repo unsafe to adopt without
+  significant remediation. Do NOT adopt until issues are resolved.
+
+  • Hard-stop rule triggered: GHA-EXEC-005 — Remote code or config fetched at runtime
+  • Hard-stop rule triggered: GHA-AI-001 — Model output directly controls tool or shell execution
+  • Hard-stop rule triggered: GHA-AGENT-001 — Agent has shell, write, and network capabilities without approval gate
+  • Hard-stop rule triggered: GHA-MCP-001 — MCP server exposes unrestricted shell execution tool
+  • Hard-stop rule triggered: GHA-MCP-003 — MCP server forwards credentials or tokens to tool layer
+
+────────────────────────────────────────────────────────────────────
+
+  Risk Scores  (0 = safe, 100 = critical risk)
+
+  Trustworthiness  ████░░░░░░░░░░░░░░░░            20 / 100  Low
+                   How well-governed and maintained is the source?
+  Exploitability   ████████████████████           100 / 100  Critical
+                   How exposed is the attack surface?
+  Abuse Potential  █████████░░░░░░░░░░░            43 / 100  Moderate
+                   How easily could this be misused in your environment?
+
+  Confidence: high  |  Env: 0.2x on abuse_potential
+
+────────────────────────────────────────────────────────────────────
+
+  Findings  13 active
+
+  CRITICAL 4  HIGH 5  MEDIUM 2  LOW 2
+
+  CRITICAL  GHA-AI-001
+  Model output directly controls tool or shell execution
+  Files: gh_audit_rule_catalog_v_2.yaml, docs/implementation-plan.md, docs/rule-catalog.yaml
+  Risk:  LLM output flows directly to tool execution without validation. A prompt injection could execute arbitrary tools.
+  Fix:   Enforce strict structured output validation and approval gates before tool execution.
+
+  CRITICAL  GHA-AGENT-001
+  Agent has shell, write, and network capabilities without approval gate
+  Files: .../typed/mcp-server.ts, .../typed/agent-framework.ts
+  Risk:  Agent has shell, write, and network access without human approval. A misbehaving agent can exfiltrate data or destroy files.
+  Fix:   Add mandatory human approval or policy gates before destructive or external actions.
+
+  CRITICAL  GHA-MCP-001
+  MCP server exposes unrestricted shell execution tool
+  Files: docs/plan-review.md, src/plugins/builtin-ts.ts, src/__tests__/router.test.ts
+  Risk:  MCP server exposes unrestricted shell execution. Any connected client can run arbitrary commands on the host.
+  Fix:   Remove arbitrary shell execution or constrain it with allowlists and approval gates.
+
+  CRITICAL  GHA-MCP-003
+  MCP server forwards credentials or tokens to tool layer
+  Files: docs/implementation-plan.md, .../typed/mcp-server.ts, .../typed/skills-plugins.ts
+  Risk:  MCP server forwards auth tokens into tool calls. A malicious tool request can capture credentials.
+  Fix:   Avoid forwarding credentials to tool calls; mint scoped tokens or proxy requests safely.
+
+  HIGH  GHA-EXEC-004
+  Unsafe deserialization primitive
+  Files: .../universal/dangerous-execution.ts
+  Risk:  Deserializes untrusted data into executable objects. Attacker-crafted payloads can execute arbitrary code.
+  Fix:   Replace with safe parsing APIs and validate untrusted input.
+
+  HIGH  GHA-EXEC-005
+  Remote code or config fetched at runtime
+  Files: .../universal/dangerous-execution.ts
+  Risk:  Fetches remote content then executes or loads it as code. If the remote source is compromised, your system is compromised.
+  Fix:   Vendor or sign remote content; avoid executing or blindly loading remote code/config.
+
+  HIGH  GHA-AI-002
+  Secrets or sensitive context embedded into prompts
+  Files: gh_audit_rule_catalog_v_2.yaml, docs/implementation-plan.md, docs/rule-catalog.yaml
+  Risk:  Secrets or sensitive data included in prompts. LLM providers may log or train on this data.
+  Fix:   Remove secrets from prompts and minimize sensitive context exposure.
+
+  HIGH  GHA-PLUGIN-002
+  Plugin/skill instructions attempt to alter identity or safety boundaries
+  Files: docs/implementation-plan.md, src/adapters/osv.ts, .../typed/mcp-server.ts
+  Risk:  Plugin instructions attempt to override the AI's identity or safety boundaries. May be benign (defining a persona) or malicious (bypassing guardrails).
+  Fix:   Remove instruction content that attempts to override identity, memory, or security policy.
+
+  HIGH  GHA-MCP-002
+  MCP fetch tool appears SSRF-capable
+  Files: .../typed/mcp-server.ts, .../typed/agent-framework.ts
+  Fix:   Restrict destinations, block private IP ranges, and enforce allowlists.
+
+  MEDIUM  GHA-SUPPLY-002
+  Floating dependency versions
+  Files: ./package.json
+  Risk:  Dependencies use floating version ranges. A malicious version published within range would be installed automatically.
+  Fix:   Pin direct dependencies to reviewed versions.
+
+  MEDIUM  GHA-AGENT-002
+  Shared memory or state used across tasks without isolation
+  Files: .../typed/agent-framework.ts
+  Fix:   Partition memory/state by task, user, or run scope.
+
+  LOW  GHA-TRUST-001
+  SECURITY.md missing
+  Risk:  No security disclosure policy. Vulnerability reporters have no way to reach maintainers privately.
+  Fix:   Add SECURITY.md with reporting instructions and support policy.
+
+  LOW  GHA-TRUST-002
+  CODEOWNERS missing
+  Risk:  No code ownership defined. No guarantee that changes to sensitive files are reviewed by qualified maintainers.
+  Fix:   Add CODEOWNERS to clarify review responsibility.
+
+────────────────────────────────────────────────────────────────────
+
+  Coverage
+  Files: 89 scanned / 89 total (24 skipped — too large or excluded)
+  Runtime: no (static analysis only)
+  Modules: 13 ok
+  governance_trust, supply_chain, secrets, dangerous_execution, ci_cd, infrastructure, ai_llm, agent_framework, skills_plugins, mcp_server, library_package, infrastructure, ci_cd
+
+────────────────────────────────────────────────────────────────────
+

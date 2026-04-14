@@ -1,0 +1,117 @@
+
+════════════════════════════════════════════════════════════════════
+  stop-git-std — Repository Safety Audit
+════════════════════════════════════════════════════════════════════
+
+  ✗ ABORT
+
+  This repo triggered one or more hard-stop rules. These indicate
+  dangerous patterns that make the repo unsafe to adopt without
+  significant remediation. Do NOT adopt until issues are resolved.
+
+  • Hard-stop rule triggered: GHA-EXEC-001 — curl pipe shell pattern
+  • Hard-stop rule triggered: GHA-CI-004 — Workflow step interpolates untrusted input into shell command
+
+────────────────────────────────────────────────────────────────────
+
+  Risk Scores  (0 = safe, 100 = critical risk)
+
+  Trustworthiness  ██████░░░░░░░░░░░░░░            31 / 100  Moderate
+                   How well-governed and maintained is the source?
+  Exploitability   ████████████████████           100 / 100  Critical
+                   How exposed is the attack surface?
+  Abuse Potential  ██████░░░░░░░░░░░░░░            30 / 100  Moderate
+                   How easily could this be misused in your environment?
+
+  Confidence: high  |  Env: 0.2x on abuse_potential
+
+────────────────────────────────────────────────────────────────────
+
+  Findings  13 active
+
+  CRITICAL 2  HIGH 3  MEDIUM 6  LOW 2
+
+  CRITICAL  GHA-EXEC-001
+  curl pipe shell pattern
+  Files: .../scripts/install.sh
+  Risk:  Downloads and executes remote code in a single command. An attacker who compromises the URL can execute arbitrary code on your machine during install.
+  Fix:   Replace pipe-to-shell execution with verified downloads and explicit execution steps.
+
+  CRITICAL  GHA-CI-004
+  Workflow step interpolates untrusted input into shell command
+  Files: .../workflows/ci.yml
+  Risk:  Untrusted user input (PR title, issue body) injected directly into shell commands. Attackers craft input that executes arbitrary commands.
+  Fix:   Pass untrusted values as quoted data and validate before shell execution.
+
+  HIGH  GHA-SECRETS-002
+  Committed environment file likely contains secrets
+  Files: .../JYMGm5G-lB8_uzTt71o6W/.env.example
+  Risk:  Environment file with probable secrets committed. Database passwords, API keys, or tokens may be exposed.
+  Fix:   Remove secrets from repo, rotate them, and commit only sanitized examples.
+
+  HIGH  GHA-EXEC-002
+  Install lifecycle hook executes script
+  Files: .../JYMGm5G-lB8_uzTt71o6W/package.json
+  Risk:  Runs code automatically during package install. Malicious packages use this to execute code before you review anything.
+  Fix:   Remove install hooks or isolate them for manual review and explicit invocation.
+
+  HIGH  GHA-API-001
+  Sensitive route lacks obvious authentication guard
+  Files: .../vercel-react-best-practices/AGENTS.md, .../rules/server-auth-actions.md, .../authorize/route.ts
+  Fix:   Require authentication and explicit authorization on sensitive routes.
+
+  MEDIUM  GHA-SUPPLY-002
+  Floating dependency versions
+  Files: .../JYMGm5G-lB8_uzTt71o6W/package.json
+  Risk:  Dependencies use floating version ranges. A malicious version published within range would be installed automatically.
+  Fix:   Pin direct dependencies to reviewed versions.
+
+  MEDIUM  GHA-SECRETS-003
+  High-entropy token-like string detected
+  Files: .../JYMGm5G-lB8_uzTt71o6W/pnpm-lock.yaml, .../auth/nextauth-config.ts
+  Risk:  High-entropy string near auth keywords detected. May be a real API key or token — verify manually.
+  Fix:   Verify whether the value is a secret, then rotate/remove as needed.
+
+  MEDIUM  GHA-CI-003
+  Unpinned third-party action reference
+  Files: .../workflows/publish.yml, .../workflows/release.yml, .../workflows/ci.yml
+  Risk:  Actions pinned to tags instead of commit SHAs. If the action repo is compromised, the tag can be moved to malicious code.
+  Fix:   Pin third-party actions by full commit SHA.
+
+  MEDIUM  GHA-INFRA-001
+  Container runs as root by default
+  Files: .../docker/docker-compose.yml
+  Risk:  Container runs as root. A container escape gives the attacker root access to the host.
+  Fix:   Set a non-root USER in the container image.
+
+  MEDIUM  GHA-INFRA-002
+  Container base image uses latest tag
+  Files: .../docker/Dockerfile
+  Risk:  Container uses :latest tag. Builds are not reproducible and a compromised image affects all future builds.
+  Fix:   Pin container images to reviewed versions or immutable digests.
+
+  MEDIUM  GHA-AI-003
+  No obvious consumption or rate bound around model calls
+  Files: .../docs/vault-integration.md, .../tests/integration.rs, .../src/gateway.rs
+  Fix:   Add request limits, quotas, and timeout/budget controls.
+
+  LOW  GHA-TRUST-001
+  SECURITY.md missing
+  Risk:  No security disclosure policy. Vulnerability reporters have no way to reach maintainers privately.
+  Fix:   Add SECURITY.md with reporting instructions and support policy.
+
+  LOW  GHA-TRUST-002
+  CODEOWNERS missing
+  Risk:  No code ownership defined. No guarantee that changes to sensitive files are reviewed by qualified maintainers.
+  Fix:   Add CODEOWNERS to clarify review responsibility.
+
+────────────────────────────────────────────────────────────────────
+
+  Coverage
+  Files: 508 scanned / 508 total (12 skipped — too large or excluded)
+  Runtime: no (static analysis only)
+  Modules: 14 ok
+  governance_trust, supply_chain, secrets, dangerous_execution, ci_cd, infrastructure, web, api, ai_llm, agent_framework, skills_plugins, library_package, infrastructure, ci_cd
+
+────────────────────────────────────────────────────────────────────
+

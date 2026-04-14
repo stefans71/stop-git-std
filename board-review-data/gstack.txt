@@ -1,0 +1,129 @@
+
+════════════════════════════════════════════════════════════════════
+  stop-git-std — Repository Safety Audit
+════════════════════════════════════════════════════════════════════
+
+  ✗ ABORT
+
+  This repo triggered one or more hard-stop rules. These indicate
+  dangerous patterns that make the repo unsafe to adopt without
+  significant remediation. Do NOT adopt until issues are resolved.
+
+  • Hard-stop rule triggered: GHA-CI-004 — Workflow step interpolates untrusted input into shell command
+  • Hard-stop rule triggered: GHA-AI-001 — Model output directly controls tool or shell execution
+  • Hard-stop rule triggered: GHA-AGENT-001 — Agent has shell, write, and network capabilities without approval gate
+
+────────────────────────────────────────────────────────────────────
+
+  Risk Scores  (0 = safe, 100 = critical risk)
+
+  Trustworthiness  ███████░░░░░░░░░░░░░            36 / 100  Moderate
+                   How well-governed and maintained is the source?
+  Exploitability   ████████████████████           100 / 100  Critical
+                   How exposed is the attack surface?
+  Abuse Potential  ████████░░░░░░░░░░░░            39 / 100  Moderate
+                   How easily could this be misused in your environment?
+
+  Confidence: high  |  Env: 0.2x on abuse_potential
+
+────────────────────────────────────────────────────────────────────
+
+  Findings  15 active
+
+  CRITICAL 3  HIGH 4  MEDIUM 6  LOW 2
+
+  CRITICAL  GHA-CI-004
+  Workflow step interpolates untrusted input into shell command
+  Files: .../workflows/evals.yml
+  Risk:  Untrusted user input (PR title, issue body) injected directly into shell commands. Attackers craft input that executes arbitrary commands.
+  Fix:   Pass untrusted values as quoted data and validate before shell execution.
+
+  CRITICAL  GHA-AI-001
+  Model output directly controls tool or shell execution
+  Files: .../office-hours/SKILL.md, .../review/SKILL.md, .../codex/SKILL.md.tmpl
+  Risk:  LLM output flows directly to tool execution without validation. A prompt injection could execute arbitrary tools.
+  Fix:   Enforce strict structured output validation and approval gates before tool execution.
+
+  CRITICAL  GHA-AGENT-001
+  Agent has shell, write, and network capabilities without approval gate
+  Files: .../bin/gstack-team-init
+  Risk:  Agent has shell, write, and network access without human approval. A misbehaving agent can exfiltrate data or destroy files.
+  Fix:   Add mandatory human approval or policy gates before destructive or external actions.
+
+  HIGH  GHA-SECRETS-002
+  Committed environment file likely contains secrets
+  Files: .../JHiVssaAGMawqSyJ3CI1Z/.env.example
+  Risk:  Environment file with probable secrets committed. Database passwords, API keys, or tokens may be exposed.
+  Fix:   Remove secrets from repo, rotate them, and commit only sanitized examples.
+
+  HIGH  GHA-AI-002
+  Secrets or sensitive context embedded into prompts
+  Files: .../designs/ML_PROMPT_INJECTION_KILLER.md, .../cso/SKILL.md.tmpl, .../cso/SKILL.md
+  Risk:  Secrets or sensitive data included in prompts. LLM providers may log or train on this data.
+  Fix:   Remove secrets from prompts and minimize sensitive context exposure.
+
+  HIGH  GHA-PLUGIN-002
+  Plugin/skill instructions attempt to alter identity or safety boundaries
+  Files: .../docs/skills.md, .../designs/ML_PROMPT_INJECTION_KILLER.md, .../test/content-security.test.ts
+  Risk:  Plugin instructions attempt to override the AI's identity or safety boundaries. May be benign (defining a persona) or malicious (bypassing guardrails).
+  Fix:   Remove instruction content that attempts to override identity, memory, or security policy.
+
+  HIGH  GHA-PKG-001
+  Package performs network or process side effect at import/init time
+  Files: .../lib/worktree.ts
+  Fix:   Remove side effects from import/init paths and require explicit user action.
+
+  MEDIUM  GHA-SUPPLY-002
+  Floating dependency versions
+  Files: .../JHiVssaAGMawqSyJ3CI1Z/package.json
+  Risk:  Dependencies use floating version ranges. A malicious version published within range would be installed automatically.
+  Fix:   Pin direct dependencies to reviewed versions.
+
+  MEDIUM  GHA-SECRETS-003
+  High-entropy token-like string detected
+  Files: .../test/skill-e2e-cso.test.ts
+  Risk:  High-entropy string near auth keywords detected. May be a real API key or token — verify manually.
+  Fix:   Verify whether the value is a secret, then rotate/remove as needed.
+
+  MEDIUM  GHA-CI-003
+  Unpinned third-party action reference
+  Files: .../workflows/evals-periodic.yml, .../workflows/evals.yml
+  Risk:  Actions pinned to tags instead of commit SHAs. If the action repo is compromised, the tag can be moved to malicious code.
+  Fix:   Pin third-party actions by full commit SHA.
+
+  MEDIUM  GHA-INFRA-001
+  Container runs as root by default
+  Files: .../docker/Dockerfile.ci
+  Risk:  Container runs as root. A container escape gives the attacker root access to the host.
+  Fix:   Set a non-root USER in the container image.
+
+  MEDIUM  GHA-AI-003
+  No obvious consumption or rate bound around model calls
+  Files: .../codex/SKILL.md.tmpl, .../designs/SESSION_INTELLIGENCE.md, .../designs/ML_PROMPT_INJECTION_KILLER.md
+  Fix:   Add request limits, quotas, and timeout/budget controls.
+
+  MEDIUM  GHA-AGENT-002
+  Shared memory or state used across tasks without isolation
+  Files: .../helpers/codex-session-runner.ts, .../helpers/session-runner.ts, .../helpers/gemini-session-runner.ts
+  Fix:   Partition memory/state by task, user, or run scope.
+
+  LOW  GHA-TRUST-001
+  SECURITY.md missing
+  Risk:  No security disclosure policy. Vulnerability reporters have no way to reach maintainers privately.
+  Fix:   Add SECURITY.md with reporting instructions and support policy.
+
+  LOW  GHA-TRUST-002
+  CODEOWNERS missing
+  Risk:  No code ownership defined. No guarantee that changes to sensitive files are reviewed by qualified maintainers.
+  Fix:   Add CODEOWNERS to clarify review responsibility.
+
+────────────────────────────────────────────────────────────────────
+
+  Coverage
+  Files: 424 scanned / 424 total (12 skipped — too large or excluded)
+  Runtime: no (static analysis only)
+  Modules: 12 ok
+  governance_trust, supply_chain, secrets, dangerous_execution, ci_cd, infrastructure, ai_llm, agent_framework, skills_plugins, library_package, infrastructure, ci_cd
+
+────────────────────────────────────────────────────────────────────
+

@@ -1,0 +1,75 @@
+
+════════════════════════════════════════════════════════════════════
+  stop-git-std — Repository Safety Audit
+════════════════════════════════════════════════════════════════════
+
+  ⚠ CAUTION
+
+  This repo has elevated risk. Manual review recommended before
+  adoption. Review all findings and assess whether the risks
+  are acceptable for your use case.
+
+  • Caution threshold exceeded: exploitability=13, abuse_potential=6
+
+────────────────────────────────────────────────────────────────────
+
+  Risk Scores  (0 = safe, 100 = critical risk)
+
+  Trustworthiness  ███░░░░░░░░░░░░░░░░░            14 / 100  Low
+                   How well-governed and maintained is the source?
+  Exploitability   ███░░░░░░░░░░░░░░░░░            13 / 100  Low
+                   How exposed is the attack surface?
+  Abuse Potential  █░░░░░░░░░░░░░░░░░░░             6 / 100  Low
+                   How easily could this be misused in your environment?
+
+  Confidence: high  |  Env: 0.2x on abuse_potential
+
+────────────────────────────────────────────────────────────────────
+
+  Findings  6 active
+
+  HIGH 2  MEDIUM 2  LOW 2
+
+  HIGH  GHA-AI-002
+  Secrets or sensitive context embedded into prompts
+  Files: .../review-release/SKILL.md
+  Risk:  Secrets or sensitive data included in prompts. LLM providers may log or train on this data.
+  Fix:   Remove secrets from prompts and minimize sensitive context exposure.
+
+  HIGH  GHA-PLUGIN-002
+  Plugin/skill instructions attempt to alter identity or safety boundaries
+  Files: .../debug-bug/SKILL.md, .../d2aqbF0LIb-dPKFs8Vnda/CLAUDE.md
+  Risk:  Plugin instructions attempt to override the AI's identity or safety boundaries. May be benign (defining a persona) or malicious (bypassing guardrails).
+  Fix:   Remove instruction content that attempts to override identity, memory, or security policy.
+
+  MEDIUM  GHA-SECRETS-003
+  High-entropy token-like string detected
+  Files: .../tasks/example-tasks.json
+  Risk:  High-entropy string near auth keywords detected. May be a real API key or token — verify manually.
+  Fix:   Verify whether the value is a secret, then rotate/remove as needed.
+
+  MEDIUM  GHA-AI-003
+  No obvious consumption or rate bound around model calls
+  Files: .../tasks/FB-000-oauth-credential-fix.yaml
+  Fix:   Add request limits, quotas, and timeout/budget controls.
+
+  LOW  GHA-TRUST-001
+  SECURITY.md missing
+  Risk:  No security disclosure policy. Vulnerability reporters have no way to reach maintainers privately.
+  Fix:   Add SECURITY.md with reporting instructions and support policy.
+
+  LOW  GHA-TRUST-002
+  CODEOWNERS missing
+  Risk:  No code ownership defined. No guarantee that changes to sensitive files are reviewed by qualified maintainers.
+  Fix:   Add CODEOWNERS to clarify review responsibility.
+
+────────────────────────────────────────────────────────────────────
+
+  Coverage
+  Files: 50 scanned / 50 total (12 skipped — too large or excluded)
+  Runtime: no (static analysis only)
+  Modules: 9 ok
+  governance_trust, supply_chain, secrets, dangerous_execution, ci_cd, infrastructure, ai_llm, agent_framework, skills_plugins
+
+────────────────────────────────────────────────────────────────────
+

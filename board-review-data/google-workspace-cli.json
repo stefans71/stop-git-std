@@ -1,0 +1,78 @@
+
+════════════════════════════════════════════════════════════════════
+  stop-git-std — Repository Safety Audit
+════════════════════════════════════════════════════════════════════
+
+  ✗ ABORT
+
+  This repo triggered one or more hard-stop rules. These indicate
+  dangerous patterns that make the repo unsafe to adopt without
+  significant remediation. Do NOT adopt until issues are resolved.
+
+  • Hard-stop rule triggered: GHA-AI-001 — Model output directly controls tool or shell execution
+
+────────────────────────────────────────────────────────────────────
+
+  Risk Scores  (0 = safe, 100 = critical risk)
+
+  Trustworthiness  ███░░░░░░░░░░░░░░░░░            16 / 100  Low
+                   How well-governed and maintained is the source?
+  Exploitability   ███████████░░░░░░░░░            56 / 100  Elevated
+                   How exposed is the attack surface?
+  Abuse Potential  ████░░░░░░░░░░░░░░░░            19 / 100  Low
+                   How easily could this be misused in your environment?
+
+  Confidence: high  |  Env: 0.2x on abuse_potential
+
+────────────────────────────────────────────────────────────────────
+
+  Findings  6 active
+
+  CRITICAL 1  HIGH 3  MEDIUM 2
+
+  CRITICAL  GHA-AI-001
+  Model output directly controls tool or shell execution
+  Files: .../gmail/mod.rs
+  Risk:  LLM output flows directly to tool execution without validation. A prompt injection could execute arbitrary tools.
+  Fix:   Enforce strict structured output validation and approval gates before tool execution.
+
+  HIGH  GHA-EXEC-002
+  Install lifecycle hook executes script
+  Files: .../9VzXQOUhsF0ahLMWj45u5/package.json
+  Risk:  Runs code automatically during package install. Malicious packages use this to execute code before you review anything.
+  Fix:   Remove install hooks or isolate them for manual review and explicit invocation.
+
+  HIGH  GHA-CI-001
+  Workflow uses pull_request_target
+  Files: .../workflows/automation.yml
+  Risk:  Runs CI workflows with write access on pull requests from forks. Attackers can submit PRs that execute code with your repo's secrets.
+  Fix:   Use pull_request where possible and avoid running untrusted code in privileged contexts.
+
+  HIGH  GHA-PLUGIN-002
+  Plugin/skill instructions attempt to alter identity or safety boundaries
+  Files: .../npm/platform.js, .../9VzXQOUhsF0ahLMWj45u5/flake.nix
+  Risk:  Plugin instructions attempt to override the AI's identity or safety boundaries. May be benign (defining a persona) or malicious (bypassing guardrails).
+  Fix:   Remove instruction content that attempts to override identity, memory, or security policy.
+
+  MEDIUM  GHA-SUPPLY-002
+  Floating dependency versions
+  Files: .../9VzXQOUhsF0ahLMWj45u5/package.json
+  Risk:  Dependencies use floating version ranges. A malicious version published within range would be installed automatically.
+  Fix:   Pin direct dependencies to reviewed versions.
+
+  MEDIUM  GHA-CI-003
+  Unpinned third-party action reference
+  Files: .../workflows/generate-skills.yml, .../workflows/cla.yml, .../workflows/automation.yml
+  Risk:  Actions pinned to tags instead of commit SHAs. If the action repo is compromised, the tag can be moved to malicious code.
+  Fix:   Pin third-party actions by full commit SHA.
+
+────────────────────────────────────────────────────────────────────
+
+  Coverage
+  Files: 222 scanned / 222 total (12 skipped — too large or excluded)
+  Runtime: no (static analysis only)
+  Modules: 11 ok
+  governance_trust, supply_chain, secrets, dangerous_execution, ci_cd, infrastructure, ai_llm, agent_framework, skills_plugins, library_package, ci_cd
+
+────────────────────────────────────────────────────────────────────
+

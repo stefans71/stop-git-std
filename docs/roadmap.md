@@ -1,6 +1,6 @@
 # stop-git-std — Roadmap
 
-## MVP (Done — PR #2 merged)
+## MVP (Done — PR #2)
 
 - CLI: `bun run src/cli.ts <repo> --format terminal`
 - 11-phase pipeline (runtime validation no-op)
@@ -9,75 +9,102 @@
 - Policy engine: strict/balanced/advisory profiles, hard-stop rules
 - Output: terminal, JSON, markdown, SARIF
 - Suppressions: `.stop-git-std.suppressions.yaml`
+- Terminal reporter: color-coded score bars, risk explanations, remediation per finding
+- Tested on 6 real repos (Express, FrontierBoard, onecli, gstack, Google WS CLI, self-audit)
 
-## P0 — Usability (required before real use)
+## Board Review Results (2026-04-14)
 
-### Terminal reporter improvements
-- Color-coded scores (green 0-20, yellow 21-50, orange 51-75, red 76-100)
-- Score range labels (Low / Moderate / Elevated / Critical)
-- Findings grouped by axis in a matrix view
-- Decision explanation (not just "no thresholds exceeded")
-- Progress output during long scans
+3-model board review (Claude Opus 4.6, Codex GPT-5.2, DeepSeek V3.2) — unanimous findings:
+- Detection accuracy: **2/5** — universal analyzers work, typed analyzers produce 37% false positives
+- Scoring calibration: **3/5** — math correct, false positives corrupt inputs
+- Actionability: **1/5** — 4/6 repos get ABORT with zero remediation guidance
+- Tool got **2/6 decisions right** (Express, onecli). 4/6 too aggressive.
+- Full report: `board-review-data/BOARD-FINAL-RECOMMENDATION.md`
 
-### Audit history / storage
-- SQLite database for storing audit results
+## P0 — Detection Accuracy Fixes (next — board-mandated)
+
+### DR1: Hard-stop confidence gating
+- Hard-stop rules must check confidence >= medium before triggering ABORT
+- Low-confidence regex stubs downgraded to HIGH findings with constraints
+- Fixes: Google WS CLI (ABORT→CAUTION), self-audit (ABORT→PROCEED), gstack partial
+
+### DR2: ABORT remediation paths
+- Generate constraints for ALL decisions including ABORT
+- Per-finding remediation steps + "re-run after fixing" instruction
+- Every ABORT becomes actionable, not a dead end
+
+### DR3: Typed analyzer false positive reduction
+- Skip non-code files (.md, .yaml, .json, test files) in typed analyzers
+- Eliminates ~80% of typed analyzer false positives
+- Fixes: FrontierBoard (CAUTION→PROCEED), self-audit FP count drops from 11 to ~2
+
+### DR4: .env.example distinction
+- Files ending in `.example` get severity=info, confidence=low
+
+### Plain-English output
+- New "What This Means" section in terminal report
+- Translates every finding into lay-person language: "here's what could actually happen"
+- Sits between decision and technical scores
+
+### Staged scanning architecture (Stage 1 → Stage 2)
+- Stage 1 (current): fast static regex scan with confidence levels
+- When low-confidence findings would trigger hard-stop: recommend deeper analysis
+- Stage 2 modules (designed, built later): AST (tree-sitter), sandbox execution
+- Terminal output shows what deeper analysis would verify
+- CLI: `--no-stage2` to suppress recommendations
+
+Expected outcome: decision accuracy **2/6 → 5/6** after DR1-DR3.
+
+## P1 — Detection Depth (Stage 2 modules)
+
+### AST/tree-sitter analysis
+- Verifies whether flagged patterns are in executable code vs docs/comments/strings
+- Upgrades typed analyzer confidence from "low" to "high" when confirmed
+- Dismisses findings when pattern is in documentation or string literals
+- Priority: GHA-AI-001, GHA-AGENT-001, GHA-MCP-001
+
+### Sandbox execution (runtime validation)
+- Runs install/build in isolated container
+- Captures: network connections, file writes, process spawns, env access
+- Confirms or dismisses GHA-EXEC-001 (curl|bash), GHA-EXEC-002 (install hooks)
+- Docker/Bun sandbox, no network after initial download
+
+### OSV dependency vulnerability scanning
+- Replace stub with real OSV.dev API queries
+- Biggest detection gap identified by board — no dependency CVE detection currently
+- Direct dependency scanning per ecosystem
+
+## P2 — Usability & Storage
+
+### Audit history / SQLite storage
 - Each run persisted: repo URL, ref, date, scores, decision, finding count
 - `stop-git-std history` — list past audits
 - `stop-git-std compare <run-id-1> <run-id-2>` — diff two audits of same repo
-- Reports saved to `~/.stop-git-std/reports/<repo>/<date>/`
 
 ### Web UI dashboard
 - Local web interface: `stop-git-std serve`
-- Audit history with search/filter
-- Score trends over time per repo
-- Finding drill-down with evidence
-- Side-by-side comparison of audits
-- Export to markdown/PDF
+- Score trends over time, finding drill-down, side-by-side comparison
 
-## P1 — Detection depth
-
-### Runtime validation (sandboxed execution)
-- 3 runtime rules: credential path reads, unexpected network, download-then-exec
-- Includes 2 hard-stop rules (GHA-RUNTIME-001, GHA-RUNTIME-003)
-- Docker/Bun sandbox for install/build/smoke
-- Network observation, filesystem observation, process observation
-
-### AST/tree-sitter for Python + TypeScript
-- Upgrades 15+ typed analyzer rules from "low confidence regex" to real detection
-- Sink detection, route extraction, dataflow analysis
-- Confidence upgrades from "low" to "high" for AST-backed rules
-
-## P2 — Integration
+## P3 — Integration
 
 ### GitHub Action
-- `action.yml` exists (stub), needs testing + marketplace publishing
 - PR annotations from SARIF findings
 - Check runs with pass/fail status
 - Auto-comment on PRs with audit summary
 
-### OSV API (real HTTP)
-- Replace stub with real vulnerability queries
-- Direct dependency scanning per ecosystem
-- Advisory severity mapping to findings
-
 ### GitHub API enrichment
 - Repo metadata: archived status, stars, activity, contributor count
 - Release history for signed tag verification
-- Rate limiting + graceful degradation without GITHUB_TOKEN
 
-## P3 — Extensibility
+## P4 — Extensibility
 
 ### Python subprocess analyzer backend
-- Plugin interface exists (stub). Enable Python-based deep analysis.
+- Enable Python-based deep analysis via plugin interface
 - Taint/dataflow analysis for Python repos
-- Custom analyzers via Python scripts
 
 ### Multi-repo dependency graph
-- Audit a repo's entire dependency tree
+- Audit entire dependency trees
 - Transitive risk scoring
-- "This repo depends on 3 repos that would ABORT"
 
 ### Attestation and provenance verification
 - SLSA/Sigstore verification for supply chain
-- Build provenance checks
-- Signed release verification beyond just tags
