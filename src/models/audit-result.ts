@@ -20,6 +20,22 @@ export const CoverageReportSchema = z.object({
 
 export type CoverageReport = z.infer<typeof CoverageReportSchema>;
 
+export interface AstRefinementSkip {
+  finding_id: string;
+  reason: string;
+}
+
+export interface AstRefinementSummary {
+  findings_considered: number;
+  findings_refined: number;
+  findings_skipped: number;
+  suppressed_findings: number;
+  confirmed_findings: number;
+  ambiguous_findings: number;
+  error_count: number;
+  skips: AstRefinementSkip[];
+}
+
 export interface Stage2Trigger {
   finding_id: string;
   reason: string;
@@ -36,6 +52,7 @@ export interface AuditResult {
   module_results: ModuleResult[];
   coverage: CoverageReport;
   reports: Record<string, string>;
+  ast_refinement_summary?: AstRefinementSummary;
   stage2_recommended?: boolean;
   stage2_triggers?: Stage2Trigger[];
 }

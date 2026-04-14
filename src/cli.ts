@@ -1,4 +1,4 @@
-import { Command } from "commander";
+import { Command, Option } from "commander";
 import { AuditRequestSchema } from "./models/audit-request.ts";
 import { runAudit } from "./engine/run-audit.ts";
 
@@ -17,9 +17,15 @@ const program = new Command()
   .option("--disable-module <modules...>", "Force-disable modules")
   .option("--runtime-mode <mode>", "Runtime validation mode", "off")
   .option("--adoption-mode <mode>", "Adoption context", "third_party")
-  .option("--skip-stage2", "Suppress stage 2 analysis recommendations", false)
-  .option("--quick", "Skip AST analysis (regex-only)", false)
-  .option("--deep", "Force AST analysis on all findings", false);
+  .addOption(
+    new Option("--skip-stage2", "Suppress stage 2 analysis recommendations"),
+  )
+  .addOption(
+    new Option("--quick", "Skip AST analysis (regex-only)").conflicts(["deep"]),
+  )
+  .addOption(
+    new Option("--deep", "Force AST analysis on all findings").conflicts(["quick"]),
+  );
 
 export async function main(): Promise<number> {
   program.parse();

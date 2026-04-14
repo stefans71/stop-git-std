@@ -1,6 +1,6 @@
 import { nanoid } from "nanoid";
 import type { AuditRequest } from "../models/audit-request.ts";
-import type { AuditResult, Stage2Trigger } from "../models/audit-result.ts";
+import type { AuditResult, Stage2Trigger, AstRefinementSummary } from "../models/audit-result.ts";
 import type { AuditContext } from "../models/audit-context.ts";
 import type { Finding } from "../models/finding.ts";
 import type { ModuleResult } from "../models/module-result.ts";
@@ -172,16 +172,20 @@ export async function runAudit(request: AuditRequest): Promise<AuditResult> {
   );
 
   // Phase 8.5: AST refinement (auto-escalation)
+  let ast_refinement_summary: AstRefinementSummary | undefined;
+
   if (request.depth_mode !== "quick") {
     try {
       const { refineFindings } = await import("../stage2/ast-refiner.ts");
-      findings = await refineFindings(
+      const refinement = await refineFindings(
         findings,
         workspace,
         request.depth_mode,
         catalog.policy_baselines.hard_stop_patterns,
         STAGE2_MODULE_MAP,
       );
+      findings = refinement.findings;
+      ast_refinement_summary = refinement.summary;
     } catch (err) {
       console.warn(`[ast-refiner] AST refinement failed, continuing with original findings: ${err}`);
     }
@@ -252,6 +256,7 @@ export async function runAudit(request: AuditRequest): Promise<AuditResult> {
     module_results: allModuleResults,
     coverage,
     reports: {},
+    ...(ast_refinement_summary ? { ast_refinement_summary } : {}),
     ...(stage2_recommended ? { stage2_recommended, stage2_triggers } : {}),
   };
 

@@ -54,12 +54,12 @@ describe("refineFindings", () => {
     const finding = makeFinding({
       files: [filePath],
       line_numbers: [1],
-      evidence: { type: "file_match", records: [{ match: "model execution" }] },
+      evidence: { type: "file_match", records: [{ file: filePath, line: 1, match: "model execution" }] },
     });
 
     const result = await refineFindings([finding], workspace, "auto", HARD_STOP_PATTERNS, STAGE2_MODULE_MAP);
-    expect(result[0]!.suppressed).toBe(true);
-    expect(result[0]!.suppression_reason).toContain("AST analysis");
+    expect(result.findings[0]!.suppressed).toBe(true);
+    expect(result.findings[0]!.suppression_reason).toContain("AST analysis");
   });
 
   test("preserves finding when evidence is in function call", async () => {
@@ -69,12 +69,12 @@ describe("refineFindings", () => {
     const finding = makeFinding({
       files: [filePath],
       line_numbers: [1],
-      evidence: { type: "file_match", records: [{ match: "exec" }] },
+      evidence: { type: "file_match", records: [{ file: filePath, line: 1, match: "exec" }] },
     });
 
     const result = await refineFindings([finding], workspace, "auto", HARD_STOP_PATTERNS, STAGE2_MODULE_MAP);
-    expect(result[0]!.suppressed).toBe(false);
-    expect(result[0]!.confidence).toBe("high");
+    expect(result.findings[0]!.suppressed).toBe(false);
+    expect(result.findings[0]!.confidence).toBe("medium"); // C1: confirm preserves original confidence
   });
 
   test("returns findings unchanged when depth_mode is 'quick'", async () => {
@@ -84,8 +84,8 @@ describe("refineFindings", () => {
     });
 
     const result = await refineFindings([finding], workspace, "quick", HARD_STOP_PATTERNS, STAGE2_MODULE_MAP);
-    expect(result[0]!.confidence).toBe("medium"); // unchanged
-    expect(result[0]!.suppressed).toBe(false);
+    expect(result.findings[0]!.confidence).toBe("medium"); // unchanged
+    expect(result.findings[0]!.suppressed).toBe(false);
   });
 
   test("analyzes all findings in 'deep' mode regardless of hard-stop status", async () => {
@@ -96,11 +96,11 @@ describe("refineFindings", () => {
       id: "NON-HARDSTOP-001",
       files: [filePath],
       line_numbers: [1],
-      evidence: { type: "file_match", records: [{ match: "credential" }] },
+      evidence: { type: "file_match", records: [{ file: filePath, line: 1, match: "credential" }] },
     });
 
     const result = await refineFindings([finding], workspace, "deep", HARD_STOP_PATTERNS, STAGE2_MODULE_MAP);
-    expect(result[0]!.suppressed).toBe(true); // string literal → dismissed even for non-hard-stop
+    expect(result.findings[0]!.suppressed).toBe(true); // string literal → dismissed even for non-hard-stop
   });
 
   test("skips files with unsupported extensions", async () => {
@@ -113,15 +113,15 @@ describe("refineFindings", () => {
     });
 
     const result = await refineFindings([finding], workspace, "auto", HARD_STOP_PATTERNS, STAGE2_MODULE_MAP);
-    expect(result[0]!.confidence).toBe("medium"); // unchanged
-    expect(result[0]!.suppressed).toBe(false);
+    expect(result.findings[0]!.confidence).toBe("medium"); // unchanged
+    expect(result.findings[0]!.suppressed).toBe(false);
   });
 
   test("handles findings with missing files gracefully", async () => {
     const finding = makeFinding({ files: undefined, line_numbers: undefined });
 
     const result = await refineFindings([finding], workspace, "auto", HARD_STOP_PATTERNS, STAGE2_MODULE_MAP);
-    expect(result[0]!.confidence).toBe("medium"); // unchanged
+    expect(result.findings[0]!.confidence).toBe("medium"); // unchanged
   });
 
   test("PowerShell pattern: C# class definition → ambiguous/dismiss", async () => {
@@ -132,12 +132,12 @@ describe("refineFindings", () => {
       id: "GHA-EXEC-004",
       files: [filePath],
       line_numbers: [4], // points to comment line
-      evidence: { type: "file_match", records: [{ match: "Execute" }] },
+      evidence: { type: "file_match", records: [{ file: filePath, line: 4, match: "Execute" }] },
     });
 
     const result = await refineFindings([finding], workspace, "auto", HARD_STOP_PATTERNS, STAGE2_MODULE_MAP);
     // Comment line → dismissed
-    expect(result[0]!.suppressed).toBe(true);
+    expect(result.findings[0]!.suppressed).toBe(true);
   });
 
   test("uses per-file match text from evidence records (multi-file finding)", async () => {
@@ -156,19 +156,19 @@ describe("refineFindings", () => {
       evidence: {
         type: "file_match",
         records: [
-          { match: "credential" },
-          { match: "forward" },
+          { file: file1, line: 1, match: "credential" },
+          { file: file2, line: 1, match: "forward" },
         ],
       },
     });
 
     const result = await refineFindings([finding], workspace, "deep", HARD_STOP_PATTERNS, STAGE2_MODULE_MAP);
-    // File 2 confirms → finding should not be suppressed, confidence should be high
-    expect(result[0]!.suppressed).toBe(false);
-    expect(result[0]!.confidence).toBe("high");
+    // File 2 confirms → finding should not be suppressed, confidence preserved
+    expect(result.findings[0]!.suppressed).toBe(false);
+    expect(result.findings[0]!.confidence).toBe("medium"); // C1: confirm preserves original
   });
 
-  test("mixed dismiss+ambiguous classifications set confidence to low", async () => {
+  test("mixed dismiss+ambiguous classifications preserve original confidence", async () => {
     // File 1: match in string → dismiss
     const file1 = join(tmpDir, "test-mixed-1.js");
     writeFileSync(file1, `const x = "model exec handler";\n`);
@@ -183,15 +183,15 @@ describe("refineFindings", () => {
       evidence: {
         type: "file_match",
         records: [
-          { match: "model exec" },
-          { match: "ModelExec" },
+          { file: file1, line: 1, match: "model exec" },
+          { file: file2, line: 1, match: "ModelExec" },
         ],
       },
     });
 
     const result = await refineFindings([finding], workspace, "deep", HARD_STOP_PATTERNS, STAGE2_MODULE_MAP);
-    expect(result[0]!.suppressed).toBe(false);
-    expect(result[0]!.confidence).toBe("low");
+    expect(result.findings[0]!.suppressed).toBe(false);
+    expect(result.findings[0]!.confidence).toBe("medium"); // C1: ambiguous preserves original
   });
 
   test("Google WS CLI pattern: Rust format string → dismiss", async () => {
@@ -202,10 +202,10 @@ describe("refineFindings", () => {
       id: "GHA-AI-001",
       files: [filePath],
       line_numbers: [2],
-      evidence: { type: "file_match", records: [{ match: "model_exec" }] },
+      evidence: { type: "file_match", records: [{ file: filePath, line: 2, match: "model_exec" }] },
     });
 
     const result = await refineFindings([finding], workspace, "auto", HARD_STOP_PATTERNS, STAGE2_MODULE_MAP);
-    expect(result[0]!.suppressed).toBe(true);
+    expect(result.findings[0]!.suppressed).toBe(true);
   });
 });
