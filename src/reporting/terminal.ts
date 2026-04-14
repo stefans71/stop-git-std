@@ -129,15 +129,15 @@ function renderPlainEnglish(result: AuditResult): string[] {
   }
 
   if (showFindings.length > 0) {
-    lines.push(`  We found ${showFindings.length} issue(s) worth knowing about:`);
-    lines.push("");
-    for (const f of showFindings) {
-      const explanation = RISK_EXPLANATIONS[f.id];
-      if (explanation) {
-        lines.push(`  ${pc.dim("\u2022")} ${explanation.plain}`);
+    const explained = showFindings.filter((f) => RISK_EXPLANATIONS[f.id]);
+    if (explained.length > 0) {
+      lines.push(`  We found ${explained.length} issue(s) worth knowing about:`);
+      lines.push("");
+      for (const f of explained) {
+        lines.push(`  ${pc.dim("\u2022")} ${RISK_EXPLANATIONS[f.id]!.plain}`);
       }
+      lines.push("");
     }
-    lines.push("");
   }
 
   return lines;
@@ -253,6 +253,78 @@ const RISK_EXPLANATIONS: Record<string, { technical: string; plain: string }> = 
   "GHA-INFRA-002": {
     technical: "Container uses :latest tag. Builds are not reproducible and a compromised image affects all future builds.",
     plain: "The container always pulls the latest version — a compromised image would affect everyone automatically.",
+  },
+  "GHA-INFRA-003": {
+    technical: "Kubernetes manifest grants broad RBAC permissions. A compromised pod can access or modify cluster-wide resources.",
+    plain: "This gives the app broad access across the entire cluster — if it's compromised, the attacker gets that access too.",
+  },
+  "GHA-TRUST-003": {
+    technical: "Repository appears archived or abandoned. No active maintainer to address security issues.",
+    plain: "This project looks abandoned — if a security problem is found, nobody is around to fix it.",
+  },
+  "GHA-TRUST-004": {
+    technical: "No signed tags or releases. Difficult to verify that published artifacts match the source code.",
+    plain: "Releases aren't signed — there's no way to prove the code you download is what the author actually published.",
+  },
+  "GHA-TRUST-005": {
+    technical: "Unusual recent change in commit authors. Could indicate a maintainer account takeover.",
+    plain: "New people suddenly started making changes — could be normal, or could mean someone's account was hijacked.",
+  },
+  "GHA-SUPPLY-004": {
+    technical: "A direct dependency has a known security vulnerability. The vulnerability may be exploitable in your usage.",
+    plain: "One of the packages this depends on has a known security hole — it might affect you too.",
+  },
+  "GHA-WEB-001": {
+    technical: "Debug mode enabled in production-like configuration. Exposes stack traces, internal state, and diagnostic endpoints.",
+    plain: "Debug mode is on — this shows detailed error messages and internal info that attackers can use.",
+  },
+  "GHA-WEB-002": {
+    technical: "User-controlled content rendered without escaping. Attackers can inject scripts that run in other users' browsers.",
+    plain: "User input gets displayed without cleaning it first — an attacker could inject code that runs in your browser.",
+  },
+  "GHA-API-001": {
+    technical: "Sensitive API route has no visible authentication check. Unauthenticated users may access protected resources.",
+    plain: "An important API endpoint doesn't check who's calling it — anyone could access data they shouldn't.",
+  },
+  "GHA-API-002": {
+    technical: "CORS allows all origins or credentials with wildcards. Any website can make authenticated requests to this API.",
+    plain: "Any website can talk to this API as if it were you — your login cookies get sent along automatically.",
+  },
+  "GHA-API-003": {
+    technical: "Request body bound directly to internal model without validation. Attackers can set fields they shouldn't have access to.",
+    plain: "Data from users goes straight into the system without checking — someone could set admin-only fields.",
+  },
+  "GHA-AI-003": {
+    technical: "No rate limiting or budget controls on AI model calls. Runaway usage can generate large unexpected costs.",
+    plain: "There's no limit on how much the AI can be used — a bug or abuse could run up a huge bill.",
+  },
+  "GHA-AGENT-002": {
+    technical: "Agent tasks share memory or state without isolation. One task can read or corrupt another task's data.",
+    plain: "Different AI tasks share the same memory — one task could accidentally (or intentionally) mess with another's data.",
+  },
+  "GHA-PLUGIN-001": {
+    technical: "Plugin manifest requests broad permissions (e.g., wildcard access). A malicious plugin gets far more access than it needs.",
+    plain: "This plugin asks for access to everything — if it turns out to be malicious, it can do a lot of damage.",
+  },
+  "GHA-MCP-002": {
+    technical: "MCP fetch tool can request arbitrary URLs including internal services. Server-side request forgery (SSRF) risk.",
+    plain: "This tool can fetch any URL, including internal ones — an attacker could use it to reach systems that should be private.",
+  },
+  "GHA-PKG-001": {
+    technical: "Package runs network requests or spawns processes at import time. Side effects execute before you can inspect behavior.",
+    plain: "Just loading this package triggers network calls or runs commands — you don't get a chance to opt in first.",
+  },
+  "GHA-RUNTIME-001": {
+    technical: "Install or build process accesses SSH keys or cloud credential files. Could exfiltrate credentials during routine operations.",
+    plain: "During install, this reads your SSH keys or cloud credentials — it could be stealing them.",
+  },
+  "GHA-RUNTIME-002": {
+    technical: "Unexpected outbound network connection to unknown domain during install. May be phoning home or exfiltrating data.",
+    plain: "During install, this connects to an unknown server — it might be sending your data somewhere.",
+  },
+  "GHA-RUNTIME-003": {
+    technical: "Runtime observed downloading content then executing it as code. Classic dropper behavior.",
+    plain: "This downloads something and then runs it — that's exactly how malware installers work.",
   },
 };
 
@@ -386,10 +458,11 @@ export function renderTerminalReport(result: AuditResult): string {
       lines.push(`  ${pc.dim("Files:")} ${shortFiles.join(", ")}`);
     }
 
-    // Risk explanation
+    // Risk explanation — technical + plain English
     const explanation = RISK_EXPLANATIONS[f.id];
     if (explanation) {
       lines.push(`  ${pc.dim("Risk:")}  ${explanation.technical}`);
+      lines.push(`  ${pc.dim("    →")}  ${explanation.plain}`);
     }
 
     // Remediation from the finding

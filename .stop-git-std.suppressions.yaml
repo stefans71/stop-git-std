@@ -1,0 +1,60 @@
+# Self-referential false positive suppressions for stop-git-std
+#
+# This tool is a security auditor. When it scans itself, its own source code
+# matches the patterns it detects (e.g., regex literals for "mcp.*server",
+# imports like "mcpServerAnalyzer", classification logic mentioning "mcp").
+# None of these represent actual security risks — they ARE the detection logic.
+#
+# Reviewed by FrontierBoard (3-model board, 2026-04-14) as part of detection accuracy review.
+
+suppressions:
+  # ── Hard-stop rules — require override fields ──────────────────────────────
+
+  - rule_id: GHA-AI-001
+    path_globs: ["src/**"]
+    justification: "Self-referential: tool source contains AI/LLM detection patterns (regex literals, rule catalog references), not actual AI model execution"
+    override_reason: "Self-referential false positive: security auditor source code contains detection patterns as string literals and rule references"
+    reviewer_identity: "FrontierBoard (3-model review, 2026-04-14)"
+    reviewed_commit_sha: "30f479b"
+
+  - rule_id: GHA-AGENT-001
+    path_globs: ["src/**"]
+    justification: "Self-referential: tool source contains agent tool registration patterns as detection targets, not actual agent capabilities"
+    override_reason: "Self-referential false positive: security auditor source code contains detection patterns as string literals"
+    reviewer_identity: "FrontierBoard (3-model review, 2026-04-14)"
+    reviewed_commit_sha: "30f479b"
+
+  - rule_id: GHA-MCP-001
+    path_globs: ["src/**"]
+    justification: "Self-referential: tool source references 'mcp' in analyzer code, plugin registration, category classification, and enum definitions — not an actual MCP server"
+    override_reason: "Self-referential false positive: security auditor references MCP patterns throughout its detection infrastructure"
+    reviewer_identity: "FrontierBoard (3-model review, 2026-04-14)"
+    reviewed_commit_sha: "30f479b"
+
+  - rule_id: GHA-MCP-003
+    path_globs: ["src/**"]
+    justification: "Self-referential: tool source contains prompt injection detection patterns as regex string literals, not actual prompt injection"
+    override_reason: "Self-referential false positive: security auditor source code contains detection patterns as string literals"
+    reviewer_identity: "FrontierBoard (3-model review, 2026-04-14)"
+    reviewed_commit_sha: "30f479b"
+
+  - rule_id: GHA-EXEC-005
+    path_globs: ["src/**"]
+    justification: "Self-referential: tool source contains remote code fetch detection patterns as regex string literals, not actual remote execution"
+    override_reason: "Self-referential false positive: security auditor source code contains detection patterns as string literals"
+    reviewer_identity: "FrontierBoard (3-model review, 2026-04-14)"
+    reviewed_commit_sha: "30f479b"
+
+  # ── Non-hard-stop rules — no override fields needed ────────────────────────
+
+  - rule_id: GHA-EXEC-004
+    path_globs: ["src/**"]
+    justification: "Self-referential: tool source contains deserialization detection patterns as regex string literals, not actual unsafe deserialization"
+
+  - rule_id: GHA-AI-002
+    path_globs: ["src/**"]
+    justification: "Self-referential: tool source contains secret-in-prompt detection patterns and risk explanation text, not actual secret embedding in prompts"
+
+  - rule_id: GHA-PLUGIN-002
+    path_globs: ["src/**"]
+    justification: "Self-referential: tool source contains prompt injection detection patterns as regex string literals, not actual plugin instruction manipulation"
