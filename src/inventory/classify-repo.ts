@@ -39,6 +39,7 @@ export function detectCategories(
   inventory: FileInventory,
   frameworks: string[],
   languages: string[],
+  rootPath?: string,
 ): RepoCategory[] {
   const categories = new Set<RepoCategory>();
   const fileNames = new Set(inventory.files.map((f) => f.relativePath));
@@ -73,8 +74,36 @@ export function detectCategories(
     categories.add("skills_plugins");
   }
 
-  // MCP server detection
-  if (hasFileMatching(/mcp/i) && hasFileMatching(/server/i)) {
+  // MCP server detection — check filenames, package name, and dependencies
+  const isMcp =
+    (hasFileMatching(/mcp/i) && hasFileMatching(/server/i)) ||
+    inventory.files.some((f) => {
+      if (f.relativePath !== "package.json") return false;
+      try {
+        if (!rootPath) return false;
+        const pkg = JSON.parse(
+          require("fs").readFileSync(
+            require("path").join(rootPath, f.relativePath),
+            "utf8",
+          ),
+        );
+        const name = (pkg.name ?? "").toLowerCase();
+        const allDeps = {
+          ...pkg.dependencies,
+          ...pkg.devDependencies,
+        };
+        const desc = (pkg.description ?? "").toLowerCase();
+        return (
+          name.includes("mcp") ||
+          desc.includes("mcp") ||
+          "@modelcontextprotocol/sdk" in allDeps ||
+          Object.keys(allDeps).some((d) => d.includes("mcp-server"))
+        );
+      } catch {
+        return false;
+      }
+    });
+  if (isMcp) {
     categories.add("mcp_server");
   }
 
@@ -108,7 +137,7 @@ export function classifyRepo(
   const languages = detectLanguages(inventory.extensionCounts);
   const frameworks = detectFrameworks(inventory);
   const ecosystems = detectEcosystems(inventory);
-  const detected_categories = detectCategories(inventory, frameworks, languages);
+  const detected_categories = detectCategories(inventory, frameworks, languages, workspace.rootPath);
 
   const manifests: string[] = [];
   const workflows: string[] = [];
