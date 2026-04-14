@@ -117,6 +117,8 @@ export function renderSarifReport(result: AuditResult): string {
           decision: result.decision.value,
           scores: result.scores,
           run_id: result.manifest.run_id,
+          stage2_recommended: result.stage2_recommended ?? false,
+          stage2_triggers: result.stage2_triggers ?? [],
         },
       },
     ],

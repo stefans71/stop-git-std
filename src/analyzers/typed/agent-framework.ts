@@ -1,6 +1,6 @@
 import { readdirSync } from "fs";
 import { join } from "path";
-import { emitFinding, scanFileContent } from "../base.ts";
+import { emitFinding, scanFileContent, shouldSkipInTypedAnalyzer, classifyFile } from "../base.ts";
 import type { AnalyzerModule, AnalyzerOutput } from "../../plugins/analyzer-backend.ts";
 import type { Finding } from "../../models/finding.ts";
 
@@ -31,16 +31,16 @@ export const agentFrameworkAnalyzer: AnalyzerModule = {
     } catch {
       // workspace not accessible
     }
+    const scanFiles = allFiles.filter((f) => !shouldSkipInTypedAnalyzer(f));
 
     for (const rule of rules) {
       switch (rule.id) {
         case "GHA-AGENT-001": {
-          // Stub: scan for unrestricted tool/function registration patterns
           const regex = /register.*tool|addTool|tool.*register|allowAllTools|allow_all_tools/i;
           const matchedFiles: string[] = [];
           const lineNumbers: number[] = [];
 
-          for (const f of allFiles) {
+          for (const f of scanFiles) {
             const matches = scanFileContent(f, regex);
             for (const m of matches) {
               matchedFiles.push(m.path);
@@ -62,19 +62,19 @@ export const agentFrameworkAnalyzer: AnalyzerModule = {
               [...new Set(matchedFiles)],
               lineNumbers,
             );
-            finding.confidence = "low";
+            const hasCodeMatch = [...new Set(matchedFiles)].some((f) => classifyFile(f) === "code");
+            finding.confidence = hasCodeMatch ? rule.default_confidence : "low";
             findings.push(finding);
           }
           break;
         }
 
         case "GHA-AGENT-002": {
-          // Stub: scan for unbounded agent loop / recursion indicators
           const regex = /while\s*\(\s*true\s*\)|loop_forever|max_iterations\s*=\s*-1|recursion_limit\s*=\s*0/i;
           const matchedFiles: string[] = [];
           const lineNumbers: number[] = [];
 
-          for (const f of allFiles) {
+          for (const f of scanFiles) {
             const matches = scanFileContent(f, regex);
             for (const m of matches) {
               matchedFiles.push(m.path);
@@ -96,7 +96,8 @@ export const agentFrameworkAnalyzer: AnalyzerModule = {
               [...new Set(matchedFiles)],
               lineNumbers,
             );
-            finding.confidence = "low";
+            const hasCodeMatch = [...new Set(matchedFiles)].some((f) => classifyFile(f) === "code");
+            finding.confidence = hasCodeMatch ? rule.default_confidence : "low";
             findings.push(finding);
           }
           break;
@@ -118,7 +119,7 @@ export const agentFrameworkAnalyzer: AnalyzerModule = {
         warnings: [],
         errors: [],
         coverage: {
-          files_scanned: allFiles.length,
+          files_scanned: scanFiles.length,
         },
       },
     };

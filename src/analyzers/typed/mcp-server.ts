@@ -1,6 +1,6 @@
 import { readdirSync } from "fs";
 import { join } from "path";
-import { emitFinding, scanFileContent } from "../base.ts";
+import { emitFinding, scanFileContent, shouldSkipInTypedAnalyzer, classifyFile } from "../base.ts";
 import type { AnalyzerModule, AnalyzerOutput } from "../../plugins/analyzer-backend.ts";
 import type { Finding } from "../../models/finding.ts";
 
@@ -31,20 +31,19 @@ export const mcpServerAnalyzer: AnalyzerModule = {
     } catch {
       // workspace not accessible
     }
+    const scanFiles = allFiles.filter((f) => !shouldSkipInTypedAnalyzer(f));
 
     for (const rule of rules) {
       switch (rule.id) {
         case "GHA-MCP-001": {
-          // Stub: scan for unauthenticated MCP endpoint exposure
           const regex = /mcp.*server|server.*mcp|McpServer|createServer.*mcp/i;
           const authRegex = /auth|token|bearer|apiKey|api_key/i;
           const matchedFiles: string[] = [];
-          const lineNumbers: number[] = [];
 
           const filesWithMcp = new Set<string>();
           const filesWithAuth = new Set<string>();
 
-          for (const f of allFiles) {
+          for (const f of scanFiles) {
             if (scanFileContent(f, regex).length > 0) filesWithMcp.add(f);
             if (scanFileContent(f, authRegex).length > 0) filesWithAuth.add(f);
           }
@@ -66,19 +65,19 @@ export const mcpServerAnalyzer: AnalyzerModule = {
               },
               matchedFiles,
             );
-            finding.confidence = "low";
+            const hasCodeMatch = matchedFiles.some((f) => classifyFile(f) === "code");
+            finding.confidence = hasCodeMatch ? rule.default_confidence : "low";
             findings.push(finding);
           }
           break;
         }
 
         case "GHA-MCP-002": {
-          // Stub: scan for overly broad tool permissions in MCP server definitions
           const regex = /tools?\s*:\s*\[\s*['"`]\*['"`]|allowAllTools|all_tools\s*:\s*true/i;
           const matchedFiles: string[] = [];
           const lineNumbers: number[] = [];
 
-          for (const f of allFiles) {
+          for (const f of scanFiles) {
             const matches = scanFileContent(f, regex);
             for (const m of matches) {
               matchedFiles.push(m.path);
@@ -100,19 +99,19 @@ export const mcpServerAnalyzer: AnalyzerModule = {
               [...new Set(matchedFiles)],
               lineNumbers,
             );
-            finding.confidence = "low";
+            const hasCodeMatch = [...new Set(matchedFiles)].some((f) => classifyFile(f) === "code");
+            finding.confidence = hasCodeMatch ? rule.default_confidence : "low";
             findings.push(finding);
           }
           break;
         }
 
         case "GHA-MCP-003": {
-          // Stub: scan for prompt injection vectors in MCP tool descriptions
           const regex = /ignore previous|override.*instruction|you are now|disregard.*system/i;
           const matchedFiles: string[] = [];
           const lineNumbers: number[] = [];
 
-          for (const f of allFiles) {
+          for (const f of scanFiles) {
             const matches = scanFileContent(f, regex);
             for (const m of matches) {
               matchedFiles.push(m.path);
@@ -134,7 +133,8 @@ export const mcpServerAnalyzer: AnalyzerModule = {
               [...new Set(matchedFiles)],
               lineNumbers,
             );
-            finding.confidence = "low";
+            const hasCodeMatch = [...new Set(matchedFiles)].some((f) => classifyFile(f) === "code");
+            finding.confidence = hasCodeMatch ? rule.default_confidence : "low";
             findings.push(finding);
           }
           break;
@@ -156,7 +156,7 @@ export const mcpServerAnalyzer: AnalyzerModule = {
         warnings: [],
         errors: [],
         coverage: {
-          files_scanned: allFiles.length,
+          files_scanned: scanFiles.length,
         },
       },
     };

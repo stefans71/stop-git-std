@@ -118,15 +118,24 @@ export function evaluatePolicy(
   const runtimeFindings = active.filter((f) => f.proof_type === "runtime");
 
   // ── 1. Hard stop ────────────────────────────────────────────────────────────
-  const triggeredHardStop = active.filter((f) => hardStopPatterns.includes(f.id));
+  const triggeredHardStop = active.filter(
+    (f) => hardStopPatterns.includes(f.id) && f.confidence !== "low"
+  );
   if (triggeredHardStop.length > 0) {
     const reasons = triggeredHardStop.map(
       (f) => `Hard-stop rule triggered: ${f.id} — ${f.title}`,
     );
     // Respect hard_stop_behavior from the profile: "abort" → ABORT, "caution" → CAUTION
     const hardStopDecision = profileConfig.hard_stop_behavior === "caution" ? "CAUTION" : "ABORT";
-    const constraints =
-      hardStopDecision === "CAUTION" ? generateConstraints(active) : [];
+    const constraints = generateConstraints(active);
+    if (hardStopDecision === "ABORT") {
+      for (const f of triggeredHardStop) {
+        if (f.remediation) {
+          constraints.push(`[${f.id}] ${f.remediation}`);
+        }
+      }
+      constraints.push("After applying fixes, re-run stop-git-std to verify resolution.");
+    }
     return {
       value: hardStopDecision,
       reasons,
@@ -147,7 +156,11 @@ export function evaluatePolicy(
       reasons: [
         `Abort threshold exceeded: exploitability=${scores.exploitability}, abuse_potential=${scores.abuse_potential}`,
       ],
-      constraints: [],
+      constraints: (() => {
+        const c = generateConstraints(active);
+        c.push("After applying fixes, re-run stop-git-std to verify resolution.");
+        return c;
+      })(),
       hard_stop_triggered: false,
       manual_review_required: true,
     };

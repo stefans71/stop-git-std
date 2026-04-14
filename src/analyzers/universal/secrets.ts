@@ -180,22 +180,31 @@ export const secretsAnalyzer: AnalyzerModule = {
           }
 
           if (matches.length > 0) {
-            findings.push(
-              emitFinding(
-                rule,
-                {
-                  type: "env_secret_entry",
-                  records: matches.map((m) => ({
-                    path: m.path,
-                    line_number: m.lineNumber,
-                    entry_key: m.entry_type,
-                    detail: `Secret-like entry "${m.entry_type}" found in env file`,
-                  })),
-                },
-                affectedFiles,
-                matches.map((m) => m.lineNumber),
-              ),
+            const finding = emitFinding(
+              rule,
+              {
+                type: "env_secret_entry",
+                records: matches.map((m) => ({
+                  path: m.path,
+                  line_number: m.lineNumber,
+                  entry_key: m.entry_type,
+                  detail: `Secret-like entry "${m.entry_type}" found in env file`,
+                })),
+              },
+              affectedFiles,
+              matches.map((m) => m.lineNumber),
             );
+
+            // Downgrade example/sample/template env files
+            const allExample = affectedFiles.every((f) =>
+              /\.(example|sample|template)$/.test(f)
+            );
+            if (allExample) {
+              finding.severity = "info";
+              finding.confidence = "low";
+            }
+
+            findings.push(finding);
           }
           break;
         }

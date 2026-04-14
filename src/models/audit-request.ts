@@ -29,6 +29,7 @@ export const AuditRequestSchema = z.object({
   allow_network_during_runtime: z.boolean().default(false),
   policy_profile: PolicyProfile.default("balanced"),
   notes: z.string().default(""),
+  skip_stage2: z.boolean().default(false),
 });
 
 export type AuditRequest = z.infer<typeof AuditRequestSchema>;

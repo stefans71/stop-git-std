@@ -1,6 +1,6 @@
 import { readdirSync } from "fs";
 import { join, basename } from "path";
-import { emitFinding, scanFileContent } from "../base.ts";
+import { emitFinding, scanFileContent, shouldSkipInTypedAnalyzer, classifyFile } from "../base.ts";
 import type { AnalyzerModule, AnalyzerOutput } from "../../plugins/analyzer-backend.ts";
 import type { Finding } from "../../models/finding.ts";
 
@@ -31,6 +31,7 @@ export const skillsPluginsAnalyzer: AnalyzerModule = {
     } catch {
       // workspace not accessible
     }
+    const scanFiles = allFiles.filter((f) => !shouldSkipInTypedAnalyzer(f));
 
     for (const rule of rules) {
       switch (rule.id) {
@@ -74,12 +75,12 @@ export const skillsPluginsAnalyzer: AnalyzerModule = {
         }
 
         case "GHA-PLUGIN-002": {
-          // Scan for prompt injection patterns in all files
+          // Scan for prompt injection patterns
           const injectionRegex = /ignore previous instructions|you are now|system\s*:/i;
           const matchedFiles: string[] = [];
           const lineNumbers: number[] = [];
 
-          for (const f of allFiles) {
+          for (const f of scanFiles) {
             const matches = scanFileContent(f, injectionRegex);
             for (const m of matches) {
               matchedFiles.push(m.path);
@@ -88,21 +89,22 @@ export const skillsPluginsAnalyzer: AnalyzerModule = {
           }
 
           if (matchedFiles.length > 0) {
-            findings.push(
-              emitFinding(
-                rule,
-                {
-                  type: "regex_match",
-                  records: matchedFiles.map((f, i) => ({
-                    file: f,
-                    line: lineNumbers[i],
-                    pattern: "prompt injection indicator",
-                  })),
-                },
-                [...new Set(matchedFiles)],
-                lineNumbers,
-              ),
+            const finding = emitFinding(
+              rule,
+              {
+                type: "regex_match",
+                records: matchedFiles.map((f, i) => ({
+                  file: f,
+                  line: lineNumbers[i],
+                  pattern: "prompt injection indicator",
+                })),
+              },
+              [...new Set(matchedFiles)],
+              lineNumbers,
             );
+            const hasCodeMatch = [...new Set(matchedFiles)].some((f) => classifyFile(f) === "code");
+            finding.confidence = hasCodeMatch ? rule.default_confidence : "low";
+            findings.push(finding);
           }
           break;
         }
@@ -123,7 +125,7 @@ export const skillsPluginsAnalyzer: AnalyzerModule = {
         warnings: [],
         errors: [],
         coverage: {
-          files_scanned: allFiles.length,
+          files_scanned: scanFiles.length,
         },
       },
     };

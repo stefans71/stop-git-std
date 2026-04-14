@@ -20,6 +20,12 @@ export const CoverageReportSchema = z.object({
 
 export type CoverageReport = z.infer<typeof CoverageReportSchema>;
 
+export interface Stage2Trigger {
+  finding_id: string;
+  reason: string;
+  recommended_module: "ast" | "sandbox" | "manual_review";
+}
+
 export interface AuditResult {
   manifest: RunManifest;
   context: AuditContext;
@@ -30,4 +36,6 @@ export interface AuditResult {
   module_results: ModuleResult[];
   coverage: CoverageReport;
   reports: Record<string, string>;
+  stage2_recommended?: boolean;
+  stage2_triggers?: Stage2Trigger[];
 }

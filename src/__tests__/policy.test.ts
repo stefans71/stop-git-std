@@ -338,6 +338,99 @@ describe("evaluatePolicy", () => {
     });
   });
 
+  describe("Confidence gate on hard-stop rules", () => {
+    test("low-confidence hard-stop finding does NOT trigger ABORT", () => {
+      const finding = makeFinding({
+        id: "GHA-SECRETS-001",
+        title: "Secrets exposed",
+        confidence: "low",
+      });
+      const decision = evaluatePolicy(
+        [finding],
+        makeScores(),
+        baseContext,
+        "balanced",
+        mockContract,
+        mockCatalog,
+      );
+      expect(decision.value).not.toBe("ABORT");
+      expect(decision.hard_stop_triggered).toBeFalsy();
+    });
+
+    test("medium-confidence hard-stop finding DOES trigger ABORT", () => {
+      const finding = makeFinding({
+        id: "GHA-SECRETS-001",
+        title: "Secrets exposed",
+        confidence: "medium",
+      });
+      const decision = evaluatePolicy(
+        [finding],
+        makeScores(),
+        baseContext,
+        "balanced",
+        mockContract,
+        mockCatalog,
+      );
+      expect(decision.value).toBe("ABORT");
+      expect(decision.hard_stop_triggered).toBe(true);
+    });
+
+    test("high-confidence hard-stop finding DOES trigger ABORT", () => {
+      const finding = makeFinding({
+        id: "GHA-EXEC-001",
+        title: "Exec issue",
+        confidence: "high",
+      });
+      const decision = evaluatePolicy(
+        [finding],
+        makeScores(),
+        baseContext,
+        "balanced",
+        mockContract,
+        mockCatalog,
+      );
+      expect(decision.value).toBe("ABORT");
+      expect(decision.hard_stop_triggered).toBe(true);
+    });
+  });
+
+  describe("ABORT decisions include constraints", () => {
+    test("hard-stop ABORT includes non-empty constraints", () => {
+      const finding = makeFinding({
+        id: "GHA-EXEC-001",
+        title: "Dangerous exec",
+        category: "supply-chain",
+        confidence: "high",
+        remediation: "Pin the download URL and verify checksums.",
+      });
+      const decision = evaluatePolicy(
+        [finding],
+        makeScores(),
+        baseContext,
+        "balanced",
+        mockContract,
+        mockCatalog,
+      );
+      expect(decision.value).toBe("ABORT");
+      expect(decision.constraints.length).toBeGreaterThan(0);
+    });
+
+    test("threshold ABORT includes constraints", () => {
+      const finding = makeFinding({ category: "supply-chain" });
+      const scores = makeScores({ abuse_potential: 90 });
+      const decision = evaluatePolicy(
+        [finding],
+        scores,
+        baseContext,
+        "balanced",
+        mockContract,
+        mockCatalog,
+      );
+      expect(decision.value).toBe("ABORT");
+      expect(decision.constraints.length).toBeGreaterThan(0);
+    });
+  });
+
   describe("Unknown policy profile throws", () => {
     test("invalid profile name throws Error", () => {
       expect(() =>

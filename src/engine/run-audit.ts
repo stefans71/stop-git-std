@@ -1,6 +1,6 @@
 import { nanoid } from "nanoid";
 import type { AuditRequest } from "../models/audit-request.ts";
-import type { AuditResult } from "../models/audit-result.ts";
+import type { AuditResult, Stage2Trigger } from "../models/audit-result.ts";
 import type { AuditContext } from "../models/audit-context.ts";
 import type { Finding } from "../models/finding.ts";
 import type { ModuleResult } from "../models/module-result.ts";
@@ -173,6 +173,41 @@ export async function runAudit(request: AuditRequest): Promise<AuditResult> {
     catalog,
   );
 
+  // ── Stage 2 escalation detection ───────────────────────────────────────────
+  let stage2_recommended = false;
+  const stage2_triggers: Stage2Trigger[] = [];
+
+  if (!request.skip_stage2) {
+    const hardStopPatterns: string[] = catalog.policy_baselines.hard_stop_patterns;
+    const lowConfHardStops = findings.filter(
+      (f) => !f.suppressed && hardStopPatterns.includes(f.id) && f.confidence === "low"
+    );
+
+    const STAGE2_MODULE_MAP: Record<string, "ast" | "sandbox" | "manual_review"> = {
+      "GHA-AI-001": "ast",
+      "GHA-AGENT-001": "ast",
+      "GHA-MCP-001": "ast",
+      "GHA-MCP-003": "ast",
+      "GHA-EXEC-004": "ast",
+      "GHA-EXEC-005": "ast",
+      "GHA-EXEC-001": "sandbox",
+      "GHA-EXEC-002": "sandbox",
+    };
+
+    for (const f of lowConfHardStops) {
+      const mod = STAGE2_MODULE_MAP[f.id] ?? "manual_review";
+      const label = mod === "ast" ? "code flow analysis"
+        : mod === "sandbox" ? "sandbox execution" : "manual review";
+      stage2_triggers.push({
+        finding_id: f.id,
+        reason: `Low-confidence static match \u2014 ${label} could confirm or dismiss this.`,
+        recommended_module: mod,
+      });
+    }
+
+    stage2_recommended = stage2_triggers.length > 0;
+  }
+
   // Build coverage report (C7)
   const coverage = buildCoverageReport(inventory, allModuleResults, false);
 
@@ -201,6 +236,7 @@ export async function runAudit(request: AuditRequest): Promise<AuditResult> {
     module_results: allModuleResults,
     coverage,
     reports: {},
+    ...(stage2_recommended ? { stage2_recommended, stage2_triggers } : {}),
   };
 
   // Phase 11: reporting

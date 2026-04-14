@@ -79,3 +79,26 @@ export function emitFinding(
     suppression_reason: "",
   };
 }
+
+// ── File classification for typed analyzers ──────────────────────────────────
+
+const DOC_EXTENSIONS = new Set([".md", ".txt", ".rst", ".adoc"]);
+const CONFIG_EXTENSIONS = new Set([".json", ".yaml", ".yml"]);
+const TEST_PATTERNS = [/__tests__\//, /\.test\.[jt]sx?$/, /\.spec\.[jt]sx?$/, /\/tests?\//, /\/fixtures?\//];
+
+export type FileClassification = "code" | "doc" | "config" | "test";
+
+export function classifyFile(filePath: string): FileClassification {
+  const ext = "." + (filePath.split(".").pop()?.toLowerCase() ?? "");
+  if (DOC_EXTENSIONS.has(ext)) return "doc";
+  if (CONFIG_EXTENSIONS.has(ext)) return "config";
+  if (TEST_PATTERNS.some((p) => p.test(filePath))) return "test";
+  return "code";
+}
+
+/** Returns true for docs and tests — files that should be skipped by typed analyzers.
+ *  Config files (.json/.yaml) return FALSE — they are scanned but findings get confidence downgrade. */
+export function shouldSkipInTypedAnalyzer(filePath: string): boolean {
+  const cls = classifyFile(filePath);
+  return cls === "doc" || cls === "test";
+}

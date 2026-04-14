@@ -1,6 +1,6 @@
 import { readdirSync } from "fs";
 import { join } from "path";
-import { emitFinding, scanFileContent } from "../base.ts";
+import { emitFinding, scanFileContent, shouldSkipInTypedAnalyzer, classifyFile } from "../base.ts";
 import type { AnalyzerModule, AnalyzerOutput } from "../../plugins/analyzer-backend.ts";
 import type { Finding } from "../../models/finding.ts";
 
@@ -31,6 +31,7 @@ export const aiLlmAnalyzer: AnalyzerModule = {
     } catch {
       // workspace not accessible
     }
+    const scanFiles = allFiles.filter((f) => !shouldSkipInTypedAnalyzer(f));
 
     for (const rule of rules) {
       switch (rule.id) {
@@ -40,7 +41,7 @@ export const aiLlmAnalyzer: AnalyzerModule = {
           const matchedFiles: string[] = [];
           const lineNumbers: number[] = [];
 
-          for (const f of allFiles) {
+          for (const f of scanFiles) {
             const matches = scanFileContent(f, regex);
             for (const m of matches) {
               matchedFiles.push(m.path);
@@ -62,7 +63,8 @@ export const aiLlmAnalyzer: AnalyzerModule = {
               [...new Set(matchedFiles)],
               lineNumbers,
             );
-            finding.confidence = "low";
+            const hasCodeMatch = [...new Set(matchedFiles)].some((f) => classifyFile(f) === "code");
+            finding.confidence = hasCodeMatch ? rule.default_confidence : "low";
             findings.push(finding);
           }
           break;
@@ -74,7 +76,7 @@ export const aiLlmAnalyzer: AnalyzerModule = {
           const matchedFiles: string[] = [];
           const lineNumbers: number[] = [];
 
-          for (const f of allFiles) {
+          for (const f of scanFiles) {
             const matches = scanFileContent(f, regex);
             for (const m of matches) {
               matchedFiles.push(m.path);
@@ -96,7 +98,8 @@ export const aiLlmAnalyzer: AnalyzerModule = {
               [...new Set(matchedFiles)],
               lineNumbers,
             );
-            finding.confidence = "low";
+            const hasCodeMatch = [...new Set(matchedFiles)].some((f) => classifyFile(f) === "code");
+            finding.confidence = hasCodeMatch ? rule.default_confidence : "low";
             findings.push(finding);
           }
           break;
@@ -113,7 +116,7 @@ export const aiLlmAnalyzer: AnalyzerModule = {
           const filesWithLlmCalls = new Set<string>();
           const filesWithRateLimit = new Set<string>();
 
-          for (const f of allFiles) {
+          for (const f of scanFiles) {
             if (scanFileContent(f, llmCallRegex).length > 0) {
               filesWithLlmCalls.add(f);
             }
@@ -136,7 +139,8 @@ export const aiLlmAnalyzer: AnalyzerModule = {
               },
               unprotected,
             );
-            finding.confidence = "low";
+            const hasCodeMatch = unprotected.some((f) => classifyFile(f) === "code");
+            finding.confidence = hasCodeMatch ? rule.default_confidence : "low";
             findings.push(finding);
           }
           break;
@@ -158,7 +162,7 @@ export const aiLlmAnalyzer: AnalyzerModule = {
         warnings: [],
         errors: [],
         coverage: {
-          files_scanned: allFiles.length,
+          files_scanned: scanFiles.length,
         },
       },
     };

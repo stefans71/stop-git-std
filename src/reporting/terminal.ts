@@ -86,63 +86,174 @@ function decisionExplanation(result: AuditResult): string[] {
   return lines;
 }
 
+// ── Plain English summary ────────────────────────────────────────────────────
+
+function renderPlainEnglish(result: AuditResult): string[] {
+  const lines: string[] = [];
+  const active = result.findings.filter((f) => !f.suppressed);
+  const critical = active.filter((f) => f.severity === "critical");
+  const high = active.filter((f) => f.severity === "high");
+  const medium = active.filter((f) => f.severity === "medium");
+
+  lines.push(pc.bold("  What This Means"));
+  lines.push(pc.dim("  " + "\u2500".repeat(30)));
+  lines.push("");
+
+  switch (result.decision.value) {
+    case "PROCEED":
+      lines.push("  No serious issues detected in our static checks. We scanned");
+      lines.push(`  ${result.coverage.files_scanned} files and found nothing that would`);
+      lines.push("  prevent safe adoption.");
+      break;
+    case "PROCEED_WITH_CONSTRAINTS":
+      lines.push("  We found some issues that need attention before you use this.");
+      lines.push("  None are critically dangerous, but the mitigations listed below");
+      lines.push("  should be applied first.");
+      break;
+    case "CAUTION":
+      lines.push("  We found issues that deserve a closer look before you use this.");
+      lines.push("  Review the findings below and decide whether the risks are");
+      lines.push("  acceptable for your use case.");
+      break;
+    case "ABORT":
+      lines.push("  We found serious security issues that should be fixed before");
+      lines.push("  you use this. See the specific issues and remediation steps below.");
+      break;
+  }
+  lines.push("");
+
+  // Show critical/high findings in plain English; show medium if few and no critical/high
+  const showFindings = [...critical, ...high];
+  if (showFindings.length === 0 && medium.length > 0 && medium.length <= 3) {
+    showFindings.push(...medium);
+  }
+
+  if (showFindings.length > 0) {
+    lines.push(`  We found ${showFindings.length} issue(s) worth knowing about:`);
+    lines.push("");
+    for (const f of showFindings) {
+      const explanation = RISK_EXPLANATIONS[f.id];
+      if (explanation) {
+        lines.push(`  ${pc.dim("\u2022")} ${explanation.plain}`);
+      }
+    }
+    lines.push("");
+  }
+
+  return lines;
+}
+
 // ── Finding risk explanations ────────────────────────────────────────────────
 
-const RISK_EXPLANATIONS: Record<string, string> = {
-  "GHA-EXEC-001":
-    "Downloads and executes remote code in a single command. An attacker who compromises the URL can execute arbitrary code on your machine during install.",
-  "GHA-EXEC-002":
-    "Runs code automatically during package install. Malicious packages use this to execute code before you review anything.",
-  "GHA-EXEC-003":
-    "Allows arbitrary shell commands from string input. If user data reaches this, it's remote code execution.",
-  "GHA-EXEC-004":
-    "Deserializes untrusted data into executable objects. Attacker-crafted payloads can execute arbitrary code.",
-  "GHA-EXEC-005":
-    "Fetches remote content then executes or loads it as code. If the remote source is compromised, your system is compromised.",
-  "GHA-CI-001":
-    "Runs CI workflows with write access on pull requests from forks. Attackers can submit PRs that execute code with your repo's secrets.",
-  "GHA-CI-002":
-    "GitHub token has broad permissions. A compromised workflow step can push code, delete branches, or access secrets.",
-  "GHA-CI-003":
-    "Actions pinned to tags instead of commit SHAs. If the action repo is compromised, the tag can be moved to malicious code.",
-  "GHA-CI-004":
-    "Untrusted user input (PR title, issue body) injected directly into shell commands. Attackers craft input that executes arbitrary commands.",
-  "GHA-CI-005":
-    "Self-hosted runners execute untrusted code from forks. The runner's host machine, network, and credentials are exposed.",
-  "GHA-SECRETS-001":
-    "Private key material committed to the repository. Anyone with repo access can impersonate the key owner.",
-  "GHA-SECRETS-002":
-    "Environment file with probable secrets committed. Database passwords, API keys, or tokens may be exposed.",
-  "GHA-SECRETS-003":
-    "High-entropy string near auth keywords detected. May be a real API key or token — verify manually.",
-  "GHA-SUPPLY-001":
-    "No lockfile means dependency versions aren't pinned. A compromised registry could serve malicious versions.",
-  "GHA-SUPPLY-002":
-    "Dependencies use floating version ranges. A malicious version published within range would be installed automatically.",
-  "GHA-SUPPLY-003":
-    "Dependencies sourced from raw git URLs instead of registries. No audit trail or integrity verification.",
-  "GHA-SUPPLY-005":
-    "Binary files without source provenance. Could contain malware that bypasses code review.",
-  "GHA-TRUST-001":
-    "No security disclosure policy. Vulnerability reporters have no way to reach maintainers privately.",
-  "GHA-TRUST-002":
-    "No code ownership defined. No guarantee that changes to sensitive files are reviewed by qualified maintainers.",
-  "GHA-AI-001":
-    "LLM output flows directly to tool execution without validation. A prompt injection could execute arbitrary tools.",
-  "GHA-AI-002":
-    "Secrets or sensitive data included in prompts. LLM providers may log or train on this data.",
-  "GHA-AGENT-001":
-    "Agent has shell, write, and network access without human approval. A misbehaving agent can exfiltrate data or destroy files.",
-  "GHA-MCP-001":
-    "MCP server exposes unrestricted shell execution. Any connected client can run arbitrary commands on the host.",
-  "GHA-MCP-003":
-    "MCP server forwards auth tokens into tool calls. A malicious tool request can capture credentials.",
-  "GHA-PLUGIN-002":
-    "Plugin instructions attempt to override the AI's identity or safety boundaries. May be benign (defining a persona) or malicious (bypassing guardrails).",
-  "GHA-INFRA-001":
-    "Container runs as root. A container escape gives the attacker root access to the host.",
-  "GHA-INFRA-002":
-    "Container uses :latest tag. Builds are not reproducible and a compromised image affects all future builds.",
+const RISK_EXPLANATIONS: Record<string, { technical: string; plain: string }> = {
+  "GHA-EXEC-001": {
+    technical: "Downloads and executes remote code in a single command. An attacker who compromises the URL can execute arbitrary code on your machine during install.",
+    plain: "The install downloads and runs code in one step — if the source is compromised, your machine runs the attacker's code.",
+  },
+  "GHA-EXEC-002": {
+    technical: "Runs code automatically during package install. Malicious packages use this to execute code before you review anything.",
+    plain: "Code runs automatically when you install this package — you don't get a chance to review it first.",
+  },
+  "GHA-EXEC-003": {
+    technical: "Allows arbitrary shell commands from string input. If user data reaches this, it's remote code execution.",
+    plain: "This code can run any command on your computer from text input — if that input comes from outside, it's a backdoor.",
+  },
+  "GHA-EXEC-004": {
+    technical: "Deserializes untrusted data into executable objects. Attacker-crafted payloads can execute arbitrary code.",
+    plain: "This loads external data in a way that could let an attacker slip in code that runs on your machine.",
+  },
+  "GHA-EXEC-005": {
+    technical: "Fetches remote content then executes or loads it as code. If the remote source is compromised, your system is compromised.",
+    plain: "This downloads something from the internet and then runs it — if that source gets hacked, so does your system.",
+  },
+  "GHA-CI-001": {
+    technical: "Runs CI workflows with write access on pull requests from forks. Attackers can submit PRs that execute code with your repo's secrets.",
+    plain: "Anyone can submit code changes that run with access to your project's secrets — an attacker could steal them.",
+  },
+  "GHA-CI-002": {
+    technical: "GitHub token has broad permissions. A compromised workflow step can push code, delete branches, or access secrets.",
+    plain: "The CI system has more access than it needs — if anything goes wrong, it could modify your whole project.",
+  },
+  "GHA-CI-003": {
+    technical: "Actions pinned to tags instead of commit SHAs. If the action repo is compromised, the tag can be moved to malicious code.",
+    plain: "CI tools aren't locked to exact versions — a compromised tool could swap in malicious code without you noticing.",
+  },
+  "GHA-CI-004": {
+    technical: "Untrusted user input (PR title, issue body) injected directly into shell commands. Attackers craft input that executes arbitrary commands.",
+    plain: "Pull request text gets run as a command in CI — someone could submit a PR with text that steals your project's secrets.",
+  },
+  "GHA-CI-005": {
+    technical: "Self-hosted runners execute untrusted code from forks. The runner's host machine, network, and credentials are exposed.",
+    plain: "Your build server runs code from anyone who submits a PR — they could access your server and network.",
+  },
+  "GHA-SECRETS-001": {
+    technical: "Private key material committed to the repository. Anyone with repo access can impersonate the key owner.",
+    plain: "A private key is stored in the code — anyone who can see this repo can pretend to be you.",
+  },
+  "GHA-SECRETS-002": {
+    technical: "Environment file with probable secrets committed. Database passwords, API keys, or tokens may be exposed.",
+    plain: "A config file that likely contains passwords or API keys was committed — these should never be in code.",
+  },
+  "GHA-SECRETS-003": {
+    technical: "High-entropy string near auth keywords detected. May be a real API key or token — verify manually.",
+    plain: "We found something that looks like it might be a password or API key — worth checking manually.",
+  },
+  "GHA-SUPPLY-001": {
+    technical: "No lockfile means dependency versions aren't pinned. A compromised registry could serve malicious versions.",
+    plain: "Dependencies aren't locked to specific versions — a compromised update could slip in automatically.",
+  },
+  "GHA-SUPPLY-002": {
+    technical: "Dependencies use floating version ranges. A malicious version published within range would be installed automatically.",
+    plain: "Dependencies accept a range of versions — a malicious update within that range would install without warning.",
+  },
+  "GHA-SUPPLY-003": {
+    technical: "Dependencies sourced from raw git URLs instead of registries. No audit trail or integrity verification.",
+    plain: "Some dependencies come directly from git repos instead of package registries — there's no verification they're safe.",
+  },
+  "GHA-SUPPLY-005": {
+    technical: "Binary files without source provenance. Could contain malware that bypasses code review.",
+    plain: "There are binary files with no way to verify what's in them — they could contain anything.",
+  },
+  "GHA-TRUST-001": {
+    technical: "No security disclosure policy. Vulnerability reporters have no way to reach maintainers privately.",
+    plain: "There's no SECURITY.md — if someone finds a vulnerability, there's no private way to report it.",
+  },
+  "GHA-TRUST-002": {
+    technical: "No code ownership defined. No guarantee that changes to sensitive files are reviewed by qualified maintainers.",
+    plain: "No CODEOWNERS file — there's no rule about who must review changes to important files.",
+  },
+  "GHA-AI-001": {
+    technical: "LLM output flows directly to tool execution without validation. A prompt injection could execute arbitrary tools.",
+    plain: "AI model output may control what tools run — a prompt injection attack could make the AI do things it shouldn't.",
+  },
+  "GHA-AI-002": {
+    technical: "Secrets or sensitive data included in prompts. LLM providers may log or train on this data.",
+    plain: "Sensitive data might be sent to an AI provider — they could log it or use it for training.",
+  },
+  "GHA-AGENT-001": {
+    technical: "Agent has shell, write, and network access without human approval. A misbehaving agent can exfiltrate data or destroy files.",
+    plain: "An AI agent can run commands, write files, and access the network without asking permission — if it goes wrong, it could leak or destroy data.",
+  },
+  "GHA-MCP-001": {
+    technical: "MCP server exposes unrestricted shell execution. Any connected client can run arbitrary commands on the host.",
+    plain: "This MCP server lets connected tools run any command on the computer — no restrictions.",
+  },
+  "GHA-MCP-003": {
+    technical: "MCP server forwards auth tokens into tool calls. A malicious tool request can capture credentials.",
+    plain: "Login credentials get passed to tools automatically — a malicious tool could steal them.",
+  },
+  "GHA-PLUGIN-002": {
+    technical: "Plugin instructions attempt to override the AI's identity or safety boundaries. May be benign (defining a persona) or malicious (bypassing guardrails).",
+    plain: "Plugin instructions try to change the AI's behavior — could be a normal persona definition or an attempt to bypass safety rules.",
+  },
+  "GHA-INFRA-001": {
+    technical: "Container runs as root. A container escape gives the attacker root access to the host.",
+    plain: "The container runs with full admin privileges — if an attacker breaks out, they own the whole machine.",
+  },
+  "GHA-INFRA-002": {
+    technical: "Container uses :latest tag. Builds are not reproducible and a compromised image affects all future builds.",
+    plain: "The container always pulls the latest version — a compromised image would affect everyone automatically.",
+  },
 };
 
 // ── Severity counts ───────────────────────────────────────────────────────────
@@ -186,6 +297,9 @@ export function renderTerminalReport(result: AuditResult): string {
     }
     lines.push("");
   }
+
+  // ── Plain English summary ──
+  lines.push(...renderPlainEnglish(result));
 
   lines.push(hr);
 
@@ -275,7 +389,7 @@ export function renderTerminalReport(result: AuditResult): string {
     // Risk explanation
     const explanation = RISK_EXPLANATIONS[f.id];
     if (explanation) {
-      lines.push(`  ${pc.dim("Risk:")}  ${explanation}`);
+      lines.push(`  ${pc.dim("Risk:")}  ${explanation.technical}`);
     }
 
     // Remediation from the finding
@@ -311,6 +425,26 @@ export function renderTerminalReport(result: AuditResult): string {
     for (const c of result.decision.constraints) {
       lines.push(`  ${pc.cyan("→")} ${c}`);
     }
+    lines.push("");
+  }
+
+  // ── Stage 2 recommendations ──
+  if (result.stage2_recommended && result.stage2_triggers && result.stage2_triggers.length > 0) {
+    lines.push(hr);
+    lines.push("");
+    lines.push(pc.bold("  Deeper Analysis Recommended"));
+    lines.push(pc.dim("  Static analysis flagged issue(s) with low confidence."));
+    lines.push(pc.dim("  A deeper scan could confirm or dismiss these."));
+    lines.push("");
+    for (const t of result.stage2_triggers) {
+      const moduleLabel = t.recommended_module === "ast" ? "Code flow analysis"
+        : t.recommended_module === "sandbox" ? "Sandbox execution"
+        : "Manual review";
+      lines.push(`  ${pc.yellow("\u2192")} ${pc.bold(t.finding_id)}: ${t.reason}`);
+      lines.push(`    ${pc.dim("Recommended:")} ${moduleLabel}`);
+    }
+    lines.push("");
+    lines.push(pc.dim("  Future: stop-git-std --deep <repo>"));
     lines.push("");
   }
 

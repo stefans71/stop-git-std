@@ -92,6 +92,19 @@ export function renderMarkdownReport(result: AuditResult): string {
     lines.push("");
   }
 
+  // ── Stage 2 ────────────────────────────────────────────────────────────────
+  if (result.stage2_recommended && result.stage2_triggers && result.stage2_triggers.length > 0) {
+    lines.push("## Deeper Analysis Recommended");
+    lines.push("");
+    lines.push(`Static analysis flagged ${result.stage2_triggers.length} issue(s) with low confidence.`);
+    lines.push("A deeper scan could confirm or dismiss these before you act on them.");
+    lines.push("");
+    for (const t of result.stage2_triggers) {
+      lines.push(`- **${t.finding_id}**: ${t.reason} *(${t.recommended_module})*`);
+    }
+    lines.push("");
+  }
+
   // ── Coverage ────────────────────────────────────────────────────────────────
   lines.push("## Coverage");
   lines.push("");

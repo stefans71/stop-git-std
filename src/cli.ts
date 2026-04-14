@@ -16,7 +16,8 @@ const program = new Command()
   .option("--enable-module <modules...>", "Force-enable modules")
   .option("--disable-module <modules...>", "Force-disable modules")
   .option("--runtime-mode <mode>", "Runtime validation mode", "off")
-  .option("--adoption-mode <mode>", "Adoption context", "third_party");
+  .option("--adoption-mode <mode>", "Adoption context", "third_party")
+  .option("--skip-stage2", "Suppress stage 2 analysis recommendations", false);
 
 export async function main(): Promise<number> {
   program.parse();
@@ -40,6 +41,7 @@ export async function main(): Promise<number> {
     disabled_modules: opts.disableModule ?? [],
     runtime_mode: opts.runtimeMode,
     adoption_mode: opts.adoptionMode,
+    skip_stage2: opts.skipStage2 ?? false,
   });
 
   const result = await runAudit(request);
