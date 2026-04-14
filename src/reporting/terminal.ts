@@ -200,7 +200,7 @@ const RISK_EXPLANATIONS: Record<string, { technical: string; plain: string }> = 
   },
   "GHA-SECRETS-003": {
     technical: "High-entropy string near auth keywords detected. May be a real API key or token — verify manually.",
-    plain: "We found something that looks like it might be a password or API key — worth checking manually.",
+    plain: "We found a high-entropy string that may be a password or API key. Have a security engineer or AI assistant review the files below to confirm whether it's a real secret or test data.",
   },
   "GHA-SUPPLY-001": {
     technical: "No lockfile means dependency versions aren't pinned. A compromised registry could serve malicious versions.",
@@ -300,7 +300,7 @@ const RISK_EXPLANATIONS: Record<string, { technical: string; plain: string }> = 
   },
   "GHA-AI-003": {
     technical: "No rate limiting or budget controls on AI model calls. Runaway usage can generate large unexpected costs.",
-    plain: "There's no limit on how much the AI can be used — a bug or abuse could run up a huge bill.",
+    plain: "These files make AI/LLM API calls without visible rate limiting or budget controls. Review the files below to add request limits before production use.",
   },
   "GHA-AGENT-002": {
     technical: "Agent tasks share memory or state without isolation. One task can read or corrupt another task's data.",
@@ -381,7 +381,7 @@ export function renderTerminalReport(result: AuditResult): string {
 
   // ── Scores with bars ──
   lines.push("");
-  lines.push(pc.bold("  Risk Scores") + pc.dim("  (0 = safe, 100 = critical risk)"));
+  lines.push(pc.bold("  Risk Scores") + pc.dim("  (0% = safe, 100% = dangerous)"));
   lines.push("");
 
   const tw = result.scores.trustworthiness;
@@ -389,22 +389,22 @@ export function renderTerminalReport(result: AuditResult): string {
   const ap = result.scores.abuse_potential;
 
   lines.push(
-    `  Trustworthiness  ${scoreBar(tw)}  ${scoreColor(tw).padStart(12)} / 100  ${scoreLabel(tw)}`,
+    `  Trustworthiness Risk  ${scoreBar(tw)}  ${scoreColor(tw).padStart(5)}%  ${scoreLabel(tw)}`,
   );
   lines.push(
-    pc.dim("                   How well-governed and maintained is the source?"),
+    pc.dim("                        How well-governed and maintained is the source?"),
   );
   lines.push(
-    `  Exploitability   ${scoreBar(ex)}  ${scoreColor(ex).padStart(12)} / 100  ${scoreLabel(ex)}`,
+    `  Exploitability Risk   ${scoreBar(ex)}  ${scoreColor(ex).padStart(5)}%  ${scoreLabel(ex)}`,
   );
   lines.push(
-    pc.dim("                   How exposed is the attack surface?"),
+    pc.dim("                        How exposed is the attack surface?"),
   );
   lines.push(
-    `  Abuse Potential  ${scoreBar(ap)}  ${scoreColor(ap).padStart(12)} / 100  ${scoreLabel(ap)}`,
+    `  Abuse Potential Risk  ${scoreBar(ap)}  ${scoreColor(ap).padStart(5)}%  ${scoreLabel(ap)}`,
   );
   lines.push(
-    pc.dim("                   How easily could this be misused in your environment?"),
+    pc.dim("                        How easily could this be misused in your environment?"),
   );
   lines.push("");
   lines.push(
@@ -472,6 +472,18 @@ export function renderTerminalReport(result: AuditResult): string {
     // Remediation from the finding
     if (f.remediation) {
       lines.push(`  ${pc.dim("Fix:")}   ${f.remediation}`);
+    }
+
+    // Actionable next steps with full file paths
+    if (f.files && f.files.length > 0) {
+      const label = f.files.length === 1 ? "Review this file" : "Review these files";
+      lines.push(`  ${pc.dim("Next:")}  ${label}:`);
+      for (const file of f.files.slice(0, 5)) {
+        lines.push(`  ${pc.dim("       ")} ${file}`);
+      }
+      if (f.files.length > 5) {
+        lines.push(`  ${pc.dim("       ")} ... and ${f.files.length - 5} more`);
+      }
     }
 
     lines.push("");

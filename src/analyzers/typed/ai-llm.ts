@@ -106,17 +106,19 @@ export const aiLlmAnalyzer: AnalyzerModule = {
         }
 
         case "GHA-AI-003": {
-          // Stub: basic scan for missing rate limiting on LLM calls
+          // Scan for missing rate limiting on LLM calls — code files only
+          // Config files (.yaml/.json) mentioning LLM providers are expected (they configure
+          // which model to use, not call it), so we exclude them to avoid false positives.
           const regex = /rate.*limit|rateLimit|throttl/i;
           const matchedFiles: string[] = [];
           const lineNumbers: number[] = [];
 
-          // For this stub we flag files that call LLM APIs but appear to have no rate limiting
           const llmCallRegex = /openai\.|anthropic\.|completion\(|chat\.create|generate\(/i;
+          const codeOnlyFiles = scanFiles.filter((f) => classifyFile(f) === "code");
           const filesWithLlmCalls = new Set<string>();
           const filesWithRateLimit = new Set<string>();
 
-          for (const f of scanFiles) {
+          for (const f of codeOnlyFiles) {
             if (scanFileContent(f, llmCallRegex).length > 0) {
               filesWithLlmCalls.add(f);
             }
