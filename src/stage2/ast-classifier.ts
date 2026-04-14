@@ -1,4 +1,4 @@
-import type { Parser } from "web-tree-sitter";
+import type { Parser, Node } from "web-tree-sitter";
 
 export type AstClassification = "dismiss" | "confirm" | "ambiguous";
 
@@ -44,11 +44,35 @@ function classifyNodeType(nodeType: string): AstClassification | null {
   return null;
 }
 
+function classifyAtPosition(
+  rootNode: Node,
+  row: number,
+  column: number,
+): ClassificationResult | null {
+  const node = rootNode.descendantForPosition({ row, column });
+  if (!node) return null;
+
+  let current = node;
+  for (let i = 0; i < 5; i++) {
+    const classification = classifyNodeType(current.type);
+    if (classification !== null) {
+      const reason = classification === "dismiss"
+        ? `Match is inside ${current.type} — not executable code`
+        : `Match is part of ${current.type} — potentially dangerous`;
+      return { classification, reason, nodeType: current.type };
+    }
+    if (!current.parent) break;
+    current = current.parent;
+  }
+
+  return null;
+}
+
 export function classifyMatchContext(
   parser: Parser,
   sourceCode: string,
   lineNumber: number,
-  _matchText: string,
+  matchText: string,
 ): ClassificationResult {
   let tree;
   try {
@@ -66,30 +90,47 @@ export function classifyMatchContext(
     const row = lineNumber - 1;
     const rootNode = tree.rootNode;
 
-    // Find the deepest named node at this line
-    let node = rootNode.descendantForPosition({ row, column: 0 });
-    if (!node) {
-      return { classification: "ambiguous", reason: "No node found at line", nodeType: "unknown" };
-    }
+    // Find the column where the match text appears on this line
+    const lines = sourceCode.split("\n");
+    const line = lines[row] ?? "";
 
-    // Walk up the ancestor chain (up to 5 levels) to find a classifiable node
-    let current = node;
-    for (let i = 0; i < 5; i++) {
-      const classification = classifyNodeType(current.type);
-      if (classification !== null) {
-        const reason = classification === "dismiss"
-          ? `Match is inside ${current.type} — not executable code`
-          : `Match is part of ${current.type} — potentially dangerous`;
-        return { classification, reason, nodeType: current.type };
+    // If we have match text, find its column; otherwise sample the line midpoint
+    const columns: number[] = [];
+    if (matchText) {
+      let searchFrom = 0;
+      while (true) {
+        const idx = line.indexOf(matchText, searchFrom);
+        if (idx === -1) break;
+        columns.push(idx + Math.floor(matchText.length / 2));
+        searchFrom = idx + 1;
       }
-      if (!current.parent) break;
-      current = current.parent;
+    }
+    if (columns.length === 0) {
+      // Sample multiple positions across the line
+      const trimmedStart = line.length - line.trimStart().length;
+      columns.push(trimmedStart, Math.floor(line.length / 2));
     }
 
+    // Classify at each column position; return the first definitive result
+    let bestResult: ClassificationResult | null = null;
+    for (const col of columns) {
+      const result = classifyAtPosition(rootNode, row, col);
+      if (result) {
+        // Dismiss and confirm are definitive
+        if (result.classification === "dismiss" || result.classification === "confirm") {
+          return result;
+        }
+        if (!bestResult) bestResult = result;
+      }
+    }
+
+    if (bestResult) return bestResult;
+
+    const node = rootNode.descendantForPosition({ row, column: 0 });
     return {
       classification: "ambiguous",
-      reason: `Match is in ${node.type} context — unable to determine intent`,
-      nodeType: node.type,
+      reason: `Match is in ${node?.type ?? "unknown"} context — unable to determine intent`,
+      nodeType: node?.type ?? "unknown",
     };
   } finally {
     tree.delete();
