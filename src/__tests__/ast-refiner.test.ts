@@ -140,6 +140,60 @@ describe("refineFindings", () => {
     expect(result[0]!.suppressed).toBe(true);
   });
 
+  test("uses per-file match text from evidence records (multi-file finding)", async () => {
+    // File 1: match text "credential" is in a string literal → dismiss
+    const file1 = join(tmpDir, "test-multi-1.js");
+    writeFileSync(file1, `const msg = "credential forwarding";\n`);
+
+    // File 2: match text "forward" is in a function call → confirm
+    const file2 = join(tmpDir, "test-multi-2.js");
+    writeFileSync(file2, `credential.forward(secret);\n`);
+
+    const finding = makeFinding({
+      id: "GHA-MCP-003",
+      files: [file1, file2],
+      line_numbers: [1, 1],
+      evidence: {
+        type: "file_match",
+        records: [
+          { match: "credential" },
+          { match: "forward" },
+        ],
+      },
+    });
+
+    const result = await refineFindings([finding], workspace, "deep", HARD_STOP_PATTERNS, STAGE2_MODULE_MAP);
+    // File 2 confirms → finding should not be suppressed, confidence should be high
+    expect(result[0]!.suppressed).toBe(false);
+    expect(result[0]!.confidence).toBe("high");
+  });
+
+  test("mixed dismiss+ambiguous classifications set confidence to low", async () => {
+    // File 1: match in string → dismiss
+    const file1 = join(tmpDir, "test-mixed-1.js");
+    writeFileSync(file1, `const x = "model exec handler";\n`);
+
+    // File 2: match in type annotation → ambiguous
+    const file2 = join(tmpDir, "test-mixed-2.ts");
+    writeFileSync(file2, `interface ModelExec { run(): void; }\n`);
+
+    const finding = makeFinding({
+      files: [file1, file2],
+      line_numbers: [1, 1],
+      evidence: {
+        type: "file_match",
+        records: [
+          { match: "model exec" },
+          { match: "ModelExec" },
+        ],
+      },
+    });
+
+    const result = await refineFindings([finding], workspace, "deep", HARD_STOP_PATTERNS, STAGE2_MODULE_MAP);
+    expect(result[0]!.suppressed).toBe(false);
+    expect(result[0]!.confidence).toBe("low");
+  });
+
   test("Google WS CLI pattern: Rust format string → dismiss", async () => {
     const filePath = join(tmpDir, "mod.rs");
     writeFileSync(filePath, `fn main() {\n    let query = format!("model_exec_query_{}", id);\n}\n`);

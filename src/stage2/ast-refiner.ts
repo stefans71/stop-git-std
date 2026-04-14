@@ -6,15 +6,6 @@ import type { LocalWorkspace } from "../models/local-workspace.ts";
 import type { DepthMode } from "../models/enums.ts";
 import { join, isAbsolute } from "path";
 
-export interface AstRefinementSummary {
-  findings_analyzed: number;
-  dismissed: number;
-  confirmed: number;
-  ambiguous: number;
-  unsupported_language_skips: number;
-  parse_errors: number;
-}
-
 export async function refineFindings(
   findings: Finding[],
   workspace: LocalWorkspace,
@@ -53,20 +44,18 @@ export async function refineFindings(
       const content = readFileContent(filePath);
       if (!content) continue;
 
-      // Extract match text from evidence records if available
+      // Extract match text from the corresponding evidence record for this file
       let matchText = "";
-      for (const rec of finding.evidence.records) {
-        const recMatch = (rec as Record<string, unknown>).match;
-        if (typeof recMatch === "string") {
-          matchText = recMatch;
-          break;
-        }
+      const rec = finding.evidence.records[i] as Record<string, unknown> | undefined;
+      if (rec && typeof rec.match === "string") {
+        matchText = rec.match;
       }
 
       try {
         const result = classifyMatchContext(parser, content, lineNumber, matchText);
         classifications.push(result.classification);
-      } catch {
+      } catch (err) {
+        console.warn(`[ast-refiner] Classification failed for ${rawPath}:${lineNumber}: ${err}`);
         classifications.push("ambiguous");
       } finally {
         parser.delete();

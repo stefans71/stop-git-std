@@ -94,7 +94,7 @@ export function classifyMatchContext(
     const lines = sourceCode.split("\n");
     const line = lines[row] ?? "";
 
-    // If we have match text, find its column; otherwise sample the line midpoint
+    // If we have match text, find its column; otherwise sample multiple positions
     const columns: number[] = [];
     if (matchText) {
       let searchFrom = 0;

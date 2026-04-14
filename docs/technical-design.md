@@ -27,9 +27,9 @@ The engine is data-driven. Rules are defined in YAML (`docs/rule-catalog.yaml`),
 
 Analyzers load their rules from the catalog at runtime and emit normalized findings matching the finding contract.
 
-### 11-Phase Pipeline
+### Pipeline
 
-The engine executes a fixed sequence of 11 phases (defined in `engine-contract.yaml`):
+The engine executes a fixed sequence of phases (defined in `engine-contract.yaml`):
 
 1. **context_capture** — Normalize audit request into audit context
 2. **repository_acquisition** — Clone/fetch repo or open local path
@@ -39,9 +39,27 @@ The engine executes a fixed sequence of 11 phases (defined in `engine-contract.y
 6. **typed_analysis** — Run category-specific rule modules (activated by classification)
 7. **runtime_validation** — Optional sandboxed execution (no-op in MVP)
 8. **finding_normalization** — Merge, dedupe, normalize all findings
+8.5. **ast_refinement** — Stage 2 AST analysis to confirm or dismiss low-confidence findings (see below)
 9. **scoring** — Compute 3-axis risk scores + confidence
 10. **policy_decision** — Convert scores + findings into final decision
 11. **reporting** — Emit requested report formats
+
+### Stage 2: AST Refinement (Phase 8.5)
+
+When `depth_mode` is not `quick`, the engine runs AST refinement on findings mapped to the `ast` Stage 2 module. This phase uses tree-sitter to parse source files and classify whether regex matches are in executable code paths or non-executable contexts (string literals, comments, type annotations).
+
+**Classification model:**
+- **dismiss** — Match is in a string literal, comment, or type name → finding suppressed
+- **confirm** — Match is in a function call, import, or assignment → confidence upgraded to high
+- **ambiguous** — Unable to determine → confidence set to low
+
+**Supported languages:** TypeScript, JavaScript, Python, Rust, Go, C#
+
+**Modules:** `src/stage2/language-map.ts` (parser loading), `src/stage2/ast-classifier.ts` (node classification), `src/stage2/ast-refiner.ts` (orchestration)
+
+**Graceful degradation:** If tree-sitter WASM loading fails, the entire phase is skipped and original findings are preserved. Individual parse or classification errors fall back to "ambiguous".
+
+**CLI control:** `--quick` skips Phase 8.5 entirely, `--deep` refines all findings (not just hard-stop), `--skip-stage2` suppresses Stage 2 recommendations.
 
 ### Module System
 
@@ -175,7 +193,7 @@ Automatically attached based on finding categories:
 bun run src/cli.ts <repo-path-or-url> [options]
 ```
 
-Options: `--ref`, `--env`, `--policy`, `--format`, `--output-dir`, `--include`, `--exclude`, `--enable-module`, `--disable-module`, `--runtime-mode`, `--adoption-mode`
+Options: `--ref`, `--env`, `--policy`, `--format`, `--output-dir`, `--include`, `--exclude`, `--enable-module`, `--disable-module`, `--runtime-mode`, `--adoption-mode`, `--quick`, `--deep`, `--skip-stage2`
 
 Exit codes: 0=PROCEED, 1=ABORT, 2=CAUTION
 

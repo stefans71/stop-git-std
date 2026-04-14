@@ -44,7 +44,8 @@ async function loadLanguage(grammarName: string): Promise<Language | null> {
     const lang = await Language.load(wasmPath);
     languageCache.set(grammarName, lang);
     return lang;
-  } catch {
+  } catch (err) {
+    console.warn(`[ast] Failed to load grammar "${grammarName}": ${err}`);
     return null;
   }
 }

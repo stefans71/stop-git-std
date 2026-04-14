@@ -59,19 +59,12 @@ Expected outcome: decision accuracy **2/6 → 5/6** after DR1-DR3.
 
 Stage 2 is triggered automatically when Stage 1 flags low-confidence findings that would trigger hard-stop rules. The P0 work builds the escalation framework and recommendation output; P1 builds the actual analysis modules.
 
-### AST/tree-sitter analysis module
-- **Purpose:** Verify whether flagged patterns are in executable code paths vs docs/comments/string literals
-- **How it works:** Uses tree-sitter to parse flagged files. Walks the AST to determine if the regex match is inside a function call, string literal, comment, or markdown text. If the match is in a non-executable context (string literal in an analyzer, markdown description, test fixture), the finding is dismissed or confidence downgraded.
-- **Findings it resolves:**
-  - GHA-AI-001 (model→exec): Checks if `model.*exec` match is an actual function call chain or a documentation string
-  - GHA-AGENT-001 (unrestricted agent): Checks if `register.*tool` is a real tool registration call or a regex pattern in analyzer code
-  - GHA-MCP-001 (shell exposure): Checks if `mcp.*server` is an MCP server instantiation or a test/doc reference
-  - GHA-MCP-003 (credential forwarding): Checks if credential-passing pattern is in executable code
-  - GHA-EXEC-004 (unsafe deserialization): Checks if `pickle.loads`/`yaml.load` is a real call or a regex string
-  - GHA-EXEC-005 (remote code fetch): Checks if `fetch()` + `eval()` co-location is in actual code flow
-- **Output:** Upgrades confidence to "high" (confirmed) or dismisses finding (false positive in docs/comments)
-- **Impact:** Eliminates self-audit false positives entirely. Resolves AI/agent/MCP false positives for repos like FrontierBoard and Google WS CLI.
-- **Tech:** tree-sitter with TypeScript, Python, Rust, Go grammars. ~500-800 lines.
+### AST/tree-sitter analysis module — Done (PR #3)
+- Implemented as Phase 8.5 in the audit pipeline
+- Uses tree-sitter to parse flagged files and classify matches as dismiss/confirm/ambiguous
+- Supports TypeScript, JavaScript, Python, Rust, Go, C# via WASM grammars
+- CLI control: `--quick` (skip), `--deep` (refine all), default `auto` (refine hard-stop findings only)
+- Modules: `src/stage2/language-map.ts`, `src/stage2/ast-classifier.ts`, `src/stage2/ast-refiner.ts`
 
 ### Sandbox execution module
 - **Purpose:** Verify runtime behavior of install scripts and lifecycle hooks
