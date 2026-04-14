@@ -136,6 +136,10 @@ function renderPlainEnglish(result: AuditResult): string[] {
       for (const f of explained) {
         lines.push(`  ${pc.dim("\u2022")} ${RISK_EXPLANATIONS[f.id]!.plain}`);
       }
+      const unexplained = showFindings.length - explained.length;
+      if (unexplained > 0) {
+        lines.push(`  ${pc.dim("\u2022")} Plus ${unexplained} additional finding(s) — see details below.`);
+      }
       lines.push("");
     }
   }
@@ -268,7 +272,7 @@ const RISK_EXPLANATIONS: Record<string, { technical: string; plain: string }> = 
   },
   "GHA-TRUST-005": {
     technical: "Unusual recent change in commit authors. Could indicate a maintainer account takeover.",
-    plain: "New people suddenly started making changes — could be normal, or could mean someone's account was hijacked.",
+    plain: "New contributors appeared recently — this may be normal growth, but sudden maintainer changes can indicate account compromise. Check the project's contributor history.",
   },
   "GHA-SUPPLY-004": {
     technical: "A direct dependency has a known security vulnerability. The vulnerability may be exploitable in your usage.",

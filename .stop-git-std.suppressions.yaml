@@ -1,60 +1,63 @@
 # Self-referential false positive suppressions for stop-git-std
 #
+# GOVERNANCE: Changes to this file require FrontierBoard review (3-model board).
 # This tool is a security auditor. When it scans itself, its own source code
 # matches the patterns it detects (e.g., regex literals for "mcp.*server",
-# imports like "mcpServerAnalyzer", classification logic mentioning "mcp").
+# imports like "mcpServerAnalyzer", risk explanation text mentioning threats).
 # None of these represent actual security risks — they ARE the detection logic.
 #
-# Reviewed by FrontierBoard (3-model board, 2026-04-14) as part of detection accuracy review.
+# Reviewed by FrontierBoard (3-model board, 2026-04-14).
+# Board Review 4: retroactive code review of commit ab493a5.
+# Findings C1 (narrow path_globs), C2 (fallback line), C6 (TRUST-005 wording) applied.
 
 suppressions:
   # ── Hard-stop rules — require override fields ──────────────────────────────
 
   - rule_id: GHA-AI-001
-    path_globs: ["src/**"]
-    justification: "Self-referential: tool source contains AI/LLM detection patterns (regex literals, rule catalog references), not actual AI model execution"
-    override_reason: "Self-referential false positive: security auditor source code contains detection patterns as string literals and rule references"
+    path_globs: ["src/analyzers/**", "src/reporting/terminal.ts"]
+    justification: "Self-referential: analyzer source contains AI/LLM detection regex patterns; terminal.ts contains risk explanation text mentioning 'model' — not actual AI model execution"
+    override_reason: "Self-referential false positive: security auditor source code contains detection patterns as string literals and risk explanation text"
     reviewer_identity: "FrontierBoard (3-model review, 2026-04-14)"
     reviewed_commit_sha: "30f479b"
 
   - rule_id: GHA-AGENT-001
-    path_globs: ["src/**"]
-    justification: "Self-referential: tool source contains agent tool registration patterns as detection targets, not actual agent capabilities"
+    path_globs: ["src/analyzers/**"]
+    justification: "Self-referential: analyzer source contains tool registration patterns as detection targets, not actual agent capabilities"
     override_reason: "Self-referential false positive: security auditor source code contains detection patterns as string literals"
     reviewer_identity: "FrontierBoard (3-model review, 2026-04-14)"
     reviewed_commit_sha: "30f479b"
 
   - rule_id: GHA-MCP-001
-    path_globs: ["src/**"]
-    justification: "Self-referential: tool source references 'mcp' in analyzer code, plugin registration, category classification, and enum definitions — not an actual MCP server"
+    path_globs: ["src/analyzers/**", "src/plugins/builtin-ts.ts", "src/models/enums.ts", "src/inventory/classify-repo.ts", "src/reporting/terminal.ts"]
+    justification: "Self-referential: tool references 'mcp' in analyzer code, plugin registration, category classification, enum definitions, and risk explanations — not an actual MCP server"
     override_reason: "Self-referential false positive: security auditor references MCP patterns throughout its detection infrastructure"
     reviewer_identity: "FrontierBoard (3-model review, 2026-04-14)"
     reviewed_commit_sha: "30f479b"
 
   - rule_id: GHA-MCP-003
-    path_globs: ["src/**"]
-    justification: "Self-referential: tool source contains prompt injection detection patterns as regex string literals, not actual prompt injection"
+    path_globs: ["src/analyzers/**"]
+    justification: "Self-referential: analyzer source contains prompt injection detection patterns as regex string literals, not actual prompt injection"
     override_reason: "Self-referential false positive: security auditor source code contains detection patterns as string literals"
     reviewer_identity: "FrontierBoard (3-model review, 2026-04-14)"
     reviewed_commit_sha: "30f479b"
 
   - rule_id: GHA-EXEC-005
-    path_globs: ["src/**"]
-    justification: "Self-referential: tool source contains remote code fetch detection patterns as regex string literals, not actual remote execution"
-    override_reason: "Self-referential false positive: security auditor source code contains detection patterns as string literals"
+    path_globs: ["src/analyzers/**", "src/adapters/osv.ts"]
+    justification: "Self-referential: analyzer source contains remote code fetch patterns; osv.ts references fetch for OSV API calls — not actual remote code execution"
+    override_reason: "Self-referential false positive: security auditor source code contains detection patterns and legitimate API fetch calls"
     reviewer_identity: "FrontierBoard (3-model review, 2026-04-14)"
     reviewed_commit_sha: "30f479b"
 
   # ── Non-hard-stop rules — no override fields needed ────────────────────────
 
   - rule_id: GHA-EXEC-004
-    path_globs: ["src/**"]
-    justification: "Self-referential: tool source contains deserialization detection patterns as regex string literals, not actual unsafe deserialization"
+    path_globs: ["src/analyzers/**", "src/reporting/terminal.ts"]
+    justification: "Self-referential: analyzer source contains deserialization patterns; terminal.ts contains risk explanation text — not actual unsafe deserialization"
 
   - rule_id: GHA-AI-002
-    path_globs: ["src/**"]
-    justification: "Self-referential: tool source contains secret-in-prompt detection patterns and risk explanation text, not actual secret embedding in prompts"
+    path_globs: ["src/analyzers/**", "src/reporting/terminal.ts"]
+    justification: "Self-referential: analyzer source contains secret-in-prompt patterns; terminal.ts contains risk explanation text — not actual secret embedding in prompts"
 
   - rule_id: GHA-PLUGIN-002
-    path_globs: ["src/**"]
-    justification: "Self-referential: tool source contains prompt injection detection patterns as regex string literals, not actual plugin instruction manipulation"
+    path_globs: ["src/analyzers/**", "src/adapters/osv.ts"]
+    justification: "Self-referential: analyzer source contains prompt injection patterns; osv.ts contains 'system' keyword — not actual plugin instruction manipulation"
