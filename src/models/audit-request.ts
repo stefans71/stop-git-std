@@ -5,6 +5,7 @@ import {
   AdoptionMode,
   OutputFormat,
   PolicyProfile,
+  DepthMode,
 } from "./enums.ts";
 
 export const AuditRequestSchema = z.object({
@@ -30,6 +31,7 @@ export const AuditRequestSchema = z.object({
   policy_profile: PolicyProfile.default("balanced"),
   notes: z.string().default(""),
   skip_stage2: z.boolean().default(false),
+  depth_mode: DepthMode.default("auto"),
 });
 
 export type AuditRequest = z.infer<typeof AuditRequestSchema>;

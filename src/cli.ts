@@ -1,4 +1,4 @@
-import { Command } from "commander";
+import { Command, Option } from "commander";
 import { AuditRequestSchema } from "./models/audit-request.ts";
 import { runAudit } from "./engine/run-audit.ts";
 
@@ -17,7 +17,15 @@ const program = new Command()
   .option("--disable-module <modules...>", "Force-disable modules")
   .option("--runtime-mode <mode>", "Runtime validation mode", "off")
   .option("--adoption-mode <mode>", "Adoption context", "third_party")
-  .option("--skip-stage2", "Suppress stage 2 analysis recommendations", false);
+  .addOption(
+    new Option("--skip-stage2", "Suppress stage 2 analysis recommendations"),
+  )
+  .addOption(
+    new Option("--quick", "Skip AST analysis (regex-only)").conflicts(["deep"]),
+  )
+  .addOption(
+    new Option("--deep", "Force AST analysis on all findings").conflicts(["quick"]),
+  );
 
 export async function main(): Promise<number> {
   program.parse();
@@ -41,7 +49,8 @@ export async function main(): Promise<number> {
     disabled_modules: opts.disableModule ?? [],
     runtime_mode: opts.runtimeMode,
     adoption_mode: opts.adoptionMode,
-    skip_stage2: opts.skipStage2 ?? false,
+    skip_stage2: opts.skipStage2 || opts.quick || false,
+    depth_mode: opts.deep ? "deep" : opts.quick ? "quick" : "auto",
   });
 
   const result = await runAudit(request);

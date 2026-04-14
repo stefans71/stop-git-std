@@ -1,6 +1,6 @@
 import { nanoid } from "nanoid";
 import type { AuditRequest } from "../models/audit-request.ts";
-import type { AuditResult, Stage2Trigger } from "../models/audit-result.ts";
+import type { AuditResult, Stage2Trigger, AstRefinementSummary } from "../models/audit-result.ts";
 import type { AuditContext } from "../models/audit-context.ts";
 import type { Finding } from "../models/finding.ts";
 import type { ModuleResult } from "../models/module-result.ts";
@@ -24,6 +24,17 @@ import { renderMarkdownReport } from "../reporting/markdown.ts";
 import { renderSarifReport } from "../reporting/sarif.ts";
 
 const ENGINE_VERSION = "0.1.0";
+
+const STAGE2_MODULE_MAP: Record<string, "ast" | "sandbox" | "manual_review"> = {
+  "GHA-AI-001": "ast",
+  "GHA-AGENT-001": "ast",
+  "GHA-MCP-001": "ast",
+  "GHA-MCP-003": "ast",
+  "GHA-EXEC-004": "ast",
+  "GHA-EXEC-005": "ast",
+  "GHA-EXEC-001": "sandbox",
+  "GHA-EXEC-002": "sandbox",
+};
 
 export function captureContext(request: AuditRequest): AuditContext {
   return {
@@ -160,6 +171,26 @@ export async function runAudit(request: AuditRequest): Promise<AuditResult> {
     catalog.policy_baselines.hard_stop_patterns,
   );
 
+  // Phase 8.5: AST refinement (auto-escalation)
+  let ast_refinement_summary: AstRefinementSummary | undefined;
+
+  if (request.depth_mode !== "quick") {
+    try {
+      const { refineFindings } = await import("../stage2/ast-refiner.ts");
+      const refinement = await refineFindings(
+        findings,
+        workspace,
+        request.depth_mode,
+        catalog.policy_baselines.hard_stop_patterns,
+        STAGE2_MODULE_MAP,
+      );
+      findings = refinement.findings;
+      ast_refinement_summary = refinement.summary;
+    } catch (err) {
+      console.warn(`[ast-refiner] AST refinement failed, continuing with original findings: ${err}`);
+    }
+  }
+
   // Phase 9: scoring
   const scores = computeScores(findings, profile, context, allModuleResults, contract);
 
@@ -177,22 +208,11 @@ export async function runAudit(request: AuditRequest): Promise<AuditResult> {
   let stage2_recommended = false;
   const stage2_triggers: Stage2Trigger[] = [];
 
-  if (!request.skip_stage2) {
+  if (!request.skip_stage2 && request.depth_mode !== "deep") {
     const hardStopPatterns: string[] = catalog.policy_baselines.hard_stop_patterns;
     const lowConfHardStops = findings.filter(
       (f) => !f.suppressed && hardStopPatterns.includes(f.id) && f.confidence === "low"
     );
-
-    const STAGE2_MODULE_MAP: Record<string, "ast" | "sandbox" | "manual_review"> = {
-      "GHA-AI-001": "ast",
-      "GHA-AGENT-001": "ast",
-      "GHA-MCP-001": "ast",
-      "GHA-MCP-003": "ast",
-      "GHA-EXEC-004": "ast",
-      "GHA-EXEC-005": "ast",
-      "GHA-EXEC-001": "sandbox",
-      "GHA-EXEC-002": "sandbox",
-    };
 
     for (const f of lowConfHardStops) {
       const mod = STAGE2_MODULE_MAP[f.id] ?? "manual_review";
@@ -236,6 +256,7 @@ export async function runAudit(request: AuditRequest): Promise<AuditResult> {
     module_results: allModuleResults,
     coverage,
     reports: {},
+    ...(ast_refinement_summary ? { ast_refinement_summary } : {}),
     ...(stage2_recommended ? { stage2_recommended, stage2_triggers } : {}),
   };
 

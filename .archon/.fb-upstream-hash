@@ -1,0 +1,6 @@
+# FrontierBoard-Archon upstream hashes — do not edit
+# Generated: 2026-04-14T01:41:29+00:00
+plan-to-pr=7ae4d18edf3a1218157edefbc48073748ae757555805e58454f04c2eb2f0147d
+idea-to-pr=aee746a3d0117a11eb93687ce74235cdc465013f7099310d3fbd759829ee5215
+upstream-plan-to-pr=/root/tinkering/Archon/.archon/workflows/defaults/archon-plan-to-pr.yaml
+upstream-idea-to-pr=/root/tinkering/Archon/.archon/workflows/defaults/archon-idea-to-pr.yaml

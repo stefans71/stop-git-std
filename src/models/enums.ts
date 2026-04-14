@@ -33,6 +33,9 @@ export type AdoptionMode = z.infer<typeof AdoptionMode>;
 export const PolicyProfile = z.enum(["strict", "balanced", "advisory"]);
 export type PolicyProfile = z.infer<typeof PolicyProfile>;
 
+export const DepthMode = z.enum(["auto", "quick", "deep"]);
+export type DepthMode = z.infer<typeof DepthMode>;
+
 export const OutputFormat = z.enum(["json", "yaml", "markdown", "sarif", "terminal"]);
 export type OutputFormat = z.infer<typeof OutputFormat>;
 

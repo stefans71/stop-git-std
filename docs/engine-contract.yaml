@@ -114,6 +114,13 @@ inputs:
         type: string
         enum_ref: runtime_modes
         default: off
+      depth_mode:
+        type: string
+        allowed_values:
+          - auto
+          - quick
+          - deep
+        default: auto
       adoption_mode:
         type: string
         allowed_values:
@@ -502,6 +509,7 @@ phase_order:
   - typed_analysis
   - runtime_validation
   - finding_normalization
+  - ast_refinement
   - scoring
   - policy_decision
   - reporting
@@ -645,10 +653,29 @@ phases:
       - attach_default_mappings
       - apply_suppressions
 
+  ast_refinement:
+    description: Validate regex findings with tree-sitter AST and refine suppression/confidence.
+    inputs:
+      - normalized_findings
+      - local_workspace
+      - audit_request
+    outputs:
+      - refined_findings
+      - ast_refinement_summary
+    required: false
+    skip_if:
+      any:
+        - audit_request.depth_mode == quick
+    actions:
+      - load_language_parsers
+      - classify_match_context
+      - suppress_non_executable_matches
+      - emit_refinement_summary
+
   scoring:
     description: Compute axis scores and confidence.
     inputs:
-      - normalized_findings
+      - refined_findings
       - repo_profile
       - audit_context
       - module_results
@@ -665,7 +692,7 @@ phases:
   policy_decision:
     description: Convert findings and scores into final decision.
     inputs:
-      - normalized_findings
+      - refined_findings
       - scores
       - audit_context
     outputs:
@@ -683,7 +710,7 @@ phases:
       - run_manifest
       - audit_context
       - repo_profile
-      - normalized_findings
+      - refined_findings
       - scores
       - decision
       - module_results

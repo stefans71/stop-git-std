@@ -24,6 +24,8 @@ bun install
 
 ```bash
 bun run src/cli.ts <repo-path-or-url>
+bun run src/cli.ts <repo-path-or-url> --quick   # Skip AST refinement (fast scan)
+bun run src/cli.ts <repo-path-or-url> --deep    # AST-refine all findings (thorough scan)
 ```
 
 ## Build spec
