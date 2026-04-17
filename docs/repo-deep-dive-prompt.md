@@ -85,7 +85,7 @@ SCAN_DIR=/tmp/repo-scan-$OWNER-$REPO
 mkdir -p "$SCAN_DIR"
 
 # Capture the exact commit we're investigating — record this in the report's version scope
-HEAD_SHA=$(gh api "repos/$OWNER/$REPO/commits/HEAD" -q '.sha' | head -c 7)
+HEAD_SHA=$(gh api "repos/$OWNER/$REPO/commits/HEAD" -q '.sha')
 DEFAULT_BRANCH=$(gh repo view "$OWNER/$REPO" --json defaultBranchRef -q '.defaultBranchRef.name')
 echo "Investigating $OWNER/$REPO @ $DEFAULT_BRANCH ($HEAD_SHA) at $(date -u +%Y-%m-%dT%H:%M:%SZ)"
 ```
@@ -98,7 +98,11 @@ If any of these fail, STOP and tell the user what's wrong. Don't proceed with pa
 # gh api follows redirects automatically — the response body IS the tarball.
 # Pin the fetch to the captured $HEAD_SHA so a force-push between capture and fetch
 # can't cause us to analyze different code than our metadata references.
-gh api "repos/$OWNER/$REPO/tarball/$HEAD_SHA" 2>/dev/null | tar -xz -C "$SCAN_DIR" --strip-components=1
+gh api "repos/$OWNER/$REPO/tarball/$HEAD_SHA" 2>/dev/null | tar --no-absolute-names -xz -C "$SCAN_DIR" --strip-components=1
+
+# Strip symlinks — a malicious repo could include symlinks pointing outside $SCAN_DIR
+# (e.g., README.md -> /etc/shadow) which grep -r would follow and leak host files.
+find "$SCAN_DIR" -type l -delete
 
 # SANITY CHECK — verify extraction worked. If this is 0 or empty, the scan is broken; report it as blocked.
 FILE_COUNT=$(find "$SCAN_DIR" -type f 2>/dev/null | wc -l)
@@ -331,8 +335,9 @@ If Dependabot returns 403, record as "dependency vulnerability scan: blocked (re
 
 ```bash
 # Total PR count to detect sampling
-TOTAL_MERGED=$(gh api "repos/$OWNER/$REPO/pulls?state=closed&per_page=1" --jq 'length' 2>/dev/null)
-echo "Note sampling if this exceeds 300"
+# Total merged PR count — use search API for accurate total (per_page=1 + 'length' returns 0/1, not total)
+TOTAL_MERGED=$(gh api "search/issues?q=repo:$OWNER/$REPO+is:pr+is:merged&per_page=1" --jq '.total_count' 2>/dev/null)
+echo "Total merged PRs: $TOTAL_MERGED — note sampling if this exceeds 300"
 
 # All merged PRs — include `reviews` array so we can compute the broader review metric (F11)
 gh pr list -R "$OWNER/$REPO" --state merged --limit 300 --json number,title,createdAt,mergedAt,author,reviewDecision,reviews,labels

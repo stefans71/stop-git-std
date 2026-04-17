@@ -33,7 +33,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Unbounded:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; script-src 'unsafe-inline';">
 <style>
+  /* SOURCE: scanner-design-system.css — do not edit here, edit the .css file */
   /* ═══════════════════════════════════════════════
      DESIGN SYSTEM — DO NOT MODIFY
      Dark theme, security monitoring aesthetic
@@ -92,16 +94,18 @@
     pointer-events: none;
     z-index: 9999;
   }
-  /* Slow sweeping scan bar */
+  /* Single-pass scan line — thin cyan line sweeps once then disappears */
   body::after {
-    content: ''; position: fixed; left: 0; right: 0; height: 120px;
-    background: linear-gradient(to bottom, transparent, rgba(255,170,42,0.035), transparent);
-    pointer-events: none; z-index: 9998;
-    animation: scan-sweep 14s linear infinite;
+    content: ''; position: fixed; left: 0; right: 0; height: 2px;
+    background: linear-gradient(to right, transparent 5%, var(--cyan-glow) 30%, var(--cyan-glow) 70%, transparent 95%);
+    box-shadow: 0 0 12px var(--cyan-glow), 0 0 4px var(--cyan-glow);
+    pointer-events: none; z-index: 9998; opacity: 0.7;
+    animation: scan-sweep 3s ease-in-out 1s 1 forwards;
   }
   @keyframes scan-sweep {
-    0% { top: -15%; }
-    100% { top: 115%; }
+    0% { top: -2px; opacity: 0.7; }
+    90% { opacity: 0.5; }
+    100% { top: 100vh; opacity: 0; }
   }
 
   /* Scan strip — the data ribbon above the hero */

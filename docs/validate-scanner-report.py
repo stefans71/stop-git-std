@@ -130,6 +130,53 @@ def find_suspicious_lt(html_stripped: str, raw_html: str):
     return findings
 
 
+def find_xss_vectors(html: str):
+    """Scan for XSS vectors in the rendered HTML body (outside <style> blocks).
+    Returns list of (line_num, description, snippet) tuples.
+    Added post-AXIOM audit (V1 fix)."""
+    # Strip style blocks — event handlers inside CSS are not XSS
+    body_html = re.sub(r"<style[^>]*>.*?</style>", "", html, flags=re.DOTALL | re.IGNORECASE)
+
+    findings = []
+
+    # 1. <script> tags in body (outside style blocks — already stripped above)
+    #    Allow the known-safe font-size adjustFont script block.
+    for m in re.finditer(r"<script[^>]*>(.*?)</script>", body_html, re.DOTALL | re.IGNORECASE):
+        script_body = m.group(1)
+        # Whitelist: font-size control script (adjustFont only)
+        if "adjustFont" in script_body and len(script_body.strip().splitlines()) < 10:
+            continue
+        line = body_html.count("\n", 0, m.start()) + 1
+        findings.append((line, "<script> tag in body", m.group()[:60]))
+
+    # 2. Event handler attributes (on*=)
+    for m in re.finditer(r'\bon[a-z]+\s*=\s*["\']', body_html, re.IGNORECASE):
+        # Allow onclick in font-controls (known safe pattern)
+        ctx_start = max(0, m.start() - 80)
+        context = body_html[ctx_start:m.start()]
+        if "adjustFont" in body_html[m.start():m.start() + 50]:
+            continue
+        line = body_html.count("\n", 0, m.start()) + 1
+        findings.append((line, f"event handler attribute: {m.group().strip()}", m.group()))
+
+    # 3. javascript: URLs
+    for m in re.finditer(r'(?:href|src|action)\s*=\s*["\']?\s*javascript:', body_html, re.IGNORECASE):
+        line = body_html.count("\n", 0, m.start()) + 1
+        findings.append((line, "javascript: URL", m.group()))
+
+    # 4. Dangerous embed tags
+    for m in re.finditer(r"<(iframe|embed|object|applet|form)[\s>]", body_html, re.IGNORECASE):
+        line = body_html.count("\n", 0, m.start()) + 1
+        findings.append((line, f"dangerous <{m.group(1)}> tag", m.group()))
+
+    # 5. data: URLs in src attributes (can execute JS)
+    for m in re.finditer(r'src\s*=\s*["\']?\s*data:', body_html, re.IGNORECASE):
+        line = body_html.count("\n", 0, m.start()) + 1
+        findings.append((line, "data: URL in src attribute", m.group()))
+
+    return findings
+
+
 def check(path: Path, mode: str = "default") -> int:
     raw = path.read_text(encoding="utf-8")
     clean = strip_comments_and_inline_content(raw)
@@ -218,6 +265,16 @@ def check(path: Path, mode: str = "default") -> int:
             print(f"  ✓ Zero EXAMPLE-START/END markers remaining (rendered-report check)")
         else:
             print(f"  ✗ {starts + ends} EXAMPLE marker(s) remaining — template scaffolding not stripped")
+            total_errors += 1
+
+        # XSS security check (V1 fix — AXIOM audit)
+        xss_findings = find_xss_vectors(raw)
+        if not xss_findings:
+            print(f"  ✓ No XSS vectors detected (script tags, event handlers, javascript: URLs, dangerous embeds)")
+        else:
+            print(f"  ✗ {len(xss_findings)} XSS vector(s) detected — report contains potentially dangerous content")
+            for line, desc, snippet in xss_findings[:10]:
+                print(f"      line ~{line}: {desc}")
             total_errors += 1
 
         # C4: repo-text escape heuristic

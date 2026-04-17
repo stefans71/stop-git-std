@@ -128,7 +128,11 @@ echo "$HEAD_SHA" > head-sha.txt
 # Download at the pinned SHA so a force-push between now and the end of
 # the scan can't silently change what we're analysing.
 gh api "repos/<owner>/<repo>/tarball/${HEAD_SHA}" > tarball.gz
-mkdir -p src && tar -xzf tarball.gz -C src --strip-components=1
+mkdir -p src && tar --no-absolute-names -xzf tarball.gz -C src --strip-components=1
+
+# Strip symlinks — prevents malicious repos from reading host files via
+# symlinks pointing outside the scan directory (e.g., README.md -> /etc/shadow).
+find src -type l -delete
 
 # Sanity check. If this returns 0, abort — the scan is broken and should
 # be reported as "blocked."
