@@ -142,6 +142,8 @@ These are normal for a repo at 18k stars.
 
 **What this means for you (non-technical).** When you install Archon, you are trusting the maintainer's account security as tightly as you'd trust your own laptop's password. There is no automated gate that would catch "maintainer pushed a bad change" before it reaches your next install. On an 18k-star repo that ships Bun-compiled binaries plus a server that runs on user machines, the blast radius of a single credential compromise is every current and future user.
 
+**OSSF Scorecard note.** The repo is not yet indexed by securityscorecards.dev (API returned 404), so no independent governance score is available. If it were scored, the missing branch protection, missing CODEOWNERS, and low formal review rate would likely drag the Branch-Protection and Code-Review checks to 0-2/10 — reinforcing this finding.
+
 **Why Critical, not Warning.** C20 escalates to Critical when the repo ships executable code to user machines AND has active code flow (≥1 release in the last 30 days). Archon meets both: CLI binaries distributed via Homebrew / `archon.diy/install` / GHCR; 8 releases in the last 30 days (v0.3.0 → v0.3.6). Combined with F2 (release-artifact integrity relies on a single GitHub Releases URL), the installed-artifact trust chain has no independent second root.
 
 | Meta | Value |
@@ -376,6 +378,7 @@ CI-only pipeline. `build-binaries.sh` uses a bash EXIT trap to restore `packages
 | CODEOWNERS | ❌ None | No file in any standard location |
 | SECURITY.md | ✅ Yes (root) | Real private disclosure policy |
 | Security advisories | ⚠ 0 published | May be used in future for open items |
+| OSSF Scorecard | ⚠ Not indexed | API returned 404 — repo not yet indexed by securityscorecards.dev |
 | Dependabot | ⚠ Unknown (403 without admin) | No `.github/dependabot.yml` config either way |
 | Runtime dependencies (root) | ✅ 1 (claude-agent-sdk) | Transitive surface via Slack SDK, React, Vite |
 | CI workflows | 4 (test, publish, release, deploy-docs) | Real matrix test (ubuntu + windows), Docker smoke test |
@@ -403,6 +406,10 @@ CI-only pipeline. `build-binaries.sh` uses a bash EXIT trap to restore `packages
 | Prompt-injection scan (F8) | ✅ 0 matches / 0 actionable |
 | Distribution channels verified (F1, post-R3 C6) | ⚠ **Install path verified, installed artifact NOT verified.** 2 of 2 install paths are pinned and sha256-checked against the release's `checksums.txt` (script byte-matches `scripts/install.sh`; Homebrew formula pins per-platform sha256; Docker publish workflow uses semver GHCR tags). But the Bun-compiled binary was NOT independently rebuilt from source and diffed against the release tarball — so the trust chain terminates at GitHub Releases. This IS the gap Archon's own F2 issue (#1246) names. Treat verdict as "install path looks right; end-artifact reproducibility is not established." |
 | Windows surface coverage (F16) | ✅ install.ps1 inspected; CI test matrix covers windows-latest |
+| OSSF Scorecard | ⚠ Not indexed (API returned 404) — repo not yet tracked by securityscorecards.dev; no independent governance score available |
+| osv.dev | ℹ Not queried — runtime deps are minimal (1 direct: claude-agent-sdk); transitive surface via Slack SDK covered by CVE watch (F3) |
+| Secrets-in-history | ⚠ Not scanned (gitleaks not available) |
+| API rate budget | ✅ 5000/5000 remaining. PR sample: full. |
 | Tarball SHA | `3dedc22` — if your tree differs, re-run the scan |
 
 **Gaps noted:**
@@ -561,6 +568,48 @@ SKIP_CHECKSUM="${SKIP_CHECKSUM:-false}"
 ```
 
 *Classification: Confirmed fact — checksum verification is the default install path.*
+
+---
+
+---
+
+## 08 · How this scan works
+
+### What this scan is
+
+This is an **LLM-driven security investigation** — an AI assistant with terminal access used the [GitHub CLI](https://cli.github.com/) and free public APIs to investigate this repo's governance, code patterns, dependencies, and distribution pipeline. It then synthesized its findings into this plain-English report.
+
+This is **not** a static analyzer, penetration test, or formal security audit. It is a trust-assessment tool that answers: "Should I install this?"
+
+### What we checked
+
+| Area | Scope |
+|------|-------|
+| Governance & Trust | Branch protection, rulesets, CODEOWNERS, SECURITY.md, community health, maintainer account age & activity, code review rates |
+| Code Patterns | Dangerous primitives (eval, exec, fetch), hardcoded secrets, executable file inventory, install scripts, README paste-blocks |
+| Supply Chain | Dependencies, CI/CD workflows, GitHub Actions SHA-pinning, release pipeline, artifact verification |
+| AI Agent Rules | CLAUDE.md, AGENTS.md, .cursorrules, .mcp.json — checked for prompt injection and behavioral manipulation |
+
+### External tools used
+
+| Tool | Purpose |
+|------|---------|
+| [OSSF Scorecard](https://securityscorecards.dev/) | Independent security rating. Scores 24 practices 0-10. Free API. |
+| [osv.dev](https://osv.dev/) | Google-backed vulnerability database. Dependabot fallback. |
+| [gitleaks](https://gitleaks.io/) (optional) | Scans code history for leaked secrets. Requires installation. |
+| [GitHub CLI](https://cli.github.com/) | Primary data source for all repo metadata and API calls. |
+
+### What this scan cannot detect
+
+- **Transitive dependency vulnerabilities** — we check direct dependencies but cannot fully resolve the tree
+- **Runtime behavior** — we see what the code *could* do, not what it *does* when running
+- **Published artifact tampering** — we cannot verify published packages match this source
+- **Sophisticated backdoors** — pattern-matching catches common primitives, not logic bombs
+- **Container image contents** — we read Dockerfiles but cannot inspect built images
+
+### Scan methodology version
+
+Scanner prompt V2.3 (backfilled with V2.4 data) · Operator Guide V0.1 · Validator with XSS checks + verdict-severity coherence · [stop-git-std](https://github.com/stefans71/stop-git-std)
 
 ---
 

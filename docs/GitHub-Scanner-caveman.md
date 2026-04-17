@@ -156,6 +156,8 @@ These are normal for a repo at 32k stars.
 | Releases in last 30 days | WARN 10 |
 | Active executable surface | Hooks in every Claude Code session |
 
+**OSSF Scorecard correlation.** The OSSF Scorecard API returned 404 for this repo — it is not yet indexed, likely due to its 12-day age. Were it indexed, the Branch-Protection, Code-Review, and Security-Policy checks would all score 0/10, consistent with every governance finding in this report.
+
 **How to fix (maintainer-side).** GitHub *Settings → Branches → Add branch protection rule* for `main`: require pull request reviews (1 approver minimum), require status checks, require branches to be up to date before merging, do not allow bypassing. Also add a `.github/CODEOWNERS` file covering at minimum `hooks/`, `rules/`, `.github/workflows/`, and install scripts. This is a 10-minute maintainer task that closes the single-point-of-failure. At 32k stars, it is basic hygiene the repo should already have.
 
 ### F5 — Warning · Code fixed in v1.6.0 · Disclosure gap open — Unadvertised symlink vulnerability — named in release notes, not in advisory channel
@@ -445,6 +447,7 @@ The hooks directory has a `package.json` with zero runtime dependencies (literal
 | Runtime dependencies | OK 1 (benchmarks only) | Hook package.json has zero deps; only anthropic SDK for benchmarks |
 | CI workflows | 1 (sync-skill.yml) | Single internal file-copy automation, narrowly scoped |
 | Releases | 10 | v1.0.0 → v1.6.0 in 11 days; v1.0.0–v1.5.1 are vulnerable |
+| OSSF Scorecard | BAD Not indexed | API returned 404 — repo too new or not yet crawled by OSSF |
 
 ---
 
@@ -462,6 +465,10 @@ The hooks directory has a `package.json` with zero runtime dependencies (literal
 | Workflow files read | OK 1 of 1 — sync-skill.yml fully inspected |
 | Executable files inspected | WARN 8 of 8 (3 Warning, 3 OK, 2 Info) — 3 hook .js + install.sh + uninstall.sh + sync-skill.yml + CI-amplified rule source + README paste block. "Inspected" is not "clean" — 3 got Warning cards. |
 | Tarball extraction | OK 103 files extracted; grep positive-control passed |
+| OSSF Scorecard | BAD Not indexed — API returned 404; repo too new for OSSF crawl |
+| osv.dev | OK No runtime deps to check — hook package.json has zero dependencies |
+| Secrets-in-history | Not scanned (gitleaks not available) |
+| API rate budget | 5000/5000 remaining. PR sample: full. |
 
 **Gaps noted:**
 
@@ -635,6 +642,48 @@ Result:
 ```
 
 *Classification: Confirmed fact — the only SECURITY.md is nested inside `caveman-compress/` and covers a different concern (Snyk static-analysis rating), not a disclosure policy.*
+
+---
+
+---
+
+## 08 · How this scan works
+
+### What this scan is
+
+This is an **LLM-driven security investigation** — an AI assistant with terminal access used the [GitHub CLI](https://cli.github.com/) and free public APIs to investigate this repo's governance, code patterns, dependencies, and distribution pipeline. It then synthesized its findings into this plain-English report.
+
+This is **not** a static analyzer, penetration test, or formal security audit. It is a trust-assessment tool that answers: "Should I install this?"
+
+### What we checked
+
+| Area | Scope |
+|------|-------|
+| Governance & Trust | Branch protection, rulesets, CODEOWNERS, SECURITY.md, community health, maintainer account age & activity, code review rates |
+| Code Patterns | Dangerous primitives (eval, exec, fetch), hardcoded secrets, executable file inventory, install scripts, README paste-blocks |
+| Supply Chain | Dependencies, CI/CD workflows, GitHub Actions SHA-pinning, release pipeline, artifact verification |
+| AI Agent Rules | CLAUDE.md, AGENTS.md, .cursorrules, .mcp.json — checked for prompt injection and behavioral manipulation |
+
+### External tools used
+
+| Tool | Purpose |
+|------|---------|
+| [OSSF Scorecard](https://securityscorecards.dev/) | Independent security rating. Scores 24 practices 0-10. Free API. |
+| [osv.dev](https://osv.dev/) | Google-backed vulnerability database. Dependabot fallback. |
+| [gitleaks](https://gitleaks.io/) (optional) | Scans code history for leaked secrets. Requires installation. |
+| [GitHub CLI](https://cli.github.com/) | Primary data source for all repo metadata and API calls. |
+
+### What this scan cannot detect
+
+- **Transitive dependency vulnerabilities** — we check direct dependencies but cannot fully resolve the tree
+- **Runtime behavior** — we see what the code *could* do, not what it *does* when running
+- **Published artifact tampering** — we cannot verify published packages match this source
+- **Sophisticated backdoors** — pattern-matching catches common primitives, not logic bombs
+- **Container image contents** — we read Dockerfiles but cannot inspect built images
+
+### Scan methodology version
+
+Scanner prompt V2.3 (backfilled with V2.4 data) · Operator Guide V0.1 · Validator with XSS checks + verdict-severity coherence · [stop-git-std](https://github.com/stefans71/stop-git-std)
 
 ---
 

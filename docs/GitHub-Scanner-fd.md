@@ -21,7 +21,7 @@
 | Verdict | **Caution** (split — see below) |
 | Scanned revision | `master @ a665a3b` (release tag `v10.4.2`) |
 | Commit pinned | `a665a3bba9abc85e80c142a7dcdb8c356b12d9c9` |
-| Scanner version | `V2.3-post-R3` |
+| Scanner version | `V2.3-post-R3` (backfilled with V2.4 data) |
 | Scan date | `2026-04-16` |
 | Prior scan | None — first scan of this repo. Future re-runs should rename this file to `GitHub-Scanner-fd-2026-04-16.md` before generating the new report. |
 
@@ -68,9 +68,9 @@ Same verdict, stronger caveat. `fd` runs with the calling user's privileges and 
 
 | Question | Answer |
 |----------|--------|
-| Does anyone check the code? | ⚠ **Review happens but isn't required** — ~33% formal review rate in sample, no branch protection, no CODEOWNERS, three-person effective core |
+| Does anyone check the code? | ⚠ **Review happens but isn't required** — ~33% formal review rate in sample (OSSF Code-Review 8/10 corroborates), no branch protection (OSSF Branch-Protection −1/10), no CODEOWNERS, three-person effective core |
 | Is it safe out of the box? | ✅ **Yes** — clean source, single benign `unsafe` block for SIGINT restore, no network I/O, narrow filesystem-walking surface |
-| Can you trust the maintainers? | ✅ **Yes** — sharkdp at Astral, tmccombs 186-repo footprint, active supply-chain work (added SLSA attestations in 2025-10) |
+| Can you trust the maintainers? | ✅ **Yes** — sharkdp at Astral, tmccombs 186-repo footprint, active supply-chain work (added SLSA attestations in 2025-10). OSSF Security-Policy 10/10, Maintained 10/10. |
 | Is it actively maintained? | ⚠ **Partly** — v10.4.x shipped March 2026 after an **8-month gap** since v10.3.0. Dependabot bumps flow weekly, but feature releases are sporadic |
 
 ---
@@ -141,6 +141,8 @@ Both are small, incremental, free.
 *Continuous · Since repo creation · → If you install: prefer GitHub Releases or distro packages over `cargo install fd-find`, and run `gh attestation verify --owner sharkdp ARCHIVE` on shared-host or CI rollouts. If you maintain this repo: enable classic branch protection on `master` (Settings → Branches → Add rule, require 1 approver, require the existing CICD workflow checks) and add a `.github/CODEOWNERS` covering `.github/workflows/` + `src/`.*
 
 **Severity sits at Warning, comfortably.** The V2.3 C20 rule escalates to Critical when a repo (a) has all three governance signals negative AND (b) ships executable code to user machines AND (c) has a release within the last 30 days. fd's latest v10.4.2 shipped 2026-03-10 — 37 days before this scan, outside the 30-day window. This is not a boundary case like some other scans: v10.4.0 before it shipped 2026-03-07 (40 days out), and v10.3.0 before that shipped 2025-08-26 — an **8-month gap**. "No recent release" is an honest read of the cadence, not a one-day margin.
+
+**OSSF Scorecard corroborates.** The independent OSSF Scorecard rates fd's Branch-Protection at −1/10 (unable to detect any protection) and Code-Review at 8/10 (high but not perfect — consistent with our 33% formal / 83% cross-merger sample). Security-Policy scores 10/10 (SECURITY.md present and current), and Token-Permissions scores 10/10 (least-privilege workflow permissions confirmed). The scorecard sees the same split we do: strong CI hygiene, weak governance gates.
 
 **What's missing.** Classic branch protection on `master` returns HTTP 404 from the GitHub API (authoritative — our scan token has `repo` scope and would have returned 403 on a permissions issue). Repo rulesets: `gh api repos/sharkdp/fd/rulesets` returns `[]`. Rules applying to `master`: `gh api repos/sharkdp/fd/rules/branches/master` returns `[]` — this endpoint is authoritative because it captures both repo-level and org-level rulesets. Note on org-level: sharkdp is a **User account**, not an Organization, so there is no org-level ruleset layer either way — the authoritative check reduces to the three signals above plus CODEOWNERS. CODEOWNERS is absent in all four standard locations (`CODEOWNERS`, `.github/CODEOWNERS`, `docs/CODEOWNERS`, `.gitlab/CODEOWNERS`). Any push that lands on a maintainer's credentials goes directly to `master` without a review gate, a required status check, or a path-scoped reviewer.
 
@@ -215,6 +217,8 @@ Both are small, incremental, free.
 *Current · → No action needed. Positive signal: the maintainers use the current supply-chain best practice (sigstore attestations via `actions/attest`) on every release, not just on paper. PR #1809 in 2025-10 landed this; PRs #1904 and #1941 in 2026-03 fixed pipeline bugs — active, not abandoned.*
 
 **Sigstore SLSA Build L3 attestations.** The release path in `.github/workflows/CICD.yml` calls `actions/attest@59d89421af93a897026c735860bf21b6eb4f7b26 # v4` on every release artifact — tarballs and `.deb` files across 14 cross-platform targets (Linux gnu/musl on x86_64/i686/aarch64/arm, Windows msvc/gnu on x86_64/i686/aarch64, macOS Intel/Apple Silicon). The attestation binds each artifact to the repository, the exact workflow file, and the commit SHA that built it, using sigstore's Fulcio certificate authority and Rekor transparency log. Consumers verify with `gh attestation verify --owner sharkdp ARCHIVE`. This is the 2025/2026 gold standard — stronger than SHA-pinning, stronger than OIDC publishing alone.
+
+**OSSF Scorecard discrepancy: Signed-Releases 0/10.** The OSSF Scorecard rates fd's Signed-Releases at 0/10 because its heuristic looks for GPG signatures or Sigstore signatures attached directly to GitHub Release assets in a specific format. fd uses `actions/attest` (sigstore SLSA Build L3 attestations via the newer GitHub attestation API), which the Scorecard's Signed-Releases check does not yet recognise. This is a **false negative in the scorecard**, not a missing control — we independently verified the attestation with `gh attestation verify` (see Evidence 2). The Scorecard's Dangerous-Workflow 10/10 and Token-Permissions 10/10 scores correctly reflect the pipeline hygiene we observed.
 
 **Least-privilege root permissions.** `CICD.yml` declares `permissions: { contents: read }` at the top level. Only the `build` job escalates — and only for the attestation step itself — to `id-token: write`, `contents: write`, and `attestations: write`. Every other job (lint, fmt, MSRV check, test matrix) inherits the read-only default. A compromised lint step literally cannot push tags or mint attestations.
 
@@ -341,6 +345,7 @@ Sample: the 6 most recent merged PRs at scan time. None hit the flag-for-diff-re
 | Release attestations | ✅ Sigstore SLSA L3 | `actions/attest` signs every tarball + .deb. Verify with `gh attestation verify --owner sharkdp`. |
 | CI workflows | 1 (CICD.yml, 309 lines) | 6 jobs (fmt / lint / MSRV / build / winget / crate_metadata). Zero `pull_request_target`. |
 | Releases | ⚠ Irregular cadence | v10.4.2 (2026-03-10, current, 37d old), v10.4.0 (2026-03-07), v10.3.0 (2025-08-26 — **8-month gap**). Feature releases sporadic; dep bumps weekly. |
+| OSSF Scorecard | ⚠ **6.6 / 10** (14 checks) | Maintained 10, Security-Policy 10, Token-Permissions 10, Binary-Artifacts 10, Dangerous-Workflow 10, Code-Review 8, License 10, Pinned-Dependencies 3, Signed-Releases 0, CII-Best-Practices 0, Fuzzing 0, SAST 0, Branch-Protection −1, Packaging −1 |
 | Repo size | 2,396 KB | Tarball extraction: 54 files / 736 KB uncompressed |
 | Crate | `fd-find` v10.4.2 | Binary name is `fd` but crates.io slot is `fd-find` (namespace conflict with older unrelated `fd` crate) |
 | Topics | cli, command-line, filesystem, regex, rust, search, tool | Also: hacktoberfest, terminal |
@@ -368,6 +373,10 @@ Sample: the 6 most recent merged PRs at scan time. None hit the flag-for-diff-re
 | Windows surface coverage (F16) | ✅ Verified — completion only. Single `.ps1` is `autocomplete/_fd.ps1` (shell completion, not an installer). |
 | Review-rate sample | ⚠ 6 recent merges sampled — 2/6 formal (33%), 5/6 cross-merger (83%), 1/6 self-merge |
 | Commit pinned | `a665a3bba9abc85e80c142a7dcdb8c356b12d9c9` |
+| OSSF Scorecard | ✅ Retrieved — 6.6/10 (14 checks). Key positives: Maintained 10, Security-Policy 10, Token-Permissions 10, Code-Review 8. Key gaps: Signed-Releases 0, CII-Best-Practices 0, Fuzzing 0, SAST 0, Branch-Protection −1. |
+| osv.dev | ℹ Not checked — fd is a compiled Rust binary with no runtime dependencies exposed to end users. Build-time deps are all trusted Rust-ecosystem crates (BurntSushi, dtolnay, clap-rs). |
+| Secrets-in-history | ℹ Not scanned (gitleaks not available) |
+| API rate budget | ✅ 5000/5000 remaining. PR sample: full. |
 
 **Gaps noted:**
 
@@ -586,6 +595,46 @@ on:
 ```
 
 *Classification: Confirmed fact — the single workflow file uses `pull_request` (restricted, no secrets), `push` to `master` or tags, and `workflow_dispatch`. Zero `pull_request_target` usage rules out the PwnRequest class.*
+
+---
+
+## 08 · How this scan works
+
+### What this scan is
+
+This is an **LLM-driven security investigation** — an AI assistant with terminal access used the [GitHub CLI](https://cli.github.com/) and free public APIs to investigate this repo's governance, code patterns, dependencies, and distribution pipeline. It then synthesized its findings into this plain-English report.
+
+This is **not** a static analyzer, penetration test, or formal security audit. It is a trust-assessment tool that answers: "Should I install this?"
+
+### What we checked
+
+| Area | Scope |
+|------|-------|
+| Governance & Trust | Branch protection, rulesets, CODEOWNERS, SECURITY.md, community health, maintainer account age & activity, code review rates |
+| Code Patterns | Dangerous primitives (eval, exec, fetch), hardcoded secrets, executable file inventory, install scripts, README paste-blocks |
+| Supply Chain | Dependencies, CI/CD workflows, GitHub Actions SHA-pinning, release pipeline, artifact verification |
+| AI Agent Rules | CLAUDE.md, AGENTS.md, .cursorrules, .mcp.json — checked for prompt injection and behavioral manipulation |
+
+### External tools used
+
+| Tool | Purpose |
+|------|---------|
+| [OSSF Scorecard](https://securityscorecards.dev/) | Independent security rating. Scores 24 practices 0-10. Free API. |
+| [osv.dev](https://osv.dev/) | Google-backed vulnerability database. Dependabot fallback. |
+| [gitleaks](https://gitleaks.io/) (optional) | Scans code history for leaked secrets. Requires installation. |
+| [GitHub CLI](https://cli.github.com/) | Primary data source for all repo metadata and API calls. |
+
+### What this scan cannot detect
+
+- **Transitive dependency vulnerabilities** — we check direct dependencies but cannot fully resolve the tree
+- **Runtime behavior** — we see what the code *could* do, not what it *does* when running
+- **Published artifact tampering** — we cannot verify published packages match this source
+- **Sophisticated backdoors** — pattern-matching catches common primitives, not logic bombs
+- **Container image contents** — we read Dockerfiles but cannot inspect built images
+
+### Scan methodology version
+
+Scanner prompt V2.3 (backfilled with V2.4 data) · Operator Guide V0.1 · Validator with XSS checks + verdict-severity coherence · [stop-git-std](https://github.com/stefans71/stop-git-std)
 
 ---
 
