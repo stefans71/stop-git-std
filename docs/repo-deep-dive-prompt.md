@@ -1033,6 +1033,19 @@ At the bottom of every report, include a Coverage section with:
 - **osv.dev fallback (V2.4):** "osv.dev: queried N direct deps, M vulnerabilities found" or "osv.dev: not queried (Dependabot returned data)." Results go in the Dependencies/Supply Chain section alongside Dependabot output. If both Dependabot AND osv.dev return data, use Dependabot as primary (more detailed) and note osv.dev confirmation.
 - **Secrets-in-history (V2.4):** "gitleaks: N findings (redacted)" or "gitleaks: clean" or "Secrets-in-history: not scanned (gitleaks not available)." If findings exist, create a finding card in the main report body (Warning or Critical). Redacted output goes in Evidence Appendix.
 - **API budget (V2.4):** "API budget at Step 5: X/5000 remaining. PR sample: N (full/reduced)." If reduced, explain why.
+
+**Plain-English explainers for external tools (V2.4).** The HTML report is read by non-technical users. When rendering the V2.4 coverage cells, include the `.vital-explainer` block under each cell with:
+1. A one-sentence explanation of what the tool does
+2. A hyperlink to the tool's website so readers can learn more
+3. Context for interpreting the score ("most repos score 3–5" or "0 vulnerabilities is ideal")
+
+Use these exact explainers in the HTML coverage cells:
+- **OSSF Scorecard:** "Independent security rating from the [Open Source Security Foundation](https://securityscorecards.dev/). Scores 24 security practices from 0–10. Most repos score 3–5; above 6 is strong."
+- **osv.dev:** "Checked against [osv.dev](https://osv.dev/), a free vulnerability database backed by Google. Shows known security issues in this project's dependencies."
+- **gitleaks:** "Scanned by [gitleaks](https://gitleaks.io/) for passwords, API keys, or tokens accidentally committed to the code. 'Not scanned' means the tool wasn't available — not that the code is clean."
+- **API budget:** "GitHub limits API calls to 5,000/hour. If budget was low, we sampled fewer pull requests. 'Full' means every PR was checked."
+
+Also: when OSSF Scorecard per-check scores are first cited in a finding (e.g., "OSSF Token-Permissions: 0/10"), add a brief parenthetical explaining what the check measures (e.g., "OSSF Token-Permissions: 0/10 (measures whether CI workflows use least-privilege token scopes)").
 - How many merged PRs were reviewed out of the total ("300 of 2,400 — sampled")
 - How many suspicious PRs had their diffs actually read ("12 of 19")
 - Whether Step A tarball extraction succeeded and file count

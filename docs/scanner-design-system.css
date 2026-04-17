@@ -540,6 +540,14 @@
   }
   .vital-cell .vital-value { font-size: 1rem; font-weight: 700; margin-bottom: 4px; }
   .vital-cell .vital-note { font-size: 0.75rem; color: var(--text-secondary); line-height: 1.5; }
+  .vital-cell .vital-explainer {
+    font-size: 0.7rem; color: var(--text-muted); line-height: 1.5;
+    margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--border-subtle);
+  }
+  .vital-cell .vital-explainer a {
+    color: var(--cyan-glow); text-decoration: none;
+  }
+  .vital-cell .vital-explainer a:hover { text-decoration: underline; }
 
   /* Action cards */
   .action-card { padding: 24px; border-radius: 10px; margin-bottom: 12px; }
