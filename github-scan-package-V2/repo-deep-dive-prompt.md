@@ -2,7 +2,7 @@
 
 > **Version:** 2.4 | **Last updated:** 2026-04-17 | **By:** [stop-git-std](https://github.com/stefans71/stop-git-std)
 >
-> **V2.4 changes (AXIOM audit FIX NEXT items):** shell variable quoting (V4), changelog moved to `docs/CHANGELOG.md` (W1/O3), rate-limit budget check before Step 5 (W2), osv.dev fallback for Dependabot 403 (W4), OSSF Scorecard API integration (Cap-1), S8 design rules restructured: 9 hard rules with 4 re-promoted after structural regression (O2 revised). Full version history: `docs/CHANGELOG.md`.
+> **V2.4 changes (AXIOM audit FIX NEXT items):** shell variable quoting (V4), changelog moved to `CHANGELOG.md` (W1/O3), rate-limit budget check before Step 5 (W2), osv.dev fallback for Dependabot 403 (W4), OSSF Scorecard API integration (Cap-1), S8 design rules restructured: 9 hard rules with 4 re-promoted after structural regression (O2 revised). Full version history: `CHANGELOG.md`.
 >
 > **Hard design rules (9 — must follow):**
 > - **[S8-1] Utility-class rule.** Zero `style=""` attributes on `<body>` elements. Use `.val-good`/`.val-bad`/`.val-warn`/`.val-info`, `.fw-semi`, `.stack-md`/`.stack-sm`, `.p-meta`/`.p-meta-tight`.
@@ -13,12 +13,12 @@
 > - **[S8-7] Priority evidence grouping.** Evidence Appendix must use 3 groups: `★ Priority evidence (read first)`, `Other evidence supporting Warnings`, `Evidence supporting OK findings`. Priority items get `START HERE` markers.
 > - **[S8-8] `rem`-only font sizes.** No `px` font-sizes in `<style>` (exception: 0px). The A+/A- controls need rem to work.
 > - **[S8-11] Split-verdict banner.** When F4 fires (risk differs by audience/deployment context), use per-audience verdict entries with scope labels, not a single-line verdict. In MD use H3 sub-headings under the Verdict heading.
-> - **[S8-12] Validator gate.** `python3 docs/validate-scanner-report.py --report <file>` + `--markdown <file>` must both exit 0 before delivery.
+> - **[S8-12] Validator gate.** `python3 validate-scanner-report.py --report <file>` + `--markdown <file>` must both exit 0 before delivery.
 >
 > **Recommended patterns (follow reference scans — not enforced by validator):**
 > S8-2 cyan landmark colours, S8-9 timeline severity labels, S8-10 inventory quick-scan.
 >
-> **Reference implementation:** `docs/GitHub-Scanner-caveman.html`. When rules conflict, the reference wins.
+> **Reference implementation:** `reference/GitHub-Scanner-caveman.html`. When rules conflict, the reference wins.
 
 Give this prompt to any LLM with terminal access (Claude Code, Cursor, Windsurf, etc.) to investigate a GitHub repo before you trust it.
 
@@ -893,11 +893,11 @@ When re-scanning a repo later, **do not overwrite the prior report.** Rename the
 - Choose the right verdict class: `critical` (do not install), `caution` (review before using), `clean` (safe to use).
 - Apply the scorecard consistency rule before finalizing.
 - Apply the V2.3 design-system rules below before finalizing.
-- Run the validator (`python3 docs/validate-scanner-report.py <output.html>`) and fix anything it flags before handing the report to the user.
+- Run the validator (`python3 validate-scanner-report.py <output.html>`) and fix anything it flags before handing the report to the user.
 
 ### V2.3 Design system (Sprint 8 refactor)
 
-Reference implementation: `docs/GitHub-Scanner-caveman.html`. When the rules here conflict with something else in this prompt, these rules win — they were empirically tuned against the reference.
+Reference implementation: `reference/GitHub-Scanner-caveman.html`. When the rules here conflict with something else in this prompt, these rules win — they were empirically tuned against the reference.
 
 **1. Utility classes, zero inline styles.**
 Every rendered element uses classes from the template's `<style>` block. Zero `style=""` attributes on `<body>` elements. Use:
@@ -968,7 +968,7 @@ Do NOT emit a single compound headline — the two audiences need separate reads
 **12. Validator gate (hard).**
 Before handing the report to the user, run:
 ```bash
-python3 docs/validate-scanner-report.py path/to/GitHub-Scanner-<REPO>.html
+python3 validate-scanner-report.py path/to/GitHub-Scanner-<REPO>.html
 ```
 Must exit 0. It checks: HTML tag balance, EXAMPLE marker balance, inline `style=""` count, `px` font-size count, `{{...}}` placeholder count. Non-zero exit = do not deliver the report. Fix and re-run.
 

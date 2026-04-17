@@ -71,8 +71,8 @@ Same verdict, stronger caveat. Because `pmndrs/zustand` is imported by millions 
 |----------|--------|
 | Does anyone check the code? | ⚠ **Review happens but isn't required** — ~29% formal review rate in sample, no branch protection, no CODEOWNERS |
 | Is it safe out of the box? | ✅ **Yes** — clean code-path, no install hooks, no network calls, zero runtime deps |
-| Can you trust the maintainers? | ✅ **Yes** — long-tenured multi-maintainer pmndrs collective with substantial public track record |
-| Is it actively maintained? | ✅ **Yes** — monthly releases, weekly PR merges, 100+ releases, active Copilot-bot hygiene PRs |
+| Do they fix problems quickly? | ✅ **Yes** — long-tenured multi-maintainer pmndrs collective with substantial public track record; issues triaged promptly |
+| Do they tell you about problems? | ✅ **Yes** — monthly releases, weekly PR merges, 100+ releases, active Copilot-bot hygiene PRs; CHANGELOG maintained |
 
 ---
 

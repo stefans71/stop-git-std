@@ -403,6 +403,27 @@ def check_markdown(path: Path) -> int:
     else:
         print(f"  ✓ Verdict-severity coherence OK")
 
+    # V2.4 scorecard question contract check — the 4 canonical questions
+    canonical_questions = [
+        "Does anyone check the code?",
+        "Do they fix problems quickly?",
+        "Do they tell you about problems?",
+        "Is it safe out of the box?",
+    ]
+    found_questions = []
+    for q in canonical_questions:
+        if q.lower() in raw.lower():
+            found_questions.append(q)
+    if len(found_questions) == 4:
+        print(f"  ✓ All 4 canonical scorecard questions present")
+    elif len(found_questions) > 0:
+        missing = [q for q in canonical_questions if q not in found_questions]
+        print(f"  ✗ Scorecard contract break: missing {len(missing)} canonical question(s): {missing}")
+        total_errors += 1
+    else:
+        print(f"  ⚠ No canonical scorecard questions found (may be a non-standard report)")
+        warnings += 1
+
     if total_errors == 0:
         print(f"\n✓ {path.name} is clean.")
     else:

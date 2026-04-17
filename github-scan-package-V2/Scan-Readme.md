@@ -122,15 +122,17 @@ Your scan produces `GitHub-Scanner-<repo>.{html,md}`. To use it:
 
 ---
 
-## Current catalog (8/10 toward JSON-first migration)
+## Current catalog (10/10 — JSON-first Trigger #1 MET)
 
 | Scan | Verdict | Shape |
 |---|---|---|
-| caveman | critical | curl-pipe-from-main installer |
-| Archon | critical | agentic platform with open vulns |
-| zustand | caution | pure JS library, zero deps |
-| fd | caution | Rust CLI, multi-platform binaries, SLSA attestations |
+| caveman | critical (split) | curl-pipe-from-main installer |
+| Archon | caution (split) | agentic platform with open vulns |
+| zustand | caution (split) | pure JS library, zero deps |
+| fd | caution (split) | Rust CLI, multi-platform binaries, SLSA attestations |
 | gstack | caution (split) | dense agent-rule surface, install-from-main + auto-update |
 | archon-board-review | caution | tiny / self-scan / pre-distribution |
 | hermes-agent | caution | Python platform, org-owned, open vulns |
 | postiz-app | caution | web application, CVEs, Docker defaults |
+| zustand (V2.4 re-scan) | clean | V2.4 methodology validation re-scan |
+| Archon (re-run) | (determinism record) | re-run confirming verdict held across SHA bump |
