@@ -22,7 +22,9 @@ The live catalog of all completed scans using the V2.3/V2.4 scanner pipeline. Ea
 | 8 | [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) | `764536b` | 2026-04-17 | Caution | -- | First org-owned repo; first Python platform; open security issues; 5 vulns via issue search | `methodology-used: path-b` | [html](GitHub-Scanner-hermes-agent.html) · [md](GitHub-Scanner-hermes-agent.md) |
 | 9 | [gitroomhq/postiz-app](https://github.com/gitroomhq/postiz-app) | `386fc7b` | 2026-04-17 | Caution | -- | Web application; first CVE hits (8 via advisory API); first `pull_request_target` finding; Docker defaults | `methodology-used: path-b` | [html](GitHub-Scanner-postiz-app.html) · [md](GitHub-Scanner-postiz-app.md) |
 
-**Current count: 9 entries (8 full scans + 1 re-run determinism record).** JSON-first Trigger #1 fires at 10 full scans.
+| 10 | [pmndrs/zustand](https://github.com/pmndrs/zustand) (V2.4 re-scan) | `3201328` | 2026-04-17 | Clean | -- | V2.4 methodology validation re-scan; OSSF Scorecard 5.9/10; first scan with V2.4 coverage cells | `methodology-used: path-b` | [html](GitHub-Scanner-zustand-v3.html) · [md](GitHub-Scanner-zustand-v3.md) |
+
+**Current count: 10 entries (9 full scans + 1 re-run determinism record).** JSON-first Trigger #1 fires at 10 full scans — **TRIGGER MET.**
 
 ---
 
