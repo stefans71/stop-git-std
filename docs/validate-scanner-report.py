@@ -364,6 +364,20 @@ def check_markdown(path: Path) -> int:
         print(f"  ✗ No verdict or severity keywords found")
         total_errors += 1
 
+    # Verdict-severity coherence check: "Clean" verdict with Warning/Critical findings is invalid.
+    # A report cannot say the repo is clean while also flagging warnings.
+    has_clean_verdict = bool(re.search(r"(?i)verdict[:\s]*clean", raw))
+    has_warning_findings = bool(re.search(r"(?i)\bwarning\b", raw))
+    has_critical_findings = bool(re.search(r"(?i)\bcritical\b", raw))
+    if has_clean_verdict and (has_warning_findings or has_critical_findings):
+        severity = "Critical" if has_critical_findings else "Warning"
+        print(f"  ✗ Verdict says 'Clean' but report contains {severity} findings — verdict must be Caution or higher when warnings exist")
+        total_errors += 1
+    elif has_clean_verdict:
+        print(f"  ✓ Clean verdict with no Warning/Critical findings (coherent)")
+    else:
+        print(f"  ✓ Verdict-severity coherence OK")
+
     if total_errors == 0:
         print(f"\n✓ {path.name} is clean.")
     else:
