@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<!-- Security Investigation Report: pmndrs/zustand @ 3201328 (v5.0.12) | Generated 2026-04-17 | Prompt V2.4 -->
+<!-- Security Investigation Report: pmndrs/zustand @ 3201328 (v5.0.12) | Generated 2026-04-17 | Prompt v2.4 -->
 <title>Security Investigation: pmndrs/zustand</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -830,494 +830,662 @@
 </head>
 <body>
 
-<!-- Font size controls -->
 <div class="font-controls">
-  <button onclick="adjustFont(-1)">A−</button>
-  <span class="font-size-display">100%</span>
-  <button onclick="adjustFont(1)">A+</button>
+  <button onclick="adjustFont(-1)" title="Decrease font size" aria-label="Decrease font size">A&minus;</button>
+  <span class="font-size-display" id="fontDisplay">100%</span>
+  <button onclick="adjustFont(1)" title="Increase font size" aria-label="Increase font size">A+</button>
 </div>
 <script>
-  let fontPct = 100;
-  function adjustFont(d) {
-    fontPct = Math.max(70, Math.min(150, fontPct + d * 10));
-    document.documentElement.style.fontSize = fontPct + '%';
-    document.querySelector('.font-size-display').textContent = fontPct + '%';
+  let fontScale = 100;
+  function adjustFont(dir) {
+    fontScale = Math.min(150, Math.max(75, fontScale + dir * 10));
+    document.documentElement.style.fontSize = fontScale + '%';
+    document.getElementById('fontDisplay').textContent = fontScale + '%';
   }
 </script>
 
 <div class="page">
 
-<!-- ═══ HERO ═══ -->
-<div class="hero">
-  <div class="hero-badge"><span class="dot green"></span> Security Investigation</div>
-  <h1>pmndrs <span class="slash">/</span> <span class="green">zustand</span></h1>
-  <p class="hero-caption">Lightweight React state management library — 1,447 lines of TypeScript, zero runtime dependencies, 57K+ stars. A re-scan at V2.4 prompt level confirming the clean verdict from the prior V2.3 scan.</p>
-  <div class="meta">
-    <div class="meta-item"><span class="label">Scanned</span> 2026-04-17</div>
-    <div class="meta-item"><span class="label">Commit</span> <code>3201328</code></div>
-    <div class="meta-item"><span class="label">Tag</span> v5.0.12</div>
-    <div class="meta-item"><span class="label">Branch</span> main</div>
-    <div class="meta-item"><span class="label">OSSF</span> 5.9 / 10</div>
-  </div>
-</div>
-
-<!-- Scan strip -->
-<div class="scan-strip">
-  <span class="scan-strip-item"><span class="dot green"></span> verdict: clean</span>
-  <span class="scan-strip-item">sha: 32013285</span>
-  <span class="scan-strip-item">prompt: v2.4</span>
-  <span class="scan-strip-item">runtime deps: 0</span>
-  <span class="scan-strip-item">source: 1,447 loc</span>
-  <span class="scan-strip-item">findings: 2 warn · 3 info</span>
-</div>
-
-<!-- Catalog metadata -->
-<div class="catalog-meta">
-  <div class="catalog-label">Catalog Metadata</div>
-  <table>
-    <tr><td class="key">Report</td><td class="val">GitHub-Scanner-zustand-v3.md / .html</td></tr>
-    <tr><td class="key">Repo</td><td class="val"><a href="https://github.com/pmndrs/zustand">github.com/pmndrs/zustand</a></td></tr>
-    <tr><td class="key">Description</td><td class="val">Lightweight React state management library (1.4K LOC, zero runtime deps) used by 57K+ stargazers</td></tr>
-    <tr><td class="key">Category</td><td class="val">Web framework &rarr; React state management</td></tr>
-    <tr><td class="key">Verdict</td><td class="val fw-semi val-good">clean</td></tr>
-    <tr><td class="key">Revision</td><td class="val"><code>main @ 3201328</code> (v5.0.12)</td></tr>
-    <tr><td class="key">Prompt</td><td class="val">V2.4</td></tr>
-    <tr><td class="key">Prior scan</td><td class="val">GitHub-Scanner-zustand.html (2026-04-16, V2.3)</td></tr>
-    <tr><td class="key">OSSF Score</td><td class="val">5.9 / 10 (14 checks)</td></tr>
-    <tr><td class="key">Methodology</td><td class="val">path-a</td></tr>
-  </table>
-</div>
-
-<!-- ═══ VERDICT ═══ -->
-<div class="verdict-section">
-  <div class="verdict-banner clean" data-dossier="zustand-v3 · 2026-04-17">
-    <div class="verdict-label">Verdict</div>
-    <h2>Safe to install</h2>
-    <ul class="verdict-bullets">
-      <li><span class="bullet-icon green">&#10003;</span> <strong>Zero runtime dependencies</strong> — nothing executes on install except npm placing the module files</li>
-      <li><span class="bullet-icon green">&#10003;</span> <strong>Zero hooks, zero install scripts</strong> — no preinstall/postinstall/prepare lifecycle scripts</li>
-      <li><span class="bullet-icon green">&#10003;</span> <strong>No agent-rule files</strong> — no CLAUDE.md, AGENTS.md, .cursor/rules, or similar</li>
-      <li><span class="bullet-icon green">&#10003;</span> <strong>Excellent CI</strong> — 8 workflows with SHA-pinned actions, matrix testing across React 18/19 and TS 4.5–5.9</li>
-      <li><span class="bullet-icon green">&#10003;</span> <strong>Active multi-maintainer project</strong> — 67% review rate, OSSF Maintained 10/10</li>
-      <li><span class="bullet-icon amber">!</span> <strong>Governance gaps exist</strong> — no SECURITY.md and no confirmed branch protection (see findings)</li>
-    </ul>
-  </div>
-</div>
-
-<!-- ═══ SCORECARD ═══ -->
-<div class="scorecard-section">
-  <div class="scorecard-grid">
-    <div class="score-cell">
-      <div class="score-icon green">&#128065;</div>
-      <div class="score-label">Does anyone check the code?</div>
-      <div class="score-value green">Regular</div>
-      <p class="p-meta-tight">Any-review 67%, formal 54.3%. Multi-maintainer (top: 38.2%). OSSF Code-Review: 6/10.</p>
+  <!-- ═══════════════ HERO ═══════════════ -->
+  <div class="hero">
+    <div class="scan-strip">
+      <span class="scan-strip-item"><span class="dot amber"></span>Security Investigation</span>
+      <span class="scan-strip-item">Dossier &middot; zustand</span>
+      <span class="scan-strip-item">Rev &middot; 3201328</span>
+      <span class="scan-strip-item">v2.4 &middot; 2026-04-17</span>
+      <span class="scan-strip-item flash">&bull; Live</span>
     </div>
-    <div class="score-cell">
-      <div class="score-icon green">&#9889;</div>
-      <div class="score-label">Do they fix problems quickly?</div>
-      <div class="score-value green">Yes</div>
-      <p class="p-meta-tight">Zero open security issues. 30 commits in 90 days. OSSF Maintained: 10/10.</p>
-    </div>
-    <div class="score-cell">
-      <div class="score-icon amber">&#128172;</div>
-      <div class="score-label">Do they tell you about problems?</div>
-      <div class="score-value amber">No advisory channel</div>
-      <p class="p-meta-tight">No SECURITY.md, no published advisories. Zero historical CVEs — nothing to disclose yet.</p>
-    </div>
-    <div class="score-cell">
-      <div class="score-icon green">&#128737;</div>
-      <div class="score-label">Is it safe out of the box?</div>
-      <div class="score-value green">Yes</div>
-      <p class="p-meta-tight">npm channel verified. Zero runtime deps. No Warning+ findings on default install path.</p>
+    <h1>pmndrs<span class="slash">/</span><span class="amber">zustand</span></h1>
+    <div class="hero-caption">A 57,760-star React state library with zero runtime dependencies, no install-time hooks, and a clean code surface &mdash; but no branch protection, no CODEOWNERS, and no SECURITY.md on one of the most-imported libraries on npm.</div>
+    <div class="meta">
+      <div class="meta-item"><span class="label">Investigated</span> 2026-04-17</div>
+      <div class="meta-item"><span class="label">Applies to</span> main @ 3201328 &middot; v5.0.12</div>
+      <div class="meta-item"><span class="label">Repo age</span> 7 years</div>
+      <div class="meta-item"><span class="label">Stars</span> 57,760</div>
+      <div class="meta-item"><span class="label">License</span> MIT</div>
+      <div class="meta-item"><span class="label">OSSF</span> 5.9/10</div>
     </div>
   </div>
-</div>
 
-<!-- ═══ SECTION 01: WHAT SHOULD I DO? ═══ -->
-<details class="collapsible-section" open>
-  <summary>
-    <div class="section-header">
-      <span class="section-number">01</span>
-      <h2>What Should I Do?</h2>
-      <div class="section-status">
-        <span class="pill green">&#10003; Safe to install</span>
+  <!-- ═══════════════ CATALOG METADATA ═══════════════ -->
+  <div class="catalog-meta">
+    <div class="catalog-label">Catalog metadata</div>
+    <table>
+      <tr><td class="key">Report file</td><td class="val"><code>GitHub-Scanner-zustand-v3.html</code> (+ <code>.md</code> companion)</td></tr>
+      <tr><td class="key">Repo</td><td class="val"><a href="https://github.com/pmndrs/zustand">github.com/pmndrs/zustand</a></td></tr>
+      <tr><td class="key">Short description</td><td class="val">Lightweight React state management library with zero runtime dependencies. Hook-based API, framework-agnostic core. Middleware for persistence, devtools, Immer, and Redux-style APIs.</td></tr>
+      <tr><td class="key">Category</td><td class="val">Web framework</td></tr>
+      <tr><td class="key">Subcategory</td><td class="val">State management library</td></tr>
+      <tr><td class="key">Language</td><td class="val">TypeScript</td></tr>
+      <tr><td class="key">Verdict</td><td class="val val-warn fw-semi">Caution</td></tr>
+      <tr><td class="key">Scanned revision</td><td class="val">main @ 3201328 (v5.0.12, commit <code>32013285083648e8d58ba1f76d73b9bdc02fef50</code>)</td></tr>
+      <tr><td class="key">Scanner version</td><td class="val">V2.4</td></tr>
+      <tr><td class="key">Scan date</td><td class="val">2026-04-17</td></tr>
+      <tr><td class="key">Prior scan</td><td class="val"><code>GitHub-Scanner-zustand.html</code> (2026-04-16, v2.3)</td></tr>
+      <tr><td class="key">Methodology</td><td class="val">path-a</td></tr>
+    </table>
+  </div>
+
+  <!-- ═══════════════ VERDICT ═══════════════ -->
+  <div class="verdict-section">
+    <div class="verdict-banner caution" data-dossier="DOSSIER &middot; ZUSTAND &middot; 3201328 &middot; 2026-04-17 &middot; V2.4">
+      <div class="verdict-label">&bull; Caution</div>
+      <h2>Clean library code, governance gaps on a high-value target</h2>
+      <ul class="verdict-bullets">
+        <li><span class="bullet-icon amber">&#x26A0;</span> <strong>Warning:</strong> No branch protection on default branch &mdash; anyone with write access can push directly to main without review (F0 / C20)</li>
+        <li><span class="bullet-icon amber">&#x26A0;</span> <strong>Info:</strong> No SECURITY.md &mdash; no documented channel for private vulnerability disclosure</li>
+        <li><span class="bullet-icon amber">&#x26A0;</span> <strong>Info:</strong> Four CI workflows lack explicit token permissions blocks (OSSF Token-Permissions: 0/10)</li>
+        <li><span class="bullet-icon amber">&#x26A0;</span> <strong>Info:</strong> Docs workflow uses unpinned reusable workflow reference (@v3 tag, not SHA)</li>
+        <li><span class="bullet-icon green">&#x2714;</span> <strong>Positive:</strong> Zero runtime dependencies, SHA-pinned CI, OIDC npm publish, active maintenance, 65% review rate, long-tenured maintainers</li>
+      </ul>
+
+      <div class="verdict-exhibits">
+        <details class="exhibit govern">
+          <summary>
+            <span class="exhibit-glyph">&#x26A0;</span>
+            <span>
+              <span class="exhibit-title">Governance gaps &mdash; no branch protection, no CODEOWNERS, no SECURITY.md</span>
+              <span class="exhibit-count">&middot; 2 findings</span>
+              <span class="exhibit-summary-line">C20 single-point-of-failure fires as Warning; no private disclosure channel</span>
+            </span>
+          </summary>
+          <div class="exhibit-body">
+            <div class="exhibit-item">
+              <span class="exhibit-item-glyph">01</span>
+              <span>
+                <span class="exhibit-item-tag">Governance &middot; F0 / C20</span>
+                No branch protection on <code>main</code> (API returns 404), zero rulesets, no CODEOWNERS in any of 4 standard locations. On a 57,760-star library imported by millions, this is a supply-chain single-point-of-failure. Warning severity.
+              </span>
+            </div>
+            <div class="exhibit-item">
+              <span class="exhibit-item-glyph">02</span>
+              <span>
+                <span class="exhibit-item-tag">Security policy</span>
+                No SECURITY.md file. OSSF Security-Policy: 0/10. Users have no documented channel for private vulnerability disclosure.
+              </span>
+            </div>
+          </div>
+        </details>
+
+        <details class="exhibit signals">
+          <summary>
+            <span class="exhibit-glyph">&#x2714;</span>
+            <span>
+              <span class="exhibit-title">Strong positive signals &mdash; clean code, zero deps, OIDC publish, long-tenured maintainers</span>
+              <span class="exhibit-count">&middot; 8 signals</span>
+              <span class="exhibit-summary-line">Zero runtime deps, zero install hooks, SHA-pinned CI, OIDC publish, active maintenance, no dangerous patterns</span>
+            </span>
+          </summary>
+          <div class="exhibit-body">
+            <div class="exhibit-item">
+              <span class="exhibit-item-glyph">01</span>
+              <span>
+                <span class="exhibit-item-tag">Zero runtime deps</span>
+                <code>package.json</code> <code>dependencies: {}</code>. The install-time supply chain is zustand itself &mdash; minimal attack surface for transitive CVEs.
+              </span>
+            </div>
+            <div class="exhibit-item">
+              <span class="exhibit-item-glyph">02</span>
+              <span>
+                <span class="exhibit-item-tag">No install hooks</span>
+                No <code>preinstall</code>, <code>postinstall</code>, <code>prepare</code>, or <code>prepublish</code> scripts. <code>"private": true</code> guards against accidental publish.
+              </span>
+            </div>
+            <div class="exhibit-item">
+              <span class="exhibit-item-glyph">03</span>
+              <span>
+                <span class="exhibit-item-tag">OIDC publish pipeline</span>
+                <code>publish.yml</code> uses <code>id-token: write</code> for npm OIDC auth. No long-lived npm token in GitHub Secrets.
+              </span>
+            </div>
+            <div class="exhibit-item">
+              <span class="exhibit-item-glyph">04</span>
+              <span>
+                <span class="exhibit-item-tag">SHA-pinned CI</span>
+                7 of 8 external actions SHA-pinned. Single unpinned ref is <code>pmndrs/docs@v3</code> (same-org, docs-only). Zero <code>pull_request_target</code> usage.
+              </span>
+            </div>
+            <div class="exhibit-item">
+              <span class="exhibit-item-glyph">05</span>
+              <span>
+                <span class="exhibit-item-tag">Clean code surface</span>
+                Zero <code>eval()</code>, zero <code>child_process</code>, zero <code>fetch()</code>, zero hardcoded credentials, zero SQL injection patterns, zero prompt injection strings in non-test source.
+              </span>
+            </div>
+            <div class="exhibit-item">
+              <span class="exhibit-item-glyph">06</span>
+              <span>
+                <span class="exhibit-item-tag">Active maintenance</span>
+                OSSF Maintained: 10/10. 30 commits + 1 issue in last 90 days. 12 releases in last 12 months (monthly cadence).
+              </span>
+            </div>
+            <div class="exhibit-item">
+              <span class="exhibit-item-glyph">07</span>
+              <span>
+                <span class="exhibit-item-tag">Long-tenured maintainers</span>
+                dai-shi (411 commits, account since 2010, 8,087 followers). drcmda (pmndrs founder, 232 commits, since 2012, 4,215 followers). No sockpuppet signals.
+              </span>
+            </div>
+            <div class="exhibit-item">
+              <span class="exhibit-item-glyph">08</span>
+              <span>
+                <span class="exhibit-item-tag">Review culture</span>
+                65% any-review rate, 45% formal review rate on most recent 100 merged PRs. Reviews happen voluntarily despite no branch protection.
+              </span>
+            </div>
+          </div>
+        </details>
       </div>
     </div>
-    <p class="section-subtitle">Recommended actions for <span class="cold">zustand v5.0.12</span> users</p>
-    <div class="section-action ok"><span class="lbl">Your action</span> Install normally. Pin your version. Subscribe to releases for future signal.</div>
-  </summary>
-  <div class="section-body">
-    <div class="action-card ok-action stack-md">
-      <h3>1. Install normally</h3>
-      <p><code>npm install zustand</code> is safe. The package has zero runtime dependencies and zero install hooks. Nothing runs on your machine at install time except npm placing module files.</p>
-    </div>
-    <div class="action-card info-action stack-md">
-      <h3>2. Pin your version</h3>
-      <p>Use <code>"zustand": "5.0.12"</code> instead of <code>"^5.0.12"</code> in your package.json. This way you only get updates when you choose to.</p>
-      <pre>// package.json
-"dependencies": {
-  "zustand": "5.0.12"
-}</pre>
-    </div>
-    <div class="action-card info-action stack-md">
-      <h3>3. Subscribe to releases</h3>
-      <p>Watch the repo at <a href="https://github.com/pmndrs/zustand/releases">github.com/pmndrs/zustand/releases</a> to catch any security-relevant updates.</p>
-    </div>
   </div>
-</details>
 
-<!-- ═══ SECTION 02: WHAT WE FOUND ═══ -->
-<details class="collapsible-section" open>
-  <summary>
-    <div class="section-header">
-      <span class="section-number">02</span>
-      <h2>What We Found</h2>
-      <div class="section-status">
-        <span class="pill amber">&#9888; 2 Warning</span>
-        <span class="pill info">&#8505; 3 Info</span>
+  <!-- ═══════════════ SCORECARD ═══════════════ -->
+  <div class="scorecard-section">
+    <div class="scorecard-grid">
+      <div class="score-cell">
+        <div class="score-icon amber">&#x26A0;</div>
+        <div class="score-label">Does anyone check the code?</div>
+        <div class="score-value amber">Amber &mdash; Informal</div>
+        <p class="p-meta-tight">65% any-review, 45% formal review &mdash; solid rates, but no branch protection means reviews are voluntary, not enforced. OSSF Code-Review: 6/10.</p>
+      </div>
+      <div class="score-cell">
+        <div class="score-icon green">&#x2714;</div>
+        <div class="score-label">Do they fix problems quickly?</div>
+        <div class="score-value green">Green</div>
+        <p class="p-meta-tight">Zero open security issues. Zero open CVE PRs. Active maintenance: 30 commits in 90 days, monthly releases. OSSF Maintained: 10/10.</p>
+      </div>
+      <div class="score-cell">
+        <div class="score-icon amber">&#x26A0;</div>
+        <div class="score-label">Do they tell you about problems?</div>
+        <div class="score-value amber">Amber &mdash; No advisory channel</div>
+        <p class="p-meta-tight">No SECURITY.md. No published advisories. OSSF Security-Policy: 0/10. Contributing guide exists but no private disclosure path.</p>
+      </div>
+      <div class="score-cell">
+        <div class="score-icon green">&#x2714;</div>
+        <div class="score-label">Is it safe out of the box?</div>
+        <div class="score-value green">Green</div>
+        <p class="p-meta-tight">npm v5.0.12 verified on registry. Zero runtime deps. No install scripts. No hooks. No dangerous patterns. OIDC publish.</p>
       </div>
     </div>
-    <p class="section-subtitle">All findings are <span class="hot">governance process gaps</span> — none affect the safety of installing zustand today</p>
-    <div class="section-action"><span class="lbl">Your action</span> Pin your version and review changelogs before upgrading. No code-level concerns.</div>
-  </summary>
-  <div class="section-body">
+  </div>
 
-    <!-- Finding F0 -->
+  <!-- ═══════════════ SECTION 01: WHAT SHOULD I DO? ═══════════════ -->
+  <details class="collapsible-section" open>
+    <summary>
+      <div class="section-header">
+        <span class="section-number">01</span>
+        <h2>What Should I Do?</h2>
+        <span class="section-status">
+          <span class="pill green">&#x2713; Safe to install today</span>
+          <span class="pill amber">&#x26A0; 1 consumer-side mitigation</span>
+        </span>
+      </div>
+      <div class="section-subtitle">
+        <span class="cold">Install is safe</span> &mdash; the library itself is clean. <span class="hot">For production use</span>, pin exact versions to protect against future upstream compromise.
+      </div>
+    </summary>
+    <div class="section-body">
+
+    <div class="action-card ok-action">
+      <h3 class="val-good">Step 1: Install zustand &mdash; the library is clean</h3>
+      <p><strong>Non-technical:</strong> Zustand is a pure React state library. It has zero runtime dependencies, no install-time scripts, no shell calls, no network calls, and nothing in its source tree that resembles a dangerous primitive. The published npm package is built through GitHub Actions with OIDC authentication.</p>
+      <pre>npm install zustand@5.0.12
+# or: pnpm add zustand@5.0.12
+# or: yarn add zustand@5.0.12</pre>
+    </div>
+
+    <div class="action-card wait">
+      <h3 class="val-warn">Step 2: Pin to exact version for production</h3>
+      <p><strong>Non-technical:</strong> Because there is no branch protection on <code>main</code>, a compromised maintainer account could push malicious code in a future release. Pinning your version protects you until you manually verify the next upgrade.</p>
+      <pre># In package.json, use exact version (no ^ or ~):
+"zustand": "5.0.12"</pre>
+    </div>
+
+    <div class="action-card info-action">
+      <h3>Step 3: If you maintain this repo &mdash; enable branch protection</h3>
+      <p><strong>Non-technical:</strong> Navigate to <a href="https://github.com/pmndrs/zustand/settings/branches">github.com/pmndrs/zustand/settings/branches</a> and add a branch protection rule for <code>main</code> requiring at least one review. Add a SECURITY.md with a private disclosure channel. Both are free and take a minute each.</p>
+    </div>
+
+    </div>
+  </details>
+
+  <!-- ═══════════════ SECTION 02: WHAT WE FOUND ═══════════════ -->
+  <details class="collapsible-section">
+    <summary>
+      <div class="section-header">
+        <span class="section-number">02</span>
+        <h2>What We Found</h2>
+        <span class="section-status">
+          <span class="pill amber">&#x26A0; 1 Warning</span>
+          <span class="pill info">&#x2139; 3 Info</span>
+        </span>
+      </div>
+      <div class="section-subtitle">
+        4 findings total. <span class="hot">The Warning is governance, not code.</span> F0 is the C20 single-point-of-failure. All Info findings are configuration gaps with low operational impact.
+      </div>
+      <div class="section-action">
+        <span class="lbl">Your action</span>
+        Pin exact versions in production. For maintainers: enable branch protection on <code>main</code> and add a SECURITY.md.
+      </div>
+    </summary>
+    <div class="section-body">
+
+    <!-- Finding 1: C20 -->
     <div class="finding-card warning stack-md">
       <div class="finding-header">
         <span class="tag warning-tag">Warning</span>
         <span class="status-chip active">Active</span>
-        <h3>No vulnerability disclosure channel</h3>
-        <p class="action-hint warn">If you maintain a fork, add a SECURITY.md with a private reporting channel.</p>
+        <span class="status-chip ongoing">Ongoing</span>
+        <h3>No Branch Protection on Default Branch (C20 Governance Single-Point-of-Failure)</h3>
+        <div class="action-hint warn">Pin exact versions in production <code>package.json</code>. If you maintain this repo: enable branch protection at <a href="https://github.com/pmndrs/zustand/settings/branches">Settings &rarr; Branches</a> requiring 1 approver.</div>
       </div>
       <div class="finding-body">
-        <p>zustand has no SECURITY.md file and no published security advisories. The OSSF Security-Policy check scores 0/10. If someone discovers a vulnerability, there is no documented private channel to report it. Vulnerabilities may be reported as public issues, exposing all users before a fix is available.</p>
+        <p><strong>What this means for you:</strong> Anyone with write access to pmndrs/zustand can push code directly to <code>main</code> without a review gate. This does not mean the code is compromised today &mdash; it means the safety net is missing.</p>
+        <p><strong>Threat model (F13):</strong> An attacker who compromises a maintainer&rsquo;s GitHub account (via phishing, leaked token, session hijack from a malicious browser extension, or compromised IDE plugin) could push directly to main. The publish.yml triggers on release events, so the attacker would also need to create a release to ship to npm. This is a two-step attack, but neither step has a review gate.</p>
+        <p><strong>What this does NOT mean:</strong> The library code is clean &mdash; zero runtime deps, zero install hooks, no network, no dangerous primitives. This finding is about the upstream process gap, not the current code.</p>
         <div class="finding-meta">
-          <div class="meta-chip"><span class="chip-label">OSSF Security-Policy</span><span class="chip-value val-bad">0/10</span></div>
-          <div class="meta-chip"><span class="chip-label">Published advisories</span><span class="chip-value">0</span></div>
-          <div class="meta-chip"><span class="chip-label">Impact</span><span class="chip-value">Disclosure maturity gap</span></div>
+          <div class="meta-chip">
+            <span class="chip-label">Classic protection</span>
+            <span class="chip-value val-bad">404 on main</span>
+          </div>
+          <div class="meta-chip">
+            <span class="chip-label">Rulesets</span>
+            <span class="chip-value val-bad">Empty []</span>
+          </div>
+          <div class="meta-chip">
+            <span class="chip-label">CODEOWNERS</span>
+            <span class="chip-value val-bad">Absent</span>
+          </div>
+          <div class="meta-chip">
+            <span class="chip-label">Org rulesets</span>
+            <span class="chip-value val-warn">Unknown (scope gap)</span>
+          </div>
+          <div class="meta-chip">
+            <span class="chip-label">Blast radius</span>
+            <span class="chip-value">57,760 stars &middot; 2,035 forks</span>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- Finding F1 -->
-    <div class="finding-card warning stack-md">
+    <!-- Finding 2: No SECURITY.md -->
+    <div class="finding-card info stack-md">
       <div class="finding-header">
-        <span class="tag warning-tag">Warning</span>
+        <span class="tag info-tag">Info</span>
         <span class="status-chip active">Active</span>
-        <h3>No confirmed branch protection on main</h3>
-        <p class="action-hint warn">Pin your zustand version in package.json and review changelogs before upgrading.</p>
+        <h3>No Security Policy (SECURITY.md)</h3>
+        <div class="action-hint warn">If you maintain this repo: add a SECURITY.md with a private disclosure email or GitHub Security Advisories link.</div>
       </div>
       <div class="finding-body">
-        <p>Classic branch protection returned 404 on main. Repo-level rulesets returned empty array. Rules on default branch returned empty array. CODEOWNERS not found in any of 4 standard locations. Org-level rulesets could not be checked (admin:org scope gap — state is unknown, not confirmed absent).</p>
-        <p><strong>Threat model:</strong> An attacker who compromises a maintainer's GitHub session (via phishing, stolen token, malicious browser extension, or compromised IDE plugin) could push directly to main and trigger the publish workflow, shipping malicious code to npm. The blast radius is 57,760+ stars and all downstream npm consumers.</p>
-        <p><strong>Mitigating factors:</strong> Multiple active maintainers with 10+ year accounts. 67% any-review rate shows a review culture. All CI actions SHA-pinned. PR #3395 shows supply-chain awareness.</p>
+        <p><strong>What this means for you:</strong> If you discover a vulnerability in zustand, there is no documented way to report it privately. OSSF Security-Policy: 0/10.</p>
         <div class="finding-meta">
-          <div class="meta-chip"><span class="chip-label">Classic protection</span><span class="chip-value val-bad">404</span></div>
-          <div class="meta-chip"><span class="chip-label">Rulesets</span><span class="chip-value val-bad">None</span></div>
-          <div class="meta-chip"><span class="chip-label">CODEOWNERS</span><span class="chip-value val-bad">Absent</span></div>
-          <div class="meta-chip"><span class="chip-label">Org rulesets</span><span class="chip-value val-warn">Unknown</span></div>
-          <div class="meta-chip"><span class="chip-label">Stars</span><span class="chip-value">57,760</span></div>
+          <div class="meta-chip">
+            <span class="chip-label">Community health</span>
+            <span class="chip-value">62%</span>
+          </div>
+          <div class="meta-chip">
+            <span class="chip-label">OSSF Security-Policy</span>
+            <span class="chip-value val-bad">0/10</span>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- Finding F2 -->
+    <!-- Finding 3: Token permissions -->
+    <div class="finding-card info stack-md">
+      <div class="finding-header">
+        <span class="tag info-tag">Info</span>
+        <span class="status-chip ongoing">Ongoing</span>
+        <h3>Missing Explicit Token Permissions in CI Workflows</h3>
+        <div class="action-hint warn">Add <code>permissions: { contents: read }</code> to test.yml, test-multiple-versions.yml, test-multiple-builds.yml, compressed-size.yml.</div>
+      </div>
+      <div class="finding-body">
+        <p>Four of eight workflows lack <code>permissions:</code> blocks, running with GitHub&rsquo;s default token scope (broader than necessary). OSSF Token-Permissions: 0/10. Mitigated: publish.yml (the critical workflow) correctly scopes to <code>id-token: write</code> + <code>contents: read</code>.</p>
+      </div>
+    </div>
+
+    <!-- Finding 4: Unpinned docs workflow -->
     <div class="finding-card info stack-md">
       <div class="finding-header">
         <span class="tag info-tag">Info</span>
         <span class="status-chip informational">Informational</span>
-        <h3>CI workflow token permissions too broad</h3>
-        <p class="action-hint">Subscribe to repo releases if you want future signal on governance improvements.</p>
+        <h3>Unpinned Reusable Workflow in docs.yml</h3>
+        <div class="action-hint warn">Pin to SHA: <code>uses: pmndrs/docs/.github/workflows/build.yml@COMMIT_SHA</code></div>
       </div>
       <div class="finding-body">
-        <p>OSSF Token-Permissions scored 0/10. publish.yml and docs.yml explicitly scope permissions, but other workflows use default GITHUB_TOKEN permissions which are broader than needed. This affects CI, not your local install.</p>
-        <div class="finding-meta">
-          <div class="meta-chip"><span class="chip-label">OSSF Token-Permissions</span><span class="chip-value val-bad">0/10</span></div>
-          <div class="meta-chip"><span class="chip-label">Impact</span><span class="chip-value">CI environment only</span></div>
-        </div>
+        <p><code>docs.yml</code> line 15: <code>uses: pmndrs/docs/.github/workflows/build.yml@v3</code> (tag, not SHA). This is a same-org workflow that builds GitHub Pages docs only &mdash; cannot affect the npm package. Low risk.</p>
       </div>
     </div>
 
-    <!-- Finding F3 -->
-    <div class="finding-card info stack-md">
-      <div class="finding-header">
-        <span class="tag info-tag">Info</span>
-        <span class="status-chip informational">Informational</span>
-        <h3>One CI action not SHA-pinned (docs workflow)</h3>
+    </div>
+  </details>
+
+  <!-- ═══════════════ SECTION 02A: EXECUTABLE FILE INVENTORY ═══════════════ -->
+  <details class="collapsible-section">
+    <summary>
+      <div class="section-header">
+        <span class="section-number">02A</span>
+        <h2>Executable File Inventory</h2>
+        <span class="section-status">
+          <span class="pill green">&#x2713; 8 OK</span>
+          <span class="pill info">&#x2139; 1 Info</span>
+        </span>
       </div>
-      <div class="finding-body">
-        <p><code>pmndrs/docs/.github/workflows/build.yml@v3</code> in docs.yml uses a version tag instead of SHA pin. All other 23 uses directives are pinned to 40-char commit SHAs. This is an internal pmndrs org reusable workflow used only for docs deployment.</p>
-        <div class="finding-meta">
-          <div class="meta-chip"><span class="chip-label">SHA-pinned actions</span><span class="chip-value val-good">23/24</span></div>
-          <div class="meta-chip"><span class="chip-label">Unpinned action</span><span class="chip-value">pmndrs/docs build.yml</span></div>
-          <div class="meta-chip"><span class="chip-label">Impact</span><span class="chip-value">Docs deployment only</span></div>
-        </div>
+      <div class="section-subtitle">
+        Zero hooks, zero install scripts, zero lifecycle scripts, zero agent rule files. Only executable artifacts are 8 CI workflow YAMLs.
       </div>
+      <div class="section-action ok">
+        <span class="lbl">Your action</span>
+        No action needed. The library ships no executable files to your machine.
+      </div>
+    </summary>
+    <div class="section-body">
+
+    <div class="inventory-summary">
+      <div class="inventory-summary-title">Quick scan &mdash; 8 CI workflows, 0 user-facing executables</div>
+      <ul>
+        <li class="ok"><span class="glyph">&#x2713;</span> <code>publish.yml</code> &mdash; release trigger, OIDC publish, SHA-pinned actions, scoped permissions. OK.</li>
+        <li class="ok"><span class="glyph">&#x2713;</span> <code>test.yml</code> &mdash; push/PR trigger, SHA-pinned actions, test-only. OK.</li>
+        <li class="ok"><span class="glyph">&#x2713;</span> <code>test-multiple-versions.yml</code> &mdash; matrix tests, SHA-pinned. OK.</li>
+        <li class="ok"><span class="glyph">&#x2713;</span> <code>test-multiple-builds.yml</code> &mdash; matrix tests, SHA-pinned. OK.</li>
+        <li class="ok"><span class="glyph">&#x2713;</span> <code>test-old-typescript.yml</code> &mdash; TS compat, SHA-pinned. OK.</li>
+        <li class="ok"><span class="glyph">&#x2713;</span> <code>preview-release.yml</code> &mdash; push to main, SHA-pinned. OK.</li>
+        <li class="ok"><span class="glyph">&#x2713;</span> <code>compressed-size.yml</code> &mdash; PR trigger, third-party action SHA-pinned. OK.</li>
+        <li class="info"><span class="glyph">&#x2139;</span> <code>docs.yml</code> &mdash; push to main, reusable workflow @v3 (not SHA-pinned), deploy-pages SHA-pinned. Info.</li>
+      </ul>
     </div>
 
-    <!-- Finding F4 -->
-    <div class="finding-card info stack-md">
-      <div class="finding-header">
-        <span class="tag info-tag">Info</span>
-        <span class="status-chip informational">Informational</span>
-        <h3>Dependabot alerts disabled</h3>
-      </div>
-      <div class="finding-body">
-        <p>Dependabot alerts API returned 403: &quot;Dependabot alerts are disabled for this repository.&quot; With zero runtime dependencies, this has minimal impact on end users — it mainly catches vulnerabilities in devDependencies used during development.</p>
-        <div class="finding-meta">
-          <div class="meta-chip"><span class="chip-label">Runtime deps</span><span class="chip-value val-good">0</span></div>
-          <div class="meta-chip"><span class="chip-label">DevDeps</span><span class="chip-value">39</span></div>
-        </div>
-      </div>
     </div>
+  </details>
 
-  </div>
-</details>
-
-<!-- ═══ SECTION 02A: EXECUTABLE FILE INVENTORY ═══ -->
-<details class="collapsible-section">
-  <summary>
-    <div class="section-header">
-      <span class="section-number">02A</span>
-      <h2>Executable File Inventory</h2>
-      <div class="section-status">
-        <span class="pill green">&#10003; 0 executable files</span>
+  <!-- ═══════════════ SECTION 03: SUSPICIOUS CODE CHANGES ═══════════════ -->
+  <details class="collapsible-section">
+    <summary>
+      <div class="section-header">
+        <span class="section-number">03</span>
+        <h2>Suspicious Code Changes</h2>
+        <span class="section-status">
+          <span class="pill green">&#x2713; None identified</span>
+        </span>
       </div>
-    </div>
-    <p class="section-subtitle">zustand has <span class="cold">no executable files</span> in the always-investigate list</p>
-    <div class="section-action ok"><span class="lbl">Your action</span> No action needed. Nothing runs on your machine at install time.</div>
-  </summary>
-  <div class="section-body">
-    <p class="p-meta">zustand ships zero hook files, zero install scripts, zero package lifecycle scripts, zero agent-rule files, zero Dockerfiles, and zero README paste-blocks. The only files that execute are the 8 CI workflows (all inspected, all clean).</p>
-    <p class="p-meta"><strong>CI workflows (8 files):</strong> No dangerous patterns. No pull_request_target. No curl|bash. No secret exfiltration. 23/24 actions SHA-pinned. The publish workflow uses npm provenance (id-token: write).</p>
-  </div>
-</details>
-
-<!-- ═══ SECTION 03: SUSPICIOUS CODE CHANGES ═══ -->
-<details class="collapsible-section">
-  <summary>
-    <div class="section-header">
-      <span class="section-number">03</span>
-      <h2>Suspicious Code Changes</h2>
-      <div class="section-status">
-        <span class="pill green">&#10003; None</span>
-      </div>
-    </div>
-    <p class="section-subtitle">No suspicious code changes identified in the sampled PRs</p>
-    <div class="section-action ok"><span class="lbl">Your action</span> No action needed.</div>
-  </summary>
-  <div class="section-body">
+      <div class="section-subtitle">No changelog-hiding, no relabeled security fixes, no fast self-merges on critical changes.</div>
+    </summary>
+    <div class="section-body">
     <div class="pr-table-wrap">
       <table>
-        <thead><tr><th>PR</th><th>What it did</th><th>Submitted by</th><th>Merged by</th><th>Reviewed?</th><th>Concern</th></tr></thead>
-        <tbody>
-          <tr>
-            <td><a href="https://github.com/pmndrs/zustand/pull/3395">#3395</a></td>
-            <td>Pin actions/deploy-pages to SHA</td>
-            <td class="td-person">Copilot agent</td>
-            <td class="td-person">dai-shi</td>
-            <td class="td-reviewed-no">No</td>
-            <td>Self-merge of bot PR in 7 min — benign change (CI hardening)</td>
-          </tr>
-        </tbody>
+        <tr>
+          <th>PR</th><th>What it did</th><th>Submitted by</th><th>Merged by</th><th>Reviewed?</th><th>Concern</th>
+        </tr>
+        <tr>
+          <td><a href="https://github.com/pmndrs/zustand/pull/3395">#3395</a></td>
+          <td>Pin deploy-pages to SHA for supply-chain security</td>
+          <td class="td-person">copilot-swe-agent</td>
+          <td class="td-person">dai-shi</td>
+          <td class="td-reviewed-no">No formal review</td>
+          <td>AI-authored security fix merged without formal review &mdash; low risk (docs workflow only)</td>
+        </tr>
+        <tr>
+          <td><a href="https://github.com/pmndrs/zustand/pull/3391">#3391</a></td>
+          <td>Fix persist rehydration callback</td>
+          <td class="td-person">Shohjahon-n</td>
+          <td class="td-person">dai-shi</td>
+          <td class="td-reviewed-yes">APPROVED (11 reviews)</td>
+          <td>None &mdash; excellent review process</td>
+        </tr>
       </table>
     </div>
-  </div>
-</details>
-
-<!-- ═══ SECTION 04: TIMELINE ═══ -->
-<details class="collapsible-section">
-  <summary>
-    <div class="section-header">
-      <span class="section-number">04</span>
-      <h2>Timeline</h2>
-      <div class="section-status">
-        <span class="pill green">&#10003; Clean history</span>
-      </div>
     </div>
-    <p class="section-subtitle">Key events in zustand's security-relevant history</p>
-  </summary>
-  <div class="section-body">
+  </details>
+
+  <!-- ═══════════════ SECTION 04: TIMELINE ═══════════════ -->
+  <details class="collapsible-section">
+    <summary>
+      <div class="section-header">
+        <span class="section-number">04</span>
+        <h2>Timeline</h2>
+        <span class="section-status">
+          <span class="pill muted">7 events</span>
+        </span>
+      </div>
+      <div class="section-subtitle">Key events from repo creation to this scan.</div>
+    </summary>
+    <div class="section-body">
     <div class="timeline">
       <div class="tl-item good">
-        <div class="tl-date"><span class="tl-severity-label">REPO BORN</span> 2019-04-09</div>
-        <div class="tl-desc">zustand created under pmndrs org by drcmda</div>
+        <div class="tl-date"><span class="tl-severity-label">REPO CREATED</span> 2019-04-09</div>
+        <div class="tl-desc">pmndrs/zustand created by drcmda (Paul Henschel, pmndrs founder).</div>
       </div>
       <div class="tl-item good">
-        <div class="tl-date"><span class="tl-severity-label">MAJOR RELEASE</span> 2024-10-14</div>
-        <div class="tl-desc">v5.0.0 published — major version with TypeScript improvements</div>
+        <div class="tl-date"><span class="tl-severity-label">V5 SHIPS</span> 2024-10-14</div>
+        <div class="tl-desc">v5.0.0 released after RC cycle (rc.0 through rc.2). Major version bump.</div>
       </div>
       <div class="tl-item good">
-        <div class="tl-date"><span class="tl-severity-label">CI HARDENING</span> 2026-02-10</div>
-        <div class="tl-desc">PR #3381 pins all GitHub Actions to commit SHAs</div>
+        <div class="tl-date"><span class="tl-severity-label">ACTIVE RELEASE</span> 2025-05-21 &ndash; 2026-03-16</div>
+        <div class="tl-desc">v5.0.5 through v5.0.12 shipped with monthly cadence. Regular maintenance releases.</div>
       </div>
       <div class="tl-item good">
-        <div class="tl-date"><span class="tl-severity-label">CI HARDENING</span> 2026-02-23</div>
-        <div class="tl-desc">PR #3395 pins actions/deploy-pages to SHA (Copilot-authored)</div>
+        <div class="tl-date"><span class="tl-severity-label">SUPPLY-CHAIN FIX</span> 2026-02-23</div>
+        <div class="tl-desc">PR #3395 pins deploy-pages action to SHA. Copilot-authored, merged by dai-shi.</div>
       </div>
       <div class="tl-item good">
         <div class="tl-date"><span class="tl-severity-label">LATEST RELEASE</span> 2026-03-16</div>
-        <div class="tl-desc">v5.0.12 published on npm</div>
+        <div class="tl-desc">v5.0.12 ships with devtools type fix (#3414) and persist rehydration fix (#3391).</div>
       </div>
       <div class="tl-item neutral">
         <div class="tl-date"><span class="tl-severity-label">LAST COMMIT</span> 2026-04-14</div>
-        <div class="tl-desc">README link update (#3466)</div>
+        <div class="tl-desc">README docs link update (#3466). Normal maintenance activity.</div>
       </div>
       <div class="tl-item good">
-        <div class="tl-date"><span class="tl-severity-label">THIS SCAN</span> 2026-04-17</div>
-        <div class="tl-desc">V2.4 re-scan of main @ 32013285 — verdict: clean</div>
+        <div class="tl-date"><span class="tl-severity-label">SCAN DATE</span> 2026-04-17</div>
+        <div class="tl-desc">This investigation. HEAD: 32013285083648e8d58ba1f76d73b9bdc02fef50.</div>
       </div>
     </div>
-  </div>
-</details>
-
-<!-- ═══ SECTION 05: REPO VITALS ═══ -->
-<details class="collapsible-section">
-  <summary>
-    <div class="section-header">
-      <span class="section-number">05</span>
-      <h2>Repo Vitals</h2>
     </div>
-    <p class="section-subtitle">Key metrics for pmndrs/zustand</p>
-  </summary>
-  <div class="section-body">
+  </details>
+
+  <!-- ═══════════════ SECTION 05: REPO VITALS ═══════════════ -->
+  <details class="collapsible-section">
+    <summary>
+      <div class="section-header">
+        <span class="section-number">05</span>
+        <h2>Repo Vitals</h2>
+        <span class="section-status">
+          <span class="pill muted">Metrics</span>
+        </span>
+      </div>
+    </summary>
+    <div class="section-body">
     <div class="vitals-grid">
       <div class="vital-cell">
-        <div class="vital-label">Stars</div>
-        <div class="vital-value val-good">57,760</div>
-        <div class="vital-note">Extremely popular — one of the most-starred React libraries</div>
+        <div class="vital-label">Repository</div>
+        <div class="vital-value">pmndrs/zustand</div>
+        <div class="vital-note">Organization-owned (Poimandres collective)</div>
       </div>
       <div class="vital-cell">
-        <div class="vital-label">Forks</div>
-        <div class="vital-value">2,035</div>
-        <div class="vital-note">High fork count, active ecosystem</div>
+        <div class="vital-label">Stars / Forks</div>
+        <div class="vital-value">57,760 / 2,035</div>
+        <div class="vital-note">Top-10 React state management library</div>
       </div>
       <div class="vital-cell">
         <div class="vital-label">Age</div>
         <div class="vital-value">7 years</div>
-        <div class="vital-note">Created 2019-04-09 — mature, established project</div>
+        <div class="vital-note">Created 2019-04-09</div>
       </div>
       <div class="vital-cell">
         <div class="vital-label">License</div>
-        <div class="vital-value val-good">MIT</div>
-        <div class="vital-note">Permissive, no compliance issues</div>
-      </div>
-      <div class="vital-cell">
-        <div class="vital-label">Runtime dependencies</div>
-        <div class="vital-value val-good">0</div>
-        <div class="vital-note">Minimal attack surface — standalone library</div>
-      </div>
-      <div class="vital-cell">
-        <div class="vital-label">Source lines</div>
-        <div class="vital-value">1,447</div>
-        <div class="vital-note">16 TypeScript files — auditable in an afternoon</div>
+        <div class="vital-value">MIT</div>
       </div>
       <div class="vital-cell">
         <div class="vital-label">OSSF Scorecard</div>
-        <div class="vital-value val-warn">5.9 / 10</div>
-        <div class="vital-note">Above average. Strengths: Maintained (10), Packaging (10), Pinned-Deps (9). Gaps: Security-Policy (0), Token-Permissions (0)</div>
+        <div class="vital-value val-warn">5.9/10</div>
+        <div class="vital-note">Maintained 10, Code-Review 6, Token-Permissions 0, Security-Policy 0</div>
       </div>
       <div class="vital-cell">
-        <div class="vital-label">Review rate</div>
-        <div class="vital-value val-good">67% any / 54% formal</div>
-        <div class="vital-note">300/895 PRs sampled — above green thresholds</div>
+        <div class="vital-label">Runtime Dependencies</div>
+        <div class="vital-value val-good">0</div>
+        <div class="vital-note">Zero runtime deps. 39 dev deps (build/test only).</div>
       </div>
       <div class="vital-cell">
-        <div class="vital-label">Last release</div>
+        <div class="vital-label">Latest Release</div>
         <div class="vital-value">v5.0.12</div>
-        <div class="vital-note">2026-03-16 — monthly cadence</div>
+        <div class="vital-note">2026-03-16. 12 releases in last 12 months.</div>
       </div>
       <div class="vital-cell">
-        <div class="vital-label">Last commit</div>
-        <div class="vital-value val-good">2026-04-14</div>
-        <div class="vital-note">Active development — 3 days before scan</div>
+        <div class="vital-label">PR Review Rate</div>
+        <div class="vital-value val-warn">65% any / 45% formal</div>
+        <div class="vital-note">100 of 895 sampled. Reviews voluntary (no branch protection).</div>
       </div>
       <div class="vital-cell">
-        <div class="vital-label">Open issues</div>
+        <div class="vital-label">Open Issues</div>
         <div class="vital-value val-good">2</div>
-        <div class="vital-note">Very few open issues, none security-related</div>
+        <div class="vital-note">0 security-related</div>
       </div>
       <div class="vital-cell">
-        <div class="vital-label">Contributors</div>
-        <div class="vital-value">30+</div>
-        <div class="vital-note">Top: dai-shi (38.2%), drcmda (21.6%), dbritto-dev (5.5%)</div>
+        <div class="vital-label">Top Contributor</div>
+        <div class="vital-value">dai-shi</div>
+        <div class="vital-note">411 commits (54.7% of top 4). Account since 2010.</div>
       </div>
     </div>
-  </div>
-</details>
-
-<!-- ═══ SECTION 06: INVESTIGATION COVERAGE ═══ -->
-<details class="collapsible-section">
-  <summary>
-    <div class="section-header">
-      <span class="section-number">06</span>
-      <h2>Investigation Coverage</h2>
     </div>
-    <p class="section-subtitle">What was checked, what failed, what was sampled</p>
-  </summary>
-  <div class="section-body">
-    <div class="pr-table-wrap">
-      <table>
-        <thead><tr><th>Check</th><th>Result</th></tr></thead>
-        <tbody>
-          <tr><td>Repo metadata</td><td>Queried successfully</td></tr>
-          <tr><td>Maintainer background</td><td>Top 4 checked — all established (10+ year accounts)</td></tr>
-          <tr><td>OSSF Scorecard</td><td class="val-good">5.9/10 (14 checks indexed)</td></tr>
-          <tr><td>osv.dev fallback</td><td>Not queried (zero runtime dependencies)</td></tr>
-          <tr><td>Dependabot alerts</td><td class="val-warn">Disabled for this repo (403)</td></tr>
-          <tr><td>Secrets-in-history (gitleaks)</td><td class="val-warn">Not scanned (gitleaks not available)</td></tr>
-          <tr><td>API budget at Step 5</td><td class="val-good">4,971/5,000 remaining. PR sample: 300 (full)</td></tr>
-          <tr><td>Branch protection</td><td class="val-warn">Classic 404 + rulesets [] + org unknown (scope gap)</td></tr>
-          <tr><td>CODEOWNERS</td><td class="val-warn">Not found (4 locations checked)</td></tr>
-          <tr><td>Merged PR sample</td><td>300 of 895 total (33.5% sampled)</td></tr>
-          <tr><td>Security-relevant PRs inspected</td><td>4 title hits reviewed, 1 detailed diff (#3395)</td></tr>
-          <tr><td>Tarball extraction</td><td class="val-good">143 files extracted</td></tr>
-          <tr><td>Step A grep (dangerous patterns)</td><td class="val-good">All categories scanned — 0 concerning hits</td></tr>
-          <tr><td>Step B targeted reads</td><td class="val-good">1 file (devtools.ts) — RegExp.exec(), not eval()</td></tr>
-          <tr><td>Executable files inspected</td><td class="val-good">0 of 0 (none exist) — 8 CI workflows inspected separately</td></tr>
-          <tr><td>README install-paste scan</td><td class="val-good">Run — 0 paste blocks found</td></tr>
-          <tr><td>Agent-rule files (Step 2.5)</td><td class="val-good">CI-amplified: 0. Static: 0</td></tr>
-          <tr><td>Prompt-injection scan</td><td class="val-good">0 strings matched, 0 findings</td></tr>
-          <tr><td>Distribution channels</td><td class="val-good">1 of 1 resolved (npm verified)</td></tr>
-          <tr><td>Windows surface</td><td>N/A — no .ps1/.bat/.cmd files</td></tr>
-          <tr><td>pull_request_target usage</td><td class="val-good">0 workflows</td></tr>
-          <tr><td>Inner package.json lifecycle</td><td class="val-good">3 files, 0 lifecycle scripts</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-</details>
+  </details>
 
-<!-- ═══ SECTION 07: EVIDENCE APPENDIX ═══ -->
-<details class="collapsible-section">
-  <summary>
-    <div class="section-header">
-      <span class="section-number">07</span>
-      <h2>Evidence Appendix</h2>
-      <div class="section-status">
-        <span class="pill amber">&#9888; 2 Warning evidence</span>
-        <span class="pill green">&#10003; 6 positive evidence</span>
+  <!-- ═══════════════ SECTION 06: INVESTIGATION COVERAGE ═══════════════ -->
+  <details class="collapsible-section">
+    <summary>
+      <div class="section-header">
+        <span class="section-number">06</span>
+        <h2>Investigation Coverage</h2>
+        <span class="section-status">
+          <span class="pill muted">V2.4 coverage</span>
+        </span>
+      </div>
+    </summary>
+    <div class="section-body">
+    <div class="vitals-grid">
+      <div class="vital-cell">
+        <div class="vital-label">OSSF Scorecard</div>
+        <div class="vital-value">5.9/10 (14 checks)</div>
+        <div class="vital-note">Branch-Protection returned -1 (token limitation). All other checks returned data.</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">osv.dev</div>
+        <div class="vital-value">N/A</div>
+        <div class="vital-note">Zero runtime dependencies &mdash; nothing to query.</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Dependabot</div>
+        <div class="vital-value val-warn">403 (disabled)</div>
+        <div class="vital-note">Dependabot alerts disabled for this repository. Version-update PRs still active.</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Secrets-in-history</div>
+        <div class="vital-value val-warn">Not scanned</div>
+        <div class="vital-note">gitleaks not available. Install gitleaks for full coverage.</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">API Budget</div>
+        <div class="vital-value val-good">4960/5000</div>
+        <div class="vital-note">Full PR sample (no reduction needed).</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">PR Sample</div>
+        <div class="vital-value">100 of 895</div>
+        <div class="vital-note">Most recent 100 merged PRs sampled. 18 title-matched for drill-in.</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Tarball Extraction</div>
+        <div class="vital-value val-good">143 files</div>
+        <div class="vital-note">Symlinks stripped. Extraction verified.</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Executable Files</div>
+        <div class="vital-value val-good">8 of 8 inspected</div>
+        <div class="vital-note">0 Warning, 8 OK (all CI workflows). 0 hooks, 0 install scripts, 0 lifecycle scripts.</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">README Install-Paste</div>
+        <div class="vital-value val-good">0 blocks</div>
+        <div class="vital-note">Scan run. No paste-into-agent blocks found.</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Agent Rule Files</div>
+        <div class="vital-value val-good">0 found</div>
+        <div class="vital-note">CI-amplified: 0. Static: 0.</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Prompt Injection</div>
+        <div class="vital-value val-good">0 strings matched</div>
+        <div class="vital-note">0 classified as actionable findings.</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Distribution Channels</div>
+        <div class="vital-value val-good">1 of 1 verified</div>
+        <div class="vital-note">npm v5.0.12 verified (shasum confirmed). Git clone trivially matches.</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">pull_request_target</div>
+        <div class="vital-value val-good">0 workflows</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Windows Surface</div>
+        <div class="vital-value">N/A</div>
+        <div class="vital-note">No .ps1/.bat/.cmd files in repo.</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Inner package.json</div>
+        <div class="vital-value val-good">3 files, 0 lifecycle scripts</div>
+        <div class="vital-note">Root + 2 examples. All sampled.</div>
       </div>
     </div>
-    <p class="section-subtitle">Reproducible evidence for every finding and scorecard assertion</p>
-  </summary>
-  <div class="section-body">
+    <p class="p-meta stack-sm"><strong>Limitations:</strong> Org-level rulesets unknown (admin:org scope not available). Dependabot alerts disabled on repo. gitleaks not installed. Only 100 of 895 merged PRs sampled.</p>
+    </div>
+  </details>
 
-    <div class="evidence-group-label warns">&#9733; Priority evidence (read first)</div>
+  <!-- ═══════════════ SECTION 07: EVIDENCE APPENDIX ═══════════════ -->
+  <details class="collapsible-section">
+    <summary>
+      <div class="section-header">
+        <span class="section-number">07</span>
+        <h2>Evidence Appendix</h2>
+        <span class="section-status">
+          <span class="pill muted">10 entries</span>
+        </span>
+      </div>
+    </summary>
+    <div class="section-body">
 
-    <!-- E1 -->
+    <div class="evidence-group-label warns">&#x2605; Priority evidence (read first)</div>
+
     <div class="finding-card warning evidence-priority stack-md">
       <div class="finding-header">
-        <span class="tag warning-tag">Warning</span>
-        <span class="priority-flag">&#9733; Start here</span>
-        <h3>E1: No classic branch protection on main</h3>
+        <span class="tag warning-tag">E1</span>
+        <span class="priority-flag">&#x2605; Start here</span>
+        <h3>Branch Protection &mdash; No Classic Rule</h3>
       </div>
       <div class="finding-body">
         <div class="evidence-row">
           <div class="evidence-label">Claim</div>
-          <p>No classic branch protection rule configured on main</p>
+          <p>No branch protection rule exists on the main branch.</p>
         </div>
         <div class="evidence-row">
           <div class="evidence-label">Command</div>
@@ -1325,185 +1493,165 @@
         </div>
         <div class="evidence-row">
           <div class="evidence-label">Result</div>
-          <pre class="evidence-pre result">{"message":"Not Found","documentation_url":"...","status":"404"}</pre>
+          <pre class="evidence-pre result">{"message":"Not Found","documentation_url":"https://docs.github.com/rest/branches/branch-protection#get-branch-protection","status":"404"}</pre>
         </div>
         <div class="evidence-classification fact">Classification: Confirmed fact</div>
       </div>
     </div>
 
-    <!-- E7 -->
     <div class="finding-card warning evidence-priority stack-md">
       <div class="finding-header">
-        <span class="tag warning-tag">Warning</span>
-        <span class="priority-flag">&#9733; Start here</span>
-        <h3>E7: No SECURITY.md</h3>
+        <span class="tag warning-tag">E5</span>
+        <span class="priority-flag">&#x2605; Start here</span>
+        <h3>PR Review Rate</h3>
       </div>
       <div class="finding-body">
         <div class="evidence-row">
           <div class="evidence-label">Claim</div>
-          <p>No security policy file exists</p>
+          <p>65% any-review rate, 45% formal review rate on most recent 100 merged PRs.</p>
         </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Command</div>
+          <pre class="evidence-pre">gh pr list -R pmndrs/zustand --state merged --limit 100 --json number,title,createdAt,mergedAt,author,reviewDecision,reviews,labels</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Result</div>
+          <pre class="evidence-pre result">Sample size: 100
+Formal review rate: 45/100 = 45.0%
+Any-review rate: 65/100 = 65.0%</pre>
+        </div>
+        <div class="evidence-classification fact">Classification: Confirmed fact (sampled &mdash; 100 of 895 total)</div>
+      </div>
+    </div>
+
+    <div class="evidence-group-label context">Supporting evidence</div>
+
+    <div class="finding-card info stack-md">
+      <div class="finding-header">
+        <span class="tag info-tag">E2</span>
+        <h3>Rulesets &mdash; Empty</h3>
+      </div>
+      <div class="finding-body">
+        <div class="evidence-row">
+          <div class="evidence-label">Command</div>
+          <pre class="evidence-pre">gh api repos/pmndrs/zustand/rulesets</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Result</div>
+          <pre class="evidence-pre result">[]</pre>
+        </div>
+        <div class="evidence-classification fact">Classification: Confirmed fact</div>
+      </div>
+    </div>
+
+    <div class="finding-card info stack-md">
+      <div class="finding-header">
+        <span class="tag info-tag">E3</span>
+        <h3>Rules on Default Branch &mdash; Empty</h3>
+      </div>
+      <div class="finding-body">
+        <div class="evidence-row">
+          <div class="evidence-label">Command</div>
+          <pre class="evidence-pre">gh api repos/pmndrs/zustand/rules/branches/main</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Result</div>
+          <pre class="evidence-pre result">[]</pre>
+        </div>
+        <div class="evidence-classification fact">Classification: Confirmed fact</div>
+      </div>
+    </div>
+
+    <div class="finding-card info stack-md">
+      <div class="finding-header">
+        <span class="tag info-tag">E4</span>
+        <h3>CODEOWNERS &mdash; Absent</h3>
+      </div>
+      <div class="finding-body">
+        <div class="evidence-row">
+          <div class="evidence-label">Command</div>
+          <pre class="evidence-pre">Checked CODEOWNERS, .github/CODEOWNERS, docs/CODEOWNERS, .gitlab/CODEOWNERS via gh api</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Result</div>
+          <pre class="evidence-pre result">All 4 paths returned empty/404</pre>
+        </div>
+        <div class="evidence-classification fact">Classification: Confirmed fact</div>
+      </div>
+    </div>
+
+    <div class="finding-card info stack-md">
+      <div class="finding-header">
+        <span class="tag info-tag">E7</span>
+        <h3>OSSF Scorecard</h3>
+      </div>
+      <div class="finding-body">
+        <div class="evidence-row">
+          <div class="evidence-label">Command</div>
+          <pre class="evidence-pre">curl -s "https://api.securityscorecards.dev/projects/github.com/pmndrs/zustand"</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Result</div>
+          <pre class="evidence-pre result">OSSF Scorecard: overall 5.9/10
+  Code-Review: 6/10
+  Maintained: 10/10
+  Binary-Artifacts: 10/10
+  Dangerous-Workflow: 10/10
+  Token-Permissions: 0/10
+  Pinned-Dependencies: 9/10
+  CII-Best-Practices: 0/10
+  Fuzzing: 0/10
+  Security-Policy: 0/10
+  SAST: 0/10
+  Packaging: 10/10
+  License: 10/10</pre>
+        </div>
+        <div class="evidence-classification fact">Classification: Confirmed fact</div>
+      </div>
+    </div>
+
+    <div class="finding-card info stack-md">
+      <div class="finding-header">
+        <span class="tag info-tag">E9</span>
+        <h3>No Security Policy</h3>
+      </div>
+      <div class="finding-body">
         <div class="evidence-row">
           <div class="evidence-label">Command</div>
           <pre class="evidence-pre">gh api repos/pmndrs/zustand/community/profile</pre>
         </div>
         <div class="evidence-row">
           <div class="evidence-label">Result</div>
-          <pre class="evidence-pre result">security_policy: false</pre>
+          <pre class="evidence-pre result">{"coc":false,"contrib":true,"health":62,"license":"MIT","security_policy":false}</pre>
         </div>
         <div class="evidence-classification fact">Classification: Confirmed fact</div>
-      </div>
-    </div>
-
-    <div class="evidence-group-label context">Supporting evidence</div>
-
-    <!-- E2 -->
-    <div class="finding-card info stack-md">
-      <div class="finding-header">
-        <span class="tag info-tag">Info</span>
-        <h3>E2: No rulesets on main</h3>
-      </div>
-      <div class="finding-body">
-        <div class="evidence-row">
-          <div class="evidence-label">Command</div>
-          <pre class="evidence-pre">gh api repos/pmndrs/zustand/rulesets
-gh api repos/pmndrs/zustand/rules/branches/main</pre>
-        </div>
-        <div class="evidence-row">
-          <div class="evidence-label">Result</div>
-          <pre class="evidence-pre result">Both returned []</pre>
-        </div>
-        <div class="evidence-classification fact">Classification: Confirmed fact</div>
-      </div>
-    </div>
-
-    <!-- E3 -->
-    <div class="finding-card info stack-md">
-      <div class="finding-header">
-        <span class="tag info-tag">Info</span>
-        <h3>E3: Org rulesets unknown (scope gap)</h3>
-      </div>
-      <div class="finding-body">
-        <div class="evidence-row">
-          <div class="evidence-label">Command</div>
-          <pre class="evidence-pre">gh api orgs/pmndrs/rulesets</pre>
-        </div>
-        <div class="evidence-row">
-          <div class="evidence-label">Result</div>
-          <pre class="evidence-pre result">404 — "This API operation needs the admin:org scope"</pre>
-        </div>
-        <div class="evidence-classification fact">Classification: Confirmed fact — state is unknown (scope gap), not absent</div>
-      </div>
-    </div>
-
-    <!-- E4 -->
-    <div class="finding-card info stack-md">
-      <div class="finding-header">
-        <span class="tag info-tag">Info</span>
-        <h3>E4: OSSF Scorecard 5.9/10</h3>
-      </div>
-      <div class="finding-body">
-        <div class="evidence-row">
-          <div class="evidence-label">Command</div>
-          <pre class="evidence-pre">curl -s https://api.securityscorecards.dev/projects/github.com/pmndrs/zustand</pre>
-        </div>
-        <div class="evidence-row">
-          <div class="evidence-label">Result</div>
-          <pre class="evidence-pre result">Overall: 5.9/10
-Code-Review: 6/10, Maintained: 10/10, Binary-Artifacts: 10/10
-Dangerous-Workflow: 10/10, Pinned-Dependencies: 9/10, Packaging: 10/10, License: 10/10
-CII-Best-Practices: 0/10, Token-Permissions: 0/10, Fuzzing: 0/10
-Security-Policy: 0/10, SAST: 0/10
-Branch-Protection: -1/10 (error), Signed-Releases: -1/10</pre>
-        </div>
-        <div class="evidence-classification fact">Classification: Confirmed fact</div>
-      </div>
-    </div>
-
-    <!-- E5 -->
-    <div class="finding-card info stack-md">
-      <div class="finding-header">
-        <span class="tag info-tag">Info</span>
-        <h3>E5: PR review rate</h3>
-      </div>
-      <div class="finding-body">
-        <div class="evidence-row">
-          <div class="evidence-label">Command</div>
-          <pre class="evidence-pre">gh pr list -R pmndrs/zustand --state merged --limit 300 --json reviewDecision,reviews</pre>
-        </div>
-        <div class="evidence-row">
-          <div class="evidence-label">Result</div>
-          <pre class="evidence-pre result">Sample: 300/895. Formal: 163/300 = 54.3%. Any-review: 201/300 = 67.0%.</pre>
-        </div>
-        <div class="evidence-classification fact">Classification: Confirmed fact (300/895 sample)</div>
       </div>
     </div>
 
     <div class="evidence-group-label positives">Positive evidence</div>
 
-    <!-- E6 -->
     <div class="finding-card ok stack-md">
       <div class="finding-header">
-        <span class="tag ok-tag">OK</span>
-        <h3>E6: Zero runtime dependencies</h3>
+        <span class="tag ok-tag">E6</span>
+        <h3>Zero Runtime Dependencies</h3>
       </div>
       <div class="finding-body">
         <div class="evidence-row">
           <div class="evidence-label">Command</div>
-          <pre class="evidence-pre">cat package.json | jq .dependencies</pre>
+          <pre class="evidence-pre">python3 -c "import json; d=json.load(open('package.json')); print(d.get('dependencies',{}))"</pre>
         </div>
         <div class="evidence-row">
           <div class="evidence-label">Result</div>
-          <pre class="evidence-pre result">{} (empty — no runtime dependencies)</pre>
+          <pre class="evidence-pre result">{}</pre>
         </div>
         <div class="evidence-classification fact">Classification: Confirmed fact</div>
       </div>
     </div>
 
-    <!-- E8 -->
     <div class="finding-card ok stack-md">
       <div class="finding-header">
-        <span class="tag ok-tag">OK</span>
-        <h3>E8: SHA-pinned actions (23/24)</h3>
-      </div>
-      <div class="finding-body">
-        <div class="evidence-row">
-          <div class="evidence-label">Command</div>
-          <pre class="evidence-pre">grep -rn 'uses:' .github/workflows/</pre>
-        </div>
-        <div class="evidence-row">
-          <div class="evidence-label">Result</div>
-          <pre class="evidence-pre result">23/24 uses directives pinned to 40-char commit SHA.
-Only exception: pmndrs/docs/.github/workflows/build.yml@v3 (internal org, docs only)</pre>
-        </div>
-        <div class="evidence-classification fact">Classification: Confirmed fact</div>
-      </div>
-    </div>
-
-    <!-- E9 -->
-    <div class="finding-card ok stack-md">
-      <div class="finding-header">
-        <span class="tag ok-tag">OK</span>
-        <h3>E9: No dangerous code patterns in source</h3>
-      </div>
-      <div class="finding-body">
-        <div class="evidence-row">
-          <div class="evidence-label">Command</div>
-          <pre class="evidence-pre">Step A grep battery (eval, network, secrets, CORS, XSS, debug, env, injection)</pre>
-        </div>
-        <div class="evidence-row">
-          <div class="evidence-label">Result</div>
-          <pre class="evidence-pre result">Zero hits across all categories. One false positive: RegExp.exec() in devtools.ts.</pre>
-        </div>
-        <div class="evidence-classification fact">Classification: Confirmed fact</div>
-      </div>
-    </div>
-
-    <!-- E10 -->
-    <div class="finding-card ok stack-md">
-      <div class="finding-header">
-        <span class="tag ok-tag">OK</span>
-        <h3>E10: npm package verified</h3>
+        <span class="tag ok-tag">E8</span>
+        <h3>npm Package Verified</h3>
       </div>
       <div class="finding-body">
         <div class="evidence-row">
@@ -1512,23 +1660,45 @@ Only exception: pmndrs/docs/.github/workflows/build.yml@v3 (internal org, docs o
         </div>
         <div class="evidence-row">
           <div class="evidence-label">Result</div>
-          <pre class="evidence-pre result">version: 5.0.12
-dist.shasum: ed36f647aa89965c4019b671dfc23ef6c6e3af8c
-dist.tarball: https://registry.npmjs.org/zustand/-/zustand-5.0.12.tgz</pre>
+          <pre class="evidence-pre result">dist.shasum = 'ed36f647aa89965c4019b671dfc23ef6c6e3af8c'
+dist.tarball = 'https://registry.npmjs.org/zustand/-/zustand-5.0.12.tgz'
+version = '5.0.12'</pre>
         </div>
         <div class="evidence-classification fact">Classification: Confirmed fact</div>
       </div>
     </div>
 
+    <div class="finding-card ok stack-md">
+      <div class="finding-header">
+        <span class="tag ok-tag">E10</span>
+        <h3>Dangerous Pattern Grep &mdash; Clean</h3>
+      </div>
+      <div class="finding-body">
+        <div class="evidence-row">
+          <div class="evidence-label">Command</div>
+          <pre class="evidence-pre">Multiple grep commands per Step A (eval, exec, fetch, secrets, XSS, debug, prompt injection)</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Result</div>
+          <pre class="evidence-pre result">0 hits for eval/exec in non-test source
+0 hits for network calls in non-test source
+0 hits for hardcoded secrets
+XSS sinks: only in tests/ssr.test.tsx (test file, not shipped)
+0 hits for debug defaults
+0 hits for prompt injection patterns</pre>
+        </div>
+        <div class="evidence-classification fact">Classification: Confirmed fact</div>
+      </div>
+    </div>
+
+    </div>
+  </details>
+
+  <!-- ═══════════════ FOOTER ═══════════════ -->
+  <div class="footer">
+    <p>Generated by <a href="https://github.com/stefans71/stop-git-std">stop-git-std</a> V2.4 scanner &middot; pmndrs/zustand @ 32013285083648e8d58ba1f76d73b9bdc02fef50 &middot; 2026-04-17</p>
   </div>
-</details>
 
-<!-- ═══ FOOTER ═══ -->
-<div class="footer">
-  <p>Generated by <a href="https://github.com/stefans71/stop-git-std">stop-git-std</a> scanner &middot; Prompt V2.4 &middot; 2026-04-17</p>
-  <p>Full 40-char SHA: 32013285083648e8d58ba1f76d73b9bdc02fef50</p>
 </div>
-
-</div><!-- .page -->
 </body>
 </html>
