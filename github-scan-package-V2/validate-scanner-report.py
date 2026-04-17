@@ -343,12 +343,18 @@ def check_markdown(path: Path) -> int:
         print(f"  ✗ Only {len(lines)} lines — expected at least 100 for a scan report")
         total_errors += 1
 
-    # Required section headers (case-insensitive search in first 2 heading levels)
+    # Required section headers — must match the numbered section pattern from the prompt
     required_sections = [
         ("Verdict or Executive Summary", r"(?i)#+ .*(verdict|executive\s+summary)"),
-        ("Findings", r"(?i)#+ .*finding"),
-        ("Evidence", r"(?i)#+ .*evidence"),
         ("Scorecard", r"(?i)#+ .*scorecard"),
+        ("What should I do (Section 01)", r"(?i)#+ .*(what should i do|what to do|01)"),
+        ("What we found (Section 02)", r"(?i)#+ .*(what we found|finding|02 )"),
+        ("Executable file inventory (02A)", r"(?i)#+ .*(executable|inventory|02a)"),
+        ("Timeline (Section 04)", r"(?i)#+ .*(timeline|04)"),
+        ("Repo vitals (Section 05)", r"(?i)#+ .*(repo vital|vital|05)"),
+        ("Investigation coverage (Section 06)", r"(?i)#+ .*(coverage|06)"),
+        ("Evidence (Section 07)", r"(?i)#+ .*(evidence|07)"),
+        ("How this scan works (Section 08)", r"(?i)#+ .*(how this scan works|methodology|08)"),
     ]
     for name, pattern in required_sections:
         if re.search(pattern, raw):
@@ -356,6 +362,25 @@ def check_markdown(path: Path) -> int:
         else:
             print(f"  ✗ Missing required section: {name}")
             total_errors += 1
+
+    # Section numbering check — sections should use "## 0N ·" pattern
+    numbered_sections = re.findall(r"^## 0[0-9A-Za-z]+ ·", raw, re.MULTILINE)
+    if len(numbered_sections) >= 7:
+        print(f"  ✓ Section numbering: {len(numbered_sections)} numbered sections (## 0N · pattern)")
+    elif len(numbered_sections) >= 1:
+        print(f"  ⚠ Only {len(numbered_sections)} numbered sections found (expected 7+). Some sections may be missing numbers.")
+        warnings += 1
+    else:
+        print(f"  ✗ No numbered sections (## 0N · pattern) found — report structure does not match template")
+        total_errors += 1
+
+    # Evidence structure check — priority grouping
+    has_priority_evidence = bool(re.search(r"(?i)(priority evidence|START HERE|★)", raw))
+    if has_priority_evidence:
+        print(f"  ✓ Evidence priority grouping present (★ / START HERE / Priority evidence)")
+    else:
+        print(f"  ⚠ No evidence priority grouping found — evidence appendix should use ★ Priority / Context / Positives groups")
+        warnings += 1
 
     # Must have at least one verdict keyword
     if re.search(r"(?i)(critical|caution|warning|clean|informational)", raw):

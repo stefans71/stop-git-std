@@ -82,6 +82,20 @@ Each gets red / amber / green with a one-line justification.
 | `reference/GitHub-Scanner-*.html` | 5 reference scans (different shapes) | Phase 4 — structural patterns |
 | `reference/path-b-test-prompt.md` | Path B delegation template | Optional — for background agent delegation |
 
+## Structural fidelity rule
+
+Your output MUST reproduce the structural patterns from the reference scans and the Markdown file structure in the prompt. Specifically:
+
+- **Section numbering:** `## 01 ·` through `## 08 ·` (plus `## 02A ·` for inventory)
+- **Section-status summary lines:** blockquote under every heading with count glyphs (`⚠ N Warning · ℹ N Info · ✓ N OK`)
+- **Section-action blocks:** `**Your action:**` blockquote in every flagged section
+- **Split-verdict exhibits:** per-audience H3 headings + `<details>` exhibit panels when risk differs by context
+- **Evidence priority grouping:** `### ★ Priority evidence (read first)` + `### Other evidence` + `### Evidence supporting OK findings`
+- **Finding card full structure:** severity tag, status, action hint, threat model, "What this means for you", "What this does NOT mean", meta table, remediation
+- **Section 08 (How This Scan Works):** methodology section with what/checked/tools/limitations/version — present in every report
+
+Read one reference scan (HTML) before starting Phase 4a. Match its section skeleton. Also read `reference/GitHub-Scanner-zustand.md` for the MD structural pattern.
+
 ## Pick a reference scan for your target
 
 | Your repo looks like... | Use this reference |
