@@ -36,7 +36,7 @@ Key findings:
 - **Do they tell you about problems?** — Red: No advisory. No SECURITY.md, no published advisories, no disclosure channel.
 - **Is it safe out of the box?** — Amber: Safe for single-user local dev with your own API keys. Shared/production deployment requires authentication middleware on API routes.
 
-## What Should I Do?
+## 01 · What Should I Do?
 
 ### If you are evaluating this for local development:
 
@@ -58,7 +58,7 @@ Key findings:
 3. Add authentication middleware to all `/api/*` routes before any non-localhost deployment.
 4. Merge PR #176 (dependency security patches).
 
-## What We Found
+## 02 · What We Found
 
 ### Finding 1: No governance gates — single point of failure
 - **Severity:** Warning
@@ -133,7 +133,7 @@ Last commit to main was 2025-11-19 (v3 release). No commits in 150 days. This pa
 
 **What this means for you:** The ASCII animation uses are low-risk (static local data). The tooltip and Pylon widget uses warrant attention if you extend the app to handle user-generated content.
 
-## Executable File Inventory
+## 02A · Executable File Inventory
 
 ### Quick scan (4 Cursor rule files, 0 install scripts, 0 CI workflows)
 
@@ -175,7 +175,7 @@ Last commit to main was 2025-11-19 (v3 release). No commits in 150 days. This pa
 - **Severity:** Info
 - **Status:** Informational
 
-## Suspicious Code Changes
+## 03 · Suspicious Code Changes
 
 | PR | What it did | Submitted by | Merged by | Reviewed? | Merge time | Concern |
 |----|------------|-------------|-----------|-----------|------------|---------|
@@ -184,7 +184,7 @@ Last commit to main was 2025-11-19 (v3 release). No commits in 150 days. This pa
 | [#33](https://github.com/firecrawl/open-lovable/pull/33) | Add Google Gemini AI | ayoubdya | developersdigest | Yes (1 review) | 10 hrs | Only PR with any review; reviewer (Saeen55-stack) has no project association |
 | [#136](https://github.com/firecrawl/open-lovable/pull/136) | Update README for Morph API key | bekbull | bekbull | No | 3 min | Self-merge |
 
-## Timeline
+## 04 · Timeline
 
 - **2025-08-08** — REPO CREATED. firecrawl/open-lovable created under the Firecrawl organization.
 - **2025-08-08 to 2025-08-14** — RAPID GROWTH. Initial development burst: 37 commits from developersdigest, multiple community PRs merged without review.
@@ -196,7 +196,7 @@ Last commit to main was 2025-11-19 (v3 release). No commits in 150 days. This pa
 - **2025-12-17** — CVE PR FILED. PR #178 reports Vercel/React server components CVE. Still open 121 days later.
 - **2026-04-17** — THIS SCAN. 150 days since last commit. Security PRs unmerged. 93 open issues.
 
-## Repo Vitals
+## 05 · Repo Vitals
 
 - **Stars:** 25,496 | **Forks:** 4,897
 - **Created:** 2025-08-08 (252 days ago)
@@ -219,7 +219,7 @@ Last commit to main was 2025-11-19 (v3 release). No commits in 150 days. This pa
 - **CODEOWNERS:** None
 - **Security advisories:** None published
 
-## Investigation Coverage
+## 06 · Investigation Coverage
 
 - **Data sources queried:** gh api (repo, contributors, users, branches, rulesets, rules, org rulesets, community/profile, advisories, PRs, issues, commits, contents), OSSF Scorecard API, osv.dev API
 - **OSSF Scorecard:** Not indexed. The repo is not in the OSSF Scorecard database.
@@ -246,7 +246,7 @@ Last commit to main was 2025-11-19 (v3 release). No commits in 150 days. This pa
 - **gitleaks:** Not scanned (tool not available). Scanned by gitleaks for passwords, API keys, or tokens accidentally committed to the code. "Not scanned" means the tool was not available — not that the code is clean.
 - **API budget:** 4,944/5,000 remaining at Step 5. Full PR sample (12/12). GitHub limits API calls to 5,000/hour. Budget was sufficient for complete coverage.
 
-## Evidence Appendix
+## 07 · Evidence Appendix
 
 ### Priority Evidence
 
@@ -322,3 +322,43 @@ Last commit to main was 2025-11-19 (v3 release). No commits in 150 days. This pa
 - **Command:** `grep -rliP 'ignore (all )?(previous|prior) instructions|you are now|pretend you are|jailbreak' . | grep -v node_modules`
 - **Result:** 2 files matched "system prompt" keyword — both are legitimate LLM prompt construction code, not scanner-targeting injection.
 - **Classification:** Confirmed fact
+
+---
+
+## 08 · How this scan works
+
+### What this scan is
+
+This is an **LLM-driven security investigation** — an AI assistant with terminal access used the [GitHub CLI](https://cli.github.com/) and free public APIs to investigate this repo's governance, code patterns, dependencies, and distribution pipeline. It then synthesized its findings into this plain-English report.
+
+This is **not** a static analyzer, penetration test, or formal security audit. It is a trust-assessment tool that answers: "Should I install this?"
+
+### What we checked
+
+| Area | Scope |
+|------|-------|
+| Governance & Trust | Branch protection, rulesets, CODEOWNERS, SECURITY.md, community health, maintainer account age & activity, code review rates |
+| Code Patterns | Dangerous primitives (eval, exec, fetch), hardcoded secrets, executable file inventory, install scripts, README paste-blocks |
+| Supply Chain | Dependencies, CI/CD workflows, GitHub Actions SHA-pinning, release pipeline, artifact verification |
+| AI Agent Rules | CLAUDE.md, AGENTS.md, .cursorrules, .mcp.json — checked for prompt injection and behavioral manipulation |
+
+### External tools used
+
+| Tool | Purpose |
+|------|---------|
+| [OSSF Scorecard](https://securityscorecards.dev/) | Independent security rating. Scores 24 practices 0-10. Free API. |
+| [osv.dev](https://osv.dev/) | Google-backed vulnerability database. Dependabot fallback. |
+| [gitleaks](https://gitleaks.io/) (optional) | Scans code history for leaked secrets. Requires installation. |
+| [GitHub CLI](https://cli.github.com/) | Primary data source for all repo metadata and API calls. |
+
+### What this scan cannot detect
+
+- **Transitive dependency vulnerabilities** — we check direct dependencies but cannot fully resolve the tree
+- **Runtime behavior** — we see what the code *could* do, not what it *does* when running
+- **Published artifact tampering** — we cannot verify published packages match this source
+- **Sophisticated backdoors** — pattern-matching catches common primitives, not logic bombs
+- **Container image contents** — we read Dockerfiles but cannot inspect built images
+
+### Scan methodology version
+
+Scanner prompt V2.3 (backfilled with V2.4 data) · Operator Guide V0.1 · Validator with XSS checks + verdict-severity coherence · [stop-git-std](https://github.com/stefans71/stop-git-std)

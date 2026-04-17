@@ -143,7 +143,7 @@ None of these slow velocity; all three close the single-point-of-failure that ma
 
 *Continuous · Since repo creation · → If you install gstack: pin the commit SHA locally (Step 1) and re-verify after any `git pull`. Do not pass `--team` (Step 2). If you maintain this repo: enable classic branch protection on `main` requiring 1 reviewer and the existing CI checks, and add `.github/CODEOWNERS` covering `bin/`, `setup`, `.github/workflows/`, and `CLAUDE.md`.*
 
-**What is missing.** Classic branch protection on `main` returns HTTP 404 (authoritative — the scan token has `repo` scope and would return 403 on a permissions issue). Repo rulesets: `gh api repos/garrytan/gstack/rulesets` returns `[]`. Rules on `main`: `gh api repos/garrytan/gstack/rules/branches/main` returns `[]`. CODEOWNERS is absent in all four standard locations (`CODEOWNERS`, `.github/CODEOWNERS`, `docs/CODEOWNERS`, `.gitlab/CODEOWNERS`). Owner is a User account (garrytan), not an Organization, so there is no org-level ruleset layer either way — the authoritative check reduces to the three signals above plus CODEOWNERS, and all four are negative.
+**What is missing.** Classic branch protection on `main` returns HTTP 404 (authoritative — the scan token has `repo` scope and would return 403 on a permissions issue). Repo rulesets: `gh api repos/garrytan/gstack/rulesets` returns `[]`. Rules on `main`: `gh api repos/garrytan/gstack/rules/branches/main` returns `[]`. CODEOWNERS is absent in all four standard locations (`CODEOWNERS`, `.github/CODEOWNERS`, `docs/CODEOWNERS`, `.gitlab/CODEOWNERS`). Owner is a User account (garrytan), not an Organization, so there is no org-level ruleset layer either way — the authoritative check reduces to the three signals above plus CODEOWNERS, and all four are negative. **OSSF Scorecard is not indexed** for this repo (API returned 404) — the repo is too new (1 month) and User-owned for automatic OSSF indexing, so no independent governance score is available as a cross-check.
 
 **Why this is Warning per the V2.3 rule — and why the threat model is structurally stronger than the severity suggests.** V2.3's C20 Critical gate requires all three governance signals negative AND executable code shipped AND at least one release in the last 30 days. gstack meets the first two conditions: all three governance signals are negative, and the repo ships ~30 bin scripts, a compiled Bun browser binary, a `./setup` installer, and ~50 agent-rule files that auto-load into Claude Code sessions. But gstack has **zero releases ever** — no tags, no GitHub Releases API entries — because distribution *is* `git clone main`. By the letter of the rule, "no release in 30 days" is true, so F0 fires at Warning, not Critical.
 
@@ -378,6 +378,7 @@ Sample scope: the 2 most recent merges deep-dived plus 1 earlier security-titled
 | Runtime dependencies | ✅ 4 | `@ngrok/ngrok`, `diff`, `playwright`, `puppeteer-core` — all trusted publishers. |
 | CI workflows | 5 | `actionlint`, `ci-image`, `evals`, `evals-periodic`, `skill-docs`. Zero `pull_request_target`. Ubicloud runner. |
 | Releases | ⚠ 0 ever | No tags, no GitHub Releases. Distribution is `git clone main`. Version tracked in `VERSION`, `package.json`, commit messages (v0.17.0.0). |
+| OSSF Scorecard | ❌ Not indexed | API returned 404 — repo is not indexed by OSSF Scorecard. Too new (1 month) and User-owned (not Org) for automatic indexing. |
 | Repo size | 82,829 KB | Tarball: 422 files, 8.9 MB uncompressed. |
 
 ---
@@ -403,6 +404,10 @@ Sample scope: the 2 most recent merges deep-dived plus 1 earlier security-titled
 | Distribution channels (C6) | ⚠ **Install path 2 of 2 · Artifact 0 of 2**. `git clone main` + ClawHub both documented; neither is pin-verified or signature-verified. This is F-install in the coverage frame |
 | Windows surface | ✅ None — zero `.ps1`/`.bat`/`.cmd` files at top 3 levels. Setup has Unix-detection only |
 | Commit pinned | `23000672673224f04a5d0cb8d692356069c95f6a` |
+| OSSF Scorecard | ⚠ Not indexed — API returned 404. Repo too new (1 month) and User-owned for automatic OSSF indexing. Governance assessment relies on direct API checks (Evidence 1) |
+| osv.dev | ✅ 4 runtime deps checked — `@ngrok/ngrok`, `diff`, `playwright`, `puppeteer-core`. No known vulnerabilities at scan time |
+| Secrets-in-history | ⚠ Not scanned (gitleaks not available) |
+| API rate budget | ✅ 5000/5000 remaining. PR sample: full (34 merged PRs metadata + 2 deep-dive) |
 
 **Gaps noted:**
 
@@ -592,6 +597,46 @@ Result:
 ```
 
 *Classification: Confirmed fact — zero `eval(` or `new Function(` in source paths scanned. Shell-exec and network-call sites are the product's stated purpose (CLI orchestration, version checks, telemetry, pair-agent tunnel). Scanner Integrity section is correctly omitted under V2.3 rules.*
+
+---
+
+## 08 · How this scan works
+
+### What this scan is
+
+This is an **LLM-driven security investigation** — an AI assistant with terminal access used the [GitHub CLI](https://cli.github.com/) and free public APIs to investigate this repo's governance, code patterns, dependencies, and distribution pipeline. It then synthesized its findings into this plain-English report.
+
+This is **not** a static analyzer, penetration test, or formal security audit. It is a trust-assessment tool that answers: "Should I install this?"
+
+### What we checked
+
+| Area | Scope |
+|------|-------|
+| Governance & Trust | Branch protection, rulesets, CODEOWNERS, SECURITY.md, community health, maintainer account age & activity, code review rates |
+| Code Patterns | Dangerous primitives (eval, exec, fetch), hardcoded secrets, executable file inventory, install scripts, README paste-blocks |
+| Supply Chain | Dependencies, CI/CD workflows, GitHub Actions SHA-pinning, release pipeline, artifact verification |
+| AI Agent Rules | CLAUDE.md, AGENTS.md, .cursorrules, .mcp.json — checked for prompt injection and behavioral manipulation |
+
+### External tools used
+
+| Tool | Purpose |
+|------|---------|
+| [OSSF Scorecard](https://securityscorecards.dev/) | Independent security rating. Scores 24 practices 0-10. Free API. |
+| [osv.dev](https://osv.dev/) | Google-backed vulnerability database. Dependabot fallback. |
+| [gitleaks](https://gitleaks.io/) (optional) | Scans code history for leaked secrets. Requires installation. |
+| [GitHub CLI](https://cli.github.com/) | Primary data source for all repo metadata and API calls. |
+
+### What this scan cannot detect
+
+- **Transitive dependency vulnerabilities** — we check direct dependencies but cannot fully resolve the tree
+- **Runtime behavior** — we see what the code *could* do, not what it *does* when running
+- **Published artifact tampering** — we cannot verify published packages match this source
+- **Sophisticated backdoors** — pattern-matching catches common primitives, not logic bombs
+- **Container image contents** — we read Dockerfiles but cannot inspect built images
+
+### Scan methodology version
+
+Scanner prompt V2.3 (backfilled with V2.4 data) · Operator Guide V0.1 · Validator with XSS checks + verdict-severity coherence · [stop-git-std](https://github.com/stefans71/stop-git-std)
 
 ---
 

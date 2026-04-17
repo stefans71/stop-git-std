@@ -59,7 +59,7 @@ The codebase demonstrates above-average security consciousness: 100% SHA-pinned 
 
 ---
 
-## 01 &middot; What should I do?
+## 01 · What should I do?
 
 ### Step 1: Install from a tagged release, not HEAD of main
 
@@ -87,7 +87,7 @@ pip install -e ".[all]"
 
 ---
 
-## 02 &middot; What we found
+## 02 · What we found
 
 ### F0 &middot; Warning &middot; Active &mdash; Governance gap: no review gate on main
 
@@ -97,7 +97,7 @@ With 93,679 stars, weekly releases shipping code to user machines, and a sole ma
 
 **Threat model (F13):** An attacker who phishes teknium1's GitHub credentials, compromises a stale session token, gains access via a malicious IDE extension, or exploits a GitHub OAuth vulnerability can push code directly to main. That code immediately reaches the curl-pipe-bash install path (F1) and Docker builds. The supply-chain-audit workflow would catch some patterns (.pth files, base64+exec) but not all conceivable payloads.
 
-**Evidence:** `gh api repos/NousResearch/hermes-agent/branches/main/protection` returned 404. `gh api repos/NousResearch/hermes-agent/rulesets` returned one ruleset with only `deletion` and `non_fast_forward` rules. `gh api orgs/NousResearch/rulesets` returned 404 (scope gap). CODEOWNERS not found in 4 paths.
+**Evidence:** `gh api repos/NousResearch/hermes-agent/branches/main/protection` returned 404. `gh api repos/NousResearch/hermes-agent/rulesets` returned one ruleset with only `deletion` and `non_fast_forward` rules. `gh api orgs/NousResearch/rulesets` returned 404 (scope gap). CODEOWNERS not found in 4 paths. **OSSF Scorecard is not indexed** for this repo (API returned 404), so no independent governance score is available as a cross-check.
 
 **Action:** Enable required PR reviews on the protect-main ruleset. Add CODEOWNERS for scripts/install.sh, docker/, tools/, pyproject.toml.
 
@@ -171,7 +171,7 @@ pyproject.toml pins 14 core dependencies to version ranges (e.g., `openai>=2.21.
 
 ---
 
-## 02A &middot; Executable File Inventory
+## 02A · Executable File Inventory
 
 **Quick scan (14+ executables &mdash; includes install scripts, Docker entrypoint, skill helpers)**
 
@@ -198,7 +198,7 @@ pyproject.toml pins 14 core dependencies to version ranges (e.g., `openai>=2.21.
 
 ---
 
-## 03 &middot; Suspicious code changes
+## 03 · Suspicious code changes
 
 No suspicious code changes detected in the recent commit sample. All 15 sampled commits from 2026-04-16 are consistent with active development: feature additions (Gemini TTS, Gemini CLI OAuth), bug fixes (Discord RTP, approval panel clipping, checkpoint isolation), and maintenance (model catalog updates, release mapping).
 
@@ -206,7 +206,7 @@ The Step A grep found no `eval()` or `exec()` in source files. `subprocess` usag
 
 ---
 
-## 04 &middot; Timeline
+## 04 · Timeline
 
 - **2025-07-22** &mdash; Repository created (START)
 - **2026-03-12** &mdash; v0.2.0 first public release
@@ -227,7 +227,7 @@ The pattern shows vulnerability reports accelerating (7 in 23 days) while releas
 
 ---
 
-## 05 &middot; Repo vitals
+## 05 · Repo vitals
 
 | Metric | Value |
 |--------|-------|
@@ -250,10 +250,11 @@ The pattern shows vulnerability reports accelerating (7 in 23 days) while releas
 | CODEOWNERS | Absent |
 | Security policy | Absent |
 | Dependabot | Unknown (403 scope gap) |
+| OSSF Scorecard | Not indexed (API returned 404) |
 
 ---
 
-## 06 &middot; Investigation coverage
+## 06 · Investigation coverage
 
 | Check | Status | Notes |
 |-------|--------|-------|
@@ -277,10 +278,14 @@ The pattern shows vulnerability reports accelerating (7 in 23 days) while releas
 | Dangerous-primitive grep (Step A) | Complete | Focused on root .py + agent/ + hermes_cli/ |
 | Targeted read (Step B) | Complete | No actionable grep hits required deep reads |
 | Executable inventory (Step C) | Complete | 14+ executables cataloged |
+| OSSF Scorecard | Not indexed — API returned 404. Org-owned but not yet indexed by OSSF |
+| osv.dev | Applicable — 14 core deps in pyproject.toml. CVE tracking via issue #10695 |
+| Secrets-in-history | Not scanned (gitleaks not available) |
+| API rate budget | 5000/5000 remaining. PR sample: 15 merged PRs |
 
 ---
 
-## 07 &middot; Evidence appendix
+## 07 · Evidence appendix
 
 ### Priority evidence
 
@@ -345,3 +350,43 @@ All `uses:` directives across 8 workflow files reference SHA-pinned commits (e.g
 **E9: AGENTS.md content**
 
 Standard development guide with project structure, file dependency chain, coding conventions. No imperative AI-directed language.
+
+---
+
+## 08 · How this scan works
+
+### What this scan is
+
+This is an **LLM-driven security investigation** — an AI assistant with terminal access used the [GitHub CLI](https://cli.github.com/) and free public APIs to investigate this repo's governance, code patterns, dependencies, and distribution pipeline. It then synthesized its findings into this plain-English report.
+
+This is **not** a static analyzer, penetration test, or formal security audit. It is a trust-assessment tool that answers: "Should I install this?"
+
+### What we checked
+
+| Area | Scope |
+|------|-------|
+| Governance & Trust | Branch protection, rulesets, CODEOWNERS, SECURITY.md, community health, maintainer account age & activity, code review rates |
+| Code Patterns | Dangerous primitives (eval, exec, fetch), hardcoded secrets, executable file inventory, install scripts, README paste-blocks |
+| Supply Chain | Dependencies, CI/CD workflows, GitHub Actions SHA-pinning, release pipeline, artifact verification |
+| AI Agent Rules | CLAUDE.md, AGENTS.md, .cursorrules, .mcp.json — checked for prompt injection and behavioral manipulation |
+
+### External tools used
+
+| Tool | Purpose |
+|------|---------|
+| [OSSF Scorecard](https://securityscorecards.dev/) | Independent security rating. Scores 24 practices 0-10. Free API. |
+| [osv.dev](https://osv.dev/) | Google-backed vulnerability database. Dependabot fallback. |
+| [gitleaks](https://gitleaks.io/) (optional) | Scans code history for leaked secrets. Requires installation. |
+| [GitHub CLI](https://cli.github.com/) | Primary data source for all repo metadata and API calls. |
+
+### What this scan cannot detect
+
+- **Transitive dependency vulnerabilities** — we check direct dependencies but cannot fully resolve the tree
+- **Runtime behavior** — we see what the code *could* do, not what it *does* when running
+- **Published artifact tampering** — we cannot verify published packages match this source
+- **Sophisticated backdoors** — pattern-matching catches common primitives, not logic bombs
+- **Container image contents** — we read Dockerfiles but cannot inspect built images
+
+### Scan methodology version
+
+Scanner prompt V2.3 (backfilled with V2.4 data) · Operator Guide V0.1 · Validator with XSS checks + verdict-severity coherence · [stop-git-std](https://github.com/stefans71/stop-git-std)

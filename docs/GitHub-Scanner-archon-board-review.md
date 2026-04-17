@@ -48,7 +48,7 @@ This is the scanner's own maintainer running the scanner against his own 2-day-o
 <summary><strong>⚠ Governance gaps — 2-day-old pre-distribution repo, no branch protection, no CODEOWNERS, install-from-main (3 items)</strong>
 <br><em>C20 fires at Warning because no release exists within 30 days (no releases at all). Zero-blast-radius today — 0 users — but the structure would need to change before external adoption.</em></summary>
 
-1. **Governance · F0 / C20** — No classic branch protection on `main` (API returns "Branch not protected"), zero rulesets (`/rulesets` returns `[]`), no rules applied to main (`/rules/branches/main` returns `[]`), no CODEOWNERS in any of 4 standard locations. Owner is a User account (stefans71), so there is no org-level ruleset layer either way. Warning (not Critical) per V2.3 because zero published releases means the "release in last 30 days" criterion is not met.
+1. **Governance · F0 / C20** — No classic branch protection on `main` (API returns "Branch not protected"), zero rulesets (`/rulesets` returns `[]`), no rules applied to main (`/rules/branches/main` returns `[]`), no CODEOWNERS in any of 4 standard locations. Owner is a User account (stefans71), so there is no org-level ruleset layer either way. **OSSF Scorecard is not indexed** for this repo (API returned 404) — too new and too small for automatic indexing. Warning (not Critical) per V2.3 because zero published releases means the "release in last 30 days" criterion is not met.
 2. **Distribution · Install-from-main** — README documents `git clone https://github.com/stefans71/archon-board-review.git` followed by `./archon-board-review.sh install /path/to/project`. No tag pin, no SHA pin, no checksum verification. Same category as caveman/gstack install-from-main but without the gstack SessionStart auto-update amplifier — this installer does not phone home or refresh itself.
 3. **Legal · LICENSE absent** — No `LICENSE` file at the repo root. The README invites install and use, but in the absence of an explicit license, default copyright applies — technically, "all rights reserved" by the author. This is the most actionable maintainer-side item in the report: adding a two-line MIT LICENSE file resolves it.
 
@@ -354,6 +354,7 @@ Sample: all commits on `main` at scan time. No PRs have ever been opened against
 | Runtime dependencies | ✅ None | No manifest files. Shell script uses standard POSIX utilities (`sha256sum`, `mkdir`, `cp`, etc.). |
 | Install-time hooks | ✅ None | The installer script writes to `$HOME/.archon-board-review/` and exits. No daemon, no systemd unit, no PATH modification, no `/etc` touch. |
 | Release attestations | ⚠ N/A (no releases) | Zero published releases means no artifacts to attest. Future releases would fit the same "cut a tag" recommendation from F-no-releases. |
+| OSSF Scorecard | ❌ Not indexed | API returned 404 — repo is not indexed by OSSF Scorecard. Too new (2 days), zero stars, User-owned (not Org). |
 | CI workflows | ⚠ 0 (no `.github/`) | First repo in catalog to exercise the no-CI branch. Zero `pull_request_target` because zero workflows exist. |
 | Repo size | 120 KB | 11 files total. Tarball-pinned extraction at `4cea18d` matched the API tree exactly. |
 | Topics | ⚠ None set | No GitHub topics configured. A future discoverability nudge once the tool has an audience — not a structural concern. |
@@ -380,6 +381,10 @@ Sample: all commits on `main` at scan time. No PRs have ever been opened against
 | Distribution channels (F1, post-R3 C6) | ⚠ **Install path: 1 of 1 · Artifact: 0 of 1**. git-clone-main-plus-script documented. Artifact: no tag, no SHA pin, no release, no signature. Same pattern as caveman and gstack but without the SessionStart auto-update amplifier. |
 | Windows surface coverage (F16) | ✅ Verified — none. Zero `.ps1`, `.bat`, `.cmd` files. Shell script is bash-only (`#!/bin/bash`, no Windows detection). |
 | Commit pinned | `4cea18d9f64307fbf0a9346c04371fee3ba28ecb` |
+| OSSF Scorecard | ⚠ Not indexed — API returned 404. Repo too new (2 days), zero stars, User-owned. No independent governance score available as cross-check |
+| osv.dev | ✅ N/A — no dependency manifests exist. Tool is POSIX shell + YAML + markdown with zero runtime dependencies |
+| Secrets-in-history | ⚠ Not scanned (gitleaks not available) |
+| API rate budget | ✅ 5000/5000 remaining. PR sample: N/A (0 PRs lifetime) |
 
 **Gaps noted:**
 
@@ -542,6 +547,46 @@ Result:
 ```
 
 *Classification: Confirmed fact — ~6-year-old account (not a fresh hijack-candidate profile), 3 followers, 11 public repos, no company listed, no blog. Enough to rule out the obvious "account created last week" sockpuppet pattern, but not enough of a public track record for an outside observer to calibrate "can I trust this maintainer" to green. Scorecard sits at amber on that cell, not green, not red.*
+
+---
+
+## 08 · How this scan works
+
+### What this scan is
+
+This is an **LLM-driven security investigation** — an AI assistant with terminal access used the [GitHub CLI](https://cli.github.com/) and free public APIs to investigate this repo's governance, code patterns, dependencies, and distribution pipeline. It then synthesized its findings into this plain-English report.
+
+This is **not** a static analyzer, penetration test, or formal security audit. It is a trust-assessment tool that answers: "Should I install this?"
+
+### What we checked
+
+| Area | Scope |
+|------|-------|
+| Governance & Trust | Branch protection, rulesets, CODEOWNERS, SECURITY.md, community health, maintainer account age & activity, code review rates |
+| Code Patterns | Dangerous primitives (eval, exec, fetch), hardcoded secrets, executable file inventory, install scripts, README paste-blocks |
+| Supply Chain | Dependencies, CI/CD workflows, GitHub Actions SHA-pinning, release pipeline, artifact verification |
+| AI Agent Rules | CLAUDE.md, AGENTS.md, .cursorrules, .mcp.json — checked for prompt injection and behavioral manipulation |
+
+### External tools used
+
+| Tool | Purpose |
+|------|---------|
+| [OSSF Scorecard](https://securityscorecards.dev/) | Independent security rating. Scores 24 practices 0-10. Free API. |
+| [osv.dev](https://osv.dev/) | Google-backed vulnerability database. Dependabot fallback. |
+| [gitleaks](https://gitleaks.io/) (optional) | Scans code history for leaked secrets. Requires installation. |
+| [GitHub CLI](https://cli.github.com/) | Primary data source for all repo metadata and API calls. |
+
+### What this scan cannot detect
+
+- **Transitive dependency vulnerabilities** — we check direct dependencies but cannot fully resolve the tree
+- **Runtime behavior** — we see what the code *could* do, not what it *does* when running
+- **Published artifact tampering** — we cannot verify published packages match this source
+- **Sophisticated backdoors** — pattern-matching catches common primitives, not logic bombs
+- **Container image contents** — we read Dockerfiles but cannot inspect built images
+
+### Scan methodology version
+
+Scanner prompt V2.3 (backfilled with V2.4 data) · Operator Guide V0.1 · Validator with XSS checks + verdict-severity coherence · [stop-git-std](https://github.com/stefans71/stop-git-std)
 
 ---
 

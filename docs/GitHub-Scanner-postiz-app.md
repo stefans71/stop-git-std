@@ -46,7 +46,7 @@ Postiz is actively maintained with transparent vulnerability handling (8 publish
 
 ---
 
-## 01 - What should I do?
+## 01 · What should I do?
 
 ### Step 1: If you are deploying self-hosted via Docker Compose, change all default credentials immediately
 
@@ -92,7 +92,7 @@ docker pull ghcr.io/gitroomhq/postiz-app:v2.21.6
 
 ---
 
-## 02 - What we found
+## 02 · What we found
 
 > 0 Critical - 5 Warning - 2 Info - 1 OK
 >
@@ -158,7 +158,7 @@ Eight third-party GitHub Actions use tag-only pinning. Notable:
 
 ### F7 — Warning - Active - No Required Reviews on Default Branch (Governance Gap)
 
-Classic branch protection returned 404 on `main`. The repo-level ruleset ("Copilot review for default branch") prevents branch deletion and force-push but does NOT require reviews or status checks. No CODEOWNERS file exists. Org-level rulesets are unknown (scope gap requiring `admin:org`).
+Classic branch protection returned 404 on `main`. The repo-level ruleset ("Copilot review for default branch") prevents branch deletion and force-push but does NOT require reviews or status checks. No CODEOWNERS file exists. Org-level rulesets are unknown (scope gap requiring `admin:org`). **OSSF Scorecard is not indexed** for this repo (API returned 404), so no independent governance score is available as a cross-check.
 
 **Threat model (F13):** An attacker who compromises nevo-david's GitHub account (phishing, stale OAuth token, session cookie theft via malicious browser extension, compromised IDE plugin) can push directly to main without any review gate. Given 28,822 stars and 3M+ Docker pulls, blast radius is significant. The force-push prevention in the ruleset limits history rewriting but does not prevent malicious commit insertion.
 
@@ -179,7 +179,7 @@ Both files contain behavioral rules only. No imperative AI-directed language, no
 
 ---
 
-## 02A - Executable File Inventory
+## 02A · Executable File Inventory
 
 ### Quick scan (F12 one-liner per file)
 
@@ -232,13 +232,13 @@ Both files contain behavioral rules only. No imperative AI-directed language, no
 
 ---
 
-## 03 - Suspicious Code Changes
+## 03 · Suspicious Code Changes
 
 No PRs were flagged as suspicious in the sampled set. Security fixes were committed by the primary maintainer (nevo-david) with commit messages like "feat: security fixes" and "feat: fix advisory" — the use of `feat:` prefix for security fixes is a minor changelog-hygiene concern (conventional commits would use `fix:` or `security:`) but the content is legitimate.
 
 ---
 
-## 04 - Timeline
+## 04 · Timeline
 
 | Date | Event | Severity |
 |------|-------|----------|
@@ -252,7 +252,7 @@ No PRs were flagged as suspicious in the sampled set. Security fixes were commit
 
 ---
 
-## 05 - Repo Vitals
+## 05 · Repo Vitals
 
 | Metric | Value | Interpretation |
 |--------|-------|----------------|
@@ -270,10 +270,11 @@ No PRs were flagged as suspicious in the sampled set. Security fixes were commit
 | CodeQL | Enabled | Automated code scanning active |
 | Dependabot alerts | Unknown (scope gap) | 403 — requires admin:repo_hook |
 | Docker pulls | 3M+ (per README) | Wide deployment base |
+| OSSF Scorecard | Not indexed | API returned 404 — repo is not indexed by OSSF Scorecard |
 
 ---
 
-## 06 - Investigation Coverage
+## 06 · Investigation Coverage
 
 - **Repo metadata:** gh api repos/gitroomhq/postiz-app — success
 - **Contributors:** top 30 — success
@@ -298,10 +299,14 @@ No PRs were flagged as suspicious in the sampled set. Security fixes were commit
 - **Distribution channels:** 1 verified (Docker via GHCR), 1 partially verified (npm SDK @postiz/node), Chrome extension not verified against source
 - **Windows surface:** no .ps1/.bat/.cmd files — not applicable
 - **Executable files inspected:** 8 of 8 (2 Warning, 4 OK, 0 Critical, 2 Info)
+- **OSSF Scorecard:** Not indexed — API returned 404. No independent governance score available as cross-check
+- **osv.dev:** Applicable — NestJS monorepo with multiple package.json dependency manifests. 8 published CVEs tracked via GHSA
+- **Secrets-in-history:** Not scanned (gitleaks not available)
+- **API rate budget:** 5000/5000 remaining. PR sample: 50 merged PRs
 
 ---
 
-## 07 - Evidence Appendix
+## 07 · Evidence Appendix
 
 ### Priority evidence (read first)
 
@@ -362,3 +367,43 @@ No PRs were flagged as suspicious in the sampled set. Security fixes were commit
 - **Command:** `grep -rlP '(api[_-]?key|secret|token|password)\s*[:=]\s*["..."][A-Za-z0-9_\-\.]{16,}' . --include='*.ts' --include='*.js'`
 - **Result:** 0 matches
 - **Classification:** Confirmed fact
+
+---
+
+## 08 · How this scan works
+
+### What this scan is
+
+This is an **LLM-driven security investigation** — an AI assistant with terminal access used the [GitHub CLI](https://cli.github.com/) and free public APIs to investigate this repo's governance, code patterns, dependencies, and distribution pipeline. It then synthesized its findings into this plain-English report.
+
+This is **not** a static analyzer, penetration test, or formal security audit. It is a trust-assessment tool that answers: "Should I install this?"
+
+### What we checked
+
+| Area | Scope |
+|------|-------|
+| Governance & Trust | Branch protection, rulesets, CODEOWNERS, SECURITY.md, community health, maintainer account age & activity, code review rates |
+| Code Patterns | Dangerous primitives (eval, exec, fetch), hardcoded secrets, executable file inventory, install scripts, README paste-blocks |
+| Supply Chain | Dependencies, CI/CD workflows, GitHub Actions SHA-pinning, release pipeline, artifact verification |
+| AI Agent Rules | CLAUDE.md, AGENTS.md, .cursorrules, .mcp.json — checked for prompt injection and behavioral manipulation |
+
+### External tools used
+
+| Tool | Purpose |
+|------|---------|
+| [OSSF Scorecard](https://securityscorecards.dev/) | Independent security rating. Scores 24 practices 0-10. Free API. |
+| [osv.dev](https://osv.dev/) | Google-backed vulnerability database. Dependabot fallback. |
+| [gitleaks](https://gitleaks.io/) (optional) | Scans code history for leaked secrets. Requires installation. |
+| [GitHub CLI](https://cli.github.com/) | Primary data source for all repo metadata and API calls. |
+
+### What this scan cannot detect
+
+- **Transitive dependency vulnerabilities** — we check direct dependencies but cannot fully resolve the tree
+- **Runtime behavior** — we see what the code *could* do, not what it *does* when running
+- **Published artifact tampering** — we cannot verify published packages match this source
+- **Sophisticated backdoors** — pattern-matching catches common primitives, not logic bombs
+- **Container image contents** — we read Dockerfiles but cannot inspect built images
+
+### Scan methodology version
+
+Scanner prompt V2.3 (backfilled with V2.4 data) · Operator Guide V0.1 · Validator with XSS checks + verdict-severity coherence · [stop-git-std](https://github.com/stefans71/stop-git-std)
