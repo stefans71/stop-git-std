@@ -558,6 +558,31 @@ Any hit that resolves to `main`, `master`, `latest`, or an unpinned tag is a **W
 
 If any channel is "Not performed" or "Not pinned," the **"Is it safe out of the box?" scorecard cell cannot exceed amber**, and the verdict section must include a sentence: "Safe on inspected source at `main @ SHA`; distribution channels X, Y were not fully verified."
 
+### Step A-pre: Secrets-in-history scan (Cap-4 — opportunistic)
+
+If `gitleaks` is installed, run it on the extracted source. If not installed, skip and note the gap in Coverage.
+
+```bash
+# Check if gitleaks is available
+if command -v gitleaks &>/dev/null; then
+  echo "=== Secrets-in-history scan (gitleaks) ==="
+  gitleaks detect --source "$SCAN_DIR" -v --redact --no-git 2>&1 | head -50
+  GITLEAKS_EXIT=$?
+  if [ "$GITLEAKS_EXIT" -eq 0 ]; then
+    echo "gitleaks: no secrets detected"
+  else
+    echo "gitleaks: $GITLEAKS_EXIT finding(s) — review above for leaked secrets"
+  fi
+else
+  echo "gitleaks: not installed — secrets-in-history not scanned"
+  echo "Note in Coverage: 'Secrets-in-history: not scanned (gitleaks not available). Install gitleaks for full coverage.'"
+fi
+```
+
+**If gitleaks finds secrets:** Create a finding card (Warning or Critical depending on whether the secret appears active). Include the redacted output as evidence. Note: `--redact` ensures actual secret values are not included in the report.
+
+**If gitleaks is not available:** Record in the Coverage section: "Secrets-in-history: not scanned (gitleaks not available)." Do NOT claim the repo is free of leaked secrets.
+
 ### Step A: Grep for dangerous patterns (pattern-only, no full reads)
 
 Run these greps on the extracted tarball. Each command lists FILES containing the pattern — it does not dump content. **Requires `grep -P` (Perl-compatible regex) on most systems.** On macOS BSD grep, substitute `ggrep` if available or expand the patterns to ERE.
