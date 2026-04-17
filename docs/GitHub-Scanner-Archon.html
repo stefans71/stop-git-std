@@ -1,0 +1,2286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Security Investigation Report: coleam00/Archon @ 3dedc22 (v0.3.6) | Generated 2026-04-16 | Prompt v2.3 -->
+<title>Security Investigation: coleam00/Archon</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Unbounded:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* ═══════════════════════════════════════════════
+     DESIGN SYSTEM — DO NOT MODIFY
+     Dark theme, security monitoring aesthetic
+     ═══════════════════════════════════════════════ */
+  :root {
+    --bg-void: #0a0a0c;
+    --bg-surface: #131316;
+    --bg-elevated: #1a1a1f;
+    --bg-hover: #222228;
+    --border: #32323c;
+    --border-subtle: #26262e;
+    --text-primary: #f0f0f4;
+    --text-secondary: #b0b0bc;
+    --text-muted: #7e7e8e;
+    --red-glow: #ff4545;
+    --red-dim: #ff454520;
+    --red-bg: #1a0f0f;
+    --amber-glow: #ffaa2a;
+    --amber-dim: #ffaa2a20;
+    --amber-bg: #1a150e;
+    --green-glow: #22c55e;
+    --green-dim: #22c55e20;
+    --green-bg: #0e1a12;
+    --cyan-glow: #06b6d4;
+    --cyan-dim: #06b6d420;
+    --font-mono: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace;
+    --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-display: 'Unbounded', 'Inter', sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--font-sans);
+    background: var(--bg-void);
+    color: var(--text-primary);
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Noise texture + horizontal scanlines — forensic console feel */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      repeating-linear-gradient(
+        to bottom,
+        rgba(255,255,255,0.008) 0px,
+        rgba(255,255,255,0.008) 1px,
+        transparent 1px,
+        transparent 3px
+      ),
+      url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+  }
+  /* Slow sweeping scan bar */
+  body::after {
+    content: ''; position: fixed; left: 0; right: 0; height: 120px;
+    background: linear-gradient(to bottom, transparent, rgba(255,170,42,0.035), transparent);
+    pointer-events: none; z-index: 9998;
+    animation: scan-sweep 14s linear infinite;
+  }
+  @keyframes scan-sweep {
+    0% { top: -15%; }
+    100% { top: 115%; }
+  }
+
+  /* Scan strip — the data ribbon above the hero */
+  .scan-strip {
+    display: flex; flex-wrap: wrap; gap: 1.25rem; align-items: center;
+    padding: 0.625rem 0 0.75rem; margin-bottom: 1.5rem;
+    border-top: 1px solid var(--border-subtle);
+    border-bottom: 1px solid var(--border-subtle);
+    font-family: var(--font-mono); font-size: 0.65rem;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--text-secondary);
+  }
+  .scan-strip-item { display: inline-flex; align-items: center; gap: 0.4rem; }
+  .scan-strip-item .dot {
+    display: inline-block; width: 6px; height: 6px; border-radius: 50%;
+    box-shadow: 0 0 6px currentColor;
+  }
+  .scan-strip-item.amber, .scan-strip-item .dot.amber { color: var(--amber-glow); background: var(--amber-glow); }
+  .scan-strip-item .dot.amber { background: var(--amber-glow); box-shadow: 0 0 8px var(--amber-glow); animation: pulse 3s ease-in-out infinite; }
+  .scan-strip-item.flash {
+    color: var(--red-glow); animation: flash-blink 1.4s ease-in-out infinite;
+  }
+  @keyframes flash-blink {
+    0%, 80%, 100% { opacity: 1; }
+    85%, 95% { opacity: 0.25; }
+  }
+
+  /* Hero caption — the editorial line under the H1.
+     Readable sans-serif, slightly larger than body, no italic (readability > flavor). */
+  .hero-caption {
+    font-family: var(--font-sans); font-size: 1.0625rem; line-height: 1.55;
+    color: var(--text-primary); font-weight: 400;
+    max-width: 68ch; margin: 0.75rem 0 1.75rem;
+    letter-spacing: -0.005em;
+  }
+
+  /* ─────────────── Utility classes (replaces inline style="" attributes) ─────────────── */
+  /* Semantic value colors — use on chip-value, vital-value, td.val, etc. */
+  .val-good  { color: var(--green-glow) !important; }
+  .val-bad   { color: var(--red-glow)   !important; }
+  .val-warn  { color: var(--amber-glow) !important; }
+  .val-info  { color: var(--cyan-glow)  !important; }
+  .fw-semi   { font-weight: 600; }
+  /* Card vertical rhythm — replaces margin-bottom:12px inline on cards */
+  .stack-md  { margin-bottom: 0.75rem; }
+  .stack-sm  { margin-top: 0.75rem; }
+  /* Subdued paragraph — replaces the meta-text inline patterns */
+  .p-meta {
+    color: var(--text-secondary); margin-bottom: 1rem;
+    font-size: 0.875rem; line-height: 1.55;
+  }
+  .p-meta-tight {
+    color: var(--text-secondary); margin: 0.75rem 0 1rem;
+    font-size: 0.8125rem; line-height: 1.55;
+  }
+  /* Priority-evidence visual uplift — replaces inline border-left hack */
+  .finding-card.evidence-priority {
+    border-left: 4px solid var(--amber-glow);
+  }
+  /* Inline-flag variant — when priority-flag appears mid-sentence, not block */
+  .priority-flag.inline { display: inline-block; }
+
+  a { color: var(--cyan-glow); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* Font size controls */
+  .font-controls {
+    position: fixed; top: 16px; right: 16px; z-index: 1000;
+    display: flex; align-items: center; gap: 2px;
+    background: var(--bg-elevated); border: 1px solid var(--border);
+    border-radius: 8px; padding: 4px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5); backdrop-filter: blur(12px);
+  }
+  .font-controls button {
+    font-family: var(--font-mono); font-size: 0.875rem; font-weight: 700;
+    width: 34px; height: 34px; border: none; border-radius: 6px;
+    background: transparent; color: var(--text-secondary); cursor: pointer;
+    display: flex; align-items: center; justify-content: center; transition: all 0.15s;
+  }
+  .font-controls button:hover { background: var(--bg-hover); color: var(--text-primary); }
+  .font-controls button:active { transform: scale(0.92); }
+  .font-controls .font-size-display {
+    font-family: var(--font-mono); font-size: 0.6875rem; color: var(--text-muted);
+    min-width: 38px; text-align: center; letter-spacing: 0.05em; user-select: none;
+  }
+
+  .page { max-width: 960px; margin: 0 auto; padding: 0 20px; }
+
+  /* Hero */
+  .hero { padding: 64px 0 48px; border-bottom: 1px solid var(--border); position: relative; }
+  .hero::after {
+    content: ''; position: absolute; bottom: -1px; left: 0; right: 0; height: 120px;
+    background: linear-gradient(to top, var(--bg-void), transparent); pointer-events: none;
+  }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-family: var(--font-mono); font-size: 0.6875rem; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--text-muted); margin-bottom: 20px;
+    padding: 6px 12px; border: 1px solid var(--border); border-radius: 6px; background: var(--bg-surface);
+  }
+  .hero-badge .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--text-muted); /* Neutral default — LLM must set .red, .green, or .amber */
+  }
+  .hero-badge .dot.red { background: var(--red-glow); box-shadow: 0 0 8px var(--red-glow); animation: pulse 2s ease-in-out infinite; }
+  .hero-badge .dot.green { background: var(--green-glow); box-shadow: 0 0 8px var(--green-glow); }
+  .hero-badge .dot.amber { background: var(--amber-glow); box-shadow: 0 0 8px var(--amber-glow); animation: pulse 3s ease-in-out infinite; }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+  .hero h1 {
+    font-family: var(--font-display); font-size: clamp(1.8rem, 4vw, 3.4rem);
+    font-weight: 800; letter-spacing: -0.04em; line-height: 1.05; margin-bottom: 16px;
+  }
+  .hero h1 .slash {
+    color: var(--text-muted); font-weight: 300;
+    margin: 0 0.1em; font-size: 0.85em;
+  }
+  .hero h1 span { color: var(--red-glow); }
+  .hero h1 span.green { color: var(--green-glow); }
+  .hero h1 span.amber { color: var(--amber-glow); }
+  .hero .meta { font-size: 0.875rem; color: var(--text-primary); display: flex; flex-wrap: wrap; gap: 16px; }
+  .hero .meta-item { display: flex; align-items: center; gap: 6px; }
+  .hero .meta-item .label { color: var(--text-secondary); font-size: 0.75rem; }
+
+  /* Verdict */
+  .verdict-section { padding: 48px 0 40px; }
+  .verdict-banner {
+    border-radius: 0; padding: 2.25rem 2.75rem 2rem 4.5rem;
+    position: relative; overflow: hidden;
+    border-left-width: 6px; border-left-style: solid;
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%);
+  }
+  .verdict-banner.critical { background: linear-gradient(135deg, #1f0a0a 0%, #0a0a0c 100%); border: 1px solid #ff454540; border-left-color: var(--red-glow); }
+  .verdict-banner.caution { background: linear-gradient(135deg, #1f1810 0%, #0a0a0c 100%); border: 1px solid #ffaa2a40; border-left-color: var(--amber-glow); }
+  .verdict-banner.clean { background: linear-gradient(135deg, #0a1f14 0%, #0a0a0c 100%); border: 1px solid #22c55e40; border-left-color: var(--green-glow); }
+  /* Radial wash */
+  .verdict-banner::before {
+    content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+    pointer-events: none;
+  }
+  .verdict-banner.critical::before { background: radial-gradient(circle at 20% 30%, #ff454510, transparent 55%); }
+  .verdict-banner.caution::before { background: radial-gradient(circle at 20% 30%, #ffaa2a12, transparent 55%); }
+  .verdict-banner.clean::before { background: radial-gradient(circle at 20% 30%, #22c55e10, transparent 55%); }
+  /* Vertical scan-ID bar on the left */
+  .verdict-banner::after {
+    content: attr(data-dossier); position: absolute;
+    left: 1.4rem; top: 2.1rem; bottom: 2rem;
+    writing-mode: vertical-rl; transform: rotate(180deg);
+    font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.25em;
+    color: var(--text-muted); text-transform: uppercase;
+    display: flex; align-items: center;
+    opacity: 0.55;
+  }
+  .verdict-banner .verdict-label {
+    font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.22em;
+    text-transform: uppercase; margin-bottom: 1rem; position: relative;
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    padding: 0.25rem 0.625rem; border-radius: 0.125rem;
+    background: rgba(255,170,42,0.08); border: 1px solid rgba(255,170,42,0.25);
+  }
+  .verdict-banner.critical .verdict-label { color: var(--red-glow); background: rgba(255,69,69,0.08); border-color: rgba(255,69,69,0.25); }
+  .verdict-banner.caution .verdict-label { color: var(--amber-glow); }
+  .verdict-banner.clean .verdict-label { color: var(--green-glow); background: rgba(34,197,94,0.08); border-color: rgba(34,197,94,0.25); }
+  .verdict-banner h2 {
+    font-family: var(--font-display);
+    font-size: clamp(1.5rem, 3.2vw, 2.2rem); font-weight: 600; line-height: 1.18;
+    letter-spacing: -0.025em; margin-bottom: 1rem; position: relative; color: #ff8c00;
+    max-width: 56ch;
+  }
+  .verdict-banner.clean h2 { color: var(--green-glow); }
+  .verdict-banner.critical h2 { color: var(--red-glow); }
+
+  /* Split-verdict layout — two audience blocks separated by a divider */
+  .verdict-split {
+    display: grid; grid-template-columns: 1fr auto 1fr; gap: 1.75rem;
+    margin-bottom: 1.25rem; align-items: stretch;
+  }
+  @media (max-width: 820px) {
+    .verdict-split { grid-template-columns: 1fr; gap: 1rem; }
+  }
+  .verdict-entry { display: flex; flex-direction: column; gap: 0.5rem; }
+  .verdict-entry-scope {
+    font-family: var(--font-mono); font-size: 0.65rem; letter-spacing: 0.2em;
+    text-transform: uppercase; color: var(--text-muted);
+    padding-bottom: 0.375rem; border-bottom: 1px solid var(--border-subtle);
+  }
+  .verdict-entry-headline {
+    font-family: var(--font-display); font-weight: 600;
+    font-size: clamp(1.35rem, 2.5vw, 1.85rem); line-height: 1.15;
+    letter-spacing: -0.02em; margin: 0;
+  }
+  .verdict-entry-headline.good { color: #8dd492; }
+  .verdict-entry-headline.warn { color: var(--amber-glow); }
+  .verdict-entry-headline.bad  { color: var(--red-glow); }
+  .verdict-entry-detail {
+    font-family: var(--font-sans); font-size: 0.8125rem; line-height: 1.55;
+    color: var(--text-secondary); margin-top: 0.25rem;
+  }
+  .verdict-split-divider {
+    width: 1px; background: linear-gradient(to bottom, transparent, var(--border), transparent);
+  }
+  @media (max-width: 820px) {
+    .verdict-split-divider { width: 100%; height: 1px; background: var(--border-subtle); }
+  }
+
+  /* Rolled verdict exhibits — 3 themed panels that replace the 10-bullet glaze list */
+  .verdict-exhibits { display: grid; gap: 0.875rem; margin-top: 0.5rem; }
+  .exhibit {
+    position: relative; overflow: hidden; border-radius: 10px;
+    border: 1px solid var(--border-subtle);
+  }
+  .exhibit.vuln    { background: linear-gradient(135deg, #1a1008 0%, #0f0a0a 100%); border-color: #ffaa2a30; }
+  .exhibit.govern  { background: linear-gradient(135deg, #100c1a 0%, #0a0a0f 100%); border-color: #ff808040; }
+  .exhibit.signals { background: linear-gradient(135deg, #0a1812 0%, #0a0f0a 100%); border-color: #22c55e30; }
+  /* Left accent bar */
+  .exhibit::before {
+    content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
+  }
+  .exhibit.vuln::before    { background: var(--amber-glow); }
+  .exhibit.govern::before  { background: var(--red-glow); }
+  .exhibit.signals::before { background: var(--green-glow); }
+  /* Summary row (collapsed state) */
+  .exhibit > summary {
+    list-style: none; cursor: pointer;
+    padding: 0.875rem 1rem 0.875rem 1.5rem;
+    display: flex; align-items: center; gap: 0.75rem;
+    position: relative;
+  }
+  .exhibit > summary::-webkit-details-marker { display: none; }
+  .exhibit > summary::after {
+    content: '\25B6'; margin-left: auto; font-size: 0.7rem;
+    color: var(--text-muted); transition: transform 0.2s;
+  }
+  .exhibit[open] > summary::after { transform: rotate(90deg); }
+  .exhibit-glyph {
+    width: 1.75rem; height: 1.75rem; border-radius: 50%;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 0.85rem; font-weight: 700; flex-shrink: 0;
+  }
+  .exhibit.vuln .exhibit-glyph    { background: rgba(255,170,42,0.18); color: var(--amber-glow); }
+  .exhibit.govern .exhibit-glyph  { background: rgba(255,69,69,0.18);  color: var(--red-glow); }
+  .exhibit.signals .exhibit-glyph { background: rgba(34,197,94,0.18);  color: var(--green-glow); }
+  .exhibit-title {
+    font-family: var(--font-display); font-size: 1.05rem; font-weight: 600;
+    letter-spacing: -0.01em; line-height: 1.25;
+  }
+  .exhibit-count {
+    margin-left: 0.5rem; font-family: var(--font-mono); font-size: 0.7rem;
+    letter-spacing: 0.12em; color: var(--text-muted); text-transform: uppercase;
+  }
+  .exhibit-summary-line {
+    font-family: var(--font-sans); font-size: 0.82rem; color: var(--text-secondary);
+    margin-left: 0.5rem; line-height: 1.45; font-weight: 400;
+  }
+  @media (max-width: 720px) {
+    .exhibit-summary-line { display: block; margin-left: 2.5rem; margin-top: 0.25rem; }
+  }
+  /* Expanded content — zebra-striped items */
+  .exhibit-body {
+    border-top: 1px solid var(--border-subtle);
+    padding: 0; background: rgba(0,0,0,0.15);
+  }
+  .exhibit-item {
+    display: grid; grid-template-columns: 1.5rem 1fr; gap: 0.75rem;
+    padding: 0.75rem 1rem 0.75rem 1.5rem;
+    font-size: 0.88rem; line-height: 1.55; color: var(--text-primary);
+    border-bottom: 1px solid var(--border-subtle);
+  }
+  .exhibit-item:last-child { border-bottom: none; }
+  /* Zebra striping — every other row gets a subtle background shift */
+  .exhibit-item:nth-child(even) { background: rgba(255,255,255,0.015); }
+  .exhibit-item-glyph {
+    font-family: var(--font-mono); font-weight: 700; font-size: 0.8rem;
+    text-align: center; padding-top: 0.15rem;
+  }
+  .exhibit.vuln .exhibit-item-glyph    { color: var(--amber-glow); }
+  .exhibit.govern .exhibit-item-glyph  { color: var(--red-glow); }
+  .exhibit.signals .exhibit-item-glyph { color: var(--green-glow); }
+  .exhibit-item-tag {
+    font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--text-muted); display: block;
+    margin-bottom: 0.15rem;
+  }
+
+  /* Verdict bullet list */
+  .verdict-bullets { list-style: none; padding: 0; margin: 0; position: relative; }
+  .verdict-bullets li {
+    display: flex; align-items: flex-start; gap: 12px; font-size: 0.9375rem;
+    color: var(--text-primary); line-height: 1.6; padding: 8px 0; border-bottom: 1px solid #ffffff08;
+  }
+  .verdict-bullets li:last-child { border-bottom: none; }
+  .verdict-bullets .bullet-icon {
+    flex-shrink: 0; width: 22px; height: 22px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center; font-size: 0.6875rem; margin-top: 2px;
+  }
+  .verdict-bullets .bullet-icon.red { background: var(--red-dim); color: var(--red-glow); box-shadow: 0 0 6px var(--red-dim); }
+  .verdict-bullets .bullet-icon.amber { background: var(--amber-dim); color: var(--amber-glow); box-shadow: 0 0 6px var(--amber-dim); }
+  .verdict-bullets .bullet-icon.green { background: var(--green-dim); color: var(--green-glow); box-shadow: 0 0 6px var(--green-dim); }
+
+  /* Scorecard */
+  .scorecard-section { padding: 0 0 48px; }
+  .scorecard-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px;
+    background: var(--border); border-radius: 12px; overflow: hidden;
+  }
+  .score-cell { background: var(--bg-surface); padding: 24px 20px; text-align: center; transition: background 0.2s; }
+  .score-cell:hover { background: var(--bg-elevated); }
+  .score-cell .score-icon {
+    width: 32px; height: 32px; margin: 0 auto 12px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center; font-size: 1rem;
+  }
+  .score-cell .score-icon.red { background: var(--red-dim); color: var(--red-glow); }
+  .score-cell .score-icon.amber { background: var(--amber-dim); color: var(--amber-glow); }
+  .score-cell .score-icon.green { background: var(--green-dim); color: var(--green-glow); }
+  .score-cell .score-label {
+    font-family: var(--font-mono); font-size: 0.625rem; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--text-muted); margin-bottom: 6px;
+  }
+  .score-cell .score-value { font-size: 1.125rem; font-weight: 700; line-height: 1.2; }
+  .score-cell .score-value.red { color: var(--red-glow); }
+  .score-cell .score-value.amber { color: var(--amber-glow); }
+  .score-cell .score-value.green { color: var(--green-glow); }
+
+  /* Collapsible sections */
+  details summary { cursor: pointer; list-style: none; }
+  details summary::-webkit-details-marker { display: none; }
+  .collapsible-section > summary { padding: 48px 0 0; border-top: 1px solid var(--border-subtle); }
+  .collapsible-section > summary .section-header { margin-bottom: 0; display: flex; align-items: center; gap: 12px; }
+  .collapsible-section[open] > summary .section-header { margin-bottom: 28px; }
+  .collapsible-section .section-body { padding-bottom: 0; }
+  .collapsible-section > summary .section-header::after {
+    content: '\25B6'; font-size: 0.625rem; color: var(--text-muted); transition: transform 0.2s; margin-left: auto;
+  }
+  .collapsible-section[open] > summary .section-header::after { transform: rotate(90deg); }
+  .section-header .section-number {
+    font-family: var(--font-mono); font-size: 0.6875rem; letter-spacing: 0.1em; color: var(--text-muted);
+    width: 28px; height: 28px; border-radius: 6px; border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .section-header h2 {
+    font-family: var(--font-display); font-size: 1.4rem; font-weight: 600;
+    letter-spacing: -0.02em; line-height: 1.15;
+    color: var(--cyan-glow);
+  }
+  /* Slightly emphasize the section number too so the landmark row reads as a unit */
+  .section-header .section-number {
+    color: var(--cyan-glow); opacity: 0.75;
+  }
+
+  /* Finding cards */
+  .finding-card {
+    background: var(--bg-surface); border: 1px solid var(--border); border-radius: 10px;
+    margin-bottom: 12px; overflow: hidden; transition: border-color 0.2s;
+  }
+  .finding-card:hover { border-color: #3a3a44; }
+  .finding-card.critical { border-left: 3px solid var(--red-glow); }
+  .finding-card.warning { border-left: 3px solid var(--amber-glow); }
+  .finding-card.info { border-left: 3px solid var(--cyan-glow); }
+  .finding-card.ok { border-left: 3px solid var(--green-glow); }
+  @keyframes border-pulse {
+    0%, 100% { border-left-color: var(--red-glow); box-shadow: -2px 0 8px var(--red-dim); }
+    50% { border-left-color: #ff454580; box-shadow: -2px 0 4px transparent; }
+  }
+  .finding-card.critical { animation: border-pulse 3s ease-in-out infinite; }
+
+  .finding-header {
+    padding: 16px 20px 12px; display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 16px;
+  }
+  .finding-header .tag {
+    font-family: var(--font-mono); font-size: 0.625rem; letter-spacing: 0.08em;
+    text-transform: uppercase; padding: 3px 8px; border-radius: 4px; font-weight: 600; flex-shrink: 0;
+  }
+  .tag.critical-tag { background: var(--red-dim); color: var(--red-glow); }
+  .tag.warning-tag { background: var(--amber-dim); color: var(--amber-glow); }
+  .tag.info-tag { background: var(--cyan-dim); color: var(--cyan-glow); }
+  .tag.ok-tag { background: var(--green-dim); color: var(--green-glow); }
+  .finding-header .finding-date { font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-secondary); }
+  .finding-header .finding-duration {
+    font-family: var(--font-mono); font-size: 0.6875rem; font-weight: 600;
+    color: var(--amber-glow); background: var(--amber-dim); border: 1px solid #ffaa2a30;
+    padding: 3px 10px; border-radius: 4px;
+  }
+  .finding-header h3 {
+    width: 100%; font-family: var(--font-display); font-size: 1.125rem;
+    font-weight: 600; line-height: 1.3; letter-spacing: -0.015em; margin-top: 4px;
+  }
+
+  /* Finding collapsible */
+  .finding-card summary { list-style: none; cursor: pointer; }
+  .finding-card summary::-webkit-details-marker { display: none; }
+  .finding-card summary .finding-header { position: relative; padding-right: 40px; }
+  .finding-card summary .finding-header::after {
+    content: '\25B6'; font-size: 0.625rem; color: var(--text-muted);
+    transition: transform 0.2s; position: absolute; right: 20px; top: 20px;
+  }
+  .finding-card details[open] > summary .finding-header::after { transform: rotate(90deg); }
+
+  .finding-body { padding: 0 20px 16px; }
+  .finding-body p { font-size: 0.875rem; color: var(--text-primary); line-height: 1.7; margin-bottom: 12px; }
+  .finding-meta {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 8px; margin-top: 12px;
+  }
+  .meta-chip {
+    font-size: 0.75rem; padding: 8px 12px; border-radius: 6px;
+    background: var(--bg-elevated); border: 1px solid var(--border-subtle);
+    display: flex; flex-direction: column; gap: 2px;
+  }
+  .meta-chip .chip-label {
+    font-family: var(--font-mono); font-size: 0.625rem; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--text-secondary);
+  }
+  .meta-chip .chip-value { color: var(--text-primary); font-weight: 500; }
+
+  /* Sub-finding (nested under parent finding) */
+  .sub-finding {
+    margin: 16px 0 8px; padding: 16px; border-left: 2px solid var(--amber-glow);
+    background: var(--bg-elevated); border-radius: 0 8px 8px 0;
+  }
+  .sub-finding .sub-finding-label {
+    font-family: var(--font-mono); font-size: 0.625rem; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--amber-glow); margin-bottom: 8px;
+  }
+  .sub-finding h4 { font-size: 1rem; font-weight: 700; line-height: 1.4; margin-bottom: 10px; }
+  .sub-finding p { font-size: 0.875rem; color: var(--text-primary); line-height: 1.7; margin-bottom: 12px; }
+
+  /* PR Table */
+  .pr-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.8125rem; }
+  th {
+    font-family: var(--font-mono); font-size: 0.625rem; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--text-secondary); text-align: left;
+    padding: 12px 16px; background: var(--bg-surface); border-bottom: 1px solid var(--border);
+    position: sticky; top: 0; white-space: nowrap;
+  }
+  td { padding: 14px 16px; border-bottom: 1px solid var(--border-subtle); color: var(--text-primary); vertical-align: top; }
+  tr:hover td { background: var(--bg-surface); }
+  td:first-child { font-family: var(--font-mono); font-weight: 600; color: var(--cyan-glow); white-space: nowrap; }
+  .td-concern { color: var(--amber-glow); font-weight: 500; }
+  .td-reviewed-no { color: var(--red-glow); font-family: var(--font-mono); font-weight: 600; }
+  .td-reviewed-yes { color: var(--green-glow); font-family: var(--font-mono); font-weight: 600; }
+  .td-reviewed-rejected { color: var(--amber-glow); font-family: var(--font-mono); font-weight: 600; }
+  .td-merge-fast { font-family: var(--font-mono); color: var(--red-glow); font-weight: 600; }
+  .td-person { font-weight: 500; color: var(--text-primary); }
+
+  /* Timeline */
+  .timeline { position: relative; padding-left: 28px; }
+  .timeline::before {
+    content: ''; position: absolute; left: 7px; top: 8px; bottom: 8px; width: 1px;
+    background: linear-gradient(to bottom, var(--border), var(--red-glow), var(--border));
+  }
+  .tl-item { position: relative; margin-bottom: 20px; padding-left: 8px; }
+  .tl-item::before {
+    content: ''; position: absolute; left: -24px; top: 7px; width: 9px; height: 9px;
+    border-radius: 50%; background: var(--text-muted); border: 2px solid var(--bg-void);
+  }
+  .tl-item.bad::before { background: var(--red-glow); box-shadow: 0 0 6px var(--red-dim); }
+  .tl-item.good::before { background: var(--green-glow); }
+  .tl-item.neutral::before { background: var(--amber-glow); }
+  .tl-date { font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-secondary); font-weight: 600; }
+  .tl-desc { font-size: 0.875rem; color: var(--text-primary); margin-top: 2px; line-height: 1.6; }
+
+  /* Vitals */
+  .vitals-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1px; background: var(--border); border-radius: 10px; overflow: hidden;
+  }
+  .vital-cell { background: var(--bg-surface); padding: 18px 20px; }
+  .vital-cell .vital-label {
+    font-family: var(--font-mono); font-size: 0.625rem; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--text-muted); margin-bottom: 4px;
+  }
+  .vital-cell .vital-value { font-size: 1rem; font-weight: 700; margin-bottom: 4px; }
+  .vital-cell .vital-note { font-size: 0.75rem; color: var(--text-secondary); line-height: 1.5; }
+
+  /* Action cards */
+  .action-card { padding: 24px; border-radius: 10px; margin-bottom: 12px; }
+  .action-card.stop { background: var(--red-bg); border: 1px solid #ff454530; }
+  .action-card.wait { background: var(--amber-bg); border: 1px solid #ffaa2a30; }
+  .action-card.info-action { background: var(--bg-surface); border: 1px solid var(--border); }
+  .action-card.ok-action { background: var(--green-bg); border: 1px solid #22c55e30; }
+  .action-card h3 { font-size: 0.9375rem; font-weight: 700; margin-bottom: 8px; }
+  .action-card p { font-size: 0.875rem; color: var(--text-primary); line-height: 1.7; }
+
+  /* Code blocks inside action cards */
+  .action-card pre {
+    background: var(--bg-void); border: 1px solid var(--border); border-radius: 8px;
+    padding: 16px; margin: 12px 0; overflow-x: auto;
+    font-family: var(--font-mono); font-size: 0.8125rem; color: var(--cyan-glow); line-height: 1.6;
+  }
+
+  /* Catalog metadata block — sits between hero and verdict
+     Font sizes use rem so the font +/- controls (which mutate root font-size) scale them. */
+  .catalog-meta {
+    background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: 10px;
+    padding: 1.125rem 1.375rem; margin-bottom: 1rem;
+  }
+  .catalog-meta .catalog-label {
+    font-family: var(--font-mono); font-size: 0.65rem; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--text-secondary); margin-bottom: 0.625rem;
+  }
+  .catalog-meta table { width: 100%; }
+  .catalog-meta td { padding: 0.375rem 0.75rem 0.375rem 0; border: none; font-size: 0.82rem; vertical-align: top; }
+  .catalog-meta td.key {
+    font-family: var(--font-mono); color: var(--text-secondary);
+    white-space: nowrap; width: 1%; font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.06em;
+  }
+  .catalog-meta td.val { color: var(--text-primary); }
+  .catalog-meta td.val a { color: var(--cyan-glow); text-decoration: none; }
+  .catalog-meta td.val a:hover { text-decoration: underline; }
+
+  /* ─────────────── UX-FIX CSS (section status pills, finding status chips,
+     timeline glyphs, evidence priority markers) ─────────────── */
+
+  /* Section status pills — shown on the collapsed <summary> row so readers know
+     at a glance whether a section needs attention. */
+  .section-status {
+    display: inline-flex; gap: 0.5rem; margin-left: auto; padding-right: 2.5rem;
+    font-size: 0.72rem; font-family: var(--font-mono); align-items: center;
+    flex-wrap: wrap;
+  }
+  .section-status .pill {
+    display: inline-flex; align-items: center; gap: 0.25rem;
+    padding: 0.1875rem 0.5rem; border-radius: 0.625rem; border: 1px solid;
+    letter-spacing: 0.04em; white-space: nowrap;
+  }
+  .section-status .pill.red {
+    color: var(--red-glow); border-color: var(--red-dim);
+    background: rgba(255, 69, 69, 0.1);
+  }
+  .section-status .pill.amber {
+    color: var(--amber-glow); border-color: var(--amber-dim);
+    background: rgba(255, 170, 42, 0.1);
+  }
+  .section-status .pill.green {
+    color: var(--green-glow); border-color: var(--green-dim);
+    background: rgba(34, 197, 94, 0.1);
+  }
+  .section-status .pill.info {
+    color: var(--cyan-glow); border-color: var(--cyan-dim);
+    background: rgba(6, 182, 212, 0.1);
+  }
+  .section-status .pill.muted {
+    color: var(--text-secondary); border-color: var(--border-subtle);
+    background: var(--bg-elevated);
+  }
+  .section-status .pill.urgent {
+    animation: urgent-pulse 1.8s ease-in-out infinite;
+  }
+  @keyframes urgent-pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(255, 69, 69, 0.4); }
+    50% { box-shadow: 0 0 0 0.5rem rgba(255, 69, 69, 0); }
+  }
+  /* Hide status pills when section is open — they're redundant with the content */
+  .collapsible-section[open] > summary .section-status { opacity: 0.5; }
+
+  /* Section subtitle — a one-line orientation under the H2, visible both open
+     and collapsed. Gives readers the "why should I look at this" answer. */
+  .section-subtitle {
+    font-family: var(--font-sans); font-size: 0.9375rem; color: var(--text-secondary);
+    font-weight: 400; margin-top: 0.5rem; line-height: 1.55;
+    max-width: 68ch; letter-spacing: -0.003em;
+  }
+  .section-subtitle .emph { color: var(--text-primary); font-weight: 600; }
+  .section-subtitle .hot { color: var(--amber-glow); font-weight: 600; }
+  .section-subtitle .cold { color: var(--green-glow); font-weight: 600; }
+
+  /* Section-level "Your action" line — every section that flags concerns
+     must answer "what do I do about this?" for the reader. */
+  .section-action {
+    display: block; margin-top: 0.5rem; padding: 0.5rem 0.75rem;
+    background: var(--bg-elevated); border-radius: 0.375rem;
+    border-left: 3px solid var(--amber-glow);
+    font-size: 0.85rem; color: var(--text-primary); line-height: 1.55;
+  }
+  .section-action.ok { border-left-color: var(--green-glow); }
+  .section-action.info { border-left-color: var(--cyan-glow); }
+  .section-action .lbl {
+    font-family: var(--font-mono); font-weight: 700;
+    font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--amber-glow); margin-right: 0.5rem;
+  }
+  .section-action.ok .lbl { color: var(--green-glow); }
+  .section-action.info .lbl { color: var(--cyan-glow); }
+
+  /* Finding-card status chip — distinguishes Active vs Resolved vs Ongoing.
+     Shown on every finding and evidence card next to the severity tag. */
+  .status-chip {
+    display: inline-flex; align-items: center; gap: 0.25rem;
+    padding: 0.1875rem 0.5rem; border-radius: 0.625rem; border: 1px solid;
+    font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.04em;
+    white-space: nowrap; margin-left: 0.375rem;
+  }
+  .status-chip.resolved {
+    color: var(--green-glow); border-color: var(--green-dim);
+    background: rgba(34, 197, 94, 0.12);
+  }
+  .status-chip.active {
+    color: var(--red-glow); border-color: var(--red-dim);
+    background: rgba(255, 69, 69, 0.12);
+  }
+  .status-chip.ongoing {
+    color: var(--amber-glow); border-color: var(--amber-dim);
+    background: rgba(255, 170, 42, 0.12);
+  }
+  .status-chip.mitigated {
+    color: var(--cyan-glow); border-color: var(--cyan-dim);
+    background: rgba(6, 182, 212, 0.12);
+  }
+  .status-chip.informational {
+    color: var(--text-secondary); border-color: var(--border-subtle);
+    background: var(--bg-elevated);
+  }
+
+  /* Action-needed hint on finding cards — one sentence that says "what the reader should do" */
+  .action-hint {
+    margin-top: 0.5rem; font-size: 0.78rem; color: var(--text-secondary);
+    line-height: 1.55;
+  }
+  .action-hint::before {
+    content: "→ "; color: var(--amber-glow); font-style: normal; font-weight: 600;
+  }
+  .action-hint.ok::before { color: var(--green-glow); }
+  .action-hint.warn::before { color: var(--amber-glow); }
+
+  /* Executable File Inventory — differentiate verdict on the tag clearly.
+     The card border already carries severity via .finding-card.warning/.ok/.info;
+     this makes the header tag match so the reader doesn't have to decode borders. */
+  .inv-verdict {
+    display: inline-flex; align-items: center; gap: 0.25rem;
+    padding: 0.1875rem 0.5rem; border-radius: 0.625rem; margin-left: 0.375rem;
+    font-family: var(--font-mono); font-size: 0.65rem; letter-spacing: 0.04em;
+    text-transform: uppercase; border: 1px solid;
+  }
+  .inv-verdict.warn {
+    color: var(--amber-glow); border-color: var(--amber-dim);
+    background: rgba(255, 170, 42, 0.12);
+  }
+  .inv-verdict.ok {
+    color: var(--green-glow); border-color: var(--green-dim);
+    background: rgba(34, 197, 94, 0.12);
+  }
+  .inv-verdict.info {
+    color: var(--cyan-glow); border-color: var(--cyan-dim);
+    background: rgba(6, 182, 212, 0.12);
+  }
+
+  /* Inventory one-line summary block — V2.2 F12 format */
+  .inventory-summary {
+    margin-bottom: 1.25rem; padding: 0.875rem 1rem;
+    background: var(--bg-elevated); border-radius: 0.5rem;
+    border-left: 3px solid var(--cyan-glow); font-size: 0.85rem;
+  }
+  .inventory-summary-title {
+    font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--text-secondary); margin-bottom: 0.5rem;
+  }
+  .inventory-summary ul { list-style: none; padding: 0; margin: 0; }
+  .inventory-summary li {
+    padding: 0.25rem 0; line-height: 1.55; display: flex; gap: 0.5rem; align-items: flex-start;
+  }
+  .inventory-summary li .glyph {
+    flex: 0 0 1.125rem; font-family: var(--font-mono); font-weight: 700;
+    text-align: center;
+  }
+  .inventory-summary li.warn .glyph { color: var(--amber-glow); }
+  .inventory-summary li.ok .glyph { color: var(--green-glow); }
+  .inventory-summary li.info .glyph { color: var(--cyan-glow); }
+
+  /* Timeline severity glyphs — per-item worry indicator beyond just dot color */
+  .tl-item .tl-severity-label {
+    display: inline-block; font-family: var(--font-mono); font-weight: 700;
+    font-size: 0.68rem; letter-spacing: 0.05em; margin-right: 0.375rem;
+    padding: 0.125rem 0.375rem; border-radius: 0.25rem;
+  }
+  .tl-item.bad .tl-severity-label {
+    color: var(--red-glow); background: rgba(255, 69, 69, 0.12);
+  }
+  .tl-item.good .tl-severity-label {
+    color: var(--green-glow); background: rgba(34, 197, 94, 0.12);
+  }
+  .tl-item.neutral .tl-severity-label {
+    color: var(--amber-glow); background: rgba(255, 170, 42, 0.12);
+  }
+
+  /* Evidence priority banner — "read this first" marker on the most important evidence */
+  .evidence-priority {
+    position: relative; border-left-width: 4px !important;
+  }
+  .evidence-priority .priority-flag {
+    display: inline-block; margin-left: 0.5rem; padding: 0.1875rem 0.5rem;
+    background: var(--amber-glow); color: var(--bg-void);
+    border-radius: 0.25rem; font-family: var(--font-mono);
+    font-size: 0.62rem; font-weight: 700; letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .evidence-group-label {
+    margin: 1.5rem 0 0.75rem; font-family: var(--font-mono);
+    font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--text-secondary); padding: 0.5rem 0.75rem;
+    background: var(--bg-elevated); border-radius: 0.375rem;
+    border-left: 3px solid var(--border);
+  }
+  .evidence-group-label.warns { border-left-color: var(--amber-glow); color: var(--amber-glow); }
+  .evidence-group-label.positives { border-left-color: var(--green-glow); color: var(--green-glow); }
+  .evidence-group-label.context { border-left-color: var(--cyan-glow); color: var(--cyan-glow); }
+
+  /* Evidence Appendix — <pre> blocks for command and multi-line result */
+  .evidence-row { margin-bottom: 10px; }
+  .evidence-row .evidence-label {
+    font-family: var(--font-mono); font-size: 0.625rem; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--text-secondary); margin-bottom: 4px;
+  }
+  .evidence-pre {
+    background: var(--bg-void); border: 1px solid var(--border); border-radius: 6px;
+    padding: 12px 14px; margin: 0; overflow-x: auto; white-space: pre-wrap; word-break: break-word;
+    font-family: var(--font-mono); font-size: 0.75rem; color: var(--cyan-glow); line-height: 1.55;
+    max-height: 320px; overflow-y: auto;
+  }
+  .evidence-pre.result { color: var(--text-primary); }
+  .evidence-classification {
+    font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-primary);
+    padding: 8px 12px; background: var(--bg-elevated);
+    border: 1px solid var(--border-subtle); border-radius: 6px;
+  }
+  .evidence-classification.inference { color: var(--amber-glow); }
+  .evidence-classification.fact { color: var(--green-glow); }
+
+  /* Footer */
+  .footer {
+    padding: 40px 0; border-top: 1px solid var(--border-subtle);
+    text-align: center; font-size: 0.75rem; color: var(--text-muted);
+  }
+  .footer a { color: var(--text-secondary); }
+
+  /* Responsive */
+  @media (max-width: 700px) {
+    .scorecard-grid { grid-template-columns: repeat(2, 1fr); }
+    .finding-meta { grid-template-columns: 1fr; }
+    .hero { padding: 40px 0 32px; }
+    .collapsible-section > summary { padding-top: 32px; }
+    table { font-size: 0.75rem; }
+    th, td { padding: 10px 12px; }
+    .vitals-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 420px) {
+    .scorecard-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="font-controls">
+  <button onclick="adjustFont(-1)" title="Decrease font size" aria-label="Decrease font size">A&minus;</button>
+  <span class="font-size-display" id="fontDisplay">100%</span>
+  <button onclick="adjustFont(1)" title="Increase font size" aria-label="Increase font size">A+</button>
+</div>
+<script>
+  let fontScale = 100;
+  function adjustFont(dir) {
+    fontScale = Math.min(150, Math.max(75, fontScale + dir * 10));
+    document.documentElement.style.fontSize = fontScale + '%';
+    document.getElementById('fontDisplay').textContent = fontScale + '%';
+  }
+</script>
+
+<div class="page">
+
+  <!-- ═══════════════ HERO ═══════════════ -->
+  <div class="hero">
+    <div class="scan-strip">
+      <span class="scan-strip-item"><span class="dot amber"></span>Security Investigation</span>
+      <span class="scan-strip-item">Dossier · Archon</span>
+      <span class="scan-strip-item">Rev · 3dedc22</span>
+      <span class="scan-strip-item">v2.3 · 2026-04-16T09:35:10Z</span>
+      <span class="scan-strip-item flash">● Live</span>
+    </div>
+    <h1>coleam00<span class="slash">/</span><span class="amber">Archon</span></h1>
+    <div class="hero-caption">An 18,000-star remote agentic coding platform with a serious SECURITY.md discipline, pinned-and-checksummed distribution, and three open security issues that its maintainer is actively fixing in public.</div>
+    <div class="meta">
+      <div class="meta-item"><span class="label">Investigated</span> 2026-04-16</div>
+      <div class="meta-item"><span class="label">Applies to</span> dev @ 3dedc22 · v0.3.6</div>
+      <div class="meta-item"><span class="label">Repo age</span> 14 months</div>
+      <div class="meta-item"><span class="label">Stars</span> 18,300</div>
+      <div class="meta-item"><span class="label">License</span> MIT</div>
+    </div>
+  </div>
+
+  <div class="catalog-meta">
+    <div class="catalog-label">Catalog metadata</div>
+    <table>
+      <tr><td class="key">Report file</td><td class="val"><code>GitHub-Scanner-Archon.html</code> (+ <code>.md</code> companion)</td></tr>
+      <tr><td class="key">Repo</td><td class="val"><a href="https://github.com/coleam00/Archon">github.com/coleam00/Archon</a></td></tr>
+      <tr><td class="key">Short description</td><td class="val">Remote agentic coding platform — a harness that lets you drive Claude Code and Codex through Slack, Telegram, GitHub, or a web UI, with its own DAG workflow engine. Ships as a Bun-compiled CLI binary plus a server + web UI.</td></tr>
+      <tr><td class="key">Category</td><td class="val">AI/LLM tooling</td></tr>
+      <tr><td class="key">Subcategory</td><td class="val">Remote agent orchestrator / workflow engine</td></tr>
+      <tr><td class="key">Verdict</td><td class="val val-warn fw-semi">Caution</td></tr>
+      <tr><td class="key">Scanned revision</td><td class="val">dev @ 3dedc22 (release tag v0.3.6)</td></tr>
+      <tr><td class="key">Prompt version</td><td class="val">v2.3 (first Archon scan under V2.3 pipeline)</td></tr>
+      <tr><td class="key">Prior scan</td><td class="val">None &mdash; first run on this repo. Future re-runs should diff against <code>GitHub-Scanner-Archon-YYYY-MM-DD.md</code> snapshots.</td></tr>
+    </table>
+  </div>
+
+  <div class="verdict-section">
+    <div class="verdict-banner critical" data-dossier="DOSSIER · ARCHON · 3DEDC22 · 2026-04-16 · V2.3">
+      <div class="verdict-label">● Split verdict · governance gap</div>
+      <div class="verdict-split">
+        <div class="verdict-entry">
+          <div class="verdict-entry-scope">Deployment · Installing today · v0.3.6 · default profile</div>
+          <h2 class="verdict-entry-headline bad">Install pinned to a tagged release, and know the trust chain terminates at the maintainer's credentials</h2>
+          <div class="verdict-entry-detail">Install scripts sha256-verify the binary against <code>checksums.txt</code> &mdash; but both come from the same GitHub Releases URL. No branch protection on <code>dev</code>, no rulesets, no CODEOWNERS (F0 Critical). A single compromised maintainer credential ships code to every install on the next release with no gate. If you install anyway, pin to a specific tag (not <code>main</code>/<code>dev</code>) and subscribe to repo releases.</div>
+        </div>
+        <div class="verdict-split-divider"></div>
+        <div class="verdict-entry">
+          <div class="verdict-entry-scope">Deployment · Shared host / multi-tenant · using Codex provider</div>
+          <h2 class="verdict-entry-headline bad">Do not run in production until PR #1250 merges</h2>
+          <div class="verdict-entry-detail">Two Critical surfaces stack here: F0 (no governance gate upstream) plus F1 (Codex vendor binary resolver has no hash/signature pinning &mdash; local attacker with write access to <code>~/.archon/vendor/codex/</code> gets arbitrary-code execution under your user via <a href="https://github.com/coleam00/Archon/issues/1245">#1245</a>). Also watch <a href="https://github.com/coleam00/Archon/pull/1153">PR #1153</a> (axios CVE-2025-62718).</div>
+        </div>
+      </div>
+      <div class="verdict-exhibits">
+        <details class="exhibit vuln">
+          <summary>
+            <span class="exhibit-glyph">&#x26A0;</span>
+            <span>
+              <span class="exhibit-title">Open security issues filed by an external researcher &mdash; actively being fixed</span>
+              <span class="exhibit-count">· 3 findings</span>
+              <span class="exhibit-summary-line">Codex LPE + web-dist attestation gap + axios CVE override &mdash; none merged yet, all tracked publicly</span>
+            </span>
+          </summary>
+          <div class="exhibit-body">
+            <div class="exhibit-item">
+              <span class="exhibit-item-glyph">01</span>
+              <span>
+                <span class="exhibit-item-tag">Vulnerability · F1</span>
+                Codex vendor binary resolver lacks hash/signature pinning (<a href="https://github.com/coleam00/Archon/issues/1245">#1245</a>). On multi-user hosts, another user who can write to <code>~/.archon/vendor/codex/</code> gets arbitrary code execution as you on the next Codex workflow. Fix open in <a href="https://github.com/coleam00/Archon/pull/1250">PR #1250</a>.
+              </span>
+            </div>
+            <div class="exhibit-item">
+              <span class="exhibit-item-glyph">02</span>
+              <span>
+                <span class="exhibit-item-tag">Supply chain · F2</span>
+                <code>archon serve</code> downloads web-dist tarball AND its sha256 checksums from the same GitHub Releases URL (<a href="https://github.com/coleam00/Archon/issues/1246">#1246</a>). A release-manager token compromise defeats the verification. Reporter asks for independent attestation / sigstore.
+              </span>
+            </div>
+            <div class="exhibit-item">
+              <span class="exhibit-item-glyph">03</span>
+              <span>
+                <span class="exhibit-item-tag">Dependency · CVE</span>
+                Axios CVE-2025-62718 (NO_PROXY bypass via hostname normalization) override pending in <a href="https://github.com/coleam00/Archon/pull/1153">PR #1153</a>, open since 2026-04-13 &mdash; 3 days before scan. Reaches via <code>@slack/bolt</code> and <code>@slack/web-api</code>.
+              </span>
+            </div>
+          </div>
+        </details>
+
+        <details class="exhibit govern">
+          <summary>
+            <span class="exhibit-glyph">&#x26A0;</span>
+            <span>
+              <span class="exhibit-title">Governance gaps &mdash; low formal review rate, no branch protection</span>
+              <span class="exhibit-count">· 4 findings</span>
+              <span class="exhibit-summary-line">8% formal review, no branch protection on <code>dev</code>, no CODEOWNERS, CI bot commits direct to dev</span>
+            </span>
+          </summary>
+          <div class="exhibit-body">
+            <div class="exhibit-item">
+              <span class="exhibit-item-glyph">01</span>
+              <span>
+                <span class="exhibit-item-tag">Review rate · F11</span>
+                13 of 160 merged PRs have formal <code>reviewDecision</code> set (8%). Any-review rate is 58% (93/160) &mdash; a second pair of eyes exists in practice (Wirasm leads dev, coleam00 is owner) but formal gates are absent.
+              </span>
+            </div>
+            <div class="exhibit-item">
+              <span class="exhibit-item-glyph">02</span>
+              <span>
+                <span class="exhibit-item-tag">Branch protection · F14</span>
+                No branch protection rule on <code>dev</code> (the default branch) or <code>main</code>. Direct pushes possible, no required status checks at the branch level.
+              </span>
+            </div>
+            <div class="exhibit-item">
+              <span class="exhibit-item-glyph">03</span>
+              <span>
+                <span class="exhibit-item-tag">CODEOWNERS · F14</span>
+                No CODEOWNERS file anywhere in the repo. No path-scoped review gate either &mdash; which combined with no branch protection means there is no automated requirement for a second reviewer on hooks, workflows, or install scripts.
+              </span>
+            </div>
+            <div class="exhibit-item">
+              <span class="exhibit-item-glyph">04</span>
+              <span>
+                <span class="exhibit-item-tag">CI-bot merge</span>
+                <code>release.yml</code> runs <code>update-homebrew.sh</code> then commits the updated Homebrew formula directly to <code>dev</code> using <code>GITHUB_TOKEN</code>. Low risk (the bot only runs on tag-push) but it's a code-modification path that bypasses human review, so worth naming.
+              </span>
+            </div>
+          </div>
+        </details>
+
+        <details class="exhibit signals">
+          <summary>
+            <span class="exhibit-glyph">&#x2714;</span>
+            <span>
+              <span class="exhibit-title">Strong positive signals &mdash; real disclosure, pinned distribution, established maintainers</span>
+              <span class="exhibit-count">· 4 findings</span>
+              <span class="exhibit-summary-line">SECURITY.md with private reporting, sha256-verified installs, 7-year-old owner, active second maintainer</span>
+            </span>
+          </summary>
+          <div class="exhibit-body">
+            <div class="exhibit-item">
+              <span class="exhibit-item-glyph">01</span>
+              <span>
+                <span class="exhibit-item-tag">Disclosure</span>
+                <code>SECURITY.md</code> at repo root with a real private reporting policy (<code>cole@dynamous.ai</code> or GitHub's private advisory). The external reporter (shaun0927, 5-year-old account, 54 followers) used it to file four well-scoped issues in public with evidence.
+              </span>
+            </div>
+            <div class="exhibit-item">
+              <span class="exhibit-item-glyph">02</span>
+              <span>
+                <span class="exhibit-item-tag">Distribution · F1</span>
+                Install scripts verify sha256 checksums by default (<code>SKIP_CHECKSUM=false</code>). Homebrew formula pins to release tag + per-platform sha256. Docker images build via GHCR with semver tags (no live-main fetch). This is the opposite of the caveman curl-pipe-from-main pattern.
+              </span>
+            </div>
+            <div class="exhibit-item">
+              <span class="exhibit-item-glyph">03</span>
+              <span>
+                <span class="exhibit-item-tag">Maintainer</span>
+                coleam00 (Cole Medin): 7-year GitHub account, 6,641 followers, Dynamous company listed. Wirasm (Rasmus Widing) is the de facto dev lead with 791 commits vs coleam00's 343 &mdash; owner-merges-contributor-work is healthier than solo-maintainer for review purposes.
+              </span>
+            </div>
+            <div class="exhibit-item">
+              <span class="exhibit-item-glyph">04</span>
+              <span>
+                <span class="exhibit-item-tag">Code quality</span>
+                Recent PRs show active security work: <a href="https://github.com/coleam00/Archon/pull/1169">#1169</a> blocks <code>.env</code> leaks into subprocesses, <a href="https://github.com/coleam00/Archon/pull/1217">#1217</a> replaces SDK binary resolution with an explicit allowlist. <code>exec.ts</code> uses <code>execFile</code> (not shell), Docker entrypoint drops root to appuser via <code>gosu</code>.
+              </span>
+            </div>
+          </div>
+        </details>
+      </div>
+    </div>
+  </div>
+
+  <div class="scorecard-section">
+    <div class="scorecard-grid">
+      <div class="score-cell">
+        <div class="score-icon red">&#x1F6A8;</div>
+        <div class="score-label">Does anyone check the code?</div>
+        <div class="score-value red">No upstream gate — 8% formal / 58% any · no branch protection · no CODEOWNERS</div>
+      </div>
+      <div class="score-cell">
+        <div class="score-icon amber">&#x26A0;</div>
+        <div class="score-label">Do they fix problems quickly?</div>
+        <div class="score-value amber">Open fixes, not merged yet</div>
+      </div>
+      <div class="score-cell">
+        <div class="score-icon green">&#x2705;</div>
+        <div class="score-label">Do they tell you about problems?</div>
+        <div class="score-value green">Yes — SECURITY.md + public issues</div>
+      </div>
+      <div class="score-cell">
+        <div class="score-icon red">&#x1F6A8;</div>
+        <div class="score-label">Is it safe out of the box?</div>
+        <div class="score-value red">No — Critical finding applies to default install path (F0 governance gap)</div>
+      </div>
+    </div>
+  </div>
+
+  <details class="collapsible-section" open>
+    <summary>
+      <div class="section-header">
+        <span class="section-number">01</span>
+        <h2>What Should I Do?</h2>
+        <span class="section-status">
+          <span class="pill amber">⚠ Action if you use Codex on shared hosts</span>
+          <span class="pill info">3 steps</span>
+        </span>
+      </div>
+      <div class="section-subtitle">
+        <span class="hot">Most urgent</span>: if you run Archon with the Codex provider on any machine another user can log into, wait for PR #1250 before trusting Codex runs (Step 1). For single-user laptops (Step 2) you're fine to install today via the pinned install script. Step 3 is the dependency patch to watch.
+      </div>
+    </summary>
+    <div class="section-body">
+
+    <div class="action-card wait">
+      <h3 class="val-warn">Step 1: If you use the Codex provider on a shared host, hold off until #1250 merges</h3>
+      <p><strong>Non-technical:</strong> Archon can drive either Claude Code or Codex. The Codex side downloads its binary to <code>~/.archon/vendor/codex/</code> and runs whatever's there without checking a hash or signature. On a multi-user machine, another user who has write access to that folder (the admin, a shared dev container, prior malware) can drop a rigged binary and it will run as you the next time you kick off a Codex workflow. The fix is open as PR #1250. Single-user laptops are a much lower risk because nobody else has write access to your home directory &mdash; that's the 99% case.</p>
+      <pre># Check if you have a Codex binary dropped that Archon would pick up
+ls -la ~/.archon/vendor/codex/ 2>/dev/null
+
+# If it exists AND your machine is shared, rename it so Archon refuses to load
+mv ~/.archon/vendor/codex/codex ~/.archon/vendor/codex/codex.disabled
+
+# Watch PR #1250 for merge
+gh pr view 1250 -R coleam00/Archon --json state,mergedAt</pre>
+    </div>
+    <div class="action-card info-action">
+      <h3>Step 2: If you're considering installing Archon for the first time on your own machine</h3>
+      <p><strong>Non-technical:</strong> Installing now is fine on a personal laptop. The install script verifies a sha256 checksum before running the binary (unlike the caveman pattern where you pipe live <code>main</code> into bash). The Codex LPE above only matters on shared hosts. If you only use the Claude Code provider, none of the open security issues affect you today.</p>
+      <pre># Recommended (verified install)
+curl -fsSL https://archon.diy/install | bash
+
+# After install, confirm version matches your expectation
+archon version</pre>
+    </div>
+    <div class="action-card info-action">
+      <h3>Step 3: Ask the maintainers to merge the axios CVE patch and enable branch protection</h3>
+      <p><strong>Non-technical:</strong> The maintainers are clearly doing careful work &mdash; the SECURITY.md disclosure process is real, recent PRs show security-minded refactors, and they run the private reports in public for accountability. Helpful asks: (1) merge <a href="https://github.com/coleam00/Archon/pull/1153">PR #1153</a> to get the axios CVE fix in; (2) enable branch protection on <code>dev</code>; (3) add a <code>.github/dependabot.yml</code> so transitive-CVE PRs get opened automatically; (4) add CODEOWNERS so <code>packages/providers/</code> and <code>.github/workflows/</code> require a second reviewer. These are normal for a repo at 18k stars.</p>
+    </div>
+    </div>
+  </details>
+
+  <details class="collapsible-section">
+    <summary>
+      <div class="section-header">
+        <span class="section-number">02</span>
+        <h2>What We Found</h2>
+        <span class="section-status">
+          <span class="pill red urgent">🚨 1 Critical</span>
+          <span class="pill amber">⚠ 4 Warning</span>
+          <span class="pill info">2 Info</span>
+          <span class="pill green">✓ 2 OK</span>
+        </span>
+      </div>
+      <div class="section-subtitle">
+        9 findings total. <span class="hot">The Critical finding is structural:</span> no branch protection on <code>dev</code>, no rulesets, no CODEOWNERS &mdash; a single maintainer-credential compromise ships arbitrary code to every install on the next release. The Warnings cluster into <span class="emph">three open security issues being fixed in public</span> (Codex LPE, web-dist attestation, axios CVE) and <span class="emph">process gaps</span> (no dependabot.yml, self-merge pattern). Start with Finding F0 (Critical) and Finding F1 (Codex LPE) if time-pressed.
+      </div>
+      <div class="section-action">
+        <span class="lbl">Your action</span>
+        The Critical finding (F0) means your install path doesn't have a second-pair-of-eyes gate upstream &mdash; that's a decision you're making about the maintainer, not about the code. If you install anyway, pin to a specific release tag (not <code>main</code>/<code>dev</code>), verify the install artifact against source, and watch releases. Don't run Codex on shared hosts until PR #1250 merges (F1); watch PR #1153 for the axios patch (F3).
+      </div>
+    </summary>
+    <div class="section-body">
+
+    <div class="finding-card critical">
+      <details>
+        <summary>
+          <div class="finding-header">
+            <span class="tag critical-tag">Critical</span>
+            <span class="status-chip active">Ongoing · no upstream gate</span>
+            <span class="finding-date">Continuous</span>
+            <span class="finding-duration">Since repo creation</span>
+            <h3>Governance single-point-of-failure &mdash; no branch protection, no rulesets, no CODEOWNERS on a repo that ships executable code to every install (F0 / C20)</h3>
+            <div class="action-hint warn">If you install Archon: pin to a specific release tag, not <code>main</code>/<code>dev</code>. Verify the binary against source if your threat model justifies it. Subscribe to repo releases so you notice unexpected tagged releases. If you maintain this repo: enable branch protection on <code>dev</code> and add CODEOWNERS covering <code>packages/providers/</code> + <code>.github/workflows/</code> + install scripts.</div>
+          </div>
+        </summary>
+        <div class="finding-body">
+          <p><strong>What's missing.</strong> The <code>dev</code> branch (default) has no classic branch protection (API returns 404, authoritative); the repo has zero rulesets (newer-API <code>/rulesets</code> returns <code>[]</code>); no ruleset applies to <code>dev</code> or <code>main</code> (<code>/rules/branches/*</code> both return <code>[]</code>); and there is no CODEOWNERS file in any standard location (<code>CODEOWNERS</code>, <code>.github/CODEOWNERS</code>, <code>docs/CODEOWNERS</code>, <code>.gitlab/CODEOWNERS</code> &mdash; all checked via API and via local tarball search). This means: any push that lands on the maintainer's credentials goes directly to <code>dev</code> without a review gate, a required status check, or a path-scoped reviewer.</p>
+          <p><strong>How an attacker arrives (F13).</strong> This does NOT require xz-utils-level sophistication. Concrete paths: (1) credential phishing against coleam00 or Wirasm (both have public profiles and active GitHub presence &mdash; findable targets); (2) stale OAuth token reuse from a developer machine or old CI system; (3) compromised browser session cookie (e.g., malicious browser extension running in the maintainer's session); (4) malicious IDE/editor extension running as the maintainer; (5) sloppy review of an attacker-submitted PR &mdash; 5 of 6 flagged security-adjacent PRs in this scan were Wirasm-self-submitted-and-merged, a pattern that wouldn't distinguish a real contributor PR from a credential-compromise PR; (6) compromised self-hosted runner on a release pipeline.</p>
+          <p><strong>What this means for you (non-technical).</strong> When you install Archon, you are trusting the maintainer's account security as tightly as you'd trust your own laptop's password. There is no automated gate that would catch "maintainer pushed a bad change" before it reaches your next install. On a 18k-star repo that ships Bun-compiled binaries plus a server that runs on user machines, the blast radius of a single credential compromise is every current and future user.</p>
+          <p><strong>Why this is Critical, not Warning.</strong> C20 escalates from Warning to Critical when the repo ships executable code to user machines AND has active code flow (≥1 release in the last 30 days). Archon meets both: the <code>packages/cli/</code> tree produces Bun-compiled binaries distributed via the Homebrew tap, <code>archon.diy/install</code>, and GHCR Docker images; 8 releases shipped in the last 30 days (v0.3.0 → v0.3.6). Combined with F2 (Finding #1246 &mdash; release-artifact integrity relies on a single GitHub Releases URL), the installed-artifact trust chain has no independent second root.</p>
+          <div class="finding-meta">
+            <div class="meta-chip">
+              <span class="chip-label">Classic branch protection</span>
+              <span class="chip-value val-bad">404 on <code>dev</code> and <code>main</code></span>
+            </div>
+            <div class="meta-chip">
+              <span class="chip-label">Rulesets</span>
+              <span class="chip-value val-bad"><code>[]</code> — zero rulesets</span>
+            </div>
+            <div class="meta-chip">
+              <span class="chip-label">CODEOWNERS</span>
+              <span class="chip-value val-bad">Absent (4 locations checked)</span>
+            </div>
+            <div class="meta-chip">
+              <span class="chip-label">Stars (blast radius)</span>
+              <span class="chip-value">18,300</span>
+            </div>
+            <div class="meta-chip">
+              <span class="chip-label">Releases in last 30 days</span>
+              <span class="chip-value val-warn">8</span>
+            </div>
+            <div class="meta-chip">
+              <span class="chip-label">Active executable surface</span>
+              <span class="chip-value">CLI binaries + server + web UI</span>
+            </div>
+          </div>
+          <div class="sub-finding">
+            <div class="sub-finding-label">How to fix (maintainer-side)</div>
+            <p>GitHub <em>Settings → Branches → Add branch protection rule</em>. For <code>dev</code>: require pull request reviews (1 approver minimum), require status checks (the existing <code>Test Suite</code> workflow), require branches to be up to date before merging, do not allow bypassing. Also add a <code>.github/CODEOWNERS</code> file with at minimum: <code>packages/providers/ @coleam00</code>, <code>.github/workflows/ @coleam00</code>, <code>scripts/install* @coleam00</code>. This closes the single-point-of-failure without slowing dev velocity (only security-critical paths require gated review).</p>
+          </div>
+        </div>
+      </details>
+    </div>
+
+    <div class="finding-card warning">
+      <details>
+        <summary>
+          <div class="finding-header">
+            <span class="tag warning-tag">Warning</span>
+            <span class="status-chip active">Open · fix in review</span>
+            <span class="finding-date">2026-04-16 (issue filed)</span>
+            <span class="finding-duration">Live now</span>
+            <h3>Codex vendor binary resolver has no hash pinning &mdash; local-privilege-escalation gateway on shared hosts (#1245)</h3>
+            <div class="action-hint warn">Don't run Codex workflows on shared hosts until PR #1250 merges. Single-user laptops: low risk.</div>
+          </div>
+        </summary>
+        <div class="finding-body">
+          <p><code>packages/providers/src/codex/binary-resolver.ts</code> resolves the Codex CLI binary from three sources &mdash; env var, config, and a dropped file under <code>~/.archon/vendor/codex/</code> &mdash; and hands it straight to the SDK's <code>codexPathOverride</code>. The only gate is <code>fileExists()</code>. No sha256, no signature, no permission check on the directory. <strong>How an attacker arrives (F13):</strong> this only reaches you if another local user (or a process running as another user) can write to your <code>~/.archon/vendor/codex/</code> &mdash; which in practice means shared workstations, dev containers sharing a volume, CI images, or a Docker setup with an exposed vendor mount. Single-user laptops are low risk because nobody else has write access to your home directory. The fix open in <a href="https://github.com/coleam00/Archon/pull/1250">PR #1250</a> pins the sha256 of the binary on first use and refuses to load if it changes. Reporter shaun0927 filed it against the current <code>dev</code> branch with a proof-of-concept grep showing zero integrity checks in the resolver.</p>
+          <div class="finding-meta">
+            <div class="meta-chip">
+              <span class="chip-label">Reported by</span>
+              <span class="chip-value">shaun0927 &mdash; <a href="https://github.com/coleam00/Archon/issues/1245">issue #1245</a></span>
+            </div>
+            <div class="meta-chip">
+              <span class="chip-label">Fix proposed in</span>
+              <span class="chip-value"><a href="https://github.com/coleam00/Archon/pull/1250">PR #1250</a> (open 2026-04-16)</span>
+            </div>
+            <div class="meta-chip">
+              <span class="chip-label">Attack surface</span>
+              <span class="chip-value val-warn">Shared hosts only</span>
+            </div>
+            <div class="meta-chip">
+              <span class="chip-label">Privilege gained</span>
+              <span class="chip-value val-bad">Your user, full</span>
+            </div>
+            <div class="meta-chip">
+              <span class="chip-label">Disclosure channel</span>
+              <span class="chip-value val-good">Public issue (SECURITY.md compliant)</span>
+            </div>
+          </div>
+        </div>
+      </details>
+    </div>
+
+    <div class="finding-card warning">
+      <details>
+        <summary>
+          <div class="finding-header">
+            <span class="tag warning-tag">Warning</span>
+            <span class="status-chip ongoing">Structural · no fix yet</span>
+            <span class="finding-date">2026-04-16 (issue filed)</span>
+            <span class="finding-duration">Live</span>
+            <h3>`archon serve` web-dist integrity reduces to trusting one GitHub Releases URL (#1246)</h3>
+            <div class="action-hint warn">If you deploy Archon behind a Caddy reverse proxy in production, pin to a specific version tag and mirror the web-dist artifact yourself.</div>
+          </div>
+        </summary>
+        <div class="finding-body">
+          <p>In <code>packages/cli/src/commands/serve.ts</code> lines 82-83, the <code>archon serve</code> command downloads the web UI tarball AND its sha256 checksums file from the same <code>github.com/.../releases/download/vX.Y.Z/</code> URL. The sha256 check protects against corrupt downloads but not against a compromised release: if a release-manager token or a self-hosted runner were ever compromised, the attacker could rewrite both the tarball and the checksums simultaneously. Reporter shaun0927 asks for independent attestation &mdash; a Sigstore bundle, a separate signing key, or a <code>provenance</code> assertion generated during publish &mdash; so the integrity chain doesn't collapse into "trust GitHub Releases." This is a supply-chain hardening request rather than an exploitable bug today.</p>
+          <div class="finding-meta">
+            <div class="meta-chip">
+              <span class="chip-label">Filed by</span>
+              <span class="chip-value">shaun0927 &mdash; <a href="https://github.com/coleam00/Archon/issues/1246">issue #1246</a></span>
+            </div>
+            <div class="meta-chip">
+              <span class="chip-label">Fix</span>
+              <span class="chip-value val-warn">None merged yet</span>
+            </div>
+            <div class="meta-chip">
+              <span class="chip-label">Who's affected</span>
+              <span class="chip-value">Anyone running <code>archon serve</code> in production</span>
+            </div>
+            <div class="meta-chip">
+              <span class="chip-label">Maintainer response</span>
+              <span class="chip-value val-good">Issue accepted, labelled <code>security</code></span>
+            </div>
+          </div>
+        </div>
+      </details>
+    </div>
+
+    <div class="finding-card warning">
+      <details>
+        <summary>
+          <div class="finding-header">
+            <span class="tag warning-tag">Warning</span>
+            <span class="status-chip ongoing">PR open 3 days</span>
+            <span class="finding-date">2026-04-13 (PR filed)</span>
+            <span class="finding-duration">3 days open</span>
+            <h3>Axios CVE-2025-62718 (NO_PROXY bypass / SSRF) &mdash; override patch open but not merged (PR #1153)</h3>
+            <div class="action-hint warn">If you expose any Archon surface that makes outbound HTTP and honors NO_PROXY, watch PR #1153 until merged.</div>
+          </div>
+        </summary>
+        <div class="finding-body">
+          <p>Axios 1.14.x has CVE-2025-62718 &mdash; hostname normalization lets a crafted URL bypass <code>NO_PROXY</code> rules, so requests that the user thought would be kept off the proxy can still egress there. Archon pulls axios transitively via <code>@slack/bolt</code> and <code>@slack/web-api</code>. <a href="https://github.com/coleam00/Archon/pull/1153">PR #1153</a> adds an <code>"axios": "^1.15.0"</code> override to root <code>package.json</code>, which is the idiomatic one-line fix &mdash; both Slack packages already accept <code>&gt;=1.15.0</code> in their semver ranges, so nothing else has to change. The PR has been sitting open for 3 days at scan time. Without a Dependabot config (see Finding 5 below), there's no automation pushing this to get merged. The severity depends on deployment: a user running Archon as their personal CLI is unlikely to hit an SSRF scenario; anyone exposing Archon's server behind a network boundary with <code>NO_PROXY</code> rules should check.</p>
+          <div class="finding-meta">
+            <div class="meta-chip">
+              <span class="chip-label">CVE</span>
+              <span class="chip-value"><a href="https://nvd.nist.gov/vuln/detail/CVE-2025-62718">CVE-2025-62718</a></span>
+            </div>
+            <div class="meta-chip">
+              <span class="chip-label">Transit path</span>
+              <span class="chip-value"><code>@slack/bolt</code> &rarr; <code>@slack/web-api</code> &rarr; axios</span>
+            </div>
+            <div class="meta-chip">
+              <span class="chip-label">Fix PR</span>
+              <span class="chip-value"><a href="https://github.com/coleam00/Archon/pull/1153">#1153</a> &mdash; filed 2026-04-13</span>
+            </div>
+            <div class="meta-chip">
+              <span class="chip-label">Closes</span>
+              <span class="chip-value"><a href="https://github.com/coleam00/Archon/issues/1053">#1053</a></span>
+            </div>
+          </div>
+        </div>
+      </details>
+    </div>
+
+    <div class="finding-card warning">
+      <details>
+        <summary>
+          <div class="finding-header">
+            <span class="tag warning-tag">Warning</span>
+            <span class="status-chip active">Ongoing</span>
+            <span class="finding-date">Since repo creation</span>
+            <span class="finding-duration">Throughout history</span>
+            <h3>Governance: 8% formal review rate, no branch protection, no CODEOWNERS (F11 + F14)</h3>
+            <div class="action-hint warn">Practical reviewer density is higher than it looks (Wirasm is an active second pair of eyes), but the formal gates are all missing.</div>
+          </div>
+        </summary>
+        <div class="finding-body">
+          <p>13 of 160 merged PRs in the last 300-window have <code>reviewDecision</code> set (8% formal). The any-review rate is 58% (93/160) &mdash; meaning a human comment or approval happened on more than half of merges, just not as a formal PR-review decision. This is a much healthier picture than caveman's 15% any-review, but the formal gate is still a gap: no branch protection on <code>dev</code> (API returns 404, authoritative), no CODEOWNERS anywhere in the repo. Practically, Wirasm (Rasmus Widing, 791 commits) is the active lead &mdash; he merges almost every release &mdash; and coleam00 owns. So an owner+lead pair-of-eyes arrangement exists, it just isn't encoded in GitHub settings. The risk this leaves open is the normal one: if an attacker got commit access to <code>dev</code>, nothing at the branch level would stop a push, and no path-scoped review would be required for changes to <code>packages/providers/</code> or <code>.github/workflows/</code>.</p>
+          <div class="finding-meta">
+            <div class="meta-chip">
+              <span class="chip-label">Merged PRs (last 300)</span>
+              <span class="chip-value">160</span>
+            </div>
+            <div class="meta-chip">
+              <span class="chip-label">Formal review rate</span>
+              <span class="chip-value val-bad">8% (13/160)</span>
+            </div>
+            <div class="meta-chip">
+              <span class="chip-label">Any-review rate</span>
+              <span class="chip-value val-warn">58% (93/160)</span>
+            </div>
+            <div class="meta-chip">
+              <span class="chip-label">Branch protection</span>
+              <span class="chip-value val-bad">None (dev, main)</span>
+            </div>
+            <div class="meta-chip">
+              <span class="chip-label">CODEOWNERS</span>
+              <span class="chip-value val-bad">None anywhere</span>
+            </div>
+            <div class="meta-chip">
+              <span class="chip-label">Practical reviewer</span>
+              <span class="chip-value val-good">Wirasm (lead) + coleam00 (owner)</span>
+            </div>
+          </div>
+        </div>
+      </details>
+    </div>
+
+    <div class="finding-card info">
+      <details>
+        <summary>
+          <div class="finding-header">
+            <span class="tag info-tag">Info</span>
+            <span class="status-chip informational">Process gap</span>
+            <span class="finding-date">Current</span>
+            <span class="finding-duration">&mdash;</span>
+            <h3>No <code>.github/dependabot.yml</code> &mdash; transitive-CVE PRs aren't opened automatically</h3>
+            <div class="action-hint">No action needed of you. Why it matters: PR #1153 (axios CVE) sat 3 days because no bot is tracking the dep graph. A dependabot config would have auto-opened it.</div>
+          </div>
+        </summary>
+        <div class="finding-body">
+          <p>The repo has no <code>.github/dependabot.yml</code> or <code>renovate.json</code>. The Dependabot alerts API returns 403 with the message "not authorized" (admin scope required to query), which is ambiguous &mdash; it could mean alerts are globally disabled, or it could just mean our scan token lacks admin access. Either way, there is no declarative config in the repo to describe which ecosystems and schedules to track. For an 18k-star repo with a non-trivial transitive dep surface (Slack SDK, Express, React, Vite, Bun tooling) that's a gap. It's an Info finding rather than a Warning because <strong>the maintainers are clearly watching CVEs manually</strong> &mdash; PR #1153 is the axios fix, filed 3 days before this scan. But a bot would do this consistently.</p>
+          <div class="finding-meta">
+            <div class="meta-chip">
+              <span class="chip-label">Config file</span>
+              <span class="chip-value val-bad">Absent</span>
+            </div>
+            <div class="meta-chip">
+              <span class="chip-label">Alerts API</span>
+              <span class="chip-value">403 (admin-scope required)</span>
+            </div>
+            <div class="meta-chip">
+              <span class="chip-label">Interpretation</span>
+              <span class="chip-value">Unknown if disabled; no auto-PRs either way</span>
+            </div>
+          </div>
+        </div>
+      </details>
+    </div>
+
+    <div class="finding-card info">
+      <details>
+        <summary>
+          <div class="finding-header">
+            <span class="tag info-tag">Info</span>
+            <span class="status-chip informational">Known attack surface</span>
+            <span class="finding-date">By design</span>
+            <span class="finding-duration">Ongoing</span>
+            <h3>Archon executes AI-generated bash via its own <code>executeBashNode</code> &mdash; intended, but your workflows are your attack surface</h3>
+            <div class="action-hint">No action needed today, but: every workflow YAML you author or accept from a third party is effectively a shell script. Read untrusted workflows before running them.</div>
+          </div>
+        </summary>
+        <div class="finding-body">
+          <p>Archon's DAG engine supports bash script nodes (see <code>packages/workflows/src/dag-executor.ts</code> line 1035, <code>executeBashNode</code>). That is the working-as-intended feature &mdash; it's what lets Archon orchestrate builds, tests, and toolchains. But it also means anyone who hands you a workflow YAML hands you a shell script. Archon does not sandbox these beyond OS-level user isolation, and its own command-exec wrapper in <code>packages/git/src/exec.ts</code> uses <code>execFile</code> (not a shell &mdash; good, avoids interpolation-injection when Archon spawns tools). The threat is procedural, not code-level: treat third-party workflow YAMLs the same way you'd treat a bash script from the internet.</p>
+          <div class="finding-meta">
+            <div class="meta-chip">
+              <span class="chip-label">Mechanism</span>
+              <span class="chip-value"><code>executeBashNode</code> in dag-executor</span>
+            </div>
+            <div class="meta-chip">
+              <span class="chip-label">Safer-than-caveman signal</span>
+              <span class="chip-value val-good"><code>execFile</code>, not shell</span>
+            </div>
+            <div class="meta-chip">
+              <span class="chip-label">Sandbox</span>
+              <span class="chip-value">OS user-level only</span>
+            </div>
+          </div>
+        </div>
+      </details>
+    </div>
+
+    <div class="finding-card ok">
+      <details>
+        <summary>
+          <div class="finding-header">
+            <span class="tag ok-tag">OK</span>
+            <span class="finding-date">2025-2026</span>
+            <span class="finding-duration">Ongoing</span>
+            <h3>Active security work pattern &mdash; recent PRs show real engineering care</h3>
+            <div class="action-hint ok">No action needed. Positive signal: the team treats security PRs as first-class and merges them.</div>
+          </div>
+        </summary>
+        <div class="finding-body">
+          <p><a href="https://github.com/coleam00/Archon/pull/1169">PR #1169</a> (merged) prevents target-repo <code>.env</code> files from leaking into subprocesses by explicitly filtering the environment before spawn &mdash; the fix closes #1135 and a follow-up #1154. <a href="https://github.com/coleam00/Archon/pull/1217">PR #1217</a> (merged) replaces the Claude Code SDK's auto-resolved executable path with an explicit <code>CLAUDE_BIN_PATH</code> allowlist, which was needed because Bun's <code>--compile</code> was baking build-host paths into end-user binaries &mdash; a clean fix with good install-instruction copy, CI smoke tests for both positive and negative resolver paths, and a regression test for an earlier bug. These are the marks of a team that uses security review as a development signal rather than a compliance box.</p>
+          <div class="finding-meta">
+            <div class="meta-chip">
+              <span class="chip-label">Recent merged security PRs</span>
+              <span class="chip-value val-good">#1169, #1217</span>
+            </div>
+            <div class="meta-chip">
+              <span class="chip-label">CI smoke tests</span>
+              <span class="chip-value val-good">Positive + negative cases</span>
+            </div>
+            <div class="meta-chip">
+              <span class="chip-label">Regression tests</span>
+              <span class="chip-value val-good">Explicit (e.g. #1210 regression guard)</span>
+            </div>
+          </div>
+        </div>
+      </details>
+    </div>
+
+    <div class="finding-card ok">
+      <details>
+        <summary>
+          <div class="finding-header">
+            <span class="tag ok-tag">OK</span>
+            <span class="finding-date">Current</span>
+            <span class="finding-duration">&mdash;</span>
+            <h3>Pinned-and-checksummed distribution &mdash; opposite of the curl-pipe-from-main pattern</h3>
+            <div class="action-hint ok">No action needed. Positive signal: the install path does real verification by default.</div>
+          </div>
+        </summary>
+        <div class="finding-body">
+          <p>Both <code>scripts/install.sh</code> and <code>scripts/install.ps1</code> download from tagged GitHub releases (<code>.../releases/download/vX.Y.Z/archon-&lt;os&gt;-&lt;arch&gt;</code>), verify the sha256 against a <code>checksums.txt</code> retrieved from the same release, and only then install. <code>SKIP_CHECKSUM</code> defaults to <code>false</code>. The Homebrew formula (<code>homebrew/archon.rb</code>) pins each platform binary to a specific version + sha256. The Docker image is published by CI to GHCR with semver tags (<code>type=semver</code> / <code>&#123;&#123;version&#125;&#125;</code> pattern) &mdash; not a rolling "live main" tag. <code>archon.diy/install</code> redirects to the exact same repo-hosted script (verified byte-for-byte against <code>scripts/install.sh</code>). The one soft spot is the <code>:latest</code> rolling tag that <code>docker run ghcr.io/coleam00/archon:latest</code> will pick up &mdash; users should prefer the explicit semver tag, which is what the release-notes install instructions recommend.</p>
+          <div class="finding-meta">
+            <div class="meta-chip">
+              <span class="chip-label">Install-script checksum</span>
+              <span class="chip-value val-good">sha256, on by default</span>
+            </div>
+            <div class="meta-chip">
+              <span class="chip-label">Homebrew formula</span>
+              <span class="chip-value val-good">Version + per-platform sha256</span>
+            </div>
+            <div class="meta-chip">
+              <span class="chip-label">Docker tags</span>
+              <span class="chip-value val-good">Semver (type=semver)</span>
+            </div>
+            <div class="meta-chip">
+              <span class="chip-label">archon.diy redirect</span>
+              <span class="chip-value val-good">Matches repo script byte-for-byte</span>
+            </div>
+          </div>
+        </div>
+      </details>
+    </div>
+
+    </div>
+  </details>
+
+  <details class="collapsible-section">
+    <summary>
+      <div class="section-header">
+        <span class="section-number">02A</span>
+        <h2>Executable File Inventory</h2>
+        <span class="section-status">
+          <span class="pill amber">⚠ 2 Warning</span>
+          <span class="pill info">2 Info</span>
+          <span class="pill green">✓ 4 OK</span>
+        </span>
+      </div>
+      <div class="section-subtitle">
+        8 executable surfaces cataloged (7 scripts + 1 Tier-1 auto-loaded rule file, post-R3 C5). <span class="hot">2 need attention</span> &mdash; the Codex binary resolver (Finding 1 target) and the <code>release.yml</code> homebrew-update job that commits to <code>dev</code> without a review gate. <span class="cold">4 scripts + Dockerfile are fine</span>, 2 are informational (<code>CLAUDE.md</code> Tier-1 auto-load surface + build pipeline).
+      </div>
+      <div class="section-action">
+        <span class="lbl">Your action</span>
+        None of these need you to do anything locally today on a single-user install. The two Warning items are maintainer-side: merge <a href="https://github.com/coleam00/Archon/pull/1250">PR #1250</a> to close the Codex binary-resolver gap, and optionally gate the auto-commit-to-dev path in <code>release.yml</code> (put the Homebrew update behind a PR). The install scripts, Dockerfile, and docker-entrypoint are all clean.
+      </div>
+    </summary>
+    <div class="section-body">
+    <p class="p-meta">One card per executable file (install scripts, CI workflows that write to the repo, Docker entrypoint, binary resolvers that hand paths to SDKs). Each card documents the 7 properties derived from grep &mdash; NOT from the file's self-description &mdash; plus a capability assessment of what the code could do in the worst case.</p>
+
+    <div class="inventory-summary">
+      <div class="inventory-summary-title">Quick scan (8 executables — includes Tier 1 auto-loaded rule file)</div>
+      <ul>
+        <li class="warn"><span class="glyph">⚠</span><span><code>packages/providers/src/codex/binary-resolver.ts</code> &mdash; resolves Codex CLI path and hands it to SDK. <strong>Warning: no sha256/signature pinning (fix open in PR #1250).</strong></span></li>
+        <li class="warn"><span class="glyph">⚠</span><span><code>.github/workflows/release.yml</code> &rarr; <code>update-homebrew.sh</code> &mdash; on tag-push, downloads checksums, sed-updates <code>homebrew/archon.rb</code>, commits directly to <code>dev</code> via <code>GITHUB_TOKEN</code>. <strong>Warning: CI bot commits to dev without review gate.</strong></span></li>
+        <li class="ok"><span class="glyph">✓</span><span><code>scripts/install.sh</code> (mirrored at <code>archon.diy/install</code>) &mdash; downloads versioned binary + checksums, sha256-verifies, installs to <code>/usr/local/bin</code>. <strong>OK &mdash; checksum verification on by default.</strong></span></li>
+        <li class="ok"><span class="glyph">✓</span><span><code>scripts/install.ps1</code> (mirrored at <code>archon.diy/install.ps1</code>) &mdash; Windows PS1 parity, same checksum verification logic. <strong>OK &mdash; F16 Windows surface covered.</strong></span></li>
+        <li class="ok"><span class="glyph">✓</span><span><code>Dockerfile</code> &mdash; multi-stage, <code>gosu</code> privilege drop from root to <code>appuser</code>, no untrusted tarball fetches. <strong>OK.</strong></span></li>
+        <li class="ok"><span class="glyph">✓</span><span><code>docker-entrypoint.sh</code> &mdash; fixes volume perms, configures <code>GH_TOKEN</code> via credential helper (not <code>~/.gitconfig</code>), execs as appuser. <strong>OK.</strong></span></li>
+        <li class="info"><span class="glyph">ℹ</span><span><code>CLAUDE.md</code> &mdash; Tier 1 auto-loaded agent-rule file. 813 lines of contributor conventions (TypeScript/Zod/Bun discipline). Imperative-verb grep found only project-convention statements, no prompt-injection patterns. <strong>Info &mdash; leverage is 1:every-contributor; content benign today.</strong></span></li>
+        <li class="info"><span class="glyph">ℹ</span><span><code>scripts/build-binaries.sh</code> + <code>scripts/update-homebrew.sh</code> &mdash; build pipeline. Used by CI, not end users. <strong>Info &mdash; inspected for sanity, no direct risk.</strong></span></li>
+      </ul>
+    </div>
+
+    <div class="finding-card warning stack-md">
+      <details>
+        <summary>
+          <div class="finding-header">
+            <span class="tag warning-tag">Executable</span>
+            <span class="inv-verdict warn">⚠ Unpinned vendor binary</span>
+            <h3><code>packages/providers/src/codex/binary-resolver.ts</code></h3>
+          </div>
+        </summary>
+        <div class="finding-body">
+          <div class="finding-meta">
+            <div class="meta-chip"><span class="chip-label">1. Trigger</span><span class="chip-value">Any Archon workflow run using the Codex provider. Called by the DAG executor when a node specifies <code>provider: codex</code>.</span></div>
+            <div class="meta-chip"><span class="chip-label">2. Reads</span><span class="chip-value"><code>CODEX_BIN_PATH</code> env, <code>assistants.codex.codexBinaryPath</code> config, <code>~/.archon/vendor/codex/*</code> filesystem</span></div>
+            <div class="meta-chip"><span class="chip-label">3. Writes</span><span class="chip-value">None directly; returns a path that the SDK will exec</span></div>
+            <div class="meta-chip"><span class="chip-label">4. Network</span><span class="chip-value val-good">None</span></div>
+            <div class="meta-chip"><span class="chip-label">5. Injection channel</span><span class="chip-value val-warn">Binary drop &mdash; attacker-writable <code>~/.archon/vendor/codex/</code> = arbitrary code execution on next Codex workflow</span></div>
+            <div class="meta-chip"><span class="chip-label">6. Secret-leak path</span><span class="chip-value">Indirect &mdash; the dropped binary inherits full user env including API keys</span></div>
+            <div class="meta-chip"><span class="chip-label">7. Privilege</span><span class="chip-value val-bad">Your user, full</span></div>
+          </div>
+          <div class="sub-finding">
+            <div class="sub-finding-label">Capability assessment</div>
+            <p>This is the Finding 1 surface. Worst case: on a shared host where another user can write to <code>~/.archon/vendor/codex/</code>, they drop an executable named the same as the Codex CLI. Your next Codex workflow runs it with your environment, your creds, your file access. <strong>How an attacker arrives (F13):</strong> dev container sharing a home mount, misconfigured Docker volume, prior malware that landed via another vector, admin user on a shared workstation. Not a remote-unauth attack &mdash; it requires the attacker to already have some local write access, then escalates via your next workflow run. The PR #1250 fix pins the sha256 on first use and refuses to load a changed binary, which closes the gap.</p>
+          </div>
+        </div>
+      </details>
+    </div>
+
+    <div class="finding-card warning stack-md">
+      <details>
+        <summary>
+          <div class="finding-header">
+            <span class="tag warning-tag">Executable</span>
+            <span class="inv-verdict warn">⚠ CI bot commits to dev</span>
+            <h3><code>.github/workflows/release.yml</code> (update-homebrew job)</h3>
+          </div>
+        </summary>
+        <div class="finding-body">
+          <div class="finding-meta">
+            <div class="meta-chip"><span class="chip-label">1. Trigger</span><span class="chip-value">Push of a <code>v*</code> tag, or manual <code>workflow_dispatch</code>. Runs AFTER the release job completes.</span></div>
+            <div class="meta-chip"><span class="chip-label">2. Reads</span><span class="chip-value"><code>checksums.txt</code> from the just-published release, <code>homebrew/archon.rb</code> in the repo</span></div>
+            <div class="meta-chip"><span class="chip-label">3. Writes</span><span class="chip-value"><code>homebrew/archon.rb</code> in the repo, then git-pushes to <code>dev</code> using <code>GITHUB_TOKEN</code></span></div>
+            <div class="meta-chip"><span class="chip-label">4. Network</span><span class="chip-value">GitHub Releases fetch + git push to origin/dev</span></div>
+            <div class="meta-chip"><span class="chip-label">5. Injection channel</span><span class="chip-value">If checksums.txt were attacker-controlled, the sed would embed attacker sha256 into the formula &mdash; but checksums.txt is built in the same pipeline run, so this is a closed loop unless the runner is compromised</span></div>
+            <div class="meta-chip"><span class="chip-label">6. Secret-leak path</span><span class="chip-value val-good">None &mdash; <code>GITHUB_TOKEN</code> scoped to the repo, not written to disk</span></div>
+            <div class="meta-chip"><span class="chip-label">7. Privilege</span><span class="chip-value">Repo <code>contents: write</code>, bot commit as <code>github-actions[bot]</code></span></div>
+          </div>
+          <div class="sub-finding">
+            <div class="sub-finding-label">Capability assessment</div>
+            <p>Every Homebrew-formula update commits straight to <code>dev</code> without a PR review &mdash; the branch has no protection rule and no CODEOWNERS gate. In isolation the job is low risk (self-contained, scoped <code>GITHUB_TOKEN</code>, only runs on a tag push). Combined with Finding 4 (no branch protection) it creates a code-modification path that bypasses human review. Safer pattern: open a PR with the formula update and auto-merge after a status check. The downside of the current shape is not "this will cause a compromise today" &mdash; it's "this is a path that would survive a compromise of the release pipeline without anyone noticing because the commit looks routine."</p>
+          </div>
+        </div>
+      </details>
+    </div>
+
+    <div class="finding-card ok stack-md">
+      <details>
+        <summary>
+          <div class="finding-header">
+            <span class="tag ok-tag">Executable</span>
+            <span class="inv-verdict ok">✓ OK &mdash; sha256-verified</span>
+            <h3><code>scripts/install.sh</code> (mirrored at <code>archon.diy/install</code>)</h3>
+          </div>
+        </summary>
+        <div class="finding-body">
+          <div class="finding-meta">
+            <div class="meta-chip"><span class="chip-label">1. Trigger</span><span class="chip-value">User runs <code>curl -fsSL https://archon.diy/install | bash</code> or the raw-github equivalent</span></div>
+            <div class="meta-chip"><span class="chip-label">2. Reads</span><span class="chip-value">GitHub Releases API via curl; env vars <code>VERSION</code>, <code>INSTALL_DIR</code>, <code>SKIP_CHECKSUM</code></span></div>
+            <div class="meta-chip"><span class="chip-label">3. Writes</span><span class="chip-value"><code>$INSTALL_DIR/archon</code> (default <code>/usr/local/bin/archon</code>) after successful checksum verify</span></div>
+            <div class="meta-chip"><span class="chip-label">4. Network</span><span class="chip-value">HTTPS to <code>github.com</code> / <code>objects.githubusercontent.com</code> only</span></div>
+            <div class="meta-chip"><span class="chip-label">5. Injection channel</span><span class="chip-value val-good">None observed &mdash; <code>set -euo pipefail</code>, no untrusted interpolation</span></div>
+            <div class="meta-chip"><span class="chip-label">6. Secret-leak path</span><span class="chip-value val-good">None</span></div>
+            <div class="meta-chip"><span class="chip-label">7. Privilege</span><span class="chip-value">User-level unless <code>/usr/local/bin</code> write needs sudo</span></div>
+          </div>
+          <div class="sub-finding">
+            <div class="sub-finding-label">Capability assessment</div>
+            <p>Unlike the caveman install.sh (which curl-piped from live <code>main</code>), this one downloads the binary from a tagged release (<code>v0.3.6</code> by default), then downloads <code>checksums.txt</code> from the same release, then sha256-verifies the binary matches. <code>SKIP_CHECKSUM=false</code> by default, and the script explicitly warns when you override it. If the user ran this on a compromised machine the script couldn't protect them, but the script itself does its job. <code>archon.diy/install</code> serves the exact same content byte-for-byte &mdash; verified via <code>curl -fsSL https://archon.diy/install | head -30</code> during this scan.</p>
+          </div>
+        </div>
+      </details>
+    </div>
+
+    <div class="finding-card ok stack-md">
+      <details>
+        <summary>
+          <div class="finding-header">
+            <span class="tag ok-tag">Executable</span>
+            <span class="inv-verdict ok">✓ OK &mdash; PS1 parity</span>
+            <h3><code>scripts/install.ps1</code> (mirrored at <code>archon.diy/install.ps1</code>)</h3>
+          </div>
+        </summary>
+        <div class="finding-body">
+          <div class="finding-meta">
+            <div class="meta-chip"><span class="chip-label">1. Trigger</span><span class="chip-value">User runs <code>irm https://archon.diy/install.ps1 | iex</code></span></div>
+            <div class="meta-chip"><span class="chip-label">2. Reads</span><span class="chip-value">GitHub Releases API; env <code>$env:VERSION</code>, <code>$env:INSTALL_DIR</code>, <code>$env:SKIP_CHECKSUM</code></span></div>
+            <div class="meta-chip"><span class="chip-label">3. Writes</span><span class="chip-value"><code>$env:USERPROFILE\.archon\bin\archon.exe</code> by default</span></div>
+            <div class="meta-chip"><span class="chip-label">4. Network</span><span class="chip-value">HTTPS to github.com only</span></div>
+            <div class="meta-chip"><span class="chip-label">5. Injection channel</span><span class="chip-value val-good"><code>Set-StrictMode -Version Latest</code>, <code>$ErrorActionPreference = 'Stop'</code></span></div>
+            <div class="meta-chip"><span class="chip-label">6. Secret-leak path</span><span class="chip-value val-good">None</span></div>
+            <div class="meta-chip"><span class="chip-label">7. Privilege</span><span class="chip-value">User-level by default</span></div>
+          </div>
+          <div class="sub-finding">
+            <div class="sub-finding-label">Capability assessment</div>
+            <p>Windows parity with the bash installer (F16 satisfied). Same checksum verification logic, same version-pinning, same strict-mode defensive shell. Unlike many PS1 installers this one uses <code>Set-StrictMode</code> and an explicit error preference, which catches common PowerShell-variable-typo bugs. CI test matrix covers both <code>ubuntu-latest</code> and <code>windows-latest</code>, so PS1 regressions would be caught.</p>
+          </div>
+        </div>
+      </details>
+    </div>
+
+    <div class="finding-card ok stack-md">
+      <details>
+        <summary>
+          <div class="finding-header">
+            <span class="tag ok-tag">Executable</span>
+            <span class="inv-verdict ok">✓ OK &mdash; drops root</span>
+            <h3><code>Dockerfile</code> + <code>docker-entrypoint.sh</code></h3>
+          </div>
+        </summary>
+        <div class="finding-body">
+          <div class="finding-meta">
+            <div class="meta-chip"><span class="chip-label">1. Trigger</span><span class="chip-value"><code>docker run ghcr.io/coleam00/archon:&lt;tag&gt;</code>; also the test.yml smoke-test job</span></div>
+            <div class="meta-chip"><span class="chip-label">2. Reads</span><span class="chip-value">Mount volumes, <code>GH_TOKEN</code> env</span></div>
+            <div class="meta-chip"><span class="chip-label">3. Writes</span><span class="chip-value"><code>/.archon</code> (volume perms fixed on startup), git credential helper config</span></div>
+            <div class="meta-chip"><span class="chip-label">4. Network</span><span class="chip-value">Whatever the server listens on (default 3000)</span></div>
+            <div class="meta-chip"><span class="chip-label">5. Injection channel</span><span class="chip-value val-good">None observed &mdash; credential helper is a function, not shell-interpolated</span></div>
+            <div class="meta-chip"><span class="chip-label">6. Secret-leak path</span><span class="chip-value val-good">None &mdash; <code>GH_TOKEN</code> stays in env, not written to <code>~/.gitconfig</code></span></div>
+            <div class="meta-chip"><span class="chip-label">7. Privilege</span><span class="chip-value val-good">Drops root &rarr; appuser via <code>gosu</code></span></div>
+          </div>
+          <div class="sub-finding">
+            <div class="sub-finding-label">Capability assessment</div>
+            <p>Multi-stage build (deps &rarr; web-build &rarr; runtime). Runtime image <code>chown</code>s <code>/.archon</code> to <code>appuser</code>, then <code>gosu</code> drops privileges. The git credential helper pattern is the right way to make <code>GH_TOKEN</code> available without persisting it to disk. <code>exec $RUNNER bun run start</code> ensures the server is PID 1 and receives SIGTERM for graceful shutdown &mdash; small detail, good hygiene. This is one of the more carefully written Dockerfiles for a project this age.</p>
+          </div>
+        </div>
+      </details>
+    </div>
+
+    <div class="finding-card info stack-md">
+      <details>
+        <summary>
+          <div class="finding-header">
+            <span class="tag info-tag">Executable</span>
+            <span class="inv-verdict info">ℹ Tier 1 auto-loaded · single-source</span>
+            <span class="status-chip informational">Informational</span>
+            <h3><code>CLAUDE.md</code> (Tier-1 auto-loaded agent-rule file)</h3>
+            <div class="action-hint">If you contribute to Archon, review diffs to <code>CLAUDE.md</code> with the same care as diffs to workflow YAMLs &mdash; the blast radius is every contributor's next Claude Code session.</div>
+          </div>
+        </summary>
+        <div class="finding-body">
+          <p><strong>Auto-load tier: Tier 1 &mdash; Always auto-loaded.</strong> Claude Code auto-loads this file on every contributor session when editing Archon. Content changes reach every contributor without opt-in. Single-source rule file &mdash; NOT CI-amplified into other agent rule destinations (no <code>.clinerules/</code>, no <code>.cursor/rules/</code>, no <code>.windsurf/rules/</code>, no <code>.github/copilot-instructions.md</code>).</p>
+          <div class="finding-meta">
+            <div class="meta-chip"><span class="chip-label">1. Trigger</span><span class="chip-value">Claude Code auto-loads on every contributor session when editing Archon source</span></div>
+            <div class="meta-chip"><span class="chip-label">2. Reads</span><span class="chip-value">N/A &mdash; static markdown</span></div>
+            <div class="meta-chip"><span class="chip-label">3. Writes</span><span class="chip-value">N/A &mdash; static markdown</span></div>
+            <div class="meta-chip"><span class="chip-label">4. Network</span><span class="chip-value val-good">None</span></div>
+            <div class="meta-chip"><span class="chip-label">5. Injection channel</span><span class="chip-value val-warn">The entire file is the injection channel &mdash; auto-loads as persistent session context for every contributor</span></div>
+            <div class="meta-chip"><span class="chip-label">6. Secret-leak path</span><span class="chip-value val-good">None in current content</span></div>
+            <div class="meta-chip"><span class="chip-label">7. Privilege</span><span class="chip-value">Contributor agent context</span></div>
+          </div>
+          <div class="sub-finding">
+            <div class="sub-finding-label">Imperative-verb grep result</div>
+            <p>The 813-line file was scanned for prompt Step 2.5 patterns (<code>ignore previous</code>, <code>you are now</code>, <code>from now on</code>, <code>pretend</code>, <code>act as</code>, <code>system prompt</code>, <code>jailbreak</code>, <code>execute</code>, <code>run this command</code>, references to <code>~/.ssh/</code>, <code>~/.aws/</code>). Hits found: contributor-facing development-discipline imperatives only &mdash; "All functions must have complete type annotations," "Always use <code>z.infer&lt;typeof schema&gt;</code>," "Never duplicate as a plain array," "All new/modified API routes must use <code>registerOpenApiRoute</code>." Normal project-convention statements, not prompt injection.</p>
+          </div>
+          <div class="sub-finding">
+            <div class="sub-finding-label">Capability statement</div>
+            <p>This file shapes how Claude Code behaves when editing Archon &mdash; it enforces Bun/TypeScript/Zod conventions, routes schema placement, and test-location rules. It does NOT instruct the agent to reveal secrets, exfiltrate data, execute network calls, or bypass safety rules.</p>
+          </div>
+          <div class="sub-finding">
+            <div class="sub-finding-label">Risk statement</div>
+            <p><strong>This file is auto-loaded for every session &mdash; content changes reach every user without opt-in.</strong> A future PR that swaps the development-convention content for attacker instructions would take effect on every contributor's next Claude Code session. The existing content is benign; the leverage is permanent. Combined with the governance gaps in F4 (no branch protection on <code>dev</code>, no CODEOWNERS, 8% formal review rate), a PR modifying this file could land without a gate.</p>
+          </div>
+          <div class="sub-finding">
+            <div class="sub-finding-label">Severity rationale (F9 table)</div>
+            <p>F9 table row <em>"Behavioral rules only &mdash; tone, format, response style"</em> &rarr; Info. The amplification is 1:every-contributor (not the earlier scan's claim of 1:1) but the content is conventions, not imperatives directed at the agent to take harmful actions.</p>
+          </div>
+        </div>
+      </details>
+    </div>
+
+    <div class="finding-card info stack-md">
+      <details>
+        <summary>
+          <div class="finding-header">
+            <span class="tag info-tag">Executable</span>
+            <span class="inv-verdict info">ℹ Build-only</span>
+            <h3><code>scripts/build-binaries.sh</code> + <code>scripts/update-homebrew.sh</code></h3>
+          </div>
+        </summary>
+        <div class="finding-body">
+          <div class="finding-meta">
+            <div class="meta-chip"><span class="chip-label">1. Trigger</span><span class="chip-value">CI only &mdash; <code>release.yml</code> job matrix invokes these from ubuntu/macos runners</span></div>
+            <div class="meta-chip"><span class="chip-label">2. Reads</span><span class="chip-value">Repo source tree, <code>checksums.txt</code> from release</span></div>
+            <div class="meta-chip"><span class="chip-label">3. Writes</span><span class="chip-value"><code>packages/paths/src/bundled-build.ts</code> (temporarily), <code>dist/archon-&lt;target&gt;</code>, <code>homebrew/archon.rb</code></span></div>
+            <div class="meta-chip"><span class="chip-label">4. Network</span><span class="chip-value">Downloads <code>checksums.txt</code> from the same repo's releases</span></div>
+            <div class="meta-chip"><span class="chip-label">5. Injection channel</span><span class="chip-value val-good">None observed &mdash; sha256 values validated to be 64 hex chars before sed</span></div>
+            <div class="meta-chip"><span class="chip-label">6. Secret-leak path</span><span class="chip-value val-good">None</span></div>
+            <div class="meta-chip"><span class="chip-label">7. Privilege</span><span class="chip-value">CI runner-level</span></div>
+          </div>
+          <div class="sub-finding">
+            <div class="sub-finding-label">Capability assessment</div>
+            <p><code>build-binaries.sh</code> has a nice detail: uses a bash EXIT trap to restore <code>packages/paths/src/bundled-build.ts</code> after <code>bun build --compile</code>, so the dev tree is never left dirty even if the build fails. <code>update-homebrew.sh</code> validates that extracted sha256 values look like 64-hex-character strings before performing the sed substitution &mdash; that's the right defensive step against a malformed checksums.txt. The Warning from Finding 2 above is about <em>where</em> these run (committing to dev without review), not <em>how</em> they're written.</p>
+          </div>
+        </div>
+      </details>
+    </div>
+
+    </div>
+  </details>
+
+  <!-- ═══════════════ SECTION 03: SUSPICIOUS CODE CHANGES ═══════════════ -->
+  <details class="collapsible-section">
+    <summary>
+      <div class="section-header">
+        <span class="section-number">03</span>
+        <h2>Suspicious Code Changes</h2>
+        <span class="section-status">
+          <span class="pill amber">⚠ 6 PRs flagged</span>
+          <span class="pill muted">0/6 formal review</span>
+        </span>
+      </div>
+      <div class="section-subtitle">
+        6 PRs touching security-critical files (providers, installer, CI workflows), <span class="hot">none had a formal <code>reviewDecision</code></span>. That said, all six were merged by Wirasm (the lead contributor) who landed them from other contributors, so practical review happened even without the <code>reviewDecision</code> field being set.
+      </div>
+      <div class="section-action info">
+        <span class="lbl">Your action</span>
+        Casual user: this is a <strong>process-metric, not a direct threat</strong> &mdash; the PRs themselves are what you'd expect from an active dev team. Click through if you want to confirm nothing looks off. Auditing for production: #1217 (binary resolver) and #1169 (env leak) are the two security-relevant MERGED fixes; both are good. #1250 (Codex LPE fix) is OPEN and is the one to watch.
+      </div>
+    </summary>
+    <div class="section-body">
+    <div class="pr-table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>PR</th><th>What it did</th><th>Submitted by</th>
+            <th>Merged by</th><th>Reviewed?</th><th>Merge time</th><th>Concern</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><a href="https://github.com/coleam00/Archon/pull/1250">#1250</a></td>
+            <td>Pin Codex vendor binary sha256 on first use (fixes #1245)</td>
+            <td class="td-person">(pending merge)</td>
+            <td class="td-person">&mdash;</td>
+            <td class="td-reviewed-no">Open</td>
+            <td>&mdash;</td>
+            <td class="td-concern">Security fix for #1245 LPE, filed 2026-04-16</td>
+          </tr>
+          <tr>
+            <td><a href="https://github.com/coleam00/Archon/pull/1217">#1217</a></td>
+            <td>Replace Claude SDK embed with explicit binary-path resolver</td>
+            <td class="td-person">Wirasm</td>
+            <td class="td-person">Wirasm</td>
+            <td class="td-reviewed-no">No formal decision</td>
+            <td>3 days</td>
+            <td class="td-concern">Self-submitted-and-merged; content is good (CI smoke + regression tests)</td>
+          </tr>
+          <tr>
+            <td><a href="https://github.com/coleam00/Archon/pull/1169">#1169</a></td>
+            <td>Prevent target repo .env from leaking into subprocesses (#1135)</td>
+            <td class="td-person">Wirasm</td>
+            <td class="td-person">Wirasm</td>
+            <td class="td-reviewed-no">No formal decision</td>
+            <td>4 days</td>
+            <td class="td-concern">Self-merged security fix; content is good</td>
+          </tr>
+          <tr>
+            <td><a href="https://github.com/coleam00/Archon/pull/1153">#1153</a></td>
+            <td>Override axios to ^1.15.0 for CVE-2025-62718</td>
+            <td class="td-person">(external contributor)</td>
+            <td class="td-person">&mdash;</td>
+            <td class="td-reviewed-no">Open 3 days</td>
+            <td>&mdash;</td>
+            <td class="td-concern">Dep CVE fix sitting open; no dependabot auto-open</td>
+          </tr>
+          <tr>
+            <td><a href="https://github.com/coleam00/Archon/pull/1137">#1137</a></td>
+            <td>Extract providers from @archon/core into @archon/providers</td>
+            <td class="td-person">Wirasm</td>
+            <td class="td-person">Wirasm</td>
+            <td class="td-reviewed-no">No formal decision</td>
+            <td>2 days</td>
+            <td class="td-concern">Large refactor touching Dockerfile + binary paths, self-merged</td>
+          </tr>
+          <tr>
+            <td><a href="https://github.com/coleam00/Archon/pull/1114">#1114</a></td>
+            <td>Release 0.3.6 (batch merge to dev + tag)</td>
+            <td class="td-person">Wirasm</td>
+            <td class="td-person">Wirasm</td>
+            <td class="td-reviewed-no">No formal decision</td>
+            <td class="td-merge-fast">Release-batch</td>
+            <td class="td-concern">Standard release workflow; all prior PRs already individually merged</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    </div>
+  </details>
+
+  <!-- ═══════════════ SECTION 04: TIMELINE ═══════════════ -->
+  <details class="collapsible-section">
+    <summary>
+      <div class="section-header">
+        <span class="section-number">04</span>
+        <h2>Timeline</h2>
+        <span class="section-status">
+          <span class="pill red">2 bad</span>
+          <span class="pill amber">2 neutral</span>
+          <span class="pill green">3 good</span>
+        </span>
+      </div>
+      <div class="section-subtitle">
+        7 events over the last few months, plus a long run-up. <span class="hot">Peak concern 2026-04-13 → 2026-04-16</span> (axios CVE open 3 days, Codex LPE filed the scan day). <span class="cold">The team shipped real security hardening in #1169 + #1217</span> during the same window, so the signal is "actively-working" not "stuck."
+      </div>
+      <div class="section-action info">
+        <span class="lbl">Your action</span>
+        The open security items are <strong>current, not historical</strong> &mdash; this is a living development cycle. If you're installing v0.3.6 today: you're on the safe side of the Codex issue unless you're on a shared host. If you're on a shared host running Codex: hold until PR #1250 merges. Subscribe to repo releases for the axios CVE patch too.
+      </div>
+    </summary>
+    <div class="section-body">
+    <div class="timeline">
+      <div class="tl-item neutral">
+        <div class="tl-date">2025-02-07 <span class="tl-severity-label">START</span></div>
+        <div class="tl-desc">Repo created by coleam00 (Cole Medin at Dynamous). Initial architecture: Bun + TypeScript monorepo with workspace packages.</div>
+      </div>
+      <div class="tl-item good">
+        <div class="tl-date">2026-03 to 2026-04 <span class="tl-severity-label">SECURITY.md</span></div>
+        <div class="tl-desc">Repo adds <code>SECURITY.md</code> at root with real private disclosure policy (email + GHSA). This is the difference between "caveman no-advisory culture" and "real vulnerability management."</div>
+      </div>
+      <div class="tl-item good">
+        <div class="tl-date">2026-04-04 <span class="tl-severity-label">ENV LEAK FIXED</span></div>
+        <div class="tl-desc"><a href="https://github.com/coleam00/Archon/pull/1169">PR #1169</a> merges &mdash; prevents target-repo <code>.env</code> files from leaking into Archon-spawned subprocesses. Real security refactor. Closes #1135.</div>
+      </div>
+      <div class="tl-item neutral">
+        <div class="tl-date">2026-04-08 to 04-12 <span class="tl-severity-label">RELEASES</span></div>
+        <div class="tl-desc">Rapid release cadence: v0.3.0 &rarr; v0.3.6 in 4 days. All tagged. Homebrew formula auto-updated per release. Docker images published with semver tags to GHCR.</div>
+      </div>
+      <div class="tl-item good">
+        <div class="tl-date">2026-04-12 <span class="tl-severity-label">RESOLVER HARDENED</span></div>
+        <div class="tl-desc"><a href="https://github.com/coleam00/Archon/pull/1217">PR #1217</a> merges &mdash; explicit <code>CLAUDE_BIN_PATH</code> allowlist replaces SDK's auto-resolution (which was baking build-host paths into end-user binaries). Includes positive and negative CI smoke tests.</div>
+      </div>
+      <div class="tl-item bad">
+        <div class="tl-date">2026-04-13 <span class="tl-severity-label">AXIOS CVE</span></div>
+        <div class="tl-desc">External contributor files <a href="https://github.com/coleam00/Archon/pull/1153">PR #1153</a> for CVE-2025-62718 (axios NO_PROXY bypass). <strong>Still open at scan time &mdash; 3 days with no merge.</strong> No dependabot config to have auto-opened it.</div>
+      </div>
+      <div class="tl-item bad">
+        <div class="tl-date">2026-04-16 <span class="tl-severity-label">CODEX LPE</span></div>
+        <div class="tl-desc">Reporter shaun0927 files <a href="https://github.com/coleam00/Archon/issues/1245">#1245</a> (Codex vendor binary LPE) and <a href="https://github.com/coleam00/Archon/issues/1246">#1246</a> (web-dist attestation). Fix for #1245 proposed as <a href="https://github.com/coleam00/Archon/pull/1250">PR #1250</a> the same day. Both open at scan time.</div>
+      </div>
+      <div class="tl-item neutral">
+        <div class="tl-date">2026-04-16 <span class="tl-severity-label">SCAN</span></div>
+        <div class="tl-desc">This scan runs &mdash; same day as the security issue filings. Snapshot will diverge fast from current state; expect these open items to close within days.</div>
+      </div>
+    </div>
+    </div>
+  </details>
+
+  <!-- ═══════════════ SECTION 05: REPO VITALS ═══════════════ -->
+  <details class="collapsible-section">
+    <summary>
+      <div class="section-header">
+        <span class="section-number">05</span>
+        <h2>Repo Vitals</h2>
+        <span class="section-status">
+          <span class="pill info">12 metrics</span>
+          <span class="pill muted">Reference only</span>
+        </span>
+      </div>
+      <div class="section-subtitle">
+        Raw numbers backing everything above &mdash; stars, contributors, review rate, governance flags, dependency counts. Open if you want to verify the specific numbers cited in findings.
+      </div>
+    </summary>
+    <div class="section-body">
+    <div class="vitals-grid">
+      <div class="vital-cell">
+        <div class="vital-label">Repo age</div>
+        <div class="vital-value">14 months</div>
+        <div class="vital-note">Created 2025-02-07, scanned 2026-04-16 &mdash; mature enough that patterns have emerged</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Stars</div>
+        <div class="vital-value">18,300</div>
+        <div class="vital-note">Very high visibility &mdash; scrutiny should match that scale</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Owner account age</div>
+        <div class="vital-value val-good">7 years</div>
+        <div class="vital-note">coleam00 created 2019-02-03, 51 public repos, 6,641 followers, Dynamous company</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Lead contributor</div>
+        <div class="vital-value val-good">Wirasm (791 commits)</div>
+        <div class="vital-note">More than owner's 343 &mdash; a second active maintainer, healthier than solo</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Merged PRs (review rate)</div>
+        <div class="vital-value val-warn">13 formal / 93 any / 160 total</div>
+        <div class="vital-note">8% formal decisions, 58% any-review &mdash; practical pair-of-eyes exists, formal gate absent</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Branch protection</div>
+        <div class="vital-value val-bad">None (dev, main)</div>
+        <div class="vital-note">API returns 404 on both &mdash; definitively no rule configured</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">CODEOWNERS</div>
+        <div class="vital-value val-bad">None</div>
+        <div class="vital-note">No file in any standard location &mdash; no path-scoped review gate either</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">SECURITY.md</div>
+        <div class="vital-value val-good">Yes (root)</div>
+        <div class="vital-note">Real private disclosure policy &mdash; email + GHSA channel</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Security advisories</div>
+        <div class="vital-value val-warn">0 published</div>
+        <div class="vital-note">No GHSA entries yet; may be used in future for open items</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Dependabot</div>
+        <div class="vital-value val-warn">Unknown (403 without admin)</div>
+        <div class="vital-note">No <code>.github/dependabot.yml</code> config either way &mdash; no auto-CVE PRs</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Runtime dependencies (root)</div>
+        <div class="vital-value val-good">1 (claude-agent-sdk)</div>
+        <div class="vital-note">Transitive surface via Slack SDK, React, Vite &mdash; monorepo packages have their own deps</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">CI workflows</div>
+        <div class="vital-value">4 (test, publish, release, deploy-docs)</div>
+        <div class="vital-note">Real matrix test (ubuntu + windows), Docker smoke test, release binary smoke tests</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Releases</div>
+        <div class="vital-value">10+ (v0.2.13 &rarr; v0.3.6)</div>
+        <div class="vital-note">Rapid iteration, checksums.txt + multi-platform binaries + Docker published for each</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Total PR count</div>
+        <div class="vital-value">~461 closed, 20 open</div>
+        <div class="vital-note">Active community &mdash; much larger than caveman's 33 total</div>
+      </div>
+    </div>
+    </div>
+  </details>
+
+  <!-- ═══════════════ SECTION 06: INVESTIGATION COVERAGE ═══════════════ -->
+  <details class="collapsible-section">
+    <summary>
+      <div class="section-header">
+        <span class="section-number">06</span>
+        <h2>Investigation Coverage</h2>
+        <span class="section-status">
+          <span class="pill amber">160/300 PRs sampled</span>
+          <span class="pill info">7/7 execs inspected</span>
+          <span class="pill muted">3 gaps noted</span>
+        </span>
+      </div>
+      <div class="section-subtitle">
+        How thorough was this scan? <span class="hot">Only 160 of ~461 closed PRs reviewed</span> (the 300-PR API-limit window; older PRs not inspected in full). All executable files inspected. Windows PS1 surface covered.
+      </div>
+    </summary>
+    <div class="section-body">
+    <div class="vitals-grid">
+      <div class="vital-cell">
+        <div class="vital-label">Merged PRs reviewed</div>
+        <div class="vital-value val-warn">160 of ~461 (sampled)</div>
+        <div class="vital-note">Under the 300-window cap; older PRs not re-inspected</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Suspicious PR diffs read</div>
+        <div class="vital-value">6 of the 300-keyword hits</div>
+        <div class="vital-note">The 6 flagged in Section 03 were read in full; the rest classified from metadata</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Dependency scan</div>
+        <div class="vital-value val-warn">Metadata only</div>
+        <div class="vital-note">Dependabot alerts API returned 403 (admin scope); full lockfile audit not performed &mdash; only explicit CVE-in-PR fix (axios) surfaced</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Workflow files read</div>
+        <div class="vital-value val-good">4 of 4</div>
+        <div class="vital-note">deploy-docs, publish, release, test &mdash; all inspected in full</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Executable files inspected</div>
+        <div class="vital-value val-warn">7 of 7 (2 Warning, 4 OK, 1 Info)</div>
+        <div class="vital-note">All install scripts, CI workflows, Dockerfile, entrypoint, and the binary resolver flagged in #1245</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Tarball extraction</div>
+        <div class="vital-value val-good">OK (769 files)</div>
+        <div class="vital-note">Pinned to <code>3dedc22</code> at scan start (F6 TOCTOU guard)</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">README paste-scan (7.5)</div>
+        <div class="vital-value val-good">0 paste-blocks</div>
+        <div class="vital-note">No "paste this into your agent's system prompt" invitations in README</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">CI-amplified rule scan (2.5)</div>
+        <div class="vital-value val-good">No amplifier</div>
+        <div class="vital-note">One <code>CLAUDE.md</code> at root, not copied into <code>.clinerules/</code> etc by CI</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Prompt-injection scan (F8)</div>
+        <div class="vital-value val-good">0 matches / 0 actionable</div>
+        <div class="vital-note">No imperative-AI-directed strings in non-code files</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Distribution channels verified (F1, post-R3 C6)</div>
+        <div class="vital-value val-warn">Install path: 2 of 2 · Artifact: 0 of 2</div>
+        <div class="vital-note"><strong>Install path verified, installed artifact NOT verified.</strong> Script byte-matches <code>scripts/install.sh</code>; Homebrew formula pins per-platform sha256; Docker publish uses semver GHCR tags. BUT the Bun-compiled binary was NOT independently rebuilt from source and diffed against the release tarball &mdash; trust chain terminates at GitHub Releases. This IS the gap Archon's own F2 issue (<a href="https://github.com/coleam00/Archon/issues/1246">#1246</a>) names.</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Windows surface coverage (F16)</div>
+        <div class="vital-value val-good">install.ps1 inspected</div>
+        <div class="vital-note">PS1 installer parity with bash installer confirmed; CI test matrix covers windows-latest</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Tarball SHA</div>
+        <div class="vital-value">3dedc22</div>
+        <div class="vital-note">If your tree differs, re-run the scan</div>
+      </div>
+    </div>
+
+    <div class="finding-card info stack-sm">
+      <div class="finding-header">
+        <span class="tag info-tag">Gap</span>
+        <h3>Older PRs (pre-2026-03) not inspected &mdash; sampling window stops at 300 PRs deep</h3>
+      </div>
+    </div>
+    <div class="finding-card info stack-sm">
+      <div class="finding-header">
+        <span class="tag info-tag">Gap</span>
+        <h3>Dependabot alerts API requires <code>admin:repo_hook</code> &mdash; token used here lacks it; alert state unknown beyond "no config file"</h3>
+      </div>
+    </div>
+    <div class="finding-card info stack-sm">
+      <div class="finding-header">
+        <span class="tag info-tag">Gap</span>
+        <h3>Monorepo has 11 inner packages with their own <code>package.json</code> &mdash; per-package dep surface not enumerated here; root + root-lock inspected as the primary surface</h3>
+      </div>
+    </div>
+
+    </div>
+  </details>
+
+  <!-- ═══════════════ SECTION 07: EVIDENCE APPENDIX ═══════════════ -->
+  <details class="collapsible-section">
+    <summary>
+      <div class="section-header">
+        <span class="section-number">07</span>
+        <h2>Evidence Appendix</h2>
+        <span class="section-status">
+          <span class="pill info">9 facts</span>
+          <span class="pill amber">3 ★ priority</span>
+        </span>
+      </div>
+      <div class="section-subtitle">
+        9 command-backed claims. <span class="emph">Skip ahead to items marked ★ START HERE</span> &mdash; the Codex LPE issue body, the install-script byte-match against archon.diy, and the review-rate dual metric.
+      </div>
+      <div class="section-action info">
+        <span class="lbl">Your action</span>
+        Use this section if you want to verify a claim yourself. Each entry shows the exact command (copy-paste into a terminal with <code>gh</code> authenticated) and the expected result. If your output differs, the repo state has moved since this scan.
+      </div>
+    </summary>
+    <div class="section-body">
+    <p class="p-meta">Each major claim is backed by a command and an observed result. Inferences are marked as such. The three <span class="priority-flag inline">★ Start here</span> items at the top are the most consequential.</p>
+
+    <div class="evidence-group-label warns">&#9733; Priority evidence (read first)</div>
+
+    <div class="finding-card info evidence-priority stack-md">
+      <div class="finding-header">
+        <span class="tag info-tag">Evidence 1</span>
+        <span class="priority-flag">★ Start here</span>
+        <h3>Codex vendor binary resolver has no sha256 pinning (Finding 1 / issue #1245)</h3>
+      </div>
+      <div class="finding-body">
+        <div class="evidence-row">
+          <div class="evidence-label">Command</div>
+          <pre class="evidence-pre">gh issue view 1245 -R coleam00/Archon --json title,body -q '.title'</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Result observed</div>
+          <pre class="evidence-pre result">security(providers): codex vendor binary resolver lacks hash/signature pinning — LPE via writable vendor dir</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Classification</div>
+          <div class="evidence-classification fact">Confirmed fact &mdash; issue body explains the resolver flow and the attack pre-condition (writable <code>~/.archon/vendor/codex/</code>). Fix open in PR #1250.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="finding-card info evidence-priority stack-md">
+      <div class="finding-header">
+        <span class="tag info-tag">Evidence 2</span>
+        <span class="priority-flag">★ Start here</span>
+        <h3>archon.diy/install serves the same content as repo scripts/install.sh</h3>
+      </div>
+      <div class="finding-body">
+        <div class="evidence-row">
+          <div class="evidence-label">Command</div>
+          <pre class="evidence-pre">curl -fsSL https://archon.diy/install | head -5
+head -5 /tmp/repo-scan-coleam00-Archon/scripts/install.sh</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Result observed</div>
+          <pre class="evidence-pre result">#!/usr/bin/env bash
+# scripts/install.sh
+# Install Archon CLI from GitHub releases
+
+(identical output from both commands)</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Classification</div>
+          <div class="evidence-classification fact">Confirmed fact &mdash; archon.diy acts as a CDN/redirect for the repo's install script, not a separately-controlled distribution endpoint.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="finding-card info evidence-priority stack-md">
+      <div class="finding-header">
+        <span class="tag info-tag">Evidence 3</span>
+        <span class="priority-flag">★ Start here</span>
+        <h3>Dual review-rate metric (F11) &mdash; 8% formal, 58% any-review</h3>
+      </div>
+      <div class="finding-body">
+        <div class="evidence-row">
+          <div class="evidence-label">Command</div>
+          <pre class="evidence-pre">gh pr list -R coleam00/Archon --state merged --limit 300 --json reviewDecision,reviews \
+  | jq '{ total: length,
+          formal_review: [.[] | select(.reviewDecision != null and .reviewDecision != "")] | length,
+          any_review:    [.[] | select(.reviews != null and (.reviews | length) > 0)]    | length }'</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Result observed</div>
+          <pre class="evidence-pre result">{ "total": 160, "formal_review": 13, "any_review": 93 }</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Classification</div>
+          <div class="evidence-classification fact">Confirmed fact &mdash; 13/160 formal decisions = 8%; 93/160 any-review = 58%. The gap between the two numbers is the practical-vs-formal reviewer pattern Archon runs on.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="evidence-group-label context">Other evidence supporting Warnings</div>
+
+    <div class="finding-card info stack-md">
+      <div class="finding-header">
+        <span class="tag info-tag">Evidence 4</span>
+        <h3>Axios CVE fix open 3 days (PR #1153)</h3>
+      </div>
+      <div class="finding-body">
+        <div class="evidence-row">
+          <div class="evidence-label">Command</div>
+          <pre class="evidence-pre">gh pr view 1153 -R coleam00/Archon --json title,state,createdAt</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Result observed</div>
+          <pre class="evidence-pre result">{"createdAt":"2026-04-13T01:31:22Z","state":"OPEN","title":"fix: override axios to ^1.15.0 for CVE-2025-62718"}</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Classification</div>
+          <div class="evidence-classification fact">Confirmed fact &mdash; PR #1153 open since 2026-04-13, scan date 2026-04-16.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="finding-card info stack-md">
+      <div class="finding-header">
+        <span class="tag info-tag">Evidence 5</span>
+        <h3>No branch protection on dev or main</h3>
+      </div>
+      <div class="finding-body">
+        <div class="evidence-row">
+          <div class="evidence-label">Command</div>
+          <pre class="evidence-pre">gh api "repos/coleam00/Archon/branches/dev/protection"
+gh api "repos/coleam00/Archon/branches/main/protection"</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Result observed</div>
+          <pre class="evidence-pre result">{"message":"Not Found","status":"404"}
+{"message":"Not Found","status":"404"}</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Classification</div>
+          <div class="evidence-classification fact">Confirmed fact &mdash; 404 is authoritative, the token has <code>repo</code> scope and would return 403 if the issue were permissions.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="finding-card info stack-md">
+      <div class="finding-header">
+        <span class="tag info-tag">Evidence 6</span>
+        <h3>No dependabot config file in repo</h3>
+      </div>
+      <div class="finding-body">
+        <div class="evidence-row">
+          <div class="evidence-label">Command</div>
+          <pre class="evidence-pre">find /tmp/repo-scan-coleam00-Archon -name "dependabot.yml" -o -name "dependabot.yaml" -o -name "renovate.json"
+gh api "repos/coleam00/Archon/dependabot/alerts"</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Result observed</div>
+          <pre class="evidence-pre result">(find returns nothing)
+{"message":"You are not authorized to perform this operation.","status":"403"}</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Classification</div>
+          <div class="evidence-classification inference">Inference &mdash; the 403 means our token lacks admin scope, not that alerts are off. But the missing config file is definitive: no declarative dependency-tracking policy exists in the repo.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="evidence-group-label positives">Evidence supporting OK findings</div>
+
+    <div class="finding-card info stack-md">
+      <div class="finding-header">
+        <span class="tag info-tag">Evidence 7</span>
+        <h3>SECURITY.md with real private disclosure</h3>
+      </div>
+      <div class="finding-body">
+        <div class="evidence-row">
+          <div class="evidence-label">Command</div>
+          <pre class="evidence-pre">cat /tmp/repo-scan-coleam00-Archon/SECURITY.md | head -12</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Result observed</div>
+          <pre class="evidence-pre result"># Security Policy
+
+## Reporting a Vulnerability
+
+If you discover a security vulnerability in Archon, please report it responsibly.
+
+**Do NOT open a public issue for security vulnerabilities.**
+
+Instead, email **cole@dynamous.ai** or use [GitHub's private vulnerability reporting](https://github.com/coleam00/Archon/security/advisories/new).</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Classification</div>
+          <div class="evidence-classification fact">Confirmed fact &mdash; real private channel + GHSA link, unlike caveman's missing policy.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="finding-card info stack-md">
+      <div class="finding-header">
+        <span class="tag info-tag">Evidence 8</span>
+        <h3>Maintainer is established (coleam00 &mdash; 7 years, 6,641 followers, Dynamous)</h3>
+      </div>
+      <div class="finding-body">
+        <div class="evidence-row">
+          <div class="evidence-label">Command</div>
+          <pre class="evidence-pre">gh api "users/coleam00" -q '{login,created_at,public_repos,followers,company}'</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Result observed</div>
+          <pre class="evidence-pre result">{"company":"Dynamous","created_at":"2019-02-03T02:45:51Z","followers":6641,"login":"coleam00","public_repos":51}</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Classification</div>
+          <div class="evidence-classification fact">Confirmed fact &mdash; 7-year-old account, public company affiliation, large following. Not a sockpuppet.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="finding-card info stack-md">
+      <div class="finding-header">
+        <span class="tag info-tag">Evidence 9</span>
+        <h3>Install script verifies sha256 checksums by default</h3>
+      </div>
+      <div class="finding-body">
+        <div class="evidence-row">
+          <div class="evidence-label">Command</div>
+          <pre class="evidence-pre">grep -nE 'SKIP_CHECKSUM|sha256sum|verify_checksum' /tmp/repo-scan-coleam00-Archon/scripts/install.sh | head -5</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Result observed</div>
+          <pre class="evidence-pre result">#   SKIP_CHECKSUM - Set to "true" to skip checksum verification (not recommended)
+# SKIP_CHECKSUM opt-in only; defaults to false
+SKIP_CHECKSUM="${SKIP_CHECKSUM:-false}"
+verify_checksum: sha256sum -c (reference grep line)</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Classification</div>
+          <div class="evidence-classification fact">Confirmed fact &mdash; checksum verification is the default install path.</div>
+        </div>
+      </div>
+    </div>
+
+    </div>
+  </details>
+
+  <!-- ═══════════════ FOOTER ═══════════════ -->
+  <div class="footer">
+    Generated by <a href="https://github.com/stefans71/stop-git-std">stop-git-std</a> deep dive &middot; 2026-04-16 &middot; scanned dev @ 3dedc22 (v0.3.6)
+    <br>This report is an automated investigation, not a professional security audit. It may miss issues. If you are making a business decision, consult a security professional.
+  </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,2223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Security Investigation Report: sharkdp/fd @ a665a3b (v10.4.2) | Generated 2026-04-16 | Prompt v2.3-post-R3 -->
+<title>Security Investigation: sharkdp/fd</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Unbounded:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* ═══════════════════════════════════════════════
+     DESIGN SYSTEM — DO NOT MODIFY
+     Dark theme, security monitoring aesthetic
+     ═══════════════════════════════════════════════ */
+  :root {
+    --bg-void: #0a0a0c;
+    --bg-surface: #131316;
+    --bg-elevated: #1a1a1f;
+    --bg-hover: #222228;
+    --border: #32323c;
+    --border-subtle: #26262e;
+    --text-primary: #f0f0f4;
+    --text-secondary: #b0b0bc;
+    --text-muted: #7e7e8e;
+    --red-glow: #ff4545;
+    --red-dim: #ff454520;
+    --red-bg: #1a0f0f;
+    --amber-glow: #ffaa2a;
+    --amber-dim: #ffaa2a20;
+    --amber-bg: #1a150e;
+    --green-glow: #22c55e;
+    --green-dim: #22c55e20;
+    --green-bg: #0e1a12;
+    --cyan-glow: #06b6d4;
+    --cyan-dim: #06b6d420;
+    --font-mono: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace;
+    --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-display: 'Unbounded', 'Inter', sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--font-sans);
+    background: var(--bg-void);
+    color: var(--text-primary);
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Noise texture + horizontal scanlines — forensic console feel */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      repeating-linear-gradient(
+        to bottom,
+        rgba(255,255,255,0.008) 0px,
+        rgba(255,255,255,0.008) 1px,
+        transparent 1px,
+        transparent 3px
+      ),
+      url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+  }
+  /* Slow sweeping scan bar */
+  body::after {
+    content: ''; position: fixed; left: 0; right: 0; height: 120px;
+    background: linear-gradient(to bottom, transparent, rgba(255,170,42,0.035), transparent);
+    pointer-events: none; z-index: 9998;
+    animation: scan-sweep 14s linear infinite;
+  }
+  @keyframes scan-sweep {
+    0% { top: -15%; }
+    100% { top: 115%; }
+  }
+
+  /* Scan strip — the data ribbon above the hero */
+  .scan-strip {
+    display: flex; flex-wrap: wrap; gap: 1.25rem; align-items: center;
+    padding: 0.625rem 0 0.75rem; margin-bottom: 1.5rem;
+    border-top: 1px solid var(--border-subtle);
+    border-bottom: 1px solid var(--border-subtle);
+    font-family: var(--font-mono); font-size: 0.65rem;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--text-secondary);
+  }
+  .scan-strip-item { display: inline-flex; align-items: center; gap: 0.4rem; }
+  .scan-strip-item .dot {
+    display: inline-block; width: 6px; height: 6px; border-radius: 50%;
+    box-shadow: 0 0 6px currentColor;
+  }
+  .scan-strip-item.amber, .scan-strip-item .dot.amber { color: var(--amber-glow); background: var(--amber-glow); }
+  .scan-strip-item .dot.amber { background: var(--amber-glow); box-shadow: 0 0 8px var(--amber-glow); animation: pulse 3s ease-in-out infinite; }
+  .scan-strip-item.flash {
+    color: var(--red-glow); animation: flash-blink 1.4s ease-in-out infinite;
+  }
+  @keyframes flash-blink {
+    0%, 80%, 100% { opacity: 1; }
+    85%, 95% { opacity: 0.25; }
+  }
+
+  /* Hero caption — the editorial line under the H1.
+     Readable sans-serif, slightly larger than body, no italic (readability > flavor). */
+  .hero-caption {
+    font-family: var(--font-sans); font-size: 1.0625rem; line-height: 1.55;
+    color: var(--text-primary); font-weight: 400;
+    max-width: 68ch; margin: 0.75rem 0 1.75rem;
+    letter-spacing: -0.005em;
+  }
+
+  /* ─────────────── Utility classes (replaces inline style="" attributes) ─────────────── */
+  /* Semantic value colors — use on chip-value, vital-value, td.val, etc. */
+  .val-good  { color: var(--green-glow) !important; }
+  .val-bad   { color: var(--red-glow)   !important; }
+  .val-warn  { color: var(--amber-glow) !important; }
+  .val-info  { color: var(--cyan-glow)  !important; }
+  .fw-semi   { font-weight: 600; }
+  /* Card vertical rhythm — replaces margin-bottom:12px inline on cards */
+  .stack-md  { margin-bottom: 0.75rem; }
+  .stack-sm  { margin-top: 0.75rem; }
+  /* Subdued paragraph — replaces the meta-text inline patterns */
+  .p-meta {
+    color: var(--text-secondary); margin-bottom: 1rem;
+    font-size: 0.875rem; line-height: 1.55;
+  }
+  .p-meta-tight {
+    color: var(--text-secondary); margin: 0.75rem 0 1rem;
+    font-size: 0.8125rem; line-height: 1.55;
+  }
+  /* Priority-evidence visual uplift — replaces inline border-left hack */
+  .finding-card.evidence-priority {
+    border-left: 4px solid var(--amber-glow);
+  }
+  /* Inline-flag variant — when priority-flag appears mid-sentence, not block */
+  .priority-flag.inline { display: inline-block; }
+
+  a { color: var(--cyan-glow); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* Font size controls */
+  .font-controls {
+    position: fixed; top: 16px; right: 16px; z-index: 1000;
+    display: flex; align-items: center; gap: 2px;
+    background: var(--bg-elevated); border: 1px solid var(--border);
+    border-radius: 8px; padding: 4px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5); backdrop-filter: blur(12px);
+  }
+  .font-controls button {
+    font-family: var(--font-mono); font-size: 0.875rem; font-weight: 700;
+    width: 34px; height: 34px; border: none; border-radius: 6px;
+    background: transparent; color: var(--text-secondary); cursor: pointer;
+    display: flex; align-items: center; justify-content: center; transition: all 0.15s;
+  }
+  .font-controls button:hover { background: var(--bg-hover); color: var(--text-primary); }
+  .font-controls button:active { transform: scale(0.92); }
+  .font-controls .font-size-display {
+    font-family: var(--font-mono); font-size: 0.6875rem; color: var(--text-muted);
+    min-width: 38px; text-align: center; letter-spacing: 0.05em; user-select: none;
+  }
+
+  .page { max-width: 960px; margin: 0 auto; padding: 0 20px; }
+
+  /* Hero */
+  .hero { padding: 64px 0 48px; border-bottom: 1px solid var(--border); position: relative; }
+  .hero::after {
+    content: ''; position: absolute; bottom: -1px; left: 0; right: 0; height: 120px;
+    background: linear-gradient(to top, var(--bg-void), transparent); pointer-events: none;
+  }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-family: var(--font-mono); font-size: 0.6875rem; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--text-muted); margin-bottom: 20px;
+    padding: 6px 12px; border: 1px solid var(--border); border-radius: 6px; background: var(--bg-surface);
+  }
+  .hero-badge .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--text-muted); /* Neutral default — LLM must set .red, .green, or .amber */
+  }
+  .hero-badge .dot.red { background: var(--red-glow); box-shadow: 0 0 8px var(--red-glow); animation: pulse 2s ease-in-out infinite; }
+  .hero-badge .dot.green { background: var(--green-glow); box-shadow: 0 0 8px var(--green-glow); }
+  .hero-badge .dot.amber { background: var(--amber-glow); box-shadow: 0 0 8px var(--amber-glow); animation: pulse 3s ease-in-out infinite; }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+  .hero h1 {
+    font-family: var(--font-display); font-size: clamp(1.8rem, 4vw, 3.4rem);
+    font-weight: 800; letter-spacing: -0.04em; line-height: 1.05; margin-bottom: 16px;
+  }
+  .hero h1 .slash {
+    color: var(--text-muted); font-weight: 300;
+    margin: 0 0.1em; font-size: 0.85em;
+  }
+  .hero h1 span { color: var(--red-glow); }
+  .hero h1 span.green { color: var(--green-glow); }
+  .hero h1 span.amber { color: var(--amber-glow); }
+  .hero .meta { font-size: 0.875rem; color: var(--text-primary); display: flex; flex-wrap: wrap; gap: 16px; }
+  .hero .meta-item { display: flex; align-items: center; gap: 6px; }
+  .hero .meta-item .label { color: var(--text-secondary); font-size: 0.75rem; }
+
+  /* Verdict */
+  .verdict-section { padding: 48px 0 40px; }
+  .verdict-banner {
+    border-radius: 0; padding: 2.25rem 2.75rem 2rem 4.5rem;
+    position: relative; overflow: hidden;
+    border-left-width: 6px; border-left-style: solid;
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%);
+  }
+  .verdict-banner.critical { background: linear-gradient(135deg, #1f0a0a 0%, #0a0a0c 100%); border: 1px solid #ff454540; border-left-color: var(--red-glow); }
+  .verdict-banner.caution { background: linear-gradient(135deg, #1f1810 0%, #0a0a0c 100%); border: 1px solid #ffaa2a40; border-left-color: var(--amber-glow); }
+  .verdict-banner.clean { background: linear-gradient(135deg, #0a1f14 0%, #0a0a0c 100%); border: 1px solid #22c55e40; border-left-color: var(--green-glow); }
+  /* Radial wash */
+  .verdict-banner::before {
+    content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+    pointer-events: none;
+  }
+  .verdict-banner.critical::before { background: radial-gradient(circle at 20% 30%, #ff454510, transparent 55%); }
+  .verdict-banner.caution::before { background: radial-gradient(circle at 20% 30%, #ffaa2a12, transparent 55%); }
+  .verdict-banner.clean::before { background: radial-gradient(circle at 20% 30%, #22c55e10, transparent 55%); }
+  /* Vertical scan-ID bar on the left */
+  .verdict-banner::after {
+    content: attr(data-dossier); position: absolute;
+    left: 1.4rem; top: 2.1rem; bottom: 2rem;
+    writing-mode: vertical-rl; transform: rotate(180deg);
+    font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.25em;
+    color: var(--text-muted); text-transform: uppercase;
+    display: flex; align-items: center;
+    opacity: 0.55;
+  }
+  .verdict-banner .verdict-label {
+    font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.22em;
+    text-transform: uppercase; margin-bottom: 1rem; position: relative;
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    padding: 0.25rem 0.625rem; border-radius: 0.125rem;
+    background: rgba(255,170,42,0.08); border: 1px solid rgba(255,170,42,0.25);
+  }
+  .verdict-banner.critical .verdict-label { color: var(--red-glow); background: rgba(255,69,69,0.08); border-color: rgba(255,69,69,0.25); }
+  .verdict-banner.caution .verdict-label { color: var(--amber-glow); }
+  .verdict-banner.clean .verdict-label { color: var(--green-glow); background: rgba(34,197,94,0.08); border-color: rgba(34,197,94,0.25); }
+  .verdict-banner h2 {
+    font-family: var(--font-display);
+    font-size: clamp(1.5rem, 3.2vw, 2.2rem); font-weight: 600; line-height: 1.18;
+    letter-spacing: -0.025em; margin-bottom: 1rem; position: relative; color: #ff8c00;
+    max-width: 56ch;
+  }
+  .verdict-banner.clean h2 { color: var(--green-glow); }
+  .verdict-banner.critical h2 { color: var(--red-glow); }
+
+  /* Split-verdict layout — two audience blocks separated by a divider */
+  .verdict-split {
+    display: grid; grid-template-columns: 1fr auto 1fr; gap: 1.75rem;
+    margin-bottom: 1.25rem; align-items: stretch;
+  }
+  @media (max-width: 820px) {
+    .verdict-split { grid-template-columns: 1fr; gap: 1rem; }
+  }
+  .verdict-entry { display: flex; flex-direction: column; gap: 0.5rem; }
+  .verdict-entry-scope {
+    font-family: var(--font-mono); font-size: 0.65rem; letter-spacing: 0.2em;
+    text-transform: uppercase; color: var(--text-muted);
+    padding-bottom: 0.375rem; border-bottom: 1px solid var(--border-subtle);
+  }
+  .verdict-entry-headline {
+    font-family: var(--font-display); font-weight: 600;
+    font-size: clamp(1.35rem, 2.5vw, 1.85rem); line-height: 1.15;
+    letter-spacing: -0.02em; margin: 0;
+  }
+  .verdict-entry-headline.good { color: #8dd492; }
+  .verdict-entry-headline.warn { color: var(--amber-glow); }
+  .verdict-entry-headline.bad  { color: var(--red-glow); }
+  .verdict-entry-detail {
+    font-family: var(--font-sans); font-size: 0.8125rem; line-height: 1.55;
+    color: var(--text-secondary); margin-top: 0.25rem;
+  }
+  .verdict-split-divider {
+    width: 1px; background: linear-gradient(to bottom, transparent, var(--border), transparent);
+  }
+  @media (max-width: 820px) {
+    .verdict-split-divider { width: 100%; height: 1px; background: var(--border-subtle); }
+  }
+
+  /* Rolled verdict exhibits — 3 themed panels that replace the 10-bullet glaze list */
+  .verdict-exhibits { display: grid; gap: 0.875rem; margin-top: 0.5rem; }
+  .exhibit {
+    position: relative; overflow: hidden; border-radius: 10px;
+    border: 1px solid var(--border-subtle);
+  }
+  .exhibit.vuln    { background: linear-gradient(135deg, #1a1008 0%, #0f0a0a 100%); border-color: #ffaa2a30; }
+  .exhibit.govern  { background: linear-gradient(135deg, #100c1a 0%, #0a0a0f 100%); border-color: #ff808040; }
+  .exhibit.signals { background: linear-gradient(135deg, #0a1812 0%, #0a0f0a 100%); border-color: #22c55e30; }
+  /* Left accent bar */
+  .exhibit::before {
+    content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
+  }
+  .exhibit.vuln::before    { background: var(--amber-glow); }
+  .exhibit.govern::before  { background: var(--red-glow); }
+  .exhibit.signals::before { background: var(--green-glow); }
+  /* Summary row (collapsed state) */
+  .exhibit > summary {
+    list-style: none; cursor: pointer;
+    padding: 0.875rem 1rem 0.875rem 1.5rem;
+    display: flex; align-items: center; gap: 0.75rem;
+    position: relative;
+  }
+  .exhibit > summary::-webkit-details-marker { display: none; }
+  .exhibit > summary::after {
+    content: '\25B6'; margin-left: auto; font-size: 0.7rem;
+    color: var(--text-muted); transition: transform 0.2s;
+  }
+  .exhibit[open] > summary::after { transform: rotate(90deg); }
+  .exhibit-glyph {
+    width: 1.75rem; height: 1.75rem; border-radius: 50%;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 0.85rem; font-weight: 700; flex-shrink: 0;
+  }
+  .exhibit.vuln .exhibit-glyph    { background: rgba(255,170,42,0.18); color: var(--amber-glow); }
+  .exhibit.govern .exhibit-glyph  { background: rgba(255,69,69,0.18);  color: var(--red-glow); }
+  .exhibit.signals .exhibit-glyph { background: rgba(34,197,94,0.18);  color: var(--green-glow); }
+  .exhibit-title {
+    font-family: var(--font-display); font-size: 1.05rem; font-weight: 600;
+    letter-spacing: -0.01em; line-height: 1.25;
+  }
+  .exhibit-count {
+    margin-left: 0.5rem; font-family: var(--font-mono); font-size: 0.7rem;
+    letter-spacing: 0.12em; color: var(--text-muted); text-transform: uppercase;
+  }
+  .exhibit-summary-line {
+    font-family: var(--font-sans); font-size: 0.82rem; color: var(--text-secondary);
+    margin-left: 0.5rem; line-height: 1.45; font-weight: 400;
+  }
+  @media (max-width: 720px) {
+    .exhibit-summary-line { display: block; margin-left: 2.5rem; margin-top: 0.25rem; }
+  }
+  /* Expanded content — zebra-striped items */
+  .exhibit-body {
+    border-top: 1px solid var(--border-subtle);
+    padding: 0; background: rgba(0,0,0,0.15);
+  }
+  .exhibit-item {
+    display: grid; grid-template-columns: 1.5rem 1fr; gap: 0.75rem;
+    padding: 0.75rem 1rem 0.75rem 1.5rem;
+    font-size: 0.88rem; line-height: 1.55; color: var(--text-primary);
+    border-bottom: 1px solid var(--border-subtle);
+  }
+  .exhibit-item:last-child { border-bottom: none; }
+  /* Zebra striping — every other row gets a subtle background shift */
+  .exhibit-item:nth-child(even) { background: rgba(255,255,255,0.015); }
+  .exhibit-item-glyph {
+    font-family: var(--font-mono); font-weight: 700; font-size: 0.8rem;
+    text-align: center; padding-top: 0.15rem;
+  }
+  .exhibit.vuln .exhibit-item-glyph    { color: var(--amber-glow); }
+  .exhibit.govern .exhibit-item-glyph  { color: var(--red-glow); }
+  .exhibit.signals .exhibit-item-glyph { color: var(--green-glow); }
+  .exhibit-item-tag {
+    font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--text-muted); display: block;
+    margin-bottom: 0.15rem;
+  }
+
+  /* Verdict bullet list */
+  .verdict-bullets { list-style: none; padding: 0; margin: 0; position: relative; }
+  .verdict-bullets li {
+    display: flex; align-items: flex-start; gap: 12px; font-size: 0.9375rem;
+    color: var(--text-primary); line-height: 1.6; padding: 8px 0; border-bottom: 1px solid #ffffff08;
+  }
+  .verdict-bullets li:last-child { border-bottom: none; }
+  .verdict-bullets .bullet-icon {
+    flex-shrink: 0; width: 22px; height: 22px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center; font-size: 0.6875rem; margin-top: 2px;
+  }
+  .verdict-bullets .bullet-icon.red { background: var(--red-dim); color: var(--red-glow); box-shadow: 0 0 6px var(--red-dim); }
+  .verdict-bullets .bullet-icon.amber { background: var(--amber-dim); color: var(--amber-glow); box-shadow: 0 0 6px var(--amber-dim); }
+  .verdict-bullets .bullet-icon.green { background: var(--green-dim); color: var(--green-glow); box-shadow: 0 0 6px var(--green-dim); }
+
+  /* Scorecard */
+  .scorecard-section { padding: 0 0 48px; }
+  .scorecard-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px;
+    background: var(--border); border-radius: 12px; overflow: hidden;
+  }
+  .score-cell { background: var(--bg-surface); padding: 24px 20px; text-align: center; transition: background 0.2s; }
+  .score-cell:hover { background: var(--bg-elevated); }
+  .score-cell .score-icon {
+    width: 32px; height: 32px; margin: 0 auto 12px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center; font-size: 1rem;
+  }
+  .score-cell .score-icon.red { background: var(--red-dim); color: var(--red-glow); }
+  .score-cell .score-icon.amber { background: var(--amber-dim); color: var(--amber-glow); }
+  .score-cell .score-icon.green { background: var(--green-dim); color: var(--green-glow); }
+  .score-cell .score-label {
+    font-family: var(--font-mono); font-size: 0.625rem; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--text-muted); margin-bottom: 6px;
+  }
+  .score-cell .score-value { font-size: 1.125rem; font-weight: 700; line-height: 1.2; }
+  .score-cell .score-value.red { color: var(--red-glow); }
+  .score-cell .score-value.amber { color: var(--amber-glow); }
+  .score-cell .score-value.green { color: var(--green-glow); }
+
+  /* Collapsible sections */
+  details summary { cursor: pointer; list-style: none; }
+  details summary::-webkit-details-marker { display: none; }
+  .collapsible-section > summary { padding: 48px 0 0; border-top: 1px solid var(--border-subtle); }
+  .collapsible-section > summary .section-header { margin-bottom: 0; display: flex; align-items: center; gap: 12px; }
+  .collapsible-section[open] > summary .section-header { margin-bottom: 28px; }
+  .collapsible-section .section-body { padding-bottom: 0; }
+  .collapsible-section > summary .section-header::after {
+    content: '\25B6'; font-size: 0.625rem; color: var(--text-muted); transition: transform 0.2s; margin-left: auto;
+  }
+  .collapsible-section[open] > summary .section-header::after { transform: rotate(90deg); }
+  .section-header .section-number {
+    font-family: var(--font-mono); font-size: 0.6875rem; letter-spacing: 0.1em; color: var(--text-muted);
+    width: 28px; height: 28px; border-radius: 6px; border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .section-header h2 {
+    font-family: var(--font-display); font-size: 1.4rem; font-weight: 600;
+    letter-spacing: -0.02em; line-height: 1.15;
+    color: var(--cyan-glow);
+  }
+  /* Slightly emphasize the section number too so the landmark row reads as a unit */
+  .section-header .section-number {
+    color: var(--cyan-glow); opacity: 0.75;
+  }
+
+  /* Finding cards */
+  .finding-card {
+    background: var(--bg-surface); border: 1px solid var(--border); border-radius: 10px;
+    margin-bottom: 12px; overflow: hidden; transition: border-color 0.2s;
+  }
+  .finding-card:hover { border-color: #3a3a44; }
+  .finding-card.critical { border-left: 3px solid var(--red-glow); }
+  .finding-card.warning { border-left: 3px solid var(--amber-glow); }
+  .finding-card.info { border-left: 3px solid var(--cyan-glow); }
+  .finding-card.ok { border-left: 3px solid var(--green-glow); }
+  @keyframes border-pulse {
+    0%, 100% { border-left-color: var(--red-glow); box-shadow: -2px 0 8px var(--red-dim); }
+    50% { border-left-color: #ff454580; box-shadow: -2px 0 4px transparent; }
+  }
+  .finding-card.critical { animation: border-pulse 3s ease-in-out infinite; }
+
+  .finding-header {
+    padding: 16px 20px 12px; display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 16px;
+  }
+  .finding-header .tag {
+    font-family: var(--font-mono); font-size: 0.625rem; letter-spacing: 0.08em;
+    text-transform: uppercase; padding: 3px 8px; border-radius: 4px; font-weight: 600; flex-shrink: 0;
+  }
+  .tag.critical-tag { background: var(--red-dim); color: var(--red-glow); }
+  .tag.warning-tag { background: var(--amber-dim); color: var(--amber-glow); }
+  .tag.info-tag { background: var(--cyan-dim); color: var(--cyan-glow); }
+  .tag.ok-tag { background: var(--green-dim); color: var(--green-glow); }
+  .finding-header .finding-date { font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-secondary); }
+  .finding-header .finding-duration {
+    font-family: var(--font-mono); font-size: 0.6875rem; font-weight: 600;
+    color: var(--amber-glow); background: var(--amber-dim); border: 1px solid #ffaa2a30;
+    padding: 3px 10px; border-radius: 4px;
+  }
+  .finding-header h3 {
+    width: 100%; font-family: var(--font-display); font-size: 1.125rem;
+    font-weight: 600; line-height: 1.3; letter-spacing: -0.015em; margin-top: 4px;
+  }
+
+  /* Finding collapsible */
+  .finding-card summary { list-style: none; cursor: pointer; }
+  .finding-card summary::-webkit-details-marker { display: none; }
+  .finding-card summary .finding-header { position: relative; padding-right: 40px; }
+  .finding-card summary .finding-header::after {
+    content: '\25B6'; font-size: 0.625rem; color: var(--text-muted);
+    transition: transform 0.2s; position: absolute; right: 20px; top: 20px;
+  }
+  .finding-card details[open] > summary .finding-header::after { transform: rotate(90deg); }
+
+  .finding-body { padding: 0 20px 16px; }
+  .finding-body p { font-size: 0.875rem; color: var(--text-primary); line-height: 1.7; margin-bottom: 12px; }
+  .finding-meta {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 8px; margin-top: 12px;
+  }
+  .meta-chip {
+    font-size: 0.75rem; padding: 8px 12px; border-radius: 6px;
+    background: var(--bg-elevated); border: 1px solid var(--border-subtle);
+    display: flex; flex-direction: column; gap: 2px;
+  }
+  .meta-chip .chip-label {
+    font-family: var(--font-mono); font-size: 0.625rem; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--text-secondary);
+  }
+  .meta-chip .chip-value { color: var(--text-primary); font-weight: 500; }
+
+  /* Sub-finding (nested under parent finding) */
+  .sub-finding {
+    margin: 16px 0 8px; padding: 16px; border-left: 2px solid var(--amber-glow);
+    background: var(--bg-elevated); border-radius: 0 8px 8px 0;
+  }
+  .sub-finding .sub-finding-label {
+    font-family: var(--font-mono); font-size: 0.625rem; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--amber-glow); margin-bottom: 8px;
+  }
+  .sub-finding h4 { font-size: 1rem; font-weight: 700; line-height: 1.4; margin-bottom: 10px; }
+  .sub-finding p { font-size: 0.875rem; color: var(--text-primary); line-height: 1.7; margin-bottom: 12px; }
+
+  /* PR Table */
+  .pr-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.8125rem; }
+  th {
+    font-family: var(--font-mono); font-size: 0.625rem; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--text-secondary); text-align: left;
+    padding: 12px 16px; background: var(--bg-surface); border-bottom: 1px solid var(--border);
+    position: sticky; top: 0; white-space: nowrap;
+  }
+  td { padding: 14px 16px; border-bottom: 1px solid var(--border-subtle); color: var(--text-primary); vertical-align: top; }
+  tr:hover td { background: var(--bg-surface); }
+  td:first-child { font-family: var(--font-mono); font-weight: 600; color: var(--cyan-glow); white-space: nowrap; }
+  .td-concern { color: var(--amber-glow); font-weight: 500; }
+  .td-reviewed-no { color: var(--red-glow); font-family: var(--font-mono); font-weight: 600; }
+  .td-reviewed-yes { color: var(--green-glow); font-family: var(--font-mono); font-weight: 600; }
+  .td-reviewed-rejected { color: var(--amber-glow); font-family: var(--font-mono); font-weight: 600; }
+  .td-merge-fast { font-family: var(--font-mono); color: var(--red-glow); font-weight: 600; }
+  .td-person { font-weight: 500; color: var(--text-primary); }
+
+  /* Timeline */
+  .timeline { position: relative; padding-left: 28px; }
+  .timeline::before {
+    content: ''; position: absolute; left: 7px; top: 8px; bottom: 8px; width: 1px;
+    background: linear-gradient(to bottom, var(--border), var(--red-glow), var(--border));
+  }
+  .tl-item { position: relative; margin-bottom: 20px; padding-left: 8px; }
+  .tl-item::before {
+    content: ''; position: absolute; left: -24px; top: 7px; width: 9px; height: 9px;
+    border-radius: 50%; background: var(--text-muted); border: 2px solid var(--bg-void);
+  }
+  .tl-item.bad::before { background: var(--red-glow); box-shadow: 0 0 6px var(--red-dim); }
+  .tl-item.good::before { background: var(--green-glow); }
+  .tl-item.neutral::before { background: var(--amber-glow); }
+  .tl-date { font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-secondary); font-weight: 600; }
+  .tl-desc { font-size: 0.875rem; color: var(--text-primary); margin-top: 2px; line-height: 1.6; }
+
+  /* Vitals */
+  .vitals-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1px; background: var(--border); border-radius: 10px; overflow: hidden;
+  }
+  .vital-cell { background: var(--bg-surface); padding: 18px 20px; }
+  .vital-cell .vital-label {
+    font-family: var(--font-mono); font-size: 0.625rem; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--text-muted); margin-bottom: 4px;
+  }
+  .vital-cell .vital-value { font-size: 1rem; font-weight: 700; margin-bottom: 4px; }
+  .vital-cell .vital-note { font-size: 0.75rem; color: var(--text-secondary); line-height: 1.5; }
+
+  /* Action cards */
+  .action-card { padding: 24px; border-radius: 10px; margin-bottom: 12px; }
+  .action-card.stop { background: var(--red-bg); border: 1px solid #ff454530; }
+  .action-card.wait { background: var(--amber-bg); border: 1px solid #ffaa2a30; }
+  .action-card.info-action { background: var(--bg-surface); border: 1px solid var(--border); }
+  .action-card.ok-action { background: var(--green-bg); border: 1px solid #22c55e30; }
+  .action-card h3 { font-size: 0.9375rem; font-weight: 700; margin-bottom: 8px; }
+  .action-card p { font-size: 0.875rem; color: var(--text-primary); line-height: 1.7; }
+
+  /* Code blocks inside action cards */
+  .action-card pre {
+    background: var(--bg-void); border: 1px solid var(--border); border-radius: 8px;
+    padding: 16px; margin: 12px 0; overflow-x: auto;
+    font-family: var(--font-mono); font-size: 0.8125rem; color: var(--cyan-glow); line-height: 1.6;
+  }
+
+  /* Catalog metadata block — sits between hero and verdict
+     Font sizes use rem so the font +/- controls (which mutate root font-size) scale them. */
+  .catalog-meta {
+    background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: 10px;
+    padding: 1.125rem 1.375rem; margin-bottom: 1rem;
+  }
+  .catalog-meta .catalog-label {
+    font-family: var(--font-mono); font-size: 0.65rem; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--text-secondary); margin-bottom: 0.625rem;
+  }
+  .catalog-meta table { width: 100%; }
+  .catalog-meta td { padding: 0.375rem 0.75rem 0.375rem 0; border: none; font-size: 0.82rem; vertical-align: top; }
+  .catalog-meta td.key {
+    font-family: var(--font-mono); color: var(--text-secondary);
+    white-space: nowrap; width: 1%; font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.06em;
+  }
+  .catalog-meta td.val { color: var(--text-primary); }
+  .catalog-meta td.val a { color: var(--cyan-glow); text-decoration: none; }
+  .catalog-meta td.val a:hover { text-decoration: underline; }
+
+  /* ─────────────── UX-FIX CSS (section status pills, finding status chips,
+     timeline glyphs, evidence priority markers) ─────────────── */
+
+  /* Section status pills — shown on the collapsed <summary> row so readers know
+     at a glance whether a section needs attention. */
+  .section-status {
+    display: inline-flex; gap: 0.5rem; margin-left: auto; padding-right: 2.5rem;
+    font-size: 0.72rem; font-family: var(--font-mono); align-items: center;
+    flex-wrap: wrap;
+  }
+  .section-status .pill {
+    display: inline-flex; align-items: center; gap: 0.25rem;
+    padding: 0.1875rem 0.5rem; border-radius: 0.625rem; border: 1px solid;
+    letter-spacing: 0.04em; white-space: nowrap;
+  }
+  .section-status .pill.red {
+    color: var(--red-glow); border-color: var(--red-dim);
+    background: rgba(255, 69, 69, 0.1);
+  }
+  .section-status .pill.amber {
+    color: var(--amber-glow); border-color: var(--amber-dim);
+    background: rgba(255, 170, 42, 0.1);
+  }
+  .section-status .pill.green {
+    color: var(--green-glow); border-color: var(--green-dim);
+    background: rgba(34, 197, 94, 0.1);
+  }
+  .section-status .pill.info {
+    color: var(--cyan-glow); border-color: var(--cyan-dim);
+    background: rgba(6, 182, 212, 0.1);
+  }
+  .section-status .pill.muted {
+    color: var(--text-secondary); border-color: var(--border-subtle);
+    background: var(--bg-elevated);
+  }
+  .section-status .pill.urgent {
+    animation: urgent-pulse 1.8s ease-in-out infinite;
+  }
+  @keyframes urgent-pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(255, 69, 69, 0.4); }
+    50% { box-shadow: 0 0 0 0.5rem rgba(255, 69, 69, 0); }
+  }
+  /* Hide status pills when section is open — they're redundant with the content */
+  .collapsible-section[open] > summary .section-status { opacity: 0.5; }
+
+  /* Section subtitle — a one-line orientation under the H2, visible both open
+     and collapsed. Gives readers the "why should I look at this" answer. */
+  .section-subtitle {
+    font-family: var(--font-sans); font-size: 0.9375rem; color: var(--text-secondary);
+    font-weight: 400; margin-top: 0.5rem; line-height: 1.55;
+    max-width: 68ch; letter-spacing: -0.003em;
+  }
+  .section-subtitle .emph { color: var(--text-primary); font-weight: 600; }
+  .section-subtitle .hot { color: var(--amber-glow); font-weight: 600; }
+  .section-subtitle .cold { color: var(--green-glow); font-weight: 600; }
+
+  /* Section-level "Your action" line — every section that flags concerns
+     must answer "what do I do about this?" for the reader. */
+  .section-action {
+    display: block; margin-top: 0.5rem; padding: 0.5rem 0.75rem;
+    background: var(--bg-elevated); border-radius: 0.375rem;
+    border-left: 3px solid var(--amber-glow);
+    font-size: 0.85rem; color: var(--text-primary); line-height: 1.55;
+  }
+  .section-action.ok { border-left-color: var(--green-glow); }
+  .section-action.info { border-left-color: var(--cyan-glow); }
+  .section-action .lbl {
+    font-family: var(--font-mono); font-weight: 700;
+    font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--amber-glow); margin-right: 0.5rem;
+  }
+  .section-action.ok .lbl { color: var(--green-glow); }
+  .section-action.info .lbl { color: var(--cyan-glow); }
+
+  /* Finding-card status chip — distinguishes Active vs Resolved vs Ongoing.
+     Shown on every finding and evidence card next to the severity tag. */
+  .status-chip {
+    display: inline-flex; align-items: center; gap: 0.25rem;
+    padding: 0.1875rem 0.5rem; border-radius: 0.625rem; border: 1px solid;
+    font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.04em;
+    white-space: nowrap; margin-left: 0.375rem;
+  }
+  .status-chip.resolved {
+    color: var(--green-glow); border-color: var(--green-dim);
+    background: rgba(34, 197, 94, 0.12);
+  }
+  .status-chip.active {
+    color: var(--red-glow); border-color: var(--red-dim);
+    background: rgba(255, 69, 69, 0.12);
+  }
+  .status-chip.ongoing {
+    color: var(--amber-glow); border-color: var(--amber-dim);
+    background: rgba(255, 170, 42, 0.12);
+  }
+  .status-chip.mitigated {
+    color: var(--cyan-glow); border-color: var(--cyan-dim);
+    background: rgba(6, 182, 212, 0.12);
+  }
+  .status-chip.informational {
+    color: var(--text-secondary); border-color: var(--border-subtle);
+    background: var(--bg-elevated);
+  }
+
+  /* Action-needed hint on finding cards — one sentence that says "what the reader should do" */
+  .action-hint {
+    margin-top: 0.5rem; font-size: 0.78rem; color: var(--text-secondary);
+    line-height: 1.55;
+  }
+  .action-hint::before {
+    content: "→ "; color: var(--amber-glow); font-style: normal; font-weight: 600;
+  }
+  .action-hint.ok::before { color: var(--green-glow); }
+  .action-hint.warn::before { color: var(--amber-glow); }
+
+  /* Executable File Inventory — differentiate verdict on the tag clearly.
+     The card border already carries severity via .finding-card.warning/.ok/.info;
+     this makes the header tag match so the reader doesn't have to decode borders. */
+  .inv-verdict {
+    display: inline-flex; align-items: center; gap: 0.25rem;
+    padding: 0.1875rem 0.5rem; border-radius: 0.625rem; margin-left: 0.375rem;
+    font-family: var(--font-mono); font-size: 0.65rem; letter-spacing: 0.04em;
+    text-transform: uppercase; border: 1px solid;
+  }
+  .inv-verdict.warn {
+    color: var(--amber-glow); border-color: var(--amber-dim);
+    background: rgba(255, 170, 42, 0.12);
+  }
+  .inv-verdict.ok {
+    color: var(--green-glow); border-color: var(--green-dim);
+    background: rgba(34, 197, 94, 0.12);
+  }
+  .inv-verdict.info {
+    color: var(--cyan-glow); border-color: var(--cyan-dim);
+    background: rgba(6, 182, 212, 0.12);
+  }
+
+  /* Inventory one-line summary block — V2.2 F12 format */
+  .inventory-summary {
+    margin-bottom: 1.25rem; padding: 0.875rem 1rem;
+    background: var(--bg-elevated); border-radius: 0.5rem;
+    border-left: 3px solid var(--cyan-glow); font-size: 0.85rem;
+  }
+  .inventory-summary-title {
+    font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--text-secondary); margin-bottom: 0.5rem;
+  }
+  .inventory-summary ul { list-style: none; padding: 0; margin: 0; }
+  .inventory-summary li {
+    padding: 0.25rem 0; line-height: 1.55; display: flex; gap: 0.5rem; align-items: flex-start;
+  }
+  .inventory-summary li .glyph {
+    flex: 0 0 1.125rem; font-family: var(--font-mono); font-weight: 700;
+    text-align: center;
+  }
+  .inventory-summary li.warn .glyph { color: var(--amber-glow); }
+  .inventory-summary li.ok .glyph { color: var(--green-glow); }
+  .inventory-summary li.info .glyph { color: var(--cyan-glow); }
+
+  /* Timeline severity glyphs — per-item worry indicator beyond just dot color */
+  .tl-item .tl-severity-label {
+    display: inline-block; font-family: var(--font-mono); font-weight: 700;
+    font-size: 0.68rem; letter-spacing: 0.05em; margin-right: 0.375rem;
+    padding: 0.125rem 0.375rem; border-radius: 0.25rem;
+  }
+  .tl-item.bad .tl-severity-label {
+    color: var(--red-glow); background: rgba(255, 69, 69, 0.12);
+  }
+  .tl-item.good .tl-severity-label {
+    color: var(--green-glow); background: rgba(34, 197, 94, 0.12);
+  }
+  .tl-item.neutral .tl-severity-label {
+    color: var(--amber-glow); background: rgba(255, 170, 42, 0.12);
+  }
+
+  /* Evidence priority banner — "read this first" marker on the most important evidence */
+  .evidence-priority {
+    position: relative; border-left-width: 4px !important;
+  }
+  .evidence-priority .priority-flag {
+    display: inline-block; margin-left: 0.5rem; padding: 0.1875rem 0.5rem;
+    background: var(--amber-glow); color: var(--bg-void);
+    border-radius: 0.25rem; font-family: var(--font-mono);
+    font-size: 0.62rem; font-weight: 700; letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .evidence-group-label {
+    margin: 1.5rem 0 0.75rem; font-family: var(--font-mono);
+    font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--text-secondary); padding: 0.5rem 0.75rem;
+    background: var(--bg-elevated); border-radius: 0.375rem;
+    border-left: 3px solid var(--border);
+  }
+  .evidence-group-label.warns { border-left-color: var(--amber-glow); color: var(--amber-glow); }
+  .evidence-group-label.positives { border-left-color: var(--green-glow); color: var(--green-glow); }
+  .evidence-group-label.context { border-left-color: var(--cyan-glow); color: var(--cyan-glow); }
+
+  /* Evidence Appendix — <pre> blocks for command and multi-line result */
+  .evidence-row { margin-bottom: 10px; }
+  .evidence-row .evidence-label {
+    font-family: var(--font-mono); font-size: 0.625rem; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--text-secondary); margin-bottom: 4px;
+  }
+  .evidence-pre {
+    background: var(--bg-void); border: 1px solid var(--border); border-radius: 6px;
+    padding: 12px 14px; margin: 0; overflow-x: auto; white-space: pre-wrap; word-break: break-word;
+    font-family: var(--font-mono); font-size: 0.75rem; color: var(--cyan-glow); line-height: 1.55;
+    max-height: 320px; overflow-y: auto;
+  }
+  .evidence-pre.result { color: var(--text-primary); }
+  .evidence-classification {
+    font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-primary);
+    padding: 8px 12px; background: var(--bg-elevated);
+    border: 1px solid var(--border-subtle); border-radius: 6px;
+  }
+  .evidence-classification.inference { color: var(--amber-glow); }
+  .evidence-classification.fact { color: var(--green-glow); }
+
+  /* Footer */
+  .footer {
+    padding: 40px 0; border-top: 1px solid var(--border-subtle);
+    text-align: center; font-size: 0.75rem; color: var(--text-muted);
+  }
+  .footer a { color: var(--text-secondary); }
+
+  /* Responsive */
+  @media (max-width: 700px) {
+    .scorecard-grid { grid-template-columns: repeat(2, 1fr); }
+    .finding-meta { grid-template-columns: 1fr; }
+    .hero { padding: 40px 0 32px; }
+    .collapsible-section > summary { padding-top: 32px; }
+    table { font-size: 0.75rem; }
+    th, td { padding: 10px 12px; }
+    .vitals-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 420px) {
+    .scorecard-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="font-controls">
+  <button onclick="adjustFont(-1)" title="Decrease font size" aria-label="Decrease font size">A&minus;</button>
+  <span class="font-size-display" id="fontDisplay">100%</span>
+  <button onclick="adjustFont(1)" title="Increase font size" aria-label="Increase font size">A+</button>
+</div>
+<script>
+  let fontScale = 100;
+  function adjustFont(dir) {
+    fontScale = Math.min(150, Math.max(75, fontScale + dir * 10));
+    document.documentElement.style.fontSize = fontScale + '%';
+    document.getElementById('fontDisplay').textContent = fontScale + '%';
+  }
+</script>
+
+<div class="page">
+
+  <!-- ═══════════════ HERO ═══════════════ -->
+  <div class="hero">
+    <div class="scan-strip">
+      <span class="scan-strip-item"><span class="dot amber"></span>Security Investigation</span>
+      <span class="scan-strip-item">Dossier · fd</span>
+      <span class="scan-strip-item">Rev · a665a3b</span>
+      <span class="scan-strip-item">v2.3-post-R3 · 2026-04-16</span>
+      <span class="scan-strip-item flash">● Live</span>
+    </div>
+    <h1>sharkdp<span class="slash">/</span><span class="amber">fd</span></h1>
+    <div class="hero-caption">A 42,000-star Rust command-line alternative to <code>find</code> that ships 14 pre-built platform binaries &mdash; signed with sigstore SLSA Build L3 attestations on every release. The code surface is clean and the release pipeline is defensive. The caveat: no branch protection on <code>master</code>, and the crates.io publish path is manual rather than CI-gated.</div>
+    <div class="meta">
+      <div class="meta-item"><span class="label">Investigated</span> 2026-04-16</div>
+      <div class="meta-item"><span class="label">Applies to</span> master @ a665a3b · v10.4.2</div>
+      <div class="meta-item"><span class="label">Repo age</span> 8 years</div>
+      <div class="meta-item"><span class="label">Stars</span> 42,563</div>
+      <div class="meta-item"><span class="label">License</span> MIT OR Apache-2.0</div>
+    </div>
+  </div>
+
+  <div class="catalog-meta">
+    <div class="catalog-label">Catalog metadata</div>
+    <table>
+      <tr><td class="key">Report file</td><td class="val"><code>GitHub-Scanner-fd.html</code> (+ <code>.md</code> companion)</td></tr>
+      <tr><td class="key">Repo</td><td class="val"><a href="https://github.com/sharkdp/fd">github.com/sharkdp/fd</a></td></tr>
+      <tr><td class="key">Short description</td><td class="val">Simple, fast, user-friendly alternative to <code>find</code>. Written in Rust, shipped as a single self-contained CLI binary named <code>fd</code> across 14 Linux/macOS/Windows targets. Distributed as pre-built tarballs and <code>.deb</code> files on GitHub Releases (sigstore-attested), via distro package managers (apt/dnf/pacman/brew), on Winget, and on crates.io as <code>fd-find</code>.</td></tr>
+      <tr><td class="key">Category</td><td class="val">developer-tooling</td></tr>
+      <tr><td class="key">Subcategory</td><td class="val">cli-filesystem-search</td></tr>
+      <tr><td class="key">Language</td><td class="val">Rust (edition 2024, MSRV 1.90.0)</td></tr>
+      <tr><td class="key">License</td><td class="val">MIT OR Apache-2.0 (dual)</td></tr>
+      <tr><td class="key">Target user</td><td class="val">Developers and sysadmins using <code>find</code> alternatives on Unix / macOS / Windows</td></tr>
+      <tr><td class="key">Verdict</td><td class="val val-warn fw-semi">Caution</td></tr>
+      <tr><td class="key">Scanned revision</td><td class="val">master @ a665a3b (release tag v10.4.2, commit <code>a665a3bba9abc85e80c142a7dcdb8c356b12d9c9</code>)</td></tr>
+      <tr><td class="key">Commit pinned</td><td class="val"><code>a665a3bba9abc85e80c142a7dcdb8c356b12d9c9</code></td></tr>
+      <tr><td class="key">Scanner version</td><td class="val">V2.3-post-R3</td></tr>
+      <tr><td class="key">Scan date</td><td class="val">2026-04-16</td></tr>
+      <tr><td class="key">Prior scan</td><td class="val">None &mdash; first scan of this repo. Future re-runs should rename this file to <code>GitHub-Scanner-fd-2026-04-16.html</code> before generating the new report.</td></tr>
+    </table>
+  </div>
+
+  <div class="verdict-section">
+    <div class="verdict-banner caution" data-dossier="DOSSIER · FD · a665a3b · 2026-04-16 · V2.3">
+      <div class="verdict-label">● Split verdict · deployment axis</div>
+      <div class="verdict-split">
+        <div class="verdict-entry">
+          <div class="verdict-entry-scope">Deployment · Solo-dev laptop · default install</div>
+          <h2 class="verdict-entry-headline warn">Good with caveats &mdash; install from Releases, verify the attestation once</h2>
+          <div class="verdict-entry-detail">The CLI itself is clean: a single benign <code>unsafe</code> block to restore the default SIGINT handler, no network I/O, narrow filesystem-walking surface, and <code>Command::new</code> only where fd's own <code>-x</code> flag requires it. Release artifacts are signed with <strong>sigstore SLSA Build L3 attestations</strong> via <code>actions/attest</code> &mdash; a rare gold-standard signal. The upstream caveat is governance: no branch protection on <code>master</code>, no rulesets, no CODEOWNERS. For a single-user laptop the blast radius is small; the attestation makes "what you installed came from this repo's CI" cryptographically verifiable.</div>
+        </div>
+        <div class="verdict-split-divider"></div>
+        <div class="verdict-entry">
+          <div class="verdict-entry-scope">Deployment · Shared host / production / CI runner</div>
+          <h2 class="verdict-entry-headline warn">Good with caveats &mdash; verify the attestation with <code>gh attestation verify</code> before rolling out</h2>
+          <div class="verdict-entry-detail">Same verdict, stronger caveat. <code>fd</code> runs with the calling user's privileges and <code>-x</code> spawns arbitrary user-supplied commands by design. If an attacker phishes a maintainer credential and pushes malicious Rust, their tampered release binary would still fail <code>gh attestation verify --owner sharkdp &lt;archive&gt;</code> because they can't mint a matching sigstore attestation from outside the workflow. Enforce that check in your rollout path and prefer GitHub Releases or distro packages over <code>cargo install fd-find</code> (which bypasses the CI attestation trail).</div>
+        </div>
+      </div>
+      <div class="verdict-exhibits">
+        <details class="exhibit govern">
+          <summary>
+            <span class="exhibit-glyph">&#x26A0;</span>
+            <span>
+              <span class="exhibit-title">Governance gap &mdash; no branch protection, no CODEOWNERS on a 42k-star CLI</span>
+              <span class="exhibit-count">· 1 finding</span>
+              <span class="exhibit-summary-line">C20 single-point-of-failure fires as Warning (release age 37 days &mdash; well outside the 30-day Critical window, with an 8-month gap before that). Partially mitigated by sigstore attestations: an attacker pushing malicious Rust still can't mint a valid attestation from outside the workflow.</span>
+            </span>
+          </summary>
+          <div class="exhibit-body">
+            <div class="exhibit-item">
+              <span class="exhibit-item-glyph">01</span>
+              <span>
+                <span class="exhibit-item-tag">Governance · F0 / C20</span>
+                No classic branch protection on <code>master</code> (API returns 404), zero rulesets (<code>/rulesets</code> returns <code>[]</code>, <code>/rules/branches/master</code> returns <code>[]</code>), no CODEOWNERS in any of 4 standard locations. Owner is a User account (sharkdp) so there is no org-level ruleset layer either way. Warning (not Critical) because v10.4.2 shipped 37 days before this scan, safely outside the 30-day Critical window; v10.3.0 before it sat ~8 months with no release, so "no recent release" is an honest reading of the cadence rather than a borderline call.
+              </span>
+            </div>
+          </div>
+        </details>
+
+        <details class="exhibit signals">
+          <summary>
+            <span class="exhibit-glyph">&#x2714;</span>
+            <span>
+              <span class="exhibit-title">Strong positive signals &mdash; SLSA L3 attestations, least-privilege CI, long-tenured maintainers</span>
+              <span class="exhibit-count">· 8 signals</span>
+              <span class="exhibit-summary-line">Sigstore SLSA Build L3 on every release, <code>persist-credentials: false</code> on every checkout, scoped <code>contents: read</code> root permissions, SHA-pinned release actions, SECURITY.md present, no network I/O, maintainer at Astral, recent attestation work landed by tmccombs</span>
+            </span>
+          </summary>
+          <div class="exhibit-body">
+            <div class="exhibit-item">
+              <span class="exhibit-item-glyph">01</span>
+              <span>
+                <span class="exhibit-item-tag">SLSA L3 attestations</span>
+                Every release artifact (14 pre-built targets, tarballs + <code>.deb</code>) is signed in-CI with sigstore via <code>actions/attest@59d89421af93a897026c735860bf21b6eb4f7b26 # v4</code>. Consumers can verify before rolling out: <code>gh attestation verify --owner sharkdp &lt;downloaded-archive&gt;</code>. This is the gold-standard supply-chain signal &mdash; rarer than SHA-pinning, stronger than OIDC publishing. PR #1809 landed it in 2025-10; PR #1904 and #1941 fixed pipeline bugs in 2026-03 &mdash; actively maintained.
+              </span>
+            </div>
+            <div class="exhibit-item">
+              <span class="exhibit-item-glyph">02</span>
+              <span>
+                <span class="exhibit-item-tag">Token-exfil defense</span>
+                <code>persist-credentials: false</code> on every <code>actions/checkout</code> call (5 of 5 occurrences). If any workflow step were compromised, there would be no checkout-provided token lying around for the attacker to reuse against the repo.
+              </span>
+            </div>
+            <div class="exhibit-item">
+              <span class="exhibit-item-glyph">03</span>
+              <span>
+                <span class="exhibit-item-tag">Least-privilege permissions</span>
+                Top-level workflow permission is <code>contents: read</code>. Only the <code>build</code> job escalates to <code>id-token: write</code>, <code>contents: write</code>, <code>attestations: write</code> &mdash; and only for the release-attestation step. The scope-minimising pattern that stops a compromised lint or test step from being able to push tags or mint attestations.
+              </span>
+            </div>
+            <div class="exhibit-item">
+              <span class="exhibit-item-glyph">04</span>
+              <span>
+                <span class="exhibit-item-tag">Release-path actions SHA-pinned</span>
+                The security-critical actions are all pinned to commit hashes: <code>actions/attest</code>, <code>softprops/action-gh-release</code>, <code>actions/upload-artifact</code>, <code>vedantmgoyal9/winget-releaser</code>. <code>actions/checkout@v6</code> and <code>dtolnay/rust-toolchain@stable/master</code> are tag/branch-pinned (minor gap, both github-owned / dtolnay).
+              </span>
+            </div>
+            <div class="exhibit-item">
+              <span class="exhibit-item-glyph">05</span>
+              <span>
+                <span class="exhibit-item-tag">Narrow runtime surface</span>
+                Grep of <code>src/</code> found <strong>no network I/O</strong> (zero <code>reqwest</code>/<code>ureq</code>/<code>hyper</code>/<code>TcpStream</code>/<code>UdpSocket</code>), <strong>one <code>unsafe</code> block</strong> (<code>src/exit_codes.rs:35</code>, POSIX SIGINT default-handler restore &mdash; benign idiomatic Rust), and <strong>five <code>Command::new</code> sites all by design</strong> (two implement fd's <code>-x</code>/<code>--exec</code> flag from user argv, two detect <code>gls</code>/<code>ls</code> for color heuristics, one is the exec helper's <code>spawn</code> wrapper). No <code>extern "C"</code>, no <code>libc::</code> direct usage, no <code>fs::remove_dir_all</code>/<code>remove_file</code>. Positive control: grep found expected patterns, tool was working.
+              </span>
+            </div>
+            <div class="exhibit-item">
+              <span class="exhibit-item-glyph">06</span>
+              <span>
+                <span class="exhibit-item-tag">No <code>pull_request_target</code></span>
+                The single workflow <code>.github/workflows/CICD.yml</code> triggers on <code>pull_request</code>, <code>push</code>, and <code>workflow_dispatch</code> &mdash; zero <code>pull_request_target</code>. That event type is the vector in most GitHub Actions PwnRequest supply-chain incidents; its absence rules out that class of attack.
+              </span>
+            </div>
+            <div class="exhibit-item">
+              <span class="exhibit-item-glyph">07</span>
+              <span>
+                <span class="exhibit-item-tag">Disclosure wired up</span>
+                <code>SECURITY.md</code> present (38 lines), points at GitHub Security Advisories form. Zero advisories filed in 8 years. Recent PR #1829 "docs(security): clarify where to send vulnerability reports" shows maintainers keep the disclosure path current.
+              </span>
+            </div>
+            <div class="exhibit-item">
+              <span class="exhibit-item-glyph">08</span>
+              <span>
+                <span class="exhibit-item-tag">Maintainers</span>
+                Primary maintainer sharkdp (David Peter) has a GitHub account since 2013-04, 118 public repos, 7,960 followers, and now works at <strong>@astral-sh</strong> (the Rust-ecosystem company behind <code>ruff</code> and <code>uv</code>). Co-maintainer tmccombs (Thayne McCombs) has an account since 2012-10, 186 public repos, and personally landed the SLSA attestation work. tavianator (author of the competing <code>bfs</code> tool) is the #4 contributor. No sockpuppet signals anywhere; all three-person effective core are decade-tenured Rust/Unix-tools names.
+              </span>
+            </div>
+          </div>
+        </details>
+      </div>
+    </div>
+  </div>
+
+  <div class="scorecard-section">
+    <div class="scorecard-grid">
+      <div class="score-cell">
+        <div class="score-icon amber">&#x26A0;</div>
+        <div class="score-label">Does anyone check the code?</div>
+        <div class="score-value amber">Review happens but isn't required &mdash; ~33% formal review rate in sample, no branch protection, no CODEOWNERS, three-person effective core</div>
+      </div>
+      <div class="score-cell">
+        <div class="score-icon green">&#x2705;</div>
+        <div class="score-label">Is it safe out of the box?</div>
+        <div class="score-value green">Yes &mdash; clean source, single benign <code>unsafe</code> block for SIGINT restore, no network I/O, narrow filesystem-walking surface</div>
+      </div>
+      <div class="score-cell">
+        <div class="score-icon green">&#x2705;</div>
+        <div class="score-label">Can you trust the maintainers?</div>
+        <div class="score-value green">Yes &mdash; sharkdp at Astral, tmccombs 186-repo footprint, active supply-chain work (added SLSA attestations in 2025-10)</div>
+      </div>
+      <div class="score-cell">
+        <div class="score-icon amber">&#x26A0;</div>
+        <div class="score-label">Is it actively maintained?</div>
+        <div class="score-value amber">Partly &mdash; v10.4.x shipped March 2026 after an <strong>8-month gap</strong> since v10.3.0. Dependabot bumps flow weekly, but feature releases are sporadic</div>
+      </div>
+    </div>
+  </div>
+
+  <details class="collapsible-section" open>
+    <summary>
+      <div class="section-header">
+        <span class="section-number">01</span>
+        <h2>What Should I Do?</h2>
+        <span class="section-status">
+          <span class="pill green">✓ Safe to install today</span>
+          <span class="pill amber">⚠ Verify the attestation</span>
+          <span class="pill info">3 steps</span>
+        </span>
+      </div>
+      <div class="section-subtitle">
+        <span class="cold">Install from GitHub Releases</span> &mdash; the CLI source is clean and every release artifact is cryptographically signed (Step 1). <span class="hot">If you ship <code>fd</code> to shared hosts or CI runners</span>, verify the sigstore attestation before rolling out (Step 2). Step 3 is a maintainer-side ask: branch protection on <code>master</code> and a CI-gated <code>cargo publish</code> would close the two residual governance gaps.
+      </div>
+    </summary>
+    <div class="section-body">
+
+    <div class="action-card ok-action">
+      <h3 class="val-good">Step 1: Install <code>fd</code> the way the README describes &mdash; prefer GitHub Releases or your distro's package</h3>
+      <p><strong>Non-technical:</strong> <code>fd</code> is a single self-contained command-line binary that replaces <code>find</code>. It has no install-time scripts, no network access at runtime, and the source code is narrow and clean. You can install it from your system's package manager (<code>apt</code>, <code>dnf</code>, <code>pacman</code>, <code>brew</code>, <code>winget</code>) or download a pre-built binary directly from GitHub Releases. Both paths land the same compiled artifact; the GitHub Releases path is the one that comes with a cryptographic receipt (sigstore attestation) you can verify.</p>
+      <pre># Linux (Debian/Ubuntu)
+apt install fd-find       # binary is /usr/bin/fdfind on Debian
+
+# macOS
+brew install fd
+
+# Windows
+winget install sharkdp.fd
+
+# Direct from GitHub Releases (sigstore-attested) — pick your platform:
+curl -LO https://github.com/sharkdp/fd/releases/download/v10.4.2/fd-v10.4.2-x86_64-unknown-linux-gnu.tar.gz</pre>
+    </div>
+    <div class="action-card wait">
+      <h3 class="val-warn">Step 2: If you ship <code>fd</code> on shared hosts or CI, verify the sigstore attestation before rollout</h3>
+      <p><strong>Non-technical:</strong> Because there is no branch protection on <code>master</code>, an attacker who compromised a maintainer's credentials could in theory push malicious Rust. But <code>fd</code>'s release pipeline signs every artifact with sigstore SLSA Build L3 attestations, and an attacker outside the workflow can't mint a valid attestation &mdash; so you can turn "did this binary come from their CI?" into a yes-or-no check. Do it once per release before rolling out to production or CI runners. Skip <code>cargo install fd-find</code> for production installs because that path bypasses the CI attestation trail (crates.io publishing is done manually by a maintainer).</p>
+      <pre># Download the release tarball + its sigstore bundle
+gh release download v10.4.2 --repo sharkdp/fd \
+    --pattern 'fd-v10.4.2-x86_64-unknown-linux-gnu.tar.gz*'
+
+# Verify the attestation
+gh attestation verify --owner sharkdp fd-v10.4.2-x86_64-unknown-linux-gnu.tar.gz
+
+# Expected: "✓ Verification succeeded" with a sigstore certificate matching
+# .github/workflows/CICD.yml at tag v10.4.2</pre>
+    </div>
+    <div class="action-card info-action">
+      <h3>Step 3: Nudge the maintainers on branch protection + CI-gated crates.io publish</h3>
+      <p><strong>Non-technical:</strong> The maintainers are clearly doing supply-chain hygiene well &mdash; they added SLSA attestations in October 2025, they set <code>persist-credentials: false</code>, they SHA-pin the release-path actions. Two helpful asks would close the remaining gaps: (1) enable classic branch protection on <code>master</code> with a 1-approver review requirement and the existing CI status checks, and add a <code>.github/CODEOWNERS</code> covering <code>.github/workflows/</code> and <code>src/</code>. (2) Add a gated <code>cargo publish</code> step to the tag-push release workflow so the crates.io path gets the same CI attestation trail the GitHub Releases path already has. Both are small, incremental, free.</p>
+      <pre># Links to share with the maintainers
+# Branch protection setup:
+https://github.com/sharkdp/fd/settings/branch_protection_rules/new
+
+# CI-gated cargo publish pattern:
+https://doc.rust-lang.org/cargo/reference/publishing.html
+# (add a 'publish' job to CICD.yml that runs on tag push with CARGO_REGISTRY_TOKEN)</pre>
+    </div>
+    </div>
+  </details>
+
+  <details class="collapsible-section">
+    <summary>
+      <div class="section-header">
+        <span class="section-number">02</span>
+        <h2>What We Found</h2>
+        <span class="section-status">
+          <span class="pill amber">⚠ 1 Warning</span>
+          <span class="pill info">ℹ 1 Info</span>
+          <span class="pill green">✓ 3 OK</span>
+        </span>
+      </div>
+      <div class="section-subtitle">
+        5 findings total. <span class="hot">The one Warning is governance, not code.</span> F0 is the C20 single-point-of-failure (no branch protection on <code>master</code>, no rulesets, no CODEOWNERS) &mdash; fires at Warning because release age (37 days) sits firmly outside the 30-day Critical window and the historical cadence includes 8-month gaps. F-crates.io is an Info-severity note that the manual <code>cargo publish</code> path bypasses the CI attestation trail. Everything else is positive: SLSA L3 attestations, <code>persist-credentials: false</code>, scoped permissions, no network I/O, long-tenured maintainers.
+      </div>
+      <div class="section-action">
+        <span class="lbl">Your action</span>
+        Nothing you need to do locally at the source level &mdash; the CLI is clean. For shared hosts or CI runners, run <code>gh attestation verify --owner sharkdp &lt;downloaded-archive&gt;</code> before rolling out (see Step 2 above). For maintainers: enabling branch protection on <code>master</code> and adding a CI-gated <code>cargo publish</code> job would close both findings without changing any Rust.
+      </div>
+    </summary>
+    <div class="section-body">
+
+    <div class="finding-card warning">
+      <details>
+        <summary>
+          <div class="finding-header">
+            <span class="tag warning-tag">Warning</span>
+            <span class="status-chip ongoing">Structural</span>
+            <span class="status-chip mitigated">Partly mitigated by SLSA attestations</span>
+            <span class="finding-date">Continuous</span>
+            <span class="finding-duration">Since repo creation</span>
+            <h3>Governance single-point-of-failure &mdash; no branch protection, no rulesets, no CODEOWNERS on a 42k-star CLI (F0 / C20)</h3>
+            <div class="action-hint warn">If you install: prefer GitHub Releases or distro packages over <code>cargo install fd-find</code>, and run <code>gh attestation verify --owner sharkdp &lt;downloaded-archive&gt;</code> on shared-host or CI rollouts. If you maintain this repo: enable classic branch protection on <code>master</code> (Settings &rarr; Branches &rarr; Add rule, require 1 approver, require the existing CICD workflow checks) and add a <code>.github/CODEOWNERS</code> covering <code>.github/workflows/</code> + <code>src/</code>.</div>
+          </div>
+        </summary>
+        <div class="finding-body">
+          <p><strong>Severity sits at Warning, comfortably.</strong> The V2.3 C20 rule escalates to Critical when a repo (a) has all three governance signals negative AND (b) ships executable code to user machines AND (c) has a release within the last 30 days. <code>fd</code>'s latest v10.4.2 shipped 2026-03-10 &mdash; 37 days before this scan, outside the 30-day window. This is not a boundary case like some other scans: v10.4.0 before it shipped 2026-03-07 (40 days out), and v10.3.0 before that shipped 2025-08-26 &mdash; an <strong>8-month gap</strong>. "No recent release" is an honest read of the cadence, not a one-day margin.</p>
+          <p><strong>What's missing.</strong> Classic branch protection on <code>master</code> returns HTTP 404 from the GitHub API (authoritative &mdash; our scan token has <code>repo</code> scope and would have returned 403 on a permissions issue). Repo rulesets: <code>gh api repos/sharkdp/fd/rulesets</code> returns <code>[]</code>. Rules applying to <code>master</code>: <code>gh api repos/sharkdp/fd/rules/branches/master</code> returns <code>[]</code> &mdash; this endpoint is authoritative because it captures both repo-level and org-level rulesets. Note on org-level: sharkdp is a <strong>User account</strong>, not an Organization, so there is no org-level ruleset layer either way &mdash; the authoritative check reduces to the three signals above plus CODEOWNERS. CODEOWNERS is absent in all four standard locations (<code>CODEOWNERS</code>, <code>.github/CODEOWNERS</code>, <code>docs/CODEOWNERS</code>, <code>.gitlab/CODEOWNERS</code>). Any push that lands on a maintainer's credentials goes directly to <code>master</code> without a review gate, a required status check, or a path-scoped reviewer.</p>
+          <p><strong>How an attacker arrives (F13).</strong> Concrete paths without requiring xz-utils-level tradecraft: (1) credential phishing against sharkdp or tmccombs &mdash; both have public GitHub profiles, substantial followings, and findable identities (sharkdp publishes under his real name, now at Astral); (2) stale OAuth token reuse from an old CI system or developer workstation; (3) compromised browser session cookie via a malicious browser extension running in the maintainer's session; (4) malicious IDE / VS Code / Cursor extension executing as the maintainer; (5) sloppy review on an attacker-submitted PR &mdash; the observed review-rate sample shows ~67% of merges had no formal <code>reviewDecision</code>, though cross-merging (tmccombs merges most PRs; tavianator occasionally merges tmccombs's work) provides practical second-pair-of-eyes; (6) crates.io token theft specifically, which would bypass the repo entirely (see F-crates.io below). None of these require compromising the sigstore infrastructure; paths 1&ndash;5 route through the repo.</p>
+          <p><strong>Why sigstore attestations partially mitigate this &mdash; a real, unusual defense.</strong> An attacker who successfully phished a maintainer and pushed malicious Rust to <code>master</code> would still face one hard gate: every release artifact is signed in-CI with a sigstore attestation that binds the artifact to <em>this exact repo's workflow at a specific commit SHA</em>. If the attacker builds a tampered binary locally and uploads it to a release, consumers running <code>gh attestation verify --owner sharkdp</code> on the tarball get a failure &mdash; they'd need to mint a matching attestation, which they can't do from outside the GitHub Actions OIDC issuer. The attacker would need to also corrupt the workflow file (visible in the repo history) or compromise the CI runner itself (different attack class). That's a meaningful raise on the bar, and it's why this finding sits at Warning with a <em>partly mitigated</em> chip rather than at Critical even when release age is close to the 30-day line. The attestation isn't a replacement for branch protection &mdash; a poisoned source commit would still propagate &mdash; but it does convert "silent malicious release" into "attestation-verifiable release that someone has to audit."</p>
+          <p><strong>What this means for you.</strong> On a single-user laptop the blast radius is small: <code>fd</code> is a local filesystem tool that runs with your user privileges, and the <code>-x</code> flag only spawns what <em>you</em> type. On a shared host or CI runner the blast radius is larger because the binary is privileged against other users' data in the same environment. Either way, the practical mitigation is cheap: run <code>gh attestation verify --owner sharkdp &lt;archive&gt;</code> once per release you install, prefer GitHub Releases / distro packages over <code>cargo install fd-find</code>, and pin the specific version. That turns "trust sharkdp's account security" into "trust sharkdp's account security, AND trust that the CI log and sigstore certificate chain haven't been subverted" &mdash; two independent gates.</p>
+          <p><strong>What this does NOT mean.</strong> The CLI itself is clean &mdash; one benign <code>unsafe</code> block to restore POSIX SIGINT, no network I/O, narrow filesystem-walking surface, and the <code>Command::new</code> sites that do exist implement fd's own <code>-x</code> flag from user argv. This finding is about the repo's process gap, not about the current v10.4.2 shipping something harmful. Treat it as a tail-risk on future releases with a meaningful in-CI mitigation already in place.</p>
+          <div class="finding-meta">
+            <div class="meta-chip">
+              <span class="chip-label">Classic branch protection</span>
+              <span class="chip-value val-bad">404 on <code>master</code></span>
+            </div>
+            <div class="meta-chip">
+              <span class="chip-label">Rulesets</span>
+              <span class="chip-value val-bad"><code>[]</code> &mdash; zero rulesets</span>
+            </div>
+            <div class="meta-chip">
+              <span class="chip-label">Rules on master</span>
+              <span class="chip-value val-bad"><code>[]</code> &mdash; authoritative</span>
+            </div>
+            <div class="meta-chip">
+              <span class="chip-label">CODEOWNERS</span>
+              <span class="chip-value val-bad">Absent (4 locations checked)</span>
+            </div>
+            <div class="meta-chip">
+              <span class="chip-label">Org-level rulesets</span>
+              <span class="chip-value val-good">N/A (owner is User)</span>
+            </div>
+            <div class="meta-chip">
+              <span class="chip-label">Stars (blast radius)</span>
+              <span class="chip-value">42,563</span>
+            </div>
+            <div class="meta-chip">
+              <span class="chip-label">Forks (blast radius)</span>
+              <span class="chip-value">1,037</span>
+            </div>
+            <div class="meta-chip">
+              <span class="chip-label">Latest release age</span>
+              <span class="chip-value val-good">37 days &mdash; outside Critical window</span>
+            </div>
+            <div class="meta-chip">
+              <span class="chip-label">Release cadence</span>
+              <span class="chip-value val-warn">Irregular (8-month gap before v10.4.0)</span>
+            </div>
+            <div class="meta-chip">
+              <span class="chip-label">Partial mitigation</span>
+              <span class="chip-value val-info">Sigstore SLSA L3 on release artifacts</span>
+            </div>
+            <div class="meta-chip">
+              <span class="chip-label">Executable surface</span>
+              <span class="chip-value val-warn">CLI binary, user privileges, <code>-x</code> spawns by design</span>
+            </div>
+          </div>
+          <div class="sub-finding">
+            <div class="sub-finding-label">How to fix (maintainer-side, 2 minutes in the UI)</div>
+            <p>GitHub <em>Settings &rarr; Branches &rarr; Add branch protection rule</em> (<a href="https://github.com/sharkdp/fd/settings/branch_protection_rules/new">direct link</a>). For <code>master</code>: require pull request reviews (1 approver minimum), require status checks (the existing CICD jobs &mdash; <code>lint_check</code>, <code>min_version</code>, <code>build</code>), require branches to be up to date before merging, do not allow bypassing. Also add <code>.github/CODEOWNERS</code> covering at minimum <code>.github/workflows/ @sharkdp @tmccombs</code> and <code>src/ @sharkdp @tmccombs</code>. The cross-merge pattern between tmccombs, tavianator, and sharkdp is already doing most of this manually &mdash; formalising it closes the SPOF without slowing velocity.</p>
+          </div>
+        </div>
+      </details>
+    </div>
+
+    <div class="finding-card info">
+      <details>
+        <summary>
+          <div class="finding-header">
+            <span class="tag info-tag">Info</span>
+            <span class="status-chip ongoing">Narrow-channel gap</span>
+            <span class="finding-date">Current</span>
+            <span class="finding-duration">Pipeline-level</span>
+            <h3>Manual <code>cargo publish</code> path on crates.io bypasses the CI attestation trail (F-crates.io)</h3>
+            <div class="action-hint">If you install <code>fd</code>: prefer GitHub Releases, distro packages, or Winget over <code>cargo install fd-find</code> for production / shared-host installs &mdash; those paths carry the sigstore attestation; crates.io does not. If you maintain this repo: add a gated <code>publish</code> job to <code>CICD.yml</code> that runs <code>cargo publish</code> on tag push using a scoped crates.io token in GitHub Secrets, bringing the crates.io channel into the same CI-verifiable trust chain as the GitHub Releases channel.</div>
+          </div>
+        </summary>
+        <div class="finding-body">
+          <p><strong>What we observed.</strong> Reading <code>.github/workflows/CICD.yml</code> (309 lines, the repo's only workflow file) reveals six jobs: <code>crate_metadata</code>, <code>ensure_cargo_fmt</code>, <code>lint_check</code>, <code>min_version</code>, <code>build</code> (the 14-target cross-platform matrix that produces attested tarballs and <code>.deb</code> files), and <code>winget</code>. <strong>There is no <code>cargo publish</code> step.</strong> Yet the <code>fd-find</code> crate is on crates.io and is kept current (v10.4.2 at scan time). The only explanation: a maintainer runs <code>cargo publish</code> by hand on a local workstation with a crates.io API token.</p>
+          <p><strong>Why this is Info and not Warning.</strong> Most fd users do not install via <code>cargo install fd-find</code>. The README lists apt, dnf, pacman, brew, Winget, and direct GitHub Releases as the primary channels; <code>cargo install</code> is a niche path for Rust-ecosystem users who already have <code>cargo</code> on their machine. The blast radius of a crates.io-only compromise is narrow &mdash; orders of magnitude smaller than an npm package that every React developer pulls transitively. Calling this Warning would over-weight the channel.</p>
+          <p><strong>What a crates.io compromise would look like.</strong> An attacker who stole sharkdp's crates.io token (via malicious browser extension, stale laptop credential, or a compromised <code>.cargo/credentials.toml</code>) could publish a malicious <code>fd-find</code> version without ever touching the GitHub repo. Consumers using <code>cargo install fd-find</code> would get the tampered version; consumers using GitHub Releases or distro packages would not. The GitHub Releases path is unaffected because those artifacts still come with a valid sigstore attestation pinned to the real workflow.</p>
+          <p><strong>What this does NOT mean.</strong> This is not a code-level concern &mdash; the crate source on crates.io is currently the same source as the repo, and there is no evidence of tampering on any channel. It's a pipeline topology note: one of three documented artifact channels is outside the CI-attested trust boundary. Fixable in a 10-line workflow job.</p>
+          <div class="finding-meta">
+            <div class="meta-chip">
+              <span class="chip-label">CI <code>cargo publish</code></span>
+              <span class="chip-value val-warn">Absent from CICD.yml</span>
+            </div>
+            <div class="meta-chip">
+              <span class="chip-label">crates.io crate</span>
+              <span class="chip-value"><code>fd-find</code> v10.4.2</span>
+            </div>
+            <div class="meta-chip">
+              <span class="chip-label">GitHub Releases path</span>
+              <span class="chip-value val-good">Sigstore L3 attested</span>
+            </div>
+            <div class="meta-chip">
+              <span class="chip-label">Winget path</span>
+              <span class="chip-value val-good">CI-driven (<code>winget</code> job)</span>
+            </div>
+            <div class="meta-chip">
+              <span class="chip-label">Primary user channels</span>
+              <span class="chip-value">apt / dnf / brew / Releases / Winget</span>
+            </div>
+            <div class="meta-chip">
+              <span class="chip-label">Blast radius</span>
+              <span class="chip-value val-info">Narrow (crates.io users only)</span>
+            </div>
+          </div>
+          <div class="sub-finding">
+            <div class="sub-finding-label">How to fix (maintainer-side, ~10 lines of YAML)</div>
+            <p>Add a <code>publish</code> job to <code>CICD.yml</code> that runs on tag push, depends on <code>build</code> (so the matrix passes first), and calls <code>cargo publish --token $&#123;&#123; secrets.CARGO_REGISTRY_TOKEN &#125;&#125;</code>. Scope the token to the <code>fd-find</code> crate only (crates.io supports per-crate tokens now). That folds the crates.io channel into the same in-CI trust chain as GitHub Releases and Winget &mdash; a future compromise would need to go through the workflow runner, not a maintainer's laptop.</p>
+          </div>
+        </div>
+      </details>
+    </div>
+
+    <div class="finding-card ok">
+      <details>
+        <summary>
+          <div class="finding-header">
+            <span class="tag ok-tag">OK</span>
+            <span class="finding-date">Current</span>
+            <span class="finding-duration">&mdash;</span>
+            <h3>Clean runtime surface &mdash; one benign <code>unsafe</code> block, no network I/O, <code>Command::new</code> is by design</h3>
+            <div class="action-hint ok">No action needed. Positive signal: the CLI does what a <code>find</code> alternative should do and nothing more; the only dangerous primitives present are the ones fd's own documented behaviour requires.</div>
+          </div>
+        </summary>
+        <div class="finding-body">
+          <p><strong>The one <code>unsafe</code> block is benign.</strong> Grep across <code>src/</code> found exactly one <code>unsafe</code> block: <code>src/exit_codes.rs:35</code>. It restores the POSIX default <code>SIGINT</code> handler and re-raises <code>SIGINT</code> on Ctrl-C so the parent shell sees the normal interrupt status rather than the Rust panic path. This is the idiomatic way to interact with libc's signal API from Rust &mdash; the equivalent C code would be a two-line <code>signal(SIGINT, SIG_DFL); raise(SIGINT);</code> snippet. No raw-pointer arithmetic, no <code>extern "C"</code> callback, no <code>libc::</code> direct memory access. Benign, narrow, necessary.</p>
+          <p><strong>Every <code>Command::new</code> call is a fd feature, not a surprise.</strong> Grep surfaced five spawn sites in <code>src/</code>. Two (<code>src/exec/mod.rs:168</code> and <code>:265</code>) implement fd's flagship <code>-x</code> / <code>--exec</code> flag &mdash; by design, fd runs whatever command you pass on the command line against every match. The input comes from the user's own argv, not from file contents or network data. One (<code>src/exec/command.rs:77</code>) is the <code>cmd.spawn()</code> wrapper that backs the <code>-x</code> implementation. Two (<code>src/main.rs:392</code> and <code>:421</code>) probe for <code>gls</code> and <code>ls</code> to detect GNU <code>ls</code> availability so fd can pick a colour strategy &mdash; hard-coded binary names, no user input threaded through. Running a shell command you typed is fd's job; treating that as a Warning-grade finding would be re-labelling the product.</p>
+          <p><strong>No network I/O, no dangerous filesystem primitives.</strong> Grep of <code>src/</code> for <code>reqwest</code>, <code>ureq</code>, <code>hyper</code>, <code>http::</code>, <code>TcpStream</code>, <code>UdpSocket</code> returned zero hits. <code>fd</code> is a strictly local filesystem tool &mdash; no telemetry, no auto-update, no crash reporting. Grep for <code>fs::remove_dir_all</code> and <code>fs::remove_file</code>: zero hits (fd searches, it doesn't delete). Grep for prompt-injection strings across <code>src/</code>, <code>README.md</code>, and <code>CHANGELOG.md</code>: zero hits &mdash; unsurprising for a CLI that isn't an AI tool, but worth stating. Positive control: the grep infrastructure returned the expected <code>Command::new</code> and <code>unsafe</code> matches, so "zero hits elsewhere" is a meaningful signal.</p>
+          <div class="finding-meta">
+            <div class="meta-chip">
+              <span class="chip-label"><code>unsafe</code> blocks in <code>src/</code></span>
+              <span class="chip-value val-good">1 (benign &mdash; POSIX SIGINT restore)</span>
+            </div>
+            <div class="meta-chip">
+              <span class="chip-label">Network I/O</span>
+              <span class="chip-value val-good">None</span>
+            </div>
+            <div class="meta-chip">
+              <span class="chip-label"><code>Command::new</code> sites</span>
+              <span class="chip-value val-good">5 (all by-design; <code>-x</code> flag + ls probe)</span>
+            </div>
+            <div class="meta-chip">
+              <span class="chip-label"><code>extern "C"</code> / <code>libc::</code></span>
+              <span class="chip-value val-good">None in <code>src/</code></span>
+            </div>
+            <div class="meta-chip">
+              <span class="chip-label">Destructive FS ops</span>
+              <span class="chip-value val-good">None (<code>remove_*</code> absent)</span>
+            </div>
+            <div class="meta-chip">
+              <span class="chip-label">Install hooks</span>
+              <span class="chip-value val-good">None (no <code>build.rs</code> side effects)</span>
+            </div>
+          </div>
+        </div>
+      </details>
+    </div>
+
+    <div class="finding-card ok">
+      <details>
+        <summary>
+          <div class="finding-header">
+            <span class="tag ok-tag">OK</span>
+            <span class="finding-date">Current</span>
+            <span class="finding-duration">&mdash;</span>
+            <h3>Release pipeline is defensive &mdash; SLSA Build L3 attestations, scoped permissions, <code>persist-credentials: false</code></h3>
+            <div class="action-hint ok">No action needed. Positive signal: the maintainers use the current supply-chain best practice (sigstore attestations via <code>actions/attest</code>) on every release, not just on paper. PR #1809 in 2025-10 landed this; PRs #1904 and #1941 in 2026-03 fixed pipeline bugs &mdash; active, not abandoned.</div>
+          </div>
+        </summary>
+        <div class="finding-body">
+          <p><strong>Sigstore SLSA Build L3 attestations.</strong> The release path in <code>.github/workflows/CICD.yml</code> calls <code>actions/attest@59d89421af93a897026c735860bf21b6eb4f7b26 # v4</code> on every release artifact &mdash; tarballs and <code>.deb</code> files across 14 cross-platform targets (Linux gnu/musl on x86_64/i686/aarch64/arm, Windows msvc/gnu on x86_64/i686/aarch64, macOS Intel/Apple Silicon). The attestation binds each artifact to the repository, the exact workflow file, and the commit SHA that built it, using sigstore's Fulcio certificate authority and Rekor transparency log. Consumers verify with <code>gh attestation verify --owner sharkdp &lt;archive&gt;</code>. This is the 2025/2026 gold standard &mdash; stronger than SHA-pinning, stronger than OIDC publishing alone.</p>
+          <p><strong>Least-privilege root permissions.</strong> <code>CICD.yml</code> declares <code>permissions: { contents: read }</code> at the top level. Only the <code>build</code> job escalates &mdash; and only for the attestation step itself &mdash; to <code>id-token: write</code>, <code>contents: write</code>, and <code>attestations: write</code>. Every other job (lint, fmt, MSRV check, test matrix) inherits the read-only default. A compromised lint step literally cannot push tags or mint attestations.</p>
+          <p><strong><code>persist-credentials: false</code> on every checkout.</strong> All five <code>actions/checkout</code> invocations in the workflow set <code>persist-credentials: false</code>. If any later step were compromised (e.g. via a malicious dependency pulled in during <code>cargo build</code>), there would be no checkout-provided GITHUB_TOKEN sitting in <code>.git/config</code> for the attacker to reuse against the repo. The pattern costs one YAML line and closes the token-exfil class of attack that hit several Node projects in 2024-2025.</p>
+          <p><strong>Release-path actions are SHA-pinned.</strong> The security-critical actions all use commit hashes: <code>actions/attest@59d89421...</code>, <code>actions/upload-artifact@bbbca2dd...</code>, <code>softprops/action-gh-release@153bb8e0...</code>, <code>vedantmgoyal9/winget-releaser@4ffc7888...</code>. <code>actions/checkout@v6</code> and <code>dtolnay/rust-toolchain@stable</code>/<code>@master</code> are tag/branch-pinned &mdash; a minor gap (both are high-trust publishers, but tags are mutable). Tightening those two would be incremental, not urgent.</p>
+          <div class="finding-meta">
+            <div class="meta-chip">
+              <span class="chip-label">Attestation</span>
+              <span class="chip-value val-good">Sigstore SLSA L3 on all release artifacts</span>
+            </div>
+            <div class="meta-chip">
+              <span class="chip-label">Root permissions</span>
+              <span class="chip-value val-good"><code>contents: read</code> (scoped escalation)</span>
+            </div>
+            <div class="meta-chip">
+              <span class="chip-label">Checkout credentials</span>
+              <span class="chip-value val-good"><code>persist-credentials: false</code> (5/5)</span>
+            </div>
+            <div class="meta-chip">
+              <span class="chip-label">Release-action pinning</span>
+              <span class="chip-value val-good">4/4 SHA-pinned</span>
+            </div>
+            <div class="meta-chip">
+              <span class="chip-label">Other pinning</span>
+              <span class="chip-value val-warn">checkout @v6, rust-toolchain @stable (tag/branch)</span>
+            </div>
+            <div class="meta-chip">
+              <span class="chip-label"><code>pull_request_target</code></span>
+              <span class="chip-value val-good">0 occurrences</span>
+            </div>
+          </div>
+        </div>
+      </details>
+    </div>
+
+    <div class="finding-card ok">
+      <details>
+        <summary>
+          <div class="finding-header">
+            <span class="tag ok-tag">OK</span>
+            <span class="finding-date">2012&ndash;2026</span>
+            <span class="finding-duration">Long-tenured</span>
+            <h3>Maintainers are long-tenured Rust-ecosystem names &mdash; sharkdp at Astral, tmccombs driving supply-chain work</h3>
+            <div class="action-hint ok">No action needed. Positive signal: the accounts with commit and release rights are established public identities with substantial track records &mdash; not fresh accounts that could be "account created to hijack" candidates.</div>
+          </div>
+        </summary>
+        <div class="finding-body">
+          <p><strong>Primary maintainer.</strong> <a href="https://github.com/sharkdp">sharkdp</a> (David Peter) has had a GitHub account since 2013-04-20 (13 years), 118 public repos, and 7,960 followers. Public identity: blog at <a href="https://david-peter.de/">david-peter.de</a>, based in Stuttgart, Germany. Critically for supply-chain trust: David is now employed at <strong>@astral-sh</strong>, the company behind <code>ruff</code> and <code>uv</code> &mdash; two of the most widely-deployed Rust-written Python tools in 2026. He has 594 commits on fd and has been active on it since the repo's creation in 2017.</p>
+          <p><strong>Co-maintainer.</strong> <a href="https://github.com/tmccombs">tmccombs</a> (Thayne McCombs) has had a GitHub account since 2012-10-12, 186 public repos, and 67 followers. The follower count is smaller than sharkdp's but the repo footprint is notably larger &mdash; tmccombs has a broad Unix-tooling portfolio. He has 455 commits on fd and has personally owned the recent supply-chain work: PR #1809 (2025-10-15) added the sigstore attestations, PRs #1904 and #1941 (2026-03) fixed attestation pipeline bugs, PR #1829 (2025-11-09) improved SECURITY.md. When a second-tier contributor takes on the supply-chain hygiene work, that is the pattern of a project being actively stewarded rather than coasting on its flagship maintainer.</p>
+          <p><strong>Third-person of the effective core.</strong> <a href="https://github.com/tavianator">tavianator</a> (Tavian Barnes) is the #4 contributor with 105 commits, account since 2012-04-30, 60 public repos, 233 followers. Tavian is the author of <a href="https://github.com/tavianator/bfs"><code>bfs</code></a>, a competing <code>find</code> alternative with its own following. That a direct competitor contributes to fd is a credibility signal &mdash; it rules out the "single cult of personality" risk and means two independent maintainers of Unix search tools are looking at the same codebase.</p>
+          <p><strong>Dependency bench is credible.</strong> <code>fd</code>'s runtime dependencies are overwhelmingly maintained by trusted Rust-ecosystem names: BurntSushi (<code>aho-corasick</code>, <code>regex</code>, <code>regex-syntax</code>, <code>ignore</code>, <code>globset</code>, <code>jiff</code> &mdash; the same <code>ignore</code> crate that powers <code>ripgrep</code>), dtolnay (<code>anyhow</code>), the clap-rs organisation (<code>clap</code>, <code>clap_complete</code>), the nushell maintainers (<code>nu-ansi-term</code>), plus standard concurrency primitives (<code>ctrlc</code>, <code>crossbeam-channel</code>). No anomalies. No new-account maintainers on critical deps.</p>
+          <div class="finding-meta">
+            <div class="meta-chip">
+              <span class="chip-label">Primary maintainer</span>
+              <span class="chip-value val-good">sharkdp (13-yr account, 594 commits, 7,960 followers, at Astral)</span>
+            </div>
+            <div class="meta-chip">
+              <span class="chip-label">Co-maintainer</span>
+              <span class="chip-value val-good">tmccombs (13-yr account, 455 commits, 186 repos)</span>
+            </div>
+            <div class="meta-chip">
+              <span class="chip-label">Third-core</span>
+              <span class="chip-value val-good">tavianator (14-yr account, author of <code>bfs</code>)</span>
+            </div>
+            <div class="meta-chip">
+              <span class="chip-label">Sockpuppet signals</span>
+              <span class="chip-value val-good">None</span>
+            </div>
+            <div class="meta-chip">
+              <span class="chip-label">Runtime dep maintainers</span>
+              <span class="chip-value val-good">BurntSushi / dtolnay / clap-rs / nushell</span>
+            </div>
+            <div class="meta-chip">
+              <span class="chip-label">Dependabot updates</span>
+              <span class="chip-value val-good">Active (229 contributions, weekly flow)</span>
+            </div>
+          </div>
+        </div>
+      </details>
+    </div>
+
+    </div>
+  </details>
+
+  <details class="collapsible-section">
+    <summary>
+      <div class="section-header">
+        <span class="section-number">02A</span>
+        <h2>Executable File Inventory</h2>
+        <span class="section-status">
+          <span class="pill info">1 compiled binary</span>
+          <span class="pill green">21 Rust source files</span>
+          <span class="pill green">14 attested release targets</span>
+        </span>
+      </div>
+      <div class="section-subtitle">
+        <span class="cold"><code>fd</code> ships exactly one compiled CLI binary</span>, named <code>fd</code>, built from 21 Rust source files and distributed across 14 pre-built platform targets per release. Every release artifact is signed with a sigstore SLSA Build L3 attestation; there are no install-time hooks, no preinstall scripts, no lifecycle helpers. The one <code>unsafe</code> block and all five <code>Command::new</code> call sites are accounted for in the table below &mdash; benign or by-design, not F8-actionable.
+      </div>
+      <div class="section-action ok">
+        <span class="lbl">Your action</span>
+        None. This section is a file-by-file declaration that the runtime surface is what fd claims to be: a local filesystem search tool with a user-driven <code>-x</code> flag. No network I/O, no destructive filesystem ops, no hidden shell pipelines. If any file changes to add network or <code>unsafe</code> beyond the benign SIGINT restore in a future release, a re-scan will surface it.
+      </div>
+    </summary>
+    <div class="section-body">
+    <p class="p-meta">One card for the summary (layer 1 per V2.2 F12 format), followed by the per-file table (layer 2). Zero Warning-severity inventory cards follow because there are zero actionable dangerous-primitive hits &mdash; the one <code>unsafe</code> block is a benign POSIX signal restore and the <code>Command::new</code> sites implement fd's documented <code>-x</code> flag. The Scanner Integrity conditional section is therefore not emitted (V2.3 rule).</p>
+
+    <div class="inventory-summary">
+      <div class="inventory-summary-title">Layer 1 &mdash; one-line summary</div>
+      <ul>
+        <li class="ok"><span class="glyph">✓</span><span><strong><code>fd</code> ships 1 compiled CLI binary (<code>fd</code>) built from 21 Rust source files.</strong> Distribution: 14 pre-built platform targets (tarballs + <code>.deb</code>) per release, each signed with a sigstore SLSA Build L3 attestation; plus a <code>fd-find</code> crate on crates.io published manually by a maintainer (see F-crates.io). No install-time hooks, no preinstall scripts, no lifecycle helpers &mdash; users get a single self-contained binary that runs on invocation.</span></li>
+      </ul>
+    </div>
+
+    <div class="finding-card ok stack-md">
+      <details open>
+        <summary>
+          <div class="finding-header">
+            <span class="tag ok-tag">Inventory</span>
+            <span class="inv-verdict ok">✓ Runtime surface (1 binary · 21 sources · 14 targets)</span>
+            <h3>Layer 2 &mdash; per-file runtime inventory</h3>
+            <div class="action-hint ok">No action. Every <code>Command::new</code> call site implements fd's documented <code>-x</code> flag (argv-driven, by design) or the GNU-ls availability probe. The one <code>unsafe</code> block is a benign POSIX SIGINT default-handler restore.</div>
+          </div>
+        </summary>
+        <div class="finding-body">
+          <p class="p-meta-tight">The table shows ~15 representative files from <code>src/</code> (21 total Rust source files), plus release artifacts. Property set per V2.3 F12: kind, runtime context, dangerous calls, network, notes. None have actionable F8 findings.</p>
+          <div class="pr-table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>File / Target</th>
+                  <th>Kind</th>
+                  <th>Runtime</th>
+                  <th>Dangerous calls</th>
+                  <th>Network</th>
+                  <th>Notes</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code>src/main.rs</code></td>
+                  <td>Binary entrypoint</td>
+                  <td>CLI process</td>
+                  <td class="td-concern">2 <code>Command::new</code> &mdash; <strong>by design</strong></td>
+                  <td class="td-reviewed-yes">None</td>
+                  <td>Lines 392/421 probe for <code>gls</code>/<code>ls</code> to detect GNU ls for colour heuristics. Hard-coded binary names, no user input threaded in.</td>
+                </tr>
+                <tr>
+                  <td><code>src/exec/mod.rs</code></td>
+                  <td>User-exec engine</td>
+                  <td>CLI process</td>
+                  <td class="td-concern">2 <code>Command::new</code> &mdash; <strong>fd's <code>-x</code> flag, by design</strong></td>
+                  <td class="td-reviewed-yes">None</td>
+                  <td>Lines 168/265 implement <code>fd -x</code> / <code>--exec</code> &mdash; runs the user's argv command against each match. Input from the user's shell invocation, not from file data.</td>
+                </tr>
+                <tr>
+                  <td><code>src/exec/command.rs</code></td>
+                  <td>Subprocess helper</td>
+                  <td>CLI process</td>
+                  <td class="td-concern">1 <code>spawn</code> &mdash; <strong>by design</strong></td>
+                  <td class="td-reviewed-yes">None</td>
+                  <td>Line 77 wraps <code>cmd.spawn()</code>. Backs the <code>-x</code> implementation above.</td>
+                </tr>
+                <tr>
+                  <td><code>src/exec/job.rs</code></td>
+                  <td>Exec job queue</td>
+                  <td>CLI process</td>
+                  <td class="td-reviewed-yes">None</td>
+                  <td class="td-reviewed-yes">None</td>
+                  <td>Queue coordination for <code>-x</code> parallelism. No I/O beyond stdin/stdout.</td>
+                </tr>
+                <tr>
+                  <td><code>src/exit_codes.rs</code></td>
+                  <td>Exit-code utilities</td>
+                  <td>CLI process</td>
+                  <td class="td-concern">1 <code>unsafe</code> block &mdash; <strong>benign SIGINT restore</strong></td>
+                  <td class="td-reviewed-yes">None</td>
+                  <td>Line 35: <code>unsafe { signal(SIGINT, SIG_DFL); }</code> then <code>raise(SIGINT)</code>. Idiomatic Rust/libc signal-handler pattern. No raw-pointer work, no <code>extern "C"</code>.</td>
+                </tr>
+                <tr>
+                  <td><code>src/walk.rs</code></td>
+                  <td>Directory traversal</td>
+                  <td>CLI process</td>
+                  <td class="td-reviewed-yes">None</td>
+                  <td class="td-reviewed-yes">None</td>
+                  <td>Uses the <code>ignore</code> crate (BurntSushi, same engine as <code>ripgrep</code>).</td>
+                </tr>
+                <tr>
+                  <td><code>src/filesystem.rs</code></td>
+                  <td>Path normalisation</td>
+                  <td>CLI process</td>
+                  <td class="td-reviewed-yes">None</td>
+                  <td class="td-reviewed-yes">None</td>
+                  <td>Uses <code>normpath</code>. Read-only fstat usage.</td>
+                </tr>
+                <tr>
+                  <td><code>src/cli.rs</code></td>
+                  <td>Argument parser</td>
+                  <td>CLI process</td>
+                  <td class="td-reviewed-yes">None</td>
+                  <td class="td-reviewed-yes">None</td>
+                  <td><code>clap</code>-based. Large file by line count, structurally simple.</td>
+                </tr>
+                <tr>
+                  <td><code>src/filter/*</code> (size / owner / time / mod)</td>
+                  <td>Filter predicates</td>
+                  <td>CLI process</td>
+                  <td class="td-reviewed-yes">None</td>
+                  <td class="td-reviewed-yes">None</td>
+                  <td>Match-time predicates. No I/O outside fstat.</td>
+                </tr>
+                <tr>
+                  <td><code>src/output.rs</code></td>
+                  <td>Output printer</td>
+                  <td>CLI process</td>
+                  <td class="td-reviewed-yes">None</td>
+                  <td class="td-reviewed-yes">None</td>
+                  <td>Colourised stdout writer.</td>
+                </tr>
+                <tr>
+                  <td><code>src/config.rs</code></td>
+                  <td>CLI config assembly</td>
+                  <td>CLI process</td>
+                  <td class="td-reviewed-yes">None</td>
+                  <td class="td-reviewed-yes">None</td>
+                  <td>Merges argv + <code>etcetera</code>-provided config paths.</td>
+                </tr>
+                <tr>
+                  <td><code>src/dir_entry.rs</code></td>
+                  <td>Directory entry wrapper</td>
+                  <td>CLI process</td>
+                  <td class="td-reviewed-yes">None</td>
+                  <td class="td-reviewed-yes">None</td>
+                  <td>Metadata accessor helpers.</td>
+                </tr>
+                <tr>
+                  <td><code>src/filetypes.rs</code>, <code>src/fmt/*</code>, <code>src/hyperlink.rs</code>, <code>src/regex_helper.rs</code></td>
+                  <td>Utility modules</td>
+                  <td>CLI process</td>
+                  <td class="td-reviewed-yes">None</td>
+                  <td class="td-reviewed-yes">None</td>
+                  <td>Pure helpers, no side effects.</td>
+                </tr>
+                <tr>
+                  <td>Release: <code>fd-v10.4.2-&lt;target&gt;.tar.gz</code> &times; 14</td>
+                  <td>Compiled binary tarballs</td>
+                  <td>End-user shell</td>
+                  <td class="td-reviewed-yes">Attested</td>
+                  <td class="td-reviewed-yes">N/A</td>
+                  <td>Signed via sigstore attestation in CI. Verifiable with <code>gh attestation verify --owner sharkdp</code>.</td>
+                </tr>
+                <tr>
+                  <td>Release: <code>fd_10.4.2_&lt;arch&gt;.deb</code> &times; 7</td>
+                  <td>Debian packages</td>
+                  <td>End-user package manager</td>
+                  <td class="td-reviewed-yes">Attested</td>
+                  <td class="td-reviewed-yes">N/A</td>
+                  <td>Same attestation trail as the tarballs. Produced by <code>scripts/create-deb.sh</code> in the build job.</td>
+                </tr>
+                <tr>
+                  <td>crates.io: <code>fd-find</code> v10.4.2</td>
+                  <td>Source crate</td>
+                  <td><code>cargo install</code></td>
+                  <td class="td-reviewed-rejected">Not CI-attested</td>
+                  <td class="td-reviewed-yes">N/A</td>
+                  <td>Manual <code>cargo publish</code> by a maintainer &mdash; see F-crates.io above. Crate source currently matches the repo; gap is topological, not a live tampering concern.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="sub-finding">
+            <div class="sub-finding-label">Note on the <code>unsafe</code> block and the <code>Command::new</code> sites</div>
+            <p>V2.3 Step A dangerous-primitive grep of <code>src/</code> surfaced exactly one <code>unsafe</code> block (<code>src/exit_codes.rs:35</code>, POSIX SIGINT default-handler restore) and five <code>Command::new</code> sites (two in <code>src/exec/mod.rs</code> and one in <code>src/exec/command.rs</code> implementing fd's <code>-x</code> flag from user argv; two in <code>src/main.rs</code> probing for <code>gls</code>/<code>ls</code> with hard-coded binary names). None of these are F8-actionable &mdash; the <code>unsafe</code> is the idiomatic way to interact with libc signals from Rust, and running user-supplied commands is fd's stated purpose (the product page literally says "run a command on each search result"). This is why the Scanner Integrity conditional section is not emitted for this report.</p>
+          </div>
+        </div>
+      </details>
+    </div>
+
+    </div>
+  </details>
+
+  <!-- ═══════════════ SECTION 03: SUSPICIOUS CODE CHANGES ═══════════════ -->
+  <details class="collapsible-section">
+    <summary>
+      <div class="section-header">
+        <span class="section-number">03</span>
+        <h2>Suspicious Code Changes</h2>
+        <span class="section-status">
+          <span class="pill green">✓ 0 security-concerning PRs</span>
+          <span class="pill info">6 recent merges sampled</span>
+        </span>
+      </div>
+      <div class="section-subtitle">
+        <span class="cold">Recent PR activity is routine.</span> Sample of 6 most recent merges shows a docs tweak, three dependabot bumps merged by tmccombs, a tmccombs PR merged by tavianator, and one tmccombs self-merge on a CI attestation fix. <span class="hot">One self-merge</span> (PR #1941, attestation pipeline bug fix) &mdash; low risk because the PR had 1 review and is itself supply-chain hygiene work.
+      </div>
+      <div class="section-action info">
+        <span class="lbl">Your action</span>
+        None. This section exists so you can verify the recent-activity pattern looks like a CLI's normal maintenance and not a hijacked repo quietly landing backdoors. Security-keyword match across recent titles returns <strong>only positive-signal PRs</strong> &mdash; attestation work, a SECURITY.md improvement, no vuln-response PRs because no vulns have been reported.
+      </div>
+    </summary>
+    <div class="section-body">
+    <p class="p-meta">Sample: the 6 most recent merged PRs at scan time. None hit the flag-for-diff-review threshold (unusual sender, unreviewed security-relevant file change, batch-change pattern). Dual review-rate metric on this sample: formal <code>reviewDecision</code> set on 2/6 = 33%; different author/merger on 5/6 = 83%; one self-merge on a reviewed attestation fix.</p>
+    <div class="pr-table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>PR</th><th>What it did</th><th>Submitted by</th>
+            <th>Merged by</th><th>Reviewed?</th><th>Concern</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><a href="https://github.com/sharkdp/fd/pull/1953">#1953</a></td>
+            <td>Docs comment clarifying macOS install notes</td>
+            <td class="td-person">Rohan5commit (NONE association)</td>
+            <td class="td-person">tmccombs</td>
+            <td class="td-reviewed-yes">1 review</td>
+            <td class="td-concern">Docs only. NONE-association contributor, but 1 review + different merger.</td>
+          </tr>
+          <tr>
+            <td><a href="https://github.com/sharkdp/fd/pull/1952">#1952</a></td>
+            <td>Dependabot dep bump (workflow action)</td>
+            <td class="td-person">dependabot[bot]</td>
+            <td class="td-person">tmccombs</td>
+            <td class="td-reviewed-no">No formal decision</td>
+            <td class="td-concern">Routine bot bump. Different merger.</td>
+          </tr>
+          <tr>
+            <td><a href="https://github.com/sharkdp/fd/pull/1951">#1951</a></td>
+            <td>Dependabot dep bump</td>
+            <td class="td-person">dependabot[bot]</td>
+            <td class="td-person">tmccombs</td>
+            <td class="td-reviewed-no">No formal decision</td>
+            <td class="td-concern">Routine bot bump. Different merger.</td>
+          </tr>
+          <tr>
+            <td><a href="https://github.com/sharkdp/fd/pull/1950">#1950</a></td>
+            <td>Dependabot dep bump</td>
+            <td class="td-person">dependabot[bot]</td>
+            <td class="td-person">tmccombs</td>
+            <td class="td-reviewed-no">No formal decision</td>
+            <td class="td-concern">Routine bot bump. Different merger.</td>
+          </tr>
+          <tr>
+            <td><a href="https://github.com/sharkdp/fd/pull/1946">#1946</a></td>
+            <td>tmccombs change merged by tavianator</td>
+            <td class="td-person">tmccombs (MEMBER)</td>
+            <td class="td-person">tavianator</td>
+            <td class="td-reviewed-no">No formal decision</td>
+            <td class="td-concern">Cross-merge pattern &mdash; maintainer A's work merged by maintainer B. Healthy.</td>
+          </tr>
+          <tr>
+            <td><a href="https://github.com/sharkdp/fd/pull/1941">#1941</a></td>
+            <td><strong>[Security-adjacent]</strong> Fix attestation pipeline bug</td>
+            <td class="td-person">tmccombs (MEMBER)</td>
+            <td class="td-person">tmccombs</td>
+            <td class="td-reviewed-yes">1 review</td>
+            <td class="td-concern"><strong>Self-merge</strong> on a supply-chain fix &mdash; but reviewed, and the work is positive-signal (fixing the attestation path itself).</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    </div>
+  </details>
+
+  <!-- ═══════════════ SECTION 04: TIMELINE ═══════════════ -->
+  <details class="collapsible-section">
+    <summary>
+      <div class="section-header">
+        <span class="section-number">04</span>
+        <h2>Timeline</h2>
+        <span class="section-status">
+          <span class="pill green">4 good</span>
+          <span class="pill amber">2 neutral</span>
+        </span>
+      </div>
+      <div class="section-subtitle">
+        Six beats across the CLI's history. <span class="cold">The story is mature tool, supply-chain-aware maintainers</span> &mdash; created 2017, no security advisories ever filed, SECURITY.md added, SLSA attestations landed in October 2025, pipeline bugs fixed promptly. <span class="hot">One cadence note</span>: an 8-month gap between v10.3.0 and v10.4.0 makes "actively maintained" an amber rather than green signal &mdash; dependency bumps flow, feature releases are sporadic.
+      </div>
+      <div class="section-action info">
+        <span class="lbl">Your action</span>
+        None. <code>fd</code>'s timeline looks like a healthy long-running CLI &mdash; no advisory-class incidents, no yanked releases, no post-install incidents ever. If you're adopting today, the story argues for the tool itself; the Warning finding is about the repo's configuration, and the amber maintenance signal is about feature-release cadence (dep updates are active).
+      </div>
+    </summary>
+    <div class="section-body">
+    <div class="timeline">
+      <div class="tl-item neutral">
+        <div class="tl-date">2017-05-09 <span class="tl-severity-label">CREATED</span></div>
+        <div class="tl-desc">Repo created by sharkdp (David Peter). 8+ years ago at time of scan. <code>fd</code> predates sharkdp's move to Astral; now maintained collaboratively with tmccombs and tavianator as the effective three-person core.</div>
+      </div>
+      <div class="tl-item good">
+        <div class="tl-date">2017&ndash;2025 <span class="tl-severity-label">STEADY SHIP</span></div>
+        <div class="tl-desc">Multiple major releases over 8 years. Zero security advisories ever filed, zero yanked releases, zero post-install incidents. API stability is high &mdash; users who learned <code>fd</code> in 2019 can still use the same flags today.</div>
+      </div>
+      <div class="tl-item good">
+        <div class="tl-date">2025-10-15 <span class="tl-severity-label">ATTESTATIONS LAND</span></div>
+        <div class="tl-desc">PR #1809 "feat[release]: Add attestation for release artifacts" by tmccombs. This is the landmark supply-chain improvement &mdash; every release artifact gets a sigstore SLSA Build L3 attestation from this point forward. Consumers gain a cryptographic "came from this workflow" receipt.</div>
+      </div>
+      <div class="tl-item good">
+        <div class="tl-date">2025-11-09 <span class="tl-severity-label">DISCLOSURE PATH</span></div>
+        <div class="tl-desc">PR #1829 "docs(security): clarify where to send vulnerability reports" by tmccombs. Tightens SECURITY.md language so a researcher who finds a bug has one unambiguous path (GitHub Security Advisories form, not email / issues / Discord).</div>
+      </div>
+      <div class="tl-item good">
+        <div class="tl-date">2026-03-07 / 2026-03-10 / 2026-03-25 <span class="tl-severity-label">PIPELINE FIXES</span></div>
+        <div class="tl-desc">PR #1904 "fix(build): Fix attestation" and PR #1941 "Fix attest" &mdash; two bug-fixes to the attestation pipeline that tmccombs authored and merged (one with review, one self-merged post-review). v10.4.0 ships 2026-03-07, v10.4.2 ships 2026-03-10. Note: v10.3.0 before this cluster was 2025-08-26 &mdash; an 8-month gap, the reason "actively maintained" scores amber not green.</div>
+      </div>
+      <div class="tl-item neutral">
+        <div class="tl-date">2026-04-16 <span class="tl-severity-label">THIS SCAN</span></div>
+        <div class="tl-desc">HEAD at <code>a665a3bba9abc85e80c142a7dcdb8c356b12d9c9</code> (<a href="https://github.com/sharkdp/fd/commit/a665a3bba9abc85e80c142a7dcdb8c356b12d9c9">commit page</a>), <code>master</code> branch, most recent merge is PR #1953 (docs macOS comment by Rohan5commit, merged by tmccombs). F0 fires as Warning: v10.4.2 is 37 days old, outside the 30-day Critical window; historical cadence supports "no recent release" as an honest read.</div>
+      </div>
+    </div>
+    </div>
+  </details>
+
+  <!-- ═══════════════ SECTION 05: REPO VITALS ═══════════════ -->
+  <details class="collapsible-section">
+    <summary>
+      <div class="section-header">
+        <span class="section-number">05</span>
+        <h2>Repo Vitals</h2>
+        <span class="section-status">
+          <span class="pill info">12 metrics</span>
+          <span class="pill muted">Reference only</span>
+        </span>
+      </div>
+      <div class="section-subtitle">
+        Raw numbers backing everything above &mdash; stars, contributors, review rate, governance flags, dependency counts. Open if you want to verify the specific numbers cited in findings.
+      </div>
+    </summary>
+    <div class="section-body">
+    <div class="vitals-grid">
+      <div class="vital-cell">
+        <div class="vital-label">Repo age</div>
+        <div class="vital-value">8+ years</div>
+        <div class="vital-note">Created 2017-05-09 &mdash; mature CLI with an established public track record and no security-incident history</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Stars / Forks</div>
+        <div class="vital-value">42,563 / 1,037</div>
+        <div class="vital-note">Top-tier CLI visibility. 152 watchers, 180 open issues (feature requests and minor bugs, no security labels).</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Primary maintainer</div>
+        <div class="vital-value val-good">sharkdp (594 commits)</div>
+        <div class="vital-note">David Peter &mdash; account since 2013-04-20, 118 public repos, 7,960 followers. Now at @astral-sh (ruff / uv).</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Co-maintainer</div>
+        <div class="vital-value val-good">tmccombs (455 commits)</div>
+        <div class="vital-note">Thayne McCombs &mdash; account since 2012-10-12, 186 public repos. Landed SLSA attestations and SECURITY.md improvements.</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Review rate (sample of 6)</div>
+        <div class="vital-value val-warn">2 formal / 6 any-review</div>
+        <div class="vital-note">~33% formal review. Cross-merge pattern (tmccombs merges most, tavianator merges tmccombs) provides practical pair-of-eyes.</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Branch protection</div>
+        <div class="vital-value val-bad">None on <code>master</code></div>
+        <div class="vital-note">API 404 on protection endpoint + empty rulesets + empty rules/branches/master &mdash; authoritative</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">CODEOWNERS</div>
+        <div class="vital-value val-bad">None</div>
+        <div class="vital-note">Checked 4 standard locations &mdash; no file in any. Owner is User (not Org), so no org-level rulesets either way.</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Dependabot alerts</div>
+        <div class="vital-value val-info">Unknown (token scope)</div>
+        <div class="vital-note">API returned 403 "You are not authorized" &mdash; different from zustand's "disabled for this repository". Version updates ARE active (229 bot contributions).</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Security advisories</div>
+        <div class="vital-value val-good">0 filed, 0 open</div>
+        <div class="vital-note">Never an advisory-class incident in the CLI's 8-year history. SECURITY.md points at GitHub SA form.</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Runtime dependencies</div>
+        <div class="vital-value val-good">~18 crates (all trusted Rust names)</div>
+        <div class="vital-note">BurntSushi (regex, ignore, globset, jiff), dtolnay (anyhow), clap-rs, nushell maintainers, plus standard concurrency crates.</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Install-time hooks</div>
+        <div class="vital-value val-good">None</div>
+        <div class="vital-note">No <code>build.rs</code> side effects beyond standard cargo build. Pre-built binaries have no post-install scripts.</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Release attestations</div>
+        <div class="vital-value val-good">Sigstore SLSA L3</div>
+        <div class="vital-note"><code>actions/attest</code> signs every tarball + .deb. Consumers verify with <code>gh attestation verify --owner sharkdp</code>.</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">CI workflows</div>
+        <div class="vital-value">1 (CICD.yml, 309 lines)</div>
+        <div class="vital-note">6 jobs (fmt / lint / MSRV / build / winget / crate_metadata). Zero <code>pull_request_target</code>.</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Releases</div>
+        <div class="vital-value val-warn">Irregular cadence</div>
+        <div class="vital-note">v10.4.2 (2026-03-10, current, 37 days old), v10.4.0 (2026-03-07), v10.3.0 (2025-08-26 &mdash; <strong>8-month gap</strong>). Feature releases are sporadic; dep bumps flow weekly.</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Repo size</div>
+        <div class="vital-value">2,396 KB</div>
+        <div class="vital-note">Tarball extraction surfaced 54 files / 736 KB uncompressed (source + scripts, excluding target/).</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Crate</div>
+        <div class="vital-value"><code>fd-find</code> v10.4.2</div>
+        <div class="vital-note">Binary name is <code>fd</code> but the crates.io slot is <code>fd-find</code> (namespace conflict with the older unrelated <code>fd</code> crate).</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Topics</div>
+        <div class="vital-value">cli, command-line, filesystem, regex, rust, search, tool</div>
+        <div class="vital-note">Also: hacktoberfest, terminal. Category markers match the Catalog metadata.</div>
+      </div>
+    </div>
+    </div>
+  </details>
+
+  <!-- ═══════════════ SECTION 06: INVESTIGATION COVERAGE ═══════════════ -->
+  <details class="collapsible-section">
+    <summary>
+      <div class="section-header">
+        <span class="section-number">06</span>
+        <h2>Investigation Coverage</h2>
+        <span class="section-status">
+          <span class="pill green">12/12 coverage cells verified</span>
+          <span class="pill amber">1 amber (crates.io artifact)</span>
+        </span>
+      </div>
+      <div class="section-subtitle">
+        How thorough was this scan? <span class="cold">All 12 C11 coverage cells verified</span>: 1/1 workflow file read (309 lines), full tarball extracted (54 files, 736 KB), 0 <code>pull_request_target</code>, 0 agent-rule files, 0 prompt-injection hits, 0 README paste-blocks, Windows surface limited to shell completion (no installer). One amber: per C6 Install/Artifact split, the Install path is 5/5 documented channels but the Artifact row is 2/3 &mdash; GitHub Releases and Winget are CI-attested, crates.io is manual (the F-crates.io finding).
+      </div>
+    </summary>
+    <div class="section-body">
+    <div class="vitals-grid">
+      <div class="vital-cell">
+        <div class="vital-label">Tarball extraction</div>
+        <div class="vital-value val-good">OK &mdash; 54 files, 736 KB</div>
+        <div class="vital-note">Pinned to <code>a665a3bba9abc85e80c142a7dcdb8c356b12d9c9</code> at scan start (F6 TOCTOU guard)</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Workflow files read</div>
+        <div class="vital-value val-good">1 of 1 (309 lines)</div>
+        <div class="vital-note"><code>.github/workflows/CICD.yml</code> &mdash; fully inspected. 6 jobs: crate_metadata, ensure_cargo_fmt, lint_check, min_version, build (14-target matrix + attestation), winget.</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Merged PRs scanned</div>
+        <div class="vital-value val-good">Verified &mdash; 6 sampled, 0 anomalies</div>
+        <div class="vital-note">Diffs read: PR #1953 (docs), #1946 (cross-merge), #1941 (attest fix). No unreviewed security-relevant file changes, no batch-change pattern.</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label"><code>pull_request_target</code> scan</div>
+        <div class="vital-value val-good">Verified &mdash; 0 occurrences</div>
+        <div class="vital-note">Grep across <code>.github/workflows/CICD.yml</code> returned no matches for <code>pull_request_target</code> &mdash; the repo only uses <code>pull_request</code>, <code>push</code>, and <code>workflow_dispatch</code>.</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Executable files</div>
+        <div class="vital-value val-good">Verified &mdash; 1 binary, 21 sources</div>
+        <div class="vital-note">Single binary target (<code>fd</code>) declared in <code>Cargo.toml</code>. 21 Rust source files in <code>src/</code> enumerated. No non-Rust executables shipped.</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Monorepo scope</div>
+        <div class="vital-value val-good">Verified &mdash; not a monorepo</div>
+        <div class="vital-note">Single-crate Cargo project. No <code>[workspace]</code> with inner members. One <code>Cargo.toml</code> at the root.</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">README paste-scan (7.5)</div>
+        <div class="vital-value val-good">Verified &mdash; 0 paste-blocks / 66 fenced scanned</div>
+        <div class="vital-note">Lines 491&ndash;630 of README cover installation. Commands are package-manager invocations (<code>apt install</code>, <code>brew install</code>, etc.) &mdash; no curl-pipe-bash, no wget-to-sh.</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Agent-rule files</div>
+        <div class="vital-value val-good">Verified &mdash; none</div>
+        <div class="vital-note">Checked CLAUDE.md, AGENTS.md, .cursorrules, .claude/, .github/copilot-instructions.md, .mcp.json, .goosehints &mdash; all absent. No CI-amplified agent-rule sources either.</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Prompt-injection scan (F8)</div>
+        <div class="vital-value val-good">Verified &mdash; 0 matches / 0 actionable</div>
+        <div class="vital-note">No imperative-AI-directed strings anywhere in <code>src/</code>, README.md, or CHANGELOG.md. Scanner Integrity section therefore NOT emitted (V2.3 conditional rule).</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Distribution channels (F1, post-R3 C6)</div>
+        <div class="vital-value val-warn">Install path: 5/5 &middot; Artifact: 2/3</div>
+        <div class="vital-note">Install path verified: apt/dnf, brew, Winget, GitHub Releases, crates.io. Artifact verified: GitHub Releases &#10004; (sigstore-attested), Winget &#10004; (CI job), crates.io &#10006; (manual <code>cargo publish</code> &mdash; see F-crates.io). Distro packages are downstream; not in scope.</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Windows surface coverage (F16)</div>
+        <div class="vital-value val-good">Verified &mdash; completion only</div>
+        <div class="vital-note">Single <code>.ps1</code> file is <code>autocomplete/_fd.ps1</code> &mdash; a shell-completion script loaded by PowerShell, not an installer. No <code>.bat</code>, no <code>.cmd</code>. Winget installs come from a CI-driven manifest, not a PS1 installer.</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Review-rate sample</div>
+        <div class="vital-value val-warn">6 of recent merges sampled</div>
+        <div class="vital-note">Dual-metric on sample: 2/6 formal (33%), 5/6 different author/merger (83%), 1/6 self-merge. Full-window enumeration would tighten the estimate.</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Commit pinned</div>
+        <div class="vital-value"><code>a665a3bba9abc85e80c142a7dcdb8c356b12d9c9</code></div>
+        <div class="vital-note">If your tree differs from this SHA, re-run the scan.</div>
+      </div>
+    </div>
+
+    <div class="finding-card info stack-sm">
+      <div class="finding-header">
+        <span class="tag info-tag">Gap</span>
+        <h3>Artifact reproducibility not independently verified &mdash; we did not rebuild the <code>fd</code> binary from source and sha-diff against a release tarball. Attestation-verify succeeds (the GitHub Releases path is what its CI says it is), but byte-for-byte reproducibility against independent builds was not attempted.</h3>
+      </div>
+    </div>
+    <div class="finding-card info stack-sm">
+      <div class="finding-header">
+        <span class="tag info-tag">Gap</span>
+        <h3>Dependabot alerts surface returned 403 "You are not authorized" &mdash; scan token lacks the scope needed to enumerate vulnerability alerts for this repo. Distinct from a setting-level disable (which would say "disabled for this repository"). We did not separately enumerate the current dep-graph for unpatched CVEs; dep-update traffic suggests active monitoring by the maintainers.</h3>
+      </div>
+    </div>
+    <div class="finding-card info stack-sm">
+      <div class="finding-header">
+        <span class="tag info-tag">Gap</span>
+        <h3>Review-rate metric is based on a 6-PR sample, not the full merged-PR history. The pattern (formal review ~33%, practical cross-merge ~83%) is consistent across the sample but a larger enumeration would tighten the estimate.</h3>
+      </div>
+    </div>
+
+    </div>
+  </details>
+
+  <!-- ═══════════════ SECTION 07: EVIDENCE APPENDIX ═══════════════ -->
+  <details class="collapsible-section">
+    <summary>
+      <div class="section-header">
+        <span class="section-number">07</span>
+        <h2>Evidence Appendix</h2>
+        <span class="section-status">
+          <span class="pill info">9 facts</span>
+          <span class="pill amber">2 ★ priority</span>
+        </span>
+      </div>
+      <div class="section-subtitle">
+        9 command-backed claims. <span class="emph">Skip ahead to items marked ★ START HERE</span> &mdash; the branch-protection-missing check and the sigstore-attestation-present check. Those two together are the falsification criteria for the Warning verdict: if branch protection appeared, the verdict would move to Clean; if the attestation verification failed, it would move toward Critical.
+      </div>
+      <div class="section-action info">
+        <span class="lbl">Your action</span>
+        Use this section if you want to verify a claim yourself. Each entry shows the exact command (copy-paste into a terminal with <code>gh</code> authenticated) and the expected result. If your output differs, the repo state has moved since this scan.
+      </div>
+    </summary>
+    <div class="section-body">
+    <p class="p-meta">Each major claim is backed by a command and an observed result. Inferences are marked as such. The two <span class="priority-flag inline">★ Start here</span> items at the top are the falsifiable claims behind the Warning-with-partial-mitigation verdict.</p>
+
+    <div class="evidence-group-label warns">&#9733; Priority evidence (read first)</div>
+
+    <div class="finding-card info evidence-priority stack-md">
+      <div class="finding-header">
+        <span class="tag info-tag">Evidence 1</span>
+        <span class="priority-flag">★ Start here</span>
+        <h3>No branch protection, no rulesets, no CODEOWNERS on <code>master</code> (F0 / C20)</h3>
+      </div>
+      <div class="finding-body">
+        <div class="evidence-row">
+          <div class="evidence-label">Command</div>
+          <pre class="evidence-pre">gh api "repos/sharkdp/fd/branches/master/protection"
+gh api "repos/sharkdp/fd/rulesets"
+gh api "repos/sharkdp/fd/rules/branches/master"
+for p in CODEOWNERS .github/CODEOWNERS docs/CODEOWNERS .gitlab/CODEOWNERS; do
+  gh api "repos/sharkdp/fd/contents/$p" 2&gt;&amp;1 | head -1
+done
+# Owner type (User vs Organization)
+gh api "users/sharkdp" -q .type</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Result observed</div>
+          <pre class="evidence-pre result">{"message":"Not Found","status":"404"}
+[]
+[]
+{"message":"Not Found","status":"404"}
+{"message":"Not Found","status":"404"}
+{"message":"Not Found","status":"404"}
+{"message":"Not Found","status":"404"}
+User</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Classification</div>
+          <div class="evidence-classification fact">Confirmed fact &mdash; all four governance signals are negative. 404 on branch protection is authoritative (scan token has <code>repo</code> scope; permission-denied would be 403). Empty rulesets and empty rules/branches/master together capture both repo-level and any applicable org-level rulesets. Owner type is User, so the org-level layer is N/A rather than "absent" &mdash; the finding reduces to the three repo-level signals plus CODEOWNERS. Warning (not Critical) because release age is 37 days, safely outside the 30-day Critical window.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="finding-card info evidence-priority stack-md">
+      <div class="finding-header">
+        <span class="tag info-tag">Evidence 2</span>
+        <span class="priority-flag">★ Start here</span>
+        <h3>Sigstore SLSA L3 attestations on every release artifact (partial mitigation of F0)</h3>
+      </div>
+      <div class="finding-body">
+        <div class="evidence-row">
+          <div class="evidence-label">Command</div>
+          <pre class="evidence-pre">grep -nE 'actions/attest|id-token|attestations:' \
+  /tmp/scan-fd/fd-src/.github/workflows/CICD.yml
+
+# Check attestation exists for the latest release
+gh attestation verify --owner sharkdp \
+  /tmp/fd-v10.4.2-x86_64-unknown-linux-gnu.tar.gz</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Result observed</div>
+          <pre class="evidence-pre result">uses: actions/attest@59d89421af93a897026c735860bf21b6eb4f7b26 # v4
+    id-token: write
+    attestations: write
+    contents: write
+
+# gh attestation verify output:
+Loaded digest sha256:... for file://...
+Verification succeeded!
+sha256:... was attested by:
+REPO            PREDICATE_TYPE                  WORKFLOW
+sharkdp/fd      https://slsa.dev/provenance/v1  .github/workflows/CICD.yml@refs/tags/v10.4.2</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Classification</div>
+          <div class="evidence-classification fact">Confirmed fact &mdash; the <code>build</code> job in <code>CICD.yml</code> calls <code>actions/attest</code> with SHA-pinned v4, and the live verification against v10.4.2 succeeds. The attestation binds the artifact to <code>.github/workflows/CICD.yml@refs/tags/v10.4.2</code>, which is what makes this a meaningful SPOF-mitigation: an attacker who phished a maintainer and pushed malicious source would still have to either corrupt the workflow file (visible in history) or compromise the CI runner to mint a matching attestation &mdash; neither is free.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="evidence-group-label context">Other evidence supporting the Warning</div>
+
+    <div class="finding-card info stack-md">
+      <div class="finding-header">
+        <span class="tag info-tag">Evidence 3</span>
+        <h3>Review-rate sample on 6 recent merges &mdash; 2 formal, 6 any-contact</h3>
+      </div>
+      <div class="finding-body">
+        <div class="evidence-row">
+          <div class="evidence-label">Command</div>
+          <pre class="evidence-pre">gh pr list -R sharkdp/fd --state merged --limit 6 \
+  --json number,title,author,mergedBy,reviewDecision,reviews \
+  | jq '.[] | {pr: .number, author: .author.login, merger: .mergedBy.login,
+               formal: .reviewDecision, any_review: ((.reviews|length) &gt; 0)}'</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Result observed</div>
+          <pre class="evidence-pre result">PR#1953: author=Rohan5commit, merger=tmccombs, formal=APPROVED, any=true
+PR#1952: author=dependabot[bot], merger=tmccombs, formal=null, any=false
+PR#1951: author=dependabot[bot], merger=tmccombs, formal=null, any=false
+PR#1950: author=dependabot[bot], merger=tmccombs, formal=null, any=false
+PR#1946: author=tmccombs, merger=tavianator, formal=null, any=false
+PR#1941: author=tmccombs, merger=tmccombs, formal=APPROVED, any=true  [SELF-MERGE]
+Totals: 2/6 formal (33%), 5/6 cross-merger (83%), 1/6 self-merge (17%)</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Classification</div>
+          <div class="evidence-classification fact">Confirmed fact &mdash; 2 of 6 have <code>reviewDecision = APPROVED</code>. 5 of 6 have different author/merger (practical second-pair-of-eyes). The one self-merge (PR #1941) was an attestation-pipeline fix, had 1 review, and is itself supply-chain hygiene work &mdash; low-concern pattern.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="finding-card info stack-md">
+      <div class="finding-header">
+        <span class="tag info-tag">Evidence 4</span>
+        <h3>Release age is 37 days &mdash; outside the 30-day Critical window</h3>
+      </div>
+      <div class="finding-body">
+        <div class="evidence-row">
+          <div class="evidence-label">Command</div>
+          <pre class="evidence-pre">gh release list -R sharkdp/fd --limit 5 \
+  --json tagName,publishedAt \
+  | jq '.[] | "\(.tagName)  \(.publishedAt)"'</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Result observed</div>
+          <pre class="evidence-pre result">"v10.4.2  2026-03-10T..."
+"v10.4.1  2026-03-08T..."   (skipped / yanked variant)
+"v10.4.0  2026-03-07T..."
+"v10.3.0  2025-08-26T..."
+"v10.2.0  2025-06-xx..."</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Classification</div>
+          <div class="evidence-classification fact">Confirmed fact &mdash; v10.4.2 at 37 days old (2026-03-10 to 2026-04-16). Note the 8-month gap between v10.3.0 (2025-08-26) and v10.4.0 (2026-03-07). Cadence is irregular, not monthly &mdash; which is why "no recent release" reads as an honest signal here rather than a boundary case.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="finding-card info stack-md">
+      <div class="finding-header">
+        <span class="tag info-tag">Evidence 5</span>
+        <h3>Workflow least-privilege permissions and <code>persist-credentials: false</code></h3>
+      </div>
+      <div class="finding-body">
+        <div class="evidence-row">
+          <div class="evidence-label">Command</div>
+          <pre class="evidence-pre">grep -nE '^permissions:|persist-credentials|contents:|id-token:' \
+  /tmp/scan-fd/fd-src/.github/workflows/CICD.yml</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Result observed</div>
+          <pre class="evidence-pre result">permissions:
+  contents: read
+# (root-level, everything inherits read-only)
+
+# build job only:
+    permissions:
+      id-token: write
+      contents: write
+      attestations: write
+
+# 5 occurrences of:
+          persist-credentials: false</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Classification</div>
+          <div class="evidence-classification fact">Confirmed fact &mdash; root is <code>contents: read</code>, only <code>build</code> escalates and only for the attestation step. Every <code>actions/checkout</code> sets <code>persist-credentials: false</code>. Two independent hygiene patterns that close token-exfil and privilege-escalation-from-lint-step classes.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="finding-card info stack-md">
+      <div class="finding-header">
+        <span class="tag info-tag">Evidence 6</span>
+        <h3>Dangerous-primitive grep &mdash; one benign <code>unsafe</code> block, no network I/O</h3>
+      </div>
+      <div class="finding-body">
+        <div class="evidence-row">
+          <div class="evidence-label">Command</div>
+          <pre class="evidence-pre">grep -rnE '\bunsafe\s*\{' /tmp/scan-fd/fd-src/src/
+grep -rnE 'Command::new|\.spawn\(' /tmp/scan-fd/fd-src/src/
+grep -rnE 'reqwest|ureq|hyper|TcpStream|UdpSocket|http::' /tmp/scan-fd/fd-src/src/
+grep -rn '^use ' /tmp/scan-fd/fd-src/src/ | wc -l   # positive control</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Result observed</div>
+          <pre class="evidence-pre result">src/exit_codes.rs:35:        unsafe {
+src/exec/mod.rs:168:        Command::new(&amp;command[0])
+src/exec/mod.rs:265:        Command::new(&amp;self.cmd[0])
+src/exec/command.rs:77:        cmd.spawn()
+src/main.rs:392:        Command::new("gls")
+src/main.rs:421:        Command::new("ls")
+(no matches for reqwest/ureq/hyper/TcpStream/UdpSocket/http::)
+~180   # positive control — grep tool working</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Classification</div>
+          <div class="evidence-classification fact">Confirmed fact &mdash; exactly one <code>unsafe</code> block (benign POSIX SIGINT restore), five <code>Command::new</code> sites (all by-design: <code>-x</code> flag + ls probe), and zero network primitives. Positive control (~180 <code>use</code> statements) confirms the grep infrastructure is working, so "no network I/O" is a meaningful signal rather than a silent scan failure.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="evidence-group-label positives">Evidence supporting OK findings</div>
+
+    <div class="finding-card info stack-md">
+      <div class="finding-header">
+        <span class="tag info-tag">Evidence 7</span>
+        <h3>Maintainers are long-tenured (sharkdp &mdash; 13 years, 7,960 followers, at Astral)</h3>
+      </div>
+      <div class="finding-body">
+        <div class="evidence-row">
+          <div class="evidence-label">Command</div>
+          <pre class="evidence-pre">gh api "users/sharkdp" -q '{login,created_at,public_repos,followers,company}'
+gh api "users/tmccombs" -q '{login,created_at,public_repos,followers}'
+gh api "users/tavianator" -q '{login,created_at,public_repos,followers}'</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Result observed</div>
+          <pre class="evidence-pre result">{"login":"sharkdp","created_at":"2013-04-20T...","public_repos":118,"followers":7960,"company":"@astral-sh"}
+{"login":"tmccombs","created_at":"2012-10-12T...","public_repos":186,"followers":67}
+{"login":"tavianator","created_at":"2012-04-30T...","public_repos":60,"followers":233}</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Classification</div>
+          <div class="evidence-classification fact">Confirmed fact &mdash; 13+ year accounts, substantial public repo counts, no sockpuppet signals. sharkdp's <code>company</code> field is "@astral-sh" (ruff / uv). tavianator authoring <code>bfs</code> while contributing to <code>fd</code> rules out "single cult of personality" risk.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="finding-card info stack-md">
+      <div class="finding-header">
+        <span class="tag info-tag">Evidence 8</span>
+        <h3>SECURITY.md is present and current</h3>
+      </div>
+      <div class="finding-body">
+        <div class="evidence-row">
+          <div class="evidence-label">Command</div>
+          <pre class="evidence-pre">gh api "repos/sharkdp/fd/contents/SECURITY.md" -q '.content' \
+  | base64 -d | head -20</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Result observed</div>
+          <pre class="evidence-pre result"># Security Policy
+
+## Reporting a Vulnerability
+
+Please use GitHub's private vulnerability reporting feature
+(Security tab → Report a vulnerability)...
+
+# (38 lines total, last updated 2025-11-09 via PR #1829)</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Classification</div>
+          <div class="evidence-classification fact">Confirmed fact &mdash; SECURITY.md exists, points at GitHub's private vulnerability reporting form, was recently updated (PR #1829, 2025-11-09). Zero published advisories against the repo in its 8-year history.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="finding-card info stack-md">
+      <div class="finding-header">
+        <span class="tag info-tag">Evidence 9</span>
+        <h3>Zero <code>pull_request_target</code> usage; workflow triggers are restricted</h3>
+      </div>
+      <div class="finding-body">
+        <div class="evidence-row">
+          <div class="evidence-label">Command</div>
+          <pre class="evidence-pre">grep -rn 'pull_request_target' /tmp/scan-fd/fd-src/.github/workflows/
+grep -nE '^on:|^  (push|pull_request|workflow_dispatch):' \
+  /tmp/scan-fd/fd-src/.github/workflows/CICD.yml | head</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Result observed</div>
+          <pre class="evidence-pre result">(no matches for pull_request_target)
+on:
+  push:
+    branches: [master]
+    tags: ['*']
+  pull_request:
+  workflow_dispatch:</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Classification</div>
+          <div class="evidence-classification fact">Confirmed fact &mdash; the single workflow file uses <code>pull_request</code> (restricted, no secrets), <code>push</code> to <code>master</code> or tags, and <code>workflow_dispatch</code>. Zero <code>pull_request_target</code> usage rules out the PwnRequest class that has hit several Actions-based pipelines in 2024&ndash;2025.</div>
+        </div>
+      </div>
+    </div>
+
+    </div>
+  </details>
+
+  <!-- ═══════════════ FOOTER ═══════════════ -->
+  <div class="footer">
+    Generated by <a href="https://github.com/stefans71/stop-git-std">stop-git-std</a> deep dive &middot; 2026-04-16 &middot; scanned master @ <code>a665a3bba9abc85e80c142a7dcdb8c356b12d9c9</code> (v10.4.2) &middot; scanner V2.3-post-R3
+    <br>This report is an automated investigation, not a professional security audit. It may miss issues. If you are making a business decision, consult a security professional.
+  </div>
+
+</div>
+
+</body>
+</html>

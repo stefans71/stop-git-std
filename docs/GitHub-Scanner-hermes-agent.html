@@ -1,0 +1,1372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Security Investigation Report: NousResearch/hermes-agent @ 764536b (v0.10.0) | Generated 2026-04-16 | Prompt v2.3 -->
+<title>Security Investigation: NousResearch/hermes-agent</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Unbounded:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* ═══════════════════════════════════════════════
+     DESIGN SYSTEM — DO NOT MODIFY
+     Dark theme, security monitoring aesthetic
+     ═══════════════════════════════════════════════ */
+  :root {
+    --bg-void: #0a0a0c;
+    --bg-surface: #131316;
+    --bg-elevated: #1a1a1f;
+    --bg-hover: #222228;
+    --border: #32323c;
+    --border-subtle: #26262e;
+    --text-primary: #f0f0f4;
+    --text-secondary: #b0b0bc;
+    --text-muted: #7e7e8e;
+    --red-glow: #ff4545;
+    --red-dim: #ff454520;
+    --red-bg: #1a0f0f;
+    --amber-glow: #ffaa2a;
+    --amber-dim: #ffaa2a20;
+    --amber-bg: #1a150e;
+    --green-glow: #22c55e;
+    --green-dim: #22c55e20;
+    --green-bg: #0e1a12;
+    --cyan-glow: #06b6d4;
+    --cyan-dim: #06b6d420;
+    --font-mono: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace;
+    --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-display: 'Unbounded', 'Inter', sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--font-sans);
+    background: var(--bg-void);
+    color: var(--text-primary);
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      repeating-linear-gradient(
+        to bottom,
+        rgba(255,255,255,0.008) 0px,
+        rgba(255,255,255,0.008) 1px,
+        transparent 1px,
+        transparent 3px
+      ),
+      url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+  }
+  body::after {
+    content: ''; position: fixed; left: 0; right: 0; height: 120px;
+    background: linear-gradient(to bottom, transparent, rgba(255,170,42,0.035), transparent);
+    pointer-events: none; z-index: 9998;
+    animation: scan-sweep 14s linear infinite;
+  }
+  @keyframes scan-sweep {
+    0% { top: -15%; }
+    100% { top: 115%; }
+  }
+
+  .scan-strip {
+    display: flex; flex-wrap: wrap; gap: 1.25rem; align-items: center;
+    padding: 0.625rem 0 0.75rem; margin-bottom: 1.5rem;
+    border-top: 1px solid var(--border-subtle);
+    border-bottom: 1px solid var(--border-subtle);
+    font-family: var(--font-mono); font-size: 0.65rem;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--text-secondary);
+  }
+  .scan-strip-item { display: inline-flex; align-items: center; gap: 0.4rem; }
+  .scan-strip-item .dot {
+    display: inline-block; width: 6px; height: 6px; border-radius: 50%;
+    box-shadow: 0 0 6px currentColor;
+  }
+  .scan-strip-item .dot.amber { color: var(--amber-glow); background: var(--amber-glow); box-shadow: 0 0 8px var(--amber-glow); animation: pulse 3s ease-in-out infinite; }
+  .scan-strip-item.flash {
+    color: var(--red-glow); animation: flash-blink 1.4s ease-in-out infinite;
+  }
+  @keyframes flash-blink {
+    0%, 80%, 100% { opacity: 1; }
+    85%, 95% { opacity: 0.25; }
+  }
+
+  .hero-caption {
+    font-family: var(--font-sans); font-size: 1.0625rem; line-height: 1.55;
+    color: var(--text-primary); font-weight: 400;
+    max-width: 68ch; margin: 0.75rem 0 1.75rem;
+    letter-spacing: -0.005em;
+  }
+
+  .val-good  { color: var(--green-glow) !important; }
+  .val-bad   { color: var(--red-glow)   !important; }
+  .val-warn  { color: var(--amber-glow) !important; }
+  .val-info  { color: var(--cyan-glow)  !important; }
+  .fw-semi   { font-weight: 600; }
+  .stack-md  { margin-bottom: 0.75rem; }
+  .stack-sm  { margin-top: 0.75rem; }
+  .p-meta {
+    color: var(--text-secondary); margin-bottom: 1rem;
+    font-size: 0.875rem; line-height: 1.55;
+  }
+  .p-meta-tight {
+    color: var(--text-secondary); margin: 0.75rem 0 1rem;
+    font-size: 0.8125rem; line-height: 1.55;
+  }
+  .finding-card.evidence-priority {
+    border-left: 4px solid var(--amber-glow);
+  }
+  .priority-flag.inline { display: inline-block; }
+
+  a { color: var(--cyan-glow); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  .font-controls {
+    position: fixed; top: 16px; right: 16px; z-index: 1000;
+    display: flex; align-items: center; gap: 2px;
+    background: var(--bg-elevated); border: 1px solid var(--border);
+    border-radius: 8px; padding: 4px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5); backdrop-filter: blur(12px);
+  }
+  .font-controls button {
+    font-family: var(--font-mono); font-size: 0.875rem; font-weight: 700;
+    width: 34px; height: 34px; border: none; border-radius: 6px;
+    background: transparent; color: var(--text-secondary); cursor: pointer;
+    display: flex; align-items: center; justify-content: center; transition: all 0.15s;
+  }
+  .font-controls button:hover { background: var(--bg-hover); color: var(--text-primary); }
+  .font-controls button:active { transform: scale(0.92); }
+  .font-controls .font-size-display {
+    font-family: var(--font-mono); font-size: 0.6875rem; color: var(--text-muted);
+    min-width: 38px; text-align: center; letter-spacing: 0.05em; user-select: none;
+  }
+
+  .page { max-width: 960px; margin: 0 auto; padding: 0 20px; }
+
+  .hero { padding: 64px 0 48px; border-bottom: 1px solid var(--border); position: relative; }
+  .hero::after {
+    content: ''; position: absolute; bottom: -1px; left: 0; right: 0; height: 120px;
+    background: linear-gradient(to top, var(--bg-void), transparent); pointer-events: none;
+  }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-family: var(--font-mono); font-size: 0.6875rem; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--text-muted); margin-bottom: 20px;
+    padding: 6px 12px; border: 1px solid var(--border); border-radius: 6px; background: var(--bg-surface);
+  }
+  .hero-badge .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--text-muted);
+  }
+  .hero-badge .dot.red { background: var(--red-glow); box-shadow: 0 0 8px var(--red-glow); animation: pulse 2s ease-in-out infinite; }
+  .hero-badge .dot.green { background: var(--green-glow); box-shadow: 0 0 8px var(--green-glow); }
+  .hero-badge .dot.amber { background: var(--amber-glow); box-shadow: 0 0 8px var(--amber-glow); animation: pulse 3s ease-in-out infinite; }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+  .hero h1 {
+    font-family: var(--font-display); font-size: clamp(1.8rem, 4vw, 3.4rem);
+    font-weight: 800; letter-spacing: -0.04em; line-height: 1.05; margin-bottom: 16px;
+  }
+  .hero h1 .slash {
+    color: var(--text-muted); font-weight: 300;
+    margin: 0 0.1em; font-size: 0.85em;
+  }
+  .hero h1 span { color: var(--red-glow); }
+  .hero h1 span.green { color: var(--green-glow); }
+  .hero h1 span.amber { color: var(--amber-glow); }
+  .hero .meta { font-size: 0.875rem; color: var(--text-primary); display: flex; flex-wrap: wrap; gap: 16px; }
+  .hero .meta-item { display: flex; align-items: center; gap: 6px; }
+  .hero .meta-item .label { color: var(--text-secondary); font-size: 0.75rem; }
+
+  .verdict-section { padding: 48px 0 40px; }
+  .verdict-banner {
+    border-radius: 0; padding: 2.25rem 2.75rem 2rem 4.5rem;
+    position: relative; overflow: hidden;
+    border-left-width: 6px; border-left-style: solid;
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%);
+  }
+  .verdict-banner.critical { background: linear-gradient(135deg, #1f0a0a 0%, #0a0a0c 100%); border: 1px solid #ff454540; border-left-color: var(--red-glow); }
+  .verdict-banner.caution { background: linear-gradient(135deg, #1f1810 0%, #0a0a0c 100%); border: 1px solid #ffaa2a40; border-left-color: var(--amber-glow); }
+  .verdict-banner.clean { background: linear-gradient(135deg, #0a1f14 0%, #0a0a0c 100%); border: 1px solid #22c55e40; border-left-color: var(--green-glow); }
+  .verdict-banner::before {
+    content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+    pointer-events: none;
+  }
+  .verdict-banner.caution::before { background: radial-gradient(circle at 20% 30%, #ffaa2a12, transparent 55%); }
+  .verdict-banner::after {
+    content: attr(data-dossier); position: absolute;
+    left: 1.4rem; top: 2.1rem; bottom: 2rem;
+    writing-mode: vertical-rl; transform: rotate(180deg);
+    font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.25em;
+    color: var(--text-muted); text-transform: uppercase;
+    display: flex; align-items: center;
+    opacity: 0.55;
+  }
+  .verdict-banner .verdict-label {
+    font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.22em;
+    text-transform: uppercase; margin-bottom: 1rem; position: relative;
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    padding: 0.25rem 0.625rem; border-radius: 0.125rem;
+    background: rgba(255,170,42,0.08); border: 1px solid rgba(255,170,42,0.25);
+  }
+  .verdict-banner.caution .verdict-label { color: var(--amber-glow); }
+  .verdict-banner h2 {
+    font-family: var(--font-display);
+    font-size: clamp(1.5rem, 3.2vw, 2.2rem); font-weight: 600; line-height: 1.18;
+    letter-spacing: -0.025em; margin-bottom: 1rem; position: relative; color: #ff8c00;
+    max-width: 56ch;
+  }
+
+  .verdict-split {
+    display: grid; grid-template-columns: 1fr auto 1fr; gap: 1.75rem;
+    margin-bottom: 1.25rem; align-items: stretch;
+  }
+  @media (max-width: 820px) {
+    .verdict-split { grid-template-columns: 1fr; gap: 1rem; }
+  }
+  .verdict-entry { display: flex; flex-direction: column; gap: 0.5rem; }
+  .verdict-entry-scope {
+    font-family: var(--font-mono); font-size: 0.65rem; letter-spacing: 0.2em;
+    text-transform: uppercase; color: var(--text-muted);
+    padding-bottom: 0.375rem; border-bottom: 1px solid var(--border-subtle);
+  }
+  .verdict-entry-headline {
+    font-family: var(--font-display); font-weight: 600;
+    font-size: clamp(1.35rem, 2.5vw, 1.85rem); line-height: 1.15;
+    letter-spacing: -0.02em; margin: 0;
+  }
+  .verdict-entry-headline.good { color: #8dd492; }
+  .verdict-entry-headline.warn { color: var(--amber-glow); }
+  .verdict-entry-headline.bad  { color: var(--red-glow); }
+  .verdict-entry-detail {
+    font-family: var(--font-sans); font-size: 0.8125rem; line-height: 1.55;
+    color: var(--text-secondary); margin-top: 0.25rem;
+  }
+  .verdict-split-divider {
+    width: 1px; background: linear-gradient(to bottom, transparent, var(--border), transparent);
+  }
+  @media (max-width: 820px) {
+    .verdict-split-divider { width: 100%; height: 1px; background: var(--border-subtle); }
+  }
+
+  .verdict-exhibits { display: grid; gap: 0.875rem; margin-top: 0.5rem; }
+  .exhibit {
+    position: relative; overflow: hidden; border-radius: 10px;
+    border: 1px solid var(--border-subtle);
+  }
+  .exhibit.vuln    { background: linear-gradient(135deg, #1a1008 0%, #0f0a0a 100%); border-color: #ffaa2a30; }
+  .exhibit.govern  { background: linear-gradient(135deg, #100c1a 0%, #0a0a0f 100%); border-color: #ff808040; }
+  .exhibit.signals { background: linear-gradient(135deg, #0a1812 0%, #0a0f0a 100%); border-color: #22c55e30; }
+  .exhibit::before {
+    content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
+  }
+  .exhibit.vuln::before    { background: var(--amber-glow); }
+  .exhibit.govern::before  { background: var(--red-glow); }
+  .exhibit.signals::before { background: var(--green-glow); }
+  .exhibit > summary {
+    list-style: none; cursor: pointer;
+    padding: 0.875rem 1rem 0.875rem 1.5rem;
+    display: flex; align-items: center; gap: 0.75rem;
+    position: relative;
+  }
+  .exhibit > summary::-webkit-details-marker { display: none; }
+  .exhibit > summary::after {
+    content: '\25B6'; margin-left: auto; font-size: 0.7rem;
+    color: var(--text-muted); transition: transform 0.2s;
+  }
+  .exhibit[open] > summary::after { transform: rotate(90deg); }
+  .exhibit-glyph {
+    width: 1.75rem; height: 1.75rem; border-radius: 50%;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 0.85rem; font-weight: 700; flex-shrink: 0;
+  }
+  .exhibit.vuln .exhibit-glyph    { background: rgba(255,170,42,0.18); color: var(--amber-glow); }
+  .exhibit.govern .exhibit-glyph  { background: rgba(255,69,69,0.18);  color: var(--red-glow); }
+  .exhibit.signals .exhibit-glyph { background: rgba(34,197,94,0.18);  color: var(--green-glow); }
+  .exhibit-title {
+    font-family: var(--font-display); font-size: 1.05rem; font-weight: 600;
+    letter-spacing: -0.01em; line-height: 1.25;
+  }
+  .exhibit-count {
+    margin-left: 0.5rem; font-family: var(--font-mono); font-size: 0.7rem;
+    letter-spacing: 0.12em; color: var(--text-muted); text-transform: uppercase;
+  }
+  .exhibit-summary-line {
+    font-family: var(--font-sans); font-size: 0.82rem; color: var(--text-secondary);
+    margin-left: 0.5rem; line-height: 1.45; font-weight: 400;
+  }
+  @media (max-width: 720px) {
+    .exhibit-summary-line { display: block; margin-left: 2.5rem; margin-top: 0.25rem; }
+  }
+  .exhibit-body {
+    border-top: 1px solid var(--border-subtle);
+    padding: 0; background: rgba(0,0,0,0.15);
+  }
+  .exhibit-item {
+    display: grid; grid-template-columns: 1.5rem 1fr; gap: 0.75rem;
+    padding: 0.75rem 1rem 0.75rem 1.5rem;
+    font-size: 0.88rem; line-height: 1.55; color: var(--text-primary);
+    border-bottom: 1px solid var(--border-subtle);
+  }
+  .exhibit-item:last-child { border-bottom: none; }
+  .exhibit-item:nth-child(even) { background: rgba(255,255,255,0.015); }
+  .exhibit-item-glyph {
+    font-family: var(--font-mono); font-weight: 700; font-size: 0.8rem;
+    text-align: center; padding-top: 0.15rem;
+  }
+  .exhibit.vuln .exhibit-item-glyph    { color: var(--amber-glow); }
+  .exhibit.govern .exhibit-item-glyph  { color: var(--red-glow); }
+  .exhibit.signals .exhibit-item-glyph { color: var(--green-glow); }
+  .exhibit-item-tag {
+    font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--text-muted); display: block;
+    margin-bottom: 0.15rem;
+  }
+
+  .verdict-bullets { list-style: none; padding: 0; margin: 0; position: relative; }
+  .verdict-bullets li {
+    display: flex; align-items: flex-start; gap: 12px; font-size: 0.9375rem;
+    color: var(--text-primary); line-height: 1.6; padding: 8px 0; border-bottom: 1px solid #ffffff08;
+  }
+  .verdict-bullets li:last-child { border-bottom: none; }
+
+  .scorecard-section { padding: 0 0 48px; }
+  .scorecard-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px;
+    background: var(--border); border-radius: 12px; overflow: hidden;
+  }
+  .score-cell { background: var(--bg-surface); padding: 24px 20px; text-align: center; transition: background 0.2s; }
+  .score-cell:hover { background: var(--bg-elevated); }
+  .score-cell .score-icon {
+    width: 32px; height: 32px; margin: 0 auto 12px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center; font-size: 1rem;
+  }
+  .score-cell .score-icon.red { background: var(--red-dim); color: var(--red-glow); }
+  .score-cell .score-icon.amber { background: var(--amber-dim); color: var(--amber-glow); }
+  .score-cell .score-icon.green { background: var(--green-dim); color: var(--green-glow); }
+  .score-cell .score-label {
+    font-family: var(--font-mono); font-size: 0.625rem; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--text-muted); margin-bottom: 6px;
+  }
+  .score-cell .score-value { font-size: 1.125rem; font-weight: 700; line-height: 1.2; }
+  .score-cell .score-value.red { color: var(--red-glow); }
+  .score-cell .score-value.amber { color: var(--amber-glow); }
+  .score-cell .score-value.green { color: var(--green-glow); }
+
+  details summary { cursor: pointer; list-style: none; }
+  details summary::-webkit-details-marker { display: none; }
+  .collapsible-section > summary { padding: 48px 0 0; border-top: 1px solid var(--border-subtle); }
+  .collapsible-section > summary .section-header { margin-bottom: 0; display: flex; align-items: center; gap: 12px; }
+  .collapsible-section[open] > summary .section-header { margin-bottom: 28px; }
+  .collapsible-section .section-body { padding-bottom: 0; }
+  .collapsible-section > summary .section-header::after {
+    content: '\25B6'; font-size: 0.625rem; color: var(--text-muted); transition: transform 0.2s; margin-left: auto;
+  }
+  .collapsible-section[open] > summary .section-header::after { transform: rotate(90deg); }
+  .section-header .section-number {
+    font-family: var(--font-mono); font-size: 0.6875rem; letter-spacing: 0.1em;
+    width: 28px; height: 28px; border-radius: 6px; border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    color: var(--cyan-glow); opacity: 0.75;
+  }
+  .section-header h2 {
+    font-family: var(--font-display); font-size: 1.4rem; font-weight: 600;
+    letter-spacing: -0.02em; line-height: 1.15;
+    color: var(--cyan-glow);
+  }
+
+  .finding-card {
+    background: var(--bg-surface); border: 1px solid var(--border); border-radius: 10px;
+    margin-bottom: 12px; overflow: hidden; transition: border-color 0.2s;
+  }
+  .finding-card:hover { border-color: #3a3a44; }
+  .finding-card.critical { border-left: 3px solid var(--red-glow); }
+  .finding-card.warning { border-left: 3px solid var(--amber-glow); }
+  .finding-card.info { border-left: 3px solid var(--cyan-glow); }
+  .finding-card.ok { border-left: 3px solid var(--green-glow); }
+
+  .finding-header {
+    padding: 16px 20px 12px; display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 16px;
+  }
+  .finding-header .tag {
+    font-family: var(--font-mono); font-size: 0.625rem; letter-spacing: 0.08em;
+    text-transform: uppercase; padding: 3px 8px; border-radius: 4px; font-weight: 600; flex-shrink: 0;
+  }
+  .tag.warning-tag { background: var(--amber-dim); color: var(--amber-glow); }
+  .tag.info-tag { background: var(--cyan-dim); color: var(--cyan-glow); }
+  .tag.ok-tag { background: var(--green-dim); color: var(--green-glow); }
+  .finding-header h3 {
+    width: 100%; font-family: var(--font-display); font-size: 1.125rem;
+    font-weight: 600; line-height: 1.3; letter-spacing: -0.015em; margin-top: 4px;
+  }
+
+  .finding-card summary { list-style: none; cursor: pointer; }
+  .finding-card summary::-webkit-details-marker { display: none; }
+  .finding-card summary .finding-header { position: relative; padding-right: 40px; }
+  .finding-card summary .finding-header::after {
+    content: '\25B6'; font-size: 0.625rem; color: var(--text-muted);
+    transition: transform 0.2s; position: absolute; right: 20px; top: 20px;
+  }
+  .finding-card details[open] > summary .finding-header::after { transform: rotate(90deg); }
+
+  .finding-body { padding: 0 20px 16px; }
+  .finding-body p { font-size: 0.875rem; color: var(--text-primary); line-height: 1.7; margin-bottom: 12px; }
+  .meta-chip {
+    font-size: 0.75rem; padding: 8px 12px; border-radius: 6px;
+    background: var(--bg-elevated); border: 1px solid var(--border-subtle);
+    display: flex; flex-direction: column; gap: 2px;
+  }
+  .meta-chip .chip-label {
+    font-family: var(--font-mono); font-size: 0.625rem; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--text-secondary);
+  }
+  .meta-chip .chip-value { color: var(--text-primary); font-weight: 500; }
+
+  .timeline { position: relative; padding-left: 28px; }
+  .timeline::before {
+    content: ''; position: absolute; left: 7px; top: 8px; bottom: 8px; width: 1px;
+    background: linear-gradient(to bottom, var(--border), var(--amber-glow), var(--border));
+  }
+  .tl-item { position: relative; margin-bottom: 20px; padding-left: 8px; }
+  .tl-item::before {
+    content: ''; position: absolute; left: -24px; top: 7px; width: 9px; height: 9px;
+    border-radius: 50%; background: var(--text-muted); border: 2px solid var(--bg-void);
+  }
+  .tl-item.bad::before { background: var(--red-glow); box-shadow: 0 0 6px var(--red-dim); }
+  .tl-item.good::before { background: var(--green-glow); }
+  .tl-item.neutral::before { background: var(--amber-glow); }
+  .tl-date { font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-secondary); font-weight: 600; }
+  .tl-desc { font-size: 0.875rem; color: var(--text-primary); margin-top: 2px; line-height: 1.6; }
+
+  .vitals-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1px; background: var(--border); border-radius: 10px; overflow: hidden;
+  }
+  .vital-cell { background: var(--bg-surface); padding: 18px 20px; }
+  .vital-cell .vital-label {
+    font-family: var(--font-mono); font-size: 0.625rem; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--text-muted); margin-bottom: 4px;
+  }
+  .vital-cell .vital-value { font-size: 1rem; font-weight: 700; margin-bottom: 4px; }
+  .vital-cell .vital-note { font-size: 0.75rem; color: var(--text-secondary); line-height: 1.5; }
+
+  .action-card { padding: 24px; border-radius: 10px; margin-bottom: 12px; }
+  .action-card.stop { background: var(--red-bg); border: 1px solid #ff454530; }
+  .action-card.wait { background: var(--amber-bg); border: 1px solid #ffaa2a30; }
+  .action-card.info-action { background: var(--bg-surface); border: 1px solid var(--border); }
+  .action-card.ok-action { background: var(--green-bg); border: 1px solid #22c55e30; }
+  .action-card h3 { font-size: 0.9375rem; font-weight: 700; margin-bottom: 8px; }
+  .action-card p { font-size: 0.875rem; color: var(--text-primary); line-height: 1.7; }
+  .action-card pre {
+    background: var(--bg-void); border: 1px solid var(--border); border-radius: 8px;
+    padding: 16px; margin: 12px 0; overflow-x: auto;
+    font-family: var(--font-mono); font-size: 0.8125rem; color: var(--cyan-glow); line-height: 1.6;
+  }
+
+  .catalog-meta {
+    background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: 10px;
+    padding: 1.125rem 1.375rem; margin-bottom: 1rem;
+  }
+  .catalog-meta .catalog-label {
+    font-family: var(--font-mono); font-size: 0.65rem; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--text-secondary); margin-bottom: 0.625rem;
+  }
+  .catalog-meta table { width: 100%; }
+  .catalog-meta td { padding: 0.375rem 0.75rem 0.375rem 0; border: none; font-size: 0.82rem; vertical-align: top; }
+  .catalog-meta td.key {
+    font-family: var(--font-mono); color: var(--text-secondary);
+    white-space: nowrap; width: 1%; font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.06em;
+  }
+  .catalog-meta td.val { color: var(--text-primary); }
+  .catalog-meta td.val a { color: var(--cyan-glow); text-decoration: none; }
+
+  .section-status {
+    display: inline-flex; gap: 0.5rem; margin-left: auto; padding-right: 2.5rem;
+    font-size: 0.72rem; font-family: var(--font-mono); align-items: center;
+    flex-wrap: wrap;
+  }
+  .section-status .pill {
+    display: inline-flex; align-items: center; gap: 0.25rem;
+    padding: 0.1875rem 0.5rem; border-radius: 0.625rem; border: 1px solid;
+    letter-spacing: 0.04em; white-space: nowrap;
+  }
+  .section-status .pill.amber {
+    color: var(--amber-glow); border-color: var(--amber-dim);
+    background: rgba(255, 170, 42, 0.1);
+  }
+  .section-status .pill.green {
+    color: var(--green-glow); border-color: var(--green-dim);
+    background: rgba(34, 197, 94, 0.1);
+  }
+  .section-status .pill.info {
+    color: var(--cyan-glow); border-color: var(--cyan-dim);
+    background: rgba(6, 182, 212, 0.1);
+  }
+  .section-status .pill.muted {
+    color: var(--text-secondary); border-color: var(--border-subtle);
+    background: var(--bg-elevated);
+  }
+  .collapsible-section[open] > summary .section-status { opacity: 0.5; }
+
+  .section-subtitle {
+    font-family: var(--font-sans); font-size: 0.9375rem; color: var(--text-secondary);
+    font-weight: 400; margin-top: 0.5rem; line-height: 1.55;
+    max-width: 68ch; letter-spacing: -0.003em;
+  }
+  .section-subtitle .emph { color: var(--text-primary); font-weight: 600; }
+  .section-subtitle .hot { color: var(--amber-glow); font-weight: 600; }
+  .section-subtitle .cold { color: var(--green-glow); font-weight: 600; }
+
+  .section-action {
+    display: block; margin-top: 0.5rem; padding: 0.5rem 0.75rem;
+    background: var(--bg-elevated); border-radius: 0.375rem;
+    border-left: 3px solid var(--amber-glow);
+    font-size: 0.85rem; color: var(--text-primary); line-height: 1.55;
+  }
+  .section-action.ok { border-left-color: var(--green-glow); }
+  .section-action.info { border-left-color: var(--cyan-glow); }
+  .section-action .lbl {
+    font-family: var(--font-mono); font-weight: 700;
+    font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--amber-glow); margin-right: 0.5rem;
+  }
+  .section-action.ok .lbl { color: var(--green-glow); }
+
+  .status-chip {
+    display: inline-flex; align-items: center; gap: 0.25rem;
+    padding: 0.1875rem 0.5rem; border-radius: 0.625rem; border: 1px solid;
+    font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.04em;
+    white-space: nowrap; margin-left: 0.375rem;
+  }
+  .status-chip.active {
+    color: var(--red-glow); border-color: var(--red-dim);
+    background: rgba(255, 69, 69, 0.12);
+  }
+  .status-chip.informational {
+    color: var(--text-secondary); border-color: var(--border-subtle);
+    background: var(--bg-elevated);
+  }
+
+  .action-hint {
+    margin-top: 0.5rem; font-size: 0.78rem; color: var(--text-secondary);
+    line-height: 1.55;
+  }
+  .action-hint::before {
+    content: "\2192 "; color: var(--amber-glow); font-style: normal; font-weight: 600;
+  }
+  .action-hint.ok::before { color: var(--green-glow); }
+  .action-hint.warn::before { color: var(--amber-glow); }
+
+  .inventory-summary {
+    margin-bottom: 1.25rem; padding: 0.875rem 1rem;
+    background: var(--bg-elevated); border-radius: 0.5rem;
+    border-left: 3px solid var(--cyan-glow); font-size: 0.85rem;
+  }
+  .inventory-summary-title {
+    font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--text-secondary); margin-bottom: 0.5rem;
+  }
+  .inventory-summary ul { list-style: none; padding: 0; margin: 0; }
+  .inventory-summary li {
+    padding: 0.25rem 0; line-height: 1.55; display: flex; gap: 0.5rem; align-items: flex-start;
+  }
+  .inventory-summary li .glyph {
+    flex: 0 0 1.125rem; font-family: var(--font-mono); font-weight: 700;
+    text-align: center;
+  }
+  .inventory-summary li.warn .glyph { color: var(--amber-glow); }
+  .inventory-summary li.ok .glyph { color: var(--green-glow); }
+  .inventory-summary li.info .glyph { color: var(--cyan-glow); }
+
+  .tl-item .tl-severity-label {
+    display: inline-block; font-family: var(--font-mono); font-weight: 700;
+    font-size: 0.68rem; letter-spacing: 0.05em; margin-right: 0.375rem;
+    padding: 0.125rem 0.375rem; border-radius: 0.25rem;
+  }
+  .tl-item.bad .tl-severity-label {
+    color: var(--red-glow); background: rgba(255, 69, 69, 0.12);
+  }
+  .tl-item.good .tl-severity-label {
+    color: var(--green-glow); background: rgba(34, 197, 94, 0.12);
+  }
+  .tl-item.neutral .tl-severity-label {
+    color: var(--amber-glow); background: rgba(255, 170, 42, 0.12);
+  }
+
+  .evidence-priority {
+    position: relative; border-left-width: 4px !important;
+  }
+  .evidence-priority .priority-flag {
+    display: inline-block; margin-left: 0.5rem; padding: 0.1875rem 0.5rem;
+    background: var(--amber-glow); color: var(--bg-void);
+    border-radius: 0.25rem; font-family: var(--font-mono);
+    font-size: 0.62rem; font-weight: 700; letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .evidence-group-label {
+    margin: 1.5rem 0 0.75rem; font-family: var(--font-mono);
+    font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--text-secondary); padding: 0.5rem 0.75rem;
+    background: var(--bg-elevated); border-radius: 0.375rem;
+    border-left: 3px solid var(--border);
+  }
+  .evidence-group-label.warns { border-left-color: var(--amber-glow); color: var(--amber-glow); }
+  .evidence-group-label.positives { border-left-color: var(--green-glow); color: var(--green-glow); }
+  .evidence-group-label.context { border-left-color: var(--cyan-glow); color: var(--cyan-glow); }
+
+  .evidence-row { margin-bottom: 10px; }
+  .evidence-row .evidence-label {
+    font-family: var(--font-mono); font-size: 0.625rem; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--text-secondary); margin-bottom: 4px;
+  }
+  .evidence-pre {
+    background: var(--bg-void); border: 1px solid var(--border); border-radius: 6px;
+    padding: 12px 14px; margin: 0; overflow-x: auto; white-space: pre-wrap; word-break: break-word;
+    font-family: var(--font-mono); font-size: 0.75rem; color: var(--cyan-glow); line-height: 1.55;
+    max-height: 320px; overflow-y: auto;
+  }
+  .evidence-pre.result { color: var(--text-primary); }
+
+  .footer {
+    padding: 40px 0; border-top: 1px solid var(--border-subtle);
+    text-align: center; font-size: 0.75rem; color: var(--text-muted);
+  }
+  .footer a { color: var(--text-secondary); }
+
+  @media (max-width: 700px) {
+    .scorecard-grid { grid-template-columns: repeat(2, 1fr); }
+    .hero { padding: 40px 0 32px; }
+    .collapsible-section > summary { padding-top: 32px; }
+    .vitals-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 420px) {
+    .scorecard-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="font-controls">
+  <button onclick="adjustFont(-1)" title="Decrease font size" aria-label="Decrease font size">A&minus;</button>
+  <span class="font-size-display" id="fontDisplay">100%</span>
+  <button onclick="adjustFont(1)" title="Increase font size" aria-label="Increase font size">A+</button>
+</div>
+<script>
+  let fontScale = 100;
+  function adjustFont(dir) {
+    fontScale = Math.min(150, Math.max(75, fontScale + dir * 10));
+    document.documentElement.style.fontSize = fontScale + '%';
+    document.getElementById('fontDisplay').textContent = fontScale + '%';
+  }
+</script>
+
+<div class="page">
+
+  <div class="hero">
+    <div class="scan-strip">
+      <span class="scan-strip-item"><span class="dot amber"></span>Security Investigation</span>
+      <span class="scan-strip-item">Dossier &middot; hermes-agent</span>
+      <span class="scan-strip-item">Rev &middot; 764536b</span>
+      <span class="scan-strip-item">v2.3 &middot; 2026-04-16</span>
+      <span class="scan-strip-item flash">&#x25CF; Live</span>
+    </div>
+    <h1>NousResearch<span class="slash">/</span><span class="amber">hermes-agent</span></h1>
+    <div class="hero-caption">A 93,000-star self-improving AI agent with strong CI defenses (SHA-pinned actions, custom supply-chain audit) but a governance gap: the ruleset on main prevents force-push but does not require reviews, and 0% of sampled PRs had any formal review. Five open security issues describe real attack surfaces in the sandbox and credential handling.</div>
+    <div class="meta">
+      <div class="meta-item"><span class="label">Investigated</span> 2026-04-16</div>
+      <div class="meta-item"><span class="label">Applies to</span> main @ 764536b &middot; v0.10.0</div>
+      <div class="meta-item"><span class="label">Repo age</span> 9 months</div>
+      <div class="meta-item"><span class="label">Stars</span> 93,679</div>
+      <div class="meta-item"><span class="label">License</span> MIT</div>
+    </div>
+  </div>
+
+  <div class="catalog-meta">
+    <div class="catalog-label">Catalog metadata</div>
+    <table>
+      <tr><td class="key">Report file</td><td class="val"><code>GitHub-Scanner-hermes-agent.html</code> (+ <code>.md</code> companion)</td></tr>
+      <tr><td class="key">Repo</td><td class="val"><a href="https://github.com/NousResearch/hermes-agent">github.com/NousResearch/hermes-agent</a></td></tr>
+      <tr><td class="key">Short description</td><td class="val">Self-improving AI agent with built-in learning loop, multi-model support, messaging gateway, and skill system. Ships via curl-pipe-bash installer, Docker, Nix, and PyPI.</td></tr>
+      <tr><td class="key">Category</td><td class="val">AI/LLM tooling</td></tr>
+      <tr><td class="key">Subcategory</td><td class="val">Agentic AI platform with learning loop</td></tr>
+      <tr><td class="key">Verdict</td><td class="val val-warn fw-semi">Caution (split)</td></tr>
+      <tr><td class="key">Scanned revision</td><td class="val">main @ 764536b (release tag v0.10.0, tagged v2026.4.16)</td></tr>
+      <tr><td class="key">Prompt version</td><td class="val">v2.3 (post-R3)</td></tr>
+      <tr><td class="key">Prior scan</td><td class="val">None &mdash; first run on this repo</td></tr>
+    </table>
+  </div>
+
+  <div class="verdict-section">
+    <div class="verdict-banner caution" data-dossier="DOSSIER &middot; HERMES-AGENT &middot; 764536B &middot; 2026-04-16 &middot; V2.3">
+      <div class="verdict-label">&#x25CF; Split verdict &middot; governance gap + open vulns</div>
+      <div class="verdict-split">
+        <div class="verdict-entry">
+          <div class="verdict-entry-scope">Deployment &middot; Installing today &middot; v0.10.0</div>
+          <h2 class="verdict-entry-headline warn">Install from a tagged release, not HEAD of main</h2>
+          <div class="verdict-entry-detail">The primary install command <code>curl ... | bash</code> fetches from HEAD of main. The ruleset on main prevents force-push but does NOT require PR reviews (F0). A compromised maintainer credential can push unreviewed code that immediately reaches new installs. Install from a tagged release instead and review open sandbox/credential issues (F2) before running on sensitive systems.</div>
+        </div>
+        <div class="verdict-split-divider"></div>
+        <div class="verdict-entry">
+          <div class="verdict-entry-scope">Version &middot; Evaluating the codebase</div>
+          <h2 class="verdict-entry-headline warn">Strong security awareness, real open vulnerabilities</h2>
+          <div class="verdict-entry-detail">100% SHA-pinned CI actions, a custom supply-chain-audit workflow, CVE-aware dependency pinning, and Docker privilege dropping via gosu. However, five open security issues (#7071 sandbox escape, #8035 auth.json readable, #4427 /proc/environ bypass, #10693 OAuth PKCE leak, #11307 webhook spoofing) describe real attack surfaces. 0% PR review rate (F4) means no formal review gate.</div>
+        </div>
+      </div>
+      <div class="verdict-exhibits">
+        <details class="exhibit vuln">
+          <summary>
+            <span class="exhibit-glyph">&#x26A0;</span>
+            <span>
+              <span class="exhibit-title">Open security vulnerabilities &mdash; 5 active issues, none fixed</span>
+              <span class="exhibit-count">&middot; 3 findings</span>
+              <span class="exhibit-summary-line">Sandbox escape, credential reads, webhook spoofing &mdash; reported by community, fixes pending</span>
+            </span>
+          </summary>
+          <div class="exhibit-body">
+            <div class="exhibit-item">
+              <span class="exhibit-item-glyph">01</span>
+              <span>
+                <span class="exhibit-item-tag">Governance &middot; F0</span>
+                Ruleset "protect-main" only prevents deletion and force-push. No review requirement, no status checks, no CODEOWNERS. Org-level rulesets unknown (admin:org scope gap). 0% of 15 sampled PRs had any review.
+              </span>
+            </div>
+            <div class="exhibit-item">
+              <span class="exhibit-item-glyph">02</span>
+              <span>
+                <span class="exhibit-item-tag">Install surface &middot; F1</span>
+                curl-pipe-bash from HEAD of main (<code>scripts/install.sh</code>). Not pinned to a release tag or SHA. Combined with F0, any push to main changes what users install.
+              </span>
+            </div>
+            <div class="exhibit-item">
+              <span class="exhibit-item-glyph">03</span>
+              <span>
+                <span class="exhibit-item-tag">Runtime &middot; F2</span>
+                Five open security issues: sandbox PYTHONPATH injection (#7071), file_tools reads auth.json (#8035), /proc/environ bypass (#4427), OAuth PKCE verifier leak (#10693), Telegram webhook spoofing (#11307).
+              </span>
+            </div>
+          </div>
+        </details>
+
+        <details class="exhibit signals">
+          <summary>
+            <span class="exhibit-glyph">&#x2714;</span>
+            <span>
+              <span class="exhibit-title">Strong positive signals &mdash; CI defenses, dependency hygiene, Docker security</span>
+              <span class="exhibit-count">&middot; 3 findings</span>
+              <span class="exhibit-summary-line">100% SHA-pinned actions, supply-chain-audit workflow, CVE-aware deps, gosu privilege dropping</span>
+            </span>
+          </summary>
+          <div class="exhibit-body">
+            <div class="exhibit-item">
+              <span class="exhibit-item-glyph">01</span>
+              <span>
+                <span class="exhibit-item-tag">CI &middot; F6</span>
+                100% SHA-pinned GitHub Actions across 8 workflows. Custom supply-chain-audit.yml detects .pth files, base64+exec combos, obfuscated subprocess calls. No <code>pull_request_target</code> usage.
+              </span>
+            </div>
+            <div class="exhibit-item">
+              <span class="exhibit-item-glyph">02</span>
+              <span>
+                <span class="exhibit-item-tag">Dependencies &middot; F7</span>
+                pyproject.toml pins ranges with explicit CVE comments. uv.lock for reproducible builds. Open issue #10695 tracks known CVEs.
+              </span>
+            </div>
+            <div class="exhibit-item">
+              <span class="exhibit-item-glyph">03</span>
+              <span>
+                <span class="exhibit-item-tag">Agent rules &middot; F5</span>
+                AGENTS.md is a standard development guide with no AI-directed imperative language.
+              </span>
+            </div>
+          </div>
+        </details>
+      </div>
+    </div>
+  </div>
+
+  <div class="scorecard-section">
+    <div class="scorecard-grid">
+      <div class="score-cell">
+        <div class="score-icon amber">&#x26A0;</div>
+        <div class="score-label">Does anyone check the code?</div>
+        <div class="score-value amber">No review gate &mdash; 0% formal review, ruleset prevents force-push only</div>
+      </div>
+      <div class="score-cell">
+        <div class="score-icon amber">&#x26A0;</div>
+        <div class="score-label">Do they fix problems quickly?</div>
+        <div class="score-value amber">5 open security issues, 1&ndash;22 days old, none merged</div>
+      </div>
+      <div class="score-cell">
+        <div class="score-icon amber">&#x26A0;</div>
+        <div class="score-label">Do they tell you about problems?</div>
+        <div class="score-value amber">CVE comments in deps, public tracker, but no SECURITY.md</div>
+      </div>
+      <div class="score-cell">
+        <div class="score-icon amber">&#x26A0;</div>
+        <div class="score-label">Is it safe out of the box?</div>
+        <div class="score-value amber">Caution &mdash; install from tagged release, review sandbox issues</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 01: WHAT SHOULD I DO? -->
+  <details class="collapsible-section" open>
+    <summary>
+      <div class="section-header">
+        <span class="section-number">01</span>
+        <h2>What Should I Do?</h2>
+        <span class="section-status">
+          <span class="pill amber">&#x26A0; 3 action steps</span>
+        </span>
+      </div>
+      <div class="section-subtitle">
+        <span class="hot">Most urgent</span>: install from a tagged release, not HEAD of main. Review open security issues before running on systems with valuable credentials.
+      </div>
+    </summary>
+    <div class="section-body">
+
+    <div class="action-card wait">
+      <h3 class="val-warn">Step 1: Install from a tagged release, not HEAD of main</h3>
+      <p><strong>Non-technical:</strong> The main install command (<code>curl ... | bash</code>) grabs whatever is on the main branch right now. Since there is no review requirement on main, a bad actor who compromises the maintainer's GitHub credentials can push malicious code that you would immediately install. Instead, clone a specific tagged release.</p>
+      <pre># Instead of: curl -fsSL https://raw.githubusercontent.com/.../main/scripts/install.sh | bash
+# Do this:
+git clone --depth 1 --branch v2026.4.16 https://github.com/NousResearch/hermes-agent.git
+cd hermes-agent
+pip install -e ".[all]"</pre>
+    </div>
+    <div class="action-card wait">
+      <h3 class="val-warn">Step 2: Review open security issues before running on sensitive systems</h3>
+      <p><strong>Non-technical:</strong> The agent's code execution sandbox has a known escape path (#7071) where scripts can read your API keys. The file reading tool can access your auth tokens (#8035). If you are running this on a machine with valuable credentials, wait for these fixes or manually review the workarounds.</p>
+    </div>
+    <div class="action-card info-action">
+      <h3>Step 3: If using Telegram webhooks, configure TELEGRAM_WEBHOOK_SECRET</h3>
+      <p><strong>Non-technical:</strong> Issue #11307 reports that Telegram webhook mode can accept spoofed messages if no secret is configured. Set the <code>TELEGRAM_WEBHOOK_SECRET</code> environment variable.</p>
+    </div>
+
+    </div>
+  </details>
+
+  <!-- SECTION 02: WHAT WE FOUND -->
+  <details class="collapsible-section">
+    <summary>
+      <div class="section-header">
+        <span class="section-number">02</span>
+        <h2>What We Found</h2>
+        <span class="section-status">
+          <span class="pill amber">&#x26A0; 3 Warning</span>
+          <span class="pill info">&#x2139; 2 Info</span>
+          <span class="pill green">&#x2713; 3 OK</span>
+        </span>
+      </div>
+      <div class="section-subtitle">Eight findings across governance, install surface, runtime security, and CI posture.</div>
+    </summary>
+    <div class="section-body">
+
+    <div class="finding-card warning stack-md">
+      <details>
+        <summary>
+          <div class="finding-header">
+            <span class="tag warning-tag">Warning</span>
+            <span class="status-chip active">Active</span>
+            <h3>F0 &middot; Governance gap: no review gate on main</h3>
+            <div class="action-hint warn">Enable required PR reviews on the protect-main ruleset and add CODEOWNERS for security-critical paths.</div>
+          </div>
+        </summary>
+        <div class="finding-body">
+          <p>The repo-level ruleset "protect-main" (created 2026-03-20) prevents branch deletion and force-push on main. However, it does NOT require PR reviews or passing status checks before merge. No CODEOWNERS file exists. The classic branch protection API returns 404. Org-level rulesets could not be checked (admin:org scope gap &mdash; recorded as unknown, not absent).</p>
+          <p>With 93,679 stars, weekly releases shipping code to user machines, and a sole maintainer (teknium1, 82% of commits) who can merge directly, the trust chain for every install terminates at one set of credentials with no automated second-person check.</p>
+          <p><strong>Threat model (F13):</strong> An attacker who phishes teknium1's GitHub credentials, compromises a stale session token, gains access via a malicious IDE extension, or exploits a GitHub OAuth vulnerability can push code directly to main. That code immediately reaches the curl-pipe-bash install path (F1) and Docker builds.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="finding-card warning stack-md">
+      <details>
+        <summary>
+          <div class="finding-header">
+            <span class="tag warning-tag">Warning</span>
+            <span class="status-chip active">Active</span>
+            <h3>F1 &middot; Curl-pipe-bash install fetches from HEAD of main</h3>
+            <div class="action-hint warn">Pin the install URL to a tagged release SHA, or add checksum verification to the installer output.</div>
+          </div>
+        </summary>
+        <div class="finding-body">
+          <p>The README's primary install path fetches <code>scripts/install.sh</code> from the HEAD of the main branch. The script clones the repo at HEAD and runs <code>pip install</code>. Combined with F0 (no review gate), any push to main changes what new users install with no delay and no review.</p>
+          <p>Alternative install paths (Docker, Nix) are also tied to main branch pushes but have additional build verification (Docker smoke tests, Nix flake check).</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="finding-card warning stack-md">
+      <details>
+        <summary>
+          <div class="finding-header">
+            <span class="tag warning-tag">Warning</span>
+            <span class="status-chip active">Active</span>
+            <h3>F2 &middot; Multiple open security vulnerabilities in sandbox and credential handling</h3>
+            <div class="action-hint warn">Triage and fix #7071 and #8035 first (credential exposure). #4427 requires process isolation.</div>
+          </div>
+        </summary>
+        <div class="finding-body">
+          <p>Five open security issues describe real, reproducible attack surfaces:</p>
+          <p><strong>#7071</strong> (filed 2026-04-10): Code execution sandbox injects hermes-agent project root into PYTHONPATH, allowing sandboxed scripts to import <code>hermes_cli.config</code> and read LLM provider API keys.</p>
+          <p><strong>#8035</strong> (filed 2026-04-12): <code>file_tools.read_file</code> path guards do not block <code>~/.hermes/auth.json</code> or <code>~/.hermes/mcp-tokens/</code>, allowing the LLM to read OAuth tokens.</p>
+          <p><strong>#4427</strong> (filed 2026-04-01): Subprocess environment blocklist can be bypassed by reading <code>/proc/&lt;parent_pid&gt;/environ</code>, recovering stripped API keys.</p>
+          <p><strong>#10693</strong> (filed 2026-04-16): Anthropic OAuth PKCE flow reuses the <code>code_verifier</code> as the <code>state</code> parameter, leaking the verifier via the authorization URL.</p>
+          <p><strong>#11307</strong> (filed 2026-04-17): Telegram webhook mode accepts requests without validating <code>TELEGRAM_WEBHOOK_SECRET</code>, allowing unauthenticated update spoofing.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="finding-card info stack-md">
+      <details>
+        <summary>
+          <div class="finding-header">
+            <span class="tag info-tag">Info</span>
+            <span class="status-chip active">Active</span>
+            <h3>F3 &middot; No security policy</h3>
+            <div class="action-hint warn">Add SECURITY.md with private vulnerability reporting.</div>
+          </div>
+        </summary>
+        <div class="finding-body">
+          <p>A repo with 93k stars and an active vulnerability disclosure community has no SECURITY.md or security policy. Reporters file vulnerabilities as regular public issues, making them visible to attackers before fixes ship.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="finding-card info stack-md">
+      <details>
+        <summary>
+          <div class="finding-header">
+            <span class="tag info-tag">Info</span>
+            <span class="status-chip active">Active</span>
+            <h3>F4 &middot; Solo-maintainer commit concentration</h3>
+            <div class="action-hint warn">Organizational risk for NousResearch to address internally.</div>
+          </div>
+        </summary>
+        <div class="finding-body">
+          <p>teknium1 has 2,959 of ~3,600 commits (82%) and merged 13 of 15 sampled PRs with zero reviews. The NousResearch organization provides backing, and 29 other contributors are active, but day-to-day development bus factor is 1.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="finding-card ok stack-md">
+      <details>
+        <summary>
+          <div class="finding-header">
+            <span class="tag ok-tag">OK</span>
+            <span class="status-chip informational">Informational</span>
+            <h3>F5 &middot; AGENTS.md is a standard development guide</h3>
+            <div class="action-hint ok">No action needed. Standard project documentation.</div>
+          </div>
+        </summary>
+        <div class="finding-body">
+          <p>AGENTS.md at the repo root contains project structure documentation and coding conventions for AI coding assistants. No imperative AI-directed language, no prompt injection attempts.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="finding-card ok stack-md">
+      <details>
+        <summary>
+          <div class="finding-header">
+            <span class="tag ok-tag">OK</span>
+            <span class="status-chip informational">Informational</span>
+            <h3>F6 &middot; CI security posture is strong</h3>
+            <div class="action-hint ok">No action needed. Strongest CI posture observed in 7 scans to date.</div>
+          </div>
+        </summary>
+        <div class="finding-body">
+          <p>All 8 CI workflows use SHA-pinned GitHub Actions (100% pinning rate). No <code>pull_request_target</code> trigger usage. A custom <code>supply-chain-audit.yml</code> workflow scans every PR diff for .pth files, base64+exec combos, obfuscated subprocess calls, and more. Tests run with API keys blanked.</p>
+        </div>
+      </details>
+    </div>
+
+    <div class="finding-card ok stack-md">
+      <details>
+        <summary>
+          <div class="finding-header">
+            <span class="tag ok-tag">OK</span>
+            <span class="status-chip informational">Informational</span>
+            <h3>F7 &middot; Dependencies actively managed with CVE awareness</h3>
+            <div class="action-hint ok">No action needed. Track issue #10695 for remaining CVE bumps.</div>
+          </div>
+        </summary>
+        <div class="finding-body">
+          <p>pyproject.toml pins 14 core dependencies to version ranges with inline CVE comments. uv.lock provides reproducible builds. Open issue #10695 tracks known CVEs in aiohttp, cryptography, and curl-cffi.</p>
+        </div>
+      </details>
+    </div>
+
+    </div>
+  </details>
+
+  <!-- SECTION 02A: EXECUTABLE FILE INVENTORY -->
+  <details class="collapsible-section">
+    <summary>
+      <div class="section-header">
+        <span class="section-number">02A</span>
+        <h2>Executable File Inventory</h2>
+        <span class="section-status">
+          <span class="pill amber">&#x26A0; 1 Review</span>
+          <span class="pill green">&#x2713; 13 OK</span>
+        </span>
+      </div>
+      <div class="section-subtitle">14+ executables including install scripts, Docker entrypoint, and skill helpers.</div>
+    </summary>
+    <div class="section-body">
+
+    <div class="inventory-summary">
+      <div class="inventory-summary-title">Quick scan (14+ executables &mdash; 3 entry points, 1 Docker, 14 shell scripts)</div>
+      <ul>
+        <li class="warn"><span class="glyph">&#x26A0;</span> <code>scripts/install.sh</code> &mdash; curl-pipe-bash target, clones from HEAD of main (F1 applies)</li>
+        <li class="ok"><span class="glyph">&#x2713;</span> <code>docker/entrypoint.sh</code> &mdash; privilege-drops via gosu, bootstraps config</li>
+        <li class="ok"><span class="glyph">&#x2713;</span> <code>setup-hermes.sh</code>, <code>scripts/install.ps1</code>, <code>scripts/install.cmd</code> &mdash; alternative installers</li>
+        <li class="ok"><span class="glyph">&#x2713;</span> <code>skills/*/scripts/*.sh</code> &mdash; skill helper scripts (p5js, manim, github-auth, duckduckgo)</li>
+        <li class="ok"><span class="glyph">&#x2713;</span> <code>environments/benchmarks/*/run_eval.sh</code> &mdash; benchmark runners</li>
+        <li class="info"><span class="glyph">&#x2139;</span> Python entry points: <code>hermes</code>, <code>hermes-agent</code>, <code>hermes-acp</code> via console_scripts</li>
+      </ul>
+    </div>
+
+    </div>
+  </details>
+
+  <!-- SECTION 03: SUSPICIOUS CODE CHANGES -->
+  <details class="collapsible-section">
+    <summary>
+      <div class="section-header">
+        <span class="section-number">03</span>
+        <h2>Suspicious Code Changes</h2>
+        <span class="section-status">
+          <span class="pill green">&#x2713; None detected</span>
+        </span>
+      </div>
+      <div class="section-subtitle">No suspicious patterns in recent commits. All changes consistent with active development.</div>
+    </summary>
+    <div class="section-body">
+      <p class="p-meta">No suspicious code changes detected in the recent commit sample. All 15 sampled commits from 2026-04-16 are consistent with active development: feature additions (Gemini TTS, Gemini CLI OAuth), bug fixes (Discord RTP, approval panel, checkpoint isolation), and maintenance. Step A grep found no eval/exec in source files. subprocess usage in cli.py is consistent with terminal management. base64 usage is standard (JWT, PKCE, clipboard).</p>
+    </div>
+  </details>
+
+  <!-- SECTION 04: TIMELINE -->
+  <details class="collapsible-section">
+    <summary>
+      <div class="section-header">
+        <span class="section-number">04</span>
+        <h2>Timeline</h2>
+        <span class="section-status">
+          <span class="pill amber">&#x26A0; 7 vulns in 23 days</span>
+        </span>
+      </div>
+      <div class="section-subtitle">Vulnerability reports accelerating while releases continue at weekly cadence. No fixes shipped during this window.</div>
+    </summary>
+    <div class="section-body">
+
+    <div class="timeline">
+      <div class="tl-item good">
+        <div class="tl-date"><span class="tl-severity-label">START</span> 2025-07-22</div>
+        <div class="tl-desc">Repository created</div>
+      </div>
+      <div class="tl-item good">
+        <div class="tl-date"><span class="tl-severity-label">RELEASE</span> 2026-03-12</div>
+        <div class="tl-desc">v0.2.0 &mdash; first public release</div>
+      </div>
+      <div class="tl-item good">
+        <div class="tl-date"><span class="tl-severity-label">GOVERNANCE</span> 2026-03-20</div>
+        <div class="tl-desc">"protect-main" ruleset created (deletion + force-push protection)</div>
+      </div>
+      <div class="tl-item bad">
+        <div class="tl-date"><span class="tl-severity-label">VULN REPORTED</span> 2026-03-25</div>
+        <div class="tl-desc">Issue #3015: session file leak</div>
+      </div>
+      <div class="tl-item bad">
+        <div class="tl-date"><span class="tl-severity-label">VULN REPORTED</span> 2026-03-30</div>
+        <div class="tl-desc">Issue #3971: missing token redaction patterns</div>
+      </div>
+      <div class="tl-item bad">
+        <div class="tl-date"><span class="tl-severity-label">VULN REPORTED</span> 2026-04-01</div>
+        <div class="tl-desc">Issue #4427: /proc/environ bypass</div>
+      </div>
+      <div class="tl-item bad">
+        <div class="tl-date"><span class="tl-severity-label">VULN REPORTED</span> 2026-04-10</div>
+        <div class="tl-desc">Issue #7071: sandbox PYTHONPATH injection &mdash; secrets leak</div>
+      </div>
+      <div class="tl-item bad">
+        <div class="tl-date"><span class="tl-severity-label">VULN REPORTED</span> 2026-04-12</div>
+        <div class="tl-desc">Issue #8035: file_tools reads auth.json</div>
+      </div>
+      <div class="tl-item neutral">
+        <div class="tl-date"><span class="tl-severity-label">RELEASE</span> 2026-04-16</div>
+        <div class="tl-desc">v0.10.0 released. Issues #10693 (OAuth PKCE) + #10695 (dep CVEs) filed.</div>
+      </div>
+      <div class="tl-item neutral">
+        <div class="tl-date"><span class="tl-severity-label">SCAN</span> 2026-04-16</div>
+        <div class="tl-desc">This scan (764536b)</div>
+      </div>
+      <div class="tl-item bad">
+        <div class="tl-date"><span class="tl-severity-label">VULN REPORTED</span> 2026-04-17</div>
+        <div class="tl-desc">Issue #11307: Telegram webhook spoofing</div>
+      </div>
+    </div>
+
+    </div>
+  </details>
+
+  <!-- SECTION 05: REPO VITALS -->
+  <details class="collapsible-section">
+    <summary>
+      <div class="section-header">
+        <span class="section-number">05</span>
+        <h2>Repo Vitals</h2>
+        <span class="section-status">
+          <span class="pill muted">Coverage data</span>
+        </span>
+      </div>
+      <div class="section-subtitle">Key metrics for NousResearch/hermes-agent at the time of scan.</div>
+    </summary>
+    <div class="section-body">
+
+    <div class="vitals-grid">
+      <div class="vital-cell"><div class="vital-label">Stars</div><div class="vital-value">93,679</div></div>
+      <div class="vital-cell"><div class="vital-label">Forks</div><div class="vital-value">13,056</div></div>
+      <div class="vital-cell"><div class="vital-label">Open issues</div><div class="vital-value val-warn">4,986</div></div>
+      <div class="vital-cell"><div class="vital-label">Contributors</div><div class="vital-value">30+</div></div>
+      <div class="vital-cell"><div class="vital-label">Releases</div><div class="vital-value">9 (v0.2.0 to v0.10.0)</div></div>
+      <div class="vital-cell"><div class="vital-label">Release cadence</div><div class="vital-value">Weekly</div></div>
+      <div class="vital-cell"><div class="vital-label">Default branch</div><div class="vital-value">main</div></div>
+      <div class="vital-cell"><div class="vital-label">License</div><div class="vital-value">MIT</div></div>
+      <div class="vital-cell"><div class="vital-label">Language</div><div class="vital-value">Python</div></div>
+      <div class="vital-cell"><div class="vital-label">Branch protection</div><div class="vital-value val-warn">Partial &mdash; ruleset prevents deletion/force-push only</div></div>
+      <div class="vital-cell"><div class="vital-label">CODEOWNERS</div><div class="vital-value val-bad">Absent</div></div>
+      <div class="vital-cell"><div class="vital-label">Security policy</div><div class="vital-value val-bad">Absent</div></div>
+      <div class="vital-cell"><div class="vital-label">CI</div><div class="vital-value val-good">8 workflows, 100% SHA-pinned</div></div>
+      <div class="vital-cell"><div class="vital-label">Commit signing</div><div class="vital-value val-warn">Partial (10/15 GPG-verified)</div></div>
+      <div class="vital-cell"><div class="vital-label">Dependabot</div><div class="vital-value val-warn">Unknown (403 scope gap)</div></div>
+    </div>
+
+    </div>
+  </details>
+
+  <!-- SECTION 06: INVESTIGATION COVERAGE -->
+  <details class="collapsible-section">
+    <summary>
+      <div class="section-header">
+        <span class="section-number">06</span>
+        <h2>Investigation Coverage</h2>
+        <span class="section-status">
+          <span class="pill info">2 reduced</span>
+          <span class="pill green">&#x2713; 17 complete</span>
+        </span>
+      </div>
+      <div class="section-subtitle">What was checked, what was skipped, and why.</div>
+    </summary>
+    <div class="section-body">
+
+    <div class="vitals-grid">
+      <div class="vital-cell"><div class="vital-label">Repo metadata</div><div class="vital-value val-good">Complete</div></div>
+      <div class="vital-cell"><div class="vital-label">Maintainer background</div><div class="vital-value val-good">Complete</div></div>
+      <div class="vital-cell"><div class="vital-label">Branch protection (classic)</div><div class="vital-value val-good">Complete &mdash; 404</div></div>
+      <div class="vital-cell"><div class="vital-label">Branch protection (rulesets)</div><div class="vital-value val-good">Complete</div></div>
+      <div class="vital-cell"><div class="vital-label">Org-level rulesets (C20)</div><div class="vital-value val-warn">Reduced &mdash; 404/scope gap</div></div>
+      <div class="vital-cell"><div class="vital-label">CODEOWNERS</div><div class="vital-value val-good">Complete &mdash; not found</div></div>
+      <div class="vital-cell"><div class="vital-label">CI workflows</div><div class="vital-value val-good">Complete &mdash; 8 files</div></div>
+      <div class="vital-cell"><div class="vital-label">Agent-rule files</div><div class="vital-value val-good">Complete &mdash; AGENTS.md found</div></div>
+      <div class="vital-cell"><div class="vital-label">Dependencies</div><div class="vital-value val-good">Complete</div></div>
+      <div class="vital-cell"><div class="vital-label">Dependabot alerts</div><div class="vital-value val-warn">Reduced &mdash; 403 scope gap</div></div>
+      <div class="vital-cell"><div class="vital-label">Security advisories</div><div class="vital-value val-good">Complete &mdash; none</div></div>
+      <div class="vital-cell"><div class="vital-label">PR review rate</div><div class="vital-value val-good">Complete &mdash; 15 sampled</div></div>
+      <div class="vital-cell"><div class="vital-label">Issues</div><div class="vital-value val-good">Complete</div></div>
+      <div class="vital-cell"><div class="vital-label">Recent commits</div><div class="vital-value val-good">Complete &mdash; 15 sampled</div></div>
+      <div class="vital-cell"><div class="vital-label">README install scan</div><div class="vital-value val-good">Complete</div></div>
+      <div class="vital-cell"><div class="vital-label">Dangerous-primitive grep</div><div class="vital-value val-good">Complete</div></div>
+      <div class="vital-cell"><div class="vital-label">Executable inventory</div><div class="vital-value val-good">Complete</div></div>
+    </div>
+
+    </div>
+  </details>
+
+  <!-- SECTION 07: EVIDENCE APPENDIX -->
+  <details class="collapsible-section">
+    <summary>
+      <div class="section-header">
+        <span class="section-number">07</span>
+        <h2>Evidence Appendix</h2>
+        <span class="section-status">
+          <span class="pill muted">9 evidence blocks</span>
+        </span>
+      </div>
+      <div class="section-subtitle">Raw commands and results backing each finding.</div>
+    </summary>
+    <div class="section-body">
+
+    <div class="evidence-group-label warns">Priority evidence</div>
+
+    <div class="finding-card warning evidence-priority stack-md">
+      <div class="finding-header">
+        <span class="tag warning-tag">E1</span>
+        <span class="priority-flag">&#x2605; Start here</span>
+        <h3>Branch protection and rulesets</h3>
+      </div>
+      <div class="finding-body">
+        <div class="evidence-row">
+          <div class="evidence-label">Command</div>
+          <pre class="evidence-pre">gh api repos/NousResearch/hermes-agent/branches/main/protection</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Result</div>
+          <pre class="evidence-pre result">{"message":"Not Found","status":"404"}</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Command</div>
+          <pre class="evidence-pre">gh api repos/NousResearch/hermes-agent/rulesets</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Result</div>
+          <pre class="evidence-pre result">[{"id":14161644,"name":"protect-main","target":"branch","enforcement":"active"}]
+Rules on main: [{"type":"deletion"},{"type":"non_fast_forward"}]</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Command</div>
+          <pre class="evidence-pre">gh api orgs/NousResearch/rulesets</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Result</div>
+          <pre class="evidence-pre result">{"message":"Not Found","status":"404"}
+(Token lacks admin:org scope &mdash; recorded as unknown, not absent)</pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="finding-card warning evidence-priority stack-md">
+      <div class="finding-header">
+        <span class="tag warning-tag">E2</span>
+        <span class="priority-flag">&#x2605; Start here</span>
+        <h3>PR review rate sample (0/15)</h3>
+      </div>
+      <div class="finding-body">
+        <div class="evidence-row">
+          <div class="evidence-label">Result</div>
+          <pre class="evidence-pre result">All 15 most-recent merged PRs: reviewDecision=NONE, reviews=0
+teknium1 authored 13/15, helix4u authored 2/15
+0% review rate by both metrics</pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="finding-card warning stack-md">
+      <div class="finding-header">
+        <span class="tag warning-tag">E3</span>
+        <h3>Open security issues</h3>
+      </div>
+      <div class="finding-body">
+        <div class="evidence-row">
+          <div class="evidence-label">Result</div>
+          <pre class="evidence-pre result">#7071: Sandbox PYTHONPATH injection (open since 2026-04-10)
+#8035: file_tools reads auth.json (open since 2026-04-12)
+#4427: /proc/environ bypass (open since 2026-04-01)
+#10693: OAuth PKCE verifier leak (open since 2026-04-16)
+#11307: Telegram webhook spoofing (open since 2026-04-17)</pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="evidence-group-label context">Supporting evidence</div>
+
+    <div class="finding-card info stack-md">
+      <div class="finding-header">
+        <span class="tag info-tag">E4</span>
+        <h3>CI action pinning audit</h3>
+      </div>
+      <div class="finding-body">
+        <div class="evidence-row">
+          <div class="evidence-label">Result</div>
+          <pre class="evidence-pre result">All uses: directives across 8 workflow files reference SHA-pinned commits.
+Zero unpinned actions. Zero pull_request_target triggers.
+Example: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5  # v4</pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="finding-card info stack-md">
+      <div class="finding-header">
+        <span class="tag info-tag">E5</span>
+        <h3>Install script analysis</h3>
+      </div>
+      <div class="finding-body">
+        <div class="evidence-row">
+          <div class="evidence-label">Result</div>
+          <pre class="evidence-pre result">scripts/install.sh: clones repo via HTTPS at HEAD of main, creates venv via uv,
+runs pip install -e ".[all]". No checksum verification. Standard operations.</pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="evidence-group-label positives">Positive evidence</div>
+
+    <div class="finding-card ok stack-md">
+      <div class="finding-header">
+        <span class="tag ok-tag">E7</span>
+        <h3>Supply-chain-audit workflow</h3>
+      </div>
+      <div class="finding-body">
+        <div class="evidence-row">
+          <div class="evidence-label">Result</div>
+          <pre class="evidence-pre result">supply-chain-audit.yml scans every PR for:
+- .pth files (Python startup auto-execute)
+- base64+exec combos (litellm attack pattern)
+- Obfuscated subprocess calls
+- Outbound POST/PUT requests
+- setup.py/setup.cfg hook modifications
+- marshal/pickle deserialization</pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="finding-card ok stack-md">
+      <div class="finding-header">
+        <span class="tag ok-tag">E8</span>
+        <h3>Docker security</h3>
+      </div>
+      <div class="finding-body">
+        <div class="evidence-row">
+          <div class="evidence-label">Result</div>
+          <pre class="evidence-pre result">docker/entrypoint.sh drops root privileges via gosu, remaps UID/GID,
+creates isolated home directory for subprocesses.
+docker-publish.yml runs smoke tests before push.</pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="finding-card ok stack-md">
+      <div class="finding-header">
+        <span class="tag ok-tag">E9</span>
+        <h3>AGENTS.md content</h3>
+      </div>
+      <div class="finding-body">
+        <div class="evidence-row">
+          <div class="evidence-label">Result</div>
+          <pre class="evidence-pre result">Standard development guide with project structure, file dependency chain,
+coding conventions. No imperative AI-directed language.</pre>
+        </div>
+      </div>
+    </div>
+
+    </div>
+  </details>
+
+  <div class="footer">
+    <p>Generated by <a href="https://github.com/stefans71/stop-git-std">stop-git-std</a> GitHub Scanner &middot; Prompt v2.3 (post-R3) &middot; 2026-04-16</p>
+    <p>This report is a point-in-time snapshot. Re-scan periodically or after major releases.</p>
+  </div>
+
+</div>
+</body>
+</html>

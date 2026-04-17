@@ -1,0 +1,1887 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Security Investigation Report: pmndrs/zustand @ 3201328 (v5.0.12) | Generated 2026-04-16 | Prompt v2.3-post-R3 -->
+<title>Security Investigation: pmndrs/zustand</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Unbounded:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* ═══════════════════════════════════════════════
+     DESIGN SYSTEM — DO NOT MODIFY
+     Dark theme, security monitoring aesthetic
+     ═══════════════════════════════════════════════ */
+  :root {
+    --bg-void: #0a0a0c;
+    --bg-surface: #131316;
+    --bg-elevated: #1a1a1f;
+    --bg-hover: #222228;
+    --border: #32323c;
+    --border-subtle: #26262e;
+    --text-primary: #f0f0f4;
+    --text-secondary: #b0b0bc;
+    --text-muted: #7e7e8e;
+    --red-glow: #ff4545;
+    --red-dim: #ff454520;
+    --red-bg: #1a0f0f;
+    --amber-glow: #ffaa2a;
+    --amber-dim: #ffaa2a20;
+    --amber-bg: #1a150e;
+    --green-glow: #22c55e;
+    --green-dim: #22c55e20;
+    --green-bg: #0e1a12;
+    --cyan-glow: #06b6d4;
+    --cyan-dim: #06b6d420;
+    --font-mono: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace;
+    --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-display: 'Unbounded', 'Inter', sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--font-sans);
+    background: var(--bg-void);
+    color: var(--text-primary);
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Noise texture + horizontal scanlines — forensic console feel */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      repeating-linear-gradient(
+        to bottom,
+        rgba(255,255,255,0.008) 0px,
+        rgba(255,255,255,0.008) 1px,
+        transparent 1px,
+        transparent 3px
+      ),
+      url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+  }
+  /* Slow sweeping scan bar */
+  body::after {
+    content: ''; position: fixed; left: 0; right: 0; height: 120px;
+    background: linear-gradient(to bottom, transparent, rgba(255,170,42,0.035), transparent);
+    pointer-events: none; z-index: 9998;
+    animation: scan-sweep 14s linear infinite;
+  }
+  @keyframes scan-sweep {
+    0% { top: -15%; }
+    100% { top: 115%; }
+  }
+
+  /* Scan strip — the data ribbon above the hero */
+  .scan-strip {
+    display: flex; flex-wrap: wrap; gap: 1.25rem; align-items: center;
+    padding: 0.625rem 0 0.75rem; margin-bottom: 1.5rem;
+    border-top: 1px solid var(--border-subtle);
+    border-bottom: 1px solid var(--border-subtle);
+    font-family: var(--font-mono); font-size: 0.65rem;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--text-secondary);
+  }
+  .scan-strip-item { display: inline-flex; align-items: center; gap: 0.4rem; }
+  .scan-strip-item .dot {
+    display: inline-block; width: 6px; height: 6px; border-radius: 50%;
+    box-shadow: 0 0 6px currentColor;
+  }
+  .scan-strip-item.amber, .scan-strip-item .dot.amber { color: var(--amber-glow); background: var(--amber-glow); }
+  .scan-strip-item .dot.amber { background: var(--amber-glow); box-shadow: 0 0 8px var(--amber-glow); animation: pulse 3s ease-in-out infinite; }
+  .scan-strip-item.flash {
+    color: var(--red-glow); animation: flash-blink 1.4s ease-in-out infinite;
+  }
+  @keyframes flash-blink {
+    0%, 80%, 100% { opacity: 1; }
+    85%, 95% { opacity: 0.25; }
+  }
+
+  /* Hero caption — the editorial line under the H1.
+     Readable sans-serif, slightly larger than body, no italic (readability > flavor). */
+  .hero-caption {
+    font-family: var(--font-sans); font-size: 1.0625rem; line-height: 1.55;
+    color: var(--text-primary); font-weight: 400;
+    max-width: 68ch; margin: 0.75rem 0 1.75rem;
+    letter-spacing: -0.005em;
+  }
+
+  /* ─────────────── Utility classes (replaces inline style="" attributes) ─────────────── */
+  /* Semantic value colors — use on chip-value, vital-value, td.val, etc. */
+  .val-good  { color: var(--green-glow) !important; }
+  .val-bad   { color: var(--red-glow)   !important; }
+  .val-warn  { color: var(--amber-glow) !important; }
+  .val-info  { color: var(--cyan-glow)  !important; }
+  .fw-semi   { font-weight: 600; }
+  /* Card vertical rhythm — replaces margin-bottom:12px inline on cards */
+  .stack-md  { margin-bottom: 0.75rem; }
+  .stack-sm  { margin-top: 0.75rem; }
+  /* Subdued paragraph — replaces the meta-text inline patterns */
+  .p-meta {
+    color: var(--text-secondary); margin-bottom: 1rem;
+    font-size: 0.875rem; line-height: 1.55;
+  }
+  .p-meta-tight {
+    color: var(--text-secondary); margin: 0.75rem 0 1rem;
+    font-size: 0.8125rem; line-height: 1.55;
+  }
+  /* Priority-evidence visual uplift — replaces inline border-left hack */
+  .finding-card.evidence-priority {
+    border-left: 4px solid var(--amber-glow);
+  }
+  /* Inline-flag variant — when priority-flag appears mid-sentence, not block */
+  .priority-flag.inline { display: inline-block; }
+
+  a { color: var(--cyan-glow); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* Font size controls */
+  .font-controls {
+    position: fixed; top: 16px; right: 16px; z-index: 1000;
+    display: flex; align-items: center; gap: 2px;
+    background: var(--bg-elevated); border: 1px solid var(--border);
+    border-radius: 8px; padding: 4px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5); backdrop-filter: blur(12px);
+  }
+  .font-controls button {
+    font-family: var(--font-mono); font-size: 0.875rem; font-weight: 700;
+    width: 34px; height: 34px; border: none; border-radius: 6px;
+    background: transparent; color: var(--text-secondary); cursor: pointer;
+    display: flex; align-items: center; justify-content: center; transition: all 0.15s;
+  }
+  .font-controls button:hover { background: var(--bg-hover); color: var(--text-primary); }
+  .font-controls button:active { transform: scale(0.92); }
+  .font-controls .font-size-display {
+    font-family: var(--font-mono); font-size: 0.6875rem; color: var(--text-muted);
+    min-width: 38px; text-align: center; letter-spacing: 0.05em; user-select: none;
+  }
+
+  .page { max-width: 960px; margin: 0 auto; padding: 0 20px; }
+
+  /* Hero */
+  .hero { padding: 64px 0 48px; border-bottom: 1px solid var(--border); position: relative; }
+  .hero::after {
+    content: ''; position: absolute; bottom: -1px; left: 0; right: 0; height: 120px;
+    background: linear-gradient(to top, var(--bg-void), transparent); pointer-events: none;
+  }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-family: var(--font-mono); font-size: 0.6875rem; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--text-muted); margin-bottom: 20px;
+    padding: 6px 12px; border: 1px solid var(--border); border-radius: 6px; background: var(--bg-surface);
+  }
+  .hero-badge .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--text-muted); /* Neutral default — LLM must set .red, .green, or .amber */
+  }
+  .hero-badge .dot.red { background: var(--red-glow); box-shadow: 0 0 8px var(--red-glow); animation: pulse 2s ease-in-out infinite; }
+  .hero-badge .dot.green { background: var(--green-glow); box-shadow: 0 0 8px var(--green-glow); }
+  .hero-badge .dot.amber { background: var(--amber-glow); box-shadow: 0 0 8px var(--amber-glow); animation: pulse 3s ease-in-out infinite; }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+  .hero h1 {
+    font-family: var(--font-display); font-size: clamp(1.8rem, 4vw, 3.4rem);
+    font-weight: 800; letter-spacing: -0.04em; line-height: 1.05; margin-bottom: 16px;
+  }
+  .hero h1 .slash {
+    color: var(--text-muted); font-weight: 300;
+    margin: 0 0.1em; font-size: 0.85em;
+  }
+  .hero h1 span { color: var(--red-glow); }
+  .hero h1 span.green { color: var(--green-glow); }
+  .hero h1 span.amber { color: var(--amber-glow); }
+  .hero .meta { font-size: 0.875rem; color: var(--text-primary); display: flex; flex-wrap: wrap; gap: 16px; }
+  .hero .meta-item { display: flex; align-items: center; gap: 6px; }
+  .hero .meta-item .label { color: var(--text-secondary); font-size: 0.75rem; }
+
+  /* Verdict */
+  .verdict-section { padding: 48px 0 40px; }
+  .verdict-banner {
+    border-radius: 0; padding: 2.25rem 2.75rem 2rem 4.5rem;
+    position: relative; overflow: hidden;
+    border-left-width: 6px; border-left-style: solid;
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%);
+  }
+  .verdict-banner.critical { background: linear-gradient(135deg, #1f0a0a 0%, #0a0a0c 100%); border: 1px solid #ff454540; border-left-color: var(--red-glow); }
+  .verdict-banner.caution { background: linear-gradient(135deg, #1f1810 0%, #0a0a0c 100%); border: 1px solid #ffaa2a40; border-left-color: var(--amber-glow); }
+  .verdict-banner.clean { background: linear-gradient(135deg, #0a1f14 0%, #0a0a0c 100%); border: 1px solid #22c55e40; border-left-color: var(--green-glow); }
+  /* Radial wash */
+  .verdict-banner::before {
+    content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+    pointer-events: none;
+  }
+  .verdict-banner.critical::before { background: radial-gradient(circle at 20% 30%, #ff454510, transparent 55%); }
+  .verdict-banner.caution::before { background: radial-gradient(circle at 20% 30%, #ffaa2a12, transparent 55%); }
+  .verdict-banner.clean::before { background: radial-gradient(circle at 20% 30%, #22c55e10, transparent 55%); }
+  /* Vertical scan-ID bar on the left */
+  .verdict-banner::after {
+    content: attr(data-dossier); position: absolute;
+    left: 1.4rem; top: 2.1rem; bottom: 2rem;
+    writing-mode: vertical-rl; transform: rotate(180deg);
+    font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.25em;
+    color: var(--text-muted); text-transform: uppercase;
+    display: flex; align-items: center;
+    opacity: 0.55;
+  }
+  .verdict-banner .verdict-label {
+    font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.22em;
+    text-transform: uppercase; margin-bottom: 1rem; position: relative;
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    padding: 0.25rem 0.625rem; border-radius: 0.125rem;
+    background: rgba(255,170,42,0.08); border: 1px solid rgba(255,170,42,0.25);
+  }
+  .verdict-banner.critical .verdict-label { color: var(--red-glow); background: rgba(255,69,69,0.08); border-color: rgba(255,69,69,0.25); }
+  .verdict-banner.caution .verdict-label { color: var(--amber-glow); }
+  .verdict-banner.clean .verdict-label { color: var(--green-glow); background: rgba(34,197,94,0.08); border-color: rgba(34,197,94,0.25); }
+  .verdict-banner h2 {
+    font-family: var(--font-display);
+    font-size: clamp(1.5rem, 3.2vw, 2.2rem); font-weight: 600; line-height: 1.18;
+    letter-spacing: -0.025em; margin-bottom: 1rem; position: relative; color: #ff8c00;
+    max-width: 56ch;
+  }
+  .verdict-banner.clean h2 { color: var(--green-glow); }
+  .verdict-banner.critical h2 { color: var(--red-glow); }
+
+  /* Split-verdict layout — two audience blocks separated by a divider */
+  .verdict-split {
+    display: grid; grid-template-columns: 1fr auto 1fr; gap: 1.75rem;
+    margin-bottom: 1.25rem; align-items: stretch;
+  }
+  @media (max-width: 820px) {
+    .verdict-split { grid-template-columns: 1fr; gap: 1rem; }
+  }
+  .verdict-entry { display: flex; flex-direction: column; gap: 0.5rem; }
+  .verdict-entry-scope {
+    font-family: var(--font-mono); font-size: 0.65rem; letter-spacing: 0.2em;
+    text-transform: uppercase; color: var(--text-muted);
+    padding-bottom: 0.375rem; border-bottom: 1px solid var(--border-subtle);
+  }
+  .verdict-entry-headline {
+    font-family: var(--font-display); font-weight: 600;
+    font-size: clamp(1.35rem, 2.5vw, 1.85rem); line-height: 1.15;
+    letter-spacing: -0.02em; margin: 0;
+  }
+  .verdict-entry-headline.good { color: #8dd492; }
+  .verdict-entry-headline.warn { color: var(--amber-glow); }
+  .verdict-entry-headline.bad  { color: var(--red-glow); }
+  .verdict-entry-detail {
+    font-family: var(--font-sans); font-size: 0.8125rem; line-height: 1.55;
+    color: var(--text-secondary); margin-top: 0.25rem;
+  }
+  .verdict-split-divider {
+    width: 1px; background: linear-gradient(to bottom, transparent, var(--border), transparent);
+  }
+  @media (max-width: 820px) {
+    .verdict-split-divider { width: 100%; height: 1px; background: var(--border-subtle); }
+  }
+
+  /* Rolled verdict exhibits — 3 themed panels that replace the 10-bullet glaze list */
+  .verdict-exhibits { display: grid; gap: 0.875rem; margin-top: 0.5rem; }
+  .exhibit {
+    position: relative; overflow: hidden; border-radius: 10px;
+    border: 1px solid var(--border-subtle);
+  }
+  .exhibit.vuln    { background: linear-gradient(135deg, #1a1008 0%, #0f0a0a 100%); border-color: #ffaa2a30; }
+  .exhibit.govern  { background: linear-gradient(135deg, #100c1a 0%, #0a0a0f 100%); border-color: #ff808040; }
+  .exhibit.signals { background: linear-gradient(135deg, #0a1812 0%, #0a0f0a 100%); border-color: #22c55e30; }
+  /* Left accent bar */
+  .exhibit::before {
+    content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
+  }
+  .exhibit.vuln::before    { background: var(--amber-glow); }
+  .exhibit.govern::before  { background: var(--red-glow); }
+  .exhibit.signals::before { background: var(--green-glow); }
+  /* Summary row (collapsed state) */
+  .exhibit > summary {
+    list-style: none; cursor: pointer;
+    padding: 0.875rem 1rem 0.875rem 1.5rem;
+    display: flex; align-items: center; gap: 0.75rem;
+    position: relative;
+  }
+  .exhibit > summary::-webkit-details-marker { display: none; }
+  .exhibit > summary::after {
+    content: '\25B6'; margin-left: auto; font-size: 0.7rem;
+    color: var(--text-muted); transition: transform 0.2s;
+  }
+  .exhibit[open] > summary::after { transform: rotate(90deg); }
+  .exhibit-glyph {
+    width: 1.75rem; height: 1.75rem; border-radius: 50%;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 0.85rem; font-weight: 700; flex-shrink: 0;
+  }
+  .exhibit.vuln .exhibit-glyph    { background: rgba(255,170,42,0.18); color: var(--amber-glow); }
+  .exhibit.govern .exhibit-glyph  { background: rgba(255,69,69,0.18);  color: var(--red-glow); }
+  .exhibit.signals .exhibit-glyph { background: rgba(34,197,94,0.18);  color: var(--green-glow); }
+  .exhibit-title {
+    font-family: var(--font-display); font-size: 1.05rem; font-weight: 600;
+    letter-spacing: -0.01em; line-height: 1.25;
+  }
+  .exhibit-count {
+    margin-left: 0.5rem; font-family: var(--font-mono); font-size: 0.7rem;
+    letter-spacing: 0.12em; color: var(--text-muted); text-transform: uppercase;
+  }
+  .exhibit-summary-line {
+    font-family: var(--font-sans); font-size: 0.82rem; color: var(--text-secondary);
+    margin-left: 0.5rem; line-height: 1.45; font-weight: 400;
+  }
+  @media (max-width: 720px) {
+    .exhibit-summary-line { display: block; margin-left: 2.5rem; margin-top: 0.25rem; }
+  }
+  /* Expanded content — zebra-striped items */
+  .exhibit-body {
+    border-top: 1px solid var(--border-subtle);
+    padding: 0; background: rgba(0,0,0,0.15);
+  }
+  .exhibit-item {
+    display: grid; grid-template-columns: 1.5rem 1fr; gap: 0.75rem;
+    padding: 0.75rem 1rem 0.75rem 1.5rem;
+    font-size: 0.88rem; line-height: 1.55; color: var(--text-primary);
+    border-bottom: 1px solid var(--border-subtle);
+  }
+  .exhibit-item:last-child { border-bottom: none; }
+  /* Zebra striping — every other row gets a subtle background shift */
+  .exhibit-item:nth-child(even) { background: rgba(255,255,255,0.015); }
+  .exhibit-item-glyph {
+    font-family: var(--font-mono); font-weight: 700; font-size: 0.8rem;
+    text-align: center; padding-top: 0.15rem;
+  }
+  .exhibit.vuln .exhibit-item-glyph    { color: var(--amber-glow); }
+  .exhibit.govern .exhibit-item-glyph  { color: var(--red-glow); }
+  .exhibit.signals .exhibit-item-glyph { color: var(--green-glow); }
+  .exhibit-item-tag {
+    font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--text-muted); display: block;
+    margin-bottom: 0.15rem;
+  }
+
+  /* Verdict bullet list */
+  .verdict-bullets { list-style: none; padding: 0; margin: 0; position: relative; }
+  .verdict-bullets li {
+    display: flex; align-items: flex-start; gap: 12px; font-size: 0.9375rem;
+    color: var(--text-primary); line-height: 1.6; padding: 8px 0; border-bottom: 1px solid #ffffff08;
+  }
+  .verdict-bullets li:last-child { border-bottom: none; }
+  .verdict-bullets .bullet-icon {
+    flex-shrink: 0; width: 22px; height: 22px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center; font-size: 0.6875rem; margin-top: 2px;
+  }
+  .verdict-bullets .bullet-icon.red { background: var(--red-dim); color: var(--red-glow); box-shadow: 0 0 6px var(--red-dim); }
+  .verdict-bullets .bullet-icon.amber { background: var(--amber-dim); color: var(--amber-glow); box-shadow: 0 0 6px var(--amber-dim); }
+  .verdict-bullets .bullet-icon.green { background: var(--green-dim); color: var(--green-glow); box-shadow: 0 0 6px var(--green-dim); }
+
+  /* Scorecard */
+  .scorecard-section { padding: 0 0 48px; }
+  .scorecard-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px;
+    background: var(--border); border-radius: 12px; overflow: hidden;
+  }
+  .score-cell { background: var(--bg-surface); padding: 24px 20px; text-align: center; transition: background 0.2s; }
+  .score-cell:hover { background: var(--bg-elevated); }
+  .score-cell .score-icon {
+    width: 32px; height: 32px; margin: 0 auto 12px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center; font-size: 1rem;
+  }
+  .score-cell .score-icon.red { background: var(--red-dim); color: var(--red-glow); }
+  .score-cell .score-icon.amber { background: var(--amber-dim); color: var(--amber-glow); }
+  .score-cell .score-icon.green { background: var(--green-dim); color: var(--green-glow); }
+  .score-cell .score-label {
+    font-family: var(--font-mono); font-size: 0.625rem; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--text-muted); margin-bottom: 6px;
+  }
+  .score-cell .score-value { font-size: 1.125rem; font-weight: 700; line-height: 1.2; }
+  .score-cell .score-value.red { color: var(--red-glow); }
+  .score-cell .score-value.amber { color: var(--amber-glow); }
+  .score-cell .score-value.green { color: var(--green-glow); }
+
+  /* Collapsible sections */
+  details summary { cursor: pointer; list-style: none; }
+  details summary::-webkit-details-marker { display: none; }
+  .collapsible-section > summary { padding: 48px 0 0; border-top: 1px solid var(--border-subtle); }
+  .collapsible-section > summary .section-header { margin-bottom: 0; display: flex; align-items: center; gap: 12px; }
+  .collapsible-section[open] > summary .section-header { margin-bottom: 28px; }
+  .collapsible-section .section-body { padding-bottom: 0; }
+  .collapsible-section > summary .section-header::after {
+    content: '\25B6'; font-size: 0.625rem; color: var(--text-muted); transition: transform 0.2s; margin-left: auto;
+  }
+  .collapsible-section[open] > summary .section-header::after { transform: rotate(90deg); }
+  .section-header .section-number {
+    font-family: var(--font-mono); font-size: 0.6875rem; letter-spacing: 0.1em; color: var(--text-muted);
+    width: 28px; height: 28px; border-radius: 6px; border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .section-header h2 {
+    font-family: var(--font-display); font-size: 1.4rem; font-weight: 600;
+    letter-spacing: -0.02em; line-height: 1.15;
+    color: var(--cyan-glow);
+  }
+  /* Slightly emphasize the section number too so the landmark row reads as a unit */
+  .section-header .section-number {
+    color: var(--cyan-glow); opacity: 0.75;
+  }
+
+  /* Finding cards */
+  .finding-card {
+    background: var(--bg-surface); border: 1px solid var(--border); border-radius: 10px;
+    margin-bottom: 12px; overflow: hidden; transition: border-color 0.2s;
+  }
+  .finding-card:hover { border-color: #3a3a44; }
+  .finding-card.critical { border-left: 3px solid var(--red-glow); }
+  .finding-card.warning { border-left: 3px solid var(--amber-glow); }
+  .finding-card.info { border-left: 3px solid var(--cyan-glow); }
+  .finding-card.ok { border-left: 3px solid var(--green-glow); }
+  @keyframes border-pulse {
+    0%, 100% { border-left-color: var(--red-glow); box-shadow: -2px 0 8px var(--red-dim); }
+    50% { border-left-color: #ff454580; box-shadow: -2px 0 4px transparent; }
+  }
+  .finding-card.critical { animation: border-pulse 3s ease-in-out infinite; }
+
+  .finding-header {
+    padding: 16px 20px 12px; display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 16px;
+  }
+  .finding-header .tag {
+    font-family: var(--font-mono); font-size: 0.625rem; letter-spacing: 0.08em;
+    text-transform: uppercase; padding: 3px 8px; border-radius: 4px; font-weight: 600; flex-shrink: 0;
+  }
+  .tag.critical-tag { background: var(--red-dim); color: var(--red-glow); }
+  .tag.warning-tag { background: var(--amber-dim); color: var(--amber-glow); }
+  .tag.info-tag { background: var(--cyan-dim); color: var(--cyan-glow); }
+  .tag.ok-tag { background: var(--green-dim); color: var(--green-glow); }
+  .finding-header .finding-date { font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-secondary); }
+  .finding-header .finding-duration {
+    font-family: var(--font-mono); font-size: 0.6875rem; font-weight: 600;
+    color: var(--amber-glow); background: var(--amber-dim); border: 1px solid #ffaa2a30;
+    padding: 3px 10px; border-radius: 4px;
+  }
+  .finding-header h3 {
+    width: 100%; font-family: var(--font-display); font-size: 1.125rem;
+    font-weight: 600; line-height: 1.3; letter-spacing: -0.015em; margin-top: 4px;
+  }
+
+  /* Finding collapsible */
+  .finding-card summary { list-style: none; cursor: pointer; }
+  .finding-card summary::-webkit-details-marker { display: none; }
+  .finding-card summary .finding-header { position: relative; padding-right: 40px; }
+  .finding-card summary .finding-header::after {
+    content: '\25B6'; font-size: 0.625rem; color: var(--text-muted);
+    transition: transform 0.2s; position: absolute; right: 20px; top: 20px;
+  }
+  .finding-card details[open] > summary .finding-header::after { transform: rotate(90deg); }
+
+  .finding-body { padding: 0 20px 16px; }
+  .finding-body p { font-size: 0.875rem; color: var(--text-primary); line-height: 1.7; margin-bottom: 12px; }
+  .finding-meta {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 8px; margin-top: 12px;
+  }
+  .meta-chip {
+    font-size: 0.75rem; padding: 8px 12px; border-radius: 6px;
+    background: var(--bg-elevated); border: 1px solid var(--border-subtle);
+    display: flex; flex-direction: column; gap: 2px;
+  }
+  .meta-chip .chip-label {
+    font-family: var(--font-mono); font-size: 0.625rem; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--text-secondary);
+  }
+  .meta-chip .chip-value { color: var(--text-primary); font-weight: 500; }
+
+  /* Sub-finding (nested under parent finding) */
+  .sub-finding {
+    margin: 16px 0 8px; padding: 16px; border-left: 2px solid var(--amber-glow);
+    background: var(--bg-elevated); border-radius: 0 8px 8px 0;
+  }
+  .sub-finding .sub-finding-label {
+    font-family: var(--font-mono); font-size: 0.625rem; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--amber-glow); margin-bottom: 8px;
+  }
+  .sub-finding h4 { font-size: 1rem; font-weight: 700; line-height: 1.4; margin-bottom: 10px; }
+  .sub-finding p { font-size: 0.875rem; color: var(--text-primary); line-height: 1.7; margin-bottom: 12px; }
+
+  /* PR Table */
+  .pr-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.8125rem; }
+  th {
+    font-family: var(--font-mono); font-size: 0.625rem; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--text-secondary); text-align: left;
+    padding: 12px 16px; background: var(--bg-surface); border-bottom: 1px solid var(--border);
+    position: sticky; top: 0; white-space: nowrap;
+  }
+  td { padding: 14px 16px; border-bottom: 1px solid var(--border-subtle); color: var(--text-primary); vertical-align: top; }
+  tr:hover td { background: var(--bg-surface); }
+  td:first-child { font-family: var(--font-mono); font-weight: 600; color: var(--cyan-glow); white-space: nowrap; }
+  .td-concern { color: var(--amber-glow); font-weight: 500; }
+  .td-reviewed-no { color: var(--red-glow); font-family: var(--font-mono); font-weight: 600; }
+  .td-reviewed-yes { color: var(--green-glow); font-family: var(--font-mono); font-weight: 600; }
+  .td-reviewed-rejected { color: var(--amber-glow); font-family: var(--font-mono); font-weight: 600; }
+  .td-merge-fast { font-family: var(--font-mono); color: var(--red-glow); font-weight: 600; }
+  .td-person { font-weight: 500; color: var(--text-primary); }
+
+  /* Timeline */
+  .timeline { position: relative; padding-left: 28px; }
+  .timeline::before {
+    content: ''; position: absolute; left: 7px; top: 8px; bottom: 8px; width: 1px;
+    background: linear-gradient(to bottom, var(--border), var(--red-glow), var(--border));
+  }
+  .tl-item { position: relative; margin-bottom: 20px; padding-left: 8px; }
+  .tl-item::before {
+    content: ''; position: absolute; left: -24px; top: 7px; width: 9px; height: 9px;
+    border-radius: 50%; background: var(--text-muted); border: 2px solid var(--bg-void);
+  }
+  .tl-item.bad::before { background: var(--red-glow); box-shadow: 0 0 6px var(--red-dim); }
+  .tl-item.good::before { background: var(--green-glow); }
+  .tl-item.neutral::before { background: var(--amber-glow); }
+  .tl-date { font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-secondary); font-weight: 600; }
+  .tl-desc { font-size: 0.875rem; color: var(--text-primary); margin-top: 2px; line-height: 1.6; }
+
+  /* Vitals */
+  .vitals-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1px; background: var(--border); border-radius: 10px; overflow: hidden;
+  }
+  .vital-cell { background: var(--bg-surface); padding: 18px 20px; }
+  .vital-cell .vital-label {
+    font-family: var(--font-mono); font-size: 0.625rem; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--text-muted); margin-bottom: 4px;
+  }
+  .vital-cell .vital-value { font-size: 1rem; font-weight: 700; margin-bottom: 4px; }
+  .vital-cell .vital-note { font-size: 0.75rem; color: var(--text-secondary); line-height: 1.5; }
+
+  /* Action cards */
+  .action-card { padding: 24px; border-radius: 10px; margin-bottom: 12px; }
+  .action-card.stop { background: var(--red-bg); border: 1px solid #ff454530; }
+  .action-card.wait { background: var(--amber-bg); border: 1px solid #ffaa2a30; }
+  .action-card.info-action { background: var(--bg-surface); border: 1px solid var(--border); }
+  .action-card.ok-action { background: var(--green-bg); border: 1px solid #22c55e30; }
+  .action-card h3 { font-size: 0.9375rem; font-weight: 700; margin-bottom: 8px; }
+  .action-card p { font-size: 0.875rem; color: var(--text-primary); line-height: 1.7; }
+
+  /* Code blocks inside action cards */
+  .action-card pre {
+    background: var(--bg-void); border: 1px solid var(--border); border-radius: 8px;
+    padding: 16px; margin: 12px 0; overflow-x: auto;
+    font-family: var(--font-mono); font-size: 0.8125rem; color: var(--cyan-glow); line-height: 1.6;
+  }
+
+  /* Catalog metadata block — sits between hero and verdict
+     Font sizes use rem so the font +/- controls (which mutate root font-size) scale them. */
+  .catalog-meta {
+    background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: 10px;
+    padding: 1.125rem 1.375rem; margin-bottom: 1rem;
+  }
+  .catalog-meta .catalog-label {
+    font-family: var(--font-mono); font-size: 0.65rem; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--text-secondary); margin-bottom: 0.625rem;
+  }
+  .catalog-meta table { width: 100%; }
+  .catalog-meta td { padding: 0.375rem 0.75rem 0.375rem 0; border: none; font-size: 0.82rem; vertical-align: top; }
+  .catalog-meta td.key {
+    font-family: var(--font-mono); color: var(--text-secondary);
+    white-space: nowrap; width: 1%; font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.06em;
+  }
+  .catalog-meta td.val { color: var(--text-primary); }
+  .catalog-meta td.val a { color: var(--cyan-glow); text-decoration: none; }
+  .catalog-meta td.val a:hover { text-decoration: underline; }
+
+  /* ─────────────── UX-FIX CSS (section status pills, finding status chips,
+     timeline glyphs, evidence priority markers) ─────────────── */
+
+  /* Section status pills — shown on the collapsed <summary> row so readers know
+     at a glance whether a section needs attention. */
+  .section-status {
+    display: inline-flex; gap: 0.5rem; margin-left: auto; padding-right: 2.5rem;
+    font-size: 0.72rem; font-family: var(--font-mono); align-items: center;
+    flex-wrap: wrap;
+  }
+  .section-status .pill {
+    display: inline-flex; align-items: center; gap: 0.25rem;
+    padding: 0.1875rem 0.5rem; border-radius: 0.625rem; border: 1px solid;
+    letter-spacing: 0.04em; white-space: nowrap;
+  }
+  .section-status .pill.red {
+    color: var(--red-glow); border-color: var(--red-dim);
+    background: rgba(255, 69, 69, 0.1);
+  }
+  .section-status .pill.amber {
+    color: var(--amber-glow); border-color: var(--amber-dim);
+    background: rgba(255, 170, 42, 0.1);
+  }
+  .section-status .pill.green {
+    color: var(--green-glow); border-color: var(--green-dim);
+    background: rgba(34, 197, 94, 0.1);
+  }
+  .section-status .pill.info {
+    color: var(--cyan-glow); border-color: var(--cyan-dim);
+    background: rgba(6, 182, 212, 0.1);
+  }
+  .section-status .pill.muted {
+    color: var(--text-secondary); border-color: var(--border-subtle);
+    background: var(--bg-elevated);
+  }
+  .section-status .pill.urgent {
+    animation: urgent-pulse 1.8s ease-in-out infinite;
+  }
+  @keyframes urgent-pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(255, 69, 69, 0.4); }
+    50% { box-shadow: 0 0 0 0.5rem rgba(255, 69, 69, 0); }
+  }
+  /* Hide status pills when section is open — they're redundant with the content */
+  .collapsible-section[open] > summary .section-status { opacity: 0.5; }
+
+  /* Section subtitle — a one-line orientation under the H2, visible both open
+     and collapsed. Gives readers the "why should I look at this" answer. */
+  .section-subtitle {
+    font-family: var(--font-sans); font-size: 0.9375rem; color: var(--text-secondary);
+    font-weight: 400; margin-top: 0.5rem; line-height: 1.55;
+    max-width: 68ch; letter-spacing: -0.003em;
+  }
+  .section-subtitle .emph { color: var(--text-primary); font-weight: 600; }
+  .section-subtitle .hot { color: var(--amber-glow); font-weight: 600; }
+  .section-subtitle .cold { color: var(--green-glow); font-weight: 600; }
+
+  /* Section-level "Your action" line — every section that flags concerns
+     must answer "what do I do about this?" for the reader. */
+  .section-action {
+    display: block; margin-top: 0.5rem; padding: 0.5rem 0.75rem;
+    background: var(--bg-elevated); border-radius: 0.375rem;
+    border-left: 3px solid var(--amber-glow);
+    font-size: 0.85rem; color: var(--text-primary); line-height: 1.55;
+  }
+  .section-action.ok { border-left-color: var(--green-glow); }
+  .section-action.info { border-left-color: var(--cyan-glow); }
+  .section-action .lbl {
+    font-family: var(--font-mono); font-weight: 700;
+    font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--amber-glow); margin-right: 0.5rem;
+  }
+  .section-action.ok .lbl { color: var(--green-glow); }
+  .section-action.info .lbl { color: var(--cyan-glow); }
+
+  /* Finding-card status chip — distinguishes Active vs Resolved vs Ongoing.
+     Shown on every finding and evidence card next to the severity tag. */
+  .status-chip {
+    display: inline-flex; align-items: center; gap: 0.25rem;
+    padding: 0.1875rem 0.5rem; border-radius: 0.625rem; border: 1px solid;
+    font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.04em;
+    white-space: nowrap; margin-left: 0.375rem;
+  }
+  .status-chip.resolved {
+    color: var(--green-glow); border-color: var(--green-dim);
+    background: rgba(34, 197, 94, 0.12);
+  }
+  .status-chip.active {
+    color: var(--red-glow); border-color: var(--red-dim);
+    background: rgba(255, 69, 69, 0.12);
+  }
+  .status-chip.ongoing {
+    color: var(--amber-glow); border-color: var(--amber-dim);
+    background: rgba(255, 170, 42, 0.12);
+  }
+  .status-chip.mitigated {
+    color: var(--cyan-glow); border-color: var(--cyan-dim);
+    background: rgba(6, 182, 212, 0.12);
+  }
+  .status-chip.informational {
+    color: var(--text-secondary); border-color: var(--border-subtle);
+    background: var(--bg-elevated);
+  }
+
+  /* Action-needed hint on finding cards — one sentence that says "what the reader should do" */
+  .action-hint {
+    margin-top: 0.5rem; font-size: 0.78rem; color: var(--text-secondary);
+    line-height: 1.55;
+  }
+  .action-hint::before {
+    content: "→ "; color: var(--amber-glow); font-style: normal; font-weight: 600;
+  }
+  .action-hint.ok::before { color: var(--green-glow); }
+  .action-hint.warn::before { color: var(--amber-glow); }
+
+  /* Executable File Inventory — differentiate verdict on the tag clearly.
+     The card border already carries severity via .finding-card.warning/.ok/.info;
+     this makes the header tag match so the reader doesn't have to decode borders. */
+  .inv-verdict {
+    display: inline-flex; align-items: center; gap: 0.25rem;
+    padding: 0.1875rem 0.5rem; border-radius: 0.625rem; margin-left: 0.375rem;
+    font-family: var(--font-mono); font-size: 0.65rem; letter-spacing: 0.04em;
+    text-transform: uppercase; border: 1px solid;
+  }
+  .inv-verdict.warn {
+    color: var(--amber-glow); border-color: var(--amber-dim);
+    background: rgba(255, 170, 42, 0.12);
+  }
+  .inv-verdict.ok {
+    color: var(--green-glow); border-color: var(--green-dim);
+    background: rgba(34, 197, 94, 0.12);
+  }
+  .inv-verdict.info {
+    color: var(--cyan-glow); border-color: var(--cyan-dim);
+    background: rgba(6, 182, 212, 0.12);
+  }
+
+  /* Inventory one-line summary block — V2.2 F12 format */
+  .inventory-summary {
+    margin-bottom: 1.25rem; padding: 0.875rem 1rem;
+    background: var(--bg-elevated); border-radius: 0.5rem;
+    border-left: 3px solid var(--cyan-glow); font-size: 0.85rem;
+  }
+  .inventory-summary-title {
+    font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--text-secondary); margin-bottom: 0.5rem;
+  }
+  .inventory-summary ul { list-style: none; padding: 0; margin: 0; }
+  .inventory-summary li {
+    padding: 0.25rem 0; line-height: 1.55; display: flex; gap: 0.5rem; align-items: flex-start;
+  }
+  .inventory-summary li .glyph {
+    flex: 0 0 1.125rem; font-family: var(--font-mono); font-weight: 700;
+    text-align: center;
+  }
+  .inventory-summary li.warn .glyph { color: var(--amber-glow); }
+  .inventory-summary li.ok .glyph { color: var(--green-glow); }
+  .inventory-summary li.info .glyph { color: var(--cyan-glow); }
+
+  /* Timeline severity glyphs — per-item worry indicator beyond just dot color */
+  .tl-item .tl-severity-label {
+    display: inline-block; font-family: var(--font-mono); font-weight: 700;
+    font-size: 0.68rem; letter-spacing: 0.05em; margin-right: 0.375rem;
+    padding: 0.125rem 0.375rem; border-radius: 0.25rem;
+  }
+  .tl-item.bad .tl-severity-label {
+    color: var(--red-glow); background: rgba(255, 69, 69, 0.12);
+  }
+  .tl-item.good .tl-severity-label {
+    color: var(--green-glow); background: rgba(34, 197, 94, 0.12);
+  }
+  .tl-item.neutral .tl-severity-label {
+    color: var(--amber-glow); background: rgba(255, 170, 42, 0.12);
+  }
+
+  /* Evidence priority banner — "read this first" marker on the most important evidence */
+  .evidence-priority {
+    position: relative; border-left-width: 4px !important;
+  }
+  .evidence-priority .priority-flag {
+    display: inline-block; margin-left: 0.5rem; padding: 0.1875rem 0.5rem;
+    background: var(--amber-glow); color: var(--bg-void);
+    border-radius: 0.25rem; font-family: var(--font-mono);
+    font-size: 0.62rem; font-weight: 700; letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .evidence-group-label {
+    margin: 1.5rem 0 0.75rem; font-family: var(--font-mono);
+    font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--text-secondary); padding: 0.5rem 0.75rem;
+    background: var(--bg-elevated); border-radius: 0.375rem;
+    border-left: 3px solid var(--border);
+  }
+  .evidence-group-label.warns { border-left-color: var(--amber-glow); color: var(--amber-glow); }
+  .evidence-group-label.positives { border-left-color: var(--green-glow); color: var(--green-glow); }
+  .evidence-group-label.context { border-left-color: var(--cyan-glow); color: var(--cyan-glow); }
+
+  /* Evidence Appendix — <pre> blocks for command and multi-line result */
+  .evidence-row { margin-bottom: 10px; }
+  .evidence-row .evidence-label {
+    font-family: var(--font-mono); font-size: 0.625rem; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--text-secondary); margin-bottom: 4px;
+  }
+  .evidence-pre {
+    background: var(--bg-void); border: 1px solid var(--border); border-radius: 6px;
+    padding: 12px 14px; margin: 0; overflow-x: auto; white-space: pre-wrap; word-break: break-word;
+    font-family: var(--font-mono); font-size: 0.75rem; color: var(--cyan-glow); line-height: 1.55;
+    max-height: 320px; overflow-y: auto;
+  }
+  .evidence-pre.result { color: var(--text-primary); }
+  .evidence-classification {
+    font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-primary);
+    padding: 8px 12px; background: var(--bg-elevated);
+    border: 1px solid var(--border-subtle); border-radius: 6px;
+  }
+  .evidence-classification.inference { color: var(--amber-glow); }
+  .evidence-classification.fact { color: var(--green-glow); }
+
+  /* Footer */
+  .footer {
+    padding: 40px 0; border-top: 1px solid var(--border-subtle);
+    text-align: center; font-size: 0.75rem; color: var(--text-muted);
+  }
+  .footer a { color: var(--text-secondary); }
+
+  /* Responsive */
+  @media (max-width: 700px) {
+    .scorecard-grid { grid-template-columns: repeat(2, 1fr); }
+    .finding-meta { grid-template-columns: 1fr; }
+    .hero { padding: 40px 0 32px; }
+    .collapsible-section > summary { padding-top: 32px; }
+    table { font-size: 0.75rem; }
+    th, td { padding: 10px 12px; }
+    .vitals-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 420px) {
+    .scorecard-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="font-controls">
+  <button onclick="adjustFont(-1)" title="Decrease font size" aria-label="Decrease font size">A&minus;</button>
+  <span class="font-size-display" id="fontDisplay">100%</span>
+  <button onclick="adjustFont(1)" title="Increase font size" aria-label="Increase font size">A+</button>
+</div>
+
+<div class="font-controls">
+  <button onclick="adjustFont(-1)">A&minus;</button>
+  <div class="font-size-display" id="fontDisplay">100%</div>
+  <button onclick="adjustFont(+1)">A+</button>
+</div>
+
+<script>
+  let fontScale = 100;
+  function adjustFont(dir) {
+    fontScale = Math.min(150, Math.max(75, fontScale + dir * 10));
+    document.documentElement.style.fontSize = fontScale + '%';
+    document.getElementById('fontDisplay').textContent = fontScale + '%';
+  }
+</script>
+
+<div class="page">
+
+  <!-- ═══════════════ HERO ═══════════════ -->
+  <div class="hero">
+    <div class="scan-strip">
+      <span class="scan-strip-item"><span class="dot amber"></span>Security Investigation</span>
+      <span class="scan-strip-item">Dossier &middot; zustand</span>
+      <span class="scan-strip-item">Rev &middot; 3201328</span>
+      <span class="scan-strip-item">v2.3-post-R3 &middot; 2026-04-16</span>
+      <span class="scan-strip-item flash">&bull; Live</span>
+    </div>
+    <h1>pmndrs<span class="slash">/</span><span class="amber">zustand</span></h1>
+    <div class="hero-caption">A 57,000-star React state-management library with zero runtime dependencies and a clean code surface. The library itself is safe to install today; the caveat is governance &mdash; no branch protection on <code>main</code>, no CODEOWNERS, and Dependabot alerts disabled on one of the most-imported packages on npm.</div>
+    <div class="meta">
+      <div class="meta-item"><span class="label">Investigated</span> 2026-04-16</div>
+      <div class="meta-item"><span class="label">Applies to</span> main @ 3201328 &middot; v5.0.12</div>
+      <div class="meta-item"><span class="label">Repo age</span> 7 years</div>
+      <div class="meta-item"><span class="label">Stars</span> 57,758</div>
+      <div class="meta-item"><span class="label">License</span> MIT</div>
+    </div>
+  </div>
+
+  <div class="catalog-meta">
+    <div class="catalog-label">Catalog metadata</div>
+    <table>
+      <tr><td class="key">Report file</td><td class="val"><code>GitHub-Scanner-zustand-v2.html</code> (+ <code>.md</code> companion)</td></tr>
+      <tr><td class="key">Repo</td><td class="val"><a href="https://github.com/pmndrs/zustand">github.com/pmndrs/zustand</a></td></tr>
+      <tr><td class="key">Short description</td><td class="val">Small, fast, unopinionated state-management library for React. Stores live in hooks, no provider wrapper required; middleware covers persistence, devtools, Immer, and Redux-style APIs. Distributed as <code>zustand</code> on npm with zero runtime dependencies.</td></tr>
+      <tr><td class="key">Category</td><td class="val">developer-tooling</td></tr>
+      <tr><td class="key">Subcategory</td><td class="val">state-management-library</td></tr>
+      <tr><td class="key">Language</td><td class="val">TypeScript</td></tr>
+      <tr><td class="key">License</td><td class="val">MIT</td></tr>
+      <tr><td class="key">Target user</td><td class="val">React application developers</td></tr>
+      <tr><td class="key">Verdict</td><td class="val val-warn fw-semi">Caution</td></tr>
+      <tr><td class="key">Scanned revision</td><td class="val">main @ 3201328 (release tag v5.0.12)</td></tr>
+      <tr><td class="key">Commit pinned</td><td class="val"><code>32013285083648e8d58ba1f76d73b9bdc02fef50</code></td></tr>
+      <tr><td class="key">Scanner version</td><td class="val">V2.3-post-R3</td></tr>
+      <tr><td class="key">Scan date</td><td class="val">2026-04-16</td></tr>
+      <tr><td class="key">Methodology</td><td class="val">path-b (first delegated scan)</td></tr>
+      <tr><td class="key">Prior scan</td><td class="val"><code>GitHub-Scanner-zustand.html</code> (first scan, same repo, same SHA)</td></tr>
+    </table>
+  </div>
+
+  <div class="verdict-section">
+    <div class="verdict-banner caution" data-dossier="DOSSIER &middot; ZUSTAND &middot; 3201328 &middot; 2026-04-16 &middot; V2.3">
+      <div class="verdict-label">&bull; Split verdict &middot; deployment axis</div>
+      <div class="verdict-split">
+        <div class="verdict-entry">
+          <div class="verdict-entry-scope">Deployment &middot; Solo-dev or learning context &middot; default install</div>
+          <h2 class="verdict-entry-headline warn">Good with caveats &mdash; install and use, the library itself is clean</h2>
+          <div class="verdict-entry-detail">Pure library, zero runtime deps, zero install-time hooks, zero network calls in source, no shell-exec primitives, no dangerous sinks. The code-path risk is as close to zero as a React library gets. The caveat is upstream governance: no branch protection on <code>main</code>, no rulesets, no CODEOWNERS. Your install today is safe; the residual risk is supply-chain credential compromise affecting future releases.</div>
+        </div>
+        <div class="verdict-split-divider"></div>
+        <div class="verdict-entry">
+          <div class="verdict-entry-scope">Deployment &middot; Shared host / production application</div>
+          <h2 class="verdict-entry-headline warn">Good with caveats &mdash; pin your version, watch for unusual releases</h2>
+          <div class="verdict-entry-detail">Same verdict, stronger caveat. Because <code>pmndrs/zustand</code> is imported by millions and has no upstream governance gate, a single compromised maintainer credential would ship arbitrary code to every install on the next release with no branch-level review. Mitigation: pin exact versions in production <code>package.json</code>, use <code>minimumReleaseAge</code> in pnpm config, and keep an eye on release notes. The library itself is clean.</div>
+        </div>
+      </div>
+      <div class="verdict-exhibits">
+        <details class="exhibit govern">
+          <summary>
+            <span class="exhibit-glyph">&#x26A0;</span>
+            <span>
+              <span class="exhibit-title">Governance gaps &mdash; no branch protection, no CODEOWNERS, Dependabot alerts off</span>
+              <span class="exhibit-count">&middot; 2 findings</span>
+              <span class="exhibit-summary-line">C20 single-point-of-failure fires as Warning (release age 31 days, 1 day outside the 30-day Critical window). Dependabot alert surface disabled while version-update PRs still flow.</span>
+            </span>
+          </summary>
+          <div class="exhibit-body">
+            <div class="exhibit-item">
+              <span class="exhibit-item-glyph">01</span>
+              <span>
+                <span class="exhibit-item-tag">Governance &middot; F0 / C20</span>
+                No classic branch protection on <code>main</code> (API returns 404), zero rulesets (<code>/rulesets</code> returns <code>[]</code>, <code>/rules/branches/main</code> returns <code>[]</code>), no CODEOWNERS in any of 4 standard locations. Org rulesets unknown (scope gap). Warning (not Critical) because v5.0.12 shipped 31 days before scan, 1 day outside the 30-day Critical window. All 10 visible releases authored exclusively by dai-shi.
+              </span>
+            </div>
+            <div class="exhibit-item">
+              <span class="exhibit-item-glyph">02</span>
+              <span>
+                <span class="exhibit-item-tag">Dependabot &middot; F1</span>
+                Dependabot alerts API returns 403 with &ldquo;disabled for this repository&rdquo; &mdash; the vulnerability alert surface is off. Version-update PRs still flow (<code>dependabot[bot]</code> has 18 contributions). Low practical impact given zero runtime deps, but a notable hygiene gap on a 57k-star npm package.
+              </span>
+            </div>
+          </div>
+        </details>
+
+        <details class="exhibit signals">
+          <summary>
+            <span class="exhibit-glyph">&#x2714;</span>
+            <span>
+              <span class="exhibit-title">Strong positive signals &mdash; clean code-path, SHA-pinned CI, long-tenured maintainer</span>
+              <span class="exhibit-count">&middot; 9 signals</span>
+              <span class="exhibit-summary-line">Zero runtime deps, zero install hooks, OIDC npm publish, SHA-pinned actions, no <code>pull_request_target</code>, broad test matrix (React 18&ndash;19, TS 4.5&ndash;5.9), active release cadence, 14-year maintainer account</span>
+            </span>
+          </summary>
+          <div class="exhibit-body">
+            <div class="exhibit-item">
+              <span class="exhibit-item-glyph">01</span>
+              <span>
+                <span class="exhibit-item-tag">Zero runtime dependencies</span>
+                <code>package.json</code> has no <code>dependencies</code> field. Peer deps only (<code>react</code>, <code>immer</code>, <code>use-sync-external-store</code> &mdash; all optional). The inbound supply chain at install time is &ldquo;zustand itself.&rdquo;
+              </span>
+            </div>
+            <div class="exhibit-item">
+              <span class="exhibit-item-glyph">02</span>
+              <span>
+                <span class="exhibit-item-tag">Clean source code</span>
+                Step A dangerous-primitive grep of <code>src/</code> returned zero matches for eval, Function, child_process, execSync, fs.write, fetch, innerHTML, document.write, crypto, process.env. Only <code>import...from</code> (16 matches, expected ES module imports). Positive control confirmed grep was working.
+              </span>
+            </div>
+            <div class="exhibit-item">
+              <span class="exhibit-item-glyph">03</span>
+              <span>
+                <span class="exhibit-item-tag">SHA-pinned CI actions</span>
+                All 3 standard actions (checkout, setup-node, pnpm/action-setup) are SHA-pinned with version comments across all 8 workflows. One minor gap: <code>pmndrs/docs/.github/workflows/build.yml@v3</code> (tag-pinned, same-org reusable workflow).
+              </span>
+            </div>
+            <div class="exhibit-item">
+              <span class="exhibit-item-glyph">04</span>
+              <span>
+                <span class="exhibit-item-tag">OIDC npm publish</span>
+                <code>publish.yml</code> uses <code>id-token: write</code> to authenticate to npm &mdash; no long-lived npm token stored in GitHub Secrets. Least-privilege permissions: <code>id-token: write</code> + <code>contents: read</code>.
+              </span>
+            </div>
+            <div class="exhibit-item">
+              <span class="exhibit-item-glyph">05</span>
+              <span>
+                <span class="exhibit-item-tag">No <code>pull_request_target</code></span>
+                Grep across all 8 workflow files returned zero matches. Rules out the PwnRequest class of CI attacks.
+              </span>
+            </div>
+            <div class="exhibit-item">
+              <span class="exhibit-item-glyph">06</span>
+              <span>
+                <span class="exhibit-item-tag">Broad test matrix</span>
+                Tests across React 18.0&ndash;19.2 + canary, TypeScript 4.5&ndash;5.9, CJS/ESM build modes. 8 workflow files covering compressed size, multi-build, multi-version, old-TS, and the main test suite.
+              </span>
+            </div>
+            <div class="exhibit-item">
+              <span class="exhibit-item-glyph">07</span>
+              <span>
+                <span class="exhibit-item-tag">Active maintenance</span>
+                5 releases in 5 months (v5.0.8 through v5.0.12, Aug 2025&ndash;Mar 2026). Community PRs merged regularly. 15 recent commits show healthy multi-contributor activity.
+              </span>
+            </div>
+            <div class="exhibit-item">
+              <span class="exhibit-item-glyph">08</span>
+              <span>
+                <span class="exhibit-item-tag">Long-tenured maintainer</span>
+                dai-shi (Daishi Kato) has a 14-year GitHub account (since 2010-11), 8,087 followers, 127 public repos. Publicly known React library author maintaining zustand, jotai, valtio, and waku. No sockpuppet signals. Org pmndrs (Poimandres) is an established collective with 91 repos.
+              </span>
+            </div>
+            <div class="exhibit-item">
+              <span class="exhibit-item-glyph">09</span>
+              <span>
+                <span class="exhibit-item-tag">Standard install path</span>
+                README line 23&ndash;24: <code>npm install zustand</code>. No curl-pipe, no wget-to-sh, no unusual install instructions.
+              </span>
+            </div>
+          </div>
+        </details>
+      </div>
+    </div>
+  </div>
+
+  <div class="scorecard-section">
+    <div class="scorecard-grid">
+      <div class="score-cell">
+        <div class="score-icon amber">&#x26A0;</div>
+        <div class="score-label">Does anyone check the code?</div>
+        <div class="score-value amber">Review happens but is not required &mdash; 45% formal review rate in 20-PR sample, no branch protection, no CODEOWNERS, 7 self-merges</div>
+      </div>
+      <div class="score-cell">
+        <div class="score-icon green">&#x2705;</div>
+        <div class="score-label">Is it safe out of the box?</div>
+        <div class="score-value green">Yes &mdash; zero runtime deps, zero dangerous primitives, pure TypeScript state management with no I/O, no eval, no network</div>
+      </div>
+      <div class="score-cell">
+        <div class="score-icon green">&#x2705;</div>
+        <div class="score-label">Can you trust the maintainers?</div>
+        <div class="score-value green">Yes &mdash; dai-shi is a 14-year veteran, 8k followers, publicly known React library author; pmndrs is an established collective</div>
+      </div>
+      <div class="score-cell">
+        <div class="score-icon green">&#x2705;</div>
+        <div class="score-label">Is it actively maintained?</div>
+        <div class="score-value green">Yes &mdash; v5.0.12 shipped March 2026, 5 releases in 5 months, community PRs merged regularly, dependabot bumps flowing</div>
+      </div>
+    </div>
+  </div>
+
+  <details class="collapsible-section" open>
+    <summary>
+      <div class="section-header">
+        <span class="section-number">01</span>
+        <h2>What Should I Do?</h2>
+        <span class="section-status">
+          <span class="pill green">&#x2713; Safe to install today</span>
+          <span class="pill amber">&#x26A0; Pin versions in production</span>
+          <span class="pill info">2 steps</span>
+        </span>
+      </div>
+      <div class="section-subtitle">
+        <span class="cold">Install normally</span> &mdash; the library source is clean, zero runtime deps, zero install hooks (Step 1). <span class="hot">If you ship zustand to production</span>, pin your version and consider a release-age gate (Step 2). For maintainers: branch protection and Dependabot alerts would close both findings.
+      </div>
+    </summary>
+    <div class="section-body">
+
+    <div class="action-card ok-action">
+      <h3 class="val-good">Step 1: Install zustand the way the README describes</h3>
+      <p><strong>Non-technical:</strong> <code>zustand</code> is a React state-management library. You install it with <code>npm install zustand</code> and import it into your React code. There are no install-time scripts, no network calls at runtime, no file system access, no shell execution. The install is standard and safe.</p>
+      <pre>npm install zustand
+# or
+yarn add zustand
+# or
+pnpm add zustand</pre>
+    </div>
+    <div class="action-card wait">
+      <h3 class="val-warn">Step 2: For production apps, pin versions and add a release-age gate</h3>
+      <p><strong>Non-technical:</strong> Because there is no branch protection on <code>main</code>, an attacker who compromised a maintainer's credentials could push malicious code and publish a new npm release without any automated review gate. Pin exact versions and add a time delay before accepting new releases.</p>
+      <pre># In your package.json, use exact versions (no ^ or ~):
+"zustand": "5.0.12"
+
+# In .npmrc or pnpm config, add a minimum release age:
+minimum-release-age=1440</pre>
+      <p class="p-meta"><strong>For maintainers:</strong> Enable branch protection on <code>main</code> (Settings &rarr; Branches &rarr; Add rule, require 1 approver, require CI status checks). Add <code>.github/CODEOWNERS</code> covering <code>.github/workflows/</code> and <code>src/</code>. Enable Dependabot security alerts.</p>
+    </div>
+    </div>
+  </details>
+
+  <details class="collapsible-section">
+    <summary>
+      <div class="section-header">
+        <span class="section-number">02</span>
+        <h2>What We Found</h2>
+        <span class="section-status">
+          <span class="pill amber">&#x26A0; 1 Warning</span>
+          <span class="pill info">&#x2139; 1 Info</span>
+          <span class="pill green">&#x2713; 9 OK</span>
+        </span>
+      </div>
+      <div class="section-subtitle">
+        2 findings total plus 9 positive signals. <span class="hot">The one Warning is governance, not code.</span> F0 is the C20 single-point-of-failure (no branch protection, no rulesets, no CODEOWNERS) at Warning because release age (31 days) sits just outside the 30-day Critical window. F1 is Info noting Dependabot alerts are disabled. Everything else is positive.
+      </div>
+      <div class="section-action">
+        <span class="lbl">Your action</span>
+        Nothing you need to do at the source level &mdash; the library is clean. For production: pin versions and add a release-age gate (see Step 2 above). For maintainers: enable branch protection and Dependabot alerts.
+      </div>
+    </summary>
+    <div class="section-body">
+
+    <div class="finding-card warning">
+      <details>
+        <summary>
+          <div class="finding-header">
+            <span class="tag warning-tag">Warning</span>
+            <span class="status-chip ongoing">Structural</span>
+            <span class="finding-date">Continuous</span>
+            <span class="finding-duration">Since repo creation</span>
+            <h3>Governance single-point-of-failure &mdash; no branch protection, no rulesets, no CODEOWNERS on a 57k-star npm library (F0 / C20)</h3>
+            <div class="action-hint warn">If you use zustand: pin exact versions in production and add a <code>minimumReleaseAge</code> gate. If you maintain this repo: enable branch protection on <code>main</code> (Settings &rarr; Branches &rarr; Add rule, 1 approver + CI checks) and add <code>.github/CODEOWNERS</code>.</div>
+          </div>
+        </summary>
+        <div class="finding-body">
+          <p><strong>Severity sits at Warning, near the boundary.</strong> The V2.3 C20 rule escalates to Critical when a repo has all governance signals negative AND distributes executable code AND has a release within the last 30 days. v5.0.12 shipped 2026-03-16 &mdash; 31 days before this scan, 1 day outside the Critical window. This is not a comfortable margin.</p>
+          <p><strong>What is missing.</strong> Classic branch protection on <code>main</code> returns HTTP 404. Repo rulesets: <code>[]</code>. Rules on <code>main</code>: <code>[]</code>. Org rulesets: unknown (scope gap). CODEOWNERS absent in 4 standard locations. All 10 visible releases authored exclusively by dai-shi.</p>
+          <p><strong>How an attacker arrives (F13).</strong> Concrete paths: (1) credential phishing against dai-shi (public profile, findable identity); (2) stale OAuth token reuse; (3) compromised browser session cookie; (4) malicious IDE extension; (5) npm token theft (mitigated by OIDC publish). None require nation-state tradecraft.</p>
+          <p><strong>What this means for you.</strong> In a browser context, a malicious zustand release could read cookies, exfiltrate localStorage, inject DOM. In Node.js/SSR the blast radius is wider (filesystem, network, process). Mitigation: pin versions, add a release-age gate.</p>
+          <p><strong>What this does NOT mean.</strong> The current v5.0.12 source is clean. Zero dangerous primitives, zero runtime deps. This finding is about the repo's process gap, not the current release.</p>
+          <div class="finding-meta">
+            <div class="meta-chip">
+              <span class="chip-label">Classic branch protection</span>
+              <span class="chip-value val-bad">404 on <code>main</code></span>
+            </div>
+            <div class="meta-chip">
+              <span class="chip-label">Rulesets</span>
+              <span class="chip-value val-bad"><code>[]</code> &mdash; zero rulesets</span>
+            </div>
+            <div class="meta-chip">
+              <span class="chip-label">Rules on main</span>
+              <span class="chip-value val-bad"><code>[]</code> &mdash; authoritative</span>
+            </div>
+            <div class="meta-chip">
+              <span class="chip-label">CODEOWNERS</span>
+              <span class="chip-value val-bad">Absent (4 locations)</span>
+            </div>
+            <div class="meta-chip">
+              <span class="chip-label">Org rulesets</span>
+              <span class="chip-value val-warn">Unknown (scope gap)</span>
+            </div>
+            <div class="meta-chip">
+              <span class="chip-label">Stars (blast radius)</span>
+              <span class="chip-value">57,758</span>
+            </div>
+            <div class="meta-chip">
+              <span class="chip-label">Latest release age</span>
+              <span class="chip-value val-warn">31 days &mdash; 1 day outside Critical window</span>
+            </div>
+            <div class="meta-chip">
+              <span class="chip-label">All releases by</span>
+              <span class="chip-value val-warn">dai-shi exclusively</span>
+            </div>
+          </div>
+          <div class="sub-finding">
+            <div class="sub-finding-label">How to fix (maintainer-side, 2 minutes in the UI)</div>
+            <p>GitHub <em>Settings &rarr; Branches &rarr; Add branch protection rule</em>. For <code>main</code>: require pull request reviews (1 approver), require the existing CI status checks, do not allow bypassing. Add <code>.github/CODEOWNERS</code> covering <code>.github/workflows/ @dai-shi @dbritto-dev</code> and <code>src/ @dai-shi @dbritto-dev</code>.</p>
+          </div>
+        </div>
+      </details>
+    </div>
+
+    <div class="finding-card info">
+      <details>
+        <summary>
+          <div class="finding-header">
+            <span class="tag info-tag">Info</span>
+            <span class="status-chip ongoing">Configuration-level</span>
+            <span class="finding-date">Current</span>
+            <span class="finding-duration">Repo-level setting</span>
+            <h3>Dependabot security alerts disabled while version updates still flow (F1)</h3>
+            <div class="action-hint">Maintainers: enable Dependabot security alerts in repo settings (Security tab &rarr; Dependabot alerts &rarr; Enable). Low practical impact given zero runtime deps, but closes a hygiene gap.</div>
+          </div>
+        </summary>
+        <div class="finding-body">
+          <p><strong>What we observed.</strong> The Dependabot alerts API returns 403 with &ldquo;Dependabot alerts are disabled for this repository&rdquo; &mdash; this is the repo setting, not a token scope gap. Dependabot version updates ARE active (<code>dependabot.yml</code> present, <code>dependabot[bot]</code> has 18 contributions).</p>
+          <p><strong>Why this is Info and not Warning.</strong> zustand has zero runtime dependencies. The only dependencies that could carry CVEs are devDependencies, which only affect contributors building from source, not end users installing from npm. The blast radius is narrow.</p>
+          <div class="finding-meta">
+            <div class="meta-chip">
+              <span class="chip-label">Dependabot alerts API</span>
+              <span class="chip-value val-warn">403 &ldquo;disabled for this repository&rdquo;</span>
+            </div>
+            <div class="meta-chip">
+              <span class="chip-label">dependabot.yml</span>
+              <span class="chip-value val-good">Present (npm + github-actions)</span>
+            </div>
+            <div class="meta-chip">
+              <span class="chip-label">Runtime dependencies</span>
+              <span class="chip-value val-good">0</span>
+            </div>
+          </div>
+        </div>
+      </details>
+    </div>
+
+    <div class="finding-card ok">
+      <div class="finding-header">
+        <span class="tag ok-tag">OK</span>
+        <h3>Source code is clean &mdash; zero dangerous primitives, zero runtime deps, pure TypeScript state management</h3>
+      </div>
+    </div>
+
+    <div class="finding-card ok">
+      <div class="finding-header">
+        <span class="tag ok-tag">OK</span>
+        <h3>CI pipeline is well-configured &mdash; SHA-pinned actions, least-privilege permissions, no <code>pull_request_target</code></h3>
+      </div>
+    </div>
+
+    <div class="finding-card ok">
+      <div class="finding-header">
+        <span class="tag ok-tag">OK</span>
+        <h3>Install path is standard &mdash; <code>npm install zustand</code>, no lifecycle hooks, no curl-pipe</h3>
+      </div>
+    </div>
+
+    </div>
+  </details>
+
+  <details class="collapsible-section">
+    <summary>
+      <div class="section-header">
+        <span class="section-number">02A</span>
+        <h2>Executable File Inventory</h2>
+        <span class="section-status">
+          <span class="pill green">0 executables of concern</span>
+          <span class="pill info">143 files total</span>
+        </span>
+      </div>
+      <div class="section-subtitle">
+        <span class="cold">zustand ships as an npm package containing compiled JavaScript</span> (from TypeScript source). There are no shell scripts, no PowerShell scripts, no batch files, no binary executables. Three image files have erroneous +x permission bits &mdash; non-executable content, zero security concern.
+      </div>
+      <div class="section-action ok">
+        <span class="lbl">Your action</span>
+        None. The repo contains no executable files of security concern.
+      </div>
+    </summary>
+    <div class="section-body">
+    <div class="inventory-summary">
+      <div class="inventory-summary-title">Layer 1 &mdash; one-line summary</div>
+      <ul>
+        <li class="ok"><span class="glyph">&#x2713;</span><span><strong>zustand ships 0 executable files.</strong> Distribution: npm package built from TypeScript source via rollup. No shell scripts, no binary artifacts, no install-time hooks. Three image assets in <code>examples/demo/</code> have erroneous +x permission bits (ground.png, bg.jpg, stars.png) &mdash; non-executable content.</span></li>
+      </ul>
+    </div>
+
+    <div class="finding-card ok stack-md">
+      <details>
+        <summary>
+          <div class="finding-header">
+            <span class="tag ok-tag">Inventory</span>
+            <span class="inv-verdict ok">&#x2713; Runtime surface (0 executables &middot; ~16 TS source files &middot; npm package)</span>
+            <h3>Layer 2 &mdash; per-file runtime inventory</h3>
+            <div class="action-hint ok">No action. Pure TypeScript library with no I/O, no eval, no network, no fs access.</div>
+          </div>
+        </summary>
+        <div class="finding-body">
+          <div class="pr-table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>File / Artifact</th>
+                  <th>Kind</th>
+                  <th>Runtime</th>
+                  <th>Dangerous calls</th>
+                  <th>Network</th>
+                  <th>Notes</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code>src/react.ts</code></td>
+                  <td>Library source</td>
+                  <td>React render</td>
+                  <td class="td-reviewed-yes">None</td>
+                  <td class="td-reviewed-yes">None</td>
+                  <td>React hook entry point, imports from vanilla.ts</td>
+                </tr>
+                <tr>
+                  <td><code>src/vanilla.ts</code></td>
+                  <td>Library source</td>
+                  <td>JS runtime</td>
+                  <td class="td-reviewed-yes">None</td>
+                  <td class="td-reviewed-yes">None</td>
+                  <td>Core store implementation, pure TS</td>
+                </tr>
+                <tr>
+                  <td><code>src/traditional.ts</code></td>
+                  <td>Library source</td>
+                  <td>React render</td>
+                  <td class="td-reviewed-yes">None</td>
+                  <td class="td-reviewed-yes">None</td>
+                  <td>Legacy API compatibility layer</td>
+                </tr>
+                <tr>
+                  <td><code>src/middleware/*.ts</code></td>
+                  <td>Middleware</td>
+                  <td>JS runtime</td>
+                  <td class="td-reviewed-yes">None</td>
+                  <td class="td-reviewed-yes">None</td>
+                  <td>persist, devtools, immer, redux, subscribeWithSelector</td>
+                </tr>
+                <tr>
+                  <td><code>src/shallow.ts</code></td>
+                  <td>Library source</td>
+                  <td>JS runtime</td>
+                  <td class="td-reviewed-yes">None</td>
+                  <td class="td-reviewed-yes">None</td>
+                  <td>Shallow comparison utility</td>
+                </tr>
+                <tr>
+                  <td>npm: <code>zustand@5.0.12</code></td>
+                  <td>Published package</td>
+                  <td>npm install</td>
+                  <td class="td-reviewed-yes">None</td>
+                  <td class="td-reviewed-yes">N/A</td>
+                  <td>Built from <code>dist/</code> via <code>publish.yml</code>, OIDC auth</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </details>
+    </div>
+
+    </div>
+  </details>
+
+  <!-- ═══════════════ SECTION 03: SUSPICIOUS CODE CHANGES ═══════════════ -->
+  <details class="collapsible-section">
+    <summary>
+      <div class="section-header">
+        <span class="section-number">03</span>
+        <h2>Suspicious Code Changes</h2>
+        <span class="section-status">
+          <span class="pill green">&#x2713; 0 security-concerning PRs</span>
+          <span class="pill info">20 recent merges sampled</span>
+        </span>
+      </div>
+      <div class="section-subtitle">
+        <span class="cold">Recent PR activity is routine.</span> Sample of 20 most recent merges shows docs fixes, dependency bumps, test coverage expansion, and a devtools type fix. 3 PRs authored by copilot-swe-agent (all merged by human maintainers). <span class="hot">7 self-merges</span> (3 by dai-shi on README/deps, 4 by dbritto-dev on docs/workflow) &mdash; all on low-risk changes.
+      </div>
+      <div class="section-action info">
+        <span class="lbl">Your action</span>
+        None. The recent-activity pattern is normal maintenance, not a hijacked repo.
+      </div>
+    </summary>
+    <div class="section-body">
+    <p class="p-meta">Sample: 20 most recent merged PRs. Dual review-rate metric: formal <code>reviewDecision</code> APPROVED on 9/20 = 45%; any review activity on 14/20 = 70%. 7 self-merges on routine changes.</p>
+    <div class="pr-table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>PR</th><th>What it did</th><th>Author</th>
+            <th>Merged by</th><th>Reviewed?</th><th>Concern</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><a href="https://github.com/pmndrs/zustand/pull/3466">#3466</a></td>
+            <td>Update TypeScript guide links in README</td>
+            <td class="td-person">FelixEckl</td>
+            <td class="td-person">dai-shi</td>
+            <td class="td-reviewed-yes">APPROVED</td>
+            <td class="td-concern">Docs only. Reviewed.</td>
+          </tr>
+          <tr>
+            <td><a href="https://github.com/pmndrs/zustand/pull/3447">#3447</a></td>
+            <td>Bump actions/deploy-pages 4.0.5 to 5.0.0</td>
+            <td class="td-person">dependabot</td>
+            <td class="td-person">dbritto-dev</td>
+            <td class="td-reviewed-no">No decision</td>
+            <td class="td-concern">Routine bot bump.</td>
+          </tr>
+          <tr>
+            <td><a href="https://github.com/pmndrs/zustand/pull/3427">#3427</a></td>
+            <td>Update dev dependencies</td>
+            <td class="td-person">dai-shi</td>
+            <td class="td-person">dai-shi</td>
+            <td class="td-reviewed-no">No decision</td>
+            <td class="td-concern"><strong>Self-merge</strong> on deps update &mdash; low risk.</td>
+          </tr>
+          <tr>
+            <td><a href="https://github.com/pmndrs/zustand/pull/3414">#3414</a></td>
+            <td>Fix devtools config type extension</td>
+            <td class="td-person">grigoriy-reshetniak</td>
+            <td class="td-person">dai-shi</td>
+            <td class="td-reviewed-yes">APPROVED</td>
+            <td class="td-concern">Type fix. Reviewed.</td>
+          </tr>
+          <tr>
+            <td><a href="https://github.com/pmndrs/zustand/pull/3391">#3391</a></td>
+            <td>Fix persist post-rehydration callback</td>
+            <td class="td-person">Shohjahon-n</td>
+            <td class="td-person">dai-shi</td>
+            <td class="td-reviewed-yes">APPROVED (11 reviews)</td>
+            <td class="td-concern">Bug fix. Thoroughly reviewed.</td>
+          </tr>
+          <tr>
+            <td><a href="https://github.com/pmndrs/zustand/pull/3395">#3395</a></td>
+            <td>Pin actions/deploy-pages to commit SHA</td>
+            <td class="td-person">copilot-swe-agent</td>
+            <td class="td-person">dai-shi</td>
+            <td class="td-reviewed-no">No decision</td>
+            <td class="td-concern">AI-authored supply-chain hygiene PR. Merged by human.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    </div>
+  </details>
+
+  <!-- ═══════════════ SECTION 04: TIMELINE ═══════════════ -->
+  <details class="collapsible-section">
+    <summary>
+      <div class="section-header">
+        <span class="section-number">04</span>
+        <h2>Timeline</h2>
+        <span class="section-status">
+          <span class="pill green">4 good</span>
+          <span class="pill info">1 neutral</span>
+        </span>
+      </div>
+      <div class="section-subtitle">
+        Five beats across the library's 7-year history. <span class="cold">The story is a well-maintained React library</span> with steady releases, no security incidents, and an increasingly professional CI pipeline. <span class="hot">One governance note</span>: no branch protection has ever been enabled on this repo despite its scale.
+      </div>
+      <div class="section-action info">
+        <span class="lbl">Your action</span>
+        None. zustand's timeline shows a healthy, long-running library with no advisory-class incidents. The Warning is about repo configuration, not code quality or maintainer intent.
+      </div>
+    </summary>
+    <div class="section-body">
+    <div class="timeline">
+      <div class="tl-item neutral">
+        <div class="tl-date">2019-04-09 <span class="tl-severity-label">CREATED</span></div>
+        <div class="tl-desc">Repo created under pmndrs (Poimandres) organization. 7+ years at time of scan. Originally by drcmda, primary maintenance transferred to dai-shi.</div>
+      </div>
+      <div class="tl-item good">
+        <div class="tl-date">2019&ndash;2025 <span class="tl-severity-label">STEADY GROWTH</span></div>
+        <div class="tl-desc">Multiple major versions (v1 through v5). Zero security advisories filed. Zero npm supply-chain incidents. Grew to 57k stars. Established as one of the most popular React state management libraries.</div>
+      </div>
+      <div class="tl-item good">
+        <div class="tl-date">2025&ndash;2026 <span class="tl-severity-label">CI HARDENING</span></div>
+        <div class="tl-desc">SHA-pinned actions across all workflows. OIDC npm publish (no stored tokens). Copilot-bot hygiene PRs (#3395: pin deploy-pages to SHA). Active supply-chain awareness from maintainers.</div>
+      </div>
+      <div class="tl-item good">
+        <div class="tl-date">2026-03-16 <span class="tl-severity-label">V5.0.12 SHIPS</span></div>
+        <div class="tl-desc">Latest release. Persist bug fix, devtools type fix, dev dependency updates. All positive. 31 days before scan &mdash; 1 day outside the C20 Critical window.</div>
+      </div>
+      <div class="tl-item good">
+        <div class="tl-date">2026-04-16 <span class="tl-severity-label">THIS SCAN</span></div>
+        <div class="tl-desc">HEAD at <code>32013285083648e8d58ba1f76d73b9bdc02fef50</code>. Most recent merge: PR #3466 (README link fix by FelixEckl, merged by dai-shi). F0 fires as Warning.</div>
+      </div>
+    </div>
+    </div>
+  </details>
+
+  <!-- ═══════════════ SECTION 05: REPO VITALS ═══════════════ -->
+  <details class="collapsible-section">
+    <summary>
+      <div class="section-header">
+        <span class="section-number">05</span>
+        <h2>Repo Vitals</h2>
+        <span class="section-status">
+          <span class="pill info">15 metrics</span>
+          <span class="pill muted">Reference only</span>
+        </span>
+      </div>
+      <div class="section-subtitle">
+        Raw numbers backing everything above &mdash; stars, contributors, review rate, governance flags, dependency counts. Open to verify specific numbers cited in findings.
+      </div>
+    </summary>
+    <div class="section-body">
+    <div class="vitals-grid">
+      <div class="vital-cell">
+        <div class="vital-label">Repo age</div>
+        <div class="vital-value">7 years</div>
+        <div class="vital-note">Created 2019-04-09 &mdash; established React library with no security-incident history</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Stars / Forks</div>
+        <div class="vital-value">57,758 / 2,035</div>
+        <div class="vital-note">Top-tier npm library. 7 open issues (2 actual, both non-security).</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Primary maintainer</div>
+        <div class="vital-value val-good">dai-shi (411 commits, ~48%)</div>
+        <div class="vital-note">Daishi Kato &mdash; account since 2010-11, 127 repos, 8,087 followers. Freelancer, maintains zustand + jotai + valtio + waku.</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">#2 contributor</div>
+        <div class="vital-value val-good">drcmda (232 commits)</div>
+        <div class="vital-note">Original creator, pmndrs org member.</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">#3 contributor</div>
+        <div class="vital-value val-good">dbritto-dev (59 commits)</div>
+        <div class="vital-note">Active co-maintainer, merges PRs regularly.</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Review rate (20-PR sample)</div>
+        <div class="vital-value val-warn">9 formal / 14 any-review</div>
+        <div class="vital-note">45% formal review (APPROVED), 70% with any review activity. No branch protection enforces review.</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Branch protection</div>
+        <div class="vital-value val-bad">None on <code>main</code></div>
+        <div class="vital-note">API 404 + empty rulesets + empty rules/branches/main</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">CODEOWNERS</div>
+        <div class="vital-value val-bad">None</div>
+        <div class="vital-note">4 standard locations checked &mdash; all absent</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Dependabot alerts</div>
+        <div class="vital-value val-warn">Disabled</div>
+        <div class="vital-note">403 &ldquo;disabled for this repository&rdquo; &mdash; distinct from scope gap. Version updates ARE active.</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Security advisories</div>
+        <div class="vital-value val-good">0 filed</div>
+        <div class="vital-note">Clean history across 7 years.</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Runtime dependencies</div>
+        <div class="vital-value val-good">0</div>
+        <div class="vital-note">Peer deps only (react, immer, use-sync-external-store &mdash; all optional)</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">CI workflows</div>
+        <div class="vital-value">8 files</div>
+        <div class="vital-note">All standard actions SHA-pinned. Zero <code>pull_request_target</code>.</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Latest release</div>
+        <div class="vital-value val-good">v5.0.12 (2026-03-16)</div>
+        <div class="vital-note">31 days old at scan time. 5 releases in 5 months.</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">npm package</div>
+        <div class="vital-value"><code>zustand@5.0.12</code></div>
+        <div class="vital-note">Registry points to github.com/pmndrs/zustand.git</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Commit pinned</div>
+        <div class="vital-value"><code>32013285083648e8d58ba1f76d73b9bdc02fef50</code></div>
+        <div class="vital-note">If your tree differs, re-run the scan.</div>
+      </div>
+    </div>
+    </div>
+  </details>
+
+  <!-- ═══════════════ SECTION 06: INVESTIGATION COVERAGE ═══════════════ -->
+  <details class="collapsible-section">
+    <summary>
+      <div class="section-header">
+        <span class="section-number">06</span>
+        <h2>Investigation Coverage</h2>
+        <span class="section-status">
+          <span class="pill green">11/11 coverage cells verified</span>
+          <span class="pill amber">1 scope gap (org rulesets)</span>
+        </span>
+      </div>
+      <div class="section-subtitle">
+        How thorough was this scan? <span class="cold">All 11 coverage cells verified</span>: 8/8 workflow files inspected, full tarball extracted (143 files), 0 <code>pull_request_target</code>, 0 agent-rule files, 0 prompt-injection hits, 1 README paste-block (standard npm install). One amber: org rulesets could not be checked (token scope gap).
+      </div>
+    </summary>
+    <div class="section-body">
+    <div class="vitals-grid">
+      <div class="vital-cell">
+        <div class="vital-label">Tarball extraction</div>
+        <div class="vital-value val-good">OK &mdash; 143 files</div>
+        <div class="vital-note">Pinned to <code>32013285...</code> at scan start</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Workflow files read</div>
+        <div class="vital-value val-good">8 of 8</div>
+        <div class="vital-note">test, publish, compressed-size, docs, preview-release, test-multiple-builds, test-multiple-versions, test-old-typescript</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Merged PRs scanned</div>
+        <div class="vital-value val-good">20 sampled</div>
+        <div class="vital-note">Dual review-rate metric: 45% formal, 70% any. 7 self-merges on routine changes.</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label"><code>pull_request_target</code> scan</div>
+        <div class="vital-value val-good">0 occurrences</div>
+        <div class="vital-note">Grep confirmed across all 8 workflows</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Executable files</div>
+        <div class="vital-value val-good">0 of concern</div>
+        <div class="vital-note">3 images with erroneous +x bit</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">README paste-scan (7.5)</div>
+        <div class="vital-value val-good">1 block &mdash; standard npm install</div>
+        <div class="vital-note"><code>npm install zustand</code> &mdash; no curl-pipe-bash</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Agent-rule files</div>
+        <div class="vital-value val-good">None</div>
+        <div class="vital-note">6 locations checked &mdash; all absent</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Prompt-injection scan</div>
+        <div class="vital-value val-good">0 matches</div>
+        <div class="vital-note">No imperative-AI-directed strings</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Distribution channels</div>
+        <div class="vital-value val-good">npm only</div>
+        <div class="vital-note">OIDC publish from CI via publish.yml</div>
+      </div>
+    </div>
+
+    <div class="finding-card info stack-sm">
+      <div class="finding-header">
+        <span class="tag info-tag">Gap</span>
+        <h3>Org rulesets could not be checked &mdash; token lacks <code>admin:org</code> scope. pmndrs may have org-level rulesets that apply to zustand. Finding F0 records this as &ldquo;unknown&rdquo; rather than &ldquo;absent.&rdquo;</h3>
+      </div>
+    </div>
+    <div class="finding-card info stack-sm">
+      <div class="finding-header">
+        <span class="tag info-tag">Gap</span>
+        <h3>Review-rate metric is based on a 20-PR sample, not the full merged-PR history. The pattern (45% formal, 70% any) is consistent across the sample but a larger enumeration would tighten the estimate.</h3>
+      </div>
+    </div>
+
+    </div>
+  </details>
+
+  <!-- ═══════════════ SECTION 07: EVIDENCE APPENDIX ═══════════════ -->
+  <details class="collapsible-section">
+    <summary>
+      <div class="section-header">
+        <span class="section-number">07</span>
+        <h2>Evidence Appendix</h2>
+        <span class="section-status">
+          <span class="pill info">9 facts</span>
+          <span class="pill amber">1 &#x2605; priority</span>
+        </span>
+      </div>
+      <div class="section-subtitle">
+        9 command-backed claims. <span class="emph">Start with the item marked &#x2605;</span> &mdash; the branch-protection-missing check. That is the falsification criterion for the Warning verdict: if branch protection appeared, the verdict would move toward Clean.
+      </div>
+      <div class="section-action info">
+        <span class="lbl">Your action</span>
+        Use this section to verify claims yourself. Each entry shows the exact command and observed result. If your output differs, the repo state has moved since this scan.
+      </div>
+    </summary>
+    <div class="section-body">
+    <p class="p-meta">Each major claim is backed by a command and an observed result. The <span class="priority-flag inline">&#x2605; Start here</span> item is the falsifiable claim behind the Warning verdict.</p>
+
+    <div class="evidence-group-label warns">&#x2605; Priority evidence (read first)</div>
+
+    <div class="finding-card info evidence-priority stack-md">
+      <div class="finding-header">
+        <span class="tag info-tag">Evidence 1</span>
+        <span class="priority-flag">&#x2605; Start here</span>
+        <h3>No branch protection, no rulesets, no CODEOWNERS on <code>main</code> (F0 / C20)</h3>
+      </div>
+      <div class="finding-body">
+        <div class="evidence-row">
+          <div class="evidence-label">Command</div>
+          <pre class="evidence-pre">gh api "repos/pmndrs/zustand/branches/main/protection"
+gh api "repos/pmndrs/zustand/rulesets"
+gh api "repos/pmndrs/zustand/rules/branches/main"
+for p in .github/CODEOWNERS CODEOWNERS docs/CODEOWNERS .github/docs/CODEOWNERS; do
+  test -f "/tmp/scan-zustand-v2/src/$p" &amp;&amp; echo "FOUND" || echo "NOT FOUND: $p"
+done
+gh api "orgs/pmndrs/rulesets"</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Result observed</div>
+          <pre class="evidence-pre result">{"message":"Not Found","status":"404"}
+[]
+[]
+NOT FOUND: .github/CODEOWNERS
+NOT FOUND: CODEOWNERS
+NOT FOUND: docs/CODEOWNERS
+NOT FOUND: .github/docs/CODEOWNERS
+{"message":"Not Found","status":"404"} (needs admin:org scope)</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Classification</div>
+          <div class="evidence-classification fact">Confirmed fact &mdash; branch protection absent (404), rulesets empty, rules on main empty, CODEOWNERS absent in all 4 locations. Org rulesets unknown (scope gap, needs admin:org).</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="evidence-group-label context">Supporting evidence</div>
+
+    <div class="finding-card info stack-md">
+      <div class="finding-header">
+        <span class="tag info-tag">Evidence 2</span>
+        <h3>Dependabot alerts disabled (F1)</h3>
+      </div>
+      <div class="finding-body">
+        <div class="evidence-row">
+          <div class="evidence-label">Command</div>
+          <pre class="evidence-pre">gh api repos/pmndrs/zustand/dependabot/alerts</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Result observed</div>
+          <pre class="evidence-pre result">{"message":"Dependabot alerts are disabled for this repository.","status":"403"}</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Classification</div>
+          <div class="evidence-classification fact">Confirmed fact &mdash; the 403 message explicitly says &ldquo;disabled for this repository.&rdquo; Distinct from a scope gap (&ldquo;You are not authorized&rdquo;).</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="finding-card info stack-md">
+      <div class="finding-header">
+        <span class="tag info-tag">Evidence 3</span>
+        <h3>Zero dangerous primitives in source</h3>
+      </div>
+      <div class="finding-body">
+        <div class="evidence-row">
+          <div class="evidence-label">Command</div>
+          <pre class="evidence-pre">for pattern in 'eval(' 'Function(' 'child_process' 'execSync' 'fs.write' 'fetch(' 'innerHTML'; do
+  count=$(grep -rn "$pattern" /tmp/scan-zustand-v2/src/src/ | wc -l)
+  echo "$pattern: $count"
+done</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Result observed</div>
+          <pre class="evidence-pre result">All patterns: 0 matches
+import...from: 16 matches (expected ES module imports)</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Classification</div>
+          <div class="evidence-classification fact">Confirmed fact &mdash; zero dangerous primitives. Positive control (import...from) verified grep was working.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="finding-card info stack-md">
+      <div class="finding-header">
+        <span class="tag info-tag">Evidence 4</span>
+        <h3>Zero runtime dependencies</h3>
+      </div>
+      <div class="finding-body">
+        <div class="evidence-row">
+          <div class="evidence-label">Command</div>
+          <pre class="evidence-pre">cat /tmp/scan-zustand-v2/src/package.json | jq '.dependencies'</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Result observed</div>
+          <pre class="evidence-pre result">null (no dependencies field)</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Classification</div>
+          <div class="evidence-classification fact">Confirmed fact.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="finding-card info stack-md">
+      <div class="finding-header">
+        <span class="tag info-tag">Evidence 5</span>
+        <h3>All CI actions SHA-pinned</h3>
+      </div>
+      <div class="finding-body">
+        <div class="evidence-row">
+          <div class="evidence-label">Command</div>
+          <pre class="evidence-pre">grep -rn 'uses:' /tmp/scan-zustand-v2/src/.github/workflows/*.yml</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Result observed</div>
+          <pre class="evidence-pre result">actions/checkout@de0fac...#v6.0.2
+pnpm/action-setup@41ff7...#v4.2.0
+actions/setup-node@6044e...#v6.2.0
+preactjs/compressed-size-action@49c7f...#v3
+Exception: pmndrs/docs/.github/workflows/build.yml@v3 (tag-pinned, same-org)</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Classification</div>
+          <div class="evidence-classification fact">Confirmed fact &mdash; all standard actions SHA-pinned. One same-org reusable workflow is tag-pinned.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="finding-card info stack-md">
+      <div class="finding-header">
+        <span class="tag info-tag">Evidence 6</span>
+        <h3>No <code>pull_request_target</code> usage</h3>
+      </div>
+      <div class="finding-body">
+        <div class="evidence-row">
+          <div class="evidence-label">Command</div>
+          <pre class="evidence-pre">grep -rn 'pull_request_target' /tmp/scan-zustand-v2/src/.github/workflows/</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Result observed</div>
+          <pre class="evidence-pre result">(no matches)</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Classification</div>
+          <div class="evidence-classification fact">Confirmed fact &mdash; zero <code>pull_request_target</code> usage across 8 workflows.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="finding-card info stack-md">
+      <div class="finding-header">
+        <span class="tag info-tag">Evidence 7</span>
+        <h3>PR review rate dual metric</h3>
+      </div>
+      <div class="finding-body">
+        <div class="evidence-row">
+          <div class="evidence-label">Command</div>
+          <pre class="evidence-pre">gh api graphql -f query='{ repository(owner:"pmndrs", name:"zustand") {
+  pullRequests(last:20, states:[MERGED]) { nodes { reviewDecision reviews(first:1) { totalCount } } }
+} }'</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Result observed</div>
+          <pre class="evidence-pre result">reviewDecision APPROVED: 9/20 (45%)
+reviews.totalCount &gt; 0: 14/20 (70%)</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Classification</div>
+          <div class="evidence-classification fact">Confirmed fact (sample-based, 20 most recent merged PRs).</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="finding-card info stack-md">
+      <div class="finding-header">
+        <span class="tag info-tag">Evidence 8</span>
+        <h3>Release cadence and authorship</h3>
+      </div>
+      <div class="finding-body">
+        <div class="evidence-row">
+          <div class="evidence-label">Command</div>
+          <pre class="evidence-pre">gh api repos/pmndrs/zustand/releases --jq '.[0:10] | .[] | {tag: .tag_name, date: .published_at, author: .author.login}'</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Result observed</div>
+          <pre class="evidence-pre result">v5.0.12 (2026-03-16, dai-shi)
+v5.0.11 (2026-02-01, dai-shi)
+v5.0.10 (2026-01-12, dai-shi)
+All 10 releases by dai-shi exclusively</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Classification</div>
+          <div class="evidence-classification fact">Confirmed fact &mdash; 31-day release age, single publisher.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="finding-card info stack-md">
+      <div class="finding-header">
+        <span class="tag info-tag">Evidence 9</span>
+        <h3>npm registry mapping</h3>
+      </div>
+      <div class="finding-body">
+        <div class="evidence-row">
+          <div class="evidence-label">Command</div>
+          <pre class="evidence-pre">curl -s https://registry.npmjs.org/zustand/latest | jq '{version, repository: .repository.url}'</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Result observed</div>
+          <pre class="evidence-pre result">{"version": "5.0.12", "repository": "git+https://github.com/pmndrs/zustand.git"}</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Classification</div>
+          <div class="evidence-classification fact">Confirmed fact &mdash; npm package maps to the scanned repo.</div>
+        </div>
+      </div>
+    </div>
+
+    </div>
+  </details>
+
+  <!-- ═══════════════ FOOTER ═══════════════ -->
+  <div class="footer">
+    Generated by <a href="https://github.com/stefans71/stop-git-std">stop-git-std</a> deep dive &middot; 2026-04-16 &middot; scanned main @ <code>32013285083648e8d58ba1f76d73b9bdc02fef50</code> (v5.0.12) &middot; scanner V2.3-post-R3
+    <br>This report is an automated investigation, not a professional security audit. It may miss issues. If you are making a business decision, consult a security professional.
+  </div>
+
+</div>
+
+</body>
+</html>

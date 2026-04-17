@@ -1,0 +1,1401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Security Investigation: paperclipai/paperclip</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --font-scale: 1;
+    --bg-void: #0a0a0c;
+    --bg-surface: #131316;
+    --bg-elevated: #1a1a1f;
+    --bg-hover: #222228;
+    --border: #32323c;
+    --border-subtle: #26262e;
+    --text-primary: #f0f0f4;
+    --text-secondary: #b0b0bc;
+    --text-muted: #7e7e8e;
+    --red-glow: #ff4545;
+    --red-dim: #ff454520;
+    --red-bg: #1a0f0f;
+    --amber-glow: #ffaa2a;
+    --amber-dim: #ffaa2a20;
+    --amber-bg: #1a150e;
+    --green-glow: #22c55e;
+    --green-dim: #22c55e20;
+    --green-bg: #0e1a12;
+    --cyan-glow: #06b6d4;
+    --cyan-dim: #06b6d420;
+    --font-mono: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace;
+    --font-sans: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--font-sans);
+    background: var(--bg-void);
+    color: var(--text-primary);
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* --- Font size control bar --- */
+  .font-controls {
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 4px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    backdrop-filter: blur(12px);
+  }
+  .font-controls button {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    font-weight: 700;
+    width: 34px;
+    height: 34px;
+    border: none;
+    border-radius: 6px;
+    background: transparent;
+    color: var(--text-secondary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+  }
+  .font-controls button:hover {
+    background: var(--bg-hover);
+    color: var(--text-primary);
+  }
+  .font-controls button:active {
+    transform: scale(0.92);
+  }
+  .font-controls .font-size-display {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-muted);
+    min-width: 38px;
+    text-align: center;
+    letter-spacing: 0.05em;
+    user-select: none;
+  }
+
+  /* --- Noise texture overlay --- */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  a { color: var(--cyan-glow); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* --- Scroll container --- */
+  .page { max-width: 960px; margin: 0 auto; padding: 0 20px; }
+
+  /* --- Hero --- */
+  .hero {
+    padding: 64px 0 48px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    right: 0;
+    height: 120px;
+    background: linear-gradient(to top, var(--bg-void), transparent);
+    pointer-events: none;
+  }
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 20px;
+    padding: 6px 12px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--bg-surface);
+  }
+  .hero-badge .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--red-glow);
+    box-shadow: 0 0 8px var(--red-glow);
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+  .hero h1 {
+    font-family: var(--font-mono);
+    font-size: clamp(1.8rem, 4vw, 2.6rem);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1.15;
+    margin-bottom: 12px;
+  }
+  .hero h1 span { color: var(--red-glow); }
+  .hero .meta {
+    font-size: 14px;
+    color: var(--text-primary);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .hero .meta-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .hero .meta-item .label { color: var(--text-secondary); font-size: 12px; }
+
+  /* --- Verdict --- */
+  .verdict-section { padding: 48px 0 40px; }
+  .verdict-banner {
+    border-radius: 12px;
+    padding: 32px;
+    position: relative;
+    overflow: hidden;
+  }
+  .verdict-banner.critical {
+    background: linear-gradient(135deg, #1a0808 0%, #0a0a0c 100%);
+    border: 1px solid #ff454540;
+  }
+  .verdict-banner.critical::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at 30% 30%, #ff454508, transparent 50%);
+  }
+  .verdict-banner .verdict-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--red-glow);
+    margin-bottom: 12px;
+    position: relative;
+  }
+  .verdict-banner h2 {
+    font-size: clamp(1.3rem, 3vw, 1.8rem);
+    font-weight: 700;
+    line-height: 1.3;
+    margin-bottom: 16px;
+    position: relative;
+    color: #ff8c00;
+  }
+  .verdict-banner p {
+    font-size: 15px;
+    color: var(--text-primary);
+    line-height: 1.7;
+    max-width: 720px;
+    position: relative;
+  }
+
+  /* --- Verdict bullet list --- */
+  .verdict-bullets {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    position: relative;
+  }
+  .verdict-bullets li {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    font-size: 15px;
+    color: var(--text-primary);
+    line-height: 1.6;
+    padding: 8px 0;
+    border-bottom: 1px solid #ffffff08;
+  }
+  .verdict-bullets li:last-child {
+    border-bottom: none;
+  }
+  .verdict-bullets .bullet-icon {
+    flex-shrink: 0;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    margin-top: 2px;
+  }
+  .verdict-bullets .bullet-icon.red {
+    background: var(--red-dim);
+    color: var(--red-glow);
+    box-shadow: 0 0 6px var(--red-dim);
+  }
+  .verdict-bullets .bullet-icon.amber {
+    background: var(--amber-dim);
+    color: var(--amber-glow);
+    box-shadow: 0 0 6px var(--amber-dim);
+  }
+
+  /* --- Scorecard --- */
+  .scorecard-section { padding: 0 0 48px; }
+  .scorecard-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .score-cell {
+    background: var(--bg-surface);
+    padding: 24px 20px;
+    text-align: center;
+    transition: background 0.2s;
+  }
+  .score-cell:hover { background: var(--bg-elevated); }
+  .score-cell .score-icon {
+    width: 32px; height: 32px;
+    margin: 0 auto 12px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+  }
+  .score-cell .score-icon.red { background: var(--red-dim); color: var(--red-glow); }
+  .score-cell .score-icon.amber { background: var(--amber-dim); color: var(--amber-glow); }
+  .score-cell .score-icon.green { background: var(--green-dim); color: var(--green-glow); }
+  .score-cell .score-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+  }
+  .score-cell .score-value {
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+  .score-cell .score-value.red { color: var(--red-glow); }
+  .score-cell .score-value.amber { color: var(--amber-glow); }
+  .score-cell .score-value.green { color: var(--green-glow); }
+
+  /* --- Section headers --- */
+  .section { padding: 48px 0; border-top: 1px solid var(--border-subtle); }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+  .section-header .section-number {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: var(--text-muted);
+    width: 28px; height: 28px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .section-header h2 {
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+
+  /* --- Collapsible sections --- */
+  details summary {
+    cursor: pointer;
+    list-style: none;
+  }
+  details summary::-webkit-details-marker { display: none; }
+
+  .collapsible-section > summary {
+    padding: 48px 0 0;
+    border-top: 1px solid var(--border-subtle);
+  }
+  .collapsible-section > summary .section-header {
+    margin-bottom: 0;
+  }
+  .collapsible-section[open] > summary .section-header {
+    margin-bottom: 28px;
+  }
+  .collapsible-section .section-body {
+    padding-bottom: 0;
+  }
+
+  /* Caret on section headers */
+  .collapsible-section > summary .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .collapsible-section > summary .section-header::after {
+    content: '\25B6';
+    font-size: 10px;
+    color: var(--text-muted);
+    transition: transform 0.2s;
+    margin-left: auto;
+  }
+  .collapsible-section[open] > summary .section-header::after {
+    transform: rotate(90deg);
+  }
+
+  /* --- Finding cards --- */
+  .finding-card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 12px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .finding-card:hover { border-color: #3a3a44; }
+  .finding-card.critical { border-left: 3px solid var(--red-glow); }
+  .finding-card.warning { border-left: 3px solid var(--amber-glow); }
+  .finding-card.info { border-left: 3px solid var(--cyan-glow); }
+
+  .finding-header {
+    padding: 16px 20px 12px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 8px 16px;
+  }
+  .finding-header .tag {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+  .tag.critical-tag { background: var(--red-dim); color: var(--red-glow); }
+  .tag.warning-tag { background: var(--amber-dim); color: var(--amber-glow); }
+  .tag.info-tag { background: var(--cyan-dim); color: var(--cyan-glow); }
+  .finding-header .finding-date {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text-secondary);
+  }
+  .finding-header .finding-duration {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--amber-glow);
+    background: var(--amber-dim);
+    border: 1px solid #ffaa2a30;
+    padding: 3px 10px;
+    border-radius: 4px;
+  }
+  .finding-header h3 {
+    width: 100%;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.4;
+    margin-top: 4px;
+  }
+
+  /* Finding collapsible */
+  .finding-card summary {
+    list-style: none;
+    cursor: pointer;
+  }
+  .finding-card summary::-webkit-details-marker { display: none; }
+  .finding-card summary .finding-header {
+    position: relative;
+    padding-right: 40px;
+  }
+  .finding-card summary .finding-header::after {
+    content: '\25B6';
+    font-size: 10px;
+    color: var(--text-muted);
+    transition: transform 0.2s;
+    position: absolute;
+    right: 20px;
+    top: 20px;
+  }
+  .finding-card details[open] > summary .finding-header::after {
+    transform: rotate(90deg);
+  }
+
+  .finding-body {
+    padding: 0 20px 16px;
+  }
+  .finding-body p {
+    font-size: 14px;
+    color: var(--text-primary);
+    line-height: 1.7;
+    margin-bottom: 12px;
+  }
+  .finding-meta {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 8px;
+    margin-top: 12px;
+  }
+  .meta-chip {
+    font-size: 12px;
+    padding: 8px 12px;
+    border-radius: 6px;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-subtle);
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .meta-chip .chip-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+  }
+  .meta-chip .chip-value {
+    color: var(--text-primary);
+    font-weight: 500;
+  }
+
+  /* --- Critical pulse animation --- */
+  @keyframes border-pulse {
+    0%, 100% { border-left-color: var(--red-glow); box-shadow: -2px 0 8px var(--red-dim); }
+    50% { border-left-color: #ff454580; box-shadow: -2px 0 4px transparent; }
+  }
+  .finding-card.critical {
+    animation: border-pulse 3s ease-in-out infinite;
+  }
+
+  /* --- Sub-finding --- */
+  .sub-finding {
+    margin: 16px 0 8px;
+    padding: 16px;
+    border-left: 2px solid var(--amber-glow);
+    background: var(--bg-elevated);
+    border-radius: 0 8px 8px 0;
+  }
+  .sub-finding .sub-finding-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--amber-glow);
+    margin-bottom: 8px;
+  }
+  .sub-finding h4 {
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.4;
+    margin-bottom: 10px;
+  }
+  .sub-finding p {
+    font-size: 14px;
+    color: var(--text-primary);
+    line-height: 1.7;
+    margin-bottom: 12px;
+  }
+
+  /* --- PR Table --- */
+  .pr-table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  th {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    text-align: left;
+    padding: 12px 16px;
+    background: var(--bg-surface);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    white-space: nowrap;
+  }
+  td {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border-subtle);
+    color: var(--text-primary);
+    vertical-align: top;
+  }
+  tr:hover td { background: var(--bg-surface); }
+  td:first-child {
+    font-family: var(--font-mono);
+    font-weight: 600;
+    color: var(--cyan-glow);
+    white-space: nowrap;
+  }
+  .td-concern { color: var(--amber-glow); font-weight: 500; }
+  .td-reviewed-no {
+    color: var(--red-glow);
+    font-family: var(--font-mono);
+    font-weight: 600;
+  }
+  .td-reviewed-rejected {
+    color: var(--amber-glow);
+    font-family: var(--font-mono);
+    font-weight: 600;
+  }
+  .td-merge-fast {
+    font-family: var(--font-mono);
+    color: var(--red-glow);
+    font-weight: 600;
+  }
+  .td-person {
+    font-weight: 500;
+    color: var(--text-primary);
+  }
+
+  /* --- Timeline --- */
+  .timeline { position: relative; padding-left: 28px; }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 7px;
+    top: 8px;
+    bottom: 8px;
+    width: 1px;
+    background: linear-gradient(to bottom, var(--border), var(--red-glow), var(--border));
+  }
+  .tl-item {
+    position: relative;
+    margin-bottom: 20px;
+    padding-left: 8px;
+  }
+  .tl-item::before {
+    content: '';
+    position: absolute;
+    left: -24px;
+    top: 7px;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--text-muted);
+    border: 2px solid var(--bg-void);
+  }
+  .tl-item.bad::before { background: var(--red-glow); box-shadow: 0 0 6px var(--red-dim); }
+  .tl-item.good::before { background: var(--green-glow); }
+  .tl-item.neutral::before { background: var(--amber-glow); }
+  .tl-date {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text-secondary);
+    font-weight: 600;
+  }
+  .tl-desc {
+    font-size: 14px;
+    color: var(--text-primary);
+    margin-top: 2px;
+    line-height: 1.6;
+  }
+
+  /* --- Vitals --- */
+  .vitals-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .vital-cell {
+    background: var(--bg-surface);
+    padding: 18px 20px;
+  }
+  .vital-cell .vital-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+  }
+  .vital-cell .vital-value {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .vital-cell .vital-note {
+    font-size: 12px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+
+  /* --- Action cards --- */
+  .action-card {
+    padding: 24px;
+    border-radius: 10px;
+    margin-bottom: 12px;
+  }
+  .action-card.stop {
+    background: var(--red-bg);
+    border: 1px solid #ff454530;
+  }
+  .action-card.wait {
+    background: var(--amber-bg);
+    border: 1px solid #ffaa2a30;
+  }
+  .action-card.info-action {
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+  }
+  .action-card h3 {
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .action-card p {
+    font-size: 14px;
+    color: var(--text-primary);
+    line-height: 1.7;
+  }
+
+  /* --- Footer --- */
+  .footer {
+    padding: 40px 0;
+    border-top: 1px solid var(--border-subtle);
+    text-align: center;
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+  .footer a { color: var(--text-secondary); }
+
+  /* --- Responsive --- */
+  @media (max-width: 700px) {
+    .scorecard-grid { grid-template-columns: repeat(2, 1fr); }
+    .finding-meta { grid-template-columns: 1fr; }
+    .hero { padding: 40px 0 32px; }
+    .section { padding: 32px 0; }
+    .collapsible-section > summary { padding-top: 32px; }
+    table { font-size: 12px; }
+    th, td { padding: 10px 12px; }
+    .vitals-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 420px) {
+    .scorecard-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="font-controls">
+  <button onclick="adjustFont(-1)" title="Decrease font size" aria-label="Decrease font size">A&minus;</button>
+  <span class="font-size-display" id="fontDisplay">100%</span>
+  <button onclick="adjustFont(1)" title="Increase font size" aria-label="Increase font size">A+</button>
+</div>
+
+<script>
+  let fontScale = 100;
+  function adjustFont(dir) {
+    fontScale = Math.min(150, Math.max(75, fontScale + dir * 10));
+    document.documentElement.style.fontSize = fontScale + '%';
+    document.getElementById('fontDisplay').textContent = fontScale + '%';
+  }
+</script>
+
+<div class="page">
+
+  <!-- ═══════════════ HERO ═══════════════ -->
+  <div class="hero">
+    <div class="hero-badge">
+      <span class="dot"></span>
+      Security Investigation
+    </div>
+    <h1>paperclipai/<span>paperclip</span></h1>
+    <div class="meta">
+      <div class="meta-item">
+        <span class="label">Investigated</span> April 15, 2026
+      </div>
+      <div class="meta-item">
+        <span class="label">Repo age</span> 44 days
+      </div>
+      <div class="meta-item">
+        <span class="label">Stars</span> 53,809
+      </div>
+      <div class="meta-item">
+        <span class="label">License</span> MIT
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ VERDICT ═══════════════ -->
+  <div class="verdict-section">
+    <div class="verdict-banner critical">
+      <div class="verdict-label">Verdict</div>
+      <h2>Do not install this software right now.</h2>
+      <ul class="verdict-bullets">
+        <li>
+          <span class="bullet-icon red">&#x2718;</span>
+          <span>Remote code execution for 5 weeks &mdash; anyone could run commands on your computer</span>
+        </li>
+        <li>
+          <span class="bullet-icon red">&#x2718;</span>
+          <span>Fix merged in 22 seconds, no human review</span>
+        </li>
+        <li>
+          <span class="bullet-icon red">&#x2718;</span>
+          <span>Patched version (v2026.410.0) never published &mdash; release installs still vulnerable</span>
+        </li>
+        <li>
+          <span class="bullet-icon amber">&#x26A0;</span>
+          <span>Security releases hidden from changelogs under &ldquo;chore:&rdquo; labels</span>
+        </li>
+        <li>
+          <span class="bullet-icon red">&#x2718;</span>
+          <span>Community security fixes rejected within minutes</span>
+        </li>
+        <li>
+          <span class="bullet-icon amber">&#x26A0;</span>
+          <span>AI agents get full file access by default without asking</span>
+        </li>
+        <li>
+          <span class="bullet-icon amber">&#x26A0;</span>
+          <span>53,000 stars in 44 days, 0.3% code review rate</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ═══════════════ SCORECARD ═══════════════ -->
+  <div class="scorecard-section">
+    <div class="scorecard-grid">
+      <div class="score-cell">
+        <div class="score-icon red">&#x26D4;</div>
+        <div class="score-label">Code Review</div>
+        <div class="score-value red">0.3%</div>
+      </div>
+      <div class="score-cell">
+        <div class="score-icon red">&#x1F6A8;</div>
+        <div class="score-label">Security Response</div>
+        <div class="score-value red">Dangerous</div>
+      </div>
+      <div class="score-cell">
+        <div class="score-icon red">&#x1F576;</div>
+        <div class="score-label">Transparency</div>
+        <div class="score-value red">Hidden</div>
+      </div>
+      <div class="score-cell">
+        <div class="score-icon red">&#x26A0;</div>
+        <div class="score-label">Safe Defaults</div>
+        <div class="score-value red">Insecure</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ 01 WHAT TO DO ═══════════════ -->
+  <details class="collapsible-section">
+    <summary>
+      <div class="section-header">
+        <span class="section-number">01</span>
+        <h2>What Should I Do?</h2>
+      </div>
+    </summary>
+    <div class="section-body">
+
+    <!-- Step 1: Stop -->
+    <div class="action-card stop">
+      <h3 style="color:var(--red-glow)">Step 1: Stop using it immediately</h3>
+      <p>Do not run Paperclip until you have completed the steps below. If it is currently running, shut it down. If it is running as a service or in Docker, stop the container.</p>
+    </div>
+
+    <!-- Step 2: Check exposure -->
+    <div class="action-card stop">
+      <h3 style="color:var(--red-glow)">Step 2: Check if your credentials were exposed</h3>
+      <p>Open a terminal and run these commands to check for leaked login tokens in the log files:</p>
+      <pre style="background:var(--bg-void);border:1px solid var(--border);border-radius:8px;padding:16px;margin:12px 0;overflow-x:auto;font-family:var(--font-mono);font-size:13px;color:var(--cyan-glow);line-height:1.6"># Check if the hidden folder exists and how big it is
+ls -lah ~/.paperclip/
+
+# Search log files for leaked login tokens
+grep -ri "bearer\|authorization\|token\|session" ~/.paperclip/logs/ 2>/dev/null | head -20
+
+# Check the size of log files (one user had 816 MB)
+du -sh ~/.paperclip/logs/ 2>/dev/null</pre>
+      <p>If you see any output from the grep command, your login tokens were written to disk in readable text. Anyone or any program with access to your computer could have read them.</p>
+    </div>
+
+    <!-- Step 3: Rotate -->
+    <div class="action-card stop">
+      <h3 style="color:var(--red-glow)">Step 3: Change your passwords and API keys</h3>
+      <p>If Paperclip had access to any of the following, change them now &mdash; assume they were compromised:</p>
+      <ul style="margin:12px 0 12px 20px;color:var(--text-primary);line-height:2">
+        <li>Any API keys you entered into Paperclip (OpenAI, Anthropic, etc.)</li>
+        <li>Any passwords or tokens stored in Paperclip's settings</li>
+        <li>Your Paperclip account password (if you used one elsewhere, change it there too)</li>
+        <li>Any service accounts or OAuth tokens connected to Paperclip</li>
+      </ul>
+      <p>Also check your AI provider billing dashboards for unexpected charges &mdash; one user reported 120 million tokens consumed in a single day.</p>
+    </div>
+
+    <!-- Step 4: Update or remove -->
+    <div class="action-card wait">
+      <h3 style="color:var(--amber-glow)">Step 4: Update or remove</h3>
+      <p><strong>Option A &mdash; Remove it entirely (recommended):</strong></p>
+      <pre style="background:var(--bg-void);border:1px solid var(--border);border-radius:8px;padding:16px;margin:12px 0;overflow-x:auto;font-family:var(--font-mono);font-size:13px;color:var(--cyan-glow);line-height:1.6"># Delete the hidden data folder
+rm -rf ~/.paperclip/
+
+# If you cloned the repo, delete it
+rm -rf /path/to/your/paperclip/
+
+# If installed via npm
+npm uninstall -g paperclipai</pre>
+      <p><strong>Option B &mdash; Update to get the security fix:</strong></p>
+      <p>The "patched version" v2026.410.0 referenced in the security advisory <strong>does not exist</strong> as a downloadable release. The only way to get the fix is to pull the latest code from the master branch:</p>
+      <pre style="background:var(--bg-void);border:1px solid var(--border);border-radius:8px;padding:16px;margin:12px 0;overflow-x:auto;font-family:var(--font-mono);font-size:13px;color:var(--cyan-glow);line-height:1.6"># If you have an existing clone, pull the latest
+cd /path/to/your/paperclip/
+git pull origin master
+
+# If you need a fresh copy
+git clone https://github.com/paperclipai/paperclip.git</pre>
+      <p style="color:var(--amber-glow)"><strong>Warning:</strong> Even after updating, Paperclip still defaults to giving AI agents full access to your files without asking (dangerouslySkipPermissions = true), still has no code review process, and still has open credential logging issues. Updating fixes the remote code execution bug but not the underlying security culture.</p>
+    </div>
+
+    <!-- Step 5: Scan -->
+    <div class="action-card wait">
+      <h3 style="color:var(--amber-glow)">Step 5: Scan your system</h3>
+      <p>If you were running Paperclip during the vulnerability window (March 2 &ndash; April 10), an attacker could have run commands on your computer. Check for signs of compromise:</p>
+      <pre style="background:var(--bg-void);border:1px solid var(--border);border-radius:8px;padding:16px;margin:12px 0;overflow-x:auto;font-family:var(--font-mono);font-size:13px;color:var(--cyan-glow);line-height:1.6"># Check for unfamiliar processes
+ps aux | grep -v "$(whoami)" | head -20
+
+# Check for recently modified files in system directories
+find /usr/local/bin /usr/bin -mtime -30 -type f 2>/dev/null | head -20
+
+# Check for unfamiliar cron jobs
+crontab -l 2>/dev/null
+ls -la /etc/cron.d/ 2>/dev/null
+
+# Check for unfamiliar SSH keys
+cat ~/.ssh/authorized_keys 2>/dev/null</pre>
+      <p>If you find anything unfamiliar, assume your system was compromised. Back up your data and consider a clean reinstall of your operating system.</p>
+    </div>
+
+    <!-- Step 6: AI assistant prompt -->
+    <div class="action-card info-action">
+      <h3>Step 6: Use this prompt to get help from an AI assistant</h3>
+      <p>If you're not comfortable running the commands above, copy and paste this prompt into ChatGPT, Claude, or any AI assistant. It will walk you through the cleanup step by step:</p>
+      <pre style="background:var(--bg-void);border:1px solid var(--border);border-radius:8px;padding:16px;margin:12px 0;overflow-x:auto;font-family:var(--font-mono);font-size:12px;color:var(--text-primary);line-height:1.7;white-space:pre-wrap">I installed software called Paperclip (paperclipai/paperclip from GitHub) and I just learned it had serious security vulnerabilities. I need your help to:
+
+1. Check if I have the hidden folder ~/.paperclip/ on my computer and how big it is
+2. Search the log files in that folder for leaked login tokens (Bearer tokens, session tokens, authorization headers)
+3. Tell me what API keys or passwords I need to change based on what Paperclip had access to
+4. Help me either remove Paperclip completely or update it to get the security fix
+5. Check my system for signs that someone may have accessed my computer through the vulnerability
+6. Check my AI provider billing (OpenAI, Anthropic, etc.) for unexpected charges
+
+I am not a technical person. Please give me exact commands to run and explain what each one does before I run it. Ask me what operating system I am using first (Mac, Windows, or Linux).
+
+The specific vulnerabilities were:
+- Anyone on the internet could run commands on my computer without logging in (fixed April 10, but the patched release was never published)
+- My login tokens were being saved in a readable log file
+- A hardcoded master password "paperclip-dev-secret" was in the source code for 37 days
+- AI agents had full access to read/write/delete my files by default</pre>
+    </div>
+
+    <!-- What would need to change -->
+    <div class="action-card info-action">
+      <h3>What would need to change before trusting Paperclip again</h3>
+      <ul style="margin:12px 0 12px 20px;color:var(--text-primary);line-height:2.2">
+        <li><strong>Branch protection</strong> &mdash; all code changes require review before merging (currently: none)</li>
+        <li><strong>Actual code review</strong> &mdash; security changes reviewed by a human, not merged in 22 seconds (currently: 0.3% review rate)</li>
+        <li><strong>Honest labeling</strong> &mdash; security fixes labeled as security fixes, not hidden behind "chore:" (currently: hidden)</li>
+        <li><strong>Safe defaults</strong> &mdash; AI agents ask permission before accessing files (currently: full access by default)</li>
+        <li><strong>Community engagement</strong> &mdash; respond to security reports, don't close them in 8 minutes (currently: dismissed)</li>
+        <li><strong>Published releases</strong> &mdash; security patches actually available to install (currently: v2026.410.0 never published)</li>
+        <li><strong>Fix credential logging</strong> &mdash; stop writing login tokens to readable files (currently: still happening)</li>
+      </ul>
+    </div>
+
+    </div>
+  </details>
+
+  <!-- ═══════════════ 02 FINDINGS ═══════════════ -->
+  <details class="collapsible-section">
+    <summary>
+      <div class="section-header">
+        <span class="section-number">02</span>
+        <h2>What We Found</h2>
+      </div>
+    </summary>
+    <div class="section-body">
+
+    <!-- Finding 1 -->
+    <div class="finding-card critical">
+      <details>
+        <summary>
+          <div class="finding-header">
+            <span class="tag critical-tag">Critical</span>
+            <span class="finding-date">Apr 10, 2026</span>
+            <span class="finding-duration">Open 37 days before fix</span>
+            <h3>Anyone on the internet could run commands on your computer</h3>
+          </div>
+        </summary>
+        <div class="finding-body">
+          <p>A bug was found that let any stranger on the internet send commands to your computer without needing to log in. This is rated 10 out of 10 on the official severity scale &mdash; the worst possible score. If you were running Paperclip during this window, an attacker could have read your files, installed malware, or stolen your passwords.</p>
+          <p>The fix was merged in <strong style="color:var(--red-glow)">22 seconds</strong> with zero human review. No one actually read the code change before it went live.</p>
+          <div class="finding-meta">
+            <div class="meta-chip"><span class="chip-label">Reported by</span><span class="chip-value">Responsible disclosure (GHSA-68qg-g8mg-6pr7)</span></div>
+            <div class="meta-chip"><span class="chip-label">Fixed by</span><span class="chip-value">cryppadotta &mdash; <a href="https://github.com/paperclipai/paperclip/pull/3315">PR #3315</a></span></div>
+            <div class="meta-chip"><span class="chip-label">Reviewed by</span><span class="chip-value" style="color:var(--red-glow)">Nobody</span></div>
+            <div class="meta-chip"><span class="chip-label">The fix</span><span class="chip-value">Scoped authorization on import, approvals, activity, and heartbeat API routes</span></div>
+          </div>
+
+          <!-- Sub-finding: Ghost patch / changelog hiding (formerly Finding 5) -->
+          <div class="sub-finding">
+            <div class="sub-finding-label">Related: Ghost Patch</div>
+            <h4>Security fix hidden from changelogs so you would never know</h4>
+            <p>The bug described above &mdash; where anyone on the internet could run commands on your computer without logging in &mdash; was fixed, but the release containing that fix (v2026.410.0) was labeled "chore:" instead of "fix:" or "security:". This label tells automated changelog tools "this is just routine housekeeping" &mdash; so the security fix never appears in release notes. Users who check changelogs to decide when to update would never see it.</p>
+            <p>It gets worse: as of today (April 15 &mdash; 11 days after the fix), version v2026.410.0 is <strong>still not listed on the GitHub Releases page</strong>. We verified this just now. The last visible release is v2026.403.0 from April 4 &mdash; six days before the security fix. This means two different things depending on how you install Paperclip:<br><br><strong>If you clone the master branch</strong> (git clone) &mdash; you do get the fix, because the commit is in the git history.<br><strong>If you install from a release, tag, or package manager</strong> &mdash; you are running vulnerable code. The latest release is v2026.403.0 from April 4, six days before the fix. The version the advisory told users to install (v2026.410.0) <strong>was never published</strong> &mdash; it does not exist as a tag, release, or downloadable package. We verified this today (April 15, 11 days after the advisory). This is worse than not publishing an advisory at all. Here's why:</p>
+            <p><strong>The advisory tells users "upgrade to v2026.410.0 to be safe."</strong> But that version does not exist. If you try to install it, you get an error. You can't follow the instructions even if you find them.</p>
+            <p><strong>Most users will never see the advisory.</strong> GitHub does not send a notification to everyone who cloned a repo. The only people who get automatic alerts are those using Paperclip as a dependency in their own project with Dependabot enabled. If you just downloaded the repo, cloned it, or run it from Docker &mdash; nobody tells you.</p>
+            <p><strong>"Can't I just update?"</strong> If you originally cloned the repo from the command line, yes &mdash; running <code style="color:var(--cyan-glow);background:var(--bg-elevated);padding:2px 6px;border-radius:3px;font-family:var(--font-mono);font-size:13px">git pull</code> would pull in the fix from the master branch. But the advisory doesn't say that. It says "install v2026.410.0" &mdash; which doesn't exist. And if you installed from a packaged release or version tag (which is how most people install software), there is no update available.</p>
+            <p><strong>Meanwhile, the security community thinks this is fixed.</strong> Security databases and vulnerability scanners see a "patched version" listed in the advisory and mark the issue as resolved. Automated tools stop flagging it. The result: everyone moves on, but the actual fix was never shipped to users. A ghost patch that creates a false sense of resolution.</p>
+            <div class="finding-meta">
+              <div class="meta-chip"><span class="chip-label">PRs</span><span class="chip-value"><a href="https://github.com/paperclipai/paperclip/pull/3592">#3592</a> / <a href="https://github.com/paperclipai/paperclip/pull/3593">#3593</a> by cryppadotta</span></div>
+              <div class="meta-chip"><span class="chip-label">Label used</span><span class="chip-value" style="color:var(--amber-glow)">"chore:" &mdash; excluded from changelogs by convention</span></div>
+              <div class="meta-chip"><span class="chip-label">Last visible release</span><span class="chip-value" style="color:var(--red-glow)">v2026.403.0 (Apr 4) &mdash; BEFORE the fix. Verified missing Apr 15.</span></div>
+              <div class="meta-chip"><span class="chip-label">Impact</span><span class="chip-value" style="color:var(--red-glow)">Release/tag/package installs get vulnerable code. Git clone of master has the fix.</span></div>
+            </div>
+          </div>
+
+        </div>
+      </details>
+    </div>
+
+    <!-- Finding 2 -->
+    <div class="finding-card critical">
+      <details>
+        <summary>
+          <div class="finding-header">
+            <span class="tag critical-tag">Critical</span>
+            <span class="finding-date">Mar 2 &ndash; Apr 8, 2026</span>
+            <span class="finding-duration">Exposed 37 days</span>
+            <h3>A master password was baked into the source code for over a month</h3>
+          </div>
+        </summary>
+        <div class="finding-body">
+          <p>The login system had a fallback password hardcoded as <code style="color:var(--red-glow);background:var(--red-dim);padding:2px 6px;border-radius:3px;font-family:var(--font-mono);font-size:13px">"paperclip-dev-secret"</code>. Since the source code is public, anyone who looked could use this password to log in as any user on any Paperclip installation.</p>
+          <div class="finding-meta">
+            <div class="meta-chip"><span class="chip-label">Introduced</span><span class="chip-value">Mar 2 (repo creation)</span></div>
+            <div class="meta-chip"><span class="chip-label">Fixed by</span><span class="chip-value">cleanunicorn &mdash; <a href="https://github.com/paperclipai/paperclip/pull/3124">PR #3124</a></span></div>
+            <div class="meta-chip"><span class="chip-label">Reviewed by</span><span class="chip-value" style="color:var(--red-glow)">Nobody</span></div>
+            <div class="meta-chip"><span class="chip-label">The fix</span><span class="chip-value">Removed the hardcoded JWT secret fallback from production auth</span></div>
+          </div>
+        </div>
+      </details>
+    </div>
+
+    <!-- Finding 3 -->
+    <div class="finding-card critical">
+      <details>
+        <summary>
+          <div class="finding-header">
+            <span class="tag critical-tag">Critical</span>
+            <span class="finding-date">Mar 12, 2026</span>
+            <span class="finding-duration">Still active</span>
+            <h3>AI agents get full access to your computer without asking permission</h3>
+          </div>
+        </summary>
+        <div class="finding-body">
+          <p>A change was made that set the default so AI agents can read, write, and delete any file on your computer without asking first. Normally, software asks before doing dangerous things. Paperclip deliberately turned that off. If the AI makes a mistake or is tricked by malicious instructions, it can damage your system with no safety net.</p>
+          <div class="finding-meta">
+            <div class="meta-chip"><span class="chip-label">Submitted by</span><span class="chip-value">ohld &mdash; <a href="https://github.com/paperclipai/paperclip/pull/388">PR #388</a></span></div>
+            <div class="meta-chip"><span class="chip-label">Merged by</span><span class="chip-value">cryppadotta</span></div>
+            <div class="meta-chip"><span class="chip-label">Reviewed by</span><span class="chip-value" style="color:var(--red-glow)">Nobody</span></div>
+            <div class="meta-chip"><span class="chip-label">The change</span><span class="chip-value">dangerouslySkipPermissions defaulted to true for all new agents</span></div>
+          </div>
+        </div>
+      </details>
+    </div>
+
+    <!-- Finding 4 -->
+    <div class="finding-card critical">
+      <details>
+        <summary>
+          <div class="finding-header">
+            <span class="tag critical-tag">Critical</span>
+            <span class="finding-date">Apr 1 &ndash; Apr 6, 2026</span>
+            <span class="finding-duration">Partially fixed &mdash; 71 hours to merge</span>
+            <h3>Your login tokens were written to a readable file on your computer</h3>
+          </div>
+        </summary>
+        <div class="finding-body">
+          <p>Your login credentials (called "Bearer tokens" &mdash; think of them as temporary passwords) were being saved in plain text to a log file on your computer. 213 instances were found. Anyone with access to your computer could read that file and impersonate you. A follow-up report shows this is <strong>still happening</strong> &mdash; one user's log file grew to 816 megabytes in a single week.</p>
+          <div class="finding-meta">
+            <div class="meta-chip"><span class="chip-label">Reported by</span><span class="chip-value">Community user &mdash; Issue #2385</span></div>
+            <div class="meta-chip"><span class="chip-label">Fixed by</span><span class="chip-value">plind-junior &mdash; <a href="https://github.com/paperclipai/paperclip/pull/2659">PR #2659</a></span></div>
+            <div class="meta-chip"><span class="chip-label">Reviewed by</span><span class="chip-value" style="color:var(--red-glow)">Nobody</span></div>
+            <div class="meta-chip"><span class="chip-label">Still open</span><span class="chip-value" style="color:var(--amber-glow)">Issue #3338 &mdash; session tokens still logged (816 MB file)</span></div>
+          </div>
+        </div>
+      </details>
+    </div>
+
+    <!-- Finding 5 (formerly Finding 6) -->
+    <div class="finding-card critical">
+      <details>
+        <summary>
+          <div class="finding-header">
+            <span class="tag critical-tag">Critical</span>
+            <span class="finding-date">Apr 1 &amp; Apr 15, 2026</span>
+            <span class="finding-duration">8 minutes &amp; 26 minutes</span>
+            <h3>Community security reports dismissed within minutes</h3>
+          </div>
+        </summary>
+        <div class="finding-body">
+          <p>A community member filed a detailed security audit with 8 specific findings. The maintainers closed it in 8 minutes, saying it was "superseded by a refined version in the forked repository." No evidence those fixes were applied. Separately, a community member submitted a more thorough fix for the remote-code-execution bug &mdash; it was rejected after 26 minutes.</p>
+          <div class="finding-meta">
+            <div class="meta-chip"><span class="chip-label">Audit filed by</span><span class="chip-value">Community member &mdash; Issue #2427</span></div>
+            <div class="meta-chip"><span class="chip-label">Response</span><span class="chip-value" style="color:var(--red-glow)">Closed in 8 minutes</span></div>
+            <div class="meta-chip"><span class="chip-label">Community fix</span><span class="chip-value">tentacloos &mdash; <a href="https://github.com/paperclipai/paperclip/pull/3703">PR #3703</a></span></div>
+            <div class="meta-chip"><span class="chip-label">Response</span><span class="chip-value" style="color:var(--red-glow)">Rejected after 26 minutes</span></div>
+          </div>
+        </div>
+      </details>
+    </div>
+
+    <!-- Finding 6 (formerly Finding 7) -->
+    <div class="finding-card warning">
+      <details>
+        <summary>
+          <div class="finding-header">
+            <span class="tag warning-tag">Warning</span>
+            <span class="finding-date">Apr 8, 2026</span>
+            <span class="finding-duration">No response &mdash; 7 days</span>
+            <h3>Hidden installation uses 351 MB and potentially hundreds of dollars of AI credits</h3>
+          </div>
+        </summary>
+        <div class="finding-body">
+          <p>Users found that Paperclip installs 351 megabytes of data into a hidden folder on your computer (~/.paperclip/) without telling you. One user consumed 120 million AI tokens &mdash; potentially hundreds of dollars &mdash; in a single day. Three community members confirmed this. The maintainers have not responded at all.</p>
+          <div class="finding-meta">
+            <div class="meta-chip"><span class="chip-label">Reported by</span><span class="chip-value">Community users &mdash; Issue #3154</span></div>
+            <div class="meta-chip"><span class="chip-label">Confirmations</span><span class="chip-value">3 users confirmed</span></div>
+            <div class="meta-chip"><span class="chip-label">Maintainer response</span><span class="chip-value" style="color:var(--red-glow)">None</span></div>
+          </div>
+        </div>
+      </details>
+    </div>
+
+    <!-- Finding 7 (formerly Finding 8) -->
+    <div class="finding-card warning">
+      <details>
+        <summary>
+          <div class="finding-header">
+            <span class="tag warning-tag">Warning</span>
+            <span class="finding-date">Mar 8, 2026</span>
+            <span class="finding-duration">Still the default</span>
+            <h3>Anyone can create an account on your Paperclip server</h3>
+          </div>
+        </summary>
+        <div class="finding-body">
+          <p>If you run Paperclip on a server for your team, anyone on the internet can create an account by default. An option to disable this was added but left turned off. If you didn't know to change this setting, strangers could sign up and use your installation.</p>
+          <div class="finding-meta">
+            <div class="meta-chip"><span class="chip-label">Submitted by</span><span class="chip-value">JasonOA888 &mdash; <a href="https://github.com/paperclipai/paperclip/pull/279">PR #279</a></span></div>
+            <div class="meta-chip"><span class="chip-label">Merged by</span><span class="chip-value">cryppadotta</span></div>
+            <div class="meta-chip"><span class="chip-label">Default</span><span class="chip-value" style="color:var(--amber-glow)">Open registration (anyone can sign up)</span></div>
+          </div>
+        </div>
+      </details>
+    </div>
+
+    <!-- Finding 8 (formerly Finding 9) -->
+    <div class="finding-card warning">
+      <details>
+        <summary>
+          <div class="finding-header">
+            <span class="tag warning-tag">Warning</span>
+            <span class="finding-date">Apr 7, 2026</span>
+            <span class="finding-duration">Active</span>
+            <h3>Connected tools can run any command through the MCP server</h3>
+          </div>
+        </summary>
+        <div class="finding-body">
+          <p>An "MCP server" (a way for other AI tools to connect to Paperclip) was added with a function that lets any connected tool make any API request with no restrictions. If you connect another AI tool to Paperclip, that tool can do anything Paperclip can do &mdash; including running commands on your computer.</p>
+          <div class="finding-meta">
+            <div class="meta-chip"><span class="chip-label">Submitted by</span><span class="chip-value">cryppadotta &mdash; <a href="https://github.com/paperclipai/paperclip/pull/3001">PR #3001</a></span></div>
+            <div class="meta-chip"><span class="chip-label">Reviewed by</span><span class="chip-value" style="color:var(--red-glow)">Nobody</span></div>
+            <div class="meta-chip"><span class="chip-label">The risk</span><span class="chip-value">paperclipApiRequest allows any API call with no restriction</span></div>
+          </div>
+        </div>
+      </details>
+    </div>
+
+    <!-- Finding 9 (formerly Finding 10) -->
+    <div class="finding-card info">
+      <details>
+        <summary>
+          <div class="finding-header">
+            <span class="tag info-tag">Process</span>
+            <span class="finding-date">Mar 2 &ndash; present</span>
+            <span class="finding-duration">Ongoing</span>
+            <h3>Nearly zero code gets a second pair of eyes</h3>
+          </div>
+        </summary>
+        <div class="finding-body">
+          <p>Out of 300 merged code changes, only 1 had a formal review &mdash; that is 0.3%. The lead developer (cryppadotta) authored 143 of those changes and none were reviewed by another person. The project does use an automated "Claude Code Review" bot, but it has no power to block bad code from being merged. No branch protection rules are configured.</p>
+          <div class="finding-meta">
+            <div class="meta-chip"><span class="chip-label">PRs reviewed</span><span class="chip-value" style="color:var(--red-glow)">1 of 300 (0.3%)</span></div>
+            <div class="meta-chip"><span class="chip-label">Branch protection</span><span class="chip-value" style="color:var(--red-glow)">None</span></div>
+            <div class="meta-chip"><span class="chip-label">Lead maintainer</span><span class="chip-value">cryppadotta &mdash; 1,845 commits, 0 reviewed</span></div>
+          </div>
+        </div>
+      </details>
+    </div>
+
+    </div>
+  </details>
+
+  <!-- ═══════════════ 03 SUSPICIOUS PRS ═══════════════ -->
+  <details class="collapsible-section">
+    <summary>
+      <div class="section-header">
+        <span class="section-number">03</span>
+        <h2>Suspicious Code Changes</h2>
+      </div>
+    </summary>
+    <div class="section-body">
+    <div class="pr-table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>PR</th>
+            <th>What it did</th>
+            <th>Submitted by</th>
+            <th>Merged by</th>
+            <th>Reviewed?</th>
+            <th>Merge time</th>
+            <th>Concern</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><a href="https://github.com/paperclipai/paperclip/pull/3315">#3315</a></td>
+            <td>Fixed the bug that let strangers run commands on your computer</td>
+            <td class="td-person">cryppadotta</td>
+            <td class="td-person">cryppadotta</td>
+            <td class="td-reviewed-no">No</td>
+            <td class="td-merge-fast">22 seconds</td>
+            <td class="td-concern">Most critical fix in project history, merged faster than a human could read it</td>
+          </tr>
+          <tr>
+            <td><a href="https://github.com/paperclipai/paperclip/pull/388">#388</a></td>
+            <td>Turned off permission checks for AI agents by default</td>
+            <td class="td-person">ohld</td>
+            <td class="td-person">cryppadotta</td>
+            <td class="td-reviewed-no">No</td>
+            <td>68.6 hours</td>
+            <td class="td-concern">Every new installation gives AI full system access</td>
+          </tr>
+          <tr>
+            <td><a href="https://github.com/paperclipai/paperclip/pull/3124">#3124</a></td>
+            <td>Removed hardcoded master password from login system</td>
+            <td class="td-person">cleanunicorn</td>
+            <td class="td-person">cryppadotta</td>
+            <td class="td-reviewed-no">No</td>
+            <td>1.3 hours</td>
+            <td class="td-concern">"paperclip-dev-secret" was in public source code for 37 days</td>
+          </tr>
+          <tr>
+            <td><a href="https://github.com/paperclipai/paperclip/pull/279">#279</a></td>
+            <td>Added option to block new signups, left it off by default</td>
+            <td class="td-person">JasonOA888</td>
+            <td class="td-person">cryppadotta</td>
+            <td class="td-reviewed-no">No</td>
+            <td>1.9 hours</td>
+            <td class="td-concern">Public installations accept random signups</td>
+          </tr>
+          <tr>
+            <td><a href="https://github.com/paperclipai/paperclip/pull/3592">#3592</a></td>
+            <td>Added security release notes, labeled "chore:"</td>
+            <td class="td-person">cryppadotta</td>
+            <td class="td-person">cryppadotta</td>
+            <td class="td-reviewed-no">No</td>
+            <td>&lt;1 hour</td>
+            <td class="td-concern">Hides security release from automated changelogs</td>
+          </tr>
+          <tr>
+            <td><a href="https://github.com/paperclipai/paperclip/pull/3703">#3703</a></td>
+            <td>More thorough fix for the remote code execution bug</td>
+            <td class="td-person">tentacloos</td>
+            <td class="td-person">&mdash;</td>
+            <td class="td-reviewed-rejected">Rejected</td>
+            <td>Closed in 26 min</td>
+            <td class="td-concern">Better community fix rejected; maintainer's minimal fix kept</td>
+          </tr>
+          <tr>
+            <td><a href="https://github.com/paperclipai/paperclip/pull/2659">#2659</a></td>
+            <td>Stopped writing login tokens to a readable log file</td>
+            <td class="td-person">plind-junior</td>
+            <td class="td-person">cryppadotta</td>
+            <td class="td-reviewed-no">No</td>
+            <td>71 hours</td>
+            <td class="td-concern">Your passwords sat in a plain text file for 3 days after report</td>
+          </tr>
+          <tr>
+            <td><a href="https://github.com/paperclipai/paperclip/pull/3001">#3001</a></td>
+            <td>Added MCP server with unrestricted API access</td>
+            <td class="td-person">cryppadotta</td>
+            <td class="td-person">cryppadotta</td>
+            <td class="td-reviewed-no">No</td>
+            <td>9.9 hours</td>
+            <td class="td-concern">Any connected tool can run any command</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    </div>
+  </details>
+
+  <!-- ═══════════════ 04 TIMELINE ═══════════════ -->
+  <details class="collapsible-section">
+    <summary>
+      <div class="section-header">
+        <span class="section-number">04</span>
+        <h2>Timeline</h2>
+      </div>
+    </summary>
+    <div class="section-body">
+    <div class="timeline">
+      <div class="tl-item neutral">
+        <div class="tl-date">March 2</div>
+        <div class="tl-desc">Repository created. Open registration, no email verification, hardcoded master password in source code.</div>
+      </div>
+      <div class="tl-item neutral">
+        <div class="tl-date">March 7</div>
+        <div class="tl-desc">Community asks for signup restrictions and log redaction. Project is 5 days old and security concerns already being raised.</div>
+      </div>
+      <div class="tl-item bad">
+        <div class="tl-date">March 12</div>
+        <div class="tl-desc">Permission checks disabled by default for all AI agents (<a href="https://github.com/paperclipai/paperclip/pull/388">PR #388</a>). Every new installation now gives AI full system access.</div>
+      </div>
+      <div class="tl-item bad">
+        <div class="tl-date">April 1</div>
+        <div class="tl-desc">Community reports 213 login tokens in readable log file (Issue #2385). Same day: 8-finding security audit (Issue #2427) closed in 8 minutes.</div>
+      </div>
+      <div class="tl-item bad">
+        <div class="tl-date">April 7</div>
+        <div class="tl-desc">MCP server added (<a href="https://github.com/paperclipai/paperclip/pull/3001">PR #3001</a>) with unrestricted API access. Any connected tool can run any command.</div>
+      </div>
+      <div class="tl-item bad">
+        <div class="tl-date">April 8</div>
+        <div class="tl-desc">Hardcoded master password finally removed (<a href="https://github.com/paperclipai/paperclip/pull/3124">PR #3124</a>) &mdash; 37 days in public source code. Same day: users report hidden 351 MB installation.</div>
+      </div>
+      <div class="tl-item bad">
+        <div class="tl-date">April 10</div>
+        <div class="tl-desc"><strong>Worst-possible security bug discovered and fixed in 22 seconds</strong> (<a href="https://github.com/paperclipai/paperclip/pull/3315">PR #3315</a>). No review. Session tokens still being logged (816 MB file).</div>
+      </div>
+      <div class="tl-item bad">
+        <div class="tl-date">April 13</div>
+        <div class="tl-desc">Security release notes labeled "chore:" (<a href="https://github.com/paperclipai/paperclip/pull/3592">PRs #3592</a>/<a href="https://github.com/paperclipai/paperclip/pull/3593">#3593</a>) to hide from changelogs.</div>
+      </div>
+      <div class="tl-item bad">
+        <div class="tl-date">April 15</div>
+        <div class="tl-desc">Community's more thorough security fix (<a href="https://github.com/paperclipai/paperclip/pull/3703">PR #3703</a>) rejected in 26 minutes. Security patch still not on GitHub Releases page.</div>
+      </div>
+    </div>
+    </div>
+  </details>
+
+  <!-- ═══════════════ 05 VITALS ═══════════════ -->
+  <details class="collapsible-section">
+    <summary>
+      <div class="section-header">
+        <span class="section-number">05</span>
+        <h2>Repo Vitals</h2>
+      </div>
+    </summary>
+    <div class="section-body">
+    <div class="vitals-grid">
+      <div class="vital-cell">
+        <div class="vital-label">Age</div>
+        <div class="vital-value" style="color:var(--amber-glow)">44 days</div>
+        <div class="vital-note">Very young. Most trusted tools are years old.</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Stars</div>
+        <div class="vital-value">53,809</div>
+        <div class="vital-note">Viral growth. Popularity does not mean safety.</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Code Review Rate</div>
+        <div class="vital-value" style="color:var(--red-glow)">0.3%</div>
+        <div class="vital-note">1 of 300 PRs reviewed. Industry standard: 100%.</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Branch Protection</div>
+        <div class="vital-value" style="color:var(--red-glow)">None</div>
+        <div class="vital-note">Anyone with write access can push code directly.</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Security Advisories</div>
+        <div class="vital-value" style="color:var(--red-glow)">1 (Severity 10/10)</div>
+        <div class="vital-note">Patched version not on Releases page.</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Lead Contributor</div>
+        <div class="vital-value">cryppadotta</div>
+        <div class="vital-note">1,845 commits. Next: 63. One person controls everything.</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">CI Workflows</div>
+        <div class="vital-value" style="color:var(--amber-glow)">13</div>
+        <div class="vital-note">Automated tests exist but can't block merges (no branch protection).</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Health Score</div>
+        <div class="vital-value">75%</div>
+        <div class="vital-note">Has SECURITY.md &amp; CONTRIBUTING.md. No Code of Conduct.</div>
+      </div>
+    </div>
+    </div>
+  </details>
+
+  <!-- ═══════════════ FOOTER ═══════════════ -->
+  <div class="footer">
+    Generated by <a href="https://github.com/stefans71/stop-git-std">stop-git-std</a> deep dive &middot; April 15, 2026
+    <br>Not legal or professional security advice. Investigate further before making trust decisions.
+  </div>
+
+</div>
+
+</body>
+</html>
