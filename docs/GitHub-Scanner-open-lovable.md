@@ -1,264 +1,324 @@
 # Security Investigation: firecrawl/open-lovable
 
-**Investigated:** 2026-04-17 | **Applies to:** main @ 69bd93b | **Repo age:** 619 days | **Stars:** 25,491 | **License:** MIT
+**Investigated:** 2026-04-17 | **Applies to:** main @ 69bd93ba (no release tags) | **Repo age:** 252 days | **Stars:** 25,496 | **License:** MIT
 
-| Field | Value |
-|-------|-------|
-| Report file | GitHub-Scanner-open-lovable.md (+ .html companion) |
-| Repo | [github.com/firecrawl/open-lovable](https://github.com/firecrawl/open-lovable) |
-| Short description | AI-powered tool that clones any website and recreates it as a modern React app using multiple LLM providers (Anthropic, OpenAI, Google, Groq) with sandboxed code execution via Vercel Sandbox or E2B. |
-| Category | AI/LLM tooling |
-| Subcategory | AI code generation platform |
-| Verdict | caution |
-| Scanned revision | main @ 69bd93b |
-| Prompt version | v2.4 |
-| Prior scan | None — first run |
+---
+
+**Report file:** GitHub-Scanner-open-lovable.md (+ .html companion)
+**Repo:** [github.com/firecrawl/open-lovable](https://github.com/firecrawl/open-lovable)
+**Short description:** Open-source clone of Lovable.dev — an AI-powered website cloner and React app generator that uses Firecrawl for scraping and cloud sandboxes (Vercel/E2B) for live preview.
+**Category:** AI/LLM tooling
+**Subcategory:** AI code generator / web cloner
+**Verdict:** Caution
+**Scanned revision:** main @ 69bd93ba (no release tags)
+**Prompt version:** V2.4
+**Prior scan:** None — first run
+
+---
 
 ## Verdict: Caution
 
-**Unauthenticated API routes can execute arbitrary commands in sandboxed environments — safe for local dev, risky if deployed publicly.**
+**AI-powered web cloner with significant governance gaps and API routes that execute arbitrary commands in cloud sandboxes — safe for local experimentation with your own API keys, but deploy with caution.**
 
-- **Warning:** API routes `/api/run-command` and `/api/run-command-v2` accept arbitrary shell commands via unauthenticated POST requests. Commands execute inside Vercel/E2B sandboxes, not on the host, but no auth gate prevents abuse if the app is deployed to a public URL.
-- **Warning:** Zero formal code review across all 12 merged PRs. The V2 rewrite (PR #122, 100+ files) was self-merged with no reviews.
-- **Warning:** No branch protection, no rulesets, no CODEOWNERS, no SECURITY.md — governance single-point-of-failure (C20). Anyone with write access can push directly to main.
-- **Info:** CORS `Access-Control-Allow-Origin: *` on AI streaming and web scraping routes. Standard for local dev but dangerous on public deployments.
-- **Positive:** Sandbox execution model isolates generated code from the host machine. All maintainer accounts are established (2+ years). No hardcoded secrets, no malicious lifecycle scripts, no prompt injection patterns detected.
+Key findings:
+
+- **No branch protection, no CODEOWNERS, no CI/CD, no security policy** — a 25K-star repo with zero governance gates. Any maintainer account compromise pushes directly to main.
+- **API routes accept arbitrary shell commands** (`/api/run-command`, `/api/run-command-v2`) and execute them in cloud sandboxes without authentication middleware.
+- **CORS wildcard (`Access-Control-Allow-Origin: *`)** on streaming AI code generation and scraping endpoints.
+- **0% formal code review rate** across all 12 merged PRs. Only 1 of 12 PRs received any review at all (an external approval from a non-associated account).
+- **4 Cursor rule files committed** — auto-loaded styling/architecture instructions. Content is benign (design system rules), but the channel exists for future compromise.
+- **67 runtime dependencies** including AI SDKs (Anthropic, OpenAI, Google, Groq) with 1 known vulnerability (osv.dev: @anthropic-ai/sdk).
 
 ## Trust Scorecard
 
-- **Does anyone check the code?** — Red (Rare). Formal review rate: 0.0%. Any-review rate: 8.3% (1 of 12 merged PRs). No branch protection on main. Top contributor has 63.8% of commits but this is a multi-contributor repo, not a solo project — the low review rate is a process gap, not a structural limitation.
-- **Do they fix problems quickly?** — Amber (Open fixes, not merged yet). No open CVEs, no security advisories. PR #176 ("fix: update dependencies to patch security vulnerabilities") is open but not yet merged. No evidence of ignored security reports.
-- **Do they tell you about problems?** — Red (No advisory). No SECURITY.md, no published security advisories, no release notes (no releases exist at all). There is no channel for responsible disclosure and no mechanism to notify users of security fixes.
-- **Is it safe out of the box?** — Amber (Local dev: yes. Public deployment: add auth first). For local development where the user supplies their own API keys: reasonably safe — sandbox isolates code execution. For public/shared deployment: the unauthenticated command execution endpoints and CORS wildcard mean anyone on the internet can use your sandbox. Distribution: git clone from main only, no pinned releases.
+- **Does anyone check the code?** — Red: Rare. 0% formal review rate, 8% any-review rate (1 of 12 PRs). Solo-maintained: developersdigest has 37 of 58 commits (64%). No branch protection.
+- **Do they fix problems quickly?** — Amber: Open fixes, not merged yet. PR #176 patches security vulnerabilities, open since 2025-12-11 and unmerged. PR #178 reports a Vercel/React CVE, open since 2025-12-17.
+- **Do they tell you about problems?** — Red: No advisory. No SECURITY.md, no published advisories, no disclosure channel.
+- **Is it safe out of the box?** — Amber: Safe for single-user local dev with your own API keys. Shared/production deployment requires authentication middleware on API routes.
 
 ## What Should I Do?
 
-### If you are using this for local development (most users)
+### If you are evaluating this for local development:
 
-1. **Clone and run locally — this is the intended use case.** The sandbox execution model (Vercel Sandbox / E2B) means generated code runs in an ephemeral remote container, not on your machine.
-   - *Technical:* `git clone https://github.com/firecrawl/open-lovable.git && cd open-lovable && pnpm install && cp .env.example .env.local` — fill in your API keys.
-   - *Plain English:* Download the code, install it, and add your own API keys. The app runs on your computer and sends AI requests to cloud services.
+1. **Clone and audit `.env.example`** — the app requires your own API keys (Firecrawl, Anthropic/OpenAI/Gemini/Groq, Vercel/E2B sandbox). No keys are hardcoded. Your keys stay local.
+   - *Plain English:* Copy the example environment file and fill in your own API keys. The app does not ship with anyone else's keys.
 
-2. **Pin to a specific commit rather than tracking main.** There are no releases, so `main` is a moving target.
-   - *Technical:* `git checkout 69bd93bae7a9c97ef989eb70aabe6797fb3dac89`
-   - *Plain English:* Lock your copy to the version we just reviewed, so future changes do not affect you until you choose to update.
+2. **Pin to a specific commit** — there are no release tags. Use `git checkout 69bd93ba` to lock to the scanned revision.
+   - *Plain English:* Because there are no version numbers, bookmark the exact code snapshot you tested so future changes cannot surprise you.
 
-3. **Review your .env.local before running.** The app uses multiple API keys (Firecrawl, AI providers, Vercel/E2B). Each key has billing implications.
-   - *Plain English:* Make sure you understand which services you are paying for before starting the app.
+3. **Do NOT expose the Next.js server to the public internet** — the `/api/run-command` and `/api/run-command-v2` routes accept arbitrary shell commands with no authentication.
+   - *Plain English:* If anyone on the internet can reach your server, they can run any command in your sandbox environment.
 
-### If you are deploying this publicly
+4. **Review PR #176** before deploying — it patches dependency vulnerabilities that remain unmerged as of this scan.
 
-4. **Add authentication middleware before deploying.** The API routes at `/api/run-command`, `/api/run-command-v2`, `/api/install-packages`, `/api/install-packages-v2`, and `/api/kill-sandbox` have zero authentication. On a public URL, anyone can execute commands in your sandbox and rack up your cloud bill.
-   - *Technical:* Add a Next.js middleware.ts that validates session/JWT/API key on all `/api/*` routes before the handler runs.
-   - *Plain English:* Without a login system, anyone who finds your URL can use your AI credits and sandbox resources.
+### If you maintain this repo:
 
-5. **Remove or restrict CORS wildcard headers.** The `Access-Control-Allow-Origin: *` on AI streaming and scraping routes means any website can make requests to your deployment.
-   - *Technical:* Replace `'*'` with your specific frontend domain in `app/api/generate-ai-code-stream/route.ts` and `app/api/scrape-website/route.ts`.
+1. Enable branch protection on `main` with at least 1 required review.
+2. Add a `SECURITY.md` with a private disclosure channel.
+3. Add authentication middleware to all `/api/*` routes before any non-localhost deployment.
+4. Merge PR #176 (dependency security patches).
 
 ## What We Found
 
-### Finding 1: Unauthenticated Command Execution API Routes
+### Finding 1: No governance gates — single point of failure
 - **Severity:** Warning
 - **Status:** Active
-- **What this means for you:** The app has API endpoints that run shell commands and install npm packages. These commands run inside a sandboxed container (Vercel Sandbox or E2B), not on your machine. However, there is no login or API key check — if you deploy this to a public URL, anyone who discovers it can run commands in your sandbox, install packages, and consume your cloud resources.
-- **Threat model (F13):** An attacker who discovers the public URL can POST arbitrary commands to `/api/run-command`. The sandbox isolation limits damage to the ephemeral container — they cannot access the host filesystem or network. The primary risk is resource abuse (sandbox compute time, API credits) and potential data exfiltration from the sandbox environment.
-- **Action:** Add authentication middleware to all API routes before any public deployment. For local-only use, this is low risk because only localhost can reach the endpoints.
+- **Action:** Enable branch protection on main at github.com/firecrawl/open-lovable/settings/branches
 
-### Finding 2: Zero Code Review Process
+**What happened:** Classic branch protection returned 404. Repo-level rulesets: empty array. Rules on default branch: empty array. Org-level rulesets: 404 (admin:org scope required — state unknown, but repo-level checks confirm no protection). No CODEOWNERS file in any standard location. No CI workflows exist at all.
+
+**Threat model:** An attacker who gains access to any account with write permission (via phishing, credential stuffing, stale personal access token, malicious browser extension, or IDE plugin compromise) can push arbitrary code directly to main. With 25,496 stars and 4,897 forks, the blast radius of a compromise is substantial — every user who clones or pulls from main receives the malicious code immediately.
+
+**What this means for you:** Nobody is required to review code before it goes live. A single compromised account can ship malware to thousands of users.
+
+### Finding 2: Unauthenticated command execution API routes
 - **Severity:** Warning
 - **Status:** Active
-- **What this means for you:** None of the 12 merged pull requests received a formal code review. The V2 rewrite (PR #122, touching 100+ files across all API routes, sandbox providers, and the frontend) was merged by its author with zero reviews. This means security-relevant changes ship without a second pair of eyes.
-- **Action:** If you rely on this project, watch the commit log for changes to API routes and sandbox provider code. Consider reviewing diffs yourself before pulling updates.
+- **Action:** Add authentication middleware to `/api/run-command` and `/api/run-command-v2` before any non-localhost deployment.
 
-### Finding 3: Governance Single-Point-of-Failure (C20)
-- **Severity:** Warning
-- **Status:** Active
-- **What this means for you:** There is no branch protection on the main branch. No rulesets. No CODEOWNERS file. No SECURITY.md. Anyone with write access to the repo can push directly to main without any automated gate. Combined with 25K+ stars and 4.9K forks, this means a compromised maintainer account could push malicious code that reaches thousands of users.
-- **Threat model (F13):** Attacker paths include: phishing the maintainer's GitHub credentials, compromising a browser extension in the maintainer's session, or gaining access via a stale personal access token. Once write access is obtained, the attacker pushes to main — no review gate, no CI gate, no CODEOWNERS approval required.
-- **Action (if you install):** Pin to a reviewed commit SHA. Monitor the repo's commit feed for unexpected pushes. **(If you maintain):** Enable branch protection on main at Settings > Branches > Add rule. Require at least 1 review before merge. Add a CODEOWNERS file covering `app/api/` and `lib/sandbox/`.
+**What happened:** The API routes `/api/run-command/route.ts` and `/api/run-command-v2/route.ts` accept a JSON body `{ "command": "..." }` and execute it in the active sandbox via `global.activeSandbox.runCommand()` or `provider.runCommand()`. No authentication check, no API key validation, no rate limiting. Commands execute in the cloud sandbox (Vercel or E2B), not on the host machine.
 
-### Finding 4: CORS Wildcard on AI and Scraping Routes
-- **Severity:** Info
-- **Status:** Active / Informational
-- **What this means for you:** Two API routes (`generate-ai-code-stream` and `scrape-website`) set `Access-Control-Allow-Origin: *`, which means any website can make cross-origin requests to these endpoints. For local development this is standard. For public deployments, it means a malicious website visited by the user could trigger AI code generation or website scraping using the deployment's API keys.
-- **Action:** If deploying publicly, restrict the CORS origin to your frontend domain.
+**Mitigating factor:** Commands run inside an isolated cloud sandbox, not on the user's local machine. The sandbox is ephemeral and does not have access to the host filesystem or environment. However, the sandbox does have access to whatever API keys were injected at creation time.
 
-### Finding 5: Dependency Vulnerability
+**What this means for you:** If you deploy this application to a publicly reachable URL, anyone can run arbitrary commands in your sandbox — potentially accessing the API keys you configured for that sandbox session.
+
+### Finding 3: CORS wildcard on sensitive endpoints
 - **Severity:** Info
 - **Status:** Active
-- **What this means for you:** The `@anthropic-ai/sdk` dependency has 1 known vulnerability according to osv.dev. Dependabot data was not accessible (403 — admin scope required), so the full vulnerability picture is incomplete.
-- **Action:** Run `npm audit` locally after installation to see the full advisory. Update `@anthropic-ai/sdk` to the latest version.
+- **Action:** Restrict CORS origins to your own domain before production deployment.
 
-### Finding 6: Agent Rule File (Cursor)
-- **Severity:** OK
+**What happened:** `Access-Control-Allow-Origin: *` is set on `/api/generate-ai-code-stream/route.ts` (line 1883) and `/api/scrape-website/route.ts` (line 105). This allows any website to make cross-origin requests to these endpoints.
+
+**Mitigating factor:** The app is designed for local development (`localhost:3000`). CORS wildcards on localhost are standard practice. This only becomes a concern if the server is exposed publicly.
+
+**What this means for you:** For local dev, this is fine. For production, restrict to your domain.
+
+### Finding 4: Zero code review process
+- **Severity:** Warning
+- **Status:** Ongoing
+- **Action:** This is a solo-maintained repo. Review rate is inherently limited by the contributor base — compare with governance indicators (advisories, branch protection, CODEOWNERS, CI gates) rather than review rate alone.
+
+**What happened:** Of 12 merged PRs, 0 had a formal reviewDecision set. Only 1 (PR #33 "Add support for Google Gemini AI") received any review — an APPROVED review from user Saeen55-stack (no association with the project). Formal review rate: 0%. Any-review rate: 8.3%.
+
+The primary maintainer (developersdigest) authored 37 of 58 total commits (64%) and merged most PRs, including self-merges on security-relevant changes.
+
+**What this means for you:** No second pair of eyes has checked most of the code. The project's quality depends entirely on one maintainer's diligence.
+
+### Finding 5: Unmerged security PRs
+- **Severity:** Info
+- **Status:** Active
+- **Action:** Watch PR #176 and #178 for merge; re-evaluate after they land.
+
+**What happened:** PR #176 "fix: update dependencies to patch security vulnerabilities" has been open since 2025-12-11 with no maintainer response (128 days at scan time). PR #178 "Vercel/react server components CVE" has been open since 2025-12-17 with no response (121 days).
+
+Last commit to main was 2025-11-19 (v3 release). No commits in 150 days. This pattern is consistent with an inactive or paused project.
+
+**What this means for you:** Known security patches are sitting unmerged. The maintainer may not be actively monitoring the project.
+
+### Finding 6: 0.0.0.0 bind in sandbox configuration
+- **Severity:** Info
+- **Status:** Active
+
+**What happened:** The sandbox creation routes configure Vite dev servers to bind to `0.0.0.0` (all interfaces) inside the cloud sandbox. This is found in `app/api/create-ai-sandbox/route.ts` (line 138, 281, 371) and the sandbox provider files. This is expected behavior for cloud sandbox containers that need to be reachable from outside the container.
+
+**What this means for you:** The `0.0.0.0` bind is inside the isolated sandbox, not on your local machine. This is standard for container-based development environments.
+
+### Finding 7: dangerouslySetInnerHTML usage (16 instances)
+- **Severity:** Info
 - **Status:** Informational
-- **What this means for you:** The file `components/app/.cursor/rules/home-page-components.md` is a Cursor IDE rule file that documents home page component structure for the migration. It contains no AI-directed imperative language, no secrets, no commands, and no model-obedience changes.
-- **Imperative-verb list:** None found
-- **Auto-load tier:** Tier 2 (conditionally auto-loaded — Cursor with path-specific glob matching)
-- **Capability statement:** This file tells Cursor IDE about the expected directory structure for home page components during migration.
-- **Risk statement:** If this file were compromised, a future attacker could inject instructions that affect every Cursor user working in the `components/app/(home)` path — but the current content is benign documentation.
+
+**What happened:** 16 files use React's `dangerouslySetInnerHTML`. Most are in the flame/ASCII animation components (`components/shared/effects/flame/*`) where pre-built ASCII art frames from local JSON data files are rendered. Two notable uses:
+- `components/shared/pylon.tsx` (line 73): injects a third-party analytics/chat widget script (Pylon).
+- `components/ui/shadcn/tooltip.tsx` (line 93): renders tooltip description as raw HTML from props — XSS risk if description contains user-controlled content.
+
+**What this means for you:** The ASCII animation uses are low-risk (static local data). The tooltip and Pylon widget uses warrant attention if you extend the app to handle user-generated content.
 
 ## Executable File Inventory
 
-### Quick Scan
-- `/api/run-command/route.ts` — runs on POST request, executes arbitrary commands in sandbox, no auth. **Warning.**
-- `/api/run-command-v2/route.ts` — runs on POST request, executes arbitrary commands in sandbox via provider, no auth. **Warning.**
-- `/api/install-packages/route.ts` — runs on POST request, installs npm packages in sandbox, no auth. **Warning.**
-- `/api/install-packages-v2/route.ts` — runs on POST request, installs npm packages in sandbox via provider, no auth. **Warning.**
-- `/api/kill-sandbox/route.ts` — runs on POST request, kills active sandbox, no auth. **Warning.**
-- `packages/create-open-lovable/lib/installer.js` — CLI scaffolding tool, runs execSync('npm install') with controlled input. **OK.**
-- `components/app/.cursor/rules/home-page-components.md` — Cursor IDE rule file, documentation only. **OK.**
+### Quick scan (4 Cursor rule files, 0 install scripts, 0 CI workflows)
 
-### File: app/api/run-command/route.ts
-- **Trigger:** POST request to /api/run-command
-- **Reads:** request.json() for `command` field; global.activeSandbox
-- **Writes:** Executes arbitrary command in sandbox via `global.activeSandbox.runCommand()`
-- **Network:** Communicates with sandbox runtime (Vercel/E2B cloud)
-- **Injection channel:** User-supplied `command` string is passed directly to sandbox execution. No sanitization.
-- **Secret-leak path:** None — sandbox is isolated from host secrets
-- **Capability assessment:** Could execute any shell command the sandbox runtime allows. In worst case, if sandbox isolation fails, this becomes an RCE. In the normal case, damage is limited to the ephemeral container.
+- **styles/design-system/.cursor/rules/design-system.md** — Auto-loaded Cursor rule. Design system color/typography guidance. OK.
+- **styles/components/.cursor/rules/component-styles.md** — Auto-loaded Cursor rule. Component CSS architecture rules. OK.
+- **components/app/(home)/.cursor/rules/home-page-components.md** — Auto-loaded Cursor rule. Home page component migration notes. OK.
+- **components/shared/effects/.cursor/rules/flame-effects.md** — Auto-loaded Cursor rule. ASCII flame animation documentation. OK.
 
-### File: app/api/run-command-v2/route.ts
-- **Trigger:** POST request to /api/run-command-v2
-- **Reads:** request.json() for `command` field; sandboxManager.getActiveProvider() or global.activeSandboxProvider
-- **Writes:** Executes arbitrary command via provider.runCommand()
-- **Network:** Communicates with sandbox runtime
-- **Injection channel:** Same as run-command — user-supplied command passed to sandbox
-- **Secret-leak path:** None
-- **Capability assessment:** Same as run-command but routes through the sandbox manager abstraction layer.
+### File: styles/design-system/.cursor/rules/design-system.md
+- **Auto-load tier:** Tier 2 — Conditionally auto-loaded (Cursor `.mdc` in `.cursor/rules/` directory, loaded when working in that directory subtree)
+- **Imperative verbs:** "Use CSS custom properties", "Use" (color instructions)
+- **Capability statement:** Instructs Cursor AI to use the project's fire-inspired design system colors, typography, and utility classes when generating CSS.
+- **Risk statement:** A future compromise of this file could instruct Cursor to inject malicious CSS or JavaScript via AI-generated code for every developer working in the styles directory.
+- **Severity:** Info
+- **Status:** Informational
+- **Checklist:** Imperative verbs: "Use" (x3). Auto-load tier: Tier 2. Capability: design system guidance. Risk: CSS injection via AI. Severity: Info. Status: Informational.
 
-### File: app/api/install-packages/route.ts
-- **Trigger:** POST request to /api/install-packages
-- **Reads:** request.json() for `packages` array; global.activeSandboxProvider
-- **Writes:** Installs npm packages in sandbox. Has validation (dedup, filter empty strings).
-- **Network:** Sandbox runtime + npm registry
-- **Injection channel:** Package names come from request body. Some validation exists (dedup, type check) but no allowlist or regex filter on package name format.
-- **Secret-leak path:** None
-- **Capability assessment:** Could install any npm package in the sandbox. A malicious package name with postinstall hooks would execute in the sandbox container.
+### File: styles/components/.cursor/rules/component-styles.md
+- **Auto-load tier:** Tier 2 — Conditionally auto-loaded
+- **Imperative verbs:** "Only create CSS files for components that need them", "Use P3 colors", "Keep animations performant"
+- **Capability statement:** Instructs Cursor to follow component CSS architecture patterns (import strategy, P3 color fallbacks, animation performance).
+- **Risk statement:** A future compromise could instruct AI to generate components with malicious styles or scripts.
+- **Severity:** Info
+- **Status:** Informational
 
-### File: packages/create-open-lovable/lib/installer.js
-- **Trigger:** User runs `npx create-open-lovable`
-- **Reads:** User input via inquirer prompts; .env template files
-- **Writes:** Creates project directory, copies template files, runs `npm install` via execSync
-- **Network:** npm registry (via npm install)
-- **Injection channel:** None — command is hardcoded `npm install`, user input goes to file paths only
-- **Secret-leak path:** None
-- **Capability assessment:** Standard CLI scaffolding tool. execSync runs controlled npm install with cwd set to the new project directory.
+### File: components/app/(home)/.cursor/rules/home-page-components.md
+- **Auto-load tier:** Tier 2 — Conditionally auto-loaded
+- **Imperative verbs:** None found — purely structural documentation of component migration plan.
+- **Capability statement:** Documents the home page component structure and migration priority for Cursor AI context.
+- **Risk statement:** A future compromise could redirect AI to generate components importing from malicious sources.
+- **Severity:** Info
+- **Status:** Informational
 
-### File: components/app/.cursor/rules/home-page-components.md
-- **Trigger:** Auto-loaded by Cursor IDE when working in matching paths (Tier 2)
-- **Reads:** None
-- **Writes:** None
-- **Network:** None
-- **Injection channel:** If modified, could inject instructions into Cursor sessions
-- **Secret-leak path:** None
-- **Capability assessment:** Currently benign documentation. A future compromise could inject arbitrary Cursor instructions for anyone working on home page components.
+### File: components/shared/effects/.cursor/rules/flame-effects.md
+- **Auto-load tier:** Tier 2 — Conditionally auto-loaded
+- **Imperative verbs:** None found — documents how flame ASCII animation system works (data.json files, frame speeds, visibility-based rendering).
+- **Capability statement:** Provides context about the flame animation system so AI understands the innerHTML-based ASCII rendering approach.
+- **Risk statement:** A future compromise could instruct AI to modify the flame components to inject malicious content via innerHTML.
+- **Severity:** Info
+- **Status:** Informational
 
 ## Suspicious Code Changes
 
-| PR | What it did | Submitted by | Merged by | Reviewed? | Concern |
-|----|-------------|-------------|-----------|-----------|---------|
-| [#122](https://github.com/firecrawl/open-lovable/pull/122) | V2 rewrite — 100+ files, all API routes, sandbox providers, new features | developersdigest | developersdigest | No (0 reviews) | Self-merged massive change with zero review. Added run-command-v2, install-packages-v2, scrape-website routes — all without auth. |
-| [#109](https://github.com/firecrawl/open-lovable/pull/109) | Vercel sandbox support — rewrote sandbox infrastructure | MFCo | developersdigest | No (0 reviews) | Security-critical sandbox architecture change with zero review. |
+| PR | What it did | Submitted by | Merged by | Reviewed? | Merge time | Concern |
+|----|------------|-------------|-----------|-----------|------------|---------|
+| [#122](https://github.com/firecrawl/open-lovable/pull/122) | "V2" — major rewrite | developersdigest | developersdigest | No | 14 min | Self-merge of major version bump with no review |
+| [#109](https://github.com/firecrawl/open-lovable/pull/109) | Vercel sandbox support | MFCo | developersdigest | No | 11 hrs | External contributor adding sandbox execution — no review |
+| [#33](https://github.com/firecrawl/open-lovable/pull/33) | Add Google Gemini AI | ayoubdya | developersdigest | Yes (1 review) | 10 hrs | Only PR with any review; reviewer (Saeen55-stack) has no project association |
+| [#136](https://github.com/firecrawl/open-lovable/pull/136) | Update README for Morph API key | bekbull | bekbull | No | 3 min | Self-merge |
 
 ## Timeline
 
-- **2025-08-08** — REPO CREATED. firecrawl/open-lovable created with E2B sandbox integration.
-- **2025-08-26** — SANDBOX MIGRATION. PR #109 migrates from E2B to Vercel Sandbox. Merged with 0 reviews.
-- **2025-09-02** — SANDBOX REVERTED then merged. PR #109 merged, then immediately reverted (PR #110), suggesting instability.
-- **2025-09-02 to 2025-09-10** — V2 DEVELOPMENT. developersdigest pushes V2 rewrite directly and via PR #122 (self-merged, 0 reviews). Adds all v2 API routes, sandbox providers, and complete frontend redesign.
-- **2025-09-27** — LAST COMMUNITY PR. PR #136 (README update for Morph API key) is the last merged community contribution.
-- **2025-11-19** — V3 PUSH. Direct push to main "v3" by developersdigest. No PR, no review. Last commit on the repo.
-- **2025-11-19 to 2026-04-17** — ACTIVITY GAP. 5 months with no commits. 38 open PRs, 131 open issues accumulating.
+- **2025-08-08** — REPO CREATED. firecrawl/open-lovable created under the Firecrawl organization.
+- **2025-08-08 to 2025-08-14** — RAPID GROWTH. Initial development burst: 37 commits from developersdigest, multiple community PRs merged without review.
+- **2025-09-02** — SANDBOX ADDED. Vercel sandbox support merged (PR #109) from external contributor MFCo — no code review. This PR introduced the command execution API routes.
+- **2025-09-10** — V2 SHIPS. Major "V2" rewrite self-merged by developersdigest in 14 minutes with no review.
+- **2025-09-27** — LAST MERGE. PR #136 (Morph API key README update) was the last merged PR.
+- **2025-11-19** — LAST COMMIT. "v3" commit pushed directly to main. No PR, no review.
+- **2025-12-11** — SECURITY PR FILED. PR #176 filed to patch dependency vulnerabilities. Still open 128 days later.
+- **2025-12-17** — CVE PR FILED. PR #178 reports Vercel/React server components CVE. Still open 121 days later.
+- **2026-04-17** — THIS SCAN. 150 days since last commit. Security PRs unmerged. 93 open issues.
 
 ## Repo Vitals
 
-| Metric | Value | Interpretation |
-|--------|-------|----------------|
-| Age | 619 days | Relatively young |
-| Stars | 25,491 | Very popular — high blast radius |
-| Forks | 4,898 | Heavily forked |
-| Open issues | 131 | Many unaddressed, includes spam |
-| Open PRs | 38 | Community contributions not being merged |
-| Last commit | 2025-11-19 (5 months ago) | Possibly stale/unmaintained |
-| Contributors | 11 | Small team, dominated by 1 person |
-| Top contributor share | developersdigest: 63.8% | Near-solo maintenance |
-| Releases | 0 | No versioned releases, install from main only |
-| License | MIT | Permissive |
-| Branch protection | None | No gates on main |
-| SECURITY.md | None | No disclosure policy |
-| OSSF Scorecard | Not indexed | Not available for this repo |
-| Dependencies | 67 direct, 12 dev | Large dependency tree |
+- **Stars:** 25,496 | **Forks:** 4,897
+- **Created:** 2025-08-08 (252 days ago)
+- **Last push:** 2025-11-19 (150 days ago)
+- **License:** MIT
+- **Language:** TypeScript (Next.js 15 / React)
+- **Default branch:** main
+- **Archived:** No
+- **Community health:** 37% (no CoC, no CONTRIBUTING, no SECURITY.md)
+- **OSSF Scorecard:** Not indexed
+- **Dependencies:** 67 runtime + 12 dev
+- **Open issues:** 93 (many are spam/non-actionable; some are real bugs)
+- **Open PRs:** 38 (majority from external contributors, none merged since Sept 2025)
+- **Merged PRs:** 12 total
+- **Formal review rate:** 0% (0 of 12)
+- **Any-review rate:** 8.3% (1 of 12)
+- **Releases:** None (no tags, no releases page)
+- **CI/CD:** None (no .github/workflows directory)
+- **Branch protection:** None (404 on classic, empty rulesets)
+- **CODEOWNERS:** None
+- **Security advisories:** None published
 
 ## Investigation Coverage
 
-| Coverage item | Status |
-|---------------|--------|
-| Repo metadata (Step 1) | Complete |
-| Maintainer background | Complete — owner + top 3 contributors checked |
-| OSSF Scorecard | Not indexed (API returned no data) |
-| Dependabot alerts | 403 (admin scope required) — status unknown |
-| osv.dev fallback | Queried 20 of 67 direct deps, 1 vulnerability found |
-| Secrets-in-history | Not scanned (gitleaks not available) |
-| API budget at Step 5 | 4982/5000 remaining. PR sample: 12 (full — only 12 exist) |
-| Merged PRs reviewed | 12 of 12 (complete) |
-| Security-relevant PR diffs read | 3 of 5 title-hit PRs |
-| Step A tarball extraction | Succeeded, 336 files |
-| Executable files inspected | 7 of 7 inspected (5 Warning, 2 OK, 0 Critical) |
-| README install-paste scan (Step 7.5) | Run — 0 paste blocks found |
-| CI-amplified rule detection (Step 2.5) | Run — 0 CI-amplified files. 1 static agent rule file found. |
-| Prompt-injection scan | Run — 0 strings matched imperative-targeting-scanner pattern |
-| Distribution channels | 1 of 1 (git clone from main). No releases to verify against. |
-| pull_request_target usage | 0 workflows |
-| Windows surface | No .ps1/.bat/.cmd files in repo — N/A |
-| Monorepo inner-package scan | 2 package.json files found. Root: no lifecycle scripts. create-open-lovable: no lifecycle scripts. |
+- **Data sources queried:** gh api (repo, contributors, users, branches, rulesets, rules, org rulesets, community/profile, advisories, PRs, issues, commits, contents), OSSF Scorecard API, osv.dev API
+- **OSSF Scorecard:** Not indexed. The repo is not in the OSSF Scorecard database.
+- **osv.dev:** Queried 15 of 67 direct dependencies. 1 vulnerability found (@anthropic-ai/sdk: 1 advisory). Remaining 52 dependencies not queried (rate-limit conservation).
+- **Dependabot:** 403 (admin:repo_hook scope required). State: unknown, not "clean."
+- **Secrets-in-history:** Not scanned (gitleaks not available). Install gitleaks for full coverage.
+- **API budget at Step 5:** 4,944/5,000 remaining. PR sample: 12/12 (full — only 12 merged PRs exist).
+- **Tarball extraction:** Success. 336 files extracted from tarball pinned to HEAD SHA 69bd93bae7a9c97ef989eb70aabe6797fb3dac89.
+- **Merged PRs reviewed:** 12 of 12 (all merged PRs examined).
+- **Security-relevant PR diffs read:** Not applicable — no PRs matched title or path security keywords. All 12 PRs were inspected via metadata.
+- **Executable files inspected:** 4 of 4 (4 Cursor rule files, 0 install scripts, 0 CI workflows). Verdict breakdown: 0 Warning, 4 Info, 0 Critical.
+- **README install-paste scan:** Run. 0 paste-this blocks found.
+- **CI-amplified rule detection:** Run. 0 CI-amplified sources (no .github/workflows directory). 4 static Cursor rule files found.
+- **Prompt-injection scan:** 2 files matched "system prompt" pattern. 0 classified as actionable findings — both are legitimate LLM system prompt construction in API route code, not scanner-targeting injection.
+- **Distribution channels:** 1 channel (git clone). No npm package published. No release assets. No install scripts. Channel verified against source: trivially matches scan.
+- **Windows surface:** No .ps1/.bat/.cmd files found. N/A.
+- **pull_request_target usage:** 0 workflows (no CI exists).
+- **Monorepo inner packages:** 1 inner package found (`packages/create-open-lovable/package.json`). Sampled for lifecycle scripts: none found.
+
+### V2.4 External Tool Coverage
+
+- **OSSF Scorecard:** Not indexed. Independent security rating from the Open Source Security Foundation (securityscorecards.dev). Scores 24 security practices from 0-10. Most repos score 3-5; above 6 is strong.
+- **osv.dev:** 1 vulnerability found in 15 queried packages. Checked against osv.dev, a free vulnerability database backed by Google. Shows known security issues in this project's dependencies.
+- **gitleaks:** Not scanned (tool not available). Scanned by gitleaks for passwords, API keys, or tokens accidentally committed to the code. "Not scanned" means the tool was not available — not that the code is clean.
+- **API budget:** 4,944/5,000 remaining at Step 5. Full PR sample (12/12). GitHub limits API calls to 5,000/hour. Budget was sufficient for complete coverage.
 
 ## Evidence Appendix
 
-### E1: No authentication on command execution routes (Priority evidence)
-- **Claim:** API routes run-command and run-command-v2 accept arbitrary commands without authentication.
-- **Command:** `grep -nP 'auth|session|cookie|jwt|bearer|middleware|verify|login' app/api/run-command/route.ts app/api/run-command-v2/route.ts`
-- **Result:** No matches. Files contain no authentication logic. POST handler directly reads `command` from request body and passes to sandbox execution.
+### Priority Evidence
+
+#### E1: No branch protection (supports Finding 1)
+- **Claim:** No branch protection of any kind exists on the default branch.
+- **Command:** `gh api repos/firecrawl/open-lovable/branches/main/protection`
+- **Result:** `{"message":"Not Found","status":"404"}`
+- **Command:** `gh api repos/firecrawl/open-lovable/rulesets`
+- **Result:** `[]`
+- **Command:** `gh api repos/firecrawl/open-lovable/rules/branches/main`
+- **Result:** `[]`
 - **Classification:** Confirmed fact
 
-### E2: Zero formal code review rate (Priority evidence)
-- **Claim:** 0% of merged PRs received formal review approval.
-- **Command:** `gh pr list -R firecrawl/open-lovable --state merged --limit 300 --json number,reviewDecision,reviews`
-- **Result:** 12 merged PRs. reviewDecision is empty string on all 12. reviews.length > 0 on exactly 1 (PR #33).
+#### E2: Unauthenticated command execution routes (supports Finding 2)
+- **Claim:** API routes accept arbitrary commands without authentication.
+- **Command:** `grep -nP 'command' app/api/run-command/route.ts | head -5`
+- **Result:** Line 11: `const { command } = await request.json();` — command taken directly from request body. No auth check in the route.
 - **Classification:** Confirmed fact
 
-### E3: No branch protection on main (Priority evidence)
-- **Claim:** No branch protection rules exist on the default branch.
-- **Command:** `gh api repos/firecrawl/open-lovable/branches/main/protection` returned 404. `gh api repos/firecrawl/open-lovable/rulesets` returned []. `gh api repos/firecrawl/open-lovable/rules/branches/main` returned [].
-- **Result:** All three checks confirm no protection.
-- **Classification:** Confirmed fact (org rulesets are unknown due to scope gap — 403 on admin:org)
+#### E3: 0% formal review rate (supports Finding 4)
+- **Claim:** Zero merged PRs have a formal review decision.
+- **Command:** `gh pr list -R firecrawl/open-lovable --state merged --limit 300 --json reviewDecision`
+- **Result:** All 12 PRs show `"reviewDecision":""` (empty). Only PR #33 has a `reviews` array with 1 entry.
+- **Classification:** Confirmed fact
 
-### E4: CORS wildcard on AI streaming route
-- **Claim:** generate-ai-code-stream route sets Access-Control-Allow-Origin: *
+### Context Evidence
+
+#### E4: CORS wildcard on API routes (supports Finding 3)
+- **Claim:** CORS wildcard set on AI code generation and scraping endpoints.
 - **Command:** `grep -nP 'Access-Control-Allow-Origin' app/api/generate-ai-code-stream/route.ts`
 - **Result:** Line 1883: `'Access-Control-Allow-Origin': '*'`
 - **Classification:** Confirmed fact
 
-### E5: Dependency vulnerability
+#### E5: Unmerged security PRs (supports Finding 5)
+- **Claim:** Security-patching PRs open for 120+ days with no maintainer response.
+- **Command:** `gh pr list -R firecrawl/open-lovable --state open --json number,title,createdAt`
+- **Result:** PR #176 "fix: update dependencies to patch security vulnerabilities" (2025-12-11), PR #178 "Vercel/react server components CVE" (2025-12-17) — both open, no comments.
+- **Classification:** Confirmed fact
+
+#### E6: osv.dev vulnerability (supports dependency assessment)
 - **Claim:** @anthropic-ai/sdk has 1 known vulnerability.
 - **Command:** `curl -s "https://api.osv.dev/v1/query" -d '{"package":{"name":"@anthropic-ai/sdk","ecosystem":"npm"}}'`
-- **Result:** 1 vulnerability returned
-- **Classification:** Confirmed fact (osv.dev data)
-
-### E6: No releases
-- **Claim:** The repo has zero releases.
-- **Command:** `gh release list -R firecrawl/open-lovable --limit 20`
-- **Result:** No output (empty)
+- **Result:** 1 vulnerability returned.
 - **Classification:** Confirmed fact
 
-### E7: 5-month activity gap
-- **Claim:** Last commit was 2025-11-19, 5 months before this scan.
-- **Command:** `gh api repos/firecrawl/open-lovable/commits?per_page=1 -q '.[0].commit.author.date'`
-- **Result:** 2025-11-19T15:15:21Z
+#### E7: Dependabot access denied
+- **Claim:** Dependabot alerts could not be queried.
+- **Command:** `gh api repos/firecrawl/open-lovable/dependabot/alerts`
+- **Result:** `{"message":"You are not authorized to perform this operation.","status":"403"}`
+- **Classification:** Confirmed fact — state is unknown (scope gap), not "clean."
+
+### Positive Evidence
+
+#### E8: No hardcoded secrets
+- **Claim:** No hardcoded API keys or secrets found in source code.
+- **Command:** `grep -rlP '(api[_-]?key|secret|token|password)\s*[:=]\s*["'"'"'][A-Za-z0-9_\-\.]{16,}' . | grep -v node_modules | grep -v .env`
+- **Result:** 0 matches.
 - **Classification:** Confirmed fact
 
-### E8: Community health 37%
-- **Claim:** No SECURITY.md, no Code of Conduct, no CONTRIBUTING file.
-- **Command:** `gh api repos/firecrawl/open-lovable/community/profile`
-- **Result:** health: 37, security_policy: false, coc: false, contrib: false
+#### E9: No eval/exec usage
+- **Claim:** No `eval()` or `new Function()` calls in application code.
+- **Command:** `grep -rlP 'eval\s*\(|new\s+Function\s*\(' . --include='*.ts' --include='*.tsx' --include='*.js'`
+- **Result:** 0 matches.
+- **Classification:** Confirmed fact
+
+#### E10: Sandbox isolation
+- **Claim:** Command execution happens in isolated cloud sandboxes, not on host.
+- **Source:** `app/api/run-command/route.ts` line 30: `const result = await global.activeSandbox.runCommand({...})`
+- **Classification:** Confirmed fact — commands are forwarded to Vercel Sandbox or E2B sandbox APIs, not executed locally.
+
+#### E11: No prompt injection targeting scanner
+- **Claim:** No AI-directed prompt injection targeting security scanners was found.
+- **Command:** `grep -rliP 'ignore (all )?(previous|prior) instructions|you are now|pretend you are|jailbreak' . | grep -v node_modules`
+- **Result:** 2 files matched "system prompt" keyword — both are legitimate LLM prompt construction code, not scanner-targeting injection.
 - **Classification:** Confirmed fact

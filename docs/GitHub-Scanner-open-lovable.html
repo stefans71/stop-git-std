@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<!-- Security Investigation Report: firecrawl/open-lovable @ 69bd93b | Generated 2026-04-17 | Prompt v2.4 -->
+<!-- Security Investigation Report: firecrawl/open-lovable @ 69bd93ba | Generated 2026-04-17 | Prompt v2.4 -->
 <title>Security Investigation: firecrawl/open-lovable</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -552,6 +552,14 @@
   }
   .vital-cell .vital-value { font-size: 1rem; font-weight: 700; margin-bottom: 4px; }
   .vital-cell .vital-note { font-size: 0.75rem; color: var(--text-secondary); line-height: 1.5; }
+  .vital-cell .vital-explainer {
+    font-size: 0.7rem; color: var(--text-muted); line-height: 1.5;
+    margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--border-subtle);
+  }
+  .vital-cell .vital-explainer a {
+    color: var(--cyan-glow); text-decoration: none;
+  }
+  .vital-cell .vital-explainer a:hover { text-decoration: underline; }
 
   /* Action cards */
   .action-card { padding: 24px; border-radius: 10px; margin-bottom: 12px; }
@@ -829,201 +837,227 @@
 </style>
 </head>
 <body>
+
 <!-- Font size controls -->
 <div class="font-controls">
-  <button onclick="adjustFont(-1)" aria-label="Decrease font size">A&minus;</button>
+  <button onclick="adjustFont(-1)">A-</button>
   <span class="font-size-display">100%</span>
-  <button onclick="adjustFont(1)" aria-label="Increase font size">A+</button>
+  <button onclick="adjustFont(1)">A+</button>
 </div>
+<script>
+  let fontScale = 100;
+  function adjustFont(dir) {
+    fontScale = Math.min(150, Math.max(70, fontScale + dir * 10));
+    document.documentElement.style.fontSize = fontScale + '%';
+    document.querySelector('.font-size-display').textContent = fontScale + '%';
+  }
+</script>
 
 <div class="page">
 
-<!-- ═══════ HERO ═══════ -->
-<div class="hero">
-  <div class="hero-badge"><span class="dot amber"></span> Security Investigation</div>
-  <h1>firecrawl<span class="slash">/</span><span class="amber">open-lovable</span></h1>
-  <p class="hero-caption">AI-powered tool that clones any website and recreates it as a modern React app using multiple LLM providers with sandboxed code execution via Vercel Sandbox or E2B.</p>
-  <div class="scan-strip">
-    <span class="scan-strip-item"><span class="dot amber"></span> Caution</span>
-    <span class="scan-strip-item">main @ 69bd93b</span>
-    <span class="scan-strip-item">2026-04-17</span>
-    <span class="scan-strip-item">v2.4</span>
-    <span class="scan-strip-item">25,491 stars</span>
-    <span class="scan-strip-item">MIT</span>
+  <!-- ═══════════════ HERO ═══════════════ -->
+  <div class="hero">
+    <div class="hero-badge"><span class="dot amber"></span> Security Investigation</div>
+    <h1>firecrawl <span class="slash">/</span> <span class="amber">open-lovable</span></h1>
+    <div class="hero-caption">A 25K-star open-source AI web cloner and React app generator. Uses Firecrawl for scraping and cloud sandboxes (Vercel/E2B) for live preview. Zero governance gates, unauthenticated command execution routes, and 150 days of inactivity with unmerged security patches.</div>
+
+    <div class="scan-strip">
+      <span class="scan-strip-item"><span class="dot amber"></span> Caution</span>
+      <span class="scan-strip-item">main @ 69bd93ba</span>
+      <span class="scan-strip-item">2026-04-17</span>
+      <span class="scan-strip-item">V2.4</span>
+      <span class="scan-strip-item">336 files</span>
+      <span class="scan-strip-item">25,496 stars</span>
+    </div>
+
+    <div class="meta">
+      <div class="meta-item"><span class="label">Investigated</span> 2026-04-17</div>
+      <div class="meta-item"><span class="label">Commit</span> 69bd93ba</div>
+      <div class="meta-item"><span class="label">Age</span> 252 days</div>
+      <div class="meta-item"><span class="label">License</span> MIT</div>
+    </div>
   </div>
-  <div class="meta">
-    <span class="meta-item"><span class="label">Investigated</span> 2026-04-17</span>
-    <span class="meta-item"><span class="label">Commit</span> 69bd93bae7a9c97ef989eb70aabe6797fb3dac89</span>
-    <span class="meta-item"><span class="label">Age</span> 619 days</span>
-    <span class="meta-item"><span class="label">Stars</span> 25,491</span>
-    <span class="meta-item"><span class="label">License</span> MIT</span>
+
+  <!-- ═══════════════ CATALOG METADATA ═══════════════ -->
+  <div class="catalog-meta">
+    <div class="catalog-label">Catalog Metadata</div>
+    <table>
+      <tr><td class="key">Report</td><td class="val">GitHub-Scanner-open-lovable.md + .html</td></tr>
+      <tr><td class="key">Repo</td><td class="val"><a href="https://github.com/firecrawl/open-lovable">github.com/firecrawl/open-lovable</a></td></tr>
+      <tr><td class="key">Description</td><td class="val">Open-source clone of Lovable.dev &mdash; AI-powered website cloner and React app generator using Firecrawl + cloud sandboxes</td></tr>
+      <tr><td class="key">Category</td><td class="val">AI/LLM tooling</td></tr>
+      <tr><td class="key">Subcategory</td><td class="val">AI code generator / web cloner</td></tr>
+      <tr><td class="key">Verdict</td><td class="val val-warn">Caution</td></tr>
+      <tr><td class="key">Revision</td><td class="val">main @ 69bd93ba (no release tags)</td></tr>
+      <tr><td class="key">Prompt</td><td class="val">V2.4</td></tr>
+      <tr><td class="key">Prior scan</td><td class="val">None &mdash; first run</td></tr>
+      <tr><td class="key">Methodology</td><td class="val">path-a</td></tr>
+    </table>
   </div>
-</div>
 
-<!-- ═══════ CATALOG META ═══════ -->
-<div class="catalog-meta">
-  <div class="catalog-label">Catalog Metadata</div>
-  <table>
-    <tr><td class="key">Report file</td><td class="val">GitHub-Scanner-open-lovable.md (+ .html companion)</td></tr>
-    <tr><td class="key">Repo</td><td class="val"><a href="https://github.com/firecrawl/open-lovable">github.com/firecrawl/open-lovable</a></td></tr>
-    <tr><td class="key">Short description</td><td class="val">AI-powered tool that clones any website and recreates it as a modern React app using multiple LLM providers with sandboxed code execution.</td></tr>
-    <tr><td class="key">Category</td><td class="val">AI/LLM tooling</td></tr>
-    <tr><td class="key">Subcategory</td><td class="val">AI code generation platform</td></tr>
-    <tr><td class="key">Verdict</td><td class="val val-warn">caution</td></tr>
-    <tr><td class="key">Scanned revision</td><td class="val">main @ 69bd93b</td></tr>
-    <tr><td class="key">Prompt version</td><td class="val">v2.4</td></tr>
-    <tr><td class="key">Prior scan</td><td class="val">None &mdash; first run</td></tr>
-  </table>
-</div>
+  <!-- ═══════════════ VERDICT ═══════════════ -->
+  <div class="verdict-section">
+    <div class="verdict-banner caution" data-dossier="DOSSIER &middot; OPEN-LOVABLE &middot; 69BD93BA &middot; 2026-04-17 &middot; V2.4">
+      <div class="verdict-label">&bull; Caution &middot; governance gap + inactivity</div>
 
-<!-- ═══════ VERDICT ═══════ -->
-<div class="verdict-section">
-  <div class="verdict-banner caution" data-dossier="DOSSIER-OL-69BD93B">
-    <div class="verdict-label">Caution</div>
-
-    <div class="verdict-split">
-      <div class="verdict-entry">
-        <div class="verdict-entry-scope">Deployment &middot; Local / single-user development</div>
-        <div class="verdict-entry-headline warn">Caution &mdash; review before using</div>
-        <div class="verdict-entry-detail">Sandbox isolation protects your machine. Review .env keys and pin to this commit SHA before running.</div>
+      <div class="verdict-split">
+        <div class="verdict-entry">
+          <div class="verdict-entry-scope">Deployment &middot; Local development &middot; single-user &middot; your own API keys</div>
+          <h2 class="verdict-entry-headline warn">Safe for local experimentation &mdash; pin to the scanned commit</h2>
+          <div class="verdict-entry-detail">No hardcoded secrets. No eval/exec. Your API keys stay in your <code>.env.local</code>. Command execution routes only reach your sandbox, not your host. Pin to <code>69bd93ba</code> since there are no release tags.</div>
+        </div>
+        <div class="verdict-split-divider"></div>
+        <div class="verdict-entry">
+          <div class="verdict-entry-scope">Deployment &middot; Public internet / shared host / production</div>
+          <h2 class="verdict-entry-headline bad">Do not expose to the internet without authentication middleware</h2>
+          <div class="verdict-entry-detail"><code>/api/run-command</code> and <code>/api/run-command-v2</code> accept arbitrary shell commands with no auth. CORS wildcard on AI streaming endpoint. No branch protection means a compromised maintainer account ships code to every clone. Security PRs unmerged for 120+ days.</div>
+        </div>
       </div>
-      <div class="verdict-split-divider"></div>
-      <div class="verdict-entry">
-        <div class="verdict-entry-scope">Deployment &middot; Public / multi-user deployment</div>
-        <div class="verdict-entry-headline warn">Caution &mdash; add auth before deploying</div>
-        <div class="verdict-entry-detail">Unauthenticated command execution + CORS wildcard mean anyone on the internet can use your sandbox and AI credits.</div>
+
+      <ul class="verdict-bullets">
+        <li><span class="bullet-icon amber">&bull;</span> No branch protection, no CODEOWNERS, no CI/CD, no security policy &mdash; zero governance on a 25K-star repo</li>
+        <li><span class="bullet-icon amber">&bull;</span> API routes execute arbitrary shell commands in cloud sandboxes without authentication</li>
+        <li><span class="bullet-icon amber">&bull;</span> 0% formal code review rate across all 12 merged PRs</li>
+        <li><span class="bullet-icon amber">&bull;</span> CORS wildcard on AI code generation and scraping endpoints</li>
+        <li><span class="bullet-icon green">&bull;</span> No hardcoded secrets, no eval/exec, sandbox-isolated command execution</li>
+        <li><span class="bullet-icon green">&bull;</span> MIT licensed, well-structured Next.js codebase, API keys user-supplied</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ═══════════════ SCORECARD ═══════════════ -->
+  <div class="scorecard-section">
+    <div class="scorecard-grid">
+      <div class="score-cell">
+        <div class="score-icon red">&times;</div>
+        <div class="score-label">Does anyone check the code?</div>
+        <div class="score-value red">Rare</div>
+        <p class="p-meta-tight">0% formal review. 8% any-review (1/12 PRs). Solo-maintained: developersdigest has 64% of commits. No branch protection.</p>
       </div>
-    </div>
-
-    <ul class="verdict-bullets">
-      <li><span class="bullet-icon amber">!</span> API routes <code>/api/run-command</code> accept arbitrary shell commands via unauthenticated POST. Sandbox-isolated but exploitable on public deployments.</li>
-      <li><span class="bullet-icon amber">!</span> Zero formal code review across all 12 merged PRs. V2 rewrite (100+ files) self-merged with no reviews.</li>
-      <li><span class="bullet-icon amber">!</span> No branch protection, no rulesets, no CODEOWNERS, no SECURITY.md &mdash; governance single-point-of-failure.</li>
-      <li><span class="bullet-icon green">&check;</span> Sandbox execution model isolates generated code. All maintainers are established accounts. No hardcoded secrets or malicious lifecycle scripts detected.</li>
-    </ul>
-  </div>
-</div>
-
-<!-- ═══════ SCORECARD ═══════ -->
-<div class="scorecard-section">
-  <div class="scorecard-grid">
-    <div class="score-cell">
-      <div class="score-icon red">&#x2717;</div>
-      <div class="score-label">Does anyone check the code?</div>
-      <div class="score-value red">Rare</div>
-      <p class="p-meta-tight">Formal review: 0.0%. Any-review: 8.3%. No branch protection.</p>
-    </div>
-    <div class="score-cell">
-      <div class="score-icon amber">&#x25CB;</div>
-      <div class="score-label">Do they fix problems quickly?</div>
-      <div class="score-value amber">Open fixes</div>
-      <p class="p-meta-tight">PR #176 (dep security fix) open but not merged. No ignored reports.</p>
-    </div>
-    <div class="score-cell">
-      <div class="score-icon red">&#x2717;</div>
-      <div class="score-label">Do they tell you about problems?</div>
-      <div class="score-value red">No advisory</div>
-      <p class="p-meta-tight">No SECURITY.md, no advisories, no releases, no disclosure channel.</p>
-    </div>
-    <div class="score-cell">
-      <div class="score-icon amber">&#x25CB;</div>
-      <div class="score-label">Is it safe out of the box?</div>
-      <div class="score-value amber">Local: yes</div>
-      <p class="p-meta-tight">Sandbox isolates code. Public deploy needs auth middleware first.</p>
-    </div>
-  </div>
-</div>
-
-<!-- ═══════ SECTION 01: What Should I Do? ═══════ -->
-<details class="collapsible-section" open>
-  <summary>
-    <div class="section-header">
-      <span class="section-number">01</span>
-      <h2>What Should I Do?</h2>
-      <div class="section-status">
-        <span class="pill amber">3 Warning</span>
-        <span class="pill info">2 Info</span>
-        <span class="pill green">1 OK</span>
+      <div class="score-cell">
+        <div class="score-icon amber">&bull;</div>
+        <div class="score-label">Do they fix problems quickly?</div>
+        <div class="score-value amber">Open fixes, not merged</div>
+        <p class="p-meta-tight">PR #176 (dep security patches) open 128 days. PR #178 (CVE report) open 121 days. Last commit 150 days ago.</p>
+      </div>
+      <div class="score-cell">
+        <div class="score-icon red">&times;</div>
+        <div class="score-label">Do they tell you about problems?</div>
+        <div class="score-value red">No advisory</div>
+        <p class="p-meta-tight">No SECURITY.md. No published advisories. No disclosure channel. Community health 37%.</p>
+      </div>
+      <div class="score-cell">
+        <div class="score-icon amber">&bull;</div>
+        <div class="score-label">Is it safe out of the box?</div>
+        <div class="score-value amber">Local dev: yes. Public: no</div>
+        <p class="p-meta-tight">No auth middleware on command execution API routes. CORS wildcard. Safe for localhost; unsafe if publicly exposed.</p>
       </div>
     </div>
-    <div class="section-subtitle">Concrete steps for <span class="emph">local developers</span> and <span class="hot">public deployers</span></div>
-  </summary>
-  <div class="section-body">
+  </div>
 
-    <h3>If you are using this for local development (most users)</h3>
+  <!-- ═══════════════ SECTION 00: WHAT SHOULD I DO? ═══════════════ -->
+  <details class="collapsible-section" open>
+    <summary>
+      <div class="section-header">
+        <span class="section-number">00</span>
+        <h2>What Should I Do?</h2>
+        <span class="section-status">
+          <span class="pill amber">4 actions</span>
+        </span>
+      </div>
+      <div class="section-subtitle">
+        Concrete next steps for <span class="emph">local developers</span> and <span class="emph">maintainers</span>.
+      </div>
+    </summary>
+    <div class="section-body">
+
+    <h3 class="fw-semi stack-sm">If you are evaluating for local development</h3>
 
     <div class="action-card wait">
-      <h3>1. Clone and run locally &mdash; the intended use case</h3>
-      <p>The sandbox execution model (Vercel Sandbox / E2B) means generated code runs in an ephemeral remote container, not on your machine.</p>
+      <h3>1. Pin to the scanned commit</h3>
+      <p>There are no release tags. Lock to the exact code you audited.</p>
       <pre>git clone https://github.com/firecrawl/open-lovable.git
-cd open-lovable &amp;&amp; pnpm install
-cp .env.example .env.local  # fill in your API keys</pre>
-      <p><strong>Plain English:</strong> Download the code, install it, and add your own API keys. The app runs on your computer and sends AI requests to cloud services.</p>
+cd open-lovable
+git checkout 69bd93bae7a9c97ef989eb70aabe6797fb3dac89</pre>
+      <p><strong>Plain English:</strong> Bookmark the exact code snapshot so future unreviewed changes cannot surprise you.</p>
     </div>
 
     <div class="action-card wait">
-      <h3>2. Pin to a specific commit rather than tracking main</h3>
-      <p>There are no releases, so <code>main</code> is a moving target.</p>
-      <pre>git checkout 69bd93bae7a9c97ef989eb70aabe6797fb3dac89</pre>
-      <p><strong>Plain English:</strong> Lock your copy to the version we just reviewed, so future changes do not affect you until you choose to update.</p>
+      <h3>2. Set up your own API keys</h3>
+      <p>Copy <code>.env.example</code> to <code>.env.local</code> and fill in your keys. No keys are hardcoded &mdash; your keys stay local.</p>
+      <pre>cp .env.example .env.local
+# Edit .env.local with your Firecrawl, AI provider, and sandbox keys</pre>
+    </div>
+
+    <div class="action-card stop">
+      <h3>3. Do NOT expose to the public internet</h3>
+      <p>The <code>/api/run-command</code> routes accept arbitrary shell commands with no authentication. Keep it on <code>localhost</code>.</p>
     </div>
 
     <div class="action-card info-action">
-      <h3>3. Review your .env.local before running</h3>
-      <p>The app uses multiple API keys (Firecrawl, AI providers, Vercel/E2B). Each key has billing implications. Make sure you understand which services you are paying for.</p>
+      <h3>4. Watch PR #176 for dependency patches</h3>
+      <p>Security vulnerability patches have been filed but not merged. Check back for updates.</p>
     </div>
 
-    <h3>If you are deploying this publicly</h3>
+    <h3 class="fw-semi stack-sm">If you maintain this repo</h3>
 
     <div class="action-card stop">
-      <h3>4. Add authentication middleware before deploying</h3>
-      <p>The API routes at <code>/api/run-command</code>, <code>/api/run-command-v2</code>, <code>/api/install-packages</code>, <code>/api/install-packages-v2</code>, and <code>/api/kill-sandbox</code> have zero authentication. On a public URL, anyone can execute commands in your sandbox and consume your cloud resources.</p>
-      <pre># Add a Next.js middleware.ts that validates session/JWT/API key
-# on all /api/* routes before the handler runs.</pre>
-      <p><strong>Plain English:</strong> Without a login system, anyone who finds your URL can use your AI credits and sandbox resources.</p>
+      <h3>1. Enable branch protection on main</h3>
+      <p>Go to <a href="https://github.com/firecrawl/open-lovable/settings/branches">Settings &rarr; Branches</a> and require at least 1 review before merge.</p>
     </div>
 
     <div class="action-card wait">
-      <h3>5. Remove or restrict CORS wildcard headers</h3>
-      <p>Replace <code>'*'</code> with your specific frontend domain in <code>app/api/generate-ai-code-stream/route.ts</code> and <code>app/api/scrape-website/route.ts</code>.</p>
+      <h3>2. Add SECURITY.md + auth middleware</h3>
+      <p>Create a private disclosure channel. Add authentication to all <code>/api/*</code> routes before any non-localhost deployment.</p>
     </div>
 
-  </div>
-</details>
+    <div class="action-card wait">
+      <h3>3. Merge PR #176</h3>
+      <p>Dependency security patches have been waiting 128 days.</p>
+    </div>
 
-<!-- ═══════ SECTION 02: What We Found ═══════ -->
-<details class="collapsible-section">
-  <summary>
-    <div class="section-header">
-      <span class="section-number">02</span>
-      <h2>What We Found</h2>
-      <div class="section-status">
-        <span class="pill amber">3 Warning</span>
-        <span class="pill info">2 Info</span>
-        <span class="pill green">1 OK</span>
+    </div>
+  </details>
+
+  <!-- ═══════════════ SECTION 01: WHAT WE FOUND ═══════════════ -->
+  <details class="collapsible-section">
+    <summary>
+      <div class="section-header">
+        <span class="section-number">01</span>
+        <h2>What We Found</h2>
+        <span class="section-status">
+          <span class="pill amber">3 Warning</span>
+          <span class="pill info">4 Info</span>
+        </span>
       </div>
-    </div>
-    <div class="section-subtitle">Unauthenticated command execution, zero code review, and <span class="hot">governance gaps</span></div>
-    <div class="section-action"><span class="lbl">Your action</span> Add auth middleware before public deployment. Pin to this commit SHA for local use.</div>
-  </summary>
-  <div class="section-body">
+      <div class="section-subtitle">
+        <span class="hot">3 governance and API security warnings</span> plus 4 informational items. No critical findings &mdash; command execution is sandbox-isolated.
+      </div>
+      <div class="section-action">
+        <span class="lbl">Your action</span>
+        Enable branch protection, add API auth middleware, and keep the server on localhost until both are done.
+      </div>
+    </summary>
+    <div class="section-body">
 
     <!-- Finding 1 -->
     <div class="finding-card warning stack-md">
       <div class="finding-header">
         <span class="tag warning-tag">Warning</span>
         <span class="status-chip active">Active</span>
-        <h3>Unauthenticated Command Execution API Routes</h3>
-        <div class="action-hint warn">Add Next.js auth middleware to all <code>/api/*</code> routes before any public deployment.</div>
+        <h3>No governance gates &mdash; single point of failure</h3>
+        <div class="action-hint warn">Enable branch protection at <a href="https://github.com/firecrawl/open-lovable/settings/branches">Settings &rarr; Branches</a> and add a CODEOWNERS file.</div>
       </div>
       <div class="finding-body">
-        <p>API routes <code>/api/run-command</code> and <code>/api/run-command-v2</code> accept arbitrary shell commands via unauthenticated POST requests. Commands execute inside Vercel/E2B sandboxes (ephemeral containers), not on the host machine. However, no auth gate prevents abuse if the app is deployed to a public URL. Combined with CORS <code>Access-Control-Allow-Origin: *</code>, any website could trigger command execution.</p>
-        <p><strong>Threat model:</strong> An attacker who discovers the public URL can POST arbitrary commands to <code>/api/run-command</code>. The sandbox isolation limits damage to the ephemeral container &mdash; they cannot access the host filesystem or network. The primary risk is resource abuse (sandbox compute time, API credits) and potential data exfiltration from the sandbox environment.</p>
-        <p><strong>What this means for you:</strong> For local development, only localhost can reach the endpoints &mdash; low risk. For public deployment, anyone on the internet can run commands in your sandbox and consume your cloud billing.</p>
+        <p>Classic branch protection: 404. Repo-level rulesets: empty. Rules on default branch: empty. Org-level rulesets: 404 (admin:org scope gap &mdash; repo-level confirms no protection). No CODEOWNERS in any standard location. No CI workflows at all.</p>
+        <p><strong>Threat model:</strong> An attacker who gains access to any write-permission account (via phishing, credential stuffing, stale PAT, malicious browser extension, or IDE plugin compromise) can push arbitrary code directly to main. With 25,496 stars and 4,897 forks, every user who clones or pulls receives malicious code immediately.</p>
+        <p><strong>What this means for you:</strong> Nobody is required to review code before it goes live. A single compromised account can ship malware to thousands of users.</p>
         <div class="finding-meta">
-          <div class="meta-chip"><span class="chip-label">Affected routes</span><span class="chip-value">/api/run-command, /api/run-command-v2, /api/install-packages, /api/install-packages-v2, /api/kill-sandbox</span></div>
-          <div class="meta-chip"><span class="chip-label">Mitigation</span><span class="chip-value">Sandbox isolation (Vercel/E2B)</span></div>
-          <div class="meta-chip"><span class="chip-label">Evidence</span><span class="chip-value">E1</span></div>
+          <div class="meta-chip"><span class="chip-label">Stars</span><span class="chip-value">25,496</span></div>
+          <div class="meta-chip"><span class="chip-label">Forks</span><span class="chip-value">4,897</span></div>
+          <div class="meta-chip"><span class="chip-label">Branch protection</span><span class="chip-value val-bad">None</span></div>
+          <div class="meta-chip"><span class="chip-label">CODEOWNERS</span><span class="chip-value val-bad">None</span></div>
+          <div class="meta-chip"><span class="chip-label">CI/CD</span><span class="chip-value val-bad">None</span></div>
         </div>
       </div>
     </div>
@@ -1033,17 +1067,13 @@ cp .env.example .env.local  # fill in your API keys</pre>
       <div class="finding-header">
         <span class="tag warning-tag">Warning</span>
         <span class="status-chip active">Active</span>
-        <h3>Zero Code Review Process</h3>
-        <div class="action-hint warn">If you depend on this project, review diffs yourself before pulling updates &mdash; especially changes to <code>app/api/</code> and <code>lib/sandbox/</code>.</div>
+        <h3>Unauthenticated command execution API routes</h3>
+        <div class="action-hint warn">Add authentication middleware to <code>/api/run-command</code> and <code>/api/run-command-v2</code> before any non-localhost deployment.</div>
       </div>
       <div class="finding-body">
-        <p>None of the 12 merged pull requests received a formal code review (0.0% formal, 8.3% any-review). The V2 rewrite (<a href="https://github.com/firecrawl/open-lovable/pull/122">PR #122</a>, 100+ files across all API routes, sandbox providers, and frontend) was self-merged by its author with zero reviews.</p>
-        <p><strong>What this means for you:</strong> Security-relevant changes ship without a second pair of eyes. A malicious or buggy change could land without anyone noticing.</p>
-        <div class="finding-meta">
-          <div class="meta-chip"><span class="chip-label">Formal review</span><span class="chip-value val-bad">0.0%</span></div>
-          <div class="meta-chip"><span class="chip-label">Any review</span><span class="chip-value val-bad">8.3%</span></div>
-          <div class="meta-chip"><span class="chip-label">Evidence</span><span class="chip-value">E2</span></div>
-        </div>
+        <p><code>/api/run-command/route.ts</code> and <code>/api/run-command-v2/route.ts</code> accept a JSON body <code>{"command": "..."}</code> and execute it via the sandbox API. No authentication check, no API key validation, no rate limiting.</p>
+        <p><strong>Mitigating factor:</strong> Commands run inside an isolated cloud sandbox (Vercel or E2B), not on the host machine. The sandbox is ephemeral and does not access host filesystem or environment. However, the sandbox has access to whatever API keys were injected at creation time.</p>
+        <p><strong>What this means for you:</strong> If you deploy to a publicly reachable URL, anyone can run arbitrary commands in your sandbox &mdash; potentially accessing API keys configured for that session.</p>
       </div>
     </div>
 
@@ -1051,21 +1081,14 @@ cp .env.example .env.local  # fill in your API keys</pre>
     <div class="finding-card warning stack-md">
       <div class="finding-header">
         <span class="tag warning-tag">Warning</span>
-        <span class="status-chip active">Active</span>
-        <h3>Governance Single-Point-of-Failure (C20)</h3>
-        <div class="action-hint warn">Pin to commit SHA <code>69bd93b</code>. If you maintain: enable branch protection at Settings &gt; Branches.</div>
+        <span class="status-chip ongoing">Ongoing</span>
+        <h3>Zero code review process</h3>
+        <div class="action-hint warn">This is a solo-maintained repo. Review rate is inherently limited by the contributor base &mdash; compare with governance indicators rather than review rate alone.</div>
       </div>
       <div class="finding-body">
-        <p>No branch protection on main (classic API 404, rulesets empty, rules-on-default empty). No CODEOWNERS. No SECURITY.md. Community health: 37%. Anyone with write access can push directly to main without any automated gate.</p>
-        <p><strong>Threat model:</strong> Attacker paths: phishing maintainer GitHub credentials, compromising a browser extension in maintainer session, gaining access via stale personal access token. Once write access is obtained, attacker pushes to main &mdash; no review gate, no CI gate, no CODEOWNERS approval required. With 25K+ stars and 4.9K forks, the blast radius is significant.</p>
-        <p><strong>What this means for you:</strong> A compromised maintainer account could push malicious code that reaches thousands of users cloning from main.</p>
-        <div class="finding-meta">
-          <div class="meta-chip"><span class="chip-label">Branch protection</span><span class="chip-value val-bad">None</span></div>
-          <div class="meta-chip"><span class="chip-label">CODEOWNERS</span><span class="chip-value val-bad">None</span></div>
-          <div class="meta-chip"><span class="chip-label">Stars</span><span class="chip-value">25,491</span></div>
-          <div class="meta-chip"><span class="chip-label">Forks</span><span class="chip-value">4,898</span></div>
-          <div class="meta-chip"><span class="chip-label">Evidence</span><span class="chip-value">E3</span></div>
-        </div>
+        <p>Of 12 merged PRs, 0 had a formal <code>reviewDecision</code>. Only 1 (PR #33) received any review &mdash; an APPROVED from user Saeen55-stack with no project association. Formal review rate: 0%. Any-review rate: 8.3%.</p>
+        <p>Primary maintainer developersdigest authored 37 of 58 total commits (64%) and self-merged most PRs.</p>
+        <p><strong>What this means for you:</strong> No second pair of eyes has checked most of the code. Quality depends entirely on one maintainer.</p>
       </div>
     </div>
 
@@ -1073,15 +1096,12 @@ cp .env.example .env.local  # fill in your API keys</pre>
     <div class="finding-card info stack-md">
       <div class="finding-header">
         <span class="tag info-tag">Info</span>
-        <span class="status-chip informational">Informational</span>
-        <h3>CORS Wildcard on AI and Scraping Routes</h3>
-        <div class="action-hint">If deploying publicly, restrict CORS origin to your frontend domain.</div>
+        <span class="status-chip active">Active</span>
+        <h3>CORS wildcard on sensitive endpoints</h3>
+        <div class="action-hint warn">Restrict CORS origins to your domain before production deployment.</div>
       </div>
       <div class="finding-body">
-        <p>Two API routes (<code>generate-ai-code-stream</code> and <code>scrape-website</code>) set <code>Access-Control-Allow-Origin: *</code>. Standard for local dev, but on public deployments allows any website to trigger AI generation or scraping using your API keys.</p>
-        <div class="finding-meta">
-          <div class="meta-chip"><span class="chip-label">Evidence</span><span class="chip-value">E4</span></div>
-        </div>
+        <p><code>Access-Control-Allow-Origin: *</code> on <code>/api/generate-ai-code-stream</code> (line 1883) and <code>/api/scrape-website</code> (line 105). Standard for localhost dev; concern only if publicly exposed.</p>
       </div>
     </div>
 
@@ -1090,385 +1110,550 @@ cp .env.example .env.local  # fill in your API keys</pre>
       <div class="finding-header">
         <span class="tag info-tag">Info</span>
         <span class="status-chip active">Active</span>
-        <h3>Dependency Vulnerability</h3>
-        <div class="action-hint">Run <code>npm audit</code> after installation. Update <code>@anthropic-ai/sdk</code> to latest.</div>
+        <h3>Unmerged security PRs &mdash; project may be inactive</h3>
+        <div class="action-hint warn">Watch <a href="https://github.com/firecrawl/open-lovable/pull/176">PR #176</a> and <a href="https://github.com/firecrawl/open-lovable/pull/178">PR #178</a> for merge; re-evaluate after they land.</div>
       </div>
       <div class="finding-body">
-        <p><code>@anthropic-ai/sdk</code> has 1 known vulnerability per osv.dev. Dependabot data was not accessible (403). The full dependency vulnerability picture is incomplete.</p>
-        <div class="finding-meta">
-          <div class="meta-chip"><span class="chip-label">Evidence</span><span class="chip-value">E5</span></div>
-        </div>
+        <p>PR #176 &ldquo;fix: update dependencies to patch security vulnerabilities&rdquo; open 128 days. PR #178 &ldquo;Vercel/react server components CVE&rdquo; open 121 days. Last commit to main: 2025-11-19 (150 days ago). 93 open issues, 38 open PRs with no maintainer response.</p>
       </div>
     </div>
 
     <!-- Finding 6 -->
-    <div class="finding-card ok stack-md">
+    <div class="finding-card info stack-md">
       <div class="finding-header">
-        <span class="tag ok-tag">OK</span>
-        <h3>Agent Rule File (Cursor)</h3>
-        <div class="action-hint ok">No action needed. Documentation-only rule file with no AI-directed imperatives.</div>
+        <span class="tag info-tag">Info</span>
+        <span class="status-chip informational">Informational</span>
+        <h3>0.0.0.0 bind in sandbox Vite configuration</h3>
       </div>
       <div class="finding-body">
-        <p><code>components/app/.cursor/rules/home-page-components.md</code> &mdash; Cursor IDE rule file documenting home page component structure. Tier 2 (conditionally auto-loaded). Contains no imperative AI-directed language, no secrets, no commands, no model-obedience changes.</p>
-        <p><strong>Capability:</strong> Tells Cursor about expected directory structure for home page components during migration.</p>
-        <p><strong>Risk:</strong> If compromised, could inject instructions into Cursor sessions for anyone working in matching paths.</p>
+        <p>Vite dev servers configured to bind <code>0.0.0.0</code> inside cloud sandboxes. Expected for container-based development &mdash; the bind is in the sandbox, not on your host.</p>
       </div>
     </div>
 
-  </div>
-</details>
-
-<!-- ═══════ SECTION 02A: Executable File Inventory ═══════ -->
-<details class="collapsible-section">
-  <summary>
-    <div class="section-header">
-      <span class="section-number">02A</span>
-      <h2>Executable File Inventory</h2>
-      <div class="section-status">
-        <span class="pill amber">5 Warning</span>
-        <span class="pill green">2 OK</span>
+    <!-- Finding 7 -->
+    <div class="finding-card info stack-md">
+      <div class="finding-header">
+        <span class="tag info-tag">Info</span>
+        <span class="status-chip informational">Informational</span>
+        <h3>dangerouslySetInnerHTML usage (16 instances)</h3>
+      </div>
+      <div class="finding-body">
+        <p>Most uses are ASCII flame animations from local JSON data (low risk). Notable: <code>pylon.tsx</code> injects a third-party chat widget, and <code>tooltip.tsx</code> renders props as raw HTML (XSS risk if user-controlled).</p>
       </div>
     </div>
-    <div class="section-subtitle">7 executable files inspected &mdash; <span class="hot">5 unauthenticated API routes</span> flagged</div>
-    <div class="section-action"><span class="lbl">Your action</span> Add auth to all flagged API routes before deploying publicly.</div>
-  </summary>
-  <div class="section-body">
+
+    </div>
+  </details>
+
+  <!-- ═══════════════ SECTION 02: EXECUTABLE FILE INVENTORY ═══════════════ -->
+  <details class="collapsible-section">
+    <summary>
+      <div class="section-header">
+        <span class="section-number">02</span>
+        <h2>Executable File Inventory</h2>
+        <span class="section-status">
+          <span class="pill info">4 Info</span>
+          <span class="pill muted">4 Cursor rules</span>
+        </span>
+      </div>
+      <div class="section-subtitle">
+        4 Cursor rule files. No install scripts, no CI workflows, no hook files.
+      </div>
+      <div class="section-action info">
+        <span class="lbl">Your action</span>
+        No immediate action. The rule files contain design system documentation only. Monitor for content changes if you use Cursor in this repo.
+      </div>
+    </summary>
+    <div class="section-body">
 
     <div class="inventory-summary">
-      <div class="inventory-summary-title">Quick Scan</div>
+      <div class="inventory-summary-title">Quick scan &mdash; 4 files</div>
       <ul>
-        <li class="warn"><span class="glyph">&#x26A0;</span> <code>app/api/run-command/route.ts</code> &mdash; POST, executes arbitrary commands in sandbox, no auth. <strong class="val-warn">Warning.</strong></li>
-        <li class="warn"><span class="glyph">&#x26A0;</span> <code>app/api/run-command-v2/route.ts</code> &mdash; POST, executes commands via sandbox provider, no auth. <strong class="val-warn">Warning.</strong></li>
-        <li class="warn"><span class="glyph">&#x26A0;</span> <code>app/api/install-packages/route.ts</code> &mdash; POST, installs npm packages in sandbox, no auth. <strong class="val-warn">Warning.</strong></li>
-        <li class="warn"><span class="glyph">&#x26A0;</span> <code>app/api/install-packages-v2/route.ts</code> &mdash; POST, installs packages via provider, no auth. <strong class="val-warn">Warning.</strong></li>
-        <li class="warn"><span class="glyph">&#x26A0;</span> <code>app/api/kill-sandbox/route.ts</code> &mdash; POST, kills sandbox, no auth. <strong class="val-warn">Warning.</strong></li>
-        <li class="ok"><span class="glyph">&#x2713;</span> <code>packages/create-open-lovable/lib/installer.js</code> &mdash; CLI scaffolder, execSync npm install, controlled input. <strong class="val-good">OK.</strong></li>
-        <li class="ok"><span class="glyph">&#x2713;</span> <code>components/app/.cursor/rules/home-page-components.md</code> &mdash; Cursor rule file, docs only. <strong class="val-good">OK.</strong></li>
+        <li class="info"><span class="glyph">&#8505;</span> <code>styles/design-system/.cursor/rules/design-system.md</code> &mdash; Cursor rule, Tier 2, design system colors/typography. Info.</li>
+        <li class="info"><span class="glyph">&#8505;</span> <code>styles/components/.cursor/rules/component-styles.md</code> &mdash; Cursor rule, Tier 2, component CSS architecture. Info.</li>
+        <li class="info"><span class="glyph">&#8505;</span> <code>components/app/(home)/.cursor/rules/home-page-components.md</code> &mdash; Cursor rule, Tier 2, migration documentation. Info.</li>
+        <li class="info"><span class="glyph">&#8505;</span> <code>components/shared/effects/.cursor/rules/flame-effects.md</code> &mdash; Cursor rule, Tier 2, ASCII animation docs. Info.</li>
       </ul>
     </div>
 
-    <!-- Detailed card: run-command -->
-    <details class="finding-card warning stack-md">
-      <summary>
-        <div class="finding-header">
-          <span class="tag warning-tag">Warning</span>
-          <span class="inv-verdict warn">Unauthed exec</span>
-          <h3>app/api/run-command/route.ts</h3>
-        </div>
-      </summary>
-      <div class="finding-body">
-        <div class="finding-meta">
-          <div class="meta-chip"><span class="chip-label">Trigger</span><span class="chip-value">POST request to /api/run-command</span></div>
-          <div class="meta-chip"><span class="chip-label">Reads</span><span class="chip-value">request.json() command; global.activeSandbox</span></div>
-          <div class="meta-chip"><span class="chip-label">Writes</span><span class="chip-value">Executes arbitrary command in sandbox</span></div>
-          <div class="meta-chip"><span class="chip-label">Network</span><span class="chip-value">Sandbox runtime (Vercel/E2B cloud)</span></div>
-          <div class="meta-chip"><span class="chip-label">Injection</span><span class="chip-value">User command passed directly to sandbox. No sanitization.</span></div>
-          <div class="meta-chip"><span class="chip-label">Secret-leak</span><span class="chip-value">None &mdash; sandbox isolated from host</span></div>
-        </div>
-        <p class="p-meta">Could execute any shell command the sandbox allows. If sandbox isolation fails, this becomes RCE. In normal case, damage limited to ephemeral container.</p>
+    <div class="finding-card info stack-md">
+      <div class="finding-header">
+        <span class="tag info-tag">Info</span>
+        <span class="status-chip informational">Informational</span>
+        <span class="inv-verdict info">Tier 2</span>
+        <h3>design-system.md &mdash; Cursor design system rule</h3>
       </div>
-    </details>
-
-    <!-- Detailed card: run-command-v2 -->
-    <details class="finding-card warning stack-md">
-      <summary>
-        <div class="finding-header">
-          <span class="tag warning-tag">Warning</span>
-          <span class="inv-verdict warn">Unauthed exec</span>
-          <h3>app/api/run-command-v2/route.ts</h3>
-        </div>
-      </summary>
       <div class="finding-body">
-        <div class="finding-meta">
-          <div class="meta-chip"><span class="chip-label">Trigger</span><span class="chip-value">POST request to /api/run-command-v2</span></div>
-          <div class="meta-chip"><span class="chip-label">Reads</span><span class="chip-value">request.json() command; sandboxManager</span></div>
-          <div class="meta-chip"><span class="chip-label">Writes</span><span class="chip-value">Executes command via provider.runCommand()</span></div>
-          <div class="meta-chip"><span class="chip-label">Network</span><span class="chip-value">Sandbox runtime</span></div>
-          <div class="meta-chip"><span class="chip-label">Injection</span><span class="chip-value">User command passed to sandbox</span></div>
-        </div>
-        <p class="p-meta">Same risk profile as run-command but routes through sandbox manager abstraction.</p>
-      </div>
-    </details>
-
-    <!-- Detailed card: install-packages -->
-    <details class="finding-card warning stack-md">
-      <summary>
-        <div class="finding-header">
-          <span class="tag warning-tag">Warning</span>
-          <span class="inv-verdict warn">Unauthed install</span>
-          <h3>app/api/install-packages/route.ts</h3>
-        </div>
-      </summary>
-      <div class="finding-body">
-        <div class="finding-meta">
-          <div class="meta-chip"><span class="chip-label">Trigger</span><span class="chip-value">POST request to /api/install-packages</span></div>
-          <div class="meta-chip"><span class="chip-label">Reads</span><span class="chip-value">request.json() packages array</span></div>
-          <div class="meta-chip"><span class="chip-label">Writes</span><span class="chip-value">Installs npm packages in sandbox. Has dedup validation.</span></div>
-          <div class="meta-chip"><span class="chip-label">Network</span><span class="chip-value">Sandbox + npm registry</span></div>
-        </div>
-        <p class="p-meta">Package names from request body. Some validation (dedup, type check) but no allowlist. Malicious package with postinstall hooks would execute in sandbox.</p>
-      </div>
-    </details>
-
-    <!-- Detailed card: installer.js -->
-    <details class="finding-card ok stack-md">
-      <summary>
-        <div class="finding-header">
-          <span class="tag ok-tag">OK</span>
-          <span class="inv-verdict ok">Safe scaffolder</span>
-          <h3>packages/create-open-lovable/lib/installer.js</h3>
-        </div>
-      </summary>
-      <div class="finding-body">
-        <div class="finding-meta">
-          <div class="meta-chip"><span class="chip-label">Trigger</span><span class="chip-value">npx create-open-lovable</span></div>
-          <div class="meta-chip"><span class="chip-label">Reads</span><span class="chip-value">User input via inquirer; .env templates</span></div>
-          <div class="meta-chip"><span class="chip-label">Writes</span><span class="chip-value">Project directory, runs npm install</span></div>
-          <div class="meta-chip"><span class="chip-label">Network</span><span class="chip-value">npm registry via npm install</span></div>
-        </div>
-        <p class="p-meta">Standard CLI scaffolding. execSync runs controlled <code>npm install</code> with cwd set to new project. No user-supplied command injection.</p>
-      </div>
-    </details>
-
-  </div>
-</details>
-
-<!-- ═══════ SECTION 03: Suspicious Code Changes ═══════ -->
-<details class="collapsible-section">
-  <summary>
-    <div class="section-header">
-      <span class="section-number">03</span>
-      <h2>Suspicious Code Changes</h2>
-      <div class="section-status">
-        <span class="pill amber">2 flagged</span>
+        <p><strong>Auto-load tier:</strong> Tier 2 &mdash; Conditionally auto-loaded (Cursor rule in <code>.cursor/rules/</code>, active when working in the styles directory subtree).</p>
+        <p><strong>Imperative verbs:</strong> &ldquo;Use CSS custom properties&rdquo;, &ldquo;Use&rdquo; (color instructions).</p>
+        <p><strong>Capability:</strong> Instructs Cursor AI to use the project&rsquo;s fire-inspired design system colors, typography, and utility classes when generating CSS.</p>
+        <p><strong>Risk:</strong> A future compromise could instruct Cursor to inject malicious CSS or JavaScript via AI-generated code for every developer working in the styles directory.</p>
       </div>
     </div>
-    <div class="section-subtitle">V2 rewrite and sandbox migration &mdash; both <span class="hot">self-merged with zero reviews</span></div>
-  </summary>
-  <div class="section-body">
+
+    <div class="finding-card info stack-md">
+      <div class="finding-header">
+        <span class="tag info-tag">Info</span>
+        <span class="status-chip informational">Informational</span>
+        <span class="inv-verdict info">Tier 2</span>
+        <h3>component-styles.md &mdash; Cursor component CSS rule</h3>
+      </div>
+      <div class="finding-body">
+        <p><strong>Auto-load tier:</strong> Tier 2 &mdash; Conditionally auto-loaded.</p>
+        <p><strong>Imperative verbs:</strong> &ldquo;Only create CSS files for components that need them&rdquo;, &ldquo;Use P3 colors&rdquo;, &ldquo;Keep animations performant&rdquo;.</p>
+        <p><strong>Capability:</strong> Instructs Cursor to follow component CSS architecture (P3 colors, fallbacks, performance).</p>
+        <p><strong>Risk:</strong> A future compromise could instruct AI to generate components importing from malicious sources.</p>
+      </div>
+    </div>
+
+    <div class="finding-card info stack-md">
+      <div class="finding-header">
+        <span class="tag info-tag">Info</span>
+        <span class="status-chip informational">Informational</span>
+        <span class="inv-verdict info">Tier 2</span>
+        <h3>home-page-components.md &mdash; Cursor migration docs</h3>
+      </div>
+      <div class="finding-body">
+        <p><strong>Auto-load tier:</strong> Tier 2 &mdash; Conditionally auto-loaded.</p>
+        <p><strong>Imperative verbs:</strong> None &mdash; purely structural documentation.</p>
+        <p><strong>Capability:</strong> Documents home page component structure and migration priority.</p>
+        <p><strong>Risk:</strong> A future compromise could redirect AI to generate components importing from malicious sources.</p>
+      </div>
+    </div>
+
+    <div class="finding-card info stack-md">
+      <div class="finding-header">
+        <span class="tag info-tag">Info</span>
+        <span class="status-chip informational">Informational</span>
+        <span class="inv-verdict info">Tier 2</span>
+        <h3>flame-effects.md &mdash; Cursor ASCII animation docs</h3>
+      </div>
+      <div class="finding-body">
+        <p><strong>Auto-load tier:</strong> Tier 2 &mdash; Conditionally auto-loaded.</p>
+        <p><strong>Imperative verbs:</strong> None &mdash; documents how the flame ASCII animation system works.</p>
+        <p><strong>Capability:</strong> Provides context about innerHTML-based ASCII rendering approach.</p>
+        <p><strong>Risk:</strong> A future compromise could instruct AI to modify flame components to inject malicious content via innerHTML.</p>
+      </div>
+    </div>
+
+    </div>
+  </details>
+
+  <!-- ═══════════════ SECTION 03: SUSPICIOUS CODE CHANGES ═══════════════ -->
+  <details class="collapsible-section">
+    <summary>
+      <div class="section-header">
+        <span class="section-number">03</span>
+        <h2>Suspicious Code Changes</h2>
+        <span class="section-status">
+          <span class="pill amber">4 flagged PRs</span>
+        </span>
+      </div>
+      <div class="section-subtitle">
+        Self-merges and unreviewed changes across all 12 merged PRs.
+      </div>
+      <div class="section-action">
+        <span class="lbl">Your action</span>
+        Review PR #109 (Vercel sandbox) and PR #122 (V2 rewrite) manually if deploying beyond localhost.
+      </div>
+    </summary>
+    <div class="section-body">
+
     <div class="pr-table-wrap">
-      <table>
-        <thead><tr><th>PR</th><th>What it did</th><th>Submitted</th><th>Merged by</th><th>Reviewed?</th><th>Concern</th></tr></thead>
-        <tbody>
-          <tr>
-            <td><a href="https://github.com/firecrawl/open-lovable/pull/122">#122</a></td>
-            <td>V2 rewrite &mdash; 100+ files, all API routes, sandbox providers</td>
-            <td class="td-person">developersdigest</td>
-            <td class="td-person">developersdigest</td>
-            <td class="td-reviewed-no">No</td>
-            <td class="td-concern">Self-merged massive change. Added unauthed command execution routes.</td>
-          </tr>
-          <tr>
-            <td><a href="https://github.com/firecrawl/open-lovable/pull/109">#109</a></td>
-            <td>Vercel sandbox support &mdash; rewrote sandbox infrastructure</td>
-            <td class="td-person">MFCo</td>
-            <td class="td-person">developersdigest</td>
-            <td class="td-reviewed-no">No</td>
-            <td class="td-concern">Security-critical sandbox architecture change with zero review.</td>
-          </tr>
-        </tbody>
-      </table>
+    <table>
+      <thead>
+        <tr><th>PR</th><th>What it did</th><th>Submitted by</th><th>Merged by</th><th>Reviewed?</th><th>Merge time</th><th>Concern</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><a href="https://github.com/firecrawl/open-lovable/pull/122">#122</a></td>
+          <td>&ldquo;V2&rdquo; &mdash; major rewrite</td>
+          <td class="td-person">developersdigest</td>
+          <td class="td-person">developersdigest</td>
+          <td class="td-reviewed-no">No</td>
+          <td class="td-merge-fast">14 min</td>
+          <td class="td-concern">Self-merge of major version with no review</td>
+        </tr>
+        <tr>
+          <td><a href="https://github.com/firecrawl/open-lovable/pull/109">#109</a></td>
+          <td>Vercel sandbox support</td>
+          <td class="td-person">MFCo</td>
+          <td class="td-person">developersdigest</td>
+          <td class="td-reviewed-no">No</td>
+          <td>11 hrs</td>
+          <td class="td-concern">External contributor adding sandbox execution &mdash; no review</td>
+        </tr>
+        <tr>
+          <td><a href="https://github.com/firecrawl/open-lovable/pull/33">#33</a></td>
+          <td>Add Google Gemini AI support</td>
+          <td class="td-person">ayoubdya</td>
+          <td class="td-person">developersdigest</td>
+          <td class="td-reviewed-yes">Yes (1 review)</td>
+          <td>10 hrs</td>
+          <td>Only PR with any review; reviewer not project-associated</td>
+        </tr>
+        <tr>
+          <td><a href="https://github.com/firecrawl/open-lovable/pull/136">#136</a></td>
+          <td>Update README for Morph API key</td>
+          <td class="td-person">bekbull</td>
+          <td class="td-person">bekbull</td>
+          <td class="td-reviewed-no">No</td>
+          <td class="td-merge-fast">3 min</td>
+          <td class="td-concern">Self-merge</td>
+        </tr>
+      </tbody>
+    </table>
     </div>
-  </div>
-</details>
 
-<!-- ═══════ SECTION 04: Timeline ═══════ -->
-<details class="collapsible-section">
-  <summary>
-    <div class="section-header">
-      <span class="section-number">04</span>
-      <h2>Timeline</h2>
     </div>
-    <div class="section-subtitle">From repo creation to 5-month stall</div>
-  </summary>
-  <div class="section-body">
+  </details>
+
+  <!-- ═══════════════ SECTION 04: TIMELINE ═══════════════ -->
+  <details class="collapsible-section">
+    <summary>
+      <div class="section-header">
+        <span class="section-number">04</span>
+        <h2>Timeline</h2>
+      </div>
+      <div class="section-subtitle">Key events from repo creation to this scan.</div>
+    </summary>
+    <div class="section-body">
+
     <div class="timeline">
-      <div class="tl-item neutral">
-        <div class="tl-date"><span class="tl-severity-label">REPO CREATED</span> 2025-08-08</div>
-        <div class="tl-desc">firecrawl/open-lovable created with E2B sandbox integration.</div>
-      </div>
-      <div class="tl-item neutral">
-        <div class="tl-date"><span class="tl-severity-label">SANDBOX SWAP</span> 2025-08-26</div>
-        <div class="tl-desc">PR #109 migrates to Vercel Sandbox. Merged with 0 reviews, then immediately reverted.</div>
-      </div>
-      <div class="tl-item bad">
-        <div class="tl-date"><span class="tl-severity-label">V2 SELF-MERGE</span> 2025-09-10</div>
-        <div class="tl-desc">PR #122: V2 rewrite (100+ files) self-merged by developersdigest. All API routes restructured. Zero reviews.</div>
-      </div>
       <div class="tl-item good">
-        <div class="tl-date"><span class="tl-severity-label">LAST PR</span> 2025-09-27</div>
-        <div class="tl-desc">PR #136 (Morph API key update) is last merged community contribution.</div>
+        <div class="tl-date"><span class="tl-severity-label">REPO CREATED</span> 2025-08-08</div>
+        <div class="tl-desc">firecrawl/open-lovable created under the Firecrawl organization.</div>
+      </div>
+      <div class="tl-item neutral">
+        <div class="tl-date"><span class="tl-severity-label">RAPID GROWTH</span> 2025-08-08 &ndash; 2025-08-14</div>
+        <div class="tl-desc">Initial development burst: 37 commits from developersdigest, multiple community PRs merged without review.</div>
+      </div>
+      <div class="tl-item neutral">
+        <div class="tl-date"><span class="tl-severity-label">SANDBOX ADDED</span> 2025-09-02</div>
+        <div class="tl-desc">Vercel sandbox support merged (PR #109) from external contributor MFCo &mdash; no code review. This PR introduced the command execution API routes.</div>
+      </div>
+      <div class="tl-item neutral">
+        <div class="tl-date"><span class="tl-severity-label">V2 SHIPS</span> 2025-09-10</div>
+        <div class="tl-desc">Major &ldquo;V2&rdquo; rewrite self-merged by developersdigest in 14 minutes with no review.</div>
+      </div>
+      <div class="tl-item neutral">
+        <div class="tl-date"><span class="tl-severity-label">LAST MERGE</span> 2025-09-27</div>
+        <div class="tl-desc">PR #136 (Morph API key README update) &mdash; last merged PR.</div>
       </div>
       <div class="tl-item bad">
-        <div class="tl-date"><span class="tl-severity-label">DIRECT PUSH</span> 2025-11-19</div>
-        <div class="tl-desc">&quot;v3&quot; pushed directly to main by developersdigest. No PR, no review. Last commit on the repo.</div>
+        <div class="tl-date"><span class="tl-severity-label">GOES QUIET</span> 2025-11-19</div>
+        <div class="tl-desc">&ldquo;v3&rdquo; commit pushed directly to main. No PR, no review. Last commit to date.</div>
       </div>
       <div class="tl-item bad">
-        <div class="tl-date"><span class="tl-severity-label">5-MONTH GAP</span> 2026-04-17</div>
-        <div class="tl-desc">No commits for 5 months. 38 open PRs and 131+ open issues accumulating without response.</div>
+        <div class="tl-date"><span class="tl-severity-label">SECURITY PR FILED</span> 2025-12-11</div>
+        <div class="tl-desc">PR #176 filed to patch dependency vulnerabilities. Still open 128 days later with no maintainer response.</div>
+      </div>
+      <div class="tl-item bad">
+        <div class="tl-date"><span class="tl-severity-label">CVE PR FILED</span> 2025-12-17</div>
+        <div class="tl-desc">PR #178 reports Vercel/React server components CVE. Still open 121 days later.</div>
+      </div>
+      <div class="tl-item neutral">
+        <div class="tl-date"><span class="tl-severity-label">THIS SCAN</span> 2026-04-17</div>
+        <div class="tl-desc">150 days since last commit. Security PRs unmerged. 93 open issues.</div>
       </div>
     </div>
-  </div>
-</details>
 
-<!-- ═══════ SECTION 05: Repo Vitals ═══════ -->
-<details class="collapsible-section">
-  <summary>
-    <div class="section-header">
-      <span class="section-number">05</span>
-      <h2>Repo Vitals</h2>
     </div>
-  </summary>
-  <div class="section-body">
+  </details>
+
+  <!-- ═══════════════ SECTION 05: REPO VITALS ═══════════════ -->
+  <details class="collapsible-section">
+    <summary>
+      <div class="section-header">
+        <span class="section-number">05</span>
+        <h2>Repo Vitals</h2>
+      </div>
+      <div class="section-subtitle">Key metrics with plain-English interpretation.</div>
+    </summary>
+    <div class="section-body">
+
     <div class="vitals-grid">
-      <div class="vital-cell"><div class="vital-label">Age</div><div class="vital-value">619 days</div><div class="vital-note">Created 2025-08-08</div></div>
-      <div class="vital-cell"><div class="vital-label">Stars</div><div class="vital-value">25,491</div><div class="vital-note">Very popular &mdash; high blast radius</div></div>
-      <div class="vital-cell"><div class="vital-label">Forks</div><div class="vital-value">4,898</div><div class="vital-note">Heavily forked</div></div>
-      <div class="vital-cell"><div class="vital-label">Open Issues</div><div class="vital-value val-warn">131</div><div class="vital-note">Many unaddressed, includes spam</div></div>
-      <div class="vital-cell"><div class="vital-label">Open PRs</div><div class="vital-value val-warn">38</div><div class="vital-note">Community contributions not merged</div></div>
-      <div class="vital-cell"><div class="vital-label">Last Commit</div><div class="vital-value val-warn">2025-11-19</div><div class="vital-note">5 months ago &mdash; possibly stale</div></div>
-      <div class="vital-cell"><div class="vital-label">Contributors</div><div class="vital-value">11</div><div class="vital-note">Dominated by 1 person (63.8%)</div></div>
-      <div class="vital-cell"><div class="vital-label">Releases</div><div class="vital-value val-bad">0</div><div class="vital-note">Install from main only</div></div>
-      <div class="vital-cell"><div class="vital-label">License</div><div class="vital-value val-good">MIT</div><div class="vital-note">Permissive</div></div>
-      <div class="vital-cell"><div class="vital-label">Branch Protection</div><div class="vital-value val-bad">None</div><div class="vital-note">No gates on main</div></div>
-      <div class="vital-cell"><div class="vital-label">SECURITY.md</div><div class="vital-value val-bad">None</div><div class="vital-note">No disclosure policy</div></div>
-      <div class="vital-cell"><div class="vital-label">OSSF Scorecard</div><div class="vital-value">Not indexed</div><div class="vital-note">API returned no data</div></div>
-      <div class="vital-cell"><div class="vital-label">Dependencies</div><div class="vital-value">67 direct</div><div class="vital-note">12 dev dependencies</div></div>
-      <div class="vital-cell"><div class="vital-label">Formal Review Rate</div><div class="vital-value val-bad">0.0%</div><div class="vital-note">0 of 12 merged PRs</div></div>
-      <div class="vital-cell"><div class="vital-label">Any-Review Rate</div><div class="vital-value val-bad">8.3%</div><div class="vital-note">1 of 12 merged PRs</div></div>
-    </div>
-  </div>
-</details>
-
-<!-- ═══════ SECTION 06: Investigation Coverage ═══════ -->
-<details class="collapsible-section">
-  <summary>
-    <div class="section-header">
-      <span class="section-number">06</span>
-      <h2>Investigation Coverage</h2>
-    </div>
-  </summary>
-  <div class="section-body">
-    <div class="vitals-grid">
-      <div class="vital-cell"><div class="vital-label">Repo Metadata (Step 1)</div><div class="vital-value val-good">Complete</div></div>
-      <div class="vital-cell"><div class="vital-label">Maintainer Background</div><div class="vital-value val-good">Complete</div><div class="vital-note">Owner + top 3 contributors</div></div>
-      <div class="vital-cell"><div class="vital-label">OSSF Scorecard</div><div class="vital-value">Not indexed</div></div>
-      <div class="vital-cell"><div class="vital-label">Dependabot Alerts</div><div class="vital-value val-warn">403</div><div class="vital-note">Admin scope required &mdash; status unknown</div></div>
-      <div class="vital-cell"><div class="vital-label">osv.dev Fallback</div><div class="vital-value val-good">20 of 67 deps</div><div class="vital-note">1 vulnerability found</div></div>
-      <div class="vital-cell"><div class="vital-label">Secrets-in-history</div><div class="vital-value val-warn">Not scanned</div><div class="vital-note">gitleaks not available</div></div>
-      <div class="vital-cell"><div class="vital-label">API Budget (Step 5)</div><div class="vital-value val-good">4982/5000</div><div class="vital-note">Full PR sample (12 total)</div></div>
-      <div class="vital-cell"><div class="vital-label">Merged PRs Reviewed</div><div class="vital-value val-good">12 of 12</div></div>
-      <div class="vital-cell"><div class="vital-label">Security PR Diffs Read</div><div class="vital-value">3 of 5 title hits</div></div>
-      <div class="vital-cell"><div class="vital-label">Tarball Extraction</div><div class="vital-value val-good">336 files</div></div>
-      <div class="vital-cell"><div class="vital-label">Exec Files Inspected</div><div class="vital-value val-good">7 of 7</div><div class="vital-note">5 Warning, 2 OK, 0 Critical</div></div>
-      <div class="vital-cell"><div class="vital-label">README Paste Scan</div><div class="vital-value val-good">Run</div><div class="vital-note">0 paste blocks found</div></div>
-      <div class="vital-cell"><div class="vital-label">Agent Rule Detection</div><div class="vital-value val-good">Run</div><div class="vital-note">0 CI-amplified, 1 static</div></div>
-      <div class="vital-cell"><div class="vital-label">Prompt Injection Scan</div><div class="vital-value val-good">0 matches</div><div class="vital-note">0 actionable findings</div></div>
-      <div class="vital-cell"><div class="vital-label">Distribution Channels</div><div class="vital-value">1 of 1</div><div class="vital-note">Git clone from main only</div></div>
-      <div class="vital-cell"><div class="vital-label">pull_request_target</div><div class="vital-value val-good">0 workflows</div></div>
-      <div class="vital-cell"><div class="vital-label">Windows Surface</div><div class="vital-value">N/A</div><div class="vital-note">No .ps1/.bat/.cmd files</div></div>
-      <div class="vital-cell"><div class="vital-label">Monorepo Packages</div><div class="vital-value val-good">2 checked</div><div class="vital-note">No lifecycle scripts</div></div>
-    </div>
-  </div>
-</details>
-
-<!-- ═══════ SECTION 07: Evidence Appendix ═══════ -->
-<details class="collapsible-section">
-  <summary>
-    <div class="section-header">
-      <span class="section-number">07</span>
-      <h2>Evidence Appendix</h2>
-      <div class="section-status">
-        <span class="pill amber">3 Warning</span>
-        <span class="pill info">2 Info</span>
+      <div class="vital-cell">
+        <div class="vital-label">Stars</div>
+        <div class="vital-value">25,496</div>
+        <div class="vital-note">High popularity &mdash; but popularity is not safety</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Forks</div>
+        <div class="vital-value">4,897</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Created</div>
+        <div class="vital-value">2025-08-08</div>
+        <div class="vital-note">252 days ago</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Last push</div>
+        <div class="vital-value val-warn">2025-11-19</div>
+        <div class="vital-note">150 days ago &mdash; potentially inactive</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">License</div>
+        <div class="vital-value val-good">MIT</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Language</div>
+        <div class="vital-value">TypeScript (Next.js 15 / React)</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Community health</div>
+        <div class="vital-value val-bad">37%</div>
+        <div class="vital-note">No CoC, no CONTRIBUTING, no SECURITY.md</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">OSSF Scorecard</div>
+        <div class="vital-value val-info">Not indexed</div>
+        <div class="vital-note">Repo not in the OSSF database</div>
+        <div class="vital-explainer">Independent security rating from the <a href="https://securityscorecards.dev/" target="_blank" rel="noopener">Open Source Security Foundation</a>. Scores 24 security practices from 0&ndash;10. Most repos score 3&ndash;5; above 6 is strong.</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Dependencies</div>
+        <div class="vital-value">67 runtime + 12 dev</div>
+        <div class="vital-note">1 known vulnerability (osv.dev: @anthropic-ai/sdk)</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Merged PRs</div>
+        <div class="vital-value">12 total</div>
+        <div class="vital-note">Formal review: 0%. Any-review: 8.3%</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Open issues</div>
+        <div class="vital-value val-warn">93</div>
+        <div class="vital-note">Many spam/non-actionable; some real bugs</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Releases</div>
+        <div class="vital-value val-warn">None</div>
+        <div class="vital-note">No tags, no releases page</div>
       </div>
     </div>
-  </summary>
-  <div class="section-body">
 
-    <div class="evidence-group-label warns">&#x2605; Priority evidence (read first)</div>
+    </div>
+  </details>
+
+  <!-- ═══════════════ SECTION 06: INVESTIGATION COVERAGE ═══════════════ -->
+  <details class="collapsible-section">
+    <summary>
+      <div class="section-header">
+        <span class="section-number">06</span>
+        <h2>Investigation Coverage</h2>
+        <span class="section-status">
+          <span class="pill green">12/12 PRs</span>
+          <span class="pill info">4/4 execs inspected</span>
+          <span class="pill muted">2 gaps</span>
+        </span>
+      </div>
+      <div class="section-subtitle">
+        Full coverage of all 12 merged PRs. All 4 executable files inspected. <span class="hot">Dependabot 403 (scope gap)</span> &mdash; used osv.dev fallback.
+      </div>
+    </summary>
+    <div class="section-body">
+
+    <div class="vitals-grid">
+      <div class="vital-cell">
+        <div class="vital-label">Merged PRs reviewed</div>
+        <div class="vital-value val-good">12 of 12 (full)</div>
+        <div class="vital-note">All merged PRs examined &mdash; only 12 exist</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Tarball extraction</div>
+        <div class="vital-value val-good">OK (336 files)</div>
+        <div class="vital-note">Pinned to <code>69bd93ba</code> at scan start</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Executable files inspected</div>
+        <div class="vital-value val-good">4 of 4 (0 Warning, 4 Info, 0 Critical)</div>
+        <div class="vital-note">All 4 Cursor rule files inspected. No install scripts, CI, or hooks exist.</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">README paste-scan (7.5)</div>
+        <div class="vital-value val-good">0 paste-blocks</div>
+        <div class="vital-note">No &ldquo;paste this into your agent&rdquo; invitations</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">CI-amplified rule scan (2.5)</div>
+        <div class="vital-value val-good">0 amplified / 4 static</div>
+        <div class="vital-note">No CI exists. 4 Cursor rule files committed directly.</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Prompt-injection scan (F8)</div>
+        <div class="vital-value val-good">2 matches / 0 actionable</div>
+        <div class="vital-note">Both are legitimate LLM system prompt construction in API routes, not scanner-targeting injection.</div>
+        <div class="vital-explainer">Checks if the repo contains text designed to manipulate AI tools that read it &mdash; e.g., hidden instructions in README or config files that try to make your AI assistant ignore security warnings. &ldquo;0 actionable&rdquo; means no manipulation attempts were found.</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Distribution channels (F1)</div>
+        <div class="vital-value val-good">1 of 1 verified</div>
+        <div class="vital-note">Only channel: git clone. No npm, no releases. Trivially matches scan.</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Windows surface (F16)</div>
+        <div class="vital-value val-good">N/A</div>
+        <div class="vital-note">No .ps1, .bat, or .cmd files in repo.</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">pull_request_target (C11)</div>
+        <div class="vital-value val-good">0 workflows</div>
+        <div class="vital-note">No CI exists at all.</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">OSSF Scorecard</div>
+        <div class="vital-value val-info">Not indexed</div>
+        <div class="vital-note">Repo not in the OSSF Scorecard database</div>
+        <div class="vital-explainer">Independent security rating from the <a href="https://securityscorecards.dev/" target="_blank" rel="noopener">Open Source Security Foundation</a>. Scores 24 security practices from 0&ndash;10. Most repos score 3&ndash;5; above 6 is strong.</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Dependency vulnerabilities</div>
+        <div class="vital-value val-warn">15 queried / 1 vuln</div>
+        <div class="vital-note">Dependabot: 403 (scope gap). Fallback: osv.dev queried 15 of 67 deps. @anthropic-ai/sdk: 1 advisory.</div>
+        <div class="vital-explainer">Checked against <a href="https://osv.dev/" target="_blank" rel="noopener">osv.dev</a>, a free vulnerability database backed by Google. Shows known security issues in this project&rsquo;s dependencies.</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Secrets in code history</div>
+        <div class="vital-value val-info">Not scanned</div>
+        <div class="vital-note">gitleaks not available on this machine.</div>
+        <div class="vital-explainer">Scanned by <a href="https://gitleaks.io/" target="_blank" rel="noopener">gitleaks</a> for passwords, API keys, or tokens accidentally committed to the code. &ldquo;Not scanned&rdquo; means the tool wasn&rsquo;t available &mdash; not that the code is clean.</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">API rate budget</div>
+        <div class="vital-value val-good">4,944 / 5,000</div>
+        <div class="vital-note">PR sample: 12 (full). Budget was sufficient for complete coverage.</div>
+        <div class="vital-explainer">GitHub limits API calls to 5,000/hour. If budget was low, we sampled fewer pull requests. &ldquo;Full&rdquo; means every PR was checked.</div>
+      </div>
+    </div>
+
+    <div class="finding-card info stack-sm">
+      <div class="finding-header">
+        <span class="tag info-tag">Gap</span>
+        <h3>Dependabot alerts inaccessible (403 scope gap) &mdash; osv.dev queried 15 of 67 deps only</h3>
+      </div>
+    </div>
+    <div class="finding-card info stack-sm">
+      <div class="finding-header">
+        <span class="tag info-tag">Gap</span>
+        <h3>Secrets-in-history not scanned (gitleaks not installed)</h3>
+      </div>
+    </div>
+
+    </div>
+  </details>
+
+  <!-- ═══════════════ SECTION 07: EVIDENCE APPENDIX ═══════════════ -->
+  <details class="collapsible-section">
+    <summary>
+      <div class="section-header">
+        <span class="section-number">07</span>
+        <h2>Evidence Appendix</h2>
+        <span class="section-status">
+          <span class="pill info">11 facts</span>
+          <span class="pill amber">3 priority</span>
+        </span>
+      </div>
+      <div class="section-subtitle">
+        11 command-backed claims. <span class="emph">Start with the 3 priority items</span> &mdash; branch protection, command execution routes, and review rate.
+      </div>
+      <div class="section-action info">
+        <span class="lbl">Your action</span>
+        Use this section to verify claims yourself. Each entry shows the exact command and expected result.
+      </div>
+    </summary>
+    <div class="section-body">
+
+    <div class="evidence-group-label warns">Priority evidence (read first)</div>
 
     <!-- E1 -->
     <div class="finding-card warning evidence-priority stack-md">
       <div class="finding-header">
-        <span class="tag warning-tag">E1</span>
-        <span class="priority-flag">&#x2605; Start here</span>
-        <h3>No authentication on command execution routes</h3>
+        <span class="tag warning-tag">Evidence</span>
+        <span class="priority-flag">Start here</span>
+        <h3>E1: No branch protection of any kind</h3>
       </div>
       <div class="finding-body">
         <div class="evidence-row">
           <div class="evidence-label">Claim</div>
-          <p>API routes run-command and run-command-v2 accept arbitrary commands without authentication.</p>
+          <p>No branch protection exists on the default branch (main).</p>
         </div>
         <div class="evidence-row">
           <div class="evidence-label">Command</div>
-          <pre class="evidence-pre">grep -nP 'auth|session|cookie|jwt|bearer|middleware|verify|login' app/api/run-command/route.ts app/api/run-command-v2/route.ts</pre>
+          <pre class="evidence-pre">gh api repos/firecrawl/open-lovable/branches/main/protection</pre>
         </div>
         <div class="evidence-row">
           <div class="evidence-label">Result</div>
-          <pre class="evidence-pre result">No matches. Files contain no authentication logic. POST handler reads command from body and passes to sandbox.</pre>
+          <pre class="evidence-pre result">{"message":"Not Found","status":"404"}</pre>
         </div>
-        <div class="evidence-classification fact">Classification: Confirmed fact</div>
+        <div class="evidence-row">
+          <div class="evidence-label">Command</div>
+          <pre class="evidence-pre">gh api repos/firecrawl/open-lovable/rulesets</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Result</div>
+          <pre class="evidence-pre result">[]</pre>
+        </div>
+        <div class="evidence-classification fact">Confirmed fact</div>
       </div>
     </div>
 
     <!-- E2 -->
     <div class="finding-card warning evidence-priority stack-md">
       <div class="finding-header">
-        <span class="tag warning-tag">E2</span>
-        <span class="priority-flag">&#x2605; Start here</span>
-        <h3>Zero formal code review rate</h3>
+        <span class="tag warning-tag">Evidence</span>
+        <span class="priority-flag">Start here</span>
+        <h3>E2: Unauthenticated command execution routes</h3>
       </div>
       <div class="finding-body">
         <div class="evidence-row">
           <div class="evidence-label">Claim</div>
-          <p>0% of merged PRs received formal review approval.</p>
+          <p>API routes accept arbitrary commands with no authentication.</p>
         </div>
         <div class="evidence-row">
-          <div class="evidence-label">Command</div>
-          <pre class="evidence-pre">gh pr list -R firecrawl/open-lovable --state merged --limit 300 --json number,reviewDecision,reviews</pre>
+          <div class="evidence-label">Source</div>
+          <pre class="evidence-pre">app/api/run-command/route.ts line 11:
+const { command } = await request.json();</pre>
         </div>
         <div class="evidence-row">
-          <div class="evidence-label">Result</div>
-          <pre class="evidence-pre result">12 merged PRs. reviewDecision empty on all 12. reviews.length &gt; 0 on 1 (PR #33 only).</pre>
+          <div class="evidence-label">Analysis</div>
+          <pre class="evidence-pre result">No auth check, no API key validation, no rate limiting in the route. Command taken directly from request body and passed to sandbox.runCommand().</pre>
         </div>
-        <div class="evidence-classification fact">Classification: Confirmed fact</div>
+        <div class="evidence-classification fact">Confirmed fact</div>
       </div>
     </div>
 
     <!-- E3 -->
     <div class="finding-card warning evidence-priority stack-md">
       <div class="finding-header">
-        <span class="tag warning-tag">E3</span>
-        <span class="priority-flag">&#x2605; Start here</span>
-        <h3>No branch protection on main</h3>
+        <span class="tag warning-tag">Evidence</span>
+        <span class="priority-flag">Start here</span>
+        <h3>E3: 0% formal review rate</h3>
       </div>
       <div class="finding-body">
         <div class="evidence-row">
           <div class="evidence-label">Claim</div>
-          <p>No branch protection rules exist on the default branch.</p>
+          <p>Zero merged PRs have a formal review decision.</p>
         </div>
         <div class="evidence-row">
           <div class="evidence-label">Command</div>
-          <pre class="evidence-pre">gh api repos/firecrawl/open-lovable/branches/main/protection  # 404
-gh api repos/firecrawl/open-lovable/rulesets  # []
-gh api repos/firecrawl/open-lovable/rules/branches/main  # []</pre>
+          <pre class="evidence-pre">gh pr list -R firecrawl/open-lovable --state merged --limit 300 --json reviewDecision</pre>
         </div>
         <div class="evidence-row">
           <div class="evidence-label">Result</div>
-          <pre class="evidence-pre result">Classic: 404. Rulesets: []. Rules on main: []. Org rulesets: unknown (403 scope gap).</pre>
+          <pre class="evidence-pre result">All 12 PRs: "reviewDecision":"" (empty). Only PR #33 has reviews array with 1 entry (APPROVED by Saeen55-stack).</pre>
         </div>
-        <div class="evidence-classification fact">Classification: Confirmed fact (org rulesets unknown due to scope gap)</div>
+        <div class="evidence-classification fact">Confirmed fact</div>
       </div>
     </div>
 
-    <div class="evidence-group-label context">Supporting evidence</div>
+    <div class="evidence-group-label context">Context evidence</div>
 
     <!-- E4 -->
     <div class="finding-card info stack-md">
       <div class="finding-header">
-        <span class="tag info-tag">E4</span>
-        <h3>CORS wildcard on AI streaming route</h3>
+        <span class="tag info-tag">Evidence</span>
+        <h3>E4: CORS wildcard on API routes</h3>
       </div>
       <div class="finding-body">
         <div class="evidence-row">
@@ -1479,15 +1664,32 @@ gh api repos/firecrawl/open-lovable/rules/branches/main  # []</pre>
           <div class="evidence-label">Result</div>
           <pre class="evidence-pre result">Line 1883: 'Access-Control-Allow-Origin': '*'</pre>
         </div>
-        <div class="evidence-classification fact">Classification: Confirmed fact</div>
+        <div class="evidence-classification fact">Confirmed fact</div>
       </div>
     </div>
 
     <!-- E5 -->
     <div class="finding-card info stack-md">
       <div class="finding-header">
-        <span class="tag info-tag">E5</span>
-        <h3>Dependency vulnerability (@anthropic-ai/sdk)</h3>
+        <span class="tag info-tag">Evidence</span>
+        <h3>E5: Unmerged security PRs</h3>
+      </div>
+      <div class="finding-body">
+        <div class="evidence-row">
+          <div class="evidence-label">Result</div>
+          <pre class="evidence-pre result">PR #176 "fix: update dependencies to patch security vulnerabilities" — open since 2025-12-11 (128 days)
+PR #178 "Vercel/react server components CVE" — open since 2025-12-17 (121 days)
+Both: no comments, no maintainer response.</pre>
+        </div>
+        <div class="evidence-classification fact">Confirmed fact</div>
+      </div>
+    </div>
+
+    <!-- E6 -->
+    <div class="finding-card info stack-md">
+      <div class="finding-header">
+        <span class="tag info-tag">Evidence</span>
+        <h3>E6: osv.dev vulnerability</h3>
       </div>
       <div class="finding-body">
         <div class="evidence-row">
@@ -1496,71 +1698,119 @@ gh api repos/firecrawl/open-lovable/rules/branches/main  # []</pre>
         </div>
         <div class="evidence-row">
           <div class="evidence-label">Result</div>
-          <pre class="evidence-pre result">1 vulnerability returned</pre>
+          <pre class="evidence-pre result">1 vulnerability returned for @anthropic-ai/sdk</pre>
         </div>
-        <div class="evidence-classification fact">Classification: Confirmed fact (osv.dev data)</div>
+        <div class="evidence-classification fact">Confirmed fact</div>
       </div>
     </div>
 
-    <div class="evidence-group-label positives">Positive signals</div>
-
-    <!-- E6 -->
-    <div class="finding-card ok stack-md">
-      <div class="finding-header">
-        <span class="tag ok-tag">E6</span>
-        <h3>No releases &mdash; git clone from main only</h3>
-      </div>
-      <div class="finding-body">
-        <div class="evidence-row">
-          <div class="evidence-label">Command</div>
-          <pre class="evidence-pre">gh release list -R firecrawl/open-lovable --limit 20</pre>
-        </div>
-        <div class="evidence-row">
-          <div class="evidence-label">Result</div>
-          <pre class="evidence-pre result">(empty output)</pre>
-        </div>
-        <div class="evidence-classification fact">Classification: Confirmed fact</div>
-      </div>
-    </div>
+    <div class="evidence-group-label positives">Positive evidence</div>
 
     <!-- E7 -->
     <div class="finding-card ok stack-md">
       <div class="finding-header">
-        <span class="tag ok-tag">E7</span>
-        <h3>All maintainers are established accounts</h3>
+        <span class="tag ok-tag">Evidence</span>
+        <h3>E7: No hardcoded secrets</h3>
+      </div>
+      <div class="finding-body">
+        <div class="evidence-row">
+          <div class="evidence-label">Command</div>
+          <pre class="evidence-pre">grep -rlP '(api[_-]?key|secret|token|password)\s*[:=]\s*["'"'"'][A-Za-z0-9_\-\.]{16,}' . | grep -v node_modules | grep -v .env</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Result</div>
+          <pre class="evidence-pre result">0 matches</pre>
+        </div>
+        <div class="evidence-classification fact">Confirmed fact</div>
+      </div>
+    </div>
+
+    <!-- E8 -->
+    <div class="finding-card ok stack-md">
+      <div class="finding-header">
+        <span class="tag ok-tag">Evidence</span>
+        <h3>E8: No eval/exec usage</h3>
+      </div>
+      <div class="finding-body">
+        <div class="evidence-row">
+          <div class="evidence-label">Command</div>
+          <pre class="evidence-pre">grep -rlP 'eval\s*\(|new\s+Function\s*\(' . --include='*.ts' --include='*.tsx' --include='*.js'</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Result</div>
+          <pre class="evidence-pre result">0 matches</pre>
+        </div>
+        <div class="evidence-classification fact">Confirmed fact</div>
+      </div>
+    </div>
+
+    <!-- E9 -->
+    <div class="finding-card ok stack-md">
+      <div class="finding-header">
+        <span class="tag ok-tag">Evidence</span>
+        <h3>E9: Sandbox isolation confirmed</h3>
+      </div>
+      <div class="finding-body">
+        <div class="evidence-row">
+          <div class="evidence-label">Source</div>
+          <pre class="evidence-pre">app/api/run-command/route.ts line 30:
+const result = await global.activeSandbox.runCommand({...})</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Analysis</div>
+          <pre class="evidence-pre result">Commands forwarded to Vercel Sandbox or E2B sandbox APIs, not executed locally.</pre>
+        </div>
+        <div class="evidence-classification fact">Confirmed fact</div>
+      </div>
+    </div>
+
+    <!-- E10 -->
+    <div class="finding-card ok stack-md">
+      <div class="finding-header">
+        <span class="tag ok-tag">Evidence</span>
+        <h3>E10: No scanner-targeting prompt injection</h3>
       </div>
       <div class="finding-body">
         <div class="evidence-row">
           <div class="evidence-label">Result</div>
-          <pre class="evidence-pre result">developersdigest: created 2023-02-08, 82 repos, 968 followers
-bekbull: created 2018-07-04, 46 repos, 40 followers
-MFCo: created 2014-06-06, 15 repos, 30 followers
-firecrawl (org): created 2023-05-30, 89 repos, 2250 followers</pre>
+          <pre class="evidence-pre result">2 files matched "system prompt" keyword — both are legitimate LLM prompt construction in API route code (generate-ai-code-stream/route.ts, lib/context-selector.ts), not scanner-targeting injection.</pre>
         </div>
-        <div class="evidence-classification fact">Classification: Confirmed fact</div>
+        <div class="evidence-classification fact">Confirmed fact</div>
       </div>
     </div>
 
+    <!-- E11 -->
+    <div class="finding-card info stack-md">
+      <div class="finding-header">
+        <span class="tag info-tag">Evidence</span>
+        <h3>E11: Dependabot access denied</h3>
+      </div>
+      <div class="finding-body">
+        <div class="evidence-row">
+          <div class="evidence-label">Command</div>
+          <pre class="evidence-pre">gh api repos/firecrawl/open-lovable/dependabot/alerts</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Result</div>
+          <pre class="evidence-pre result">HTTP 403: "You are not authorized to perform this operation."</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Classification</div>
+          <pre class="evidence-pre result">State: unknown (scope gap), not "clean."</pre>
+        </div>
+        <div class="evidence-classification fact">Confirmed fact</div>
+      </div>
+    </div>
+
+    </div>
+  </details>
+
+  <!-- ═══════════════ FOOTER ═══════════════ -->
+  <div class="footer">
+    <p>Generated by <a href="https://github.com/stefans71/stop-git-std">stop-git-std</a> scanner V2.4 &middot; Prompt V2.4 &middot; 2026-04-17</p>
+    <p>This report is a point-in-time snapshot. Re-run the scan after significant repo changes.</p>
   </div>
-</details>
 
-<!-- ═══════ FOOTER ═══════ -->
-<div class="footer">
-  <p>Generated by <a href="https://github.com/stefans71/stop-git-std">stop-git-std</a> GitHub Scanner v2.4 &middot; 2026-04-17</p>
-  <p>This report reflects the state of the repository at commit <code>69bd93bae7a9c97ef989eb70aabe6797fb3dac89</code>. Findings may not apply to other versions.</p>
 </div>
-
-</div><!-- .page -->
-
-<script>
-function adjustFont(dir) {
-  const root = document.documentElement;
-  const current = parseFloat(getComputedStyle(root).fontSize);
-  const next = Math.max(10, Math.min(24, current + dir));
-  root.style.fontSize = next + 'px';
-  const pct = Math.round((next / 16) * 100);
-  document.querySelector('.font-size-display').textContent = pct + '%';
-}
-</script>
 </body>
 </html>
