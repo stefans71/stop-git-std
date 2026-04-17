@@ -40,6 +40,9 @@ These all affect **accuracy and reproducibility**, not just ergonomics.
 | `tar` + standard POSIX | Extract repo tarball locally | yes |
 | `python3` 3.8+ | Run the validator | yes |
 | `jq` | Parse gh api JSON (recommended) | yes |
+| `npm` / `pip` / `cargo` (optional) | Step 8 installed-artifact verification — needed only when the scanned repo distributes via npm/PyPI/crates.io. If absent, note "artifact verification: skipped (tool not available)" in Coverage. Not required for core scan. | yes |
+| `gitleaks` (optional) | Secrets-in-history scanning (Cap-4). If installed, run `gitleaks detect --source "$SCAN_DIR" -v --redact`. If absent, note "secrets-in-history: not scanned" in Coverage. | yes |
+| `curl` | OSSF Scorecard API + osv.dev fallback (added V2.4). Usually pre-installed. | yes |
 | A markdown-capable editor | Write `findings-bundle.md` | yes |
 | `/tmp` writable with ≥500 MB free | Working directory for tarball + bundle | yes |
 | An LLM runtime with a context window large enough to hold the handoff packet (see §8.3) | Phase 2–4 synthesis | yes (any frontier model) |
@@ -303,15 +306,15 @@ If you catch yourself writing an interpretive verb in an evidence section, cut i
 
 If the context budget is exhausted or fragmented — if any of the six ingredients has already been squeezed out or is about to be — consider Path B.
 
-### 8.2 Path B (proposed — not yet exercised)
+### 8.2 Path B (delegated — exercised and validated)
 
-> **Warning: no scan in the 6-entry catalog has used this path. It is architecturally plausible but unvalidated. Use Path A until Path B has been exercised and documented in at least one catalog scan.**
+> **Validated:** zustand-v2 scan (2026-04-16) — fresh Opus agent ran end-to-end from handoff packet alone. Structural parity with Path A confirmed. hermes-agent and postiz-app scans also used Path B successfully.
 
-- Phase 2–3 operator writes the bundle.
-- A fresh sub-agent or delegated runtime is launched with the portable handoff packet (§8.3): read the bundle, read 1–2 prior scans as structural references, produce the MD + HTML pair, validate, iterate.
+- Phase 2–3 operator writes the bundle (or the delegated agent runs all 6 phases from scratch with the handoff packet).
+- A fresh sub-agent or delegated runtime is launched with the portable handoff packet (§8.3): read the guide, read the prompt, use 1–2 prior scans as structural references, produce the MD + HTML pair, validate, iterate.
 - The parent operator is free to work on other tasks while the delegated runtime runs.
-- Intended for cases where the context budget cannot hold the edit loop alongside prior Phase 2–3 context.
-- Tag the catalog entry with `methodology-used: path-b` when first used.
+- Intended for cases where the context budget cannot hold the edit loop alongside prior Phase 2–3 context, or when running multiple scans in parallel.
+- Tag the catalog entry with `methodology-used: path-b`.
 
 ### 8.3 The portable handoff packet
 
@@ -556,5 +559,6 @@ The 6-scan catalog is 100% github.com. The first GHE / Gitea / self-hosted scan 
 
 ## 15. Changelog
 
+- **2026-04-17 · V0.2** — AXIOM audit triage fixes: B5 Path B text updated (exercised + validated on zustand-v2, hermes-agent, postiz-app); B6 prerequisites table expanded (npm/pip/cargo optional for Step 8, gitleaks optional for Cap-4, curl for V2.4 APIs). Companion prompt bumped to V2.4.
 - **2026-04-16 · V0.1 promotion** — Unanimous SIGN OFF AFTER FIXES from 3-model board (Pragmatist/Claude Opus 4.6, Systems Thinker/Codex GPT-5.4, Skeptic/DeepSeek V3.2). 10 FIX NOW items applied: A1 fact/inference discipline rewrite (§7.2/§7.3/§11); A2 Path A practiced / Path B proposed (§8.1/§8.2); A3 pre-flight + minimum durability policy (§4.1 new, §6.3, §12); A4 citation-discipline rule + pre-render checklist (§11.1 new, §9.2.1 new); Phase 4 MD-first split (§8, §8.4 deleted, Phase 4c added for re-run records); Phase 6 public-catalog-vs-optional-memory split (§10, §13 → docs/scanner-catalog.md); §6.1 1:1 ordering with V2.3 prompt Steps 1–8 + A/B/C, Step 2.5 restored; JSON-readiness narrowing (§7.1/§14.1); GitHub Enterprise GH_HOST note (§3, new §14.6); portable handoff packet (§8.3 new). Consolidation record: `docs/board-review-operator-guide-consolidation.md`. Author acknowledged same-model-blindspot: R2-F14 (Phase 4 conflict) and R2-F15 (Phase 6 coupling) were caught by Systems Thinker in R1, not by self-review.
 - **2026-04-16** — DRAFT created from the 6-scan catalog (caveman, Archon, zustand, fd, gstack, archon-board-review). Pre-board-review. No version tag yet; will be tagged V0.1 after first board review.
