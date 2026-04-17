@@ -9,9 +9,9 @@
 
 ## 1. Purpose
 
-The V2.3 prompt (`repo-deep-dive-prompt.md`), template (`GitHub-Repo-Scan-Template.html`), and validator (`validate-scanner-report.py`) describe **what** a scan should contain and how its output should look. This guide captures **how to run one end-to-end** — the workflow that's been emergent in practice but is not written down anywhere else.
+The V2.4 prompt (`repo-deep-dive-prompt.md`), template (`GitHub-Repo-Scan-Template.html`), and validator (`validate-scanner-report.py`) describe **what** a scan should contain and how its output should look. This guide captures **how to run one end-to-end** — the workflow that's been emergent in practice but is not written down anywhere else.
 
-Without this guide, an operator who has the prompt + template + validator can reproduce *something* V2.3-shaped, but will miss:
+Without this guide, an operator who has the prompt + template + validator can reproduce *something* V2.4-shaped, but will miss:
 - The two-phase evidence/render split
 - The `/tmp/scan-<repo>/` working directory convention
 - The `findings-bundle.md` intermediate artifact
@@ -26,7 +26,7 @@ These all affect **accuracy and reproducibility**, not just ergonomics.
 
 ## 2. When to use this guide
 
-- You are running a V2.3 scan against a GitHub repo.
+- You are running a V2.4 scan against a GitHub repo.
 - You are writing automation (shell script, CI job, or YAML workflow) that wraps the scanner.
 - You are an LLM orchestrator (any runtime) and want the end-to-end workflow, not just the prompt.
 
@@ -61,7 +61,7 @@ The scanner is **LLM-driven**. It is not a static analyzer. All synthesis happen
 │  PHASE 1   prep            mkdir, capture HEAD SHA (first durable  │
 │                            artifact), download tarball, extract    │
 ├────────────────────────────────────────────────────────────────────┤
-│  PHASE 2   gather          gh api + local grep per V2.3 Steps      │
+│  PHASE 2   gather          gh api + local grep per V2.4 Steps      │
 │                            1–8 + A/B/C                              │
 ├────────────────────────────────────────────────────────────────────┤
 │  PHASE 3   bundle          synthesise evidence into                │
@@ -152,13 +152,13 @@ find src -type f | wc -l
 
 ## 6. Phase 2 — Gather
 
-**Goal:** populate the LLM's context with every piece of evidence the V2.3 prompt's finding rules depend on.
+**Goal:** populate the LLM's context with every piece of evidence the V2.4 prompt's finding rules depend on.
 
 The prompt's Step 1–Step 8 + Step A/B/C describe exactly which `gh api` calls and local greps are required. This guide does not repeat them — **follow the prompt**. What this guide captures is the **ordering discipline, what counts as evidence, and the common failure modes**.
 
-### 6.1 Ordering discipline (1:1 with the V2.3 prompt)
+### 6.1 Ordering discipline (1:1 with the V2.4 prompt)
 
-Run these in this order, numbered exactly as the V2.3 prompt numbers them. Later steps use earlier results.
+Run these in this order, numbered exactly as the V2.4 prompt numbers them. Later steps use earlier results.
 
 1. **Step 1 — Repo basics, maintainer background, and governance.** Repo metadata, owner profile, contributors, CODEOWNERS × 4 paths, branch protection × 2 branches + rulesets + rules-on-default + org rulesets if Org. The C20 governance single-point-of-failure check is fully performed here as the prompt specifies.
 2. **Step 2 — Read the actual CI workflow files.** `pull_request_target` surfaces, SHA-pinning audit, third-party-action tier classification.
@@ -236,7 +236,7 @@ The bundle has three structurally-separated regions: **evidence (facts only)**, 
 ## Runtime dependencies     — facts (manifests quoted verbatim)
 ## Step A grep results      — facts (command + match count + first-5 matches with line refs)
 ## README install path      — facts + verbatim-quoted install commands
-## F12 exec inventory       — facts (2-layer per V2.3 prompt)
+## F12 exec inventory       — facts (2-layer per V2.4 prompt)
 ## PR review rate sample    — facts only (dual metric — reviewDecision set AND reviews.length > 0)
 ## Recent commits sample    — facts (SHA, author, date, title, signed? flag)
 ## Open issues              — facts (count, severity keywords, ages)
@@ -297,9 +297,9 @@ If you catch yourself writing an interpretive verb in an evidence section, cut i
 ### 8.1 Path A — continuous (the only path exercised today)
 
 - The same LLM runtime that completed Phases 2 and 3 continues directly into Phase 4.
-- Load the findings-bundle, the V2.3 template, and 1–2 prior scans as structural references (chosen by shape match — see §8.3).
+- Load the findings-bundle, the V2.4 template, and 1–2 prior scans as structural references (chosen by shape match — see §8.3).
 - Produce the MD (4a) and then the HTML (4b) in the same session.
-- All **6 of 6** scans in `docs/scanner-catalog.md` used Path A. This is the validated methodology.
+- **7 of 9** scans in `docs/scanner-catalog.md` used Path A; 2 used Path B (hermes-agent, postiz-app). Both methodologies are validated.
 - Tag the catalog entry with `methodology-used: path-a`.
 
 **Path-selection criterion (context-budget, not file-count).** Path A is viable when the operator's remaining context can hold:
@@ -325,7 +325,7 @@ The guide previously described Path A (continuous) and Path B (delegated) in ter
 **Required artifacts in every handoff packet:**
 
 1. This guide (`SCANNER-OPERATOR-GUIDE.md`)
-2. The V2.3 prompt (`repo-deep-dive-prompt.md`)
+2. The V2.4 prompt (`repo-deep-dive-prompt.md`)
 3. The findings bundle (`/tmp/scan-<repo>/findings-bundle.md`) for the Phase 4 render step
 4. The template (`GitHub-Repo-Scan-Template.html`)
 5. The validator (`validate-scanner-report.py`)
@@ -333,7 +333,7 @@ The guide previously described Path A (continuous) and Path B (delegated) in ter
 
 **Load order** (first to last into the runtime's context):
 
-`context.md → brief (role-specific for Path B; operator's self-direction for Path A) → DRAFT/guide → V2.3 prompt → findings-bundle → template + reference scans`
+`context.md → brief (role-specific for Path B; operator's self-direction for Path A) → DRAFT/guide → V2.4 prompt → findings-bundle → template + reference scans`
 
 **Render order.** MD-first (Phase 4a) → HTML-from-MD (Phase 4b). Never render HTML first.
 
@@ -346,7 +346,7 @@ The guide previously described Path A (continuous) and Path B (delegated) in ter
 
 ### 8.4 What the rendered output must contain
 
-The rendered output's required structural elements are specified by the V2.3 prompt (see `repo-deep-dive-prompt.md` §"What Should I Do?", §"What We Found", §"Executable File Inventory", etc.). This guide does not duplicate that specification.
+The rendered output's required structural elements are specified by the V2.4 prompt (see `repo-deep-dive-prompt.md` §"What Should I Do?", §"What We Found", §"Executable File Inventory", etc.). This guide does not duplicate that specification.
 
 ### 8.5 Phase 4a — bundle → canonical MD
 
@@ -357,10 +357,10 @@ The rendered output's required structural elements are specified by the V2.3 pro
 ### 8.6 Phase 4b — MD → HTML (structurally derived)
 
 - Phase 4b is a structural derivation from the MD.
-- **HTML may not add or alter findings, verdicts, evidence text, or scorecard calls that are absent from or different in the MD.** The V2.3 prompt's §8.4 MD-canonical rule applies: if the HTML says something the MD does not, the HTML is wrong.
+- **HTML may not add or alter findings, verdicts, evidence text, or scorecard calls that are absent from or different in the MD.** The V2.4 prompt's §8.4 MD-canonical rule applies: if the HTML says something the MD does not, the HTML is wrong.
 - HTML-only additions are limited to structural/presentational elements (status chips, verdict-exhibits rollup, timeline dot colour, utility classes) that the template defines.
 
-**NON-NEGOTIABLE: the CSS design system.** Before writing ANY HTML body content, copy the entire contents of `docs/scanner-design-system.css` (816 lines) into the HTML's `<style>` block verbatim. Do not modify, truncate, abbreviate, or rewrite ANY part of the CSS. This file is the canonical design system — it defines the verdict banner, scorecard grid, finding cards, exhibit rollup, timeline, and all V2.3 visual conventions. HTML scans that do not use this exact CSS will drift from the catalog and must be re-rendered.
+**NON-NEGOTIABLE: the CSS design system.** Before writing ANY HTML body content, copy the entire contents of `docs/scanner-design-system.css` (816 lines) into the HTML's `<style>` block verbatim. Do not modify, truncate, abbreviate, or rewrite ANY part of the CSS. This file is the canonical design system — it defines the verdict banner, scorecard grid, finding cards, exhibit rollup, timeline, and all visual conventions. HTML scans that do not use this exact CSS will drift from the catalog and must be re-rendered.
 
 The CSS includes the single-pass scan-line animation (a thin cyan line that sweeps once from top to bottom on page load, then disappears).
 
@@ -375,20 +375,23 @@ The CSS includes the single-pass scan-line animation (a thin cyan line that swee
 
 ## 9. Phase 5 — Validate
 
-**Goal:** `validate-scanner-report.py --report` exits 0 on both the MD and the HTML.
+**Goal:** Validator exits 0 on both the MD and the HTML. Use the correct mode flag for each format.
 
 ```bash
-python3 docs/validate-scanner-report.py --report docs/GitHub-Scanner-<repo>.md
+python3 docs/validate-scanner-report.py --markdown docs/GitHub-Scanner-<repo>.md
 python3 docs/validate-scanner-report.py --report docs/GitHub-Scanner-<repo>.html
 ```
 
-Eight strict checks run per file. All must pass.
+- `--markdown` checks: required section headers (Verdict, Findings, Evidence, Scorecard), minimum 100 lines, severity keywords.
+- `--report` checks: tag balance, inline styles, px font-sizes, placeholders, EXAMPLE markers, XSS vectors, untrusted-text escaping.
+
+All checks must pass.
 
 ### 9.1 Common false-positives (heuristic warnings that are NOT blockers)
 
 - `bash <(curl ...)` inside a fenced code block — the `<` looks like an unclosed tag. Validator warns, returns exit 0 anyway. At least one prior scan demonstrates this pattern (see `docs/scanner-catalog.md`).
 - `<<<` bash here-string inside a fenced code block — same issue, same resolution.
-- Inline code containing `<placeholder-name>` style literals in the MD — these DO fail. Replace with uppercase literals (`PLACEHOLDER_NAME`) or backtick-escape per the V2.3 prompt's `docs/validate-scanner-report.py` guidance.
+- Inline code containing `<placeholder-name>` style literals in the MD — these DO fail. Replace with uppercase literals (`PLACEHOLDER_NAME`) or backtick-escape per the V2.4 prompt's `docs/validate-scanner-report.py` guidance.
 
 ### 9.2 Real failures (validator returns non-zero)
 
@@ -460,7 +463,7 @@ An LLM running this scanner has pattern memory across prior scans. That's an ass
 - **Risk 2 (plausible):** Inference written as fact in the bundle. → Report presents an interpretation as a verified finding.
 - **Risk 3 (plausible):** Synthesis imported from a prior scan. → Report is self-plagiarising, not saying something honest about the target repo.
 
-These risks are plausible and have informed guide design; pattern-memory colouring is observed anecdotally but is not measured across the 6-scan catalog.
+These risks are plausible and have informed guide design; pattern-memory colouring is observed anecdotally but is not measured across the 9-scan catalog.
 
 ### 11.0 The hygiene practice
 
@@ -555,12 +558,12 @@ Consolidated from the 3-model board review (2026-04-16). `docs/board-review-oper
 
 ### 14.6 Non-github.com adaptation
 
-The 6-scan catalog is 100% github.com. The first GHE / Gitea / self-hosted scan will surface API availability deltas that need to be captured back into the guide. Specifically: rulesets API availability, organization audit endpoints, Dependabot alerts endpoint parity. Until then, `GH_HOST=<enterprise-host>` is believed to work for Phase 2 gh calls, with manual verification required.
+The 9-scan catalog is 100% github.com. The first GHE / Gitea / self-hosted scan will surface API availability deltas that need to be captured back into the guide. Specifically: rulesets API availability, organization audit endpoints, Dependabot alerts endpoint parity. Until then, `GH_HOST=<enterprise-host>` is believed to work for Phase 2 gh calls, with manual verification required.
 
 ---
 
 ## 15. Changelog
 
 - **2026-04-17 · V0.2** — AXIOM audit triage fixes: B5 Path B text updated (exercised + validated on zustand-v2, hermes-agent, postiz-app); B6 prerequisites table expanded (npm/pip/cargo optional for Step 8, gitleaks optional for Cap-4, curl for V2.4 APIs). Companion prompt bumped to V2.4.
-- **2026-04-16 · V0.1 promotion** — Unanimous SIGN OFF AFTER FIXES from 3-model board (Pragmatist/Claude Opus 4.6, Systems Thinker/Codex GPT-5.4, Skeptic/DeepSeek V3.2). 10 FIX NOW items applied: A1 fact/inference discipline rewrite (§7.2/§7.3/§11); A2 Path A practiced / Path B proposed (§8.1/§8.2); A3 pre-flight + minimum durability policy (§4.1 new, §6.3, §12); A4 citation-discipline rule + pre-render checklist (§11.1 new, §9.2.1 new); Phase 4 MD-first split (§8, §8.4 deleted, Phase 4c added for re-run records); Phase 6 public-catalog-vs-optional-memory split (§10, §13 → docs/scanner-catalog.md); §6.1 1:1 ordering with V2.3 prompt Steps 1–8 + A/B/C, Step 2.5 restored; JSON-readiness narrowing (§7.1/§14.1); GitHub Enterprise GH_HOST note (§3, new §14.6); portable handoff packet (§8.3 new). Consolidation record: `docs/board-review-operator-guide-consolidation.md`. Author acknowledged same-model-blindspot: R2-F14 (Phase 4 conflict) and R2-F15 (Phase 6 coupling) were caught by Systems Thinker in R1, not by self-review.
-- **2026-04-16** — DRAFT created from the 6-scan catalog (caveman, Archon, zustand, fd, gstack, archon-board-review). Pre-board-review. No version tag yet; will be tagged V0.1 after first board review.
+- **2026-04-16 · V0.1 promotion** — Unanimous SIGN OFF AFTER FIXES from 3-model board (Pragmatist/Claude Opus 4.6, Systems Thinker/Codex GPT-5.4, Skeptic/DeepSeek V3.2). 10 FIX NOW items applied: A1 fact/inference discipline rewrite (§7.2/§7.3/§11); A2 Path A practiced / Path B proposed (§8.1/§8.2); A3 pre-flight + minimum durability policy (§4.1 new, §6.3, §12); A4 citation-discipline rule + pre-render checklist (§11.1 new, §9.2.1 new); Phase 4 MD-first split (§8, §8.4 deleted, Phase 4c added for re-run records); Phase 6 public-catalog-vs-optional-memory split (§10, §13 → docs/scanner-catalog.md); §6.1 1:1 ordering with V2.4 prompt Steps 1–8 + A/B/C, Step 2.5 restored; JSON-readiness narrowing (§7.1/§14.1); GitHub Enterprise GH_HOST note (§3, new §14.6); portable handoff packet (§8.3 new). Consolidation record: `docs/board-review-operator-guide-consolidation.md`. Author acknowledged same-model-blindspot: R2-F14 (Phase 4 conflict) and R2-F15 (Phase 6 coupling) were caught by Systems Thinker in R1, not by self-review.
+- **2026-04-16** — DRAFT created from the 9-scan catalog (caveman, Archon, zustand, fd, gstack, archon-board-review). Pre-board-review. No version tag yet; will be tagged V0.1 after first board review.
