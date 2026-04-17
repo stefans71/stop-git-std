@@ -2,7 +2,7 @@
 
 > **Version:** 2.4 | **Last updated:** 2026-04-17 | **By:** [stop-git-std](https://github.com/stefans71/stop-git-std)
 >
-> **V2.4 changes (AXIOM audit FIX NEXT items):** shell variable quoting (V4), changelog moved to `docs/CHANGELOG.md` (W1/O3), rate-limit budget check before Step 5 (W2), osv.dev fallback for Dependabot 403 (W4), OSSF Scorecard API integration (Cap-1), S8 design rules reduced to 5 hard rules (O2). Full version history: `docs/CHANGELOG.md`.
+> **V2.4 changes (AXIOM audit FIX NEXT items):** shell variable quoting (V4), changelog moved to `docs/CHANGELOG.md` (W1/O3), rate-limit budget check before Step 5 (W2), osv.dev fallback for Dependabot 403 (W4), OSSF Scorecard API integration (Cap-1), S8 design rules restructured: 9 hard rules with 4 re-promoted after structural regression (O2 revised). Full version history: `docs/CHANGELOG.md`.
 >
 > **Hard design rules (9 — must follow):**
 > - **[S8-1] Utility-class rule.** Zero `style=""` attributes on `<body>` elements. Use `.val-good`/`.val-bad`/`.val-warn`/`.val-info`, `.fw-semi`, `.stack-md`/`.stack-sm`, `.p-meta`/`.p-meta-tight`.

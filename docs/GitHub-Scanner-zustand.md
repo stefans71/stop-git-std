@@ -125,9 +125,9 @@ Both are free and take a minute each in the GitHub UI.
 
 ## 02 · What we found
 
-> ⚠ 2 Warning · ✓ 3 OK
+> ⚠ 2 Warning · ℹ 1 Info · ✓ 3 OK
 >
-> 5 findings total. **Both Warnings are governance, not code.** F0 is the C20 single-point-of-failure (no branch protection, no rulesets, no CODEOWNERS) — Warning-level because the latest release v5.0.12 is 31 days old, 1 day outside the 30-day window that would escalate it to Critical. F1 is Dependabot vulnerability alerts being disabled (version-update PRs still flow). Everything else is positive: clean code-path, OIDC publish, defensive `minimumReleaseAge`, long-tenured maintainers.
+> 6 findings total. **Both Warnings are governance, not code.** F5 is an Info-level OSSF Token-Permissions gap (4 of 8 workflows lack explicit `permissions:` blocks). F0 is the C20 single-point-of-failure (no branch protection, no rulesets, no CODEOWNERS) — Warning-level because the latest release v5.0.12 is 31 days old, 1 day outside the 30-day window that would escalate it to Critical. F1 is Dependabot vulnerability alerts being disabled (version-update PRs still flow). Everything else is positive: clean code-path, OIDC publish, defensive `minimumReleaseAge`, long-tenured maintainers.
 >
 > **Your action:** Nothing you need to do locally — the library installs and runs cleanly. For production use, pin exact versions and set `minimumReleaseAge: 1440` in your own pnpm config (see Step 2 above). For maintainers: enabling branch protection on `main` and re-enabling Dependabot alerts would close both Warnings without changing any code.
 
@@ -136,6 +136,8 @@ Both are free and take a minute each in the GitHub UI.
 *Continuous · Since repo creation · → If you install: pin exact versions in production `package.json` and set `minimumReleaseAge: 1440` in your pnpm config so you're never installing a release that's less than 24 hours old. If you maintain this repo: enable branch protection on `main` (Settings → Branches → Add rule, require 1 approver, require the existing `test.yml` checks) and add a `.github/CODEOWNERS` covering `.github/workflows/` + `src/`.*
 
 **Boundary-case note.** This finding fires at Warning rather than Critical because of a 1-day margin. The V2.3 C20 severity rule escalates from Warning to Critical when a repo (a) has all three governance signals negative AND (b) ships executable code to user machines AND (c) has a release within the last 30 days. Zustand's latest release v5.0.12 shipped on 2026-03-16 — 31 days before this scan. One day outside the window. The next release (release cadence has been roughly monthly — v5.0.11 2026-02-01, v5.0.10 2026-01-12, v5.0.9 2025-11-30) will flip this to Critical on the next re-scan unless governance is added first.
+
+**OSSF Branch-Protection: -1/10 (token limitation).** The OSSF Scorecard was unable to evaluate branch protection (score -1 indicates the check could not run with the available token scope), which is consistent with our direct API finding of no protection configured.
 
 **What's missing.** Classic branch protection on `main` returns HTTP 404 from the GitHub API (authoritative — our scan token has `repo` scope and would have returned 403 if permissions were the issue). Repo rulesets: `gh api repos/pmndrs/zustand/rulesets` returns `[]`. Rules applying to `main`: `gh api repos/pmndrs/zustand/rules/branches/main` returns `[]` — this endpoint is authoritative because it captures both repo-level and org-level rulesets that would apply. CODEOWNERS is absent in all four standard locations (`CODEOWNERS`, `.github/CODEOWNERS`, `docs/CODEOWNERS`, `.gitlab/CODEOWNERS`). So any push that lands on the primary maintainer's credentials goes directly to `main` without a review gate, a required status check, or a path-scoped reviewer.
 
@@ -215,6 +217,25 @@ Both are free and take a minute each in the GitHub UI.
 | Long-lived NPM_TOKEN | ✅ Not present |
 | `minimumReleaseAge` | ✅ 1440 minutes (24 hours) |
 | Publish trigger | ✅ `release: published` event only |
+
+### F5 — Info · Hygiene gap — OSSF Token-Permissions scored 0/10: 4 of 8 CI workflows lack explicit `permissions:` blocks
+
+*Current · CI-level · → If you maintain this repo: add explicit `permissions:` blocks to the 4 workflows missing them. Principle of least privilege — each workflow should declare only the scopes it needs, so a compromised action cannot escalate.*
+
+**What the scorecard found.** The OSSF Scorecard Token-Permissions check scored 0/10. Of the 8 CI workflow files in `.github/workflows/`, 4 lack an explicit top-level `permissions:` block. Without this declaration, GitHub Actions grants the default token scope (which on public repos is `contents: read` + `metadata: read`, but on private repos or org-level configs may be broader). The `publish.yml` workflow correctly restricts to `id-token: write` + `contents: read`, but the others rely on implicit defaults.
+
+**What this means for you.** For a pure library like zustand with no install-time hooks, the practical risk is low — the workflows only run tests, build previews, and check compressed sizes. A compromised third-party action in one of these workflows could not escalate beyond the default scope. However, explicit `permissions:` blocks are a defense-in-depth best practice that OSSF scores heavily.
+
+**What this does NOT mean.** This does not mean the workflows are insecure or that the library's supply chain is compromised. The `publish.yml` (the only workflow that matters for npm releases) already has correct, minimal permissions with OIDC.
+
+| Meta | Value |
+|------|-------|
+| OSSF Token-Permissions score | ❌ 0/10 |
+| Workflows missing explicit `permissions:` | 4 of 8 |
+| `publish.yml` permissions | ✅ Correct (`id-token: write`, `contents: read`) |
+| Practical risk | ℹ Low (public repo, default scope is minimal) |
+
+**How to fix (maintainer-side, 5 minutes).** Add a top-level `permissions: {}` (empty — deny all) to each of the 4 workflows, then grant only the specific scopes each job needs. For test-only workflows, `permissions: { contents: read }` is usually sufficient. See [GitHub docs on workflow permissions](https://docs.github.com/en/actions/using-jobs/assigning-permissions-to-jobs).
 
 ### F4 — OK — Maintainers and CI hygiene are solid
 
@@ -315,11 +336,11 @@ Sample: the 7 most recent merged PRs at scan time, plus the one security-keyword
 | Stars / Forks | 57,754 / 2,033 | Top-tier visibility. 178 watchers, 6 open issues. |
 | Primary maintainer | ✅ dai-shi (411 commits) | 15-year GitHub account, 127 public repos, 8,088 followers — no sockpuppet signals |
 | Org founder | ✅ drcmda (232 commits) | pmndrs founder, 13-year account, 95 public repos, 4,215 followers |
-| Review rate (sample of 7) | ⚠ 2 formal / 7 any-review | ~29% formal review. Cross-merging provides practical second-pair-of-eyes |
+| Review rate (sample of 7) | ⚠ 2 formal / 7 any-review | ~29% formal review. Cross-merging provides practical second-pair-of-eyes. OSSF Code-Review: 6/10. |
 | Branch protection | ❌ None on main | API 404 + empty rulesets + empty rules/branches/main — authoritative |
 | CODEOWNERS | ❌ None | Checked 4 standard locations — no file in any |
 | Dependabot alerts | ❌ Disabled | Alerts API 403 with "disabled for this repository" message. Version updates still active. |
-| Security advisories | ✅ 0 filed, 0 needed | Never an advisory-class incident in 7 years |
+| Security advisories | ✅ 0 filed, 0 needed | Never an advisory-class incident in 7 years. OSSF Security-Policy: 0/10 (no SECURITY.md). |
 | Runtime dependencies | ✅ 0 | Peer deps only. 39 devDeps. |
 | Install-time hooks | ✅ None | No pre/post/prepare/prepublish/prepack/postpack |
 | Publish auth | ✅ OIDC (id-token: write) | No long-lived NPM_TOKEN stored in GitHub Secrets |
@@ -328,6 +349,7 @@ Sample: the 7 most recent merged PRs at scan time, plus the one security-keyword
 | Releases | 100+ (monthly cadence) | v5.0.12 latest (31 days old at scan); v5.0.11 2026-02-01, v5.0.10 2026-01-12, v5.0.9 2025-11-30 |
 | Repo size | 8,120 KB | Small library; tarball extraction surfaced 143 files / 2.2M uncompressed |
 | Topics | hooks, react, redux, state-management | Also: hacktoberfest, react-context, reactjs |
+| OSSF Scorecard | 5.9/10 (14 checks returned) | Independent security rating from the [Open Source Security Foundation](https://securityscorecards.dev/). Scores 24 practices 0-10; most repos 3-5, above 6 is strong. |
 
 ---
 
@@ -352,6 +374,10 @@ Sample: the 7 most recent merged PRs at scan time, plus the one security-keyword
 | Dangerous-primitive grep | ✅ Verified — 0 actionable hits. Single `.exec()` is regex-match. Positive control: 22 `import` statements found. |
 | Review-rate sample | ⚠ 7 of 64 recent merges sampled — 2/7 formal (29%), 6/7 cross-merger (86%), 1/7 self-merge (14%) |
 | Commit pinned | `32013285083648e8d58ba1f76d73b9bdc02fef50` |
+| OSSF Scorecard | ✅ 5.9/10 (14 checks returned) — Independent security rating from the [Open Source Security Foundation](https://securityscorecards.dev/). Scores 24 practices 0-10; most repos 3-5, above 6 is strong. |
+| osv.dev | ✅ Not queried (zero runtime dependencies) — Checked against [osv.dev](https://osv.dev/), a free vulnerability database backed by Google. Not queried because zustand has zero runtime dependencies. |
+| Secrets-in-history | ⚠ Not scanned (gitleaks not available) — Scanned by [gitleaks](https://gitleaks.io/) for passwords, API keys, or tokens. "Not scanned" means tool unavailable, not that code is clean. |
+| API rate budget | ✅ 5000/5000 remaining. PR sample: full. — GitHub limits API calls to 5,000/hour. Full budget available; all PRs in sample were checked. |
 
 **Gaps noted:**
 
@@ -529,6 +555,48 @@ Result:
 
 ---
 
-*Generated by [stop-git-std](https://github.com/stefans71/stop-git-std) deep dive · 2026-04-16 · scanned main @ `32013285083648e8d58ba1f76d73b9bdc02fef50` (v5.0.12) · scanner V2.3-post-R3*
+## 08 · How this scan works
+
+### What this scan is
+
+This is an **LLM-driven security investigation** — an AI assistant with terminal access used the [GitHub CLI](https://cli.github.com/) and free public APIs to investigate this repo's governance, code patterns, dependencies, and distribution pipeline. It then synthesized its findings into this plain-English report.
+
+This is **not** a static analyzer, penetration test, or formal security audit. It is a trust-assessment tool that answers: "Should I install this?"
+
+### What we checked
+
+| Area | Scope |
+|------|-------|
+| Governance & Trust | Branch protection, rulesets, CODEOWNERS, SECURITY.md, community health, maintainer account age & activity, code review rates |
+| Code Patterns | Dangerous primitives (eval, exec, fetch), hardcoded secrets, executable file inventory, install scripts, README paste-blocks |
+| Supply Chain | Dependencies, CI/CD workflows, GitHub Actions SHA-pinning, release pipeline, artifact verification, published-vs-source comparison |
+| AI Agent Rules | CLAUDE.md, AGENTS.md, .cursorrules, .mcp.json — files that instruct AI coding assistants. Checked for prompt injection and behavioral manipulation |
+
+### External tools used
+
+| Tool | Purpose |
+|------|---------|
+| [OSSF Scorecard](https://securityscorecards.dev/) | Independent security rating from the Open Source Security Foundation. Scores 24 practices from 0-10. Free API, no installation needed. |
+| [osv.dev](https://osv.dev/) | Google-backed vulnerability database. Used as fallback when GitHub's Dependabot data is not accessible (requires repo admin). |
+| [gitleaks](https://gitleaks.io/) (optional) | Scans code history for leaked passwords, API keys, and tokens. Requires installation. If unavailable, gap noted in Coverage. |
+| [GitHub CLI](https://cli.github.com/) | Primary data source. All repo metadata, PR history, workflow files, contributor data, and issue history come from authenticated GitHub API calls. |
+
+### What this scan cannot detect
+
+- **Transitive dependency vulnerabilities** — we check direct dependencies but cannot fully resolve the dependency tree without running the package manager
+- **Runtime behavior** — we see what the code *could* do, not what it *does* when running
+- **Published artifact tampering** — we read the source code but cannot verify that what's published to npm/PyPI matches this source exactly
+- **Sophisticated backdoors** — our pattern-matching catches common dangerous primitives but not logic bombs or obfuscated payloads
+- **Container image contents** — we read Dockerfiles but cannot inspect built images for extra layers or embedded secrets
+
+For comprehensive vulnerability scanning, pair this report with tools like [Semgrep](https://semgrep.dev/) (code analysis), [Snyk](https://www.snyk.io/) (dependency scanning), or [Trivy](https://aquasecurity.github.io/trivy/) (container scanning).
+
+### Scan methodology version
+
+Scanner prompt V2.3-post-R3 (backfilled with V2.4 data) · Operator Guide V0.1 · Validator with XSS checks + verdict-severity coherence · [stop-git-std](https://github.com/stefans71/stop-git-std)
+
+---
+
+*Generated by [stop-git-std](https://github.com/stefans71/stop-git-std) deep dive · 2026-04-16 · scanned main @ `32013285083648e8d58ba1f76d73b9bdc02fef50` (v5.0.12) · scanner V2.3-post-R3 (V2.4 backfill)*
 
 *This report is an automated investigation, not a professional security audit. It may miss issues. If you are making a business decision, consult a security professional.*
