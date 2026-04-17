@@ -46,7 +46,7 @@ If they pick option 2, read the `.md` and give a concise answer: overall risk, t
 - **MD is canonical.** Always produce MD first. HTML is derived from it.
 - **Facts, inference, synthesis are separate.** Evidence = facts only. Pattern recognition = inference (tagged). Findings = synthesis (citing evidence).
 - **Validator is the gate.** `python3 validate-scanner-report.py --report <file>` must exit 0 on HTML. `python3 validate-scanner-report.py --markdown <file>` must exit 0 on MD.
-- **CSS is mandatory for HTML.** Copy the ENTIRE contents of `scanner-design-system.css` (816 lines) into the HTML `<style>` block verbatim. Do not modify, truncate, or rewrite.
+- **CSS is mandatory for HTML.** Copy the ENTIRE contents of `scanner-design-system.css` (824 lines) into the HTML `<style>` block verbatim. Do not modify, truncate, or rewrite.
 - **Security hardening (V2.4).** Use `--no-absolute-names` on tar. Strip symlinks after extraction (`find -type l -delete`). Use full 40-char SHA. CSP meta tag required in HTML.
 
 ## Scorecard questions (use these exact 4)
@@ -74,7 +74,7 @@ Each gets red / amber / green with a one-line justification.
 | `SCANNER-OPERATOR-GUIDE.md` | V0.2 full process guide | Always — your primary reference |
 | `repo-deep-dive-prompt.md` | V2.4 investigation prompt | Phase 2 — what to check |
 | `GitHub-Repo-Scan-Template.html` | HTML template with placeholders | Phase 4b — structural scaffold |
-| `scanner-design-system.css` | Mandatory CSS (816 lines) | Phase 4b — copy verbatim into HTML |
+| `scanner-design-system.css` | Mandatory CSS (824 lines) | Phase 4b — copy verbatim into HTML |
 | `validate-scanner-report.py` | Validator gate (--report, --markdown, --template) | Phase 5 — must exit 0 |
 | `scanner-catalog.md` | Catalog of completed scans | For reference |
 | `CHANGELOG.md` | Version history (V2.1→V2.4) | For reference |

@@ -113,7 +113,7 @@ Your scan produces `GitHub-Scanner-<repo>.{html,md}`. To use it:
 | `SCANNER-OPERATOR-GUIDE.md` | V0.2 end-to-end process | Always — your primary reference |
 | `repo-deep-dive-prompt.md` | V2.4 investigation prompt | Phase 2 — tells you what to check |
 | `GitHub-Repo-Scan-Template.html` | Template with placeholders + CSP | Phase 4 — structural scaffold |
-| `scanner-design-system.css` | Mandatory CSS (816 lines) | Phase 4b — copy verbatim into HTML |
+| `scanner-design-system.css` | Mandatory CSS (824 lines) | Phase 4b — copy verbatim into HTML |
 | `validate-scanner-report.py` | Validator (--report, --markdown, --template) | Phase 5 — must exit 0 |
 | `scanner-catalog.md` | Live scan catalog | Phase 6 + reference |
 | `CHANGELOG.md` | Version history V2.1→V2.4 | Reference |
