@@ -1076,6 +1076,20 @@ Each entry pairs:
 
 A finding without a matching evidence entry is treated as unsupported.
 
+### Required "How This Scan Works" section (Section 08)
+
+Every report MUST include a methodology section (Section 08 in the HTML template) that explains to non-technical readers:
+
+1. **What this scan is** — LLM-driven investigation using GitHub CLI + free APIs, not a static analyzer or pentest
+2. **What we checked** — governance/trust, code patterns, supply chain, AI agent rules
+3. **External tools used** — OSSF Scorecard (link to securityscorecards.dev), osv.dev (link), gitleaks (link), GitHub CLI (link)
+4. **What this scan cannot detect** — transitive deps, runtime behavior, published artifact tampering, sophisticated backdoors, container contents
+5. **Scan methodology version** — prompt version, guide version, validator capabilities
+
+In the MD file, include this as a `## How This Scan Works` section after the Evidence Appendix. In the HTML file, use the Section 08 template structure with the collapsible section, vitals-grid cards, and links to tool websites.
+
+This section is the same structure for every scan — only the version numbers change. It exists so board reviewers and non-technical readers can understand and assess the methodology.
+
 ### Markdown file structure
 
 ```markdown
