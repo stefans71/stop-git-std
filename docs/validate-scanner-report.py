@@ -303,9 +303,67 @@ def check(path: Path, mode: str = "default") -> int:
             print(f"  ✗ No EXAMPLE markers — this is not a template")
             total_errors += 1
 
+        # O4: CSS sync check — verify template <style> contains the canonical CSS
+        css_file = path.parent / "scanner-design-system.css"
+        if css_file.exists():
+            canonical_css = css_file.read_text(encoding="utf-8").strip()
+            if canonical_css in styleblock:
+                print(f"  ✓ Template CSS matches scanner-design-system.css ({len(canonical_css.splitlines())} lines)")
+            else:
+                print(f"  ✗ Template CSS has DRIFTED from scanner-design-system.css — re-sync required")
+                total_errors += 1
+        else:
+            print(f"  ⚠ scanner-design-system.css not found alongside template — cannot verify CSS sync")
+            warnings += 1
+
     else:
         # Permissive default — just inform
         print(f"  ℹ {{{{PLACEHOLDER}}}} token count: {placeholders} (info; use --report or --template for strict check)")
+
+    return total_errors, warnings
+
+
+def check_markdown(path: Path) -> int:
+    """B3: Validate a Markdown scan report has required sections and minimum content."""
+    raw = path.read_text(encoding="utf-8")
+    lines = raw.splitlines()
+    total_errors = 0
+    warnings = 0
+
+    print(f"=== Validating {path.name} ({len(lines)} lines, mode: markdown) ===")
+
+    # Minimum line count — a real scan report is at least 100 lines
+    if len(lines) >= 100:
+        print(f"  ✓ Line count: {len(lines)} (minimum 100)")
+    else:
+        print(f"  ✗ Only {len(lines)} lines — expected at least 100 for a scan report")
+        total_errors += 1
+
+    # Required section headers (case-insensitive search in first 2 heading levels)
+    required_sections = [
+        ("Verdict or Executive Summary", r"(?i)#+ .*(verdict|executive\s+summary)"),
+        ("Findings", r"(?i)#+ .*finding"),
+        ("Evidence", r"(?i)#+ .*evidence"),
+        ("Scorecard", r"(?i)#+ .*scorecard"),
+    ]
+    for name, pattern in required_sections:
+        if re.search(pattern, raw):
+            print(f"  ✓ Required section found: {name}")
+        else:
+            print(f"  ✗ Missing required section: {name}")
+            total_errors += 1
+
+    # Must have at least one verdict keyword
+    if re.search(r"(?i)(critical|caution|warning|clean|informational)", raw):
+        print(f"  ✓ Verdict/severity keywords present")
+    else:
+        print(f"  ✗ No verdict or severity keywords found")
+        total_errors += 1
+
+    if total_errors == 0:
+        print(f"\n✓ {path.name} is clean.")
+    else:
+        print(f"\n✗ {path.name} has {total_errors} validation issue(s).")
 
     return total_errors, warnings
 
@@ -319,6 +377,9 @@ def main():
     elif argv and argv[0] == "--template":
         mode = "template"
         argv = argv[1:]
+    elif argv and argv[0] == "--markdown":
+        mode = "markdown"
+        argv = argv[1:]
 
     if len(argv) != 1:
         print(__doc__)
@@ -329,7 +390,11 @@ def main():
         print(f"ERROR: file not found — {path}")
         return 2
 
-    errors, warnings = check(path, mode)
+    if mode == "markdown":
+        errors, warnings = check_markdown(path)
+    else:
+        errors, warnings = check(path, mode)
+
     if errors == 0:
         if warnings > 0:
             print(f"\n✓ {path.name} is clean (with {warnings} warning(s) — review above).")

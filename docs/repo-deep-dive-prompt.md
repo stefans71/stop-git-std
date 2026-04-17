@@ -1,47 +1,20 @@
 # Repo Deep Dive — Security Investigation Prompt
 
-> **Version:** 2.3 (post-R3 fixes) | **Last updated:** 2026-04-16 | **By:** [stop-git-std](https://github.com/stefans71/stop-git-std)
+> **Version:** 2.4 | **Last updated:** 2026-04-17 | **By:** [stop-git-std](https://github.com/stefans71/stop-git-std)
 >
-> **Round 3 board review fixes applied (C1–C6, C8–C11, C14–C15, C19, C20):** validator `--report` strict-gate mode; auto-load tier classification in Step 2.5 (D9 elevated); monorepo inner-package enumeration + required `pull_request_target` coverage line (C11); Step 5b path list extended to config/defaults + Step 5c batch-change keyword grep (C15 / D3 elevated); binding scorecard calibration table (C10 / D10 elevated); F4 split-verdict broadened to Version + Deployment axes (C8); F13 per-finding-not-per-mention rule (C14 / D11 partial elevation); S8-5 / S8-7 / S8-9 tightened, S8-2 demoted to design-principle note (C19); **C20 governance single-point-of-failure finding** — standalone Warning/Critical when branch protection is absent (verified across classic API + rulesets) AND no CODEOWNERS (partially addresses D5 + D8). See `docs/board-review-V23-consolidation.md` for full context. JSON-first (D6) explicitly deferred to V3.0 with trigger conditions (see C12 in consolidation).
+> **V2.4 changes (AXIOM audit FIX NEXT items):** shell variable quoting (V4), changelog moved to `docs/CHANGELOG.md` (W1/O3), rate-limit budget check before Step 5 (W2), osv.dev fallback for Dependabot 403 (W4), OSSF Scorecard API integration (Cap-1), S8 design rules reduced to 5 hard rules (O2). Full version history: `docs/CHANGELOG.md`.
 >
-> **Changes in V2.3 (over V2.2)** — driven by Sprint 8 aesthetic refactor + reader-UX work on caveman report:
-> - **[S8-1] Utility-class rule.** Every rendered element must use the utility classes defined in the template's `<style>` block. Zero `style=""` attributes on `<body>` elements. Use `.val-good`/`.val-bad`/`.val-warn`/`.val-info` for semantic colors, `.fw-semi` for 600 weight, `.stack-md`/`.stack-sm` for card rhythm, `.p-meta`/`.p-meta-tight` for subdued paragraphs.
-> - **[S8-2] Cyan landmark colour system.** `--cyan-glow` is reserved for landmark navigation (section headers, section numbers, hyperlinks, mono/code voice). Amber/red/green carry severity. Do not use cyan for severity signalling; do not use severity colors for section landmarks. The reader should be able to scan *where am I* (cyan) and *how bad* (amber/red/green) as independent channels.
-> - **[S8-3] Exhibit rollup trigger.** When a section would otherwise contain 7+ similar-severity bullet items, roll them into the 3-exhibit `.verdict-exhibits` pattern: `.exhibit.vuln` (amber · vulnerability/disclosure/response-lag), `.exhibit.govern` (red · review gate / distribution / branch protection), `.exhibit.signals` (green · maintainer / code-quality / attack-surface). Fewer than 3 exhibits is fine. More than 3 means the cut is too fine — find sharper themes.
-> - **[S8-4] Status chip required on every finding.** Every Warning/Info/Critical finding card MUST carry a `.status-chip` next to its severity tag — `.resolved` (code fixed), `.active` (ongoing concern), `.ongoing` (recurring pattern), `.mitigated` (partial fix), `.informational` (no action). This disambiguates "the code is fixed now" from "this is still happening" without the reader opening the card.
-> - **[S8-5] Action hint required on every finding.** Every finding card MUST end its header with an `.action-hint` (`.action-hint.warn` or `.action-hint.ok` as appropriate). One sentence: what should the reader do about this specific finding. Generic "→ this is a concern" is not an action hint.
-> - **[S8-6] Section status pills + section action required on every flagged section.** Every `.collapsible-section` that flags concerns MUST include: (a) `.section-status` pill row on the collapsed summary (`⚠ N Warning · ℹ N Info · ✓ N OK`) so the reader sees the tally before opening; (b) a `.section-subtitle` orienting line explaining "why look here?"; (c) a `.section-action` block labeled "Your action" telling the reader what to do across the whole section. If the section is purely informational (vitals, coverage), skip the section-action but keep subtitle+status.
-> - **[S8-7] Priority evidence grouping.** In the Evidence Appendix, cluster the 2–3 most consequential evidence cards at the top under `.evidence-group-label.warns`, give each one `.evidence-priority` class + `.priority-flag` "★ Start here" span. Then `.evidence-group-label.context` for supporting evidence, then `.evidence-group-label.positives` for evidence backing OK findings. The ★ flag is the reader's explicit reading-order hint.
-> - **[S8-8] `rem`-only font sizes.** Every `font-size:` value in the `<style>` block must use `rem` (not `px`). The A+/A− controls mutate `document.documentElement.style.fontSize`, so any `px` value won't scale. Exception: 0px values allowed.
-> - **[S8-9] Timeline severity labels.** Every `.tl-item` MUST include a `.tl-severity-label` mono tag inside `.tl-date` — e.g., `START`, `VULN REPORTED`, `5-DAY LAG`, `FIX SHIPS`, `NO ADVISORY`, `SCAN`. The labels tell the story arc beyond just dot color. Keep them short (1–3 words).
-> - **[S8-10] Inventory quick-scan block.** Section 02A's `.inventory-summary` block (F12 one-line scan) is required whenever ≥ 3 executable files exist. The 10-second-read layer sits above the detailed inventory cards.
-> - **[S8-11] Split-verdict banner layout.** When V2.2 F4 fires (current vs historical diverge), use the two-column `.verdict-split` + `.verdict-split-divider` structure, not a one-line compound verdict. Each audience gets its own mono scope label + `.verdict-entry-headline.good/.warn/.bad` + sentence detail.
-> - **[S8-12] Validator gate.** Before delivering a report, run `python3 docs/validate-scanner-report.py <output.html>`. It must exit 0 (tag balance clean, zero inline styles, zero px font-sizes, zero `{{...}}` placeholder tokens, zero `<!-- EXAMPLE-START/END -->` markers remaining). Do not hand the report to the user if validation fails — fix the issues first.
+> **Hard design rules (5 — must follow):**
+> - **[S8-1] Utility-class rule.** Zero `style=""` attributes on `<body>` elements. Use `.val-good`/`.val-bad`/`.val-warn`/`.val-info`, `.fw-semi`, `.stack-md`/`.stack-sm`, `.p-meta`/`.p-meta-tight`.
+> - **[S8-4] Status chip on every finding.** `.status-chip` next to severity tag — `.resolved`/`.active`/`.ongoing`/`.mitigated`/`.informational`.
+> - **[S8-5] Action hint on every finding.** `.action-hint.warn` or `.action-hint.ok` — one sentence: what should the reader do.
+> - **[S8-8] `rem`-only font sizes.** No `px` font-sizes in `<style>` (exception: 0px). The A+/A- controls need rem to work.
+> - **[S8-12] Validator gate.** `python3 docs/validate-scanner-report.py --report <file>` must exit 0 before delivery.
 >
-> **Reference implementation (the truth for V2.3 design):** `docs/GitHub-Scanner-caveman.html`. When rules conflict, the reference wins — update this prompt to match the reference, not the other way around.
+> **Recommended patterns (follow reference scans — not enforced by validator):**
+> S8-2 cyan landmark colours, S8-3 exhibit rollup (7+ items), S8-6 section status pills, S8-7 priority evidence grouping, S8-9 timeline severity labels, S8-10 inventory quick-scan, S8-11 split-verdict banner.
 >
-> **Changes in V2.2 (over V2.1)** — driven by Board Review round 1 on caveman report:
-> - **[F6]** Tarball fetch now pins to captured `$HEAD_SHA` (prevents TOCTOU race against force-pushes)
-> - **[F1]** New Step 8 "Installed-artifact verification" — for every declared distribution channel, resolve what users actually install and diff against source
-> - **[F3]** Step 5 PR drill-in changes from title-keyword-gating to title-OR-path gating (path hits are mandatory)
-> - **[F4]** Split-verdict rule — when current release differs materially from historical surface, two verdict lines required
-> - **[F5]** "Silent" vs "unadvertised" language rule — don't say silent if release title names the attack class
-> - **[F7]** Step 2.5 expanded to also scan static agent-rule files (regardless of CI origin)
-> - **[F8]** Required Coverage line for prompt-injection scan ("N matches, M actionable")
-> - **[F9]** Step 2.5 now a hard output rule — imperative AI-directed language ALWAYS creates a finding card (Info/Warning/Critical by content)
-> - **[F10]** Step 7.5 mandatory output schema for paste-blocks
-> - **[F11]** Review rate now reports both metrics — `reviewDecision` set AND `reviews.length > 0`; solo-maintainer context required when owner has >80% of commits
-> - **[F12]** Executable File Inventory is now two-layer — one-liner per file + collapsed detailed card with file SHA + line ranges + diff anchor
-> - **[F13]** New "Threat-model explicitness" rule — local-attacker findings must enumerate how attacker arrives
-> - **[F14]** Step 1 now checks CODEOWNERS
-> - **[F15]** Third-party GitHub Actions without SHA pinning become a tiered finding
-> - **[F16]** Step C "Always investigate" now includes Windows scripts (`.ps1`, `.bat`, `.cmd`) with PowerShell-specific grep patterns
->
-> **Deferred from Round 1 (kept in play):** D1 binary/stego payloads, D2 dep-registry poisoning, D3 changelog-hiding beyond chore/refactor/docs (partially addressed by F3), D4 static-scanner logic/TOCTOU blind spot, D5 governance permission graph (partially addressed by F14), D6 catalog JSON schema, D7 paste-block heuristic breadth, D8 sophisticated account-takeover detection.
->
-> **Deferred from Round 2 (kept in play, to re-evaluate in Round 3):** D9 auto-load frontmatter pattern-class matching, D10 scorecard calibration table, D11 F13 threat-model cargo-cult risk, D12 version-pinning theater, D13 paste-block ↔ CI-amplified source correlation, D14 solo-maintainer graduated bucket thresholds, D15 coverage investigator-confidence summary line.
->
-> **Changes in V2.1 (over V2):** Fixed tarball fetch, added README paste-scan, added CI-amplified rule detection, verdict-per-file in inventory, catalog metadata header. (Full history: see V2.1 archive.)
+> **Reference implementation:** `docs/GitHub-Scanner-caveman.html`. When rules conflict, the reference wins.
 
 Give this prompt to any LLM with terminal access (Claude Code, Cursor, Windsurf, etc.) to investigate a GitHub repo before you trust it.
 
@@ -81,7 +54,7 @@ gh auth status || { echo "STOP: gh CLI is not authenticated. Run 'gh auth login'
 # Set repo vars — USE THESE CONSISTENTLY throughout all commands below
 OWNER=OWNER_HERE
 REPO=REPO_HERE
-SCAN_DIR=/tmp/repo-scan-$OWNER-$REPO
+SCAN_DIR="/tmp/repo-scan-${OWNER}-${REPO}"
 mkdir -p "$SCAN_DIR"
 
 # Capture the exact commit we're investigating — record this in the report's version scope
@@ -127,13 +100,28 @@ gh api "repos/$OWNER/$REPO/contributors?per_page=30" -q '.[] | "\(.login): \(.co
 
 # MAINTAINER BACKGROUND CHECK — critical for detecting sockpuppets and the xz-utils pattern.
 # For the repo owner AND top 3 contributors, pull account metadata:
-for USER in $OWNER $(gh api "repos/$OWNER/$REPO/contributors?per_page=3" -q '.[].login'); do
+while IFS= read -r USER; do
   gh api "users/$USER" -q '{login: .login, created_at: .created_at, public_repos: .public_repos, followers: .followers, bio: .bio}'
-done
+done < <(echo "$OWNER"; gh api "repos/$OWNER/$REPO/contributors?per_page=3" -q '.[].login')
 # Red flag: a 2-week-old account as sole maintainer of a popular repo. A repo owner with zero other public repos. Brand new account with their only commit being a security-critical change.
 
 # Releases
 gh release list -R "$OWNER/$REPO" --limit 20
+
+# OSSF Scorecard (Cap-1) — free API, no auth, 24 pre-computed security checks.
+# Returns 0-10 scores for: Branch-Protection, Code-Review, CI-Tests, Signed-Releases,
+# Dangerous-Workflow, Token-Permissions, Pinned-Dependencies, Vulnerabilities, etc.
+# Use these scores as authoritative evidence inputs — the LLM synthesizes narrative.
+# NOTE: Not all repos are indexed. If 404, record "OSSF Scorecard: not indexed" in Coverage.
+curl -s "https://api.securityscorecards.dev/projects/github.com/$OWNER/$REPO" | python3 -c "
+import sys, json
+try:
+    data = json.load(sys.stdin)
+    print(f\"OSSF Scorecard: overall {data.get('score', 'N/A')}/10\")
+    for check in data.get('checks', []):
+        print(f\"  {check['name']}: {check['score']}/10 — {check.get('reason', '')}\")
+except: print('OSSF Scorecard: not indexed or API error')
+" 2>/dev/null
 
 # Governance
 gh api "repos/$OWNER/$REPO/community/profile" -q '{health: .health_percentage, coc: (.files.code_of_conduct != null), contrib: (.files.contributing != null), security_policy: (.files.security_policy != null), license: .files.license.spdx_id}'
@@ -329,7 +317,25 @@ gh api "repos/$OWNER/$REPO/contents/" -q '.[] | select(.name | test("package.jso
 gh api "repos/$OWNER/$REPO/dependabot/alerts" --paginate -q '.[].security_advisory.summary' 2>&1 | head -30
 ```
 
-If Dependabot returns 403, record as "dependency vulnerability scan: blocked (requires repo admin access)" in Coverage — do NOT claim dependencies are clean.
+If Dependabot returns 403, **fall back to osv.dev** (free, zero-auth, zero-install):
+
+```bash
+# osv.dev fallback — query known vulnerabilities per direct dependency
+# Works for npm (package.json), pip (requirements.txt), cargo (Cargo.toml), go (go.mod)
+# Parse package names from the extracted tarball, then query osv.dev API per package.
+# Example for npm:
+if [ -f "$SCAN_DIR/package.json" ]; then
+  for PKG in $(cat "$SCAN_DIR/package.json" | python3 -c "import sys,json; deps=json.load(sys.stdin).get('dependencies',{}); print('\n'.join(deps.keys()))"); do
+    VULNS=$(curl -s "https://api.osv.dev/v1/query" -d "{\"package\":{\"name\":\"$PKG\",\"ecosystem\":\"npm\"}}" | python3 -c "import sys,json; v=json.load(sys.stdin).get('vulns',[]); print(len(v))" 2>/dev/null)
+    if [ "${VULNS:-0}" -gt 0 ]; then
+      echo "osv.dev: $PKG has $VULNS known vulnerability/ies"
+    fi
+  done
+fi
+# Repeat for pip (requirements.txt → ecosystem "PyPI"), cargo (Cargo.toml → "crates.io"), go (go.mod → "Go")
+```
+
+Record in Coverage: "Dependabot: 403 (admin required). Fallback: osv.dev queried for N direct dependencies, M vulnerabilities found." Do NOT claim dependencies are clean if neither source returned data.
 
 #### Step 4: PR history with self-merge detection + dual review-rate metric (F11)
 
@@ -366,6 +372,27 @@ If total PRs > 300, note in the report: "Sampled most recent 300 merged PRs out 
 
 #### Step 5: Drill into security-relevant PRs (title OR path gating — F3)
 
+**Rate-limit budget check (W2).** Step 5 is the most API-intensive phase — up to 600+ calls for PR analysis. Check remaining budget before proceeding:
+
+```bash
+# Rate-limit check — GitHub allows 5,000 authenticated requests/hour
+REMAINING=$(gh api rate_limit --jq '.resources.core.remaining')
+echo "API budget remaining: $REMAINING / 5000"
+
+# If budget is tight, reduce PR sample size to conserve calls
+PR_LIMIT=300
+if [ "$REMAINING" -lt 1000 ]; then
+  PR_LIMIT=50
+  echo "WARNING: Low API budget ($REMAINING remaining). Reducing PR sample to $PR_LIMIT."
+  echo "Note this in the report: 'API budget constrained — reduced PR sampling.'"
+elif [ "$REMAINING" -lt 500 ]; then
+  echo "CRITICAL: API budget nearly exhausted ($REMAINING remaining). Step 5b/5c will be skipped."
+  echo "Note this in the report: 'Step 5 PR drill-in skipped — API rate limit.'"
+fi
+```
+
+Use `$PR_LIMIT` instead of the hardcoded `300` in all Step 5 `gh pr list` calls below.
+
 Title keywords alone let benign-titled PRs evade deep inspection (e.g., `feat: improve flag writing` that touches `hooks/caveman-config.js`). Gate on title **OR** path — either signal triggers full inspection.
 
 ```bash
@@ -384,7 +411,7 @@ TITLE_HITS=$(gh pr list -R "$OWNER/$REPO" --state merged --limit 300 --json numb
 #     *.env.example, *.toml config, *.ini
 PATH_HITS=""
 for NUM in $(gh pr list -R "$OWNER/$REPO" --state merged --limit 300 --json number -q '.[].number'); do
-  FILES=$(gh pr view $NUM -R "$OWNER/$REPO" --json files -q '[.files[].path] | join(",")' 2>/dev/null)
+  FILES=$(gh pr view "$NUM" -R "$OWNER/$REPO" --json files -q '[.files[].path] | join(",")' 2>/dev/null)
   if echo "$FILES" | grep -qE 'install\.|uninstall\.|hooks/|\.github/workflows/|package\.json.*scripts|plugin\.json|setup\.(py|sh|cfg)|\.cursor/rules/|\.windsurf/rules/|\.clinerules/|copilot-instructions|AGENTS\.md|GEMINI\.md|CLAUDE\.md|defaults\.(json|yaml|yml|toml|ini)|config/.*\.(json|yaml|yml|toml|ini)|settings\.(yaml|yml|json)|\.env\.example'; then
     PATH_HITS="$PATH_HITS $NUM"
   fi
@@ -395,9 +422,9 @@ done
 # actual diff for security keywords even if the title and paths didn't match.
 BATCH_HITS=""
 for NUM in $(gh pr list -R "$OWNER/$REPO" --state merged --limit 300 --json number -q '.[].number'); do
-  FILE_COUNT=$(gh pr view $NUM -R "$OWNER/$REPO" --json files -q '.files | length' 2>/dev/null)
+  FILE_COUNT=$(gh pr view "$NUM" -R "$OWNER/$REPO" --json files -q '.files | length' 2>/dev/null)
   if [ "${FILE_COUNT:-0}" -gt 3 ]; then
-    if gh pr diff $NUM -R "$OWNER/$REPO" 2>/dev/null | grep -qiE 'secret|password|token|auth|vuln|cve|exploit|symlink|sandbox|escape|privilege|permission|sha256|checksum|sign(ature)?|verif|attestation'; then
+    if gh pr diff "$NUM" -R "$OWNER/$REPO" 2>/dev/null | grep -qiE 'secret|password|token|auth|vuln|cve|exploit|symlink|sandbox|escape|privilege|permission|sha256|checksum|sign(ature)?|verif|attestation'; then
       BATCH_HITS="$BATCH_HITS $NUM"
     fi
   fi
@@ -410,10 +437,10 @@ SEC_PRS=$(echo "$TITLE_HITS $PATH_HITS $BATCH_HITS" | tr ' ' '\n' | sort -un | g
 For EVERY PR in `$SEC_PRS`, you MUST pull full details and read the diff:
 
 ```bash
-for NUM in $SEC_PRS; do
-  gh pr view $NUM -R "$OWNER/$REPO" --json mergedBy,reviews,commits,files,mergeCommit,createdAt,mergedAt,author,title,reviewDecision
-  gh pr diff $NUM -R "$OWNER/$REPO"
-done
+while IFS= read -r NUM; do
+  gh pr view "$NUM" -R "$OWNER/$REPO" --json mergedBy,reviews,commits,files,mergeCommit,createdAt,mergedAt,author,title,reviewDecision
+  gh pr diff "$NUM" -R "$OWNER/$REPO"
+done <<< "$SEC_PRS"
 ```
 
 Do NOT summarize from the title alone. If diff fails for any PR, record in Coverage.
