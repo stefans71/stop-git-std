@@ -1726,6 +1726,27 @@
         <div class="vital-value {{val-good_or_val-bad}}">{{STATUS}}</div>
         <div class="vital-note">{{NOTE}}</div>
       </div>
+      <!-- V2.4 additions below -->
+      <div class="vital-cell">
+        <div class="vital-label">OSSF Scorecard (V2.4)</div>
+        <div class="vital-value {{val-good_or_val-warn_or_val-info}}">{{SCORE_OR_NOT_INDEXED}}</div>
+        <div class="vital-note">{{N_CHECKS_RETURNED_OR_API_ERROR_NOTE}}</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">osv.dev fallback (V2.4)</div>
+        <div class="vital-value {{val-good_or_val-warn_or_val-info}}">{{QUERIED_N_DEPS_OR_NOT_NEEDED}}</div>
+        <div class="vital-note">{{VULN_COUNT_OR_DEPENDABOT_RETURNED_DATA}}</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Secrets-in-history (V2.4)</div>
+        <div class="vital-value {{val-good_or_val-bad_or_val-info}}">{{CLEAN_OR_N_FINDINGS_OR_NOT_SCANNED}}</div>
+        <div class="vital-note">{{GITLEAKS_STATUS_OR_NOT_INSTALLED}}</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">API budget at Step 5 (V2.4)</div>
+        <div class="vital-value {{val-good_or_val-warn}}">{{N_REMAINING}} / 5000</div>
+        <div class="vital-note">PR sample: {{PR_LIMIT}} ({{FULL_OR_REDUCED}})</div>
+      </div>
     </div>
 
     <!-- EXAMPLE-START: gap-card (explicit coverage gap — use .finding-card.info.stack-sm) -->

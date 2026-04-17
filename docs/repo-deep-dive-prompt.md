@@ -1029,6 +1029,10 @@ At the bottom of every report, include a Coverage section with:
 
 - Which data sources were successfully queried
 - Which commands failed or returned no data (and why — auth, private repo, API limit)
+- **OSSF Scorecard (V2.4):** "OSSF Scorecard: overall X/10 (24 checks)" or "OSSF Scorecard: not indexed" or "OSSF Scorecard: API error." If indexed, the per-check scores are **evidence inputs** — cite them in findings and scorecard rationale. Place the overall score in the Repo Vitals section alongside stars/age/license. Individual check scores go in the Evidence Appendix.
+- **osv.dev fallback (V2.4):** "osv.dev: queried N direct deps, M vulnerabilities found" or "osv.dev: not queried (Dependabot returned data)." Results go in the Dependencies/Supply Chain section alongside Dependabot output. If both Dependabot AND osv.dev return data, use Dependabot as primary (more detailed) and note osv.dev confirmation.
+- **Secrets-in-history (V2.4):** "gitleaks: N findings (redacted)" or "gitleaks: clean" or "Secrets-in-history: not scanned (gitleaks not available)." If findings exist, create a finding card in the main report body (Warning or Critical). Redacted output goes in Evidence Appendix.
+- **API budget (V2.4):** "API budget at Step 5: X/5000 remaining. PR sample: N (full/reduced)." If reduced, explain why.
 - How many merged PRs were reviewed out of the total ("300 of 2,400 — sampled")
 - How many suspicious PRs had their diffs actually read ("12 of 19")
 - Whether Step A tarball extraction succeeded and file count
