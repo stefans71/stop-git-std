@@ -74,8 +74,8 @@ This is the scanner's own maintainer running the scanner against his own 2-day-o
 |----------|--------|
 | Does anyone check the code? | ⛔ **No** — solo maintainer, 0 PRs ever, no branch protection, no CODEOWNERS, no external reviewers |
 | Is it safe out of the box? | ✅ **Yes** — defensive installer, no executable payload on your machine, no network component, no telemetry, per-user scope |
-| Can you trust the maintainers? | ⚠ **Unclear** — solo dev, 3 followers, no public project track record for outside observers to calibrate against |
-| Is it actively maintained? | ⚠ **Too new** — 2 days old, 3 commits, cannot distinguish active from abandoned yet |
+| Do they fix problems quickly? | ⚠ **Unclear** — solo dev with no prior security-fix history to evaluate. No issues filed yet, so response time is unmeasurable. |
+| Do they tell you about problems? | ⚠ **Too new** — 2 days old, 3 commits. No SECURITY.md, no advisories, no changelog. Cannot assess transparency practices yet. |
 
 ---
 

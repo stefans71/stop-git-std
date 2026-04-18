@@ -41,8 +41,8 @@ Postiz is actively maintained with transparent vulnerability handling (8 publish
 |----------|--------|
 | Does anyone check the code? | **Amber** — Informal: 52% any-review / 14% formal. No required reviews on main. No CODEOWNERS. |
 | Is it safe out of the box? | **Amber** — Self-hosted: change defaults before deploying. Docker Compose ships placeholder JWT secret and default DB password. Docker image uses mutable `:latest` tag. |
-| Can you trust the maintainers? | **Amber** — Published advisories (8 CVEs with GHSA entries), but no SECURITY.md for private disclosure. |
-| Is it actively maintained? | **Green** — Weekly releases. v2.21.6 shipped 2026-04-12. Daily commits from primary maintainer. |
+| Do they fix problems quickly? | **Amber** — 8 CVEs patched with GHSA entries showing fixes were shipped, but no SECURITY.md means no private disclosure channel for reporters. Fix velocity is unclear without published timelines. |
+| Do they tell you about problems? | **Green** — Weekly releases with changelogs. 8 published GHSA advisories demonstrate willingness to disclose. v2.21.6 shipped 2026-04-12. Active release-note cadence. |
 
 ---
 

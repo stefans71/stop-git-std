@@ -70,8 +70,8 @@ The code itself is clean: 4 runtime deps (`@ngrok/ngrok`, `diff`, `playwright`, 
 |----------|--------|
 | Does anyone check the code? | RED — **No** — 88% self-merge, 0 formal reviews in sample, no branch protection, no CODEOWNERS |
 | Is it safe out of the box? | AMBER — **Mostly** — code path is clean; the risk is structural (install-from-main + no artifact verification + optional auto-update hook) |
-| Can you trust the maintainers? | GREEN — **Yes** — Garry Tan is a publicly accountable YC CEO, 17-year GitHub tenure, 5,957 followers |
-| Is it actively maintained? | GREEN — **Yes** — daily commits, iterative security-fix waves, structured version strings even without formal releases |
+| Do they fix problems quickly? | GREEN — **Yes** — iterative security-fix waves visible in commit history, rapid patch cadence during active development periods. Publicly accountable maintainer (YC CEO) with reputational incentive to respond. |
+| Do they tell you about problems? | GREEN — **Yes** — structured version strings track changes, daily commits with descriptive messages. No formal advisories or SECURITY.md, but commit-level transparency is high for a personal-tools repo. |
 
 ---
 

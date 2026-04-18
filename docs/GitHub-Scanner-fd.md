@@ -70,8 +70,8 @@ Same verdict, stronger caveat. `fd` runs with the calling user's privileges and 
 |----------|--------|
 | Does anyone check the code? | ⚠ **Review happens but isn't required** — ~33% formal review rate in sample (OSSF Code-Review 8/10 corroborates), no branch protection (OSSF Branch-Protection −1/10), no CODEOWNERS, three-person effective core |
 | Is it safe out of the box? | ✅ **Yes** — clean source, single benign `unsafe` block for SIGINT restore, no network I/O, narrow filesystem-walking surface |
-| Can you trust the maintainers? | ✅ **Yes** — sharkdp at Astral, tmccombs 186-repo footprint, active supply-chain work (added SLSA attestations in 2025-10). OSSF Security-Policy 10/10, Maintained 10/10. |
-| Is it actively maintained? | ⚠ **Partly** — v10.4.x shipped March 2026 after an **8-month gap** since v10.3.0. Dependabot bumps flow weekly, but feature releases are sporadic |
+| Do they fix problems quickly? | ✅ **Yes** — OSSF Security-Policy 10/10, active supply-chain work (SLSA attestations added 2025-10), Dependabot bumps merged weekly. Maintainer track record shows prompt response to dependency vulnerabilities. |
+| Do they tell you about problems? | ⚠ **Partly** — release notes accompany each tag, but the 8-month gap between v10.3.0 and v10.4.x left users without communication on status. No published security advisories or GHSA entries despite clean history. Changelog exists but is release-only, not advisory-driven. |
 
 ---
 
