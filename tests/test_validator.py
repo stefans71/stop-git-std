@@ -382,6 +382,98 @@ class TestTagBalance:
 
 
 # ===========================================================================
+# PARITY MODE TESTS (PD2)
+# ===========================================================================
+
+class TestParityGoldStandard:
+    """zustand MD+HTML pair should pass parity check."""
+
+    def test_zustand_parity_no_errors(self):
+        if ZUSTAND_HTML.exists():
+            errors, warnings = check_parity(ZUSTAND_MD, ZUSTAND_HTML)
+            assert errors == 0, f"Parity check has {errors} error(s)"
+
+    def test_zustand_parity_scorecard_match(self):
+        if ZUSTAND_HTML.exists():
+            md_raw = ZUSTAND_MD.read_text(encoding="utf-8").lower()
+            html_raw = ZUSTAND_HTML.read_text(encoding="utf-8").lower()
+            for q in ["does anyone check the code?", "do they fix problems quickly?",
+                       "do they tell you about problems?", "is it safe out of the box?"]:
+                assert q in md_raw, f"MD missing: {q}"
+                assert q in html_raw, f"HTML missing: {q}"
+
+
+class TestParityFailCases:
+    """Synthetic pairs that should fail parity."""
+
+    def test_html_extra_finding_fails(self):
+        md = (
+            "## Verdict: Caution\n## Trust Scorecard\n"
+            "| Does anyone check the code? | Yes |\n"
+            "| Do they fix problems quickly? | Yes |\n"
+            "| Do they tell you about problems? | Yes |\n"
+            "| Is it safe out of the box? | Yes |\n"
+            "## 01 · Actions\n## 02 · Findings\n### F0 — Warning · test\n"
+            "## 02A · Inventory\n## 04 · Timeline\n## 05 · Vitals\n"
+            "## 06 · Coverage\n## 07 · Evidence\n### ★ Priority\n## 08 · Methodology\n"
+        ) + ("line\n" * 80)
+        html = (
+            '<html><body>'
+            '<div class="verdict-banner caution"></div>'
+            '<div>Does anyone check the code?</div>'
+            '<div>Do they fix problems quickly?</div>'
+            '<div>Do they tell you about problems?</div>'
+            '<div>Is it safe out of the box?</div>'
+            '<span class="exhibit-item-tag">Test &middot; F0</span>'
+            '<span class="exhibit-item-tag">Extra &middot; F99</span>'
+            '</body></html>'
+        )
+        md_p = _tmp(md)
+        html_p = _tmp(html, suffix=".html")
+        errors, _ = check_parity(md_p, html_p)
+        assert errors > 0, "HTML with extra finding F99 not in MD should fail"
+        md_p.unlink()
+        html_p.unlink()
+
+    def test_scorecard_mismatch_fails(self):
+        md = (
+            "## Verdict: Caution\n## Trust Scorecard\n"
+            "| Does anyone check the code? | Yes |\n"
+            "| Do they fix problems quickly? | Yes |\n"
+            "| Do they tell you about problems? | Yes |\n"
+            "| Is it safe out of the box? | Yes |\n"
+            "## 01 · Actions\n## 02 · Findings\n## 02A · Inventory\n"
+            "## 04 · Timeline\n## 05 · Vitals\n## 06 · Coverage\n"
+            "## 07 · Evidence\n### ★ Priority\n## 08 · Methodology\n"
+        ) + ("line\n" * 80)
+        html = (
+            '<html><body>'
+            '<div class="verdict-banner caution"></div>'
+            '<div>Does anyone check the code?</div>'
+            '<div>Can you trust the maintainers?</div>'
+            '<div>Is it actively maintained?</div>'
+            '<div>Is it safe out of the box?</div>'
+            '</body></html>'
+        )
+        md_p = _tmp(md)
+        html_p = _tmp(html, suffix=".html")
+        errors, _ = check_parity(md_p, html_p)
+        assert errors > 0, "Mismatched scorecard questions should fail"
+        md_p.unlink()
+        html_p.unlink()
+
+    def test_verdict_mismatch_fails(self):
+        md = "## Verdict: Caution\n" + ("line\n" * 100)
+        html = '<html><body><div class="verdict-banner critical"></div></body></html>'
+        md_p = _tmp(md)
+        html_p = _tmp(html, suffix=".html")
+        errors, _ = check_parity(md_p, html_p)
+        assert errors > 0, "Verdict mismatch (Caution vs Critical) should fail"
+        md_p.unlink()
+        html_p.unlink()
+
+
+# ===========================================================================
 # Run as standalone script
 # ===========================================================================
 

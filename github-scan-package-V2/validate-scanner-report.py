@@ -432,6 +432,106 @@ def check_markdown(path: Path) -> int:
     return total_errors, warnings
 
 
+def check_parity(md_path: Path, html_path: Path) -> tuple:
+    """PD2: Check that MD and HTML reports contain the same structural content.
+    The MD is canonical — HTML may not add findings absent from MD."""
+    md_raw = md_path.read_text(encoding="utf-8")
+    html_raw = html_path.read_text(encoding="utf-8")
+    total_errors = 0
+    warnings = 0
+
+    print(f"=== Parity check: {md_path.name} ↔ {html_path.name} ===")
+
+    # 1. Finding IDs — extract from both, MD is canonical
+    md_findings = set(re.findall(r"###\s+(F\d+|F-[\w-]+)\s*[—–-]", md_raw))
+    # HTML findings: look for finding IDs adjacent to severity/status markers in body text
+    # Strip CSS/style/script/comments first to avoid false positives from rule references
+    html_body = re.sub(r"<style[^>]*>.*?</style>", "", html_raw, flags=re.DOTALL | re.IGNORECASE)
+    html_body = re.sub(r"<!--.*?-->", "", html_body, flags=re.DOTALL)
+    html_body = re.sub(r"/\*.*?\*/", "", html_body, flags=re.DOTALL)
+    # Match finding IDs in exhibit tags (most reliable HTML pattern)
+    # Pattern 1: exhibit-item-tag content like "Dependabot alerts · F1" or "· F0"
+    html_findings = set(re.findall(r'exhibit-item-tag[^<]*?(?:·|&middot;)\s*(F\d+|F-[\w-]+)', html_body))
+    # Pattern 2: finding IDs with severity in heading-like context
+    html_findings |= set(re.findall(r"(F\d+|F-[\w-]+)\s*(?:—|&mdash;|–)\s*(?:Warning|Critical|OK|Info)", html_body))
+
+    if md_findings:
+        html_only = html_findings - md_findings
+        md_only = md_findings - html_findings
+        if not html_only and not md_only:
+            print(f"  ✓ Finding IDs match: {sorted(md_findings)}")
+        else:
+            if html_only:
+                print(f"  ✗ HTML has findings NOT in MD (violates MD-canonical rule): {sorted(html_only)}")
+                total_errors += 1
+            if md_only:
+                print(f"  ⚠ MD findings missing from HTML: {sorted(md_only)}")
+                warnings += 1
+    else:
+        print(f"  ⚠ Could not extract finding IDs from MD for comparison")
+        warnings += 1
+
+    # 2. Scorecard questions — both must have the same 4
+    canonical_qs = [
+        "Does anyone check the code?",
+        "Do they fix problems quickly?",
+        "Do they tell you about problems?",
+        "Is it safe out of the box?",
+    ]
+    md_qs = [q for q in canonical_qs if q.lower() in md_raw.lower()]
+    html_qs = [q for q in canonical_qs if q.lower() in html_raw.lower()]
+    if set(md_qs) == set(html_qs):
+        print(f"  ✓ Scorecard questions match ({len(md_qs)} questions in both)")
+    else:
+        md_only_q = set(md_qs) - set(html_qs)
+        html_only_q = set(html_qs) - set(md_qs)
+        if md_only_q:
+            print(f"  ✗ Scorecard questions in MD but not HTML: {md_only_q}")
+            total_errors += 1
+        if html_only_q:
+            print(f"  ✗ Scorecard questions in HTML but not MD: {html_only_q}")
+            total_errors += 1
+
+    # 3. Verdict level — both must agree
+    # MD verdict: look for "Verdict: X" or "Verdict | **X**" in header area
+    md_primary = re.search(r"(?i)verdict[:\s|*]+(clean|caution|critical)", md_raw[:1500])
+    # HTML verdict: look for verdict-banner class with verdict level
+    html_primary = re.search(r'verdict-banner\s+(clean|caution|critical)', html_raw, re.IGNORECASE)
+    if not html_primary:
+        html_primary = re.search(r"(?i)class=\"[^\"]*\b(clean|caution|critical)\b", html_raw[:5000])
+    if md_primary and html_primary:
+        if md_primary.group(1).lower() == html_primary.group(1).lower():
+            print(f"  ✓ Verdict level matches: {md_primary.group(1)}")
+        else:
+            print(f"  ✗ Verdict mismatch — MD: {md_primary.group(1)}, HTML: {html_primary.group(1)}")
+            total_errors += 1
+    elif md_primary:
+        print(f"  ⚠ Could not extract verdict from HTML for comparison")
+        warnings += 1
+    else:
+        print(f"  ⚠ Could not extract verdict from MD for comparison")
+        warnings += 1
+
+    # 4. Section presence — key sections should be in both
+    key_sections = ["what should i do", "what we found", "evidence", "coverage",
+                    "timeline", "repo vital", "how this scan works"]
+    for section in key_sections:
+        in_md = section in md_raw.lower()
+        in_html = section in html_raw.lower()
+        if in_md and not in_html:
+            print(f"  ⚠ Section '{section}' in MD but not found in HTML")
+            warnings += 1
+
+    if total_errors == 0 and warnings == 0:
+        print(f"\n✓ Parity check clean — MD and HTML are structurally consistent.")
+    elif total_errors == 0:
+        print(f"\n✓ Parity check clean (with {warnings} warning(s)).")
+    else:
+        print(f"\n✗ Parity check found {total_errors} error(s).")
+
+    return total_errors, warnings
+
+
 def main():
     argv = sys.argv[1:]
     mode = "default"
@@ -444,6 +544,26 @@ def main():
     elif argv and argv[0] == "--markdown":
         mode = "markdown"
         argv = argv[1:]
+    elif argv and argv[0] == "--parity":
+        mode = "parity"
+        argv = argv[1:]
+
+    if mode == "parity":
+        if len(argv) != 2:
+            print("Usage: python3 validate-scanner-report.py --parity <md_file> <html_file>")
+            return 2
+        md_path = Path(argv[0])
+        html_path = Path(argv[1])
+        if not md_path.exists():
+            print(f"ERROR: MD file not found — {md_path}")
+            return 2
+        if not html_path.exists():
+            print(f"ERROR: HTML file not found — {html_path}")
+            return 2
+        errors, warnings = check_parity(md_path, html_path)
+        if errors == 0:
+            return 0
+        return 1
 
     if len(argv) != 1:
         print(__doc__)
