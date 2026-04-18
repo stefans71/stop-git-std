@@ -1,0 +1,42 @@
+{% set steps = form.phase_4_structured_llm.get('action_steps', {}).get('entries', []) %}
+{% set section_actions = form.phase_4_structured_llm.get('section_actions', {}).get('entries', []) %}
+{% set s01 = (section_actions | selectattr('section', 'equalto', '01') | map(attribute='action') | list) %}
+{% set s01_action = s01[0] if s01 else '' %}
+{% set lead = form.phase_4_structured_llm.get('section_leads', {}).get('section_01') %}
+## 01 · What should I do?
+
+{% if lead and lead.get('pill_row') %}
+> {{ lead.pill_row }}
+>
+> {{ lead.get('summary', '') }}
+{% else %}
+{% set n = steps | length %}
+{% set warn_count = steps | selectattr('severity', 'equalto', 'Warning') | list | length %}
+{% set ok_count = steps | selectattr('severity', 'equalto', 'OK') | list | length %}
+{% set bits = [] %}
+{% if ok_count %}{% set _ = bits.append('✓ ' ~ ok_count ~ ' safe step' ~ ('s' if ok_count != 1 else '')) %}{% endif %}
+{% if warn_count %}{% set _ = bits.append('⚠ ' ~ warn_count ~ ' mitigation' ~ ('s' if warn_count != 1 else '')) %}{% endif %}
+{% set _ = bits.append(n|string ~ ' step' ~ ('s' if n != 1 else '')) %}
+> {{ bits | join(' · ') }}
+{% if s01_action %}
+>
+> {{ s01_action }}
+{% endif %}
+{% endif %}
+
+{% for s in steps %}
+### Step {{ s.get('step', '') }}: {{ s.get('headline', '') }} ({{ SEV_SYMBOL.get(s.get('severity', 'OK'), '') }})
+
+{% if s.get('non_technical') %}
+**Non-technical:** {{ s.non_technical }}
+
+{% endif %}
+{% if s.get('command') %}
+```{{ s.get('command_lang', 'bash') }}
+{{ s.command }}
+```
+
+{% endif %}
+{% endfor %}
+---
+

@@ -1,0 +1,13 @@
+{% set vitals = form.phase_4_structured_llm.get('repo_vitals', {}).get('rows', []) %}
+{% if vitals %}
+## 05 · Repo vitals
+
+| Metric | Value | Note |
+|--------|-------|------|
+{% for v in vitals %}
+| {{ v.get('metric', '') }} | {{ v.get('value', '') }} | {{ v.get('note', '') }} |
+{% endfor %}
+
+---
+
+{% endif %}

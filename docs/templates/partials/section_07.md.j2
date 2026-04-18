@@ -1,0 +1,68 @@
+{% set evidence = form.phase_4_structured_llm.get('evidence', {}).get('entries', []) %}
+{% set priority = form.phase_4_structured_llm.get('priority_evidence', {}).get('selections', []) %}
+{% set priority_ids = priority | map(attribute='evidence_id') | list %}
+{% set intro = form.phase_4_structured_llm.get('evidence_intro') %}
+{% if evidence %}
+## 07 · Evidence appendix
+
+> ℹ {{ evidence | length }} facts · ★ {{ priority_ids | length }} priority
+
+{% if intro %}
+{{ intro }}
+
+{% endif %}
+{% set priority_entries = evidence | selectattr('id', 'in', priority_ids) | list %}
+{% set other_entries = evidence | rejectattr('id', 'in', priority_ids) | list %}
+{% if priority_entries %}
+### ★ Priority evidence (read first)
+
+{% for e in priority_entries %}
+#### ★ Evidence {{ e.get('id', '') | replace('E', '') }} — {{ e.get('claim', '') }}
+
+{% if e.get('command') %}
+```{{ e.get('command_lang', 'bash') }}
+{{ e.command }}
+```
+
+{% endif %}
+{% if e.get('result') %}
+Result:
+```{{ e.get('result_lang', '') }}
+{{ e.result }}
+```
+
+{% endif %}
+{% if e.get('classification') %}
+*Classification: {{ e.classification }}*
+
+{% endif %}
+{% endfor %}
+{% endif %}
+{% if other_entries %}
+### Other evidence
+
+{% for e in other_entries %}
+#### Evidence {{ e.get('id', '') | replace('E', '') }} — {{ e.get('claim', '') }}
+
+{% if e.get('command') %}
+```{{ e.get('command_lang', 'bash') }}
+{{ e.command }}
+```
+
+{% endif %}
+{% if e.get('result') %}
+Result:
+```{{ e.get('result_lang', '') }}
+{{ e.result }}
+```
+
+{% endif %}
+{% if e.get('classification') %}
+*Classification: {{ e.classification }}*
+
+{% endif %}
+{% endfor %}
+{% endif %}
+---
+
+{% endif %}

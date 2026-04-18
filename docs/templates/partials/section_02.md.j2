@@ -1,0 +1,70 @@
+{% set findings = form.phase_4_structured_llm.get('findings', {}).get('entries', []) %}
+{% set prose_entries = form.get('phase_5_prose_llm', {}).get('per_finding_prose', {}).get('entries', []) %}
+{% set prose_map = {} %}
+{% for p in prose_entries %}{% set _ = prose_map.update({p.finding_id: p}) %}{% endfor %}
+{% set section_actions = form.phase_4_structured_llm.get('section_actions', {}).get('entries', []) %}
+{% set s02 = (section_actions | selectattr('section', 'equalto', '02') | map(attribute='action') | list) %}
+{% set s02_action = s02[0] if s02 else '' %}
+{% set counts = {'Critical': 0, 'Warning': 0, 'Info': 0, 'OK': 0} %}
+{% for f in findings %}{% set _ = counts.update({f.severity: counts.get(f.severity, 0) + 1}) %}{% endfor %}
+{% set pill_bits = [] %}
+{% for sev in ['Critical', 'Warning', 'Info', 'OK'] %}
+{% if counts[sev] %}{% set _ = pill_bits.append(SEV_SYMBOL[sev] ~ ' ' ~ counts[sev] ~ ' ' ~ sev) %}{% endif %}
+{% endfor %}
+## 02 · What we found
+
+> {{ pill_bits | join(' · ') }}
+>
+> {{ findings | length }} findings total.{% if s02_action %} {{ s02_action }}{% endif %}
+
+{% for f in findings %}
+{% set sev = f.get('severity', 'OK') %}
+{% set header_bits = [f.id ~ ' — ' ~ sev] %}
+{% if f.get('kind') %}{% set _ = header_bits.append(f.kind) %}{% endif %}
+{% if f.get('boundary_case') %}{% set _ = header_bits.append('boundary case') %}{% endif %}
+### {{ header_bits | join(' · ') }} — {{ f.get('title', '') }}
+
+{% set hint = f.get('action_hint') %}
+{% set bits = [] %}
+{% if f.get('duration_label') %}{% set _ = bits.append(f.duration_label) %}{% endif %}
+{% if f.get('date_label') %}{% set _ = bits.append(f.date_label) %}{% endif %}
+{% if hint %}{% set _ = bits.append('→ ' ~ hint) %}{% endif %}
+{% if bits %}
+*{{ bits | join(' · ') }}*
+
+{% endif %}
+{% set prose = prose_map.get(f.id) %}
+{% if prose %}
+{% for p in prose.get('body_paragraphs', []) %}
+{{ p }}
+
+{% endfor %}
+{% if prose.get('what_we_observed') %}
+**What we observed.** {{ prose.what_we_observed }}
+
+{% endif %}
+{% if prose.get('what_this_means') %}
+**What this means for you.** {{ prose.what_this_means }}
+
+{% endif %}
+{% if prose.get('what_this_does_not_mean') %}
+**What this does NOT mean.** {{ prose.what_this_does_not_mean }}
+
+{% endif %}
+{% endif %}
+{% set meta_rows = f.get('meta_table') or [] %}
+{% if meta_rows %}
+| Meta | Value |
+|------|-------|
+{% for row in meta_rows %}
+| {{ row.get('label', '') }} | {{ row.get('value', '') }} |
+{% endfor %}
+
+{% endif %}
+{% if f.get('how_to_fix') %}
+**How to fix.** {{ f.how_to_fix }}
+
+{% endif %}
+{% endfor %}
+---
+

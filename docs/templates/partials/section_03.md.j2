@@ -1,0 +1,38 @@
+{% set pr = form.phase_1_raw_capture.get('pr_review', {}) or {} %}
+{% set sample = pr.get('prs', []) %}
+{% set review_summary = form.phase_4_structured_llm.get('pr_sample_review', {}) or {} %}
+{% set rows = review_summary.get('rows', []) %}
+{% if sample or rows %}
+## 03 · Suspicious code changes
+
+{% if review_summary.get('intro') %}
+> {{ review_summary.intro }}
+
+{% else %}
+{% set concern_count = rows | selectattr('flagged', 'equalto', true) | list | length %}
+{% set sample_total = rows | length if rows else sample | length %}
+> ✓ {{ concern_count }} security-concerning PRs · ℹ {{ sample_total }} recent merges sampled
+
+{% endif %}
+{% set formal = pr.get('formal_review_rate') %}
+Sample: the {{ sample|length }} most recent merged PRs at scan time{% if rows | selectattr('flagged', 'equalto', true) | list %}, plus flagged PRs{% endif %}.{% if formal is not none %} Dual review-rate metric on this sample: formal `reviewDecision` set on {{ formal }}% of sampled PRs.{% endif %}
+
+{% if rows %}
+| PR | What it did | Submitted by | Merged by | Reviewed? | Concern |
+|----|-------------|--------------|-----------|-----------|---------|
+{% for r in rows %}
+{% set pr_url = r.get('url') or 'https://github.com/' ~ form.target.owner ~ '/' ~ form.target.repo ~ '/pull/' ~ (r.get('number', '') | string) %}
+| [#{{ r.get('number', '') }}]({{ pr_url }}) | {{ r.get('what', '') }} | {{ r.get('author', '') }} | {{ r.get('merger', '') }} | {{ r.get('reviewed', '') }} | {{ r.get('concern', '') }} |
+{% endfor %}
+{% else %}
+| PR | Author | Merger | Formal review | Any review | Self-merge |
+|----|--------|--------|---------------|------------|------------|
+{% for p in sample %}
+{% set pr_url = 'https://github.com/' ~ form.target.owner ~ '/' ~ form.target.repo ~ '/pull/' ~ (p.get('number', '') | string) %}
+| [#{{ p.get('number', '') }}]({{ pr_url }}) | {{ p.get('author', '') }} | {{ p.get('merger', '') }} | {{ p.get('formal_review') or '—' }} | {{ 'yes' if p.get('any_review') else 'no' }} | {{ 'yes' if p.get('self_merge') else 'no' }} |
+{% endfor %}
+{% endif %}
+
+---
+
+{% endif %}

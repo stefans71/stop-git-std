@@ -1,0 +1,32 @@
+{% set target = form.target %}
+{% set catalog = form.phase_4_structured_llm.get('catalog_metadata', {}) or {} %}
+{% set repo_meta = form.phase_1_raw_capture.repo_metadata %}
+{% set head_sha = form.phase_1_raw_capture.pre_flight.head_sha or '' %}
+{% set releases = form.phase_1_raw_capture.get('releases', {}).get('entries', []) %}
+{% set latest_tag = releases[0].tag if releases else 'untagged' %}
+{% set verdict = form.get('phase_4b_computed', {}).get('verdict', {}).get('level', 'Unknown') %}
+{% set split = form.phase_4_structured_llm.get('split_axis_decision', {}) or {} %}
+{% set should_split = split.get('should_split', False) %}
+{% set scanner_ver = form.get('_meta', {}).get('scanner_version', 'unknown') %}
+{% set prior = catalog.get('prior_scan_note') or 'None — first scan of this repo. Future re-runs should rename this file to `GitHub-Scanner-' ~ target.repo ~ '-' ~ scan_date ~ '.md` before generating the new report.' %}
+## Catalog metadata
+
+| Field | Value |
+|-------|-------|
+| Report file | `GitHub-Scanner-{{ target.repo }}.md` (+ `.html` companion) |
+| Repo | [github.com/{{ target.owner }}/{{ target.repo }}]({{ target.url }}) |
+| Short description | {{ catalog.get('short_description', repo_meta.get('description', '')) }} |
+| Category | `{{ catalog.get('category', '') }}` |
+| Subcategory | `{{ catalog.get('subcategory', '') }}` |
+| Language | {{ repo_meta.get('primary_language', '') }} |
+| License | {{ repo_meta.get('license_spdx', 'None') }} |
+| Target user | {{ catalog.get('target_user', '') }} |
+| Verdict | **{{ verdict }}**{% if should_split %} (split — see below){% endif %} |
+| Scanned revision | `main @ {{ short_sha(head_sha) }}` (release tag `{{ latest_tag }}`) |
+| Commit pinned | `{{ head_sha }}` |
+| Scanner version | `{{ scanner_ver }}` |
+| Scan date | `{{ scan_date }}` |
+| Prior scan | {{ prior }} |
+
+---
+

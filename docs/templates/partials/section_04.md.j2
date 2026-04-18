@@ -1,0 +1,27 @@
+{% set events = form.phase_4_structured_llm.get('timeline_events', {}).get('entries', []) %}
+{% set intro = form.phase_4_structured_llm.get('timeline_intro') %}
+{% if events %}
+## 04 · Timeline
+
+{% set tone_counts = {'positive': 0, 'neutral': 0, 'negative': 0, 'warn': 0} %}
+{% for e in events %}{% set _ = tone_counts.update({e.get('tone', 'neutral'): tone_counts.get(e.get('tone', 'neutral'), 0) + 1}) %}{% endfor %}
+{% set pill_bits = [] %}
+{% if tone_counts.positive %}{% set _ = pill_bits.append('✓ ' ~ tone_counts.positive ~ ' good') %}{% endif %}
+{% if tone_counts.neutral %}{% set _ = pill_bits.append('🟡 ' ~ tone_counts.neutral ~ ' neutral') %}{% endif %}
+{% if tone_counts.negative %}{% set _ = pill_bits.append('🔴 ' ~ tone_counts.negative ~ ' concerning') %}{% endif %}
+{% if tone_counts.warn %}{% set _ = pill_bits.append('🟠 ' ~ tone_counts.warn ~ ' warning') %}{% endif %}
+{% if pill_bits %}
+> {{ pill_bits | join(' · ') }}
+{% if intro %}
+>
+> {{ intro }}
+{% endif %}
+
+{% endif %}
+{% for e in events %}
+- {{ TONE_ICON.get(e.get('tone', 'neutral'), '🟡') }} **{{ e.get('date', '') }} · {{ e.get('label', '') }}** — {{ e.get('note', '') }}
+{% endfor %}
+
+---
+
+{% endif %}

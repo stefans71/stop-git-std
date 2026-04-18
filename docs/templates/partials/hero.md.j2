@@ -1,0 +1,19 @@
+{% set target = form.target %}
+{% set repo_meta = form.phase_1_raw_capture.repo_metadata %}
+{% set head_sha = form.phase_1_raw_capture.pre_flight.head_sha or '' %}
+{% set releases = form.phase_1_raw_capture.get('releases', {}).get('entries', []) %}
+{% set latest_tag = releases[0].tag if releases else '' %}
+{% set age = repo_age_years(repo_meta.get('created_at', ''), scan_date) %}
+{% set stars = fmt_int(repo_meta.get('stargazer_count', 0)) %}
+{% set license_ = repo_meta.get('license_spdx') or 'None' %}
+{% set caption = form.get('phase_5_prose_llm', {}).get('editorial_caption', {}).get('text', '') %}
+# Security Investigation: {{ target.owner }}/{{ target.repo }}
+
+**Investigated:** {{ scan_date }} | **Applies to:** main @ `{{ head_sha }}`{% if latest_tag %} · {{ latest_tag }}{% endif %} | **Repo age:** {{ age }} | **Stars:** {{ stars }} | **License:** {{ license_ }}
+
+{% if caption %}
+> {{ caption }}
+
+{% endif %}
+---
+

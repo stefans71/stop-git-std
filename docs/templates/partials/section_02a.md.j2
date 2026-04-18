@@ -1,0 +1,33 @@
+{% set inv = form.phase_4_structured_llm.get('executable_file_inventory', {}) or {} %}
+{% set summary = inv.get('layer1_summary') %}
+{% set rows = inv.get('layer2_entries', []) %}
+{% if summary or rows %}
+## 02A · Executable file inventory
+
+{% if inv.get('lead') %}
+> {{ inv.lead }}
+
+{% endif %}
+{% if summary %}
+### Layer 1 — one-line summary
+
+- {{ summary }}
+
+{% endif %}
+{% if rows %}
+### Layer 2 — per-file runtime inventory
+
+| File | Kind | Runtime | Dangerous calls | Network | Notes |
+|------|------|---------|-----------------|---------|-------|
+{% for r in rows %}
+| `{{ r.get('path', '') }}` | {{ r.get('kind', '') }} | {{ r.get('runtime', '') }} | {{ r.get('dangerous_calls', 'None') }} | {{ r.get('network', 'None') }} | {{ r.get('notes', '') }} |
+{% endfor %}
+
+{% endif %}
+{% if inv.get('closing_note') %}
+{{ inv.closing_note }}
+
+{% endif %}
+---
+
+{% endif %}

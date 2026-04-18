@@ -1,0 +1,39 @@
+{% set verdict_level = form.get('phase_4b_computed', {}).get('verdict', {}).get('level', 'Unknown') %}
+{% set split = form.phase_4_structured_llm.get('split_axis_decision', {}) or {} %}
+{% set entries = split.get('entries', []) %}
+{% set axis = split.get('axis', '') %}
+{% set groups = form.phase_4_structured_llm.get('verdict_exhibits', {}).get('groups', []) %}
+{% if split.get('should_split') and entries %}
+## Verdict: {{ verdict_level }} (split — {{ axis|capitalize }} axis only)
+{% else %}
+## Verdict: {{ verdict_level }}
+{% endif %}
+
+{% for e in entries %}
+### {{ axis|capitalize }} · {{ e.get('audience', '') }}{% if e.get('scope_detail') %} · {{ e.scope_detail }}{% endif %} — **{{ e.get('verdict_level', verdict_level) }} — {{ e.get('headline', '') }}**
+
+{{ e.get('summary', '') }}
+
+{% endfor %}
+{% if groups %}
+### Verdict exhibits (grouped for reading speed)
+
+{% for g in groups %}
+<details>
+<summary><strong>{{ g.get('symbol', '⚠') }} {{ g.get('headline', '') }} ({{ g.get('items', [])|length }} findings)</strong>
+{% if g.get('one_line_summary') %}
+<br><em>{{ g.one_line_summary }}</em></summary>
+{% else %}
+</summary>
+{% endif %}
+
+{% for it in g.get('items', []) %}
+{{ loop.index }}. **{{ it.get('tag', '') }}** — {{ it.get('claim', '') }}
+{% endfor %}
+
+</details>
+
+{% endfor %}
+{% endif %}
+---
+

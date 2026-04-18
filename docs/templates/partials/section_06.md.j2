@@ -1,0 +1,44 @@
+{% set coverage = form.get('phase_3_computed', {}).get('coverage_status', {}).get('cells', []) %}
+{% set detail = form.phase_4_structured_llm.get('coverage_detail', {}).get('rows', []) %}
+{% set monorepo = form.phase_4_structured_llm.get('coverage_detail', {}).get('monorepo') %}
+{% set pr_target = form.phase_4_structured_llm.get('coverage_detail', {}).get('pr_target_usage') %}
+{% set intro = form.phase_4_structured_llm.get('coverage_intro') %}
+{% set gaps = form.phase_4_structured_llm.get('coverage_gaps', {}).get('entries', []) %}
+{% set status_icon = {'ok': '✅', 'partial': '⚠', 'blocked': '❌', 'not_available': '⚠', 'not_indexed': 'ℹ', 'not_queried': 'ℹ', 'unknown': '⚠'} %}
+{% if coverage or detail or monorepo or pr_target %}
+## 06 · Investigation coverage
+
+{% if intro %}
+> {{ intro }}
+
+{% endif %}
+| Check | Result |
+|-------|--------|
+{% set seen = [] %}
+{% for d in detail %}
+| {{ d.get('check', '') }} | {{ d.get('result', '') }} |
+{% set _ = seen.append(d.get('check')) %}
+{% endfor %}
+{% for c in coverage %}
+{% if c.get('name') not in seen %}
+| {{ c.name }} | {{ status_icon.get(c.get('status', 'unknown'), '⚠') }} {{ c.get('detail', '') }} |
+{% endif %}
+{% endfor %}
+{% if monorepo and monorepo.get('is_monorepo') %}
+| Monorepo coverage | {{ monorepo.get('inner_package_count', 0) }} inner packages{% if monorepo.get('sampled_inner_packages') %} ({{ monorepo.sampled_inner_packages | length }} sampled: {{ monorepo.sampled_inner_packages | join(', ') }}){% endif %} · lifecycle hits: {{ monorepo.get('lifecycle_script_hits', 0) }} |
+{% endif %}
+{% if pr_target %}
+| `pull_request_target` usage | {{ pr_target.usage_count }} found{% if pr_target.get('workflows_checked') %} across {{ pr_target.workflows_checked }} workflows{% endif %}{% if pr_target.get('note') %} · {{ pr_target.note }}{% endif %} |
+{% endif %}
+
+{% if gaps %}
+**Gaps noted:**
+
+{% for g in gaps %}
+{{ loop.index }}. {{ g }}
+{% endfor %}
+
+{% endif %}
+---
+
+{% endif %}
