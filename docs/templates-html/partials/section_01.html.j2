@@ -1,0 +1,69 @@
+{#
+  Section 01 — "What Should I Do?" action steps.
+  MD analogue: docs/templates/partials/section_01.md.j2
+  Source scaffold: EXAMPLE-START: section-01-what-should-i-do (lines ~1156-1183)
+
+  Data paths:
+    form.phase_4_structured_llm.action_steps.entries[]
+      {step, type, headline, severity, non_technical, command, command_lang}
+    form.phase_4_structured_llm.section_actions.entries[] (section=='01').action
+    form.phase_4_structured_llm.section_leads.section_01.{pill_row,summary}
+
+  Card class map: Critical→stop, Warning→wait, Info→info-action, OK→ok-action
+#}
+{% set steps = form.phase_4_structured_llm.get('action_steps', {}).get('entries', []) %}
+{% set section_actions = form.phase_4_structured_llm.get('section_actions', {}).get('entries', []) %}
+{% set s01_list = (section_actions | selectattr('section', 'equalto', '01') | map(attribute='action') | list) %}
+{% set s01_action = s01_list[0] if s01_list else '' %}
+{% set lead = form.phase_4_structured_llm.get('section_leads', {}).get('section_01') %}
+{% set card_class_map = {'Critical': 'stop', 'Warning': 'wait', 'Info': 'info-action', 'OK': 'ok-action'} %}
+{% if lead and lead.get('pill_row') %}
+{% set pill_row = lead.pill_row %}
+{% set subtitle = lead.get('summary', '') %}
+{% else %}
+{% set n = steps | length %}
+{% set warn_count = steps | selectattr('severity', 'equalto', 'Warning') | list | length %}
+{% set ok_count = steps | selectattr('severity', 'equalto', 'OK') | list | length %}
+{% set bits = [] %}
+{% if ok_count %}{% set _ = bits.append('✓ ' ~ ok_count ~ ' safe step' ~ ('s' if ok_count != 1 else '')) %}{% endif %}
+{% if warn_count %}{% set _ = bits.append('⚠ ' ~ warn_count ~ ' mitigation' ~ ('s' if warn_count != 1 else '')) %}{% endif %}
+{% set _ = bits.append(n|string ~ ' step' ~ ('s' if n != 1 else '')) %}
+{% set pill_row = bits | join(' · ') %}
+{% set subtitle = s01_action %}
+{% endif %}
+  <details class="collapsible-section" open>
+    <summary>
+      <div class="section-header">
+        <span class="section-number">01</span>
+        <h2>What Should I Do?</h2>
+        <span class="section-status">
+          <span class="pill amber">{{ pill_row }}</span>
+        </span>
+      </div>
+      {% if subtitle %}
+      <div class="section-subtitle">{{ subtitle }}</div>
+      {% endif %}
+    </summary>
+    <div class="section-body">
+      {% if steps %}
+      {% for s in steps %}
+      {% set sev = s.get('severity', 'OK') %}
+      {% set card_cls = card_class_map.get(sev, 'ok-action') %}
+      <div class="action-card {{ card_cls }}">
+        <h3>Step {{ s.get('step', loop.index) }}: {{ s.get('headline', '') }}</h3>
+        {% if s.get('non_technical') %}
+        <p><strong>Non-technical:</strong> {{ s.non_technical }}</p>
+        {% endif %}
+        {% if s.get('command') %}
+        <pre>{{ s.command }}</pre>
+        {% endif %}
+      </div>
+      {% endfor %}
+      {% else %}
+      <div class="action-card ok-action">
+        <h3>No action needed</h3>
+        <p><strong>Non-technical:</strong> This repo passes all checks. No steps required.</p>
+      </div>
+      {% endif %}
+    </div>
+  </details>

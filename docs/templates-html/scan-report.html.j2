@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% set target = form.target %}
+{% set head_sha = form.phase_1_raw_capture.pre_flight.head_sha or '' %}
+{% set releases = form.phase_1_raw_capture.get('releases', {}).get('entries', []) %}
+{% set latest_tag = releases[0].tag if releases else '' %}
+<!-- Security Investigation Report: {{ target.owner }}/{{ target.repo }} @ {{ short_sha(head_sha) }}{% if latest_tag %} ({{ latest_tag }}){% endif %} | Generated {{ scan_date }} | Prompt {{ form._meta.prompt_version or 'V2.3-post-R3' }} (V1.1 schema) -->
+<title>Security Investigation: {{ target.owner }}/{{ target.repo }}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Unbounded:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; script-src 'unsafe-inline';">
+<style>
+{{ css_content }}
+</style>
+</head>
+<body>
+
+<div class="font-controls">
+  <button onclick="adjustFont(-1)" title="Decrease font size" aria-label="Decrease font size">A&minus;</button>
+  <span class="font-size-display" id="fontDisplay">100%</span>
+  <button onclick="adjustFont(1)" title="Increase font size" aria-label="Increase font size">A+</button>
+</div>
+<script>
+  let fontScale = 100;
+  function adjustFont(dir) {
+    fontScale = Math.min(150, Math.max(75, fontScale + dir * 10));
+    document.documentElement.style.fontSize = fontScale + '%';
+    document.getElementById('fontDisplay').textContent = fontScale + '%';
+  }
+</script>
+
+<div class="page">
+
+{% include 'partials/hero.html.j2' %}
+
+{% include 'partials/catalog.html.j2' %}
+
+{% include 'partials/verdict.html.j2' %}
+
+{% include 'partials/scorecard.html.j2' %}
+
+{% include 'partials/section_01.html.j2' %}
+
+{% include 'partials/section_02.html.j2' %}
+
+{% include 'partials/section_02a.html.j2' %}
+
+{% include 'partials/section_03.html.j2' %}
+
+{% include 'partials/section_04.html.j2' %}
+
+{% include 'partials/section_05.html.j2' %}
+
+{% include 'partials/section_06.html.j2' %}
+
+{% include 'partials/section_07.html.j2' %}
+
+{% include 'partials/section_08.html.j2' %}
+
+{% include 'partials/footer.html.j2' %}
+
+</div>
+</body>
+</html>

@@ -1,0 +1,92 @@
+{#
+  Section 06 — Investigation Coverage matrix + gaps.
+  MD analogue: docs/templates/partials/section_06.md.j2 (coverage)
+  Source scaffold: EXAMPLE-START: section-06-investigation-coverage (lines ~1652-1776)
+
+  Data paths:
+    form.phase_4_structured_llm.coverage_detail.rows[] {check,result}
+    form.phase_4_structured_llm.coverage_detail.monorepo {is_monorepo,inner_package_count,...}
+    form.phase_4_structured_llm.coverage_detail.pr_target_usage {usage_count,workflows_checked,note}
+    form.phase_3_computed.coverage_status.cells[] {name,status,detail}
+    form.phase_4_structured_llm.coverage_gaps.entries[]
+    form.phase_4_structured_llm.coverage_intro (optional)
+
+  Coverage cells rendered as vitals-grid cells.
+  Gaps rendered as info finding-cards.
+#}
+{% set coverage = form.get('phase_3_computed', {}).get('coverage_status', {}).get('cells', []) %}
+{% set detail = form.phase_4_structured_llm.get('coverage_detail', {}) or {} %}
+{% set detail_rows = detail.get('rows', []) %}
+{% set monorepo = detail.get('monorepo') %}
+{% set pr_target = detail.get('pr_target_usage') %}
+{% set intro = form.phase_4_structured_llm.get('coverage_intro') %}
+{% set gaps = form.phase_4_structured_llm.get('coverage_gaps', {}).get('entries', []) %}
+{% set status_icon = {'ok': '✅', 'partial': '⚠', 'blocked': '❌', 'not_available': '⚠', 'not_indexed': 'ℹ', 'not_queried': 'ℹ', 'unknown': '⚠'} %}
+{% if coverage or detail_rows or monorepo or pr_target %}
+  <details class="collapsible-section">
+    <summary>
+      <div class="section-header">
+        <span class="section-number">06</span>
+        <h2>Investigation Coverage</h2>
+        <span class="section-status">
+          {% if gaps %}
+          <span class="pill amber">{{ gaps | length }} gaps noted</span>
+          {% else %}
+          <span class="pill green">&#x2713; Full coverage</span>
+          {% endif %}
+        </span>
+      </div>
+      {% if intro %}
+      <div class="section-subtitle">{{ intro }}</div>
+      {% else %}
+      <div class="section-subtitle">How thorough was this scan?</div>
+      {% endif %}
+    </summary>
+    <div class="section-body">
+    <div class="vitals-grid">
+      {% set seen = [] %}
+      {% for d in detail_rows %}
+      {% set _ = seen.append(d.get('check')) %}
+      <div class="vital-cell">
+        <div class="vital-label">{{ d.get('check', '') }}</div>
+        <div class="vital-value">{{ d.get('result', '') }}</div>
+      </div>
+      {% endfor %}
+      {% for c in coverage %}
+      {% if c.get('name') not in seen %}
+      <div class="vital-cell">
+        <div class="vital-label">{{ c.name }}</div>
+        <div class="vital-value">{{ status_icon.get(c.get('status', 'unknown'), '⚠') }} {{ c.get('detail', '') }}</div>
+      </div>
+      {% endif %}
+      {% endfor %}
+      {% if monorepo and monorepo.get('is_monorepo') %}
+      <div class="vital-cell">
+        <div class="vital-label">Monorepo inner packages</div>
+        <div class="vital-value">{{ monorepo.get('inner_package_count', 0) }} found{% if monorepo.get('sampled_inner_packages') %}, {{ monorepo.sampled_inner_packages | length }} sampled{% endif %}</div>
+        <div class="vital-note">Lifecycle script hits: {{ monorepo.get('lifecycle_script_hits', 0) }}</div>
+      </div>
+      {% endif %}
+      {% if pr_target %}
+      <div class="vital-cell">
+        <div class="vital-label"><code>pull_request_target</code> usage</div>
+        <div class="vital-value">{{ pr_target.usage_count }} found{% if pr_target.get('workflows_checked') %} / {{ pr_target.workflows_checked }} workflows{% endif %}</div>
+        {% if pr_target.get('note') %}<div class="vital-note">{{ pr_target.note }}</div>{% endif %}
+      </div>
+      {% endif %}
+    </div>
+
+    {% if gaps %}
+    {% for g in gaps %}
+    <div class="finding-card info stack-sm">
+      <div class="finding-header">
+        <span class="tag info-tag">Gap</span>
+        <h3>{{ g }}</h3>
+      </div>
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    </div>
+  </details>
+{% endif %}

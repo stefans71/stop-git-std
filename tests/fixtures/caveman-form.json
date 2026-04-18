@@ -1,0 +1,1305 @@
+{
+  "$comment": "End-to-end test fixture: real caveman scan data, extracted from docs/GitHub-Scanner-caveman.md (scanned 2026-04-16 against commit c2ed24b / v1.6.0). Used by tests/test_end_to_end.py. Shape: curl-pipe-from-main installer (Claude Code plugin).",
+  "schema_version": "1.1",
+
+  "_meta": {
+    "phases_completed": ["phase_1_raw_capture", "phase_2_validation", "phase_3_computed", "phase_4_structured_llm", "phase_5_prose_llm"],
+    "scan_status": "completed",
+    "scanner_version": "V2.2-post-R3",
+    "prompt_version": "V2.2-post-R3",
+    "model": "claude-opus",
+    "scan_started_at": "2026-04-16T00:00:00Z",
+    "scan_completed_at": "2026-04-16T00:00:00Z",
+    "assumptions": [
+      "v2.2 corrections applied retroactively after Round 1 board review",
+      "R3-C20 verdict amendment applied"
+    ]
+  },
+
+  "target": {
+    "owner": "JuliusBrussee",
+    "repo": "caveman",
+    "full_name": "JuliusBrussee/caveman",
+    "url": "https://github.com/JuliusBrussee/caveman"
+  },
+
+  "scanner_integrity": {
+    "injection_matches": 0,
+    "actionable_count": 0,
+    "findings": []
+  },
+
+  "phase_1_raw_capture": {
+    "pre_flight": {
+      "head_sha": "c2ed24b",
+      "default_branch": "main",
+      "tarball_extracted": true,
+      "tarball_file_count": 103,
+      "symlinks_stripped": true,
+      "api_rate_limit": {
+        "remaining": 5000,
+        "limit": 5000,
+        "reset_at": null
+      }
+    },
+
+    "repo_metadata": {
+      "name": "caveman",
+      "description": "Claude Code plugin that compresses LLM output to caveman speech to cut ~65% of tokens.",
+      "created_at": "2026-04-04",
+      "pushed_at": "2026-04-15",
+      "stargazer_count": 32844,
+      "fork_count": null,
+      "license_spdx": "MIT",
+      "default_branch_ref": "main",
+      "is_archived": false,
+      "has_issues_enabled": true,
+      "is_fork": false,
+      "primary_language": "JavaScript",
+      "topics": []
+    },
+
+    "contributors": {
+      "top_contributors": [
+        {"login": "JuliusBrussee", "contributions": null}
+      ],
+      "total_contributor_count": null
+    },
+
+    "maintainer_accounts": {
+      "accounts": [
+        {
+          "login": "JuliusBrussee",
+          "created_at": "2022-04-21T20:06:45Z",
+          "public_repos": 42,
+          "followers": 618,
+          "account_age_years": 4
+        }
+      ]
+    },
+
+    "releases": {
+      "entries": [
+        {"tag": "v1.6.0", "date": "2026-04-15", "name": "v1.6.0", "is_prerelease": false},
+        {"tag": "v1.5.1", "date": "2026-04-11", "name": "v1.5.1", "is_prerelease": false},
+        {"tag": "v1.5.0", "date": "2026-04-11", "name": "v1.5.0", "is_prerelease": false},
+        {"tag": "v1.4.1", "date": "2026-04-11", "name": "v1.4.1", "is_prerelease": false},
+        {"tag": "v1.4.0", "date": "2026-04-11", "name": "v1.4.0", "is_prerelease": false},
+        {"tag": "v1.3.5", "date": "2026-04-09", "name": "v1.3.5", "is_prerelease": false},
+        {"tag": "v1.3.0", "date": "2026-04-08", "name": "v1.3.0", "is_prerelease": false},
+        {"tag": "v1.2.0", "date": "2026-04-07", "name": "v1.2.0", "is_prerelease": false},
+        {"tag": "v1.1.0", "date": "2026-04-05", "name": "v1.1.0", "is_prerelease": false},
+        {"tag": "v1.0.0", "date": "2026-04-04", "name": "v1.0.0", "is_prerelease": false}
+      ],
+      "total_count": 10
+    },
+
+    "community_profile": {
+      "health_percentage": null,
+      "has_code_of_conduct": false,
+      "has_contributing": false,
+      "has_security_policy": false,
+      "license_spdx": "MIT"
+    },
+
+    "security_advisories": {
+      "count": 0,
+      "entries": []
+    },
+
+    "workflows": {
+      "entries": [
+        {"name": "sync-skill", "path": ".github/workflows/sync-skill.yml"}
+      ],
+      "count": 1,
+      "pull_request_target_count": 0
+    },
+
+    "workflow_contents": {
+      "entries": [
+        {
+          "path": ".github/workflows/sync-skill.yml",
+          "has_explicit_permissions": true,
+          "permissions": {"contents": "write"},
+          "triggers": ["push to main"],
+          "uses_oidc": false,
+          "sha_pinned_actions": false,
+          "note": "Copies SKILL.md into 4 agent rule locations on push to main. Actions/checkout@v4 — version-tagged but not SHA-pinned."
+        }
+      ]
+    },
+
+    "branch_protection": {
+      "classic": {
+        "status": 404,
+        "raw_response": "{\"message\":\"Not Found\",\"documentation_url\":\"https://docs.github.com/rest/branches/branch-protection#get-branch-protection\",\"status\":\"404\"}"
+      },
+      "rulesets": {
+        "entries": [],
+        "raw_response": "[]"
+      },
+      "rules_on_default": {
+        "entries": [],
+        "raw_response": "[]"
+      },
+      "owner_type": "User",
+      "org_rulesets": {
+        "entries": [],
+        "raw_response": null
+      }
+    },
+
+    "codeowners": {
+      "found": false,
+      "path": null,
+      "content": null,
+      "locations_checked": ["CODEOWNERS", ".github/CODEOWNERS", "docs/CODEOWNERS", ".gitlab/CODEOWNERS"]
+    },
+
+    "dependencies": {
+      "manifest_files": ["hooks/package.json", "benchmarks/requirements.txt"],
+      "runtime": [],
+      "runtime_count": 0,
+      "dev": [],
+      "dev_count": 0,
+      "peer": [],
+      "dependabot": {
+        "status": "disabled",
+        "error_message": "Dependabot alerts are disabled for this repository.",
+        "alerts": []
+      },
+      "osv_dev": {
+        "queried": false,
+        "packages_queried": 0,
+        "total_vulns": 0,
+        "per_package": []
+      }
+    },
+
+    "code_patterns": {
+      "dangerous_primitives": {
+        "hits": [],
+        "hit_count": 0
+      },
+      "executable_files": {
+        "entries": [
+          {"path": "hooks/install.sh"},
+          {"path": "hooks/caveman-activate.js"},
+          {"path": "hooks/caveman-mode-tracker.js"},
+          {"path": "hooks/caveman-config.js"},
+          {"path": "hooks/uninstall.sh"},
+          {"path": ".github/workflows/sync-skill.yml"},
+          {"path": "rules/caveman-activate.md"},
+          {"path": "README.md"}
+        ]
+      },
+      "install_hooks": {
+        "found": false,
+        "hooks": []
+      },
+      "readme_paste_blocks": {
+        "found": true,
+        "blocks": [
+          {"path": "README.md", "line": 271, "description": "7-line agent rules block for pasting into system prompt"}
+        ]
+      },
+      "agent_rule_files": {
+        "entries": [
+          {"path": "rules/caveman-activate.md", "bytes": null, "kind": "CI-synced source for 4 always-on agent configs"},
+          {"path": ".cursor/rules/caveman.mdc", "bytes": null, "kind": "Cursor alwaysApply rule"},
+          {"path": ".clinerules/caveman.md", "bytes": null, "kind": "Cline rule"},
+          {"path": ".windsurf/rules/caveman.md", "bytes": null, "kind": "Windsurf always_on rule"},
+          {"path": ".github/copilot-instructions.md", "bytes": null, "kind": "Copilot auto-loaded instructions"}
+        ],
+        "count": 5,
+        "total_bytes": null
+      }
+    },
+
+    "pr_review": {
+      "sample_size": 33,
+      "total_closed_prs": 33,
+      "prs": [
+        {"number": 70, "author": "tuanaiseo", "merger": "JuliusBrussee", "formal_review": null, "any_review": false, "self_merge": false},
+        {"number": 71, "author": "tuanaiseo", "merger": "JuliusBrussee", "formal_review": null, "any_review": false, "self_merge": false},
+        {"number": 120, "author": "hummat", "merger": "JuliusBrussee", "formal_review": null, "any_review": false, "self_merge": false},
+        {"number": 146, "author": "BrendanIzu", "merger": "JuliusBrussee", "formal_review": null, "any_review": false, "self_merge": false},
+        {"number": 174, "author": "malakhov-dmitrii", "merger": "JuliusBrussee", "formal_review": null, "any_review": false, "self_merge": false},
+        {"number": 148, "author": "davidbits", "merger": "JuliusBrussee", "formal_review": null, "any_review": false, "self_merge": false}
+      ],
+      "formal_review_rate": 15,
+      "any_review_rate": 36,
+      "self_merge_rate": null,
+      "security_relevant_prs": [
+        {"number": 70, "title": "Symlink-safe flag write (safeWriteFlag)", "author": "tuanaiseo", "merger": "JuliusBrussee"},
+        {"number": 71, "title": "Stronger parent-chain symlink check (assertNoSymlink)", "author": "tuanaiseo", "merger": "JuliusBrussee"}
+      ]
+    },
+
+    "open_prs": {
+      "entries": [],
+      "count": 0
+    },
+
+    "closed_not_merged_prs": {
+      "entries": [],
+      "count": null
+    },
+
+    "issues_and_commits": {
+      "open_security_issues": [],
+      "open_issues_count": null,
+      "closed_issues": [],
+      "closed_issues_count": null,
+      "recent_commits": [],
+      "commit_signing_rate": null
+    },
+
+    "monorepo": {
+      "is_monorepo": false,
+      "inner_packages": [],
+      "lifecycle_script_hits": []
+    },
+
+    "distribution_channels": {
+      "channels": [
+        {
+          "name": "claude-plugin",
+          "package": "caveman",
+          "install_command": "claude plugin install caveman",
+          "install_path_verified": false,
+          "artifact_verified": false,
+          "pinned": false,
+          "note": "Plugin manager fetches from live main — no release asset pinning"
+        },
+        {
+          "name": "curl-pipe-bash",
+          "package": null,
+          "install_command": "bash <(curl -s https://raw.githubusercontent.com/JuliusBrussee/caveman/main/hooks/install.sh)",
+          "install_path_verified": false,
+          "artifact_verified": false,
+          "pinned": false,
+          "note": "Fetches directly from raw main branch — no pinning"
+        },
+        {
+          "name": "codex-plugin",
+          "package": null,
+          "install_command": null,
+          "install_path_verified": false,
+          "artifact_verified": false,
+          "pinned": false,
+          "note": "Marketplace manifest says source: ./"
+        },
+        {
+          "name": "gemini-cli-extension",
+          "package": null,
+          "install_command": null,
+          "install_path_verified": false,
+          "artifact_verified": false,
+          "pinned": false,
+          "note": "Extension distribution channel"
+        },
+        {
+          "name": "cursor-rule",
+          "package": null,
+          "install_command": null,
+          "install_path_verified": false,
+          "artifact_verified": false,
+          "pinned": false,
+          "note": "CI-synced .cursor/rules/caveman.mdc (alwaysApply: true)"
+        },
+        {
+          "name": "windsurf-rule",
+          "package": null,
+          "install_command": null,
+          "install_path_verified": false,
+          "artifact_verified": false,
+          "pinned": false,
+          "note": "CI-synced .windsurf/rules/caveman.md (trigger: always_on)"
+        }
+      ]
+    },
+
+    "install_script_analysis": {
+      "scripts": [
+        {
+          "path": "hooks/install.sh",
+          "trigger": "user-run or curl-pipe",
+          "fetches_from_network": true,
+          "network_target": "raw.githubusercontent.com/JuliusBrussee/caveman/main/hooks/*",
+          "writes_to": ["~/.claude/hooks/*.js", "~/.claude/hooks/*.sh", "~/.claude/settings.json"],
+          "uses_shell_interpolation": false,
+          "note": "Fetches live main branch content — no pinning"
+        }
+      ]
+    },
+
+    "artifact_verification": {
+      "per_channel": [
+        {
+          "channel": "claude-plugin",
+          "method": "none",
+          "result": "not_verified",
+          "note": "No release assets — plugin manager fetches from live main"
+        },
+        {
+          "channel": "curl-pipe-bash",
+          "method": "none",
+          "result": "not_verified",
+          "note": "Fetches live main branch directly — no checksum or signature"
+        }
+      ]
+    },
+
+    "batch_merge_detection": {
+      "detected": true,
+      "pr_groups": [
+        {
+          "merged_at": "2026-04-15T12:50:16Z",
+          "pr_count": 16,
+          "prs": [70, 71, 119, 120, 146, 148, 153, 169, 171, 174],
+          "note": "v1.6.0 hardening release — 10+ PRs merged in 23-minute window. Security fixes #70 and #71 buried in batch."
+        }
+      ]
+    },
+
+    "defensive_configs": {
+      "entries": []
+    },
+
+    "ossf_scorecard": {
+      "queried": true,
+      "indexed": false,
+      "overall_score": null,
+      "checks": [],
+      "raw_response": null
+    },
+
+    "gitleaks": {
+      "available": false,
+      "ran": false,
+      "findings_count": null,
+      "findings": []
+    },
+
+    "windows_patterns": {
+      "hits": [
+        {"path": "hooks/install.ps1", "note": "Windows PowerShell installer — not fully inspected"},
+        {"path": "hooks/uninstall.ps1", "note": "Windows PowerShell uninstaller — not fully inspected"},
+        {"path": "hooks/caveman-statusline.ps1", "note": "Windows statusline helper — not fully inspected"}
+      ],
+      "hit_count": 3
+    },
+
+    "prompt_injection_scan": {
+      "scanned_files": ["rules/caveman-activate.md", ".cursor/rules/caveman.mdc", ".windsurf/rules/caveman.md", ".github/copilot-instructions.md"],
+      "injection_signals": [],
+      "signal_count": 0
+    },
+
+    "coverage_affirmations": {
+      "prompt_injection_scan_completed": true,
+      "windows_surface_coverage": false,
+      "distribution_channels_verified": false,
+      "gitleaks_available": false,
+      "gitleaks_explanation": "gitleaks not available in scan environment; secrets-in-history not scanned"
+    }
+  },
+
+  "phase_2_validation": {
+    "sha_consistent": true,
+    "required_fields_complete": true,
+    "dates_chronological": true,
+    "tarball_nonempty": true,
+    "validation_passed": true,
+    "validation_errors": []
+  },
+
+  "phase_3_computed": {
+    "c20_severity": {
+      "no_classic_protection": true,
+      "no_rulesets": true,
+      "no_rules_on_default": true,
+      "no_codeowners": true,
+      "has_recent_release_30d": true,
+      "ships_executable_code": true,
+      "result": "Critical"
+    },
+
+    "scorecard_cells": {
+      "does_anyone_check_the_code": {
+        "color": "red",
+        "short_answer": "No — 15% formal review rate (5/33) · no branch protection · no CODEOWNERS",
+        "inputs": {
+          "formal_review_rate": 15,
+          "any_review_rate": 36,
+          "has_branch_protection": false,
+          "has_codeowners": false
+        }
+      },
+      "do_they_fix_problems_quickly": {
+        "color": "amber",
+        "short_answer": "Slow — 5-day lag between security PR filed and merged",
+        "inputs": {
+          "open_security_issue_count": 0,
+          "security_pr_lag_days": 5
+        }
+      },
+      "do_they_tell_you_about_problems": {
+        "color": "red",
+        "short_answer": "No advisory — zero GitHub Security Advisories ever published, no SECURITY.md at repo root",
+        "inputs": {
+          "has_security_policy": false,
+          "published_advisory_count": 0,
+          "has_silent_fixes": true
+        }
+      },
+      "is_it_safe_out_of_the_box": {
+        "color": "red",
+        "short_answer": "No — F0 governance gap applies to default install path + every distribution channel tracks live main",
+        "inputs": {
+          "all_channels_pinned": false,
+          "artifact_verified": false,
+          "has_warning_or_above_finding": true
+        }
+      }
+    },
+
+    "solo_maintainer": {
+      "top_contributor_share": null,
+      "is_solo": true,
+      "verbatim_sentence": "JuliusBrussee is the sole maintainer — all 33 PRs were merged by JuliusBrussee."
+    },
+
+    "exhibit_grouping": {
+      "total_findings": 10,
+      "threshold_met": true,
+      "exhibits": [
+        {"headline": "Historical vulnerability, disclosed through release notes only", "item_count": 3},
+        {"headline": "Governance and distribution — no review gate, no pinning", "item_count": 4},
+        {"headline": "Positive signals — code quality, scope, maintainer legitimacy", "item_count": 3}
+      ]
+    },
+
+    "boundary_cases": {
+      "cases": []
+    },
+
+    "coverage_status": {
+      "cells": [
+        { "name": "Tarball extraction", "status": "ok", "detail": "103 files extracted" },
+        { "name": "OSSF Scorecard", "status": "not_indexed", "detail": "API returned 404 — repo too new (12 days)" },
+        { "name": "osv.dev", "status": "not_queried", "detail": "Zero runtime dependencies in hook package.json" },
+        { "name": "Secrets-in-history (gitleaks)", "status": "not_available", "detail": "gitleaks not installed" },
+        { "name": "API rate budget", "status": "ok", "detail": "5000/5000 remaining" },
+        { "name": "Dependabot alerts", "status": "blocked", "detail": "Explicitly disabled (HTTP 403)" },
+        { "name": "Windows hook variants", "status": "partial", "detail": "install.ps1, uninstall.ps1, caveman-statusline.ps1 not inspected in depth" },
+        { "name": "Distribution channels", "status": "partial", "detail": "0 of 6 channels fully verified against source" }
+      ]
+    },
+
+    "methodology": {
+      "scanner_version": "V2.2-post-R3",
+      "prompt_version": "V2.2-post-R3",
+      "guide_version": "V0.1"
+    }
+  },
+
+  "phase_4_structured_llm": {
+    "findings": {
+      "entries": [
+        {
+          "id": "F0",
+          "severity": "Critical",
+          "category": "governance/branch-protection",
+          "title": "Governance single-point-of-failure: no branch protection, no rulesets, no CODEOWNERS on a 32k-star repo that ships hooks into every Claude Code session (C20)",
+          "status": "active",
+          "provenance": "rule-applied",
+          "rule_id": "C20",
+          "evidence_refs": ["E5"],
+          "action_hint": "If you install caveman: pin to a specific release tag, not main. After install, check ~/.claude/hooks/ against the tagged release. If you maintain this repo: enable branch protection on main and add CODEOWNERS covering hooks/, rules/, .github/workflows/, install scripts.",
+          "kind": "Structural",
+          "duration_label": "Continuous",
+          "date_label": "Since repo creation",
+          "how_to_fix": "GitHub *Settings → Branches → Add branch protection rule* for `main`: require pull request reviews (1 approver minimum), require status checks, require branches to be up to date before merging, do not allow bypassing. Also add a `.github/CODEOWNERS` file covering at minimum `hooks/`, `rules/`, `.github/workflows/`, and install scripts.",
+          "meta_table": [
+            { "label": "Classic branch protection", "value": "❌ 404 on `main`" },
+            { "label": "Rulesets", "value": "❌ `[]` — zero rulesets" },
+            { "label": "CODEOWNERS", "value": "❌ Absent (4 locations checked)" },
+            { "label": "Stars (blast radius)", "value": "32,844" },
+            { "label": "Releases in last 30 days", "value": "⚠ 10" },
+            { "label": "Active executable surface", "value": "Hooks in every Claude Code session" }
+          ],
+          "threat_model_paths": ["phishing", "stale_token", "session_compromise", "malicious_extension", "sloppy_review"],
+          "threat_model_context": "C20 escalates to Critical when the repo ships executable code to user machines AND has active code flow (≥ 1 release in the last 30 days). Caveman meets both: hook files run on every Claude Code session start and every user prompt; 10 releases (v1.0.0 → v1.6.0) shipped in the last 30 days."
+        },
+        {
+          "id": "F5",
+          "severity": "Warning",
+          "category": "vulnerability/symlink",
+          "title": "Unadvertised symlink vulnerability — named in release notes, not in advisory channel",
+          "status": "mitigated",
+          "provenance": "observed",
+          "evidence_refs": ["E1", "E2"],
+          "action_hint": "If you installed before 2026-04-15, upgrade now. New installers on v1.6.0 are fine.",
+          "kind": "Vulnerability",
+          "duration_label": "11 days",
+          "date_label": "2026-04-04 – 2026-04-15",
+          "how_to_fix": "Upgrade to v1.6.0 via `claude plugin disable caveman && claude plugin install caveman`. Verify with `grep -c 'safeWriteFlag' ~/.claude/hooks/caveman-config.js` — should return >= 1.",
+          "meta_table": [
+            { "label": "Reported by", "value": "tuanaiseo — PR #70" },
+            { "label": "Fixed by", "value": "tuanaiseo — PR #70, PR #71" },
+            { "label": "Merged by", "value": "JuliusBrussee" },
+            { "label": "Reviewed by", "value": "❌ Nobody" },
+            { "label": "The fix", "value": "O_NOFOLLOW + atomic temp+rename + symlink refusal at parent and target" },
+            { "label": "Advisory published", "value": "❌ None" }
+          ],
+          "threat_model_paths": ["other"],
+          "threat_model_context": "Local privilege-escalation: attacker (or malicious process running as the user) replaces the flag file path with a symlink, and the hook overwrites the symlink target on the next Claude Code session."
+        },
+        {
+          "id": "F-batch",
+          "severity": "Warning",
+          "category": "governance/batch-merge",
+          "title": "v1.6.0 was a 10+ PR batch merge — security fix hidden among unrelated changes",
+          "status": "ongoing",
+          "provenance": "observed",
+          "evidence_refs": ["E3"],
+          "action_hint": "Ask the maintainer to stop batching security fixes with unrelated PRs.",
+          "kind": "Governance",
+          "duration_label": "One-time event",
+          "date_label": "2026-04-15",
+          "meta_table": [
+            { "label": "Merged by", "value": "JuliusBrussee" },
+            { "label": "Shared mergedAt", "value": "2026-04-15T12:50:16Z" },
+            { "label": "PRs in batch", "value": "16 total" },
+            { "label": "Release tag", "value": "v1.6.0" }
+          ]
+        },
+        {
+          "id": "F11",
+          "severity": "Warning",
+          "category": "governance/review-rate",
+          "title": "Review rate: 15% formal, 36% any (F11 dual metric)",
+          "status": "ongoing",
+          "provenance": "observed",
+          "evidence_refs": ["E4"],
+          "action_hint": "Only relevant if you rely on caveman for sensitive workflows. Ask maintainer to require one other approver on hook/workflow PRs.",
+          "kind": "Governance",
+          "duration_label": "Since repo creation",
+          "date_label": "Throughout history",
+          "meta_table": [
+            { "label": "PRs with formal review", "value": "5 / 33" },
+            { "label": "Review rate", "value": "❌ 15%" },
+            { "label": "Security PRs with review", "value": "❌ 0 of 2 (#70, #71)" }
+          ]
+        },
+        {
+          "id": "F-advisory",
+          "severity": "Warning",
+          "category": "governance/disclosure",
+          "title": "No GitHub Security Advisory workflow — no way to learn about future vulns",
+          "status": "active",
+          "provenance": "observed",
+          "evidence_refs": ["E2", "E6", "E10"],
+          "action_hint": "Subscribe to the repo's releases — release notes are currently the only disclosure channel. Ask maintainer to enable advisories.",
+          "kind": "Disclosure gap",
+          "duration_label": "Repo lifetime",
+          "date_label": "Since repo creation",
+          "meta_table": [
+            { "label": "Advisories published", "value": "❌ 0" },
+            { "label": "SECURITY.md at root", "value": "❌ No" },
+            { "label": "Dependabot", "value": "❌ Disabled" }
+          ]
+        },
+        {
+          "id": "F14",
+          "severity": "Info",
+          "category": "governance/branch-protection",
+          "title": "No branch protection rule on main",
+          "status": "active",
+          "provenance": "rule-applied",
+          "evidence_refs": ["E5"],
+          "action_hint": "No action required of you — this is a maintainer-side issue. Compounds every other finding though.",
+          "kind": "Governance",
+          "duration_label": "Current",
+          "date_label": "Current",
+          "meta_table": [
+            { "label": "API response", "value": "404 Not Found" },
+            { "label": "Interpretation", "value": "No protection rule exists (definitive)" }
+          ]
+        },
+        {
+          "id": "F16",
+          "severity": "OK",
+          "category": "code/clean-path",
+          "title": "v1.6.0 security code is thorough and well-reasoned",
+          "status": "informational",
+          "provenance": "observed",
+          "evidence_refs": [],
+          "action_hint": "No action needed. Positive signal: maintainer's v1.6.0 fix shows real security engineering care.",
+          "kind": "Code quality",
+          "duration_label": "v1.6.0",
+          "date_label": "Current",
+          "meta_table": [
+            { "label": "O_NOFOLLOW", "value": "✅ Yes" },
+            { "label": "Atomic rename", "value": "✅ Yes" },
+            { "label": "Whitelist-validated reads", "value": "✅ Yes" },
+            { "label": "Size cap", "value": "✅ 64 bytes" }
+          ]
+        },
+        {
+          "id": "F-amplify",
+          "severity": "Info",
+          "category": "supply-chain/ci-amplification",
+          "title": "CI sync amplifies one rule file into 4+ always-on agent configs",
+          "status": "ongoing",
+          "provenance": "synthesized",
+          "evidence_refs": [],
+          "action_hint": "No action needed today. Watch for future changes to rules/caveman-activate.md — leverage ratio is high.",
+          "kind": "Supply chain",
+          "duration_label": "Ongoing",
+          "date_label": "Ongoing",
+          "meta_table": [
+            { "label": "Source file", "value": "`rules/caveman-activate.md` (17 lines)" },
+            { "label": "Destination files", "value": "4 always-on agent rule files" },
+            { "label": "Amplifier workflow", "value": "sync-skill.yml" },
+            { "label": "Current content", "value": "✅ Clean (behavioral rules only)" },
+            { "label": "Leverage", "value": "⚠ High — 1 file → every user's always-on agent config" }
+          ]
+        },
+        {
+          "id": "F-deps",
+          "severity": "OK",
+          "category": "supply-chain/dependencies",
+          "title": "Minimal runtime dependency surface",
+          "status": "informational",
+          "provenance": "synthesized",
+          "evidence_refs": [],
+          "action_hint": "No action needed. Positive signal.",
+          "kind": "Dependencies",
+          "duration_label": "Current",
+          "date_label": "Current",
+          "meta_table": [
+            { "label": "Hook runtime deps", "value": "✅ 0" },
+            { "label": "Only dep", "value": "anthropic (benchmark-only)" },
+            { "label": "Network in hooks", "value": "✅ None" }
+          ]
+        }
+      ]
+    },
+
+    "general_vuln_severity": {
+      "assessments": []
+    },
+
+    "section_actions": {
+      "entries": [
+        {
+          "section": "01",
+          "action": "Most urgent: if you installed caveman before 2026-04-15, upgrade now. New installers get v1.6.0 (fine). Ask maintainer to publish a Security Advisory and add SECURITY.md."
+        }
+      ]
+    },
+
+    "split_axis_decision": {
+      "should_split": true,
+      "axis": "version",
+      "reasoning": "The verdict splits on version: v1.6.0 code is clean, but v1.0.0–v1.5.1 had a live exploitable symlink vulnerability. Historical installers need to upgrade; new installers get the hardened version.",
+      "entries": [
+        {
+          "audience": "Version · Current release · v1.6.0 · installing today",
+          "verdict_level": "Critical",
+          "headline": "Clean code, but no upstream gate — every install trusts the maintainer's credentials",
+          "summary": "Code in v1.6.0 is sound. But every install path fetches live main, and there is no branch protection on main, no rulesets, no CODEOWNERS (F0 Critical). A single compromised maintainer credential ships code to every Claude Code session on the next install."
+        },
+        {
+          "audience": "Version · Historical installs · v1.0.0 – v1.5.1",
+          "verdict_level": "Critical",
+          "headline": "Upgrade required",
+          "summary": "A local-privilege-escalation vulnerability shipped for 11 days. No advisory was issued. If you installed before 2026-04-15, upgrade now — do not skip. The F0 governance gap applies to historical installs too: even now, there is no upstream gate preventing a repeat."
+        }
+      ]
+    },
+
+    "priority_evidence": {
+      "selections": [
+        {
+          "evidence_id": "E1",
+          "reason": "Falsification: if the symlink attack vector didn't exist in the reporter's commit message or the fix diff didn't show the vulnerable write, F5 would not fire."
+        },
+        {
+          "evidence_id": "E2",
+          "reason": "Falsification: if security-advisories API returned a non-empty array, the disclosure gap finding would close."
+        },
+        {
+          "evidence_id": "E5",
+          "reason": "Falsification: if branch-protection endpoint returned 200 or rulesets were non-empty, the F0 Critical verdict would move to Warning or Clean."
+        }
+      ]
+    },
+
+    "threat_models": {
+      "per_finding": [
+        {
+          "finding_id": "F0",
+          "paths": [
+            "credential phishing against a 32k-star-repo maintainer (findable target)",
+            "stale OAuth token reuse",
+            "compromised browser session cookie",
+            "malicious IDE extension running as the maintainer",
+            "sloppy review of an attacker PR — base review rate is 15% formal / 36% any"
+          ]
+        }
+      ]
+    },
+
+    "action_steps": {
+      "entries": [
+        {
+          "step": 1,
+          "type": "upgrade",
+          "headline": "If you installed v1.5.1 or earlier, upgrade or remove now",
+          "severity": "Warning",
+          "non_technical": "Open Claude Code, run /plugin disable caveman, then /plugin install caveman. This gets you the hardened v1.6.0.",
+          "command": "cat ~/.claude/hooks/caveman-config.js 2>/dev/null | grep -c 'safeWriteFlag'\nclaude plugin disable caveman\nclaude plugin install caveman",
+          "command_lang": "bash"
+        },
+        {
+          "step": 2,
+          "type": "install",
+          "headline": "If installing for the first time, prefer plugin manager over curl-pipe and verify after",
+          "severity": "Info",
+          "non_technical": "Installing now is fine — the hardened version is what you get. Be aware this plugin runs code every time Claude Code starts and every time you submit a prompt.",
+          "command": "claude plugin install caveman\ngrep -l 'safeWriteFlag' ~/.claude/plugins/*/caveman*/hooks/*.js",
+          "command_lang": "bash"
+        },
+        {
+          "step": 3,
+          "type": "nudge",
+          "headline": "Ask the maintainer for standard hygiene",
+          "severity": "Info",
+          "non_technical": "Open an issue asking for: a GitHub Security Advisory, SECURITY.md, Dependabot re-enabled, and branch protection on main.",
+          "command": null,
+          "command_lang": null
+        }
+      ]
+    },
+
+    "timeline_events": {
+      "entries": [
+        {
+          "date": "2026-04-04",
+          "label": "REPO CREATED",
+          "tone": "neutral",
+          "note": "Repo created by JuliusBrussee. v1.0.0 released same day — hooks ship with the symlink-unsafe flag write (unknown at the time)."
+        },
+        {
+          "date": "2026-04-05",
+          "label": "RAPID RELEASES",
+          "tone": "neutral",
+          "note": "v1.1.0 through v1.3.5 released over 5 days. All still contain the vulnerable hook write; nobody had reported it yet."
+        },
+        {
+          "date": "2026-04-10",
+          "label": "VULN REPORTED",
+          "tone": "negative",
+          "note": "tuanaiseo files PR #70 with a commit message spelling out the symlink attack in full. PR #71 filed minutes later with stronger parent-chain check. Both PRs sit open."
+        },
+        {
+          "date": "2026-04-11",
+          "label": "STILL SHIPPING",
+          "tone": "negative",
+          "note": "v1.4.0, v1.4.1, v1.5.0, v1.5.1 released while PRs #70 and #71 sit unaddressed. All four versions ship the vulnerable code."
+        },
+        {
+          "date": "2026-04-15",
+          "label": "FIX SHIPS",
+          "tone": "positive",
+          "note": "Maintainer batch-merges 10+ PRs including #70 and #71 within a 23-minute window. v1.6.0 tagged — 'Hardening release: hook crash fixes + symlink-safe flag writes.' Code fix is good. Batch-merge is bad."
+        },
+        {
+          "date": "2026-04-15",
+          "label": "NO ADVISORY",
+          "tone": "negative",
+          "note": "No GitHub Security Advisory created. No CVE. No SECURITY.md added. Users of v1.0.0-v1.5.1 receive no programmatic notification that they are running vulnerable code."
+        },
+        {
+          "date": "2026-04-16",
+          "label": "SCAN",
+          "tone": "neutral",
+          "note": "This scan runs — 1 day after v1.6.0 release. Vulnerable versions (v1.0.0-v1.5.1) remain installable from the Releases page."
+        }
+      ]
+    },
+
+    "timeline_intro": "Eight events over 13 days. **The story is exploit-then-fix — but no disclosure.** Repo launched April 4 and went viral; a reporter found and described the symlink attack by April 10; the maintainer shipped 4 more vulnerable releases before merging the fix on April 15 in a 10-PR batch. The disclosure gap is the one still-open wound: no advisory, no SECURITY.md, no programmatic upgrade signal.",
+
+    "capability_assessments": {
+      "per_file": [
+        {
+          "path": "hooks/install.sh",
+          "capabilities": ["filesystem_write", "network_access"],
+          "note": "Fetches live main and writes to ~/.claude/hooks/"
+        },
+        {
+          "path": "hooks/caveman-activate.js",
+          "capabilities": ["filesystem_write"],
+          "note": "SessionStart hook — writes ~/.claude/.caveman-active. Symlink-safe in v1.6.0."
+        },
+        {
+          "path": "hooks/caveman-mode-tracker.js",
+          "capabilities": ["filesystem_write"],
+          "note": "UserPromptSubmit hook — reads + writes ~/.claude/.caveman-active. Symlink-safe in v1.6.0."
+        }
+      ]
+    },
+
+    "executable_file_inventory": {
+      "lead": "⚠ 3 Warning · ℹ 2 Info · ✓ 3 OK — 8 executable files cataloged. 3 need attention: install.sh (fetches live main) and two hook files (had pre-v1.6.0 symlink vuln, now fixed). 3 are OK. 2 are Info (CI-amplified rule source + README paste block).",
+      "layer1_summary": "8 executable files: 2 hook JS files (symlink-safe in v1.6.0, previously vulnerable), 1 config JS module (security-critical), 1 install shell script (fetches live main), 1 uninstall shell script, 1 CI workflow (amplifies rule file to 4 agents), 1 agent rule source (17-line behavioral rule, CI-synced), and 1 README paste-block (7-line user-pasted rules).",
+      "layer2_entries": [
+        {
+          "path": "hooks/install.sh",
+          "kind": "Installer shell script",
+          "runtime": "User-triggered or curl-pipe",
+          "dangerous_calls": "curl to raw.githubusercontent.com/JuliusBrussee/caveman/main/hooks/*",
+          "network": "Fetches from live main branch",
+          "notes": "Warning: live-main fetch, not pinned to any release tag. Writes to ~/.claude/hooks/*.",
+          "file_sha": null,
+          "line_ranges": null,
+          "diff_anchor": null
+        },
+        {
+          "path": "hooks/caveman-activate.js",
+          "kind": "SessionStart hook",
+          "runtime": "Node.js (Claude Code hook sandbox)",
+          "dangerous_calls": "fs.writeFileSync (pre-v1.6.0); safeWriteFlag (v1.6.0)",
+          "network": "None",
+          "notes": "Runs every Claude Code session start. Symlink-safe in v1.6.0 via safeWriteFlag. Vulnerable in v1.0.0-v1.5.1.",
+          "file_sha": null,
+          "line_ranges": null,
+          "diff_anchor": null
+        },
+        {
+          "path": "hooks/caveman-mode-tracker.js",
+          "kind": "UserPromptSubmit hook",
+          "runtime": "Node.js (Claude Code hook sandbox)",
+          "dangerous_calls": "fs.writeFileSync (pre-v1.6.0); safeWriteFlag (v1.6.0)",
+          "network": "None",
+          "notes": "Runs on every user prompt. Reads stdin (user prompt JSON). Both read and write paths symlink-safe in v1.6.0.",
+          "file_sha": null,
+          "line_ranges": null,
+          "diff_anchor": null
+        },
+        {
+          "path": "hooks/caveman-config.js",
+          "kind": "Security config module",
+          "runtime": "Node.js (imported by hooks)",
+          "dangerous_calls": "None — exports safeWriteFlag and readFlag",
+          "network": "None",
+          "notes": "Security-critical module. Implements O_NOFOLLOW + temp+rename + symlink refusal. Watch in future diffs.",
+          "file_sha": null,
+          "line_ranges": "80-134",
+          "diff_anchor": "hooks/caveman-config.js#L80-L134"
+        },
+        {
+          "path": "hooks/uninstall.sh",
+          "kind": "Uninstaller shell script",
+          "runtime": "User-triggered",
+          "dangerous_calls": "None",
+          "network": "None",
+          "notes": "Uses env-var-passing pattern (not shell interpolation). Removes ~/.claude/hooks/caveman-* and rewrites settings.json.",
+          "file_sha": null,
+          "line_ranges": null,
+          "diff_anchor": null
+        },
+        {
+          "path": ".github/workflows/sync-skill.yml",
+          "kind": "CI automation",
+          "runtime": "GitHub Actions",
+          "dangerous_calls": "None",
+          "network": "Standard git push only",
+          "notes": "Copies SKILL.md into 4 agent rule locations on push to main. contents:write scoped to repo. No pull_request_target. No SHA-pinned actions — uses actions/checkout@v4.",
+          "file_sha": null,
+          "line_ranges": null,
+          "diff_anchor": null
+        },
+        {
+          "path": "rules/caveman-activate.md",
+          "kind": "Agent rule source (CI-amplified)",
+          "runtime": "LLM agent context (alwaysApply)",
+          "dangerous_calls": "None in current content",
+          "network": "None",
+          "notes": "17 lines of behavioral rules. CI-synced to 4 always-on agent rule files. High leverage: 1 file → every user's always-on agent config on next CI run.",
+          "file_sha": null,
+          "line_ranges": null,
+          "diff_anchor": null
+        },
+        {
+          "path": "README.md",
+          "kind": "Install-paste block (line 271)",
+          "runtime": "User's LLM agent context",
+          "dangerous_calls": "None in current content",
+          "network": "None",
+          "notes": "7-line block users paste into their agent's system prompt. Safe today; permanent consequence once pasted.",
+          "file_sha": null,
+          "line_ranges": "271",
+          "diff_anchor": "README.md#L271"
+        }
+      ],
+      "closing_note": "The two hook files (caveman-activate.js and caveman-mode-tracker.js) were the vulnerability sites pre-v1.6.0 — the symlink-unsafe fs.writeFileSync calls have been replaced with safeWriteFlag from caveman-config.js. The install.sh file remains a live-main fetch risk regardless of code version."
+    },
+
+    "pr_sample_review": {
+      "intro": "**33 PRs reviewed — full coverage (under the 300-PR cap).** 6 PRs flagged as security-relevant, none had formal review. Two are the security fix itself (#70, #71). The other four are hook-touching PRs merged the same day in the batch without any approvals.",
+      "rows": [
+        {
+          "number": 70,
+          "url": "https://github.com/JuliusBrussee/caveman/pull/70",
+          "what": "Added symlink-safe write to hook files (the real security fix)",
+          "author": "tuanaiseo",
+          "merger": "JuliusBrussee",
+          "reviewed": "No formal decision",
+          "concern": "Real security fix, zero reviews, no advisory published. Sat open 5 days.",
+          "flagged": true
+        },
+        {
+          "number": 71,
+          "url": "https://github.com/JuliusBrussee/caveman/pull/71",
+          "what": "Strengthened safeWriteFlag with parent-chain symlink check",
+          "author": "tuanaiseo",
+          "merger": "JuliusBrussee",
+          "reviewed": "No formal decision",
+          "concern": "Follow-up security work, same reporter as #70, zero reviews. Sat open 5 days.",
+          "flagged": true
+        },
+        {
+          "number": 120,
+          "url": "https://github.com/JuliusBrussee/caveman/pull/120",
+          "what": "Natural-language activation in mode tracker — new regex triggers flag-file writes",
+          "author": "hummat",
+          "merger": "JuliusBrussee",
+          "reviewed": "No formal decision",
+          "concern": "Expands user-input parsing surface — new regex triggers flag-file writes, merged without decision.",
+          "flagged": true
+        },
+        {
+          "number": 146,
+          "url": "https://github.com/JuliusBrussee/caveman/pull/146",
+          "what": "Respect CLAUDE_CONFIG_DIR across all hooks",
+          "author": "BrendanIzu",
+          "merger": "JuliusBrussee",
+          "reviewed": "No formal decision",
+          "concern": "Touches every hook's path resolution — merged without formal approval.",
+          "flagged": true
+        },
+        {
+          "number": 174,
+          "url": "https://github.com/JuliusBrussee/caveman/pull/174",
+          "what": "Isolate hooks as CommonJS via hooks/package.json",
+          "author": "malakhov-dmitrii",
+          "merger": "JuliusBrussee",
+          "reviewed": "No formal decision",
+          "concern": "Changes module-loading on user machines, fastest merge in batch (4 hours), no review.",
+          "flagged": true
+        },
+        {
+          "number": 148,
+          "url": "https://github.com/JuliusBrussee/caveman/pull/148",
+          "what": "Update Codex hook config shape",
+          "author": "davidbits",
+          "merger": "JuliusBrussee",
+          "reviewed": "No formal decision",
+          "concern": "Plugin config shape change, no review.",
+          "flagged": true
+        }
+      ]
+    },
+
+    "repo_vitals": {
+      "rows": [
+        { "metric": "Repo age", "value": "⚠ 12 days", "note": "Very new — released 2026-04-04, scanned 2026-04-16" },
+        { "metric": "Stars", "value": "32,844", "note": "Viral growth to 32k+ stars in 12 days — scrutiny should match" },
+        { "metric": "Owner account age", "value": "✅ 4 years", "note": "Established account, 42 public repos, 618 followers — not a sockpuppet" },
+        { "metric": "Merged PRs (review rate)", "value": "❌ 5 / 33 (15%)", "note": "Only 15% have formal review decisions" },
+        { "metric": "Branch protection", "value": "❌ None", "note": "API returns 404 — definitively no rule configured" },
+        { "metric": "Security advisories", "value": "❌ 0 published", "note": "Repo has never published a GitHub Security Advisory" },
+        { "metric": "Dependabot", "value": "❌ Disabled", "note": "Explicitly disabled — even upstream dep vulns won't surface" },
+        { "metric": "Runtime dependencies", "value": "✅ 1 (benchmarks only)", "note": "Hook package.json has zero deps; only anthropic SDK for benchmarks" },
+        { "metric": "CI workflows", "value": "1 (sync-skill.yml)", "note": "Single internal file-copy automation, narrowly scoped" },
+        { "metric": "Releases", "value": "10", "note": "v1.0.0 → v1.6.0 in 11 days; v1.0.0–v1.5.1 are vulnerable" },
+        { "metric": "OSSF Scorecard", "value": "❌ Not indexed", "note": "API returned 404 — repo too new or not yet crawled by OSSF" }
+      ]
+    },
+
+    "coverage_intro": "**33/33 PRs reviewed · 8/8 executables inspected · 0/6 distribution channels fully verified · 2 gaps noted.** All 33 merged PRs reviewed (full coverage under the 300-PR cap). Every executable file inspected. Distribution channels: 0 of 6 fully verified against source — method limitation, flagged under F1+F2.",
+
+    "coverage_detail": {
+      "rows": [
+        { "check": "Merged PRs reviewed", "result": "✅ 33 of 33 — full coverage, under the 300-PR sample cap" },
+        { "check": "Suspicious PR diffs read", "result": "6 of 19 — both Security-labeled PRs (#70, #71) plus 4 recent hook-touching PRs read in full" },
+        { "check": "Dependency scan", "result": "❌ Blocked — Dependabot explicitly disabled (HTTP 403), but runtime dep list is trivial" },
+        { "check": "Workflow files read", "result": "✅ 1 of 1 — sync-skill.yml fully inspected" },
+        { "check": "Executable files inspected", "result": "⚠ 8 of 8 (3 Warning, 3 OK, 2 Info)" },
+        { "check": "Tarball extraction", "result": "✅ 103 files extracted; grep positive-control passed" },
+        { "check": "OSSF Scorecard", "result": "❌ Not indexed — API returned 404; repo too new for OSSF crawl" },
+        { "check": "osv.dev", "result": "✅ No runtime deps to check — hook package.json has zero dependencies" },
+        { "check": "Secrets-in-history", "result": "Not scanned (gitleaks not available)" },
+        { "check": "API rate budget", "result": "5000/5000 remaining. PR sample: full." }
+      ],
+      "pr_target_usage": {
+        "usage_count": 0,
+        "workflows_checked": 1,
+        "note": "Zero pull_request_target usage in sync-skill.yml — rules out that class of attack"
+      }
+    },
+
+    "coverage_gaps": {
+      "entries": [
+        "Windows hook variants (install.ps1, uninstall.ps1, caveman-statusline.ps1) not inspected in equal depth to the Unix shell and Node.js files.",
+        "13 of 19 security-keyword PRs were classified from metadata only — their diffs were not read in full."
+      ]
+    },
+
+    "evidence_intro": "10 command-backed claims. **Skip ahead to items marked ★ START HERE** — the vulnerability proof, the no-advisory confirmation, and the branch-protection check. Those three are the falsification criteria for the Critical verdict.",
+
+    "evidence": {
+      "entries": [
+        {
+          "id": "E1",
+          "claim": "v1.6.0 fixes a real symlink vulnerability that existed in v1.0.0–v1.5.1",
+          "command": "gh pr view 70 -R JuliusBrussee/caveman --json commits -q '.commits[0].messageBody'",
+          "command_lang": "bash",
+          "result": "The SessionStart hook writes to `~/.claude/.caveman-active` using `fs.writeFileSync` on a predictable path. If that path is replaced with a symlink, Node will follow it and overwrite the symlink target. A local attacker (or another process running as the same user) could abuse this to modify unintended files writable by the user.\n\nAffected files: caveman-activate.js, caveman-mode-tracker.js\n\nSigned-off-by: tuanaiseo 221258316+tuanaiseo@users.noreply.github.com",
+          "result_lang": null,
+          "result_truncated": false,
+          "classification": "Confirmed fact — vulnerability described in the reporter's own commit message; fix adds O_NOFOLLOW and symlink refusal; before/after diff confirms the unprotected write."
+        },
+        {
+          "id": "E2",
+          "claim": "No GitHub Security Advisory was issued for the fix",
+          "command": "gh api \"repos/JuliusBrussee/caveman/security-advisories\"",
+          "command_lang": "bash",
+          "result": "[]",
+          "result_lang": "json",
+          "result_truncated": false,
+          "classification": "Confirmed fact — empty array response means zero advisories published."
+        },
+        {
+          "id": "E3",
+          "claim": "v1.6.0 was a 10+ PR batch merge committed at a single timestamp",
+          "command": "gh pr list -R JuliusBrussee/caveman --state merged --limit 300 --json number,title,mergedAt \\\n  | jq '[.[] | select(.mergedAt == \"2026-04-15T12:50:16Z\")] | length'",
+          "command_lang": "bash",
+          "result": "16",
+          "result_lang": null,
+          "result_truncated": false,
+          "classification": "Confirmed fact — 16 PRs share the same mergedAt timestamp, reflecting a synchronized batch merge."
+        },
+        {
+          "id": "E4",
+          "claim": "85% of merged PRs have no formal review",
+          "command": "gh pr list -R JuliusBrussee/caveman --state merged --limit 300 --json reviewDecision \\\n  | jq '[.[] | select(.reviewDecision != null and .reviewDecision != \"\")] | length'",
+          "command_lang": "bash",
+          "result": "5",
+          "result_lang": null,
+          "result_truncated": false,
+          "classification": "Confirmed fact — 5 of 33 merged PRs = 15% formal review rate."
+        },
+        {
+          "id": "E5",
+          "claim": "No branch protection on main",
+          "command": "gh api \"repos/JuliusBrussee/caveman/branches/main/protection\"",
+          "command_lang": "bash",
+          "result": "{\"message\":\"Not Found\",\"documentation_url\":\"https://docs.github.com/rest/branches/branch-protection#get-branch-protection\",\"status\":\"404\"}",
+          "result_lang": "json",
+          "result_truncated": false,
+          "classification": "Confirmed fact — 404 is authoritative here. The authenticated token has admin-read access and would return 403 if the issue were permissions; 404 means no rule exists."
+        },
+        {
+          "id": "E6",
+          "claim": "Dependabot is disabled for this repository",
+          "command": "gh api \"repos/JuliusBrussee/caveman/dependabot/alerts\"",
+          "command_lang": "bash",
+          "result": "{\"message\":\"Dependabot alerts are disabled for this repository.\",\"documentation_url\":\"https://docs.github.com/rest/dependabot/alerts#list-dependabot-alerts-for-a-repository\",\"status\":\"403\"}",
+          "result_lang": "json",
+          "result_truncated": false,
+          "classification": "Confirmed fact — the response distinguishes 'disabled' from a permissions error."
+        },
+        {
+          "id": "E7",
+          "claim": "Runtime dependency surface is minimal",
+          "command": "find /tmp/repo-scan-JuliusBrussee-caveman -type f \\( -name 'package.json' -o -name 'requirements*.txt' -o -name 'pyproject.toml' \\)\ncat /tmp/repo-scan-JuliusBrussee-caveman/hooks/package.json\ncat /tmp/repo-scan-JuliusBrussee-caveman/benchmarks/requirements.txt",
+          "command_lang": "bash",
+          "result": "/tmp/repo-scan-JuliusBrussee-caveman/hooks/package.json\n/tmp/repo-scan-JuliusBrussee-caveman/benchmarks/requirements.txt\n\n{ \"type\": \"commonjs\" }\n\nanthropic>=0.40.0",
+          "result_lang": null,
+          "result_truncated": false,
+          "classification": "Confirmed fact — the hook package.json declares no dependencies; the only Python dep is the Anthropic SDK, only for the benchmark suite."
+        },
+        {
+          "id": "E8",
+          "claim": "Maintainer is an established account, not a sockpuppet",
+          "command": "gh api \"users/JuliusBrussee\" -q '{login,created_at,public_repos,followers}'",
+          "command_lang": "bash",
+          "result": "{\"login\":\"JuliusBrussee\",\"created_at\":\"2022-04-21T20:06:45Z\",\"followers\":618,\"public_repos\":42}",
+          "result_lang": "json",
+          "result_truncated": false,
+          "classification": "Confirmed fact — account created 2022-04-21 (4 years old at time of scan), 42 public repos, 618 followers."
+        },
+        {
+          "id": "E9",
+          "claim": "v1.6.0 hooks implement defense-in-depth against symlink attacks",
+          "command": "grep -nE 'O_NOFOLLOW|lstatSync|isSymbolicLink|renameSync|fchmodSync' \\\n  /tmp/repo-scan-JuliusBrussee-caveman/hooks/caveman-config.js",
+          "command_lang": "bash",
+          "result": "80:      if (fs.lstatSync(flagDir).isSymbolicLink()) return;\n87:      if (fs.lstatSync(flagPath).isSymbolicLink()) return;\n93:    const O_NOFOLLOW = typeof fs.constants.O_NOFOLLOW === 'number' ? fs.constants.O_NOFOLLOW : 0;\n94:    const flags = fs.constants.O_WRONLY | fs.constants.O_CREAT | fs.constants.O_EXCL | O_NOFOLLOW;\n99:      try { fs.fchmodSync(fd, 0o600); } catch (e) { /* best-effort on Windows */ }\n103:    fs.renameSync(tempPath, flagPath);\n126:    st = fs.lstatSync(flagPath);\n130:    if (st.isSymbolicLink() || !st.isFile()) return null;\n131:    if (st.size > MAX_FLAG_BYTES) return null;\n133:    const O_NOFOLLOW = typeof fs.constants.O_NOFOLLOW === 'number' ? fs.constants.O_NOFOLLOW : 0;\n134:    const flags = fs.constants.O_RDONLY | O_NOFOLLOW;",
+          "result_lang": null,
+          "result_truncated": false,
+          "classification": "Confirmed fact — the v1.6.0 code uses every defense expected for this class of vulnerability."
+        },
+        {
+          "id": "E10",
+          "claim": "No SECURITY.md at repo root",
+          "command": "find /tmp/repo-scan-JuliusBrussee-caveman -maxdepth 2 -iname 'SECURITY.md'",
+          "command_lang": "bash",
+          "result": "/tmp/repo-scan-JuliusBrussee-caveman/caveman-compress/SECURITY.md",
+          "result_lang": null,
+          "result_truncated": false,
+          "classification": "Confirmed fact — the only SECURITY.md is nested inside caveman-compress/ and covers a different concern (Snyk static-analysis rating), not a disclosure policy."
+        }
+      ]
+    },
+
+    "catalog_metadata": {
+      "category": "AI/LLM tooling",
+      "subcategory": "Token-saver / output-compressor",
+      "short_description": "Claude Code plugin that compresses LLM output to caveman speech to cut ~65% of tokens. Ships as Claude Code plugin, Codex plugin, Gemini CLI extension, and agent rule files for Cursor/Windsurf/Cline/Copilot.",
+      "target_user": "Claude Code users, AI agent developers",
+      "shape": "curl-pipe-installer",
+      "prior_scan_note": "None — first scan; rename this file on re-run."
+    },
+
+    "section_leads": {
+      "section_01": {
+        "pill_row": "⚠ Action needed if installed < v1.6.0 · 3 steps",
+        "summary": "**Most urgent:** if you installed caveman before 2026-04-15, upgrade now (Step 1). For new installers today (Step 2): code is fine but install method matters. Step 3 is what to ask the maintainer."
+      }
+    },
+
+    "verdict_exhibits": {
+      "groups": [
+        {
+          "symbol": "⚠",
+          "headline": "Historical vulnerability, disclosed through release notes only",
+          "one_line_summary": "Symlink bug shipped 11 days, fix landed in v1.6.0, no GitHub Security Advisory",
+          "items": [
+            {
+              "tag": "Vulnerability",
+              "claim": "Symlink-based file-clobber vulnerability existed in all versions v1.0.0 through v1.5.1 (11 days, 2026-04-04 to 2026-04-15). Fixed in v1.6.0."
+            },
+            {
+              "tag": "Disclosure · F5",
+              "claim": "Unadvertised security fix — no advisory, no CVE, but release title reads 'Hardening release: hook crash fixes + symlink-safe flag writes.' Named in release notes, not in GitHub's advisory channel."
+            },
+            {
+              "tag": "Response lag",
+              "claim": "Security PR sat open for 5 days after the reporter explained the exact attack vector in the commit message."
+            }
+          ]
+        },
+        {
+          "symbol": "⚠",
+          "headline": "Governance and distribution — no review gate, no pinning",
+          "one_line_summary": "15% formal review rate, no branch protection, no CODEOWNERS, every install channel tracks live main",
+          "items": [
+            {
+              "tag": "Review rate · F11",
+              "claim": "15% formal (5/33) and 36% any-review (12/33). 7-PR gap = informal review without formal decision. Security PRs #70 and #71 had zero review activity."
+            },
+            {
+              "tag": "Batch merge",
+              "claim": "v1.6.0 'hardening release' is a 10+ PR batch merge committed at a single timestamp — security fix hidden among unrelated changes."
+            },
+            {
+              "tag": "Distribution",
+              "claim": "Every distribution channel fetches from live main or unpinned artifacts — no release assets, marketplace manifest says \"source\": \"./\", install scripts curl from main on both Linux and Windows."
+            },
+            {
+              "tag": "Governance · F14",
+              "claim": "No branch protection on main. No CODEOWNERS anywhere — no path-scoped review gate either. Dependabot disabled."
+            }
+          ]
+        },
+        {
+          "symbol": "✓",
+          "headline": "Positive signals — code quality, scope, maintainer legitimacy",
+          "one_line_summary": "v1.6.0 code is defensive, dep surface minimal, maintainer is an established 4-year account",
+          "items": [
+            {
+              "tag": "Code quality · F16",
+              "claim": "The v1.6.0 hardening code itself is thorough: O_NOFOLLOW, atomic temp-and-rename, whitelist-validated reads, size caps, symlink refusal. Windows PS1 parity confirmed."
+            },
+            {
+              "tag": "Attack surface",
+              "claim": "Minimal runtime surface — 1 dependency (benchmarks only), zero network calls in hook files."
+            },
+            {
+              "tag": "Maintainer",
+              "claim": "Established 4-year GitHub account with 42 public repos, 618 followers — not a sockpuppet."
+            }
+          ]
+        }
+      ]
+    }
+  },
+
+  "phase_4b_computed": {
+    "verdict": {
+      "level": "Critical",
+      "computed_from_findings": ["F0", "F5"]
+    }
+  },
+
+  "phase_5_prose_llm": {
+    "editorial_caption": {
+      "text": "A twelve-day-old Claude Code plugin that shipped real local-privilege-escalation vulnerabilities before it got to a thousand stars — and fixed them without an advisory. This is the forensic record."
+    },
+
+    "per_finding_prose": {
+      "entries": [
+        {
+          "finding_id": "F0",
+          "what_we_observed": "Classic branch protection on main returns 404. Rulesets: []. Rules on main: []. CODEOWNERS absent in all four standard locations. Owner is a User account (no org-level rulesets possible).",
+          "what_this_means": "When you install caveman, you are trusting JuliusBrussee's account security as tightly as you'd trust your own laptop's password. There is no automated gate that would catch a phished-credential push before it reaches your next install, and the hook files run on every Claude Code session.",
+          "what_this_does_not_mean": "This does not mean the current v1.6.0 code is malicious. The finding is purely about the upstream process gap — any future compromise has no automated gate."
+        },
+        {
+          "finding_id": "F5",
+          "what_we_observed": "PR #70 commit message spells out the symlink attack in full. The hook wrote to a predictable path using fs.writeFileSync without any symlink checks. Affected versions: v1.0.0 through v1.5.1 (11 days live). Fix adds O_NOFOLLOW, atomic temp+rename, and symlink refusal.",
+          "what_this_means": "Any user who installed caveman between 2026-04-04 and 2026-04-14 ran vulnerable code. A local attacker or malicious process could have redirected the hook's flag file write to overwrite sensitive user files.",
+          "what_this_does_not_mean": "This does not mean every user was exploited. Exploitation requires a local attacker or malicious co-process — it's not a remote code execution bug. v1.6.0 is clean."
+        },
+        {
+          "finding_id": "F-advisory",
+          "what_we_observed": "Security-advisories API returns []. No SECURITY.md at repo root. Dependabot disabled (HTTP 403 with explicit message).",
+          "what_this_means": "Users of v1.0.0-v1.5.1 have no programmatic way to learn they should upgrade. There is no CVE, no GHSA, no advisory feed. Release notes are the only disclosure channel.",
+          "what_this_does_not_mean": null
+        }
+      ]
+    }
+  },
+
+  "phase_6_assembly": {
+    "assembled": true,
+    "assembly_timestamp": "2026-04-16T00:00:00Z",
+    "provenance_complete": true,
+    "evidence_refs_valid": true,
+    "field_count": null
+  },
+
+  "scan_sign_off": {
+    "approved_for_release": false,
+    "approved_by": null,
+    "approved_at": null,
+    "notes": null
+  }
+}

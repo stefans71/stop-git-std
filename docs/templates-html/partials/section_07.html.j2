@@ -1,0 +1,117 @@
+{#
+  Section 07 — Evidence appendix (priority / other / OK-signals groupings).
+  MD analogue: docs/templates/partials/section_07.md.j2 (evidence)
+  Source scaffold: EXAMPLE-START: section-07-evidence-appendix (lines ~1794-1894)
+
+  Data paths:
+    form.phase_4_structured_llm.evidence.entries[]
+      {id,claim,command,command_lang,result,result_lang,classification}
+    form.phase_4_structured_llm.priority_evidence.selections[]
+      {evidence_id,reason}
+    form.phase_4_structured_llm.evidence_intro (optional)
+
+  Priority items get evidence-priority class + priority-flag span.
+  Classification text goes into evidence-classification div (class: fact or inference).
+#}
+{% set evidence = form.phase_4_structured_llm.get('evidence', {}).get('entries', []) %}
+{% set priority = form.phase_4_structured_llm.get('priority_evidence', {}).get('selections', []) %}
+{% set priority_ids = priority | map(attribute='evidence_id') | list %}
+{% set intro = form.phase_4_structured_llm.get('evidence_intro') %}
+{% if evidence %}
+{% set priority_entries = evidence | selectattr('id', 'in', priority_ids) | list %}
+{% set other_entries = evidence | rejectattr('id', 'in', priority_ids) | list %}
+  <details class="collapsible-section">
+    <summary>
+      <div class="section-header">
+        <span class="section-number">07</span>
+        <h2>Evidence Appendix</h2>
+        <span class="section-status">
+          <span class="pill info">{{ evidence | length }} facts</span>
+          {% if priority_ids %}
+          <span class="pill amber">{{ priority_ids | length }} &#9733; priority</span>
+          {% endif %}
+        </span>
+      </div>
+      <div class="section-subtitle">
+        {{ evidence | length }} command-backed claims. <span class="emph">Skip ahead to items marked &#9733; START HERE</span> &mdash; those are the most consequential for the verdict.
+      </div>
+      <div class="section-action info">
+        <span class="lbl">Your action</span>
+        Use this section if you want to verify a claim yourself. Each entry shows the exact command (copy-paste into a terminal with <code>gh</code> authenticated) and the expected result.
+      </div>
+    </summary>
+    <div class="section-body">
+    <p class="p-meta">Each major claim is backed by a command and an observed result. Inferences are marked as such. The <span class="priority-flag inline">&#9733; Start here</span> items at the top are the most consequential evidence.</p>
+
+    {% if priority_entries %}
+    <div class="evidence-group-label warns">&#9733; Priority evidence (read first)</div>
+    {% for e in priority_entries %}
+    {% set cls_text = e.get('classification', '') | lower %}
+    {% set cls_class = 'inference' if 'inference' in cls_text else 'fact' %}
+    <div class="finding-card info evidence-priority stack-md">
+      <div class="finding-header">
+        <span class="tag info-tag">Evidence {{ e.get('id', '') | replace('E', '') }}</span>
+        <span class="priority-flag">&#9733; Start here</span>
+        <h3>{{ e.get('claim', '') }}</h3>
+      </div>
+      <div class="finding-body">
+        {% if e.get('command') %}
+        <div class="evidence-row">
+          <div class="evidence-label">Command</div>
+          <pre class="evidence-pre">{{ e.command }}</pre>
+        </div>
+        {% endif %}
+        {% if e.get('result') %}
+        <div class="evidence-row">
+          <div class="evidence-label">Result observed</div>
+          <pre class="evidence-pre result">{{ e.result }}</pre>
+        </div>
+        {% endif %}
+        {% if e.get('classification') %}
+        <div class="evidence-row">
+          <div class="evidence-label">Classification</div>
+          <div class="evidence-classification {{ cls_class }}">{{ e.classification }}</div>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    {% if other_entries %}
+    <div class="evidence-group-label context">Other evidence supporting findings</div>
+    {% for e in other_entries %}
+    {% set cls_text = e.get('classification', '') | lower %}
+    {% set cls_class = 'inference' if 'inference' in cls_text else 'fact' %}
+    <div class="finding-card info stack-md">
+      <div class="finding-header">
+        <span class="tag info-tag">Evidence {{ e.get('id', '') | replace('E', '') }}</span>
+        <h3>{{ e.get('claim', '') }}</h3>
+      </div>
+      <div class="finding-body">
+        {% if e.get('command') %}
+        <div class="evidence-row">
+          <div class="evidence-label">Command</div>
+          <pre class="evidence-pre">{{ e.command }}</pre>
+        </div>
+        {% endif %}
+        {% if e.get('result') %}
+        <div class="evidence-row">
+          <div class="evidence-label">Result observed</div>
+          <pre class="evidence-pre result">{{ e.result }}</pre>
+        </div>
+        {% endif %}
+        {% if e.get('classification') %}
+        <div class="evidence-row">
+          <div class="evidence-label">Classification</div>
+          <div class="evidence-classification {{ cls_class }}">{{ e.classification }}</div>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    </div>
+  </details>
+{% endif %}

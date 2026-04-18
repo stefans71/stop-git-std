@@ -1,0 +1,89 @@
+{#
+  Section 08 — How this scan works (methodology). Required on every report.
+  MD analogue: docs/templates/partials/section_08.md.j2
+  Source scaffold: lines ~1901-1974 of source template (no EXAMPLE wrapper)
+
+  Data paths:
+    form.phase_3_computed.methodology.{scanner_version,prompt_version,guide_version}
+
+  Static content: methodology text is fixed prose (same on every report).
+  Only the version strings at the bottom vary.
+#}
+{% set methodology = form.get('phase_3_computed', {}).get('methodology', {}) or {} %}
+{% set scanner_ver = methodology.get('scanner_version', 'unknown') %}
+{% set prompt_ver = methodology.get('prompt_version', 'unknown') %}
+{% set guide_ver = methodology.get('guide_version', 'unknown') %}
+  <details class="collapsible-section">
+    <summary>
+      <div class="section-header">
+        <span class="section-number">08</span>
+        <h2>How This Scan Works</h2>
+        <span class="section-status">
+          <span class="pill muted">Methodology reference</span>
+        </span>
+      </div>
+      <div class="section-subtitle">
+        What we checked, what tools we used, and what this scan cannot detect.
+      </div>
+    </summary>
+    <div class="section-body">
+
+    <h3>What this scan is</h3>
+    <p>This is an <strong>LLM-driven security investigation</strong> &mdash; an AI assistant with terminal access used the <a href="https://cli.github.com/" target="_blank" rel="noopener">GitHub CLI</a> and free public APIs to investigate this repo&rsquo;s governance, code patterns, dependencies, and distribution pipeline. It then synthesized its findings into this plain-English report.</p>
+    <p class="p-meta">This is <strong>not</strong> a static analyzer, penetration test, or formal security audit. It is a trust-assessment tool that answers: &ldquo;Should I install this?&rdquo;</p>
+
+    <h3>What we checked</h3>
+    <div class="vitals-grid">
+      <div class="vital-cell">
+        <div class="vital-label">Governance &amp; Trust</div>
+        <div class="vital-note">Branch protection, rulesets, CODEOWNERS, SECURITY.md, community health, maintainer account age &amp; activity, code review rates</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Code Patterns</div>
+        <div class="vital-note">Dangerous primitives (eval, exec, fetch), hardcoded secrets, executable file inventory, install scripts, README paste-blocks</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Supply Chain</div>
+        <div class="vital-note">Dependencies, CI/CD workflows, GitHub Actions SHA-pinning, release pipeline, artifact verification, published-vs-source comparison</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">AI Agent Rules</div>
+        <div class="vital-note">CLAUDE.md, AGENTS.md, .cursorrules, .mcp.json &mdash; files that instruct AI coding assistants. Checked for prompt injection and behavioral manipulation</div>
+      </div>
+    </div>
+
+    <h3>External tools used</h3>
+    <div class="vitals-grid">
+      <div class="vital-cell">
+        <div class="vital-label"><a href="https://securityscorecards.dev/" target="_blank" rel="noopener">OSSF Scorecard</a></div>
+        <div class="vital-note">Independent security rating from the Open Source Security Foundation. Scores 24 practices from 0&ndash;10. Free API, no installation needed.</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label"><a href="https://osv.dev/" target="_blank" rel="noopener">osv.dev</a></div>
+        <div class="vital-note">Google-backed vulnerability database. Used as fallback when GitHub&rsquo;s Dependabot data is not accessible (requires repo admin).</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label"><a href="https://gitleaks.io/" target="_blank" rel="noopener">gitleaks</a> (optional)</div>
+        <div class="vital-note">Scans code history for leaked passwords, API keys, and tokens. Requires installation. If unavailable, this gap is noted in Coverage.</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label"><a href="https://cli.github.com/" target="_blank" rel="noopener">GitHub CLI</a></div>
+        <div class="vital-note">Primary data source. All repo metadata, PR history, workflow files, contributor data, and issue history come from authenticated GitHub API calls.</div>
+      </div>
+    </div>
+
+    <h3>What this scan cannot detect</h3>
+    <ul>
+      <li><strong>Transitive dependency vulnerabilities</strong> &mdash; we check direct dependencies but cannot fully resolve the dependency tree without running the package manager</li>
+      <li><strong>Runtime behavior</strong> &mdash; we see what the code <em>could</em> do, not what it <em>does</em> when running</li>
+      <li><strong>Published artifact tampering</strong> &mdash; we read the source code but cannot verify that what&rsquo;s published to npm/PyPI matches this source exactly</li>
+      <li><strong>Sophisticated backdoors</strong> &mdash; our pattern-matching catches common dangerous primitives but not logic bombs or obfuscated payloads</li>
+      <li><strong>Container image contents</strong> &mdash; we read Dockerfiles but cannot inspect built images for extra layers or embedded secrets</li>
+    </ul>
+    <p class="p-meta">For comprehensive vulnerability scanning, pair this report with tools like <a href="https://semgrep.dev/" target="_blank" rel="noopener">Semgrep</a> (code analysis), <a href="https://www.snyk.io/" target="_blank" rel="noopener">Snyk</a> (dependency scanning), or <a href="https://aquasecurity.github.io/trivy/" target="_blank" rel="noopener">Trivy</a> (container scanning).</p>
+
+    <h3>Scan methodology version</h3>
+    <p class="p-meta">Scanner prompt {{ prompt_ver }} &middot; Operator Guide {{ guide_ver }} &middot; Validator version {{ scanner_ver }} &middot; Validator with XSS checks + verdict-severity coherence &middot; <a href="https://github.com/stefans71/stop-git-std" target="_blank" rel="noopener">stop-git-std</a></p>
+
+    </div>
+  </details>

@@ -1,0 +1,44 @@
+{#
+  Catalog metadata partial — table of report-level fields for the searchable catalog.
+  MD analogue: docs/templates/partials/catalog.md.j2
+  Source scaffold: EXAMPLE-START: catalog-meta (lines ~920-935)
+
+  Data paths:
+    form.target.{owner,repo,url}
+    form.phase_4_structured_llm.catalog_metadata.{short_description,category,subcategory}
+    form.phase_1_raw_capture.repo_metadata.description
+    form.phase_4b_computed.verdict.level
+    form.phase_4_structured_llm.split_axis_decision.should_split
+    form.phase_1_raw_capture.pre_flight.head_sha
+    form.phase_1_raw_capture.releases.entries[0].tag
+    form._meta.{prompt_version,scan_completed_at,scan_started_at,scanner_version}
+    form.phase_4_structured_llm.catalog_metadata.prior_scan_note (optional)
+#}
+{% set target = form.target %}
+{% set catalog = form.phase_4_structured_llm.get('catalog_metadata', {}) or {} %}
+{% set repo_meta = form.phase_1_raw_capture.repo_metadata %}
+{% set head_sha = form.phase_1_raw_capture.pre_flight.head_sha or '' %}
+{% set releases = form.phase_1_raw_capture.get('releases', {}).get('entries', []) %}
+{% set latest_tag = releases[0].tag if releases else 'untagged' %}
+{% set verdict_level = form.get('phase_4b_computed', {}).get('verdict', {}).get('level', 'Caution') %}
+{% set split = form.phase_4_structured_llm.get('split_axis_decision', {}) or {} %}
+{% set should_split = split.get('should_split', False) %}
+{% set prompt_ver = form.get('_meta', {}).get('prompt_version', 'V2.3-post-R3') %}
+{% set scanner_ver = form.get('_meta', {}).get('scanner_version', 'unknown') %}
+{% set prior = catalog.get('prior_scan_note') or 'None &mdash; first scan of this repo.' %}
+{% set short_desc = catalog.get('short_description') or repo_meta.get('description', '') %}
+{% set verdict_util = VERDICT_UTIL_CLASS.get(verdict_level, 'val-warn') %}
+  <div class="catalog-meta">
+    <div class="catalog-label">Catalog metadata</div>
+    <table>
+      <tr><td class="key">Report file</td><td class="val"><code>GitHub-Scanner-{{ target.repo }}.html</code> (+ <code>.md</code> companion)</td></tr>
+      <tr><td class="key">Repo</td><td class="val"><a href="{{ target.url }}">github.com/{{ target.owner }}/{{ target.repo }}</a></td></tr>
+      <tr><td class="key">Short description</td><td class="val">{{ short_desc }}</td></tr>
+      <tr><td class="key">Category</td><td class="val">{{ catalog.get('category', '') }}</td></tr>
+      <tr><td class="key">Subcategory</td><td class="val">{{ catalog.get('subcategory', '') }}</td></tr>
+      <tr><td class="key">Verdict</td><td class="val {{ verdict_util }} fw-semi">{{ verdict_level }}{% if should_split %} (split){% endif %}</td></tr>
+      <tr><td class="key">Scanned revision</td><td class="val">main @ {{ short_sha(head_sha) }} ({{ latest_tag }})</td></tr>
+      <tr><td class="key">Prompt version</td><td class="val">{{ prompt_ver }}</td></tr>
+      <tr><td class="key">Prior scan</td><td class="val">{{ prior | safe }}</td></tr>
+    </table>
+  </div>

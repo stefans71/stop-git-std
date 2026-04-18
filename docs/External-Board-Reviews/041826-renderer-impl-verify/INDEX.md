@@ -29,16 +29,17 @@
 | (fix) | `c6531bb` | C2 BLOCK resolution (file_sha/line_ranges/diff_anchor → required-always-nullable) | 107 |
 | C | `59224ac` | Fixture enrichment (+310 lines of structural-LLM fields via 10 approved FAs) | 107 |
 | D | `aac2b3b` | +39 render structural-assertion tests (9 new classes) | **146** |
-| E | _(see verification record)_ | Validator `--report` gate clean on rendered output — no code delta, `STEP-E-verification.md` committed as the test record | 146 |
+| E | `cf8c576` | Validator `--report` gate clean on rendered output — no code delta, `STEP-E-verification.md` committed as the test record | 146 |
+| F | _(this commit)_ | HTML renderer shipped: `render-html.py` + 14 Jinja2 partials + 2 new V1.1 fixtures (caveman, archon-subset) + 117 HTML tests. Validator `--report` clean on all 3 shapes. Parity matches reference baseline. See `STEP-F-verification.md`. | **263** |
 
 ## Where we are
 
-**Completed:** Steps A, B, C, D, **E**. All committed. 146/146 tests passing. Fixture validates clean against V1.1. Render produces all 13 section headers at 540 lines vs golden 602 (62-line gap is prose density — consistent with "prose stays sparse" rule). Validator `--report` gate exits 0 on rendered output (see `STEP-E-verification.md` for hypothesis / files / expected vs actual).
+**Completed:** Steps A, B, C, D, **E**, **F**. All committed. **263/263** tests passing (146 + 117 new HTML tests). All 3 V1.1 fixtures validate clean. Render produces valid MD + HTML for zustand, caveman, and archon-subset. Validator `--report` gate exits 0 on rendered HTML for all 3 shapes. MD/HTML parity check matches reference-scan baseline (no errors, 1 known-regex-limitation warning per fixture).
 
 **Remaining in the workstream:**
 - ~~**Step E** — Validator `--report` gate on rendered output.~~ ✅ PASS 2026-04-18. Record: `STEP-E-verification.md`.
-- **Step F** (later session) — `render-html.py` using same Jinja2 template architecture. MD/HTML parity gate (PD2 validator mode, already exists).
-- **Step G** (before "pipeline reliable" claim) — C7 acceptance matrix + dual-emit verification: Archon re-run + one other shape + zustand, each producing V1.1-compliant JSON + valid MD+HTML.
+- ~~**Step F** — `render-html.py` + cross-shape fixture coverage.~~ ✅ PASS 2026-04-18. Record: `STEP-F-verification.md`.
+- **Step G** (before "pipeline reliable" claim, **board review required**) — C7 acceptance matrix + dual-emit verification via the real end-to-end JSON-first pipeline (tool-capture → compute → LLM → assembly → render). Step F's fixtures are manually back-authored from golden MDs; Step G runs fresh scans through Phases 1-8.
 
 ## Dissents carried forward
 

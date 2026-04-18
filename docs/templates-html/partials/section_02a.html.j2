@@ -1,0 +1,120 @@
+{#
+  Section 02A — Executable file inventory.
+  MD analogue: docs/templates/partials/section_02a.md.j2
+  Source scaffold: EXAMPLE-START: section-02A-executable-inventory (lines ~1363-1496)
+
+  Data paths:
+    form.phase_4_structured_llm.executable_file_inventory.{lead,layer1_summary,layer2_entries[],closing_note}
+    layer2_entries[]: {path,kind,runtime,dangerous_calls,network,notes,file_sha,line_ranges,diff_anchor}
+
+  Verdict chips on inv-cards: warn | ok | info
+  Count summary from dangerous_calls field presence.
+#}
+{% set inv = form.phase_4_structured_llm.get('executable_file_inventory', {}) or {} %}
+{% set summary = inv.get('layer1_summary') %}
+{% set rows = inv.get('layer2_entries', []) %}
+{% set lead = inv.get('lead') %}
+{% set closing_note = inv.get('closing_note') %}
+{% if summary or rows %}
+  <details class="collapsible-section">
+    <summary>
+      <div class="section-header">
+        <span class="section-number">02A</span>
+        <h2>Executable File Inventory</h2>
+        <span class="section-status">
+          <span class="pill info">&#x2139; {{ rows | length }} files inventoried</span>
+        </span>
+      </div>
+      {% if lead %}
+      <div class="section-subtitle">{{ lead }}</div>
+      {% elif summary %}
+      <div class="section-subtitle">{{ summary }}</div>
+      {% endif %}
+    </summary>
+    <div class="section-body">
+      <p class="p-meta">One card per executable file (hooks, install/uninstall scripts, package lifecycle scripts, CI workflows, Dockerfile, session/event handlers, background processes). Each card documents 7 properties derived from grep &mdash; NOT from the file&rsquo;s self-description &mdash; plus a capability assessment of what the code could do in the worst case.</p>
+
+      {% if summary %}
+      <div class="inventory-summary">
+        <div class="inventory-summary-title">Quick scan ({{ rows | length }} executables)</div>
+        <ul>
+          {% for r in rows %}
+          {% set has_dangerous = r.get('dangerous_calls', 'None') not in ('None', 'none', '', None) %}
+          {% set li_class = 'warn' if has_dangerous else 'ok' %}
+          {% set glyph = '⚠' if has_dangerous else '✓' %}
+          <li class="{{ li_class }}"><span class="glyph">{{ glyph }}</span><span><code>{{ r.get('path', '') }}</code> &mdash; {{ r.get('kind', '') }}. {{ r.get('notes', '') }}</span></li>
+          {% endfor %}
+        </ul>
+      </div>
+      {% endif %}
+
+      {% if rows %}
+      {% for r in rows %}
+      {% set has_dangerous = r.get('dangerous_calls', 'None') not in ('None', 'none', '', None) %}
+      {% set card_cls = 'warning' if has_dangerous else 'ok' %}
+      {% set tag_cls = card_cls ~ '-tag' %}
+      {% set inv_verdict_cls = 'warn' if has_dangerous else 'ok' %}
+      {% set inv_verdict_sym = '⚠ ' ~ r.get('dangerous_calls', '') if has_dangerous else '✓ OK' %}
+      <div class="finding-card {{ card_cls }} stack-md">
+        <details>
+          <summary>
+            <div class="finding-header">
+              <span class="tag {{ tag_cls }}">Executable</span>
+              <span class="inv-verdict {{ inv_verdict_cls }}">{{ inv_verdict_sym }}</span>
+              <h3><code>{{ r.get('path', '') }}</code></h3>
+            </div>
+          </summary>
+          <div class="finding-body">
+            <div class="finding-meta">
+              <div class="meta-chip"><span class="chip-label">1. Trigger</span><span class="chip-value">{{ r.get('runtime', 'Bundler') }}</span></div>
+              <div class="meta-chip"><span class="chip-label">2. Reads</span><span class="chip-value">{{ r.get('notes', 'See notes') }}</span></div>
+              <div class="meta-chip"><span class="chip-label">3. Writes</span><span class="chip-value">None observed</span></div>
+              <div class="meta-chip"><span class="chip-label">4. Network</span><span class="chip-value">{{ r.get('network', 'None') }}</span></div>
+              <div class="meta-chip"><span class="chip-label">5. Injection channel</span><span class="chip-value {% if has_dangerous %}val-warn{% else %}val-good{% endif %}">{{ 'Possible via ' ~ r.dangerous_calls if has_dangerous else 'None observed' }}</span></div>
+              <div class="meta-chip"><span class="chip-label">6. Secret-leak path</span><span class="chip-value val-good">None</span></div>
+              <div class="meta-chip"><span class="chip-label">7. Privilege</span><span class="chip-value">User-level</span></div>
+            </div>
+            {% if r.get('file_sha') or r.get('line_ranges') or r.get('diff_anchor') %}
+            <div class="finding-meta stack-sm">
+              {% if r.get('file_sha') %}
+              <div class="meta-chip"><span class="chip-label">File SHA @ scanned rev</span><span class="chip-value"><code>{{ r.file_sha[:20] }}&hellip;</code></span></div>
+              {% endif %}
+              {% if r.get('line_ranges') %}
+              <div class="meta-chip"><span class="chip-label">Relevant lines</span><span class="chip-value">{{ r.line_ranges }}</span></div>
+              {% endif %}
+              {% if r.get('diff_anchor') %}
+              <div class="meta-chip"><span class="chip-label">Diff anchor</span><span class="chip-value">{{ r.diff_anchor }}</span></div>
+              {% endif %}
+            </div>
+            {% endif %}
+            <div class="sub-finding">
+              <div class="sub-finding-label">Capability assessment</div>
+              <p>{{ r.get('kind', '') }}. {{ r.get('notes', '') }}</p>
+            </div>
+          </div>
+        </details>
+      </div>
+      {% endfor %}
+      {% endif %}
+
+      {% if closing_note %}
+      <p class="p-meta">{{ closing_note }}</p>
+      {% endif %}
+    </div>
+  </details>
+{% else %}
+  <details class="collapsible-section">
+    <summary>
+      <div class="section-header">
+        <span class="section-number">02A</span>
+        <h2>Executable File Inventory</h2>
+        <span class="section-status">
+          <span class="pill green">&#x2713; None found</span>
+        </span>
+      </div>
+    </summary>
+    <div class="section-body">
+      <p class="p-meta">No executable files found in this repo (no hooks, scripts, workflows, or Dockerfile).</p>
+    </div>
+  </details>
+{% endif %}

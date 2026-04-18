@@ -1,0 +1,37 @@
+{#
+  Scorecard partial — 4-question trust framework grid.
+  MD analogue: docs/templates/partials/scorecard.md.j2
+  Source scaffold: EXAMPLE-START: scorecard (lines ~1070-1095)
+
+  Data paths:
+    form.phase_3_computed.scorecard_cells.{
+      does_anyone_check_the_code,
+      do_they_fix_problems_quickly,
+      do_they_tell_you_about_problems,
+      is_it_safe_out_of_the_box
+    }
+    each cell: {color, short_answer}
+  Canonical question order (source template): check / fix / tell / safe
+#}
+{% set cells = form.get('phase_3_computed', {}).get('scorecard_cells', {}) or {} %}
+{% set questions = [
+  ('does_anyone_check_the_code',       'Does anyone check the code?'),
+  ('do_they_fix_problems_quickly',     'Do they fix problems quickly?'),
+  ('do_they_tell_you_about_problems',  'Do they tell you about problems?'),
+  ('is_it_safe_out_of_the_box',        'Is it safe out of the box?'),
+] %}
+  <div class="scorecard-section">
+    <div class="scorecard-grid">
+      {% for key, question in questions %}
+      {% set cell = cells.get(key, {}) or {} %}
+      {% set color = cell.get('color') or 'amber' %}
+      {% set icon = CELL_ICON.get(color, '⚠') %}
+      {% set answer = cell.get('short_answer', '') %}
+      <div class="score-cell">
+        <div class="score-icon {{ color }}">{{ icon }}</div>
+        <div class="score-label">{{ question }}</div>
+        <div class="score-value {{ color }}">{{ answer }}</div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>

@@ -1,0 +1,51 @@
+{#
+  Hero partial — top scan-strip + H1 + editorial caption + meta row.
+  MD analogue: docs/templates/partials/hero.md.j2
+  Source scaffold: docs/GitHub-Repo-Scan-Template.html EXAMPLE-START: hero (lines 892-911)
+
+  Data paths (same as MD partial):
+    form.target.{owner,repo}
+    form.phase_1_raw_capture.pre_flight.head_sha
+    form.phase_1_raw_capture.repo_metadata.{created_at,stargazer_count,license_spdx}
+    form.phase_1_raw_capture.releases.entries[0].tag
+    form.phase_5_prose_llm.editorial_caption.text
+
+  Verdict dot/color class derived from form.phase_4b_computed.verdict.level.
+  Fixture-level values are Clean / Caution / Critical (not the finding-severity
+  tiers). Mapping lives in render-html.py globals (VERDICT_DOT_CLASS,
+  VERDICT_H1_COLOR, VERDICT_BANNER_CLASS, VERDICT_UTIL_CLASS).
+#}
+{% set target = form.target %}
+{% set repo_meta = form.phase_1_raw_capture.repo_metadata %}
+{% set head_sha = form.phase_1_raw_capture.pre_flight.head_sha or '' %}
+{% set releases = form.phase_1_raw_capture.get('releases', {}).get('entries', []) %}
+{% set latest_tag = releases[0].tag if releases else '' %}
+{% set age = repo_age_years(repo_meta.get('created_at', ''), scan_date) %}
+{% set stars = fmt_int(repo_meta.get('stargazer_count', 0)) %}
+{% set license_ = repo_meta.get('license_spdx') or 'None' %}
+{% set caption = form.get('phase_5_prose_llm', {}).get('editorial_caption', {}).get('text', '') %}
+{% set verdict_level = form.get('phase_4b_computed', {}).get('verdict', {}).get('level', 'Caution') %}
+{% set prompt_version = form._meta.prompt_version or 'V2.3-post-R3' %}
+{% set scan_ts = form._meta.scan_completed_at or form._meta.scan_started_at or scan_date %}
+{% set dot_class = VERDICT_DOT_CLASS.get(verdict_level, 'amber') %}
+{% set h1_color = VERDICT_H1_COLOR.get(verdict_level, 'amber') %}
+  <div class="hero">
+    <div class="scan-strip">
+      <span class="scan-strip-item"><span class="dot {{ dot_class }}"></span>Security Investigation</span>
+      <span class="scan-strip-item">Dossier &middot; {{ target.repo }}</span>
+      <span class="scan-strip-item">Rev &middot; {{ short_sha(head_sha) }}</span>
+      <span class="scan-strip-item">{{ prompt_version }} &middot; {{ scan_ts }}</span>
+      <span class="scan-strip-item flash">&bull; Live</span>
+    </div>
+    <h1>{{ target.owner }}<span class="slash">/</span><span class="{{ h1_color }}">{{ target.repo }}</span></h1>
+    {% if caption %}
+    <div class="hero-caption">{{ caption }}</div>
+    {% endif %}
+    <div class="meta">
+      <div class="meta-item"><span class="label">Investigated</span> {{ scan_date }}</div>
+      <div class="meta-item"><span class="label">Applies to</span> main @ {{ short_sha(head_sha) }}{% if latest_tag %} &middot; {{ latest_tag }}{% endif %}</div>
+      <div class="meta-item"><span class="label">Repo age</span> {{ age }}</div>
+      <div class="meta-item"><span class="label">Stars</span> {{ stars }}</div>
+      <div class="meta-item"><span class="label">License</span> {{ license_ }}</div>
+    </div>
+  </div>

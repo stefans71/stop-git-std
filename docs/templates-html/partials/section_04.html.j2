@@ -1,0 +1,56 @@
+{#
+  Section 04 — Timeline events. (MD template numbers this 04, HTML template also 04)
+  MD analogue: docs/templates/partials/section_04.md.j2 (timeline)
+  Source scaffold: EXAMPLE-START: section-04-timeline (lines ~1562-1605)
+
+  Data paths:
+    form.phase_4_structured_llm.timeline_events.entries[]
+      {date,label,tone,note}
+    form.phase_4_structured_llm.timeline_intro (optional)
+
+  tone → tl-item class: positive→good, negative→bad, warn→bad, neutral→neutral
+  tl-severity-label = event label (SHORT_TAG)
+#}
+{% set events = form.phase_4_structured_llm.get('timeline_events', {}).get('entries', []) %}
+{% set intro = form.phase_4_structured_llm.get('timeline_intro') %}
+{% set tone_to_cls = {'positive': 'good', 'negative': 'bad', 'warn': 'bad', 'neutral': 'neutral'} %}
+{% if events %}
+{% set tone_counts = {'positive': 0, 'neutral': 0, 'negative': 0, 'warn': 0} %}
+{% for e in events %}{% set t = e.get('tone', 'neutral') %}{% set _ = tone_counts.update({t: tone_counts.get(t, 0) + 1}) %}{% endfor %}
+  <details class="collapsible-section">
+    <summary>
+      <div class="section-header">
+        <span class="section-number">04</span>
+        <h2>Timeline</h2>
+        <span class="section-status">
+          {% if tone_counts.get('negative', 0) + tone_counts.get('warn', 0) %}
+          <span class="pill red">{{ tone_counts.get('negative', 0) + tone_counts.get('warn', 0) }} concerning</span>
+          {% endif %}
+          {% if tone_counts.get('neutral', 0) %}
+          <span class="pill amber">{{ tone_counts['neutral'] }} neutral</span>
+          {% endif %}
+          {% if tone_counts.get('positive', 0) %}
+          <span class="pill green">{{ tone_counts['positive'] }} good</span>
+          {% endif %}
+        </span>
+      </div>
+      {% if intro %}
+      <div class="section-subtitle">{{ intro }}</div>
+      {% else %}
+      <div class="section-subtitle">{{ events | length }} events across the repo&rsquo;s history.</div>
+      {% endif %}
+    </summary>
+    <div class="section-body">
+    <div class="timeline">
+      {% for e in events %}
+      {% set tone = e.get('tone', 'neutral') %}
+      {% set cls = tone_to_cls.get(tone, 'neutral') %}
+      <div class="tl-item {{ cls }}">
+        <div class="tl-date">{{ e.get('date', '') }} <span class="tl-severity-label">{{ e.get('label', '') }}</span></div>
+        <div class="tl-desc">{{ e.get('note', '') }}</div>
+      </div>
+      {% endfor %}
+    </div>
+    </div>
+  </details>
+{% endif %}

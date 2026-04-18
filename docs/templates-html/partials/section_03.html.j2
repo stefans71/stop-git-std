@@ -1,0 +1,90 @@
+{#
+  Section 03 — PR sample review table. (Template labels this "Suspicious Code Changes")
+  MD analogue: docs/templates/partials/section_03.md.j2
+  Source scaffold: EXAMPLE-START: section-03-suspicious-prs (lines ~1508-1553)
+
+  Data paths:
+    form.phase_4_structured_llm.pr_sample_review.{intro,rows[]}
+      rows[]: {number,what,author,merger,reviewed,concern,flagged,url}
+    form.phase_1_raw_capture.pr_review.{prs[],formal_review_rate,sample_size,total_closed_prs}
+    form.target.{owner,repo}
+
+  td classes for reviewed column: td-reviewed-no | td-reviewed-yes | td-reviewed-rejected
+  td-merge-fast for sub-24h merges (not tracked in fixture — omit)
+#}
+{% set pr = form.phase_1_raw_capture.get('pr_review', {}) or {} %}
+{% set sample = pr.get('prs', []) %}
+{% set review_summary = form.phase_4_structured_llm.get('pr_sample_review', {}) or {} %}
+{% set rows = review_summary.get('rows', []) %}
+{% set target = form.target %}
+{% if sample or rows %}
+{% set flagged_count = rows | selectattr('flagged', 'equalto', true) | list | length %}
+{% set sample_total = rows | length if rows else sample | length %}
+  <details class="collapsible-section">
+    <summary>
+      <div class="section-header">
+        <span class="section-number">03</span>
+        <h2>Suspicious Code Changes</h2>
+        <span class="section-status">
+          {% if flagged_count %}
+          <span class="pill amber">&#x26A0; {{ flagged_count }} PRs flagged</span>
+          {% else %}
+          <span class="pill green">&#x2713; 0 flagged</span>
+          {% endif %}
+          <span class="pill muted">{{ sample_total }} sampled</span>
+        </span>
+      </div>
+      {% if review_summary.get('intro') %}
+      <div class="section-subtitle">{{ review_summary.intro }}</div>
+      {% else %}
+      <div class="section-subtitle">
+        {{ sample_total }} recent merged PRs sampled.{% if pr.get('formal_review_rate') is not none %} Formal review rate: {{ pr.formal_review_rate }}%.{% endif %}
+      </div>
+      {% endif %}
+    </summary>
+    <div class="section-body">
+    <div class="pr-table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>PR</th><th>What it did</th><th>Submitted by</th>
+            <th>Merged by</th><th>Reviewed?</th><th>Concern</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% if rows %}
+          {% for r in rows %}
+          {% set pr_url = r.get('url') or 'https://github.com/' ~ target.owner ~ '/' ~ target.repo ~ '/pull/' ~ (r.get('number', '') | string) %}
+          {% set reviewed_str = r.get('reviewed', '') | lower %}
+          {% set reviewed_cls = 'td-reviewed-yes' if 'formal' in reviewed_str or 'approved' in reviewed_str else ('td-reviewed-rejected' if 'reject' in reviewed_str else 'td-reviewed-no') %}
+          <tr>
+            <td><a href="{{ pr_url }}">#{{ r.get('number', '') }}</a></td>
+            <td>{{ r.get('what', '') }}</td>
+            <td class="td-person">{{ r.get('author', '') }}</td>
+            <td class="td-person">{{ r.get('merger', '') }}</td>
+            <td class="{{ reviewed_cls }}">{{ r.get('reviewed', '') }}</td>
+            <td class="td-concern">{{ r.get('concern', '') }}</td>
+          </tr>
+          {% endfor %}
+          {% elif sample %}
+          {% for p in sample %}
+          {% set pr_url = 'https://github.com/' ~ target.owner ~ '/' ~ target.repo ~ '/pull/' ~ (p.get('number', '') | string) %}
+          {% set reviewed_cls = 'td-reviewed-yes' if p.get('any_review') else 'td-reviewed-no' %}
+          <tr>
+            <td><a href="{{ pr_url }}">#{{ p.get('number', '') }}</a></td>
+            <td>&mdash;</td>
+            <td class="td-person">{{ p.get('author', '') }}</td>
+            <td class="td-person">{{ p.get('merger', '') }}</td>
+            <td class="{{ reviewed_cls }}">{{ p.get('formal_review') or ('yes' if p.get('any_review') else 'no') }}</td>
+            <td class="td-concern">{% if p.get('self_merge') %}<strong>Self-merge</strong>{% else %}&mdash;{% endif %}</td>
+          </tr>
+          {% endfor %}
+          {% else %}
+          <tr><td colspan="6"><em>No PRs flagged by security-keyword filter.</em></td></tr>
+          {% endif %}
+        </tbody>
+      </table>
+    </div>
+    </div>
+  </details>
+{% endif %}

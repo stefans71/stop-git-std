@@ -1,0 +1,84 @@
+{#
+  Verdict partial — verdict banner + split-verdict entries + verdict exhibits.
+  MD analogue: docs/templates/partials/verdict.md.j2
+  Source scaffold: EXAMPLE-START: verdict-banner / verdict-split / verdict-exhibits
+
+  Data paths:
+    form.phase_4b_computed.verdict.level
+    form.phase_4_structured_llm.split_axis_decision.{should_split,axis,entries[]}
+      entries[].{audience,scope_detail,verdict_level,headline,summary}
+    form.phase_4_structured_llm.verdict_exhibits.groups[]
+      groups[].{symbol,headline,one_line_summary,items[]}
+      items[].{tag,claim}
+    form.target.repo
+    form.phase_1_raw_capture.pre_flight.head_sha
+    form._meta.prompt_version
+#}
+{% set verdict_level = form.get('phase_4b_computed', {}).get('verdict', {}).get('level', 'Caution') %}
+{% set split = form.phase_4_structured_llm.get('split_axis_decision', {}) or {} %}
+{% set entries = split.get('entries', []) %}
+{% set axis = split.get('axis', '') %}
+{% set groups = form.phase_4_structured_llm.get('verdict_exhibits', {}).get('groups', []) %}
+{% set target = form.target %}
+{% set head_sha = form.phase_1_raw_capture.pre_flight.head_sha or '' %}
+{% set prompt_ver = form.get('_meta', {}).get('prompt_version', 'V2.3-post-R3') %}
+{% set banner_class = VERDICT_BANNER_CLASS.get(verdict_level, 'caution') %}
+{% set dossier_str = 'DOSSIER · ' ~ target.repo|upper ~ ' · ' ~ short_sha(head_sha)|upper ~ ' · ' ~ scan_date ~ ' · ' ~ prompt_ver %}
+  <div class="verdict-section">
+    <div class="verdict-banner {{ banner_class }}" data-dossier="{{ dossier_str }}">
+      <div class="verdict-label">&#x25CF; {{ verdict_level }}</div>
+
+      <div class="verdict-split">
+        {% if split.get('should_split') and entries %}
+        {% for e in entries %}
+        <div class="verdict-entry">
+          <div class="verdict-entry-scope">{{ axis|capitalize }} &middot; {{ e.get('audience', '') }}{% if e.get('scope_detail') %} &middot; {{ e.scope_detail }}{% endif %}</div>
+          {% set e_level = e.get('verdict_level', verdict_level) %}
+          {% set e_color = 'good' if e_level in ('Clean', 'Good', 'Good with caveats') else ('bad' if e_level == 'Critical' else 'warn') %}
+          <h2 class="verdict-entry-headline {{ e_color }}">{{ e.get('headline', '') }}</h2>
+          <div class="verdict-entry-detail">{{ e.get('summary', '') }}</div>
+        </div>
+        {% if not loop.last %}<div class="verdict-split-divider"></div>{% endif %}
+        {% endfor %}
+        {% else %}
+        <div class="verdict-entry">
+          <div class="verdict-entry-scope">{{ target.repo }} &middot; {{ scan_date }}</div>
+          {% set single_color = 'good' if verdict_level == 'Clean' else ('bad' if verdict_level == 'Critical' else 'warn') %}
+          <h2 class="verdict-entry-headline {{ single_color }}">{{ verdict_level }}</h2>
+          <div class="verdict-entry-detail">See findings below for details.</div>
+        </div>
+        {% endif %}
+      </div>
+
+      {% if groups %}
+      <div class="verdict-exhibits">
+        {% for g in groups %}
+        {% set symbol = g.get('symbol', '⚠') %}
+        {% set theme_class = 'signals' if symbol == '✓' else ('govern' if symbol in ('❌', '🔴') else 'vuln') %}
+        <details class="exhibit {{ theme_class }}">
+          <summary>
+            <span class="exhibit-glyph">{{ symbol }}</span>
+            <span>
+              <span class="exhibit-title">{{ g.get('headline', '') }}</span>
+              <span class="exhibit-count">&middot; {{ g.get('items', []) | length }} findings</span>
+              <span class="exhibit-summary-line">{{ g.get('one_line_summary', '') }}</span>
+            </span>
+          </summary>
+          <div class="exhibit-body">
+            {% for item in g.get('items', []) %}
+            <div class="exhibit-item">
+              <span class="exhibit-item-glyph">{{ '%02d' % loop.index }}</span>
+              <span>
+                <span class="exhibit-item-tag">{{ item.get('tag', '') }}</span>
+                {{ item.get('claim', '') }}
+              </span>
+            </div>
+            {% endfor %}
+          </div>
+        </details>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+    </div>
+  </div>

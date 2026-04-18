@@ -1,0 +1,117 @@
+{#
+  Section 02 — "What We Found" detailed finding cards.
+  MD analogue: docs/templates/partials/section_02.md.j2
+  Source scaffold: EXAMPLE-START: section-02-what-we-found (lines ~1201-1340)
+
+  Data paths:
+    form.phase_4_structured_llm.findings.entries[]
+      {id,severity,title,status,action_hint,kind,boundary_case,boundary_note,
+       duration_label,date_label,how_to_fix,meta_table[],evidence_refs[]}
+    form.phase_5_prose_llm.per_finding_prose.entries[]
+      {finding_id,what_we_observed,what_this_means,what_this_does_not_mean,body_paragraphs[]}
+    form.phase_4_structured_llm.section_actions.entries[] (section=='02').action
+
+  Severity → card class: Critical→critical, Warning→warning, Info→info, OK→ok
+  Status chip classes: active | resolved | ongoing | mitigated | informational
+#}
+{% set findings = form.phase_4_structured_llm.get('findings', {}).get('entries', []) %}
+{% set prose_entries = form.get('phase_5_prose_llm', {}).get('per_finding_prose', {}).get('entries', []) %}
+{% set prose_map = {} %}
+{% for p in prose_entries %}{% set _ = prose_map.update({p.finding_id: p}) %}{% endfor %}
+{% set section_actions = form.phase_4_structured_llm.get('section_actions', {}).get('entries', []) %}
+{% set s02_list = (section_actions | selectattr('section', 'equalto', '02') | map(attribute='action') | list) %}
+{% set s02_action = s02_list[0] if s02_list else '' %}
+{% set counts = {'Critical': 0, 'Warning': 0, 'Info': 0, 'OK': 0} %}
+{% for f in findings %}{% set _ = counts.update({f.severity: counts.get(f.severity, 0) + 1}) %}{% endfor %}
+{% set sev_pill_class = {'Critical': 'red', 'Warning': 'amber', 'Info': 'info', 'OK': 'green'} %}
+  <details class="collapsible-section">
+    <summary>
+      <div class="section-header">
+        <span class="section-number">02</span>
+        <h2>What We Found</h2>
+        <span class="section-status">
+          {% if counts['Critical'] %}<span class="pill red">&#x1F6A8; {{ counts['Critical'] }} Critical</span>{% endif %}
+          {% if counts['Warning'] %}<span class="pill amber">&#x26A0; {{ counts['Warning'] }} Warning</span>{% endif %}
+          {% if counts['Info'] %}<span class="pill info">&#x2139; {{ counts['Info'] }} Info</span>{% endif %}
+          {% if counts['OK'] %}<span class="pill green">&#x2713; {{ counts['OK'] }} OK</span>{% endif %}
+        </span>
+      </div>
+      <div class="section-subtitle">
+        {{ findings | length }} findings total.{% if s02_action %} {{ s02_action }}{% endif %}
+      </div>
+      {% if s02_action %}
+      <div class="section-action">
+        <span class="lbl">Your action</span>
+        {{ s02_action }}
+      </div>
+      {% endif %}
+    </summary>
+    <div class="section-body">
+      {% if not findings %}
+      <div class="finding-card ok">
+        <div class="finding-header">
+          <span class="tag ok-tag">OK</span>
+          <h3>No significant security concerns found</h3>
+        </div>
+      </div>
+      {% else %}
+      {% for f in findings %}
+      {% set sev = f.get('severity', 'OK') %}
+      {% set sev_lower = sev | lower %}
+      {% set card_cls = sev_lower if sev_lower in ('critical', 'warning', 'info', 'ok') else 'info' %}
+      {% set tag_cls = card_cls ~ '-tag' %}
+      {% set status = f.get('status', 'informational') %}
+      {% set chip_cls = 'active' if status == 'active' else ('resolved' if status == 'resolved' else ('mitigated' if status == 'mitigated' else 'informational')) %}
+      {% set prose = prose_map.get(f.id) %}
+      <div class="finding-card {{ card_cls }}">
+        <details>
+          <summary>
+            <div class="finding-header">
+              <span class="tag {{ tag_cls }}">{{ sev }}</span>
+              {% if sev != 'OK' %}
+              <span class="status-chip {{ chip_cls }}">{{ status | capitalize }}</span>
+              {% endif %}
+              {% if f.get('date_label') %}<span class="finding-date">{{ f.date_label }}</span>{% endif %}
+              {% if f.get('duration_label') %}<span class="finding-duration">{{ f.duration_label }}</span>{% endif %}
+              <h3>{{ f.id }} &mdash; {{ f.get('title', '') }}</h3>
+              {% if f.get('action_hint') %}
+              <div class="action-hint {% if sev == 'OK' %}ok{% elif sev == 'Critical' %}warn{% else %}warn{% endif %}">{{ f.action_hint }}</div>
+              {% endif %}
+            </div>
+          </summary>
+          <div class="finding-body">
+            {% if prose %}
+            {% for para in prose.get('body_paragraphs', []) %}
+            <p>{{ para }}</p>
+            {% endfor %}
+            {% if prose.get('what_we_observed') %}
+            <p><strong>What we observed.</strong> {{ prose.what_we_observed }}</p>
+            {% endif %}
+            {% if prose.get('what_this_means') %}
+            <p><strong>What this means for you.</strong> {{ prose.what_this_means }}</p>
+            {% endif %}
+            {% if prose.get('what_this_does_not_mean') %}
+            <p><strong>What this does NOT mean.</strong> {{ prose.what_this_does_not_mean }}</p>
+            {% endif %}
+            {% endif %}
+            {% if f.get('boundary_case') and f.get('boundary_note') %}
+            <p><em>Boundary note: {{ f.boundary_note }}</em></p>
+            {% endif %}
+            {% set meta_rows = f.get('meta_table') or [] %}
+            {% if meta_rows %}
+            <div class="finding-meta">
+              {% for row in meta_rows %}
+              <div class="meta-chip"><span class="chip-label">{{ row.get('label', '') }}</span><span class="chip-value">{{ row.get('value', '') }}</span></div>
+              {% endfor %}
+            </div>
+            {% endif %}
+            {% if f.get('how_to_fix') %}
+            <p><strong>How to fix.</strong> {{ f.how_to_fix }}</p>
+            {% endif %}
+          </div>
+        </details>
+      </div>
+      {% endfor %}
+      {% endif %}
+    </div>
+  </details>

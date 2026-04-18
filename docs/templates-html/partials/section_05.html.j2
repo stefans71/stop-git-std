@@ -1,0 +1,43 @@
+{#
+  Section 05 — Repo vitals table.
+  MD analogue: docs/templates/partials/section_05.md.j2 (repo_vitals)
+  Source scaffold: EXAMPLE-START: section-05-repo-vitals (lines ~1616-1643)
+
+  Data paths:
+    form.phase_4_structured_llm.repo_vitals.rows[]
+      {metric, value, note}
+
+  Each row renders as a vital-cell in a vitals-grid.
+  No value-coloring heuristic applied here — the LLM encodes color signals
+  in the value text already (e.g. "✅ 0" or "❌ None"). We omit dynamic
+  val-good/val-bad classes to avoid false inference from text-scan.
+#}
+{% set vitals = form.phase_4_structured_llm.get('repo_vitals', {}).get('rows', []) %}
+{% if vitals %}
+  <details class="collapsible-section">
+    <summary>
+      <div class="section-header">
+        <span class="section-number">05</span>
+        <h2>Repo Vitals</h2>
+        <span class="section-status">
+          <span class="pill info">{{ vitals | length }} metrics</span>
+          <span class="pill muted">Reference only</span>
+        </span>
+      </div>
+      <div class="section-subtitle">
+        Raw numbers backing everything above &mdash; open if you want to verify the specific numbers cited in findings.
+      </div>
+    </summary>
+    <div class="section-body">
+    <div class="vitals-grid">
+      {% for v in vitals %}
+      <div class="vital-cell">
+        <div class="vital-label">{{ v.get('metric', '') }}</div>
+        <div class="vital-value">{{ v.get('value', '') }}</div>
+        <div class="vital-note">{{ v.get('note', '') }}</div>
+      </div>
+      {% endfor %}
+    </div>
+    </div>
+  </details>
+{% endif %}
