@@ -29,13 +29,14 @@
 | (fix) | `c6531bb` | C2 BLOCK resolution (file_sha/line_ranges/diff_anchor → required-always-nullable) | 107 |
 | C | `59224ac` | Fixture enrichment (+310 lines of structural-LLM fields via 10 approved FAs) | 107 |
 | D | `aac2b3b` | +39 render structural-assertion tests (9 new classes) | **146** |
+| E | _(see verification record)_ | Validator `--report` gate clean on rendered output — no code delta, `STEP-E-verification.md` committed as the test record | 146 |
 
 ## Where we are
 
-**Completed:** Steps A, B, C, D. All committed. 146/146 tests passing. Fixture validates clean against V1.1. Render produces all 13 section headers at 540 lines vs golden 602 (62-line gap is prose density — consistent with "prose stays sparse" rule).
+**Completed:** Steps A, B, C, D, **E**. All committed. 146/146 tests passing. Fixture validates clean against V1.1. Render produces all 13 section headers at 540 lines vs golden 602 (62-line gap is prose density — consistent with "prose stays sparse" rule). Validator `--report` gate exits 0 on rendered output (see `STEP-E-verification.md` for hypothesis / files / expected vs actual).
 
 **Remaining in the workstream:**
-- **Step E** — Validator `--report` gate on rendered output. Confirm `python3 docs/validate-scanner-report.py --report <rendered.md>` exits 0.
+- ~~**Step E** — Validator `--report` gate on rendered output.~~ ✅ PASS 2026-04-18. Record: `STEP-E-verification.md`.
 - **Step F** (later session) — `render-html.py` using same Jinja2 template architecture. MD/HTML parity gate (PD2 validator mode, already exists).
 - **Step G** (before "pipeline reliable" claim) — C7 acceptance matrix + dual-emit verification: Archon re-run + one other shape + zustand, each producing V1.1-compliant JSON + valid MD+HTML.
 
