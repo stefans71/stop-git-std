@@ -217,6 +217,431 @@ class TestGracefulDegradation:
             assert "## 06 · Investigation coverage" not in out
 
 
+# ---------------------------------------------------------------------------
+# Section order: all 13 headers appear in the correct sequence
+# ---------------------------------------------------------------------------
+
+class TestSectionOrder:
+
+    EXPECTED_HEADERS = [
+        "## Catalog metadata",
+        "## Verdict",
+        "## Trust Scorecard",
+        "## 01 · What should I do?",
+        "## 02 · What we found",
+        "## 02A · Executable file inventory",
+        "## 03 · Suspicious code changes",
+        "## 04 · Timeline",
+        "## 05 · Repo vitals",
+        "## 06 · Investigation coverage",
+        "## 07 · Evidence appendix",
+        "## 08 · How this scan works",
+    ]
+
+    def test_all_section_headers_present(self):
+        out = rendered()
+        for h in self.EXPECTED_HEADERS:
+            assert h in out, f"Section header missing: {h!r}"
+
+    def test_section_headers_in_order(self):
+        out = rendered()
+        positions = []
+        for h in self.EXPECTED_HEADERS:
+            idx = out.find(h)
+            assert idx >= 0, f"Section header not found: {h!r}"
+            positions.append((h, idx))
+        for i in range(len(positions) - 1):
+            assert positions[i][1] < positions[i + 1][1], (
+                f"Section out of order: {positions[i][0]!r} should precede {positions[i+1][0]!r}"
+            )
+
+
+# ---------------------------------------------------------------------------
+# §02A: Executable file inventory
+# ---------------------------------------------------------------------------
+
+class TestExecutableInventory:
+
+    def test_section_header_present(self):
+        assert "## 02A · Executable file inventory" in rendered()
+
+    def test_layer1_summary_line_present(self):
+        out = rendered()
+        assert "### Layer 1 — one-line summary" in out
+
+    def test_layer2_table_row_count(self):
+        out = rendered()
+        form = load_form()
+        layer2 = form["phase_4_structured_llm"]["executable_file_inventory"]["layer2_entries"]
+        assert len(layer2) == 13
+        # Count table rows under ### Layer 2 section (lines starting with |, excluding header + divider)
+        layer2_start = out.find("### Layer 2 — per-file runtime inventory")
+        assert layer2_start >= 0
+        layer2_block = out[layer2_start:]
+        # Find the next ### heading to bound the section
+        next_section = layer2_block.find("\n## ", 1)
+        if next_section < 0:
+            next_section = layer2_block.find("\n### ", 1)
+        block = layer2_block[:next_section] if next_section > 0 else layer2_block
+        table_rows = [
+            line for line in block.splitlines()
+            if line.startswith("|") and not line.startswith("| File") and not line.startswith("|---")
+        ]
+        assert len(table_rows) == 13, f"Expected 13 layer2 rows, got {len(table_rows)}"
+
+    def test_closing_note_present(self):
+        out = rendered()
+        # Closing note discusses the .exec() hit — look for a structural marker
+        assert "**Note on the one `.exec()` hit.**" in out
+
+
+# ---------------------------------------------------------------------------
+# §03: PR sample review — richer format
+# ---------------------------------------------------------------------------
+
+class TestPRSampleRich:
+
+    def test_richer_table_header_present(self):
+        out = rendered()
+        assert "| PR | What it did | Submitted by | Merged by | Reviewed? | Concern |" in out
+
+    def test_eight_pr_rows_rendered(self):
+        out = rendered()
+        form = load_form()
+        rows = form["phase_4_structured_llm"]["pr_sample_review"]["rows"]
+        assert len(rows) == 8
+        # Count table rows under §03 (lines starting with |, not header or divider)
+        section_start = out.find("## 03 · Suspicious code changes")
+        section_end = out.find("\n## ", section_start + 1)
+        block = out[section_start:section_end] if section_end > 0 else out[section_start:]
+        pr_rows = [
+            line for line in block.splitlines()
+            if line.startswith("|") and not line.startswith("| PR ") and not line.startswith("|---")
+        ]
+        assert len(pr_rows) == 8, f"Expected 8 PR rows, got {len(pr_rows)}"
+
+    def test_pr_rows_link_to_github(self):
+        out = rendered()
+        form = load_form()
+        for row in form["phase_4_structured_llm"]["pr_sample_review"]["rows"]:
+            pr_num = row["number"]
+            expected_link = f"https://github.com/pmndrs/zustand/pull/{pr_num}"
+            assert expected_link in out, f"PR link missing for #{pr_num}"
+
+
+# ---------------------------------------------------------------------------
+# §04: Timeline intro
+# ---------------------------------------------------------------------------
+
+class TestTimelineIntro:
+
+    def test_section_header_present(self):
+        assert "## 04 · Timeline" in rendered()
+
+    def test_intro_blockquote_contains_six_beats(self):
+        out = rendered()
+        section_start = out.find("## 04 · Timeline")
+        section_end = out.find("\n## ", section_start + 1)
+        block = out[section_start:section_end] if section_end > 0 else out[section_start:]
+        # The timeline_intro mentions "Six beats across the library's history"
+        assert "Six beats across the library" in block
+
+    def test_six_timeline_event_bullets(self):
+        out = rendered()
+        form = load_form()
+        events = form["phase_4_structured_llm"]["timeline_events"]["entries"]
+        assert len(events) == 6
+        section_start = out.find("## 04 · Timeline")
+        section_end = out.find("\n## ", section_start + 1)
+        block = out[section_start:section_end] if section_end > 0 else out[section_start:]
+        bullet_lines = [l for l in block.splitlines() if l.startswith("- ")]
+        assert len(bullet_lines) == 6, f"Expected 6 timeline bullets, got {len(bullet_lines)}"
+
+
+# ---------------------------------------------------------------------------
+# §05: Repo vitals
+# ---------------------------------------------------------------------------
+
+class TestRepoVitals:
+
+    def test_section_header_present(self):
+        assert "## 05 · Repo vitals" in rendered()
+
+    def test_table_header_present(self):
+        assert "| Metric | Value | Note |" in rendered()
+
+    def test_row_count_is_18(self):
+        out = rendered()
+        form = load_form()
+        assert len(form["phase_4_structured_llm"]["repo_vitals"]["rows"]) == 18
+        section_start = out.find("## 05 · Repo vitals")
+        section_end = out.find("\n## ", section_start + 1)
+        block = out[section_start:section_end] if section_end > 0 else out[section_start:]
+        data_rows = [
+            line for line in block.splitlines()
+            if line.startswith("|") and not line.startswith("| Metric") and not line.startswith("|---")
+        ]
+        assert len(data_rows) == 18, f"Expected 18 repo vitals rows, got {len(data_rows)}"
+
+
+# ---------------------------------------------------------------------------
+# §06: Investigation coverage
+# ---------------------------------------------------------------------------
+
+class TestCoverageSection:
+
+    def test_section_header_present(self):
+        assert "## 06 · Investigation coverage" in rendered()
+
+    def test_intro_blockquote_present(self):
+        out = rendered()
+        section_start = out.find("## 06 · Investigation coverage")
+        section_end = out.find("\n## ", section_start + 1)
+        block = out[section_start:section_end] if section_end > 0 else out[section_start:]
+        assert "> " in block, "Section 06 missing blockquote intro"
+
+    def test_check_result_table_header_present(self):
+        assert "| Check | Result |" in rendered()
+
+    def test_monorepo_row_absent_for_zustand(self):
+        # zustand is_monorepo: false → row should NOT appear in rendered output
+        out = rendered()
+        form = load_form()
+        monorepo_data = form["phase_4_structured_llm"]["coverage_detail"].get("monorepo", {})
+        assert monorepo_data.get("is_monorepo") is False
+        # The monorepo-specific row text should not appear
+        assert "Monorepo scope" not in out or "not a true monorepo" in out
+
+    def test_pull_request_target_usage_row_present(self):
+        out = rendered()
+        # Should contain note about zero pull_request_target
+        assert "pull_request_target" in out
+        assert "0 found across 8 workflows" in out
+
+    def test_gaps_noted_block_with_three_entries(self):
+        out = rendered()
+        form = load_form()
+        gaps = form["phase_4_structured_llm"]["coverage_gaps"]["entries"]
+        assert len(gaps) == 3
+        section_start = out.find("## 06 · Investigation coverage")
+        section_end = out.find("\n## ", section_start + 1)
+        block = out[section_start:section_end] if section_end > 0 else out[section_start:]
+        assert "**Gaps noted:**" in block
+        # Three numbered gap items
+        numbered = [l for l in block.splitlines() if re.match(r"^\d+\.", l.strip())]
+        assert len(numbered) == 3, f"Expected 3 numbered gaps, got {len(numbered)}"
+
+
+# ---------------------------------------------------------------------------
+# §07: Evidence appendix
+# ---------------------------------------------------------------------------
+
+class TestEvidenceAppendix:
+
+    def test_section_header_present(self):
+        assert "## 07 · Evidence appendix" in rendered()
+
+    def test_pill_row_with_counts(self):
+        out = rendered()
+        # ℹ 9 facts · ★ 2 priority
+        assert "9 facts" in out
+        assert "2 priority" in out
+
+    def test_priority_section_header_present(self):
+        assert "### ★ Priority evidence (read first)" in rendered()
+
+    def test_e1_and_e3_under_priority(self):
+        out = rendered()
+        # E1 and E3 are in priority_evidence.selections
+        priority_start = out.find("### ★ Priority evidence (read first)")
+        other_start = out.find("### Other evidence")
+        assert priority_start >= 0
+        assert other_start >= 0
+        priority_block = out[priority_start:other_start]
+        assert "Evidence 1 —" in priority_block
+        assert "Evidence 3 —" in priority_block
+
+    def test_other_evidence_entries_present(self):
+        out = rendered()
+        other_start = out.find("### Other evidence")
+        assert other_start >= 0
+        other_block = out[other_start:]
+        # E2, E4-E9 should all be under Other evidence
+        for n in [2, 4, 5, 6, 7, 8, 9]:
+            assert f"Evidence {n} —" in other_block, f"E{n} not found under Other evidence"
+
+    def test_each_evidence_block_has_command_and_result_fences(self):
+        out = rendered()
+        form = load_form()
+        entries = form["phase_4_structured_llm"]["evidence"]["entries"]
+        assert len(entries) == 9
+        # Each evidence block should have a command fence and a result fence
+        # Count triple-backtick fences in the evidence section
+        section_start = out.find("## 07 · Evidence appendix")
+        section_end = out.find("\n## 08 ·")
+        block = out[section_start:section_end] if section_end > 0 else out[section_start:]
+        fence_count = block.count("```")
+        # 9 entries × 2 fences (open+close) per block × 2 fences (command + result) = 36
+        assert fence_count >= 36, f"Expected ≥36 fences for 9 entries, got {fence_count}"
+
+    def test_each_evidence_block_has_classification_italic(self):
+        out = rendered()
+        section_start = out.find("## 07 · Evidence appendix")
+        section_end = out.find("\n## 08 ·")
+        block = out[section_start:section_end] if section_end > 0 else out[section_start:]
+        classification_lines = [l for l in block.splitlines() if l.startswith("*Classification:")]
+        assert len(classification_lines) == 9, (
+            f"Expected 9 classification lines, got {len(classification_lines)}"
+        )
+
+
+# ---------------------------------------------------------------------------
+# §02: Findings enrichment (meta tables, how-to-fix, duration/date lines)
+# ---------------------------------------------------------------------------
+
+class TestFindingsEnriched:
+
+    EXPECTED_META_ROW_COUNTS = {
+        "F0": 8,
+        "F1": 5,
+        "F2": 6,
+        "F3": 4,
+        "F4": 6,
+        "F5": 4,
+    }
+    FINDINGS_WITH_FIX = {"F0", "F1", "F5"}
+    FINDINGS_WITHOUT_FIX = {"F2", "F3", "F4"}
+
+    def _finding_block(self, out, fid, all_findings):
+        """Return the text block for a single finding (from its ### header to the next ###/## header)."""
+        start_marker = f"### {fid} —"
+        start = out.find(start_marker)
+        assert start >= 0, f"{fid} header not found"
+        # Next finding or section
+        end = len(out)
+        for other in all_findings:
+            if other == fid:
+                continue
+            idx = out.find(f"### {other} —", start + 1)
+            if idx > start:
+                end = min(end, idx)
+        # Also bound by next ## section
+        idx = out.find("\n## ", start + 1)
+        if idx > start:
+            end = min(end, idx)
+        return out[start:end]
+
+    def test_all_findings_have_meta_table(self):
+        out = rendered()
+        for fid in self.EXPECTED_META_ROW_COUNTS:
+            assert f"### {fid} —" in out
+            # Meta table header must appear after the finding header
+            block_start = out.find(f"### {fid} —")
+            block_end = out.find("\n### ", block_start + 1)
+            if block_end < 0:
+                block_end = out.find("\n## ", block_start + 1)
+            block = out[block_start:block_end] if block_end > 0 else out[block_start:]
+            assert "| Meta | Value |" in block, f"{fid} missing meta table"
+
+    def test_finding_meta_row_counts(self):
+        out = rendered()
+        all_fids = list(self.EXPECTED_META_ROW_COUNTS.keys())
+        for fid, expected_count in self.EXPECTED_META_ROW_COUNTS.items():
+            block = self._finding_block(out, fid, all_fids)
+            # Find the meta table within the block
+            meta_start = block.find("| Meta | Value |")
+            assert meta_start >= 0, f"{fid} has no meta table"
+            meta_block = block[meta_start:]
+            # Rows: lines starting with | that aren't header or divider
+            data_rows = [
+                l for l in meta_block.splitlines()
+                if l.startswith("|") and not l.startswith("| Meta") and not l.startswith("|---")
+            ]
+            assert len(data_rows) == expected_count, (
+                f"{fid}: expected {expected_count} meta rows, got {len(data_rows)}"
+            )
+
+    def test_findings_with_fix_have_how_to_fix_block(self):
+        out = rendered()
+        all_fids = list(self.EXPECTED_META_ROW_COUNTS.keys())
+        for fid in self.FINDINGS_WITH_FIX:
+            block = self._finding_block(out, fid, all_fids)
+            assert "**How to fix.**" in block, f"{fid} missing 'How to fix.' block"
+
+    def test_findings_without_fix_have_no_how_to_fix_block(self):
+        out = rendered()
+        all_fids = list(self.EXPECTED_META_ROW_COUNTS.keys())
+        for fid in self.FINDINGS_WITHOUT_FIX:
+            block = self._finding_block(out, fid, all_fids)
+            assert "**How to fix.**" not in block, f"{fid} unexpectedly has 'How to fix.' block"
+
+    def test_each_finding_has_duration_date_action_tuple(self):
+        out = rendered()
+        form = load_form()
+        for f in form["phase_4_structured_llm"]["findings"]["entries"]:
+            fid = f["id"]
+            duration = f.get("duration_label", "")
+            # Each finding should have its duration label in the italic line after the header
+            block_start = out.find(f"### {fid} —")
+            assert block_start >= 0
+            # The italic line appears as *duration · ... · → ...*
+            block_snippet = out[block_start:block_start + 600]
+            assert f"*{duration} ·" in block_snippet or f"*{duration}" in block_snippet, (
+                f"{fid} duration label {duration!r} not found in italic line"
+            )
+
+
+# ---------------------------------------------------------------------------
+# Verdict exhibits: grouped <details> blocks
+# ---------------------------------------------------------------------------
+
+class TestVerdictExhibits:
+
+    def test_exhibits_header_present(self):
+        assert "### Verdict exhibits (grouped for reading speed)" in rendered()
+
+    def test_two_details_blocks_present(self):
+        out = rendered()
+        form = load_form()
+        groups = form["phase_4_structured_llm"]["verdict_exhibits"]["groups"]
+        assert len(groups) == 2
+        assert out.count("<details>") >= 2
+
+    def test_first_group_governance_gaps(self):
+        out = rendered()
+        # First group: Governance gaps with 2 items
+        assert "Governance gaps" in out
+        assert "(2 findings)" in out
+
+    def test_second_group_strong_positive_signals(self):
+        out = rendered()
+        # Second group: Strong positive signals with 8 items
+        assert "Strong positive signals" in out
+        assert "(8 findings)" in out
+
+
+# ---------------------------------------------------------------------------
+# §01 lead: pill row + summary blockquote
+# ---------------------------------------------------------------------------
+
+class TestSection01Lead:
+
+    def test_pill_row_present(self):
+        out = rendered()
+        # Pill row from section_leads.section_01.pill_row
+        assert "✓ Safe to install today" in out
+        assert "⚠ 1 consumer-side mitigation" in out
+        assert "3 steps" in out
+
+    def test_summary_blockquote_present(self):
+        out = rendered()
+        section_start = out.find("## 01 · What should I do?")
+        section_end = out.find("\n## ", section_start + 1)
+        block = out[section_start:section_end] if section_end > 0 else out[section_start:]
+        # Summary should include the fixture's summary text (not a fallback placeholder)
+        assert "**Install is safe**" in block
+
+
 if __name__ == "__main__":
     import pytest
     sys.exit(pytest.main([__file__, "-v"]))
