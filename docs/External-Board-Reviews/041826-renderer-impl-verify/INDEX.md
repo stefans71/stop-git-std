@@ -20,6 +20,11 @@
 **Rounds:** R1.
 **Result:** UNANIMOUS 3-0 APPROVE — first review using Pragmatist Sonnet 4.6 (memory correction at `feedback_claude_on_board.md`). Applied in `59224ac`.
 
+### 4. Step F alignment + Step G readiness — `../041826-step-f-alignment-validation/`
+**Purpose:** Validate Step F (HTML renderer + 2 new fixtures, commit `402f933`) stays true to the 8/8/4 architecture + 9-phase pipeline goals; surface all deferred items (this review + prior roadmap) for timing reconciliation; assess Step G readiness.
+**Rounds:** R1 Blind → R2 Consolidation → R3 Deliberation → R4 Confirmation (full 4-round SOP).
+**Result:** SIGN OFF (2) + SIGN OFF W/ DISSENTS (1 bookkeeping). 4 FIX NOW items (FN-A `| safe` XSS, FN-B CSS escape corruption, FN-C parity regex, FN-D emergent comment-strip bug) applied in `ce698d4`. 3 items queued for next commit before Step G runs (U-1 doc integration, U-3/FX-4 fixture provenance via separate file, U-5/PD3 bundle/citation validator).
+
 ## Commit log (Step A → D)
 
 | Step | Commit | Description | Tests after |
