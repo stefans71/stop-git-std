@@ -448,12 +448,23 @@ def check_parity(md_path: Path, html_path: Path) -> tuple:
     # Strip CSS/style/script/comments first to avoid false positives from rule references
     html_body = re.sub(r"<style[^>]*>.*?</style>", "", html_raw, flags=re.DOTALL | re.IGNORECASE)
     html_body = re.sub(r"<!--.*?-->", "", html_body, flags=re.DOTALL)
-    html_body = re.sub(r"/\*.*?\*/", "", html_body, flags=re.DOTALL)
+    # NOTE: do NOT strip /* */ here — CSS comments are already removed with the <style>
+    # block above. A global /\*.*?\*/ strip matches shell globs (e.g. /plugins/*/hooks/*.js)
+    # and legitimate code comments in evidence text, eating finding cards. Found during
+    # Step F parity work against caveman fixture.
     # Match finding IDs in exhibit tags (most reliable HTML pattern)
     # Pattern 1: exhibit-item-tag content like "Dependabot alerts · F1" or "· F0"
     html_findings = set(re.findall(r'exhibit-item-tag[^<]*?(?:·|&middot;)\s*(F\d+|F-[\w-]+)', html_body))
     # Pattern 2: finding IDs with severity in heading-like context
     html_findings |= set(re.findall(r"(F\d+|F-[\w-]+)\s*(?:—|&mdash;|–)\s*(?:Warning|Critical|OK|Info)", html_body))
+    # Pattern 3: finding IDs inside <h3> finding-card headings (Step F renderer format)
+    # Strip nested tags first so span/chip wrappers don't break the match; then check if
+    # the h3 text starts with an F-ID token followed by a dash variant.
+    for h3_html in re.findall(r"<h3[^>]*>(.*?)</h3>", html_body, flags=re.DOTALL | re.IGNORECASE):
+        h3_text = re.sub(r"<[^>]+>", "", h3_html)
+        m = re.match(r"\s*(F\d+|F-[\w-]+)\s*(?:&mdash;|—|–|-)", h3_text)
+        if m:
+            html_findings.add(m.group(1))
 
     if md_findings:
         html_only = html_findings - md_findings

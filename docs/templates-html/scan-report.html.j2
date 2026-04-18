@@ -14,7 +14,12 @@
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Unbounded:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; script-src 'unsafe-inline';">
 <style>
-{{ css_content }}
+{# css_content is loaded from docs/scanner-design-system.css via render-html.py _load_css().
+   It is a static disk file, not LLM or user input. Marking | safe is required because
+   autoescape would HTML-encode single quotes in font-family declarations, pseudo-element
+   content, and SVG data URIs — corrupting the stylesheet (browsers do not decode entities
+   inside <style>). #}
+{{ css_content | safe }}
 </style>
 </head>
 <body>

@@ -25,7 +25,10 @@
 {% set should_split = split.get('should_split', False) %}
 {% set prompt_ver = form.get('_meta', {}).get('prompt_version', 'V2.3-post-R3') %}
 {% set scanner_ver = form.get('_meta', {}).get('scanner_version', 'unknown') %}
-{% set prior = catalog.get('prior_scan_note') or 'None &mdash; first scan of this repo.' %}
+{# prior_scan_note is Phase 4 structured LLM text, treat as plain text (autoescape).
+   Fallback uses Unicode em-dash — NOT &mdash; entity, because autoescape would
+   double-escape the & to &amp; on render. #}
+{% set prior = catalog.get('prior_scan_note') or 'None \u2014 first scan of this repo.' %}
 {% set short_desc = catalog.get('short_description') or repo_meta.get('description', '') %}
 {% set verdict_util = VERDICT_UTIL_CLASS.get(verdict_level, 'val-warn') %}
   <div class="catalog-meta">
@@ -39,6 +42,6 @@
       <tr><td class="key">Verdict</td><td class="val {{ verdict_util }} fw-semi">{{ verdict_level }}{% if should_split %} (split){% endif %}</td></tr>
       <tr><td class="key">Scanned revision</td><td class="val">main @ {{ short_sha(head_sha) }} ({{ latest_tag }})</td></tr>
       <tr><td class="key">Prompt version</td><td class="val">{{ prompt_ver }}</td></tr>
-      <tr><td class="key">Prior scan</td><td class="val">{{ prior | safe }}</td></tr>
+      <tr><td class="key">Prior scan</td><td class="val">{{ prior }}</td></tr>
     </table>
   </div>
