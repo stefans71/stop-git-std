@@ -1,0 +1,486 @@
+{
+  "$comment": "GitHub Repo Security Scanner — Investigation Form V1.1. LLM fills this incrementally during scan phases 1-5. Python computes phase 3 fields. Renderer consumes the complete form to produce MD + HTML.",
+  "schema_version": "1.1",
+
+  "_meta": {
+    "phases_completed": [],
+    "scan_status": "in_progress",
+    "scanner_version": "V2.4",
+    "prompt_version": "V2.4-post-R3",
+    "model": null,
+    "scan_started_at": null,
+    "scan_completed_at": null,
+    "assumptions": []
+  },
+
+  "target": {
+    "owner": null,
+    "repo": null,
+    "full_name": null,
+    "url": null
+  },
+
+  "scanner_integrity": {
+    "$comment": "Conditional section — renders above Section 01 when actionable_count > 0",
+    "injection_matches": null,
+    "actionable_count": null,
+    "findings": []
+  },
+
+  "phase_1_raw_capture": {
+    "$comment": "LLM fills this by running tools. Every field is VERBATIM tool output. source_type: raw",
+
+    "pre_flight": {
+      "head_sha": null,
+      "default_branch": null,
+      "tarball_extracted": false,
+      "tarball_file_count": null,
+      "symlinks_stripped": false,
+      "api_rate_limit": {
+        "remaining": null,
+        "limit": null,
+        "reset_at": null
+      }
+    },
+
+    "repo_metadata": {
+      "$comment": "DP-003: gh repo view --json ...",
+      "name": null,
+      "description": null,
+      "created_at": null,
+      "pushed_at": null,
+      "stargazer_count": null,
+      "fork_count": null,
+      "license_spdx": null,
+      "default_branch_ref": null,
+      "is_archived": null,
+      "has_issues_enabled": null,
+      "is_fork": null,
+      "primary_language": null,
+      "topics": []
+    },
+
+    "contributors": {
+      "$comment": "DP-004: gh api repos/.../contributors",
+      "top_contributors": [],
+      "total_contributor_count": null
+    },
+
+    "maintainer_accounts": {
+      "$comment": "DP-005: gh api users/$USER for top 3 + owner",
+      "accounts": []
+    },
+
+    "releases": {
+      "$comment": "DP-006: gh release list --limit 20",
+      "entries": [],
+      "total_count": null
+    },
+
+    "community_profile": {
+      "$comment": "DP-007: gh api repos/.../community/profile",
+      "health_percentage": null,
+      "has_code_of_conduct": null,
+      "has_contributing": null,
+      "has_security_policy": null,
+      "license_spdx": null
+    },
+
+    "security_advisories": {
+      "$comment": "DP-008: gh api repos/.../security-advisories",
+      "count": null,
+      "entries": []
+    },
+
+    "workflows": {
+      "$comment": "DP-009: gh api repos/.../actions/workflows",
+      "entries": [],
+      "count": null,
+      "pull_request_target_count": null
+    },
+
+    "workflow_contents": {
+      "$comment": "Per-workflow YAML analysis: permissions, pull_request_target, SHA-pinning audit",
+      "entries": []
+    },
+
+    "branch_protection": {
+      "$comment": "DP-010 through DP-014",
+      "classic": {
+        "status": null,
+        "raw_response": null
+      },
+      "rulesets": {
+        "entries": [],
+        "raw_response": null
+      },
+      "rules_on_default": {
+        "entries": [],
+        "raw_response": null
+      },
+      "owner_type": null,
+      "org_rulesets": {
+        "entries": [],
+        "raw_response": null
+      }
+    },
+
+    "codeowners": {
+      "$comment": "DP-015: 4-location check",
+      "found": false,
+      "path": null,
+      "content": null
+    },
+
+    "dependencies": {
+      "$comment": "DP-016 through DP-019",
+      "manifest_files": [],
+      "runtime": [],
+      "runtime_count": null,
+      "dev": [],
+      "dev_count": null,
+      "peer": [],
+      "dependabot": {
+        "status": null,
+        "error_message": null,
+        "alerts": []
+      },
+      "osv_dev": {
+        "queried": false,
+        "packages_queried": null,
+        "total_vulns": null,
+        "per_package": []
+      }
+    },
+
+    "code_patterns": {
+      "$comment": "DP-024 through DP-030: grep scans on extracted tarball",
+      "dangerous_primitives": {
+        "$comment": "DP-024: grep -rlP for eval/exec/child_process/fetch/etc.",
+        "hits": [],
+        "hit_count": null
+      },
+      "executable_files": {
+        "$comment": "DP-025-027: find + file inspection",
+        "entries": []
+      },
+      "install_hooks": {
+        "$comment": "DP-028: check for preinstall/postinstall/prepare scripts",
+        "found": false,
+        "hooks": []
+      },
+      "readme_paste_blocks": {
+        "$comment": "DP-029: grep for 'paste this into your agent' patterns. Per-block structured capture per F10.",
+        "found": false,
+        "blocks": []
+      },
+      "agent_rule_files": {
+        "$comment": "DP-030: find CLAUDE.md, AGENTS.md, .cursorrules, etc. Per-entry structured capture per F9.",
+        "entries": [],
+        "count": null,
+        "total_bytes": null
+      }
+    },
+
+    "pr_review": {
+      "$comment": "DP-031 through DP-035: merged PR sample",
+      "sample_size": null,
+      "total_closed_prs": null,
+      "prs": [],
+      "formal_review_rate": null,
+      "any_review_rate": null,
+      "self_merge_rate": null,
+      "security_relevant_prs": []
+    },
+
+    "open_prs": {
+      "$comment": "gh pr list --state open",
+      "entries": [],
+      "count": null
+    },
+
+    "closed_not_merged_prs": {
+      "$comment": "gh pr list --state closed (rejected PRs, not merged)",
+      "entries": [],
+      "count": null
+    },
+
+    "issues_and_commits": {
+      "$comment": "DP-048 through DP-054",
+      "open_security_issues": [],
+      "open_issues_count": null,
+      "closed_issues": [],
+      "closed_issues_count": null,
+      "recent_commits": [],
+      "commit_signing_rate": null
+    },
+
+    "monorepo": {
+      "$comment": "C11: monorepo detection and inner-package enumeration",
+      "is_monorepo": null,
+      "inner_packages": [],
+      "lifecycle_script_hits": []
+    },
+
+    "distribution_channels": {
+      "$comment": "DP-042: Step 8/C distribution verification. Per-channel structured capture.",
+      "channels": []
+    },
+
+    "install_script_analysis": {
+      "$comment": "DP-040/041: Install-script fetch targets and pinning check",
+      "scripts": []
+    },
+
+    "artifact_verification": {
+      "$comment": "DP-043: Per-channel verification method and result",
+      "per_channel": []
+    },
+
+    "batch_merge_detection": {
+      "$comment": "DP-035: PRs sharing identical mergedAt timestamps",
+      "detected": null,
+      "pr_groups": []
+    },
+
+    "defensive_configs": {
+      "$comment": "DP-053: Defensive configuration entries (e.g., minimumReleaseAge)",
+      "entries": []
+    },
+
+    "ossf_scorecard": {
+      "$comment": "DP-044: curl securityscorecards.dev",
+      "queried": false,
+      "indexed": false,
+      "overall_score": null,
+      "checks": [],
+      "raw_response": null
+    },
+
+    "gitleaks": {
+      "$comment": "DP-046: gitleaks detect (opportunistic)",
+      "available": false,
+      "ran": false,
+      "findings_count": null,
+      "findings": []
+    },
+
+    "windows_patterns": {
+      "$comment": "DP-053/F16: .ps1/.bat/.cmd grep",
+      "hits": [],
+      "hit_count": null
+    },
+
+    "prompt_injection_scan": {
+      "$comment": "DP-036-038: Step 7/7.5 agent rule content analysis",
+      "scanned_files": [],
+      "injection_signals": [],
+      "signal_count": null
+    },
+
+    "coverage_affirmations": {
+      "$comment": "Boolean flags confirming coverage of hard-required prompt checks",
+      "prompt_injection_scan_completed": null,
+      "windows_surface_coverage": null,
+      "distribution_channels_verified": null,
+      "gitleaks_available": null,
+      "gitleaks_explanation": null
+    }
+  },
+
+  "phase_2_validation": {
+    "$comment": "Data validation gate. Python checks consistency of phase_1 data.",
+    "sha_consistent": null,
+    "required_fields_complete": null,
+    "dates_chronological": null,
+    "tarball_nonempty": null,
+    "validation_passed": null,
+    "validation_errors": []
+  },
+
+  "phase_3_computed": {
+    "$comment": "Python computes these from phase_1 raw data. source_type: computed. 8 automatable operations.",
+
+    "c20_severity": {
+      "$comment": "Boolean formula: no_protection AND no_codeowners AND recent_release AND ships_executable → Critical",
+      "no_classic_protection": null,
+      "no_rulesets": null,
+      "no_rules_on_default": null,
+      "no_codeowners": null,
+      "has_recent_release_30d": null,
+      "ships_executable_code": null,
+      "result": null
+    },
+
+    "scorecard_cells": {
+      "$comment": "Calibration table thresholds",
+      "does_anyone_check_the_code": {
+        "color": null,
+        "short_answer": null,
+        "inputs": {
+          "formal_review_rate": null,
+          "any_review_rate": null,
+          "has_branch_protection": null,
+          "has_codeowners": null
+        }
+      },
+      "do_they_fix_problems_quickly": {
+        "color": null,
+        "short_answer": null,
+        "inputs": {
+          "open_security_issue_count": null,
+          "oldest_open_cve_pr_age_days": null
+        }
+      },
+      "do_they_tell_you_about_problems": {
+        "color": null,
+        "short_answer": null,
+        "inputs": {
+          "has_security_policy": null,
+          "published_advisory_count": null,
+          "has_silent_fixes": null
+        }
+      },
+      "is_it_safe_out_of_the_box": {
+        "color": null,
+        "short_answer": null,
+        "inputs": {
+          "all_channels_pinned": null,
+          "artifact_verified": null,
+          "has_warning_or_above_finding": null
+        }
+      }
+    },
+
+    "solo_maintainer": {
+      "$comment": "F11: top contributor >80% of commits",
+      "top_contributor_share": null,
+      "is_solo": null,
+      "verbatim_sentence": null
+    },
+
+    "exhibit_grouping": {
+      "$comment": "S8-3: 7+ similar-severity items → themed panels",
+      "total_findings": null,
+      "threshold_met": null,
+      "exhibits": []
+    },
+
+    "boundary_cases": {
+      "$comment": "Threshold proximity detection",
+      "cases": []
+    },
+
+    "coverage_status": {
+      "$comment": "Map command outcomes to status enums",
+      "cells": []
+    },
+
+    "methodology": {
+      "$comment": "S08 template — only variable is version strings",
+      "scanner_version": null,
+      "prompt_version": null,
+      "guide_version": null
+    }
+  },
+
+  "phase_4_structured_llm": {
+    "$comment": "LLM fills these with enum/template constraints. source_type: structured_llm. evidence_refs required on non-OK items.",
+
+    "findings": {
+      "$comment": "Each finding has structured fields + provenance tag",
+      "entries": []
+    },
+
+    "general_vuln_severity": {
+      "$comment": "Tier 1/2/3 with 'unless mitigated' — LLM assesses mitigation context",
+      "assessments": []
+    },
+
+    "section_actions": {
+      "$comment": "Per-section 'Your action:' blocks for every flagged section",
+      "entries": []
+    },
+
+    "split_axis_decision": {
+      "$comment": "F4: 'opposite things to two groups' — LLM decides IF and WHICH axis",
+      "should_split": null,
+      "axis": null,
+      "reasoning": null,
+      "entries": []
+    },
+
+    "priority_evidence": {
+      "$comment": "Falsification criterion — LLM selects max 3 with reasoning",
+      "selections": []
+    },
+
+    "threat_models": {
+      "$comment": "F13 path enum + contextual framing per finding",
+      "per_finding": []
+    },
+
+    "action_steps": {
+      "$comment": "S01 action type enum + command templates",
+      "entries": []
+    },
+
+    "timeline_events": {
+      "$comment": "S04 factual dates + label vocabulary",
+      "entries": []
+    },
+
+    "capability_assessments": {
+      "$comment": "Per executable file — capability enum + context",
+      "per_file": []
+    },
+
+    "catalog_metadata": {
+      "$comment": "Category/subcategory from controlled vocabulary",
+      "category": null,
+      "subcategory": null,
+      "short_description": null,
+      "target_user": null,
+      "shape": null
+    }
+  },
+
+  "phase_4b_computed": {
+    "$comment": "Computed AFTER phase_4 findings are finalized. Depends on phase_4 entries.",
+    "verdict": {
+      "level": null,
+      "computed_from_findings": []
+    }
+  },
+
+  "phase_5_prose_llm": {
+    "$comment": "LLM writes these with structural constraints only. source_type: prose_llm",
+
+    "editorial_caption": {
+      "$comment": "H1 hero — one sentence, max 25 words",
+      "text": null
+    },
+
+    "per_finding_prose": {
+      "$comment": "Body paragraphs, 'what this means', 'what this does NOT mean' per finding",
+      "entries": []
+    }
+  },
+
+  "phase_6_assembly": {
+    "$comment": "Complete JSON assembled from phases 1-5. All fields carry provenance tags. This section is populated by the assembler, not by the LLM.",
+    "assembled": false,
+    "assembly_timestamp": null,
+    "provenance_complete": null,
+    "evidence_refs_valid": null,
+    "field_count": null
+  },
+
+  "scan_sign_off": {
+    "$comment": "NOT FOR LLM USE. Management only. Set outside the scanner pipeline.",
+    "approved_for_release": false,
+    "approved_by": null,
+    "approved_at": null,
+    "notes": null
+  }
+}
