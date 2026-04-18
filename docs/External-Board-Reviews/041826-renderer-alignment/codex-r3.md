@@ -1,0 +1,3 @@
+### C3 R3 Vote: AGREE Option X
+Rationale: `auto_load_tier` must become enforceable now, but the current schema has no stable structural discriminator to bind against, and accelerating `domain` into Step A would expand the write surface across every finding, prompt enum, and fixture without evidence that C3 requires that cost. Category-match is weaker than a structural boundary, but here it is an acceptable V1.1 containment move because the affected artifact class is already named in the taxonomy and the schema can carry an explicit `$comment` that this is temporary until SD2 lands. That preserves proportionality for the immediate fix while preventing the current no-op state where `auto_load_tier` exists in `$defs` but is enforced nowhere.
+VERDICT: SIGN OFF

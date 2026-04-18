@@ -2,7 +2,8 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://stop-git-std.local/scan-schema.json",
   "title": "GitHub Repo Security Scanner — Investigation Form",
-  "description": "Validates a completed investigation form (V1.1+). LLM fills phases 1-5 incrementally; Python computes phase 3; renderer consumes the complete form.",
+  "description": "Validates a completed investigation form (V1.1). LLM fills phases 1-5 incrementally; Python computes phase 3; renderer consumes the complete form.",
+  "$comment": "V1.1 — schema freeze per 2026-04-18 board review (docs/External-Board-Reviews/041826-renderer-alignment/CONSOLIDATION.md). Adds renderer-driven structures (verdict_exhibits, executable_file_inventory, pr_sample_review, coverage_detail, evidence.entries, repo_vitals, section_leads). Reconciles stale shapes (timeline_event, action_step, meta_table_row). Enforces C2 (F12 fields on security-relevant executable entries) and C3 (auto_load_tier on agent-rule-file findings). V1.2 will re-bind C3 trigger to domain==agent per SD2 deferred roadmap.",
   "type": "object",
   "required": [
     "schema_version",
@@ -65,7 +66,15 @@
 
     "action_step_type": {
       "type": "string",
+      "description": "Category of action step. Short forms (install, mitigate, nudge) are renderer-ready; long forms (install_normally, pin_version, ...) are the V1.0 prescriptive vocabulary kept for backwards compatibility.",
       "enum": [
+        "install",
+        "mitigate",
+        "nudge",
+        "verify",
+        "audit",
+        "upgrade",
+        "avoid",
         "install_normally",
         "pin_version",
         "pin_commit",
@@ -180,12 +189,20 @@
 
     "evidence": {
       "type": "object",
-      "required": ["id", "claim", "command", "result", "result_truncated", "classification"],
+      "required": ["id", "claim", "command", "result", "classification"],
       "properties": {
         "id": { "type": "string" },
         "claim": { "type": "string" },
         "command": { "type": "string" },
+        "command_lang": {
+          "type": ["string", "null"],
+          "description": "Code fence language for the command block (e.g. bash, yaml)"
+        },
         "result": { "type": "string" },
+        "result_lang": {
+          "type": ["string", "null"],
+          "description": "Code fence language for the result block (e.g. json, yaml)"
+        },
         "result_truncated": { "type": "boolean", "default": false },
         "classification": { "type": "string" }
       },
@@ -194,51 +211,259 @@
 
     "priority_evidence_selection": {
       "type": "object",
-      "required": ["evidence_id", "falsification_statement"],
+      "required": ["evidence_id", "reason"],
       "properties": {
         "evidence_id": { "type": "string" },
-        "falsification_statement": { "type": "string" }
+        "reason": {
+          "type": "string",
+          "description": "Why this evidence is priority — per S8-7, should articulate what falsification of this claim would mean (would flip the verdict). If that can't be articulated, it isn't priority."
+        }
       },
       "additionalProperties": false
     },
 
+    "timeline_tone": {
+      "type": "string",
+      "enum": ["positive", "neutral", "negative", "warn"]
+    },
+
     "timeline_event": {
       "type": "object",
-      "required": ["date", "label", "severity", "description"],
+      "required": ["date", "label", "tone", "note"],
       "properties": {
         "date": { "type": "string" },
         "label": {
           "type": "string",
-          "maxLength": 30,
-          "description": "Max 3 words"
+          "maxLength": 40,
+          "description": "Beat name — max ~3 words (forbidden: SCAN, START, TODAY restatements per S8-9)"
         },
-        "severity_label": { "type": "string" },
-        "severity": { "$ref": "#/$defs/timeline_severity" },
-        "description": { "type": "string" }
+        "tone": { "$ref": "#/$defs/timeline_tone" },
+        "note": { "type": "string" }
       },
       "additionalProperties": false
     },
 
     "action_step": {
       "type": "object",
-      "required": ["number", "type", "title", "non_technical"],
+      "required": ["step", "type", "headline", "severity"],
       "properties": {
-        "number": { "type": "integer", "minimum": 1 },
+        "step": { "type": "integer", "minimum": 1 },
         "type": { "$ref": "#/$defs/action_step_type" },
-        "title": { "type": "string" },
-        "non_technical": { "type": "string" },
-        "code_block": { "type": ["string", "null"] }
+        "headline": { "type": "string" },
+        "severity": { "$ref": "#/$defs/severity" },
+        "non_technical": { "type": ["string", "null"] },
+        "command": { "type": ["string", "null"] },
+        "command_lang": { "type": ["string", "null"] }
       },
       "additionalProperties": false
     },
 
     "meta_table_row": {
       "type": "object",
-      "required": ["key", "value"],
+      "required": ["label", "value"],
       "properties": {
-        "key": { "type": "string" },
+        "label": { "type": "string" },
+        "value": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+
+    "verdict_exhibit_item": {
+      "type": "object",
+      "required": ["tag", "claim"],
+      "properties": {
+        "tag": { "type": "string", "description": "e.g. 'F0 / C20' or 'Governance · F0'" },
+        "claim": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+
+    "verdict_exhibit_group": {
+      "type": "object",
+      "required": ["headline", "items"],
+      "properties": {
+        "symbol": { "type": ["string", "null"], "description": "Leading symbol like ⚠, ✓, 🚨" },
+        "headline": { "type": "string" },
+        "one_line_summary": { "type": ["string", "null"] },
+        "items": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/verdict_exhibit_item" }
+        }
+      },
+      "additionalProperties": false
+    },
+
+    "executable_file_inventory_entry": {
+      "type": "object",
+      "required": ["path", "kind", "runtime"],
+      "properties": {
+        "path": { "type": "string" },
+        "kind": { "type": "string" },
+        "runtime": { "type": "string", "description": "Runtime context (Bundler, Node, shell, etc.)" },
+        "dangerous_calls": { "type": ["string", "null"] },
+        "network": { "type": ["string", "null"] },
+        "notes": { "type": ["string", "null"] },
+        "file_sha": {
+          "type": ["string", "null"],
+          "description": "C2 FIX NOW (V2.3 R3 C3): File SHA at scanned revision. Required when security-relevant (see allOf)."
+        },
+        "line_ranges": {
+          "type": ["string", "null"],
+          "description": "C2 FIX NOW (V2.3 R3 C3): Relevant lines (e.g. '45-78, 120-135'). Required when security-relevant."
+        },
+        "diff_anchor": {
+          "type": ["string", "null"],
+          "description": "C2 FIX NOW (V2.3 R3 C3): Diff anchor for reproducibility. Required when security-relevant."
+        }
+      },
+      "allOf": [
+        {
+          "$comment": "C2 FIX NOW: file_sha, line_ranges, diff_anchor required when dangerous_calls is present (security-relevant entries). Codex dissent in R2: preferred always-required with explicit-null. Per R3/R4 resolution: conditional required for V1.1; re-evaluate in V1.2.",
+          "if": {
+            "properties": {
+              "dangerous_calls": {
+                "type": "string",
+                "not": { "enum": ["None", "none", ""] }
+              }
+            },
+            "required": ["dangerous_calls"]
+          },
+          "then": {
+            "required": ["file_sha", "line_ranges", "diff_anchor"]
+          }
+        }
+      ],
+      "additionalProperties": false
+    },
+
+    "executable_file_inventory": {
+      "type": "object",
+      "properties": {
+        "$comment": { "type": "string" },
+        "lead": { "type": ["string", "null"], "description": "One-line section summary (Layer 1)" },
+        "layer1_summary": { "type": ["string", "null"] },
+        "layer2_entries": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/executable_file_inventory_entry" }
+        },
+        "closing_note": { "type": ["string", "null"] }
+      },
+      "additionalProperties": false
+    },
+
+    "pr_sample_review_row": {
+      "type": "object",
+      "required": ["number", "what", "author", "merger"],
+      "properties": {
+        "number": { "type": "integer" },
+        "url": { "type": ["string", "null"] },
+        "what": { "type": "string", "description": "Short prose — what this PR did" },
+        "author": { "type": "string" },
+        "merger": { "type": "string" },
+        "reviewed": { "type": ["string", "null"], "description": "Formal review decision or 'No formal decision'" },
+        "concern": { "type": ["string", "null"], "description": "Short concern/note or empty if routine" },
+        "flagged": { "type": ["boolean", "null"], "description": "True if this row is a security-concerning PR" }
+      },
+      "additionalProperties": false
+    },
+
+    "pr_sample_review": {
+      "type": "object",
+      "properties": {
+        "$comment": { "type": "string" },
+        "intro": { "type": ["string", "null"] },
+        "rows": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/pr_sample_review_row" }
+        }
+      },
+      "additionalProperties": false
+    },
+
+    "coverage_detail_row": {
+      "type": "object",
+      "required": ["check", "result"],
+      "properties": {
+        "check": { "type": "string" },
+        "result": { "type": "string", "description": "Emoji-leading or plain text result" }
+      },
+      "additionalProperties": false
+    },
+
+    "coverage_detail_monorepo": {
+      "$comment": "C4 FIX NOW (V2.3 R3 C11): Explicit monorepo coverage fields as typed sibling object — DeepSeek R2 dissent preferred extending generic rows[].",
+      "type": "object",
+      "properties": {
+        "is_monorepo": { "type": ["boolean", "null"] },
+        "inner_package_count": { "type": ["integer", "null"] },
+        "sampled_inner_packages": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "lifecycle_script_hits": { "type": ["integer", "null"] }
+      },
+      "additionalProperties": false
+    },
+
+    "coverage_detail_pr_target_usage": {
+      "$comment": "C4 FIX NOW (V2.3 R3 C11): Explicit pull_request_target usage reporting — must be stated even when 0.",
+      "type": "object",
+      "required": ["usage_count"],
+      "properties": {
+        "usage_count": { "type": "integer", "minimum": 0 },
+        "workflows_checked": { "type": ["integer", "null"] },
+        "note": { "type": ["string", "null"] }
+      },
+      "additionalProperties": false
+    },
+
+    "coverage_detail": {
+      "type": "object",
+      "properties": {
+        "$comment": { "type": "string" },
+        "rows": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/coverage_detail_row" }
+        },
+        "monorepo": { "$ref": "#/$defs/coverage_detail_monorepo" },
+        "pr_target_usage": { "$ref": "#/$defs/coverage_detail_pr_target_usage" }
+      },
+      "additionalProperties": false
+    },
+
+    "repo_vitals_row": {
+      "type": "object",
+      "required": ["metric", "value"],
+      "properties": {
+        "metric": { "type": "string" },
         "value": { "type": "string" },
-        "badge": { "type": ["string", "null"] }
+        "note": { "type": ["string", "null"] }
+      },
+      "additionalProperties": false
+    },
+
+    "section_lead": {
+      "type": "object",
+      "properties": {
+        "pill_row": { "type": ["string", "null"] },
+        "summary": { "type": ["string", "null"] }
+      },
+      "additionalProperties": false
+    },
+
+    "per_finding_prose_entry": {
+      "type": "object",
+      "required": ["finding_id"],
+      "properties": {
+        "finding_id": { "type": "string" },
+        "body_paragraphs": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Multi-paragraph prose body. Prose-LLM output; structural constraint only."
+        },
+        "what_we_observed": { "type": ["string", "null"] },
+        "what_this_means": { "type": ["string", "null"] },
+        "what_this_does_not_mean": { "type": ["string", "null"] }
       },
       "additionalProperties": false
     },
@@ -254,6 +479,30 @@
         "category": { "type": "string" },
         "title": { "type": "string" },
         "action_hint": { "type": "string" },
+        "kind": {
+          "type": ["string", "null"],
+          "description": "Optional finding kind label (e.g. 'Structural', 'Hygiene', 'Supply chain'). Rendered between severity and title."
+        },
+        "rule_id": {
+          "type": ["string", "null"],
+          "description": "Reference to the scanner rule that fired (e.g. 'C20', 'F11')."
+        },
+        "duration_label": {
+          "type": ["string", "null"],
+          "description": "Per-finding metadata badge (e.g. 'Continuous', 'Current', '2024 window')."
+        },
+        "date_label": {
+          "type": ["string", "null"],
+          "description": "Date context for the finding (e.g. 'Since repo creation', '2024-01 to present')."
+        },
+        "how_to_fix": {
+          "type": ["string", "null"],
+          "description": "Concrete maintainer-side or consumer-side fix instructions. Appears below meta_table in §02."
+        },
+        "auto_load_tier": {
+          "$ref": "#/$defs/auto_load_tier",
+          "description": "C3 FIX NOW: required on findings whose category matches agent-rule-file patterns. See allOf."
+        },
         "evidence_refs": {
           "type": "array",
           "items": { "type": "string" }
@@ -271,23 +520,42 @@
         },
         "remediation": { "type": ["string", "null"] },
         "boundary_case": {
-          "type": ["object", "null"],
-          "properties": {
-            "threshold": { "type": "string" },
-            "actual_value": { "type": "string" },
-            "margin": { "type": "string" },
-            "would_change_to": { "type": "string" }
+          "type": ["boolean", "null"],
+          "description": "Flag indicating this finding sits near a severity threshold (see phase_3_computed.boundary_cases for the detailed case)."
+        },
+        "boundary_note": {
+          "type": ["string", "null"],
+          "description": "One-line human-readable note about the boundary (e.g. '31 days since latest release — 1 day outside the 30-day Critical window')."
+        }
+      },
+      "allOf": [
+        {
+          "$comment": "Evidence_refs required for any non-OK finding.",
+          "if": {
+            "not": {
+              "properties": { "severity": { "const": "OK" } }
+            }
+          },
+          "then": {
+            "required": ["evidence_refs"]
+          }
+        },
+        {
+          "$comment": "C3 FIX NOW (V2.3 R3 C9, 2026-04-18 board R3 Option X): auto_load_tier required on findings whose category matches agent-rule-file patterns. V1.2 will re-bind this to domain=='agent' per SD2 deferred roadmap (project_pipeline_architecture.md).",
+          "if": {
+            "properties": {
+              "category": {
+                "type": "string",
+                "pattern": "^(supply-chain/agent-rules|code/agent-rule-file|code/agent-rule-injection)"
+              }
+            },
+            "required": ["category"]
+          },
+          "then": {
+            "required": ["auto_load_tier"]
           }
         }
-      },
-      "if": {
-        "not": {
-          "properties": { "severity": { "const": "OK" } }
-        }
-      },
-      "then": {
-        "required": ["id", "severity", "provenance", "status", "category", "title", "action_hint", "evidence_refs"]
-      },
+      ],
       "additionalProperties": false
     },
 
@@ -448,7 +716,10 @@
             "classic": {
               "type": "object",
               "properties": {
-                "status": { "type": ["string", "null"] },
+                "status": {
+                  "type": ["integer", "string", "null"],
+                  "description": "HTTP status code from branch protection API. 404 = no protection; 200 = configured; 403 = token lacks scope."
+                },
                 "raw_response": {}
               },
               "additionalProperties": false
@@ -488,7 +759,12 @@
             "$comment": { "type": "string" },
             "found": { "type": "boolean" },
             "path": { "type": ["string", "null"] },
-            "content": { "type": ["string", "null"] }
+            "content": { "type": ["string", "null"] },
+            "locations_checked": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "All paths checked for CODEOWNERS file (standard four: CODEOWNERS, .github/CODEOWNERS, docs/CODEOWNERS, .gitlab/CODEOWNERS)."
+            }
           },
           "additionalProperties": false
         },
@@ -895,6 +1171,21 @@
           "additionalProperties": false
         },
 
+        "section_leads": {
+          "$comment": "Per-section pill_row + summary blockquotes rendered at top of §01/§02/etc.",
+          "type": "object",
+          "properties": {
+            "section_01": { "$ref": "#/$defs/section_lead" },
+            "section_02": { "$ref": "#/$defs/section_lead" },
+            "section_02a": { "$ref": "#/$defs/section_lead" },
+            "section_03": { "$ref": "#/$defs/section_lead" },
+            "section_04": { "$ref": "#/$defs/section_lead" },
+            "section_06": { "$ref": "#/$defs/section_lead" },
+            "section_07": { "$ref": "#/$defs/section_lead" }
+          },
+          "additionalProperties": false
+        },
+
         "split_axis_decision": {
           "type": "object",
           "properties": {
@@ -903,6 +1194,18 @@
             "axis": { "$ref": "#/$defs/split_axis" },
             "reasoning": { "type": ["string", "null"] },
             "entries": { "type": "array" }
+          },
+          "additionalProperties": false
+        },
+
+        "verdict_exhibits": {
+          "$comment": "Detailed exhibit groups for the verdict section (§Verdict). See §02 and S8-3 (7+ similar-severity items roll up into exhibits).",
+          "type": "object",
+          "properties": {
+            "groups": {
+              "type": "array",
+              "items": { "$ref": "#/$defs/verdict_exhibit_group" }
+            }
           },
           "additionalProperties": false
         },
@@ -919,6 +1222,20 @@
           },
           "additionalProperties": false
         },
+
+        "evidence": {
+          "$comment": "All evidence entries for §07 Evidence Appendix. Each entry is command-backed; priority selections reference these by id.",
+          "type": "object",
+          "properties": {
+            "entries": {
+              "type": "array",
+              "items": { "$ref": "#/$defs/evidence" }
+            }
+          },
+          "additionalProperties": false
+        },
+
+        "evidence_intro": { "type": ["string", "null"] },
 
         "threat_models": {
           "type": "object",
@@ -953,11 +1270,45 @@
           "additionalProperties": false
         },
 
+        "timeline_intro": { "type": ["string", "null"] },
+
         "capability_assessments": {
           "type": "object",
           "properties": {
             "$comment": { "type": "string" },
             "per_file": { "type": "array" }
+          },
+          "additionalProperties": false
+        },
+
+        "executable_file_inventory": { "$ref": "#/$defs/executable_file_inventory" },
+
+        "pr_sample_review": { "$ref": "#/$defs/pr_sample_review" },
+
+        "repo_vitals": {
+          "type": "object",
+          "properties": {
+            "$comment": { "type": "string" },
+            "rows": {
+              "type": "array",
+              "items": { "$ref": "#/$defs/repo_vitals_row" }
+            }
+          },
+          "additionalProperties": false
+        },
+
+        "coverage_detail": { "$ref": "#/$defs/coverage_detail" },
+
+        "coverage_intro": { "type": ["string", "null"] },
+
+        "coverage_gaps": {
+          "type": "object",
+          "properties": {
+            "entries": {
+              "type": "array",
+              "items": { "type": "string" },
+              "description": "Short prose bullets listing gaps noted in coverage (e.g. 'Artifact reproducibility not verified')."
+            }
           },
           "additionalProperties": false
         },
@@ -970,7 +1321,11 @@
             "subcategory": { "type": ["string", "null"] },
             "short_description": { "type": ["string", "null"] },
             "target_user": { "type": ["string", "null"] },
-            "shape": { "type": ["string", "null"] }
+            "shape": { "type": ["string", "null"] },
+            "prior_scan_note": {
+              "type": ["string", "null"],
+              "description": "Optional note rendered in the Catalog row 'Prior scan' — e.g. 'None — first scan; rename this file on re-run.'"
+            }
           },
           "additionalProperties": false
         }
@@ -1017,7 +1372,10 @@
           "type": "object",
           "properties": {
             "$comment": { "type": "string" },
-            "entries": { "type": "array" }
+            "entries": {
+              "type": "array",
+              "items": { "$ref": "#/$defs/per_finding_prose_entry" }
+            }
           },
           "additionalProperties": false
         }
