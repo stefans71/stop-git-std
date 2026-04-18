@@ -294,7 +294,12 @@
     "scorecard_cell": {
       "type": "object",
       "properties": {
-        "color": { "$ref": "#/$defs/scorecard_color" },
+        "color": {
+          "oneOf": [
+            { "$ref": "#/$defs/scorecard_color" },
+            { "type": "null" }
+          ]
+        },
         "short_answer": { "type": ["string", "null"] },
         "inputs": { "type": "object" }
       },
