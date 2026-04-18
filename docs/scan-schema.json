@@ -1,0 +1,1049 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://stop-git-std.local/scan-schema.json",
+  "title": "GitHub Repo Security Scanner — Investigation Form",
+  "description": "Validates a completed investigation form (V1.1+). LLM fills phases 1-5 incrementally; Python computes phase 3; renderer consumes the complete form.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "_meta",
+    "target",
+    "phase_1_raw_capture",
+    "phase_2_validation",
+    "phase_3_computed",
+    "phase_4_structured_llm",
+    "phase_4b_computed",
+    "phase_5_prose_llm",
+    "phase_6_assembly"
+  ],
+  "properties": {
+    "$comment": { "type": "string" },
+    "schema_version": {
+      "type": "string",
+      "description": "Semantic version of the form schema"
+    },
+    "_meta": { "$ref": "#/$defs/meta" },
+    "target": { "$ref": "#/$defs/target" },
+    "scanner_integrity": { "$ref": "#/$defs/scanner_integrity" },
+    "phase_1_raw_capture": { "$ref": "#/$defs/phase_1_raw_capture" },
+    "phase_2_validation": { "$ref": "#/$defs/phase_2_validation" },
+    "phase_3_computed": { "$ref": "#/$defs/phase_3_computed" },
+    "phase_4_structured_llm": { "$ref": "#/$defs/phase_4_structured_llm" },
+    "phase_4b_computed": { "$ref": "#/$defs/phase_4b_computed" },
+    "phase_5_prose_llm": { "$ref": "#/$defs/phase_5_prose_llm" },
+    "phase_6_assembly": { "$ref": "#/$defs/phase_6_assembly" },
+    "scan_sign_off": { "$ref": "#/$defs/scan_sign_off" }
+  },
+  "additionalProperties": false,
+
+  "$defs": {
+
+    "severity": {
+      "type": "string",
+      "enum": ["Critical", "Warning", "Info", "OK"]
+    },
+
+    "finding_status": {
+      "type": "string",
+      "enum": ["active", "resolved", "ongoing", "mitigated", "informational"]
+    },
+
+    "finding_provenance": {
+      "type": "string",
+      "enum": ["rule-applied", "synthesized", "observed"]
+    },
+
+    "scorecard_color": {
+      "type": "string",
+      "enum": ["red", "amber", "green"]
+    },
+
+    "coverage_status": {
+      "type": "string",
+      "enum": ["ok", "partial", "blocked", "not_available", "not_indexed", "not_queried", "unknown"]
+    },
+
+    "action_step_type": {
+      "type": "string",
+      "enum": [
+        "install_normally",
+        "pin_version",
+        "pin_commit",
+        "set_config",
+        "verify_artifact",
+        "nudge_maintainer",
+        "upgrade_required",
+        "audit_before_use",
+        "do_not_install"
+      ]
+    },
+
+    "threat_model_path": {
+      "type": "string",
+      "enum": [
+        "phishing",
+        "stale_token",
+        "session_compromise",
+        "malicious_extension",
+        "sloppy_review",
+        "runner_compromise",
+        "other"
+      ]
+    },
+
+    "capability": {
+      "type": "string",
+      "enum": [
+        "arbitrary_code_exec",
+        "file_exfil",
+        "filesystem_write",
+        "network_access",
+        "credential_access",
+        "prompt_injection_channel",
+        "persistence",
+        "privilege_escalation",
+        "none"
+      ]
+    },
+
+    "split_axis": {
+      "type": ["string", "null"],
+      "enum": [null, "version", "deployment"]
+    },
+
+    "auto_load_tier": {
+      "type": "string",
+      "enum": [
+        "tier_1_always",
+        "tier_2_conditional",
+        "tier_3_supporting",
+        "tier_4_paste_install",
+        "unknown"
+      ]
+    },
+
+    "timeline_severity": {
+      "type": "string",
+      "enum": ["green", "yellow", "red"]
+    },
+
+    "meta": {
+      "type": "object",
+      "required": ["scan_status"],
+      "properties": {
+        "phases_completed": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "scan_status": {
+          "type": "string",
+          "enum": ["in_progress", "validated", "completed"]
+        },
+        "scanner_version": { "type": ["string", "null"] },
+        "prompt_version": { "type": ["string", "null"] },
+        "model": { "type": ["string", "null"] },
+        "scan_started_at": { "type": ["string", "null"] },
+        "scan_completed_at": { "type": ["string", "null"] },
+        "assumptions": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      },
+      "additionalProperties": false
+    },
+
+    "target": {
+      "type": "object",
+      "required": ["owner", "repo", "full_name"],
+      "properties": {
+        "owner": { "type": ["string", "null"] },
+        "repo": { "type": ["string", "null"] },
+        "full_name": { "type": ["string", "null"] },
+        "url": { "type": ["string", "null"] }
+      },
+      "additionalProperties": false
+    },
+
+    "scanner_integrity": {
+      "type": "object",
+      "properties": {
+        "$comment": { "type": "string" },
+        "injection_matches": { "type": ["integer", "null"] },
+        "actionable_count": { "type": ["integer", "null"] },
+        "findings": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/finding" }
+        }
+      },
+      "additionalProperties": false
+    },
+
+    "evidence": {
+      "type": "object",
+      "required": ["id", "claim", "command", "result", "result_truncated", "classification"],
+      "properties": {
+        "id": { "type": "string" },
+        "claim": { "type": "string" },
+        "command": { "type": "string" },
+        "result": { "type": "string" },
+        "result_truncated": { "type": "boolean", "default": false },
+        "classification": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+
+    "priority_evidence_selection": {
+      "type": "object",
+      "required": ["evidence_id", "falsification_statement"],
+      "properties": {
+        "evidence_id": { "type": "string" },
+        "falsification_statement": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+
+    "timeline_event": {
+      "type": "object",
+      "required": ["date", "label", "severity", "description"],
+      "properties": {
+        "date": { "type": "string" },
+        "label": {
+          "type": "string",
+          "maxLength": 30,
+          "description": "Max 3 words"
+        },
+        "severity_label": { "type": "string" },
+        "severity": { "$ref": "#/$defs/timeline_severity" },
+        "description": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+
+    "action_step": {
+      "type": "object",
+      "required": ["number", "type", "title", "non_technical"],
+      "properties": {
+        "number": { "type": "integer", "minimum": 1 },
+        "type": { "$ref": "#/$defs/action_step_type" },
+        "title": { "type": "string" },
+        "non_technical": { "type": "string" },
+        "code_block": { "type": ["string", "null"] }
+      },
+      "additionalProperties": false
+    },
+
+    "meta_table_row": {
+      "type": "object",
+      "required": ["key", "value"],
+      "properties": {
+        "key": { "type": "string" },
+        "value": { "type": "string" },
+        "badge": { "type": ["string", "null"] }
+      },
+      "additionalProperties": false
+    },
+
+    "finding": {
+      "type": "object",
+      "required": ["id", "severity", "provenance", "status", "category", "title", "action_hint"],
+      "properties": {
+        "id": { "type": "string" },
+        "severity": { "$ref": "#/$defs/severity" },
+        "provenance": { "$ref": "#/$defs/finding_provenance" },
+        "status": { "$ref": "#/$defs/finding_status" },
+        "category": { "type": "string" },
+        "title": { "type": "string" },
+        "action_hint": { "type": "string" },
+        "evidence_refs": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "threat_model_paths": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/threat_model_path" }
+        },
+        "threat_model_context": { "type": ["string", "null"] },
+        "what_this_means": { "type": ["string", "null"] },
+        "what_this_does_not_mean": { "type": ["string", "null"] },
+        "meta_table": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/meta_table_row" }
+        },
+        "remediation": { "type": ["string", "null"] },
+        "boundary_case": {
+          "type": ["object", "null"],
+          "properties": {
+            "threshold": { "type": "string" },
+            "actual_value": { "type": "string" },
+            "margin": { "type": "string" },
+            "would_change_to": { "type": "string" }
+          }
+        }
+      },
+      "if": {
+        "not": {
+          "properties": { "severity": { "const": "OK" } }
+        }
+      },
+      "then": {
+        "required": ["id", "severity", "provenance", "status", "category", "title", "action_hint", "evidence_refs"]
+      },
+      "additionalProperties": false
+    },
+
+    "scorecard_cell": {
+      "type": "object",
+      "properties": {
+        "color": { "$ref": "#/$defs/scorecard_color" },
+        "short_answer": { "type": ["string", "null"] },
+        "inputs": { "type": "object" }
+      },
+      "additionalProperties": false
+    },
+
+    "coverage_cell": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "status": { "$ref": "#/$defs/coverage_status" },
+        "detail": { "type": ["string", "null"] }
+      },
+      "additionalProperties": false
+    },
+
+    "phase_1_raw_capture": {
+      "type": "object",
+      "required": ["pre_flight", "repo_metadata"],
+      "properties": {
+        "$comment": { "type": "string" },
+
+        "pre_flight": {
+          "type": "object",
+          "required": ["head_sha", "default_branch"],
+          "properties": {
+            "head_sha": { "type": ["string", "null"] },
+            "default_branch": { "type": ["string", "null"] },
+            "tarball_extracted": { "type": "boolean" },
+            "tarball_file_count": { "type": ["integer", "null"] },
+            "symlinks_stripped": { "type": "boolean" },
+            "api_rate_limit": {
+              "type": "object",
+              "properties": {
+                "remaining": { "type": ["integer", "null"] },
+                "limit": { "type": ["integer", "null"] },
+                "reset_at": { "type": ["string", "null"] }
+              },
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false
+        },
+
+        "repo_metadata": {
+          "type": "object",
+          "required": ["name"],
+          "properties": {
+            "$comment": { "type": "string" },
+            "name": { "type": ["string", "null"] },
+            "description": { "type": ["string", "null"] },
+            "created_at": { "type": ["string", "null"] },
+            "pushed_at": { "type": ["string", "null"] },
+            "stargazer_count": { "type": ["integer", "null"] },
+            "fork_count": { "type": ["integer", "null"] },
+            "license_spdx": { "type": ["string", "null"] },
+            "default_branch_ref": { "type": ["string", "null"] },
+            "is_archived": { "type": ["boolean", "null"] },
+            "has_issues_enabled": { "type": ["boolean", "null"] },
+            "is_fork": { "type": ["boolean", "null"] },
+            "primary_language": { "type": ["string", "null"] },
+            "topics": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          },
+          "additionalProperties": false
+        },
+
+        "contributors": {
+          "type": "object",
+          "properties": {
+            "$comment": { "type": "string" },
+            "top_contributors": { "type": "array" },
+            "total_contributor_count": { "type": ["integer", "null"] }
+          },
+          "additionalProperties": false
+        },
+
+        "maintainer_accounts": {
+          "type": "object",
+          "properties": {
+            "$comment": { "type": "string" },
+            "accounts": { "type": "array" }
+          },
+          "additionalProperties": false
+        },
+
+        "releases": {
+          "type": "object",
+          "properties": {
+            "$comment": { "type": "string" },
+            "entries": { "type": "array" },
+            "total_count": { "type": ["integer", "null"] }
+          },
+          "additionalProperties": false
+        },
+
+        "community_profile": {
+          "type": "object",
+          "properties": {
+            "$comment": { "type": "string" },
+            "health_percentage": { "type": ["integer", "null"] },
+            "has_code_of_conduct": { "type": ["boolean", "null"] },
+            "has_contributing": { "type": ["boolean", "null"] },
+            "has_security_policy": { "type": ["boolean", "null"] },
+            "license_spdx": { "type": ["string", "null"] }
+          },
+          "additionalProperties": false
+        },
+
+        "security_advisories": {
+          "type": "object",
+          "properties": {
+            "$comment": { "type": "string" },
+            "count": { "type": ["integer", "null"] },
+            "entries": { "type": "array" }
+          },
+          "additionalProperties": false
+        },
+
+        "workflows": {
+          "type": "object",
+          "properties": {
+            "$comment": { "type": "string" },
+            "entries": { "type": "array" },
+            "count": { "type": ["integer", "null"] },
+            "pull_request_target_count": { "type": ["integer", "null"] }
+          },
+          "additionalProperties": false
+        },
+
+        "workflow_contents": {
+          "type": "object",
+          "properties": {
+            "$comment": { "type": "string" },
+            "entries": { "type": "array" }
+          },
+          "additionalProperties": false
+        },
+
+        "branch_protection": {
+          "type": "object",
+          "properties": {
+            "$comment": { "type": "string" },
+            "classic": {
+              "type": "object",
+              "properties": {
+                "status": { "type": ["string", "null"] },
+                "raw_response": {}
+              },
+              "additionalProperties": false
+            },
+            "rulesets": {
+              "type": "object",
+              "properties": {
+                "entries": { "type": "array" },
+                "raw_response": {}
+              },
+              "additionalProperties": false
+            },
+            "rules_on_default": {
+              "type": "object",
+              "properties": {
+                "entries": { "type": "array" },
+                "raw_response": {}
+              },
+              "additionalProperties": false
+            },
+            "owner_type": { "type": ["string", "null"] },
+            "org_rulesets": {
+              "type": "object",
+              "properties": {
+                "entries": { "type": "array" },
+                "raw_response": {}
+              },
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false
+        },
+
+        "codeowners": {
+          "type": "object",
+          "properties": {
+            "$comment": { "type": "string" },
+            "found": { "type": "boolean" },
+            "path": { "type": ["string", "null"] },
+            "content": { "type": ["string", "null"] }
+          },
+          "additionalProperties": false
+        },
+
+        "dependencies": {
+          "type": "object",
+          "properties": {
+            "$comment": { "type": "string" },
+            "manifest_files": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "runtime": { "type": "array" },
+            "runtime_count": { "type": ["integer", "null"] },
+            "dev": { "type": "array" },
+            "dev_count": { "type": ["integer", "null"] },
+            "peer": { "type": "array" },
+            "dependabot": {
+              "type": "object",
+              "properties": {
+                "status": { "type": ["string", "null"] },
+                "error_message": { "type": ["string", "null"] },
+                "alerts": { "type": "array" }
+              },
+              "additionalProperties": false
+            },
+            "osv_dev": {
+              "type": "object",
+              "properties": {
+                "queried": { "type": "boolean" },
+                "packages_queried": { "type": ["integer", "null"] },
+                "total_vulns": { "type": ["integer", "null"] },
+                "per_package": { "type": "array" }
+              },
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false
+        },
+
+        "code_patterns": {
+          "type": "object",
+          "properties": {
+            "$comment": { "type": "string" },
+            "dangerous_primitives": {
+              "type": "object",
+              "properties": {
+                "$comment": { "type": "string" },
+                "hits": { "type": "array" },
+                "hit_count": { "type": ["integer", "null"] }
+              },
+              "additionalProperties": false
+            },
+            "executable_files": {
+              "type": "object",
+              "properties": {
+                "$comment": { "type": "string" },
+                "entries": { "type": "array" }
+              },
+              "additionalProperties": false
+            },
+            "install_hooks": {
+              "type": "object",
+              "properties": {
+                "$comment": { "type": "string" },
+                "found": { "type": "boolean" },
+                "hooks": { "type": "array" }
+              },
+              "additionalProperties": false
+            },
+            "readme_paste_blocks": {
+              "type": "object",
+              "properties": {
+                "$comment": { "type": "string" },
+                "found": { "type": "boolean" },
+                "blocks": { "type": "array" }
+              },
+              "additionalProperties": false
+            },
+            "agent_rule_files": {
+              "type": "object",
+              "properties": {
+                "$comment": { "type": "string" },
+                "entries": { "type": "array" },
+                "count": { "type": ["integer", "null"] },
+                "total_bytes": { "type": ["integer", "null"] }
+              },
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false
+        },
+
+        "pr_review": {
+          "type": "object",
+          "properties": {
+            "$comment": { "type": "string" },
+            "sample_size": { "type": ["integer", "null"] },
+            "total_closed_prs": { "type": ["integer", "null"] },
+            "prs": { "type": "array" },
+            "formal_review_rate": { "type": ["number", "null"] },
+            "any_review_rate": { "type": ["number", "null"] },
+            "self_merge_rate": { "type": ["number", "null"] },
+            "security_relevant_prs": { "type": "array" }
+          },
+          "additionalProperties": false
+        },
+
+        "open_prs": {
+          "type": "object",
+          "properties": {
+            "$comment": { "type": "string" },
+            "entries": { "type": "array" },
+            "count": { "type": ["integer", "null"] }
+          },
+          "additionalProperties": false
+        },
+
+        "closed_not_merged_prs": {
+          "type": "object",
+          "properties": {
+            "$comment": { "type": "string" },
+            "entries": { "type": "array" },
+            "count": { "type": ["integer", "null"] }
+          },
+          "additionalProperties": false
+        },
+
+        "issues_and_commits": {
+          "type": "object",
+          "properties": {
+            "$comment": { "type": "string" },
+            "open_security_issues": { "type": "array" },
+            "open_issues_count": { "type": ["integer", "null"] },
+            "closed_issues": { "type": "array" },
+            "closed_issues_count": { "type": ["integer", "null"] },
+            "recent_commits": { "type": "array" },
+            "commit_signing_rate": { "type": ["number", "null"] }
+          },
+          "additionalProperties": false
+        },
+
+        "monorepo": {
+          "type": "object",
+          "properties": {
+            "$comment": { "type": "string" },
+            "is_monorepo": { "type": ["boolean", "null"] },
+            "inner_packages": { "type": "array" },
+            "lifecycle_script_hits": { "type": "array" }
+          },
+          "additionalProperties": false
+        },
+
+        "distribution_channels": {
+          "type": "object",
+          "properties": {
+            "$comment": { "type": "string" },
+            "channels": { "type": "array" }
+          },
+          "additionalProperties": false
+        },
+
+        "install_script_analysis": {
+          "type": "object",
+          "properties": {
+            "$comment": { "type": "string" },
+            "scripts": { "type": "array" }
+          },
+          "additionalProperties": false
+        },
+
+        "artifact_verification": {
+          "type": "object",
+          "properties": {
+            "$comment": { "type": "string" },
+            "per_channel": { "type": "array" }
+          },
+          "additionalProperties": false
+        },
+
+        "batch_merge_detection": {
+          "type": "object",
+          "properties": {
+            "$comment": { "type": "string" },
+            "detected": { "type": ["boolean", "null"] },
+            "pr_groups": { "type": "array" }
+          },
+          "additionalProperties": false
+        },
+
+        "defensive_configs": {
+          "type": "object",
+          "properties": {
+            "$comment": { "type": "string" },
+            "entries": { "type": "array" }
+          },
+          "additionalProperties": false
+        },
+
+        "ossf_scorecard": {
+          "type": "object",
+          "properties": {
+            "$comment": { "type": "string" },
+            "queried": { "type": "boolean" },
+            "indexed": { "type": "boolean" },
+            "overall_score": { "type": ["number", "null"] },
+            "checks": { "type": "array" },
+            "raw_response": {}
+          },
+          "additionalProperties": false
+        },
+
+        "gitleaks": {
+          "type": "object",
+          "properties": {
+            "$comment": { "type": "string" },
+            "available": { "type": "boolean" },
+            "ran": { "type": "boolean" },
+            "findings_count": { "type": ["integer", "null"] },
+            "findings": { "type": "array" }
+          },
+          "additionalProperties": false
+        },
+
+        "windows_patterns": {
+          "type": "object",
+          "properties": {
+            "$comment": { "type": "string" },
+            "hits": { "type": "array" },
+            "hit_count": { "type": ["integer", "null"] }
+          },
+          "additionalProperties": false
+        },
+
+        "prompt_injection_scan": {
+          "type": "object",
+          "properties": {
+            "$comment": { "type": "string" },
+            "scanned_files": { "type": "array" },
+            "injection_signals": { "type": "array" },
+            "signal_count": { "type": ["integer", "null"] }
+          },
+          "additionalProperties": false
+        },
+
+        "coverage_affirmations": {
+          "type": "object",
+          "properties": {
+            "$comment": { "type": "string" },
+            "prompt_injection_scan_completed": { "type": ["boolean", "null"] },
+            "windows_surface_coverage": { "type": ["boolean", "null"] },
+            "distribution_channels_verified": { "type": ["boolean", "null"] },
+            "gitleaks_available": { "type": ["boolean", "null"] },
+            "gitleaks_explanation": { "type": ["string", "null"] }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+
+    "phase_2_validation": {
+      "type": "object",
+      "required": ["validation_passed"],
+      "properties": {
+        "$comment": { "type": "string" },
+        "sha_consistent": { "type": ["boolean", "null"] },
+        "required_fields_complete": { "type": ["boolean", "null"] },
+        "dates_chronological": { "type": ["boolean", "null"] },
+        "tarball_nonempty": { "type": ["boolean", "null"] },
+        "validation_passed": { "type": ["boolean", "null"] },
+        "validation_errors": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      },
+      "additionalProperties": false
+    },
+
+    "phase_3_computed": {
+      "type": "object",
+      "properties": {
+        "$comment": { "type": "string" },
+
+        "c20_severity": {
+          "type": "object",
+          "properties": {
+            "$comment": { "type": "string" },
+            "no_classic_protection": { "type": ["boolean", "null"] },
+            "no_rulesets": { "type": ["boolean", "null"] },
+            "no_rules_on_default": { "type": ["boolean", "null"] },
+            "no_codeowners": { "type": ["boolean", "null"] },
+            "has_recent_release_30d": { "type": ["boolean", "null"] },
+            "ships_executable_code": { "type": ["boolean", "null"] },
+            "result": {
+              "type": ["string", "null"],
+              "enum": ["Critical", "Warning", null]
+            }
+          },
+          "additionalProperties": false
+        },
+
+        "scorecard_cells": {
+          "type": "object",
+          "properties": {
+            "$comment": { "type": "string" },
+            "does_anyone_check_the_code": { "$ref": "#/$defs/scorecard_cell" },
+            "do_they_fix_problems_quickly": { "$ref": "#/$defs/scorecard_cell" },
+            "do_they_tell_you_about_problems": { "$ref": "#/$defs/scorecard_cell" },
+            "is_it_safe_out_of_the_box": { "$ref": "#/$defs/scorecard_cell" }
+          },
+          "additionalProperties": false
+        },
+
+        "solo_maintainer": {
+          "type": "object",
+          "properties": {
+            "$comment": { "type": "string" },
+            "top_contributor_share": { "type": ["number", "null"] },
+            "is_solo": { "type": ["boolean", "null"] },
+            "verbatim_sentence": { "type": ["string", "null"] }
+          },
+          "additionalProperties": false
+        },
+
+        "exhibit_grouping": {
+          "type": "object",
+          "properties": {
+            "$comment": { "type": "string" },
+            "total_findings": { "type": ["integer", "null"] },
+            "threshold_met": { "type": ["boolean", "null"] },
+            "exhibits": { "type": "array" }
+          },
+          "additionalProperties": false
+        },
+
+        "boundary_cases": {
+          "type": "object",
+          "properties": {
+            "$comment": { "type": "string" },
+            "cases": { "type": "array" }
+          },
+          "additionalProperties": false
+        },
+
+        "coverage_status": {
+          "type": "object",
+          "properties": {
+            "$comment": { "type": "string" },
+            "cells": {
+              "type": "array",
+              "items": { "$ref": "#/$defs/coverage_cell" }
+            }
+          },
+          "additionalProperties": false
+        },
+
+        "methodology": {
+          "type": "object",
+          "properties": {
+            "$comment": { "type": "string" },
+            "scanner_version": { "type": ["string", "null"] },
+            "prompt_version": { "type": ["string", "null"] },
+            "guide_version": { "type": ["string", "null"] }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+
+    "phase_4_structured_llm": {
+      "type": "object",
+      "properties": {
+        "$comment": { "type": "string" },
+
+        "findings": {
+          "type": "object",
+          "properties": {
+            "$comment": { "type": "string" },
+            "entries": {
+              "type": "array",
+              "items": { "$ref": "#/$defs/finding" }
+            }
+          },
+          "additionalProperties": false
+        },
+
+        "general_vuln_severity": {
+          "type": "object",
+          "properties": {
+            "$comment": { "type": "string" },
+            "assessments": { "type": "array" }
+          },
+          "additionalProperties": false
+        },
+
+        "section_actions": {
+          "type": "object",
+          "properties": {
+            "$comment": { "type": "string" },
+            "entries": { "type": "array" }
+          },
+          "additionalProperties": false
+        },
+
+        "split_axis_decision": {
+          "type": "object",
+          "properties": {
+            "$comment": { "type": "string" },
+            "should_split": { "type": ["boolean", "null"] },
+            "axis": { "$ref": "#/$defs/split_axis" },
+            "reasoning": { "type": ["string", "null"] },
+            "entries": { "type": "array" }
+          },
+          "additionalProperties": false
+        },
+
+        "priority_evidence": {
+          "type": "object",
+          "properties": {
+            "$comment": { "type": "string" },
+            "selections": {
+              "type": "array",
+              "items": { "$ref": "#/$defs/priority_evidence_selection" },
+              "maxItems": 3
+            }
+          },
+          "additionalProperties": false
+        },
+
+        "threat_models": {
+          "type": "object",
+          "properties": {
+            "$comment": { "type": "string" },
+            "per_finding": { "type": "array" }
+          },
+          "additionalProperties": false
+        },
+
+        "action_steps": {
+          "type": "object",
+          "properties": {
+            "$comment": { "type": "string" },
+            "entries": {
+              "type": "array",
+              "items": { "$ref": "#/$defs/action_step" }
+            }
+          },
+          "additionalProperties": false
+        },
+
+        "timeline_events": {
+          "type": "object",
+          "properties": {
+            "$comment": { "type": "string" },
+            "entries": {
+              "type": "array",
+              "items": { "$ref": "#/$defs/timeline_event" }
+            }
+          },
+          "additionalProperties": false
+        },
+
+        "capability_assessments": {
+          "type": "object",
+          "properties": {
+            "$comment": { "type": "string" },
+            "per_file": { "type": "array" }
+          },
+          "additionalProperties": false
+        },
+
+        "catalog_metadata": {
+          "type": "object",
+          "properties": {
+            "$comment": { "type": "string" },
+            "category": { "type": ["string", "null"] },
+            "subcategory": { "type": ["string", "null"] },
+            "short_description": { "type": ["string", "null"] },
+            "target_user": { "type": ["string", "null"] },
+            "shape": { "type": ["string", "null"] }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+
+    "phase_4b_computed": {
+      "type": "object",
+      "required": ["verdict"],
+      "properties": {
+        "$comment": { "type": "string" },
+        "verdict": {
+          "type": "object",
+          "required": ["level"],
+          "properties": {
+            "level": { "type": ["string", "null"] },
+            "computed_from_findings": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+
+    "phase_5_prose_llm": {
+      "type": "object",
+      "properties": {
+        "$comment": { "type": "string" },
+
+        "editorial_caption": {
+          "type": "object",
+          "properties": {
+            "$comment": { "type": "string" },
+            "text": { "type": ["string", "null"] }
+          },
+          "additionalProperties": false
+        },
+
+        "per_finding_prose": {
+          "type": "object",
+          "properties": {
+            "$comment": { "type": "string" },
+            "entries": { "type": "array" }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+
+    "phase_6_assembly": {
+      "type": "object",
+      "required": ["assembled"],
+      "properties": {
+        "$comment": { "type": "string" },
+        "assembled": { "type": "boolean" },
+        "assembly_timestamp": { "type": ["string", "null"] },
+        "provenance_complete": { "type": ["boolean", "null"] },
+        "evidence_refs_valid": { "type": ["boolean", "null"] },
+        "field_count": { "type": ["integer", "null"] }
+      },
+      "additionalProperties": false
+    },
+
+    "scan_sign_off": {
+      "type": "object",
+      "properties": {
+        "$comment": { "type": "string" },
+        "approved_for_release": { "type": "boolean" },
+        "approved_by": { "type": ["string", "null"] },
+        "approved_at": { "type": ["string", "null"] },
+        "notes": { "type": ["string", "null"] }
+      },
+      "additionalProperties": false
+    }
+  }
+}
