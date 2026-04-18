@@ -80,6 +80,7 @@ def compute_scorecard_cells(
     any_review_rate: float | None,
     has_branch_protection: bool,
     has_codeowners: bool,
+    is_solo_maintainer: bool,
     open_security_issue_count: int,
     oldest_cve_pr_age_days: int | None,
     has_security_policy: bool,
@@ -87,17 +88,24 @@ def compute_scorecard_cells(
     has_silent_fixes: bool,
     all_channels_pinned: bool,
     artifact_verified: bool,
+    has_critical_on_default_path: bool,
     has_warning_or_above: bool,
 ) -> dict:
     """Compute the 4 scorecard cells using the V2.4 calibration table.
     Returns dict with color (red/amber/green) and short_answer per cell."""
 
     # Q1: Does anyone check the code?
+    # V2.4 calibration: Green = any>=60% AND formal>=30% AND branch protection
+    # Amber = any>=50% OR formal>=20%
+    # Red = any<30% OR (solo-maintainer AND any<40%)
     formal = formal_review_rate or 0
     any_rev = any_review_rate or 0
     if any_rev >= 60 and formal >= 30 and has_branch_protection:
         q1_color = "green"
         q1_answer = "Yes"
+    elif any_rev < 30 or (is_solo_maintainer and any_rev < 40):
+        q1_color = "red"
+        q1_answer = "No"
     elif any_rev >= 50 or formal >= 20:
         q1_color = "amber"
         q1_answer = "Partly"
@@ -129,12 +137,18 @@ def compute_scorecard_cells(
         q3_answer = "No"
 
     # Q4: Is it safe out of the box?
+    # V2.4 calibration: Green = all pinned + verified + no Warning+
+    # Red = any Critical on default install path
+    # Amber = any unverified channel OR group-specific finding
     if all_channels_pinned and artifact_verified and not has_warning_or_above:
         q4_color = "green"
         q4_answer = "Yes"
-    elif has_warning_or_above:
-        q4_color = "red" if has_warning_or_above else "amber"
+    elif has_critical_on_default_path:
+        q4_color = "red"
         q4_answer = "No"
+    elif has_warning_or_above or not all_channels_pinned or not artifact_verified:
+        q4_color = "amber"
+        q4_answer = "Partly"
     else:
         q4_color = "amber"
         q4_answer = "Partly"

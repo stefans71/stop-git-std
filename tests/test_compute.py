@@ -70,11 +70,12 @@ class TestScorecardCells:
         r = compute_scorecard_cells(
             formal_review_rate=50, any_review_rate=80,
             has_branch_protection=True, has_codeowners=True,
+            is_solo_maintainer=False,
             open_security_issue_count=0, oldest_cve_pr_age_days=0,
             has_security_policy=True, published_advisory_count=2,
             has_silent_fixes=False,
             all_channels_pinned=True, artifact_verified=True,
-            has_warning_or_above=False,
+            has_critical_on_default_path=False, has_warning_or_above=False,
         )
         assert r["does_anyone_check_the_code"]["color"] == "green"
         assert r["do_they_fix_problems_quickly"]["color"] == "green"
@@ -85,11 +86,12 @@ class TestScorecardCells:
         r = compute_scorecard_cells(
             formal_review_rate=0, any_review_rate=10,
             has_branch_protection=False, has_codeowners=False,
+            is_solo_maintainer=False,
             open_security_issue_count=0, oldest_cve_pr_age_days=None,
             has_security_policy=False, published_advisory_count=0,
             has_silent_fixes=False,
             all_channels_pinned=False, artifact_verified=False,
-            has_warning_or_above=False,
+            has_critical_on_default_path=False, has_warning_or_above=False,
         )
         assert r["does_anyone_check_the_code"]["color"] == "red"
 
@@ -97,11 +99,12 @@ class TestScorecardCells:
         r = compute_scorecard_cells(
             formal_review_rate=50, any_review_rate=80,
             has_branch_protection=True, has_codeowners=True,
+            is_solo_maintainer=False,
             open_security_issue_count=5, oldest_cve_pr_age_days=30,
             has_security_policy=True, published_advisory_count=2,
             has_silent_fixes=False,
             all_channels_pinned=True, artifact_verified=True,
-            has_warning_or_above=False,
+            has_critical_on_default_path=False, has_warning_or_above=False,
         )
         assert r["do_they_fix_problems_quickly"]["color"] == "red"
 
@@ -110,13 +113,56 @@ class TestScorecardCells:
         r = compute_scorecard_cells(
             formal_review_rate=29, any_review_rate=71,
             has_branch_protection=False, has_codeowners=False,
+            is_solo_maintainer=False,
             open_security_issue_count=0, oldest_cve_pr_age_days=None,
             has_security_policy=False, published_advisory_count=0,
             has_silent_fixes=False,
             all_channels_pinned=True, artifact_verified=True,
-            has_warning_or_above=True,
+            has_critical_on_default_path=False, has_warning_or_above=True,
         )
         assert r["does_anyone_check_the_code"]["color"] == "amber"
+
+    def test_solo_maintainer_low_review_is_red(self):
+        """Solo maintainer with any-review < 40% → red Q1"""
+        r = compute_scorecard_cells(
+            formal_review_rate=10, any_review_rate=35,
+            has_branch_protection=False, has_codeowners=False,
+            is_solo_maintainer=True,
+            open_security_issue_count=0, oldest_cve_pr_age_days=None,
+            has_security_policy=False, published_advisory_count=0,
+            has_silent_fixes=False,
+            all_channels_pinned=True, artifact_verified=True,
+            has_critical_on_default_path=False, has_warning_or_above=False,
+        )
+        assert r["does_anyone_check_the_code"]["color"] == "red"
+
+    def test_q4_critical_on_default_is_red(self):
+        """Critical finding on default install path → Q4 red"""
+        r = compute_scorecard_cells(
+            formal_review_rate=50, any_review_rate=80,
+            has_branch_protection=True, has_codeowners=True,
+            is_solo_maintainer=False,
+            open_security_issue_count=0, oldest_cve_pr_age_days=None,
+            has_security_policy=True, published_advisory_count=2,
+            has_silent_fixes=False,
+            all_channels_pinned=True, artifact_verified=True,
+            has_critical_on_default_path=True, has_warning_or_above=True,
+        )
+        assert r["is_it_safe_out_of_the_box"]["color"] == "red"
+
+    def test_q4_warning_no_critical_is_amber(self):
+        """Warning finding but no Critical → Q4 amber"""
+        r = compute_scorecard_cells(
+            formal_review_rate=50, any_review_rate=80,
+            has_branch_protection=True, has_codeowners=True,
+            is_solo_maintainer=False,
+            open_security_issue_count=0, oldest_cve_pr_age_days=None,
+            has_security_policy=True, published_advisory_count=2,
+            has_silent_fixes=False,
+            all_channels_pinned=True, artifact_verified=True,
+            has_critical_on_default_path=False, has_warning_or_above=True,
+        )
+        assert r["is_it_safe_out_of_the_box"]["color"] == "amber"
 
 
 # ===========================================================================
