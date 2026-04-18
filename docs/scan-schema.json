@@ -294,8 +294,9 @@
     },
 
     "executable_file_inventory_entry": {
+      "$comment": "C2 FIX NOW (V2.3 R3 C3, 2026-04-18 board impl-verify R1): file_sha + line_ranges + diff_anchor are STRUCTURALLY required on every entry, with null allowed when a scan genuinely cannot resolve them. This supersedes the earlier conditional trigger (`dangerous_calls != None OR kind in sensitive set`) which left the `kind` half underspecified; Codex BLOCK at V2 + R2 dissent both preferred always-required-with-null-fallback, and owner directive on 2026-04-18 adopted that resolution. Rationale: reproducibility is uniform — every entry must declare the fields; when a value is genuinely unresolvable, the scanner emits null (not omits the key). This matches the documentary-enforcement pattern used elsewhere in the schema.",
       "type": "object",
-      "required": ["path", "kind", "runtime"],
+      "required": ["path", "kind", "runtime", "file_sha", "line_ranges", "diff_anchor"],
       "properties": {
         "path": { "type": "string" },
         "kind": { "type": "string" },
@@ -305,34 +306,17 @@
         "notes": { "type": ["string", "null"] },
         "file_sha": {
           "type": ["string", "null"],
-          "description": "C2 FIX NOW (V2.3 R3 C3): File SHA at scanned revision. Required when security-relevant (see allOf)."
+          "description": "C2: File SHA at scanned revision. Required key; null only when the scan cannot resolve (document the reason in notes)."
         },
         "line_ranges": {
           "type": ["string", "null"],
-          "description": "C2 FIX NOW (V2.3 R3 C3): Relevant lines (e.g. '45-78, 120-135'). Required when security-relevant."
+          "description": "C2: Relevant lines (e.g. '45-78, 120-135'). Required key; null only when not applicable (e.g. whole-file relevance, binary)."
         },
         "diff_anchor": {
           "type": ["string", "null"],
-          "description": "C2 FIX NOW (V2.3 R3 C3): Diff anchor for reproducibility. Required when security-relevant."
+          "description": "C2: Diff anchor for reproducibility. Required key; null only when a stable anchor cannot be formed."
         }
       },
-      "allOf": [
-        {
-          "$comment": "C2 FIX NOW: file_sha, line_ranges, diff_anchor required when dangerous_calls is present (security-relevant entries). Codex dissent in R2: preferred always-required with explicit-null. Per R3/R4 resolution: conditional required for V1.1; re-evaluate in V1.2.",
-          "if": {
-            "properties": {
-              "dangerous_calls": {
-                "type": "string",
-                "not": { "enum": ["None", "none", ""] }
-              }
-            },
-            "required": ["dangerous_calls"]
-          },
-          "then": {
-            "required": ["file_sha", "line_ranges", "diff_anchor"]
-          }
-        }
-      ],
       "additionalProperties": false
     },
 
