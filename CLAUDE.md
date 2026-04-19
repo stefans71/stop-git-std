@@ -88,43 +88,19 @@ Wait for the user's choice. If they pick option 2, read the `.md` file and give 
 - **head-sha.txt is the first durable artifact.** Write it before any gh api call. On Phase 4 success, copy findings-bundle to `docs/board-review-data/scan-bundles/`.
 - **Update the catalog** at `docs/scanner-catalog.md` after every completed scan. Include the `rendering-pipeline` column (values: `v2.4` or `v2.5-preview`) alongside the existing `methodology-used` flag.
 
-## Repo structure
+## Current state (summary)
 
-```
-docs/
-  SCANNER-OPERATOR-GUIDE.md         ← V0.2 operator guide (how to run end-to-end)
-  Scan-Readme.md                    ← human-readable wizard + reference table
-  scanner-design-system.css         ← MANDATORY CSS for all V2.4 HTML scans (copy verbatim)
-  repo-deep-dive-prompt.md          ← V2.4 scanner prompt (investigation + output-format spec)
-  GitHub-Repo-Scan-Template.html    ← V2.4 HTML template (Workflow V2.4)
-  validate-scanner-report.py        ← validator gate (--report, --parity, --markdown, --template)
-  scan-schema.json                  ← V1.1 schema for Workflow V2.5-preview form.json
-  render-md.py                      ← V2.5-preview MD renderer (Jinja2 shim)
-  render-html.py                    ← V2.5-preview HTML renderer (Jinja2 shim)
-  templates/                        ← V2.5-preview MD Jinja2 partials
-  templates-html/                   ← V2.5-preview HTML Jinja2 partials
-  scanner-catalog.md                ← live catalog of completed scans
-  GitHub-Scanner-*.{html,md}        ← completed scan artifacts (10 V2.4 scans as of 2026-04-19)
-  External-Board-Reviews/           ← archived board review records (R1-R4 consolidations)
-  board-review-data/
-    path-b-test-prompt.md           ← reusable delegated-mode prompt (legacy Path B)
-    scan-bundles/                   ← durable findings-bundle copies
-  board-review-*-consolidation.md   ← older flat-file board review records
-  repo-deep-dive-prompt-V*.md       ← prompt version archives
-tests/
-  fixtures/                         ← V1.1-compliant back-authored fixtures (zustand, caveman, archon-subset)
-  test_render_md.py / test_render_html.py / test_validator.py / ...
-github-scan-package-V2/             ← V2.4 distributable package (predates V2.5-preview; validator synced to repo as of commit 60e0bf2)
-archive/                            ← old TypeScript static analyzer (historical)
-```
+As of HEAD `3c09afb` (2026-04-19): Scanner prompt V2.4, Operator Guide V0.2, 263/263 tests passing, 10 V2.4 catalog scans, Phase 7 renderer Steps A-F complete, Step G cleared (3 pre-reqs queued: U-5/PD3 + U-10; U-1 + U-3/FX-4 already done).
 
-## Current state
+**For everything else — look in `REPO_MAP.md`:**
 
-- Scanner prompt: V2.4 (investigation + output-format spec)
-- Operator Guide: V0.2 (V2.5-preview pipeline documented as Step-G-experimental in §8.8)
-- Catalog: 10 V2.4 scans; 0 V2.5-preview scans (Step G is the first live run)
-- Phase 7 renderer plan A→G: Steps A-F complete (ce698d4). Step G next — see `docs/External-Board-Reviews/041826-renderer-alignment/CONSOLIDATION.md`
-
-## Board reviews
-
-3-model: Pragmatist (Claude Opus 4.7 or Sonnet 4.6 when Opus wrote the artifact) + Systems Thinker (Codex GPT-5 as `llmuser` from `/tmp`) + Skeptic (DeepSeek V4 via `qwen -y --model deepseek-chat` from repo dir). Recent consolidations in `docs/External-Board-Reviews/<MMDDYY>-<topic>/CONSOLIDATION.md`; older flat-file records at `docs/board-review-*-consolidation.md`. Full SOP at `/root/.frontierboard/FrontierBoard/docs/REVIEW-SOP.md`.
+- **If you need to find a file** → `REPO_MAP.md` §3 (File/folder index + release status per entry + last-touched)
+- **If you need the current plan or next steps** → `REPO_MAP.md` §2 (Architecture, state, Step G queue, deferred ledger)
+- **If you need to run the board** (agent invocation commands, failure modes, file staging, recent examples) → `REPO_MAP.md` §2.3 (Board runbook)
+- **If you need to revert / recover from a regression** → `AUDIT_TRAIL.md` (checkpoint log with HEAD SHAs, verification state, revert recipes)
+- **If you need the board review SOP** → `/root/.frontierboard/FrontierBoard/docs/REVIEW-SOP.md`
+- **If you need the most recent board decision** → `docs/External-Board-Reviews/041826-step-g-kickoff/CONSOLIDATION.md`
+- **If you need the canonical architecture record** (8/8/4, 9-phase pipeline) → `docs/board-review-pipeline-methodology.md`
+- **If you need what to investigate during a scan** → `docs/repo-deep-dive-prompt.md` (V2.4, investigation half lines 1-1090 + output-format spec lines 1106-1490)
+- **If you need the end-to-end process document** → `docs/SCANNER-OPERATOR-GUIDE.md` (V0.2; §8.8 is the V2.5-preview pipeline)
+- **If you're working on the V2.4 distributable package** (not the repo docs) → `github-scan-package-V2/` — note the docs there are intentionally V2.4-snapshot; see `REPO_MAP.md` §3.2 for drift notes.
