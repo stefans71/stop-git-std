@@ -17,6 +17,37 @@ Canonical log of milestone commits with the verification state captured at commi
 
 ---
 
+## Checkpoint — 2026-04-19 — U-10 partial: validator regex extensions for V2.4 catalog
+
+**HEAD:** `3845406`
+**Changed:** `docs/validate-scanner-report.py` + package mirror (158 ins/40 del each) + `tests/test_validator.py` (5 ins/4 del). 244 ins / 81 del across 3 files.
+**State:** `--parity` now correctly discriminates V2.4 authorial variants. 4 of 9 MD+HTML catalog pairs clean (caveman, zustand, hermes-agent, zustand-v3). 5 remain with real content bugs isolated for separate decision (Archon split-verdict, + 4 scorecard V2.3/V2.4 mismatches).
+
+**Verification at commit time:**
+- pytest: `263 passed in 44.84s`
+- Repo ↔ package validator diff: **0 lines**
+- Package validator `--parity` on zustand V2.4 reference: clean
+- U-10 run log in `/tmp/u10-revalidation/` (4 runs showing progressive triage)
+
+**Validator delta vs `ce698d4` Step F R3 state:**
+- F-ID pattern extended to accept `.` (F-crates.io)
+- MD h3 separator accepts `&middot;`/`·` (hermes-agent style)
+- HTML h3 split: finding-card (MD-canonical strict) vs reference-tag (warning)
+- Pattern 4 tail-paren ID: only single-F-ID ID-only tails; rejects composites and prose
+- Evidence cards filtered by preceding `Evidence N` tag (shared `finding-card` CSS class)
+- Scorecard detector accepts V2.3 or V2.4 question set, singular "maintainer" accepted
+- Verdict regex reads CSS-stripped body (no CSS rule shadowing)
+
+**Remaining content-bug ledger (deferred, NOT blocking):**
+- Archon: MD title "Verdict: Caution (split)" vs HTML verdict-banner class "critical" — authorial inconsistency on which deployment axis drives the primary banner color
+- fd, gstack, archon-board-review, postiz-app: MD scorecard reverted to V2.3 in `cf6afcd` (2026-04-18), HTMLs left on V2.4 — needs scorecard-version canonical decision
+
+**Board approval:** Not required (regex tuning only, no semantic behavior change on passing scans; owner-authored). Content-bug resolution (above) may warrant board review before bulk edits — pending owner direction.
+
+**Revert:** `git reset --hard 3845406` to stay at this validator state; `git reset --hard 886eef1` to return to pre-U-10 state (loses validator improvements, re-exposes regex gaps masking real catalog bugs).
+
+---
+
 ## Checkpoint — 2026-04-19 03:47 UTC — U-3/FX-4 fixture provenance ledger
 
 **HEAD:** `3c09afb`
