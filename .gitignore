@@ -5,10 +5,25 @@ node_modules
 out
 dist
 *.tgz
+*.tar.gz
+*.zip
+
+# Python bytecode cache
+**/__pycache__/
 
 # code coverage
 coverage
 *.lcov
+
+# scanner board-review scratch (active session artifacts)
+.board-review-temp/
+
+# old pre-archive round scratch (content preserved in docs/External-Board-Reviews/)
+docs/board-review-data/renderer-r1/
+docs/board-review-data/renderer-alignment-r1/
+
+# Claude runtime locks
+.claude/scheduled_tasks.lock
 
 # logs
 logs
