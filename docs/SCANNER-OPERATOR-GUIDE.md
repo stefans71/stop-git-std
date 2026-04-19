@@ -294,7 +294,7 @@ If you catch yourself writing an interpretive verb in an evidence section, cut i
 
 **Phase 4 is split into 4a (MD-first) → 4b (HTML-from-MD).** A lightweight Phase 4c exists for re-run determinism records.
 
-### 8.1 Path A — continuous (the only path exercised today)
+### 8.1 Execution mode: continuous (legacy alias: Path A — the only mode exercised today in V2.4)
 
 - The same LLM runtime that completed Phases 2 and 3 continues directly into Phase 4.
 - Load the findings-bundle, the V2.4 template, and 1–2 prior scans as structural references (chosen by shape match — see §8.3).
@@ -308,7 +308,7 @@ If you catch yourself writing an interpretive verb in an evidence section, cut i
 
 If the context budget is exhausted or fragmented — if any of the six ingredients has already been squeezed out or is about to be — consider Path B.
 
-### 8.2 Path B (delegated — exercised and validated)
+### 8.2 Execution mode: delegated (legacy alias: Path B — exercised and validated)
 
 > **Validated:** zustand-v2 scan (2026-04-16) — fresh Opus agent ran end-to-end from handoff packet alone. Structural parity with Path A confirmed. hermes-agent and postiz-app scans also used Path B successfully.
 
@@ -346,7 +346,13 @@ The guide previously described Path A (continuous) and Path B (delegated) in ter
 
 ### 8.4 What the rendered output must contain
 
-The rendered output's required structural elements are specified by the V2.4 prompt (see `repo-deep-dive-prompt.md` §"What Should I Do?", §"What We Found", §"Executable File Inventory", etc.). This guide does not duplicate that specification.
+The rendered output's required structural elements are specified by the V2.4 prompt (`repo-deep-dive-prompt.md` output-format section, lines ~1106–1490 — §"What Should I Do?", §"What We Found", §"Executable File Inventory", etc.). That spec is the **canonical output contract**.
+
+This contract can be realized via two rendering pipelines (see §8.1 / §8.8):
+- **Workflow V2.4 (the path exercised by all 10 catalog entries):** the LLM authors the MD + HTML directly from the findings-bundle, following the prompt's output-format section as a template.
+- **Workflow V2.5-preview (experimental, Step G validation in progress):** the LLM authors a `form.json` conforming to `docs/scan-schema.json` V1.1; the deterministic renderers `docs/render-md.py` + `docs/render-html.py` (with Jinja2 partials at `docs/templates/` + `docs/templates-html/`) produce the MD + HTML from the form.
+
+Both pipelines must produce output conforming to the prompt's output-format spec. The schema + renderers are an implementation of that spec, not a second competing spec. This guide does not duplicate the spec itself.
 
 ### 8.5 Phase 4a — bundle → canonical MD
 
@@ -370,6 +376,96 @@ The CSS includes the single-pass scan-line animation (a thin cyan line that swee
 - Output is an MD-only note (e.g., `GitHub-Scanner-<repo>-rerun-record.md`) listing: prior scan's SHA, new SHA, what changed, explicit "no structural drift" statement.
 - Does not require Phase 4b.
 - Example in the current catalog: `GitHub-Scanner-Archon-rerun-record.md` (2026-04-16 re-run confirming the Archon scan's verdict held across a dev→dev SHA bump).
+
+### 8.8 Phase 4 — Workflow V2.5-preview (JSON-first, Step G validation only)
+
+> **V2.5-preview — Step G acceptance runs only. Not for production scans.**
+> - Use only for Step G acceptance runs (see `docs/External-Board-Reviews/041826-renderer-alignment/CONSOLIDATION.md` §"Step G — C7 acceptance matrix"). Most operators should use Workflow V2.4 (§8.5–8.6).
+> - Do NOT use for catalog scans or user-facing production scans. Use Workflow V2.4 (§8.5–8.6).
+> - Preview pipeline; output not yet considered catalog-grade until Step G passes.
+> - Only validated against 3 shapes: JS library (`tests/fixtures/zustand-form.json`), curl-pipe installer (`tests/fixtures/caveman-form.json`), agentic platform monorepo (`tests/fixtures/archon-subset-form.json`). CLI-binary (fd), Claude-Code-skills (gstack), web-app (postiz-app), and Python-platform (hermes-agent) shapes are NOT yet fixtured.
+> - **Last reviewed: 2026-04-19.** See `docs/External-Board-Reviews/041826-step-f-alignment-validation/CONSOLIDATION.md` and `docs/External-Board-Reviews/041826-step-g-kickoff/CONSOLIDATION.md` (this commit) for most recent board status.
+
+#### 8.8.1 Status
+
+The deterministic renderer shipped in commits `402f933` (Step F HTML renderer + 2 fixtures) + `ce698d4` (Step F R3 XSS/CSS/parity fixes). The Jinja2 architecture validates clean against back-authored fixtures (zustand, caveman, archon-subset) with 263/263 tests passing and validator `--report` + `--parity` clean. **End-to-end validation on a live scan (fresh `gh api` capture → pipeline → MD+HTML) is open as Step G of the renderer plan.**
+
+#### 8.8.2 Workflow
+
+1. Phases 1–3 unchanged from V2.4 (prep, gather, bundle). Same `head-sha.txt` first-durable-artifact rule. Same `findings-bundle.md` produced in Phase 3.
+2. **Phase 4 (V2.5-preview)** — LLM authors `form.json` conforming to `docs/scan-schema.json` V1.1. Reference `tests/fixtures/zustand-form.json` for shape. The form represents the same data that in V2.4 goes into the bundle + MD, but in machine-readable structured form.
+3. **Phase 4 render** — deterministic:
+   ```bash
+   python3 docs/render-md.py   form.json --out docs/GitHub-Scanner-<repo>.md
+   python3 docs/render-html.py form.json --out docs/GitHub-Scanner-<repo>.html
+   ```
+4. **Phase 5** — validator gate. Requires:
+   - `python3 docs/validate-scanner-report.py --report <.html>` exits 0 on HTML
+   - `python3 docs/validate-scanner-report.py --markdown <.md>` exits 0 on MD
+   - `python3 docs/validate-scanner-report.py --parity <.md> <.html>` zero errors **and** zero warnings
+
+#### 8.8.3 Phase-to-prompt mapping (how to populate `form.json` from the findings-bundle + prompt output-format spec)
+
+The prompt (`repo-deep-dive-prompt.md`) has two halves: investigation instructions (lines 1–1090) and output-format spec (lines ~1106–1490). The table below shows which form.json phase block each half feeds, and which prompt section drives it.
+
+| Form phase | Source | Prompt reference | Schema `$def` |
+|---|---|---|---|
+| `phase_1_raw_capture` | `gh api` calls + OSSF Scorecard API + osv.dev + `gitleaks` if present | Pre-flight + Steps 1–4 | `phase_1_raw_capture` in `scan-schema.json` |
+| `phase_2_validation` | Sanity checks on Phase 1 outputs (SHA consistent, dates chronological, tarball nonempty) | Download + extraction + symlink-strip + SANITY CHECK | `phase_2_validation` |
+| `phase_3_computed` | Python compute functions (`docs/compute.py`) on Phase 1 data | Deterministic — no prompt section; the 8 automatable operations (verdict, scorecard cells, solo-maintainer, exhibit grouping, boundary-case, coverage status, methodology boilerplate, F5 silent/unadvertised) | `phase_3_computed` |
+| `phase_4_structured_llm` | LLM produces enum/template-constrained fields: findings entries, general vuln severity, split-axis decision, priority evidence, threat models, action steps, timeline events, capability assessments, catalog metadata, section leads, verdict exhibits | Prompt Steps A/B/C + scorecard calibration + output-format spec §§01/02/04/07/Verdict/Trust Scorecard | `phase_4_structured_llm` |
+| `phase_4b_computed` | Python derives verdict level from findings (`docs/compute.py::compute_verdict`) | Deterministic — no prompt section | `phase_4b_computed` |
+| `phase_5_prose_llm` | LLM writes 4 prose fields: `what_this_means`, `what_this_does_not_mean`, finding body paragraphs, editorial caption | Output-format spec §02 finding-card body + §Hero caption | `phase_5_prose_llm` |
+| `phase_6_assembly` | Final JSON merge, provenance tags | N/A (assembly step — Python) | `phase_6_assembly` |
+| `scan_sign_off` | Human or operator-agent approval marker | Operator decision | `scan_sign_off` |
+
+**Operator checklist** (converting a V2.4 findings-bundle.md into a V2.5-preview form.json):
+
+1. Start with `tests/fixtures/zustand-form.json` as a template (copy + blank out repo-specific fields).
+2. Populate `target.{owner,repo,full_name,url}` + `_meta.{prompt_version,scan_started_at,scanner_version}` + `phase_1_raw_capture.pre_flight.head_sha` (full 40-char).
+3. Fill `phase_1_raw_capture.*` from the `gh api` call outputs your V2.4 scan already captured.
+4. Run `phase_3_computed` by invoking `docs/compute.py` functions on Phase 1 data (or mirror their logic).
+5. Translate the findings-bundle's evidence + synthesis sections into `phase_4_structured_llm.findings.entries[]` + `phase_4_structured_llm.verdict_exhibits.groups[]` + supporting structured fields. One finding in the bundle = one entry in the schema.
+6. Author the 4 prose fields (`phase_5_prose_llm.*`) using the bundle's finding summary prose.
+7. Validate the form: `python3 -c "import json; from jsonschema import Draft202012Validator; schema=json.load(open('docs/scan-schema.json')); form=json.load(open('form.json')); errors=list(Draft202012Validator(schema).iter_errors(form)); print('✓' if not errors else f'✗ {len(errors)} errors: {[e.message[:100] for e in errors[:5]]}')"`
+8. Render + validate + parity-check (Phase 4+5 above).
+
+Step 4 is the biggest lift — the Python compute functions exist in `docs/compute.py` but the pipeline harness calling them from a filled Phase 1 is not yet built; operators do this manually for Step G.
+
+#### 8.8.4 Invariants preserved from V2.4
+
+- **MD-canonical rule** — HTML may not add findings absent from MD. Enforced by the shared form.json contract and the `--parity` validator gate.
+- **Facts / inference / synthesis separation** — enforced by schema phase boundaries (Phase 1 = facts, Phase 3 = compute-derived, Phase 4 = structured LLM inference/synthesis, Phase 5 = prose LLM synthesis).
+- **`head-sha.txt` first durable artifact.** Same as V2.4.
+- **Validator is the gate.** Same as V2.4, plus the `--parity` zero-errors-zero-warnings requirement for Step G acceptance.
+
+#### 8.8.5 Step G success criterion
+
+**Validator-clean is necessary but NOT sufficient.** A V2.5-preview scan passes Step G only if ALL of:
+1. `form.json` validates clean against V1.1 schema (zero errors).
+2. Both rendered outputs pass `validate-scanner-report.py --report` (exit 0).
+3. `--parity <md> <html>` reports zero errors **and** zero warnings.
+4. Evidence refs resolve (no dead `E*` or `EB-*` references in findings).
+5. Re-rendering the same `form.json` produces byte-identical MD + HTML (determinism test: `diff <(render) <(render)` = empty).
+6. **Rendered output is reviewed against the V2.4 scan of the same repo (where one exists in the catalog) for structural parity.** Missing sections, altered finding severities, silent evidence truncation, or shape mismatches fail Step G regardless of validator cleanliness.
+
+#### 8.8.6 Rollback contract (if Step G fails)
+
+If Step G reveals schema defects, renderer regressions, or structural-parity failures:
+1. Workflow V2.4 (§8.5–8.6) continues as the ONLY production/default path. Existing catalog scans are unaffected.
+2. The V2.5-preview subsection (this §8.8) is either **reverted out of the main Operator Guide flow** (removed from §8) or **quarantined into an appendix** at the end of this guide. Operator-entry points (CLAUDE.md wizard Q3a, §8 TOC) remove the V2.5-preview option until schema/renderer fixes are validated in a fresh board review.
+3. Failed Step G `form.json` files are tagged (in `tests/fixtures/provenance.json` when that file lands per U-3/FX-4) as `step-g-failed-artifact` and kept as test artifacts, NOT as operator exemplars. Future operators should not mirror them.
+4. `github-scan-package-V2/` is NOT mutated during rollback. The package is a V2.4 distributable; V2.5 inclusion is a separate post-Step-G release cycle.
+5. Schema revision (to V1.2 or later) happens in a separate work cycle; this §8.8 is held DEPRECATED during that cycle.
+
+#### 8.8.7 Known limitations pre-Step-G
+
+- Only 3 shapes have V1.1 fixtures (JS library, curl-pipe installer, agentic platform monorepo). CLI binary, Claude Code skills, web app, and Python platform shapes are NOT exercised.
+- The JSON-first pipeline has NOT produced a scan from live `gh api` data — only back-authored reconstructions of goldens. Step G is the first live run.
+- Phases 4–6 automation (structured LLM, prose LLM, assembly) is not built. Step G uses LLM-in-the-loop for those phases.
+- `docs/scan-schema.json` V1.1 is **not yet** the complete canonical formalization of the full prompt output-format spec. Notable gaps: Scanner Integrity section 00 hit-level file/line/raw-content structure; Section 08 methodology fields beyond the currently modeled version marker. Schema hardening is on the defer ledger post-Step-G.
+- Fixture provenance tagging (U-3/FX-4 per board) will land in a follow-up commit at `tests/fixtures/provenance.json`. Fixtures in this commit are not yet machine-tagged.
+- PD3 bundle/citation validator is queued to build before the first live Step G scan produces a real `findings-bundle.md` (U-5 per board).
 
 ---
 

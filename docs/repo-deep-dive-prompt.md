@@ -1094,6 +1094,8 @@ Every report MUST include a methodology section (Section 08 in the HTML template
 
 The MD file is canonical. HTML is derived from it. Every section below maps 1:1 to an HTML template section. Use the exact heading format shown. Do not invent sections or reorder them.
 
+> **Output contract.** This structure is the canonical report format. In Workflow V2.4 (see `docs/SCANNER-OPERATOR-GUIDE.md` §8.5–8.6 — current default for all catalog scans), the LLM authors this MD directly from the findings-bundle. In Workflow V2.5-preview (Operator Guide §8.8 — Step G validation only), the same structure is realized via `docs/scan-schema.json` V1.1 (schema) + `docs/render-md.py` / `docs/render-html.py` (deterministic Jinja2 renderers). Both pipelines must produce output conforming to the spec below. The schema + renderers are an implementation of this spec, not a second competing spec.
+
 ```markdown
 # Security Investigation: OWNER/REPO
 
