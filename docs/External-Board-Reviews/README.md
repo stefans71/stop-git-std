@@ -21,6 +21,7 @@ Per 2026-04-18 SOP compliance: minimum 3 agents per round. Never drop below 3.
 | 2026-04-18 | `041826-renderer-impl-verify/` | Steps A+B implementation verification (schema V1.1 + Jinja2 refactor) | R1 | APPROVED after owner directive (C2 BLOCK resolved) |
 | 2026-04-18 | `041826-fixture-enrichment/` | Step C fix-artifact review (10 FAs for zustand-form.json) | R1 | UNANIMOUS 3-0 APPROVE, applied |
 | 2026-04-18 | `041826-step-f-alignment-validation/` | Step F validation + Step G readiness — XSS, CSS escape, parity regex, deferred-items reconciliation | R1-R4 full | SIGN OFF (2) + SIGN OFF W/ DISSENTS (1, bookkeeping only). Owner fixes in `ce698d4`. |
+| 2026-04-18 → 2026-04-19 | `041826-step-g-kickoff/` | Step G kickoff / U-1 doc integration — V2.5-preview pipeline documented as Step-G-experimental across 5 docs, FX-3b synced to package | R1-R3 | SIGN OFF (1) + SIGN OFF W/ DISSENTS (2, non-blocking carried awareness). Owner commits `60e0bf2` (FX-3b parallel) + `6a3e471` (U-1). |
 
 ## Current state in the renderer workstream
 
