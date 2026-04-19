@@ -168,8 +168,8 @@ Per `docs/External-Board-Reviews/041826-step-g-kickoff/CONSOLIDATION.md`. Status
 |---|---|---|
 | U-1 | V2.5-preview doc integration | ✅ Done (`6a3e471`) |
 | U-3/FX-4 | `tests/fixtures/provenance.json` — separate-file approach | ✅ Done (`3c09afb`) |
-| U-5/PD3 | Bundle/citation validator — validate fact/inference/synthesis separation in findings-bundle.md | ⏳ Before first live Step G scan |
-| U-10 | Re-validate all 10 catalog scans with fixed validator (check for shell-glob evidence corruption) | ⏳ Before first V2.5-preview promoted to catalog |
+| U-5/PD3 | Bundle/citation validator — validate fact/inference/synthesis separation in findings-bundle.md | ✅ Done — `--bundle` mode in validator, 16 tests, 5 V2.4 bundle corpus pass |
+| U-10 | Re-validate all 10 catalog scans with fixed validator (check for shell-glob evidence corruption) | ✅ Done (`6481533`) — canonical scorecard + Archon verdict alignment, all pairs clean |
 
 **Step G itself:** run full Phase 1-6 pipeline against 3 shapes (likely zustand + caveman + Archon), produce form.json → render-md.py + render-html.py → validator clean + parity zero warnings + structural-parity vs V2.4 scan of same repo. See `docs/SCANNER-OPERATOR-GUIDE.md` §8.8 for the operator-facing spec.
 

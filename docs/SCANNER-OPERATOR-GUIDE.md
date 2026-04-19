@@ -465,7 +465,7 @@ If Step G reveals schema defects, renderer regressions, or structural-parity fai
 - Phases 4–6 automation (structured LLM, prose LLM, assembly) is not built. Step G uses LLM-in-the-loop for those phases.
 - `docs/scan-schema.json` V1.1 is **not yet** the complete canonical formalization of the full prompt output-format spec. Notable gaps: Scanner Integrity section 00 hit-level file/line/raw-content structure; Section 08 methodology fields beyond the currently modeled version marker. Schema hardening is on the defer ledger post-Step-G.
 - Fixture provenance tagging (U-3/FX-4 per board) will land in a follow-up commit at `tests/fixtures/provenance.json`. Fixtures in this commit are not yet machine-tagged.
-- PD3 bundle/citation validator is queued to build before the first live Step G scan produces a real `findings-bundle.md` (U-5 per board).
+- PD3 bundle/citation validator shipped 2026-04-19 as `--bundle` mode in `docs/validate-scanner-report.py` (U-5 per board). Required gate before first live Step G scan; see §9.2.1 for invocation.
 
 ---
 
@@ -507,7 +507,7 @@ Walk this checklist against the Phase 3 bundle **before** starting Phase 4a. Fai
 - [ ] All audience severities in the split-verdict cite their distinguishing criterion.
 - [ ] No claim in the bundle's "Pattern recognition" section uses fact framing (no interpretive verb → cut the bullet or move to synthesis).
 
-An automated `--bundle-check` pass is explicitly **deferred to V0.2** (see DEFER list in `docs/board-review-operator-guide-consolidation.md`).
+An automated pass is available as `python3 docs/validate-scanner-report.py --bundle /tmp/scan-<repo>/findings-bundle.md` (built 2026-04-19 per U-5/PD3 board queue). The validator audits the same 5 checklist items plus the Pattern recognition interpretive-verb rule (§7.2). Exit 0 clean, 1 on contract violation. Run before starting Phase 4a.
 
 ### 9.3 Iteration budget
 
@@ -578,7 +578,7 @@ In practice this means:
 - Every `## Proposed scorecard` cell names the evidence section(s) that push it red / amber / green.
 - Every split-verdict audience severity names the criterion that distinguishes it from the other audience.
 
-The pre-render checklist (§9.2.1) walks these items one-by-one. Until `--bundle-check` is built (deferred to V0.2), the operator walks the checklist manually before starting Phase 4a.
+The pre-render checklist (§9.2.1) walks these items one-by-one. Run `python3 docs/validate-scanner-report.py --bundle <findings-bundle.md>` to automate the walk (U-5/PD3, built 2026-04-19), or step through manually before starting Phase 4a.
 
 ### 11.2 Does Phase 3 synthesis bias Phase 4 render?
 
@@ -642,7 +642,7 @@ Consolidated from the 3-model board review (2026-04-16). `docs/board-review-oper
 
 **Final position:**
 - **V0.1:** the citation-discipline rule (§11.1) + the manual pre-render checklist (§9.2.1).
-- **V0.2:** `--bundle-check` automation that audits the checklist programmatically. Deferred until one operator has hand-executed the manual checklist on ≥2 scans.
+- **V0.2:** `--bundle` automation in `docs/validate-scanner-report.py` — shipped 2026-04-19 per U-5/PD3 board queue. Passes on all 5 existing V2.4 bundles; 16 tests cover parser + corpus + synthetic failure cases. See §9.2.1 for invocation.
 
 ### 14.4 Recovery checkpointing pre-JSON-first
 

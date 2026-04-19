@@ -71,7 +71,7 @@ All three board members converged on these. Numbers are canonical for the V0.1 e
 
 | Item | Trigger |
 |---|---|
-| Automated `--bundle-check` tool auditing citation discipline | After V0.1 stabilises + one operator has hand-executed the manual checklist on ≥2 scans |
+| ~~Automated `--bundle-check` tool auditing citation discipline~~ — **shipped 2026-04-19** as `--bundle` mode in `docs/validate-scanner-report.py` per U-5/PD3 board queue. 16 tests; passes on all 5 V2.4 bundles. | ~~After V0.1 stabilises + ≥2 manual-checklist runs~~ — trigger met via catalog growth; built ahead of first Step G run |
 | Full Phase 2 YAML schema (beyond capture-plan) | After JSON-first migration fires (catalog at 10 scans, or Trigger #2 hits 3 rule-skip findings) |
 | Auto-resume on crash mid-Phase-2 | After Phase 2 is YAML-wrapped |
 | Non-github.com adaptation guide (GitHub Enterprise, Gitea, self-hosted) | First operator attempts a non-github.com scan |

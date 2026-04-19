@@ -5,6 +5,8 @@ for GitHub Scanner reports, the scan template, and markdown scan reports.
 
 Usage:
   python3 validate-scanner-report.py [--report | --template | --markdown] <path>
+  python3 validate-scanner-report.py --parity <md_path> <html_path>
+  python3 validate-scanner-report.py --bundle <findings-bundle.md>
 
 Modes:
   (default)    Permissive mode — checks structure, reports placeholder count as
@@ -21,6 +23,14 @@ Modes:
   --markdown   Validation mode for .md scan reports. Checks required section
                headers (Verdict, Findings, Evidence, Scorecard), minimum 100
                lines, and severity keyword presence (B3 fix).
+  --parity     MD↔HTML structural parity check. Enforces MD-canonical rule:
+               HTML may not add findings absent from MD. Verifies scorecard
+               question set + verdict level agree (PD2).
+  --bundle     U-5/PD3 citation-discipline audit of a findings-bundle.md.
+               Checks: evidence sections contain no interpretive verbs;
+               Pattern recognition bullets each use an interpretive verb;
+               FINDINGS SUMMARY present; Proposed verdict cites F-IDs or
+               severity; no orphan F-IDs referenced outside FINDINGS SUMMARY.
 
 What this checks in all modes:
   1. HTML tag balance (every opener has a closer, order preserved).
@@ -596,6 +606,198 @@ def check_parity(md_path: Path, html_path: Path) -> tuple:
     return total_errors, warnings
 
 
+# ---------------------------------------------------------------------------
+# U-5/PD3: Bundle/citation validator
+#
+# Audits a `findings-bundle.md` against the Operator Guide's citation-discipline
+# rule (§11.1) and the pre-render checklist (§9.2.1). Queued to build before the
+# first live Step G scan (per docs/External-Board-Reviews/041826-step-g-kickoff/
+# CONSOLIDATION.md — DeepSeek R3 compromise: Step G acceptance criterion).
+# ---------------------------------------------------------------------------
+
+# Interpretive verbs per §7.2 Pattern recognition rule. Evidence sections MUST
+# NOT contain these; Pattern recognition bullets MUST contain at least one.
+INTERPRETIVE_VERBS = [
+    "resembles", "resemble",
+    "suggests", "suggest",
+    "consistent with",
+    "pattern-matches to", "pattern matches to",
+    "reminiscent of",
+    "plausibly indicates", "plausibly indicate",
+    "looks like", "look like",
+    "behaves similarly to", "behave similarly to",
+]
+
+# Synthesis-region heading keywords (case-insensitive substring match). Anything
+# else that isn't "Pattern recognition" falls into evidence.
+SYNTHESIS_KEYWORDS = [
+    "findings summary", "key findings",
+    "positive signals",
+    "proposed verdict", "verdict",
+    "proposed scorecard", "scorecard",
+    "catalog metadata",
+]
+
+FID_PAT = r"F\d+|F-[\w.-]+"
+
+
+def _interpretive_verb_hits(text: str) -> list:
+    """Return the interpretive verbs found in text (preserving duplicates unique)."""
+    hits = []
+    for verb in INTERPRETIVE_VERBS:
+        # Word-boundary on single words; literal-phrase match for multi-word verbs.
+        pat = rf"\b{re.escape(verb)}\b" if " " not in verb else re.escape(verb)
+        if re.search(pat, text, re.IGNORECASE):
+            hits.append(verb)
+    return hits
+
+
+def parse_bundle_regions(bundle_text: str) -> dict:
+    """Split a findings-bundle.md into {evidence, pattern, synthesis} regions.
+
+    Classification:
+      - heading starts with "Pattern recognition" → pattern
+      - heading matches a SYNTHESIS_KEYWORDS substring → synthesis
+      - everything else under ## → evidence
+    """
+    regions: dict = {"evidence": {}, "pattern": "", "synthesis": {}}
+    sections = re.split(r"^## ", bundle_text, flags=re.MULTILINE)
+    for section in sections[1:]:  # skip preamble
+        head_and_body = section.split("\n", 1)
+        heading = head_and_body[0].strip()
+        body = head_and_body[1] if len(head_and_body) > 1 else ""
+        heading_lower = heading.lower()
+        if heading_lower.startswith("pattern recognition"):
+            regions["pattern"] = body
+        elif (heading_lower == "findings"
+              or any(kw in heading_lower for kw in SYNTHESIS_KEYWORDS)):
+            # "## Findings" alone is compact-bundle synthesis (zustand-v3 style);
+            # keyword substring match covers "FINDINGS SUMMARY", "Proposed verdict", etc.
+            regions["synthesis"][heading] = body
+        else:
+            regions["evidence"][heading] = body
+    return regions
+
+
+def check_bundle(path) -> tuple:
+    """U-5/PD3: Audit findings-bundle.md for citation discipline.
+
+    Checks:
+      1. Evidence sections contain no interpretive verbs (facts-only rule).
+      2. Pattern recognition bullets (if present) each contain an interpretive
+         verb (inference-is-tagged rule).
+      3. FINDINGS SUMMARY section exists and is non-empty.
+      4. Proposed verdict cites at least one F-ID or names a severity level.
+      5. F-IDs referenced in synthesis outside FINDINGS SUMMARY also appear in
+         FINDINGS SUMMARY (no orphan finding references).
+
+    Returns: (errors, warnings).
+    """
+    text = path.read_text(encoding="utf-8")
+    regions = parse_bundle_regions(text)
+    errors = 0
+    warnings = 0
+
+    print(f"=== Bundle check: {path.name} ===")
+
+    # 1. Evidence discipline
+    evidence_verb_leaks = []
+    for section_name, body in regions["evidence"].items():
+        hits = _interpretive_verb_hits(body)
+        if hits:
+            evidence_verb_leaks.append((section_name, hits))
+    if evidence_verb_leaks:
+        for name, hits in evidence_verb_leaks:
+            print(f"  ✗ Evidence section '{name}' uses interpretive verb(s): {sorted(set(hits))}")
+        errors += len(evidence_verb_leaks)
+    else:
+        print(f"  ✓ Evidence sections ({len(regions['evidence'])}): facts-only, no interpretive verbs")
+
+    # 2. Pattern recognition discipline
+    if regions["pattern"].strip():
+        # Match bullet markers followed by whitespace, so horizontal rules
+        # (`---`) and emphasis syntax (`**text**`) don't count as bullets.
+        bullets = [ln.strip() for ln in regions["pattern"].split("\n")
+                   if re.match(r"^[-*]\s+\S", ln.strip())]
+        no_verb = [b for b in bullets if not _interpretive_verb_hits(b)]
+        if no_verb:
+            print(f"  ✗ Pattern recognition: {len(no_verb)} of {len(bullets)} bullet(s) missing interpretive verb")
+            for b in no_verb[:3]:
+                snippet = b[:90] + "…" if len(b) > 90 else b
+                print(f"      → {snippet}")
+            errors += 1
+        else:
+            print(f"  ✓ Pattern recognition: all {len(bullets)} bullet(s) tagged with interpretive verb")
+    else:
+        print(f"  ℹ No Pattern recognition section (inference segregation not exercised)")
+
+    # 3. FINDINGS SUMMARY exists + F-ID extraction
+    findings_heading = None
+    findings_body = ""
+    for k, v in regions["synthesis"].items():
+        kl = k.lower()
+        if "findings summary" in kl or kl.startswith("key findings") or kl == "findings":
+            findings_heading = k
+            findings_body = v
+            break
+    if not findings_heading or not findings_body.strip():
+        print(f"  ✗ FINDINGS SUMMARY section missing or empty")
+        errors += 1
+    else:
+        summary_fids = set(re.findall(FID_PAT, findings_heading + "\n" + findings_body))
+        print(f"  ✓ FINDINGS SUMMARY present: {sorted(summary_fids) if summary_fids else '(no F-IDs parsed)'}")
+
+    findings_fids = set(re.findall(FID_PAT, (findings_heading or "") + "\n" + findings_body))
+
+    # 4. Proposed verdict cites F-IDs or severity
+    verdict_heading = None
+    verdict_body = ""
+    for k, v in regions["synthesis"].items():
+        if "verdict" in k.lower():
+            verdict_heading = k
+            verdict_body = v
+            break
+    if not verdict_heading:
+        print(f"  ✗ Proposed verdict section missing")
+        errors += 1
+    else:
+        combined = verdict_heading + "\n" + verdict_body
+        verdict_fids = set(re.findall(FID_PAT, combined))
+        has_severity = bool(re.search(
+            r"(?i)\b(clean|caution|critical|warning|info|ok|amber|green|red)\b",
+            combined,
+        ))
+        if verdict_fids:
+            print(f"  ✓ Proposed verdict cites F-IDs: {sorted(verdict_fids)}")
+        elif has_severity:
+            print(f"  ⚠ Proposed verdict names severity but no specific F-IDs")
+            warnings += 1
+        else:
+            print(f"  ✗ Proposed verdict does not cite F-IDs or severity levels")
+            errors += 1
+
+    # 5. Orphan F-IDs (referenced in synthesis but not in FINDINGS SUMMARY)
+    orphan_fids = set()
+    for k, v in regions["synthesis"].items():
+        if k == findings_heading:
+            continue
+        orphan_fids |= set(re.findall(FID_PAT, k + "\n" + v))
+    orphan_fids -= findings_fids
+    if orphan_fids:
+        print(f"  ✗ F-IDs referenced in synthesis but not in FINDINGS SUMMARY: {sorted(orphan_fids)}")
+        errors += 1
+
+    # Summary line
+    if errors == 0 and warnings == 0:
+        print(f"\n✓ Bundle check clean — {path.name} passes citation discipline.")
+    elif errors == 0:
+        print(f"\n✓ Bundle check clean (with {warnings} warning(s)).")
+    else:
+        print(f"\n✗ Bundle check found {errors} error(s).")
+
+    return errors, warnings
+
+
 def main():
     argv = sys.argv[1:]
     mode = "default"
@@ -611,6 +813,9 @@ def main():
     elif argv and argv[0] == "--parity":
         mode = "parity"
         argv = argv[1:]
+    elif argv and argv[0] == "--bundle":
+        mode = "bundle"
+        argv = argv[1:]
 
     if mode == "parity":
         if len(argv) != 2:
@@ -625,6 +830,19 @@ def main():
             print(f"ERROR: HTML file not found — {html_path}")
             return 2
         errors, warnings = check_parity(md_path, html_path)
+        if errors == 0:
+            return 0
+        return 1
+
+    if mode == "bundle":
+        if len(argv) != 1:
+            print("Usage: python3 validate-scanner-report.py --bundle <findings-bundle.md>")
+            return 2
+        bundle_path = Path(argv[0])
+        if not bundle_path.exists():
+            print(f"ERROR: bundle file not found — {bundle_path}")
+            return 2
+        errors, warnings = check_bundle(bundle_path)
         if errors == 0:
             return 0
         return 1
