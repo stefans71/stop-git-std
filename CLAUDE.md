@@ -66,6 +66,12 @@ Rendering-pipeline-specific files:
 ### Delegated-mode execution (legacy alias: Path B)
 Assemble the §8.3 handoff packet and delegate to a background agent. Template prompt at `docs/board-review-data/path-b-test-prompt.md`. Adapt for the target repo + chosen reference scan + output mode + rendering pipeline. Monitor and verify when done.
 
+**Template is the DOM contract. Every delegated-scan brief MUST include this directive verbatim:**
+
+> Fill `docs/GitHub-Repo-Scan-Template.html` verbatim. Do NOT invent new class names or redesign the DOM. Reference scans (`GitHub-Scanner-zustand-v3.html`, etc.) are *fill examples* — they show how `{{PLACEHOLDER}}` tokens get replaced with real content. They are NOT the contract. The template is. If a class you want to use is not defined in `docs/scanner-design-system.css`, you are about to invent one — stop and use the closest canonical class. Canonical anchors include: `.page`, `.hero`, `.scan-strip`, `.verdict-banner` with `data-dossier`, `.verdict-entry` + `.verdict-entry-headline` with `.good/.warn/.bad`, `.score-cell`/`.score-label`/`.score-value`, `.section-header` + `.section-number`, `.finding-card` with the F-ID INSIDE the `<h3>` (not a sibling span). The final `--parity` check must pass with ZERO warnings against the unmodified validator — warnings indicate DOM drift and require an HTML rewrite, not a validator widening.
+
+**Why this rule exists:** 2026-04-19 multica scan (Sonnet 4.6 delegated) invented `report-header`/`-body`, `scorecard-cell`/`-question`, `section-num`, sibling `<span class="finding-id">` next to bare `<h3>`, and `<section class="verdict-section">` without the `.verdict-banner` wrapper. `--parity` flagged 2 warnings. First attempt was to widen validator regex (committed + reverted). Correct fix was to rewrite the HTML to canonical DOM. Principle: the validator stays narrow because the markup stays canonical.
+
 ## After the scan completes — ask the user
 
 When a scan finishes (validator clean on all output files), present these options:
