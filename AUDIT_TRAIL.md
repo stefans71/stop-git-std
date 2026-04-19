@@ -17,6 +17,42 @@ Canonical log of milestone commits with the verification state captured at commi
 
 ---
 
+## Checkpoint — 2026-04-19 — U-5/PD3 bundle/citation validator shipped
+
+**HEAD:** `885bdcf`
+**Added:** `docs/validate-scanner-report.py` +178 lines (check_bundle + parse_bundle_regions), `--bundle` CLI mode, package mirror; `tests/test_bundle_validator.py` (341 lines, 16 tests). 6 files, 633 ins / 7 del.
+**State:** Last pre-Step-G board item cleared. Step G prerequisites now fully done: U-1 (`6a3e471`), U-3/FX-4 (`3c09afb`), U-5/PD3 (`885bdcf`), U-10 (`6481533`).
+
+**Verification at commit time:**
+- pytest: `279 passed in 43.56s` (up from 263; +16 new bundle-validator tests)
+- Repo ↔ package validator diff: **0 lines**
+- `--bundle` smoke test on all 5 V2.4 corpus bundles: clean (2 warnings for V2.4 bundles that name severity without citing F-IDs — lenient heuristic, Step G bundles should cite F-IDs directly)
+
+**Contract (per Operator Guide §9.2.1 + §11.1):**
+1. Evidence sections must not contain interpretive verbs (facts-only)
+2. Pattern recognition bullets must each use an allowed interpretive verb
+3. FINDINGS SUMMARY section exists and non-empty (accepts "Findings" / "Key findings" compact heading variants)
+4. Proposed verdict cites at least one F-ID or names a severity level
+5. F-IDs referenced in synthesis outside FINDINGS SUMMARY must appear in it (no orphan finding references)
+
+**Design decisions recorded:**
+- Lenient citation heuristic for MVP — line-ref (`L45`) / evidence-ID (`evidence.Governance`) formats not required. §11.1 aspirational for V2.5-preview bundles; V2.4 corpus uses informal citation style. Step-G-specific tightening can layer on post-hoc.
+- Interpretive-verb leak in evidence = hard error (facts/inference separation is load-bearing).
+- Untagged pattern bullet = hard error (inference must be self-identifying).
+- Horizontal rules (`---`) and emphasis (`**x**`) correctly excluded from bullet detection via `^[-*]\s+\S` match.
+- Compact bundle style (`## Findings` alone) accepted as synthesis — zustand-v3 corpus precedent.
+
+**Documentation updates (in same commit):**
+- Operator Guide §9.2.1, §11.1, §14.3, §8.8.7 updated — "deferred" language replaced with `--bundle` invocation.
+- `docs/board-review-operator-guide-consolidation.md` DEFER-list entry marked shipped.
+- `REPO_MAP.md` §2.4 U-5/PD3 + U-10 both marked done.
+
+**Board approval:** Not required for this commit — board queued the item (`docs/External-Board-Reviews/041826-step-g-kickoff/CONSOLIDATION.md` §U-5 "APPLY NEXT COMMIT 2-1"), owner-built per spec. Board review will happen at Step G kickoff when this validator gates the first live scan bundle.
+
+**Revert:** `git reset --hard 885bdcf` to stay at bundle-validator-live state. `git reset --hard 3434ce5` to return to pre-U-5 state (loses --bundle mode + 16 tests).
+
+---
+
 ## Checkpoint — 2026-04-19 — U-10 complete: canonical scorecard + verdict clean sweep
 
 **HEAD:** `6481533`
