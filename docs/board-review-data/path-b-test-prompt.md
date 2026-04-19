@@ -4,6 +4,16 @@ This is the exact prompt given to a fresh Claude Opus 4.6 sub-agent to validate 
 
 ---
 
+## Template-fidelity directive — REQUIRED in every adapted brief
+
+> The 2026-04-19 multica scan (Sonnet 4.6 delegated) silently redesigned the HTML DOM — invented `report-header`/`-body`, `scorecard-cell`/`-question`, `section-num`, a sibling `<span class="finding-id">` next to a bare `<h3>`, and a `<section class="verdict-section">` without a `.verdict-banner` wrapper. `--parity` caught it as 2 warnings. The correct fix was rewriting the HTML to canonical DOM; widening the validator was the wrong reflex (committed + reverted).
+
+**When adapting this file for a new delegated scan, include the following block verbatim in your brief** (and CLAUDE.md's Delegated-mode section carries the same text):
+
+> Fill `docs/GitHub-Repo-Scan-Template.html` verbatim. Do NOT invent new class names or redesign the DOM. Reference scans (`GitHub-Scanner-zustand-v3.html`, etc.) are *fill examples* — they show how `{{PLACEHOLDER}}` tokens get replaced with real content. They are NOT the contract. The template is. If a class you want to use is not defined in `docs/scanner-design-system.css`, you are about to invent one — stop and use the closest canonical class. Canonical anchors include: `.page`, `.hero`, `.scan-strip`, `.verdict-banner` with `data-dossier`, `.verdict-entry` + `.verdict-entry-headline` with `.good/.warn/.bad`, `.score-cell`/`.score-label`/`.score-value`, `.section-header` + `.section-number`, `.finding-card` with the F-ID INSIDE the `<h3>` (not a sibling span). The final `--parity` check must pass with ZERO warnings against the unmodified validator — warnings indicate DOM drift and require an HTML rewrite, not a validator widening.
+
+---
+
 You are an LLM operator running the GitHub Scanner for the first time. Your ONLY instructions are the Operator Guide and the handoff packet described below. You have never seen a scan run before. Follow the guide exactly.
 
 ## Your mission
@@ -22,7 +32,7 @@ Read these files in this order — this is the complete artifact set per the gui
 
 1. **The Operator Guide** — `/root/tinkering/stop-git-std/docs/SCANNER-OPERATOR-GUIDE.md` (552 lines). This is your primary process document. Follow it phase by phase.
 2. **The V2.3 prompt** — `/root/tinkering/stop-git-std/docs/repo-deep-dive-prompt.md` (1078 lines). This tells you WHAT to investigate and what output rules to follow.
-3. **The template** — `/root/tinkering/stop-git-std/docs/GitHub-Repo-Scan-Template.html` (1870 lines). Replace all `{{PLACEHOLDER}}` tokens and delete all `EXAMPLE-START/END` blocks.
+3. **The template** — `/root/tinkering/stop-git-std/docs/GitHub-Repo-Scan-Template.html` (1870 lines). Replace all `{{PLACEHOLDER}}` tokens and delete all `EXAMPLE-START/END` blocks. **This is the DOM contract — see the template-fidelity directive above. Do not invent class names; every class you use must already exist in `docs/scanner-design-system.css`.**
 4. **The validator** — `/root/tinkering/stop-git-std/docs/validate-scanner-report.py` (288 lines). Your Phase 5 gate.
 5. **One reference scan (shape match)** — `/root/tinkering/stop-git-std/docs/GitHub-Scanner-fd.html` — use this as your structural reference. fd is another `caution`-verdict scan with Warning + Info findings. Copy fd's STRUCTURE, not its CONTENT. Write fresh prose for zustand.
 6. **The findings-bundle slot** — you will CREATE this at `/tmp/scan-zustand-v2/findings-bundle.md` during Phase 3.
