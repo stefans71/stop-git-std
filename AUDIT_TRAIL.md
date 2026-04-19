@@ -17,6 +17,31 @@ Canonical log of milestone commits with the verification state captured at commi
 
 ---
 
+## Checkpoint — 2026-04-19 — U-10 complete: canonical scorecard + verdict clean sweep
+
+**HEAD:** `6481533`
+**Changed:** 5 HTML scans (scorecard de-drift), 1 MD scan (zustand-v2 scorecard drift on both sides), `docs/GitHub-Scanner-Archon.{md,html}` (verdict metadata), `docs/scanner-catalog.md` (entry 2 verdict), `docs/validate-scanner-report.py` + package mirror (detect_scorecard narrowed to canonical-only). 11 files, 56 ins / 110 del.
+**State:** Every catalog scan + zustand-v2 passes `--parity` clean. Canonical 4-question Trust Scorecard is the only accepted set. Archon verdict internally consistent across MD metadata + section heading + HTML banner + catalog row (all Critical).
+
+**Verification at commit time:**
+- pytest: `263 passed in 44.80s`
+- Repo ↔ package validator diff: **0 lines**
+- `--parity` clean on 12 MD+HTML pairs: caveman, Archon, zustand, fd, gstack, archon-board-review, hermes-agent, postiz-app, zustand-v3, zustand-v2, agency-agents, open-lovable
+
+**Source of canonical set:** `docs/repo-deep-dive-prompt.md:743-758` (V2.4 prompt, Trust Scorecard section). Questions:
+1. Does anyone check the code?
+2. Do they fix problems quickly?
+3. Do they tell you about problems?
+4. Is it safe out of the box?
+
+**Drift origin:** 5 scans were authored with non-canonical "Can you trust the maintainers?" + "Is it actively maintained?" wording. No prompt version ever defined those — pure authorial drift. Commit `cf6afcd` (2026-04-18) had reverted 4 MDs back to canonical without touching their HTMLs, creating MD↔HTML divergence that `--parity` caught once the regex gaps were closed in `3845406`.
+
+**Board approval:** Not required — fixes align the catalog to the prompt's documented canonical set (no new semantic decisions). Owner-directed clean sweep.
+
+**Revert:** `git reset --hard 6481533` to stay at clean-swept state. `git reset --hard 3845406` returns to validator-narrow-pending state (5 content bugs re-exposed).
+
+---
+
 ## Checkpoint — 2026-04-19 — U-10 partial: validator regex extensions for V2.4 catalog
 
 **HEAD:** `3845406`
