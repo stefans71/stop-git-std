@@ -73,8 +73,8 @@ Same verdict, stronger caveat. Because `pmndrs/zustand` is imported by millions 
 |----------|--------|--------|
 | Does anyone check the code? | **Amber** | 45% formal review rate (`reviewDecision` APPROVED), 70% with any review activity (20-PR sample). No branch protection enforces review. 7 self-merges in sample (dai-shi 3 + dbritto-dev 4). |
 | Is it safe out of the box? | **Green** | Zero runtime deps, zero dangerous primitives in source (Step A grep clean), pure TypeScript state management. No eval, no network, no fs. Standard `npm install`. |
-| Can you trust the maintainers? | **Green** | dai-shi is a 14-year GitHub veteran with 8k followers, publicly known React library author. Org pmndrs (Poimandres) is an established open-source collective with 91 repos. No sockpuppet signals. |
-| Is it actively maintained? | **Green** | v5.0.12 released 2026-03-16 (31 days before scan). 5 releases in 5 months. Community PRs merged regularly. Dependabot version bumps flowing. |
+| Do they fix problems quickly? | **Green** | No open security issues. pmndrs (Poimandres) is a long-tenured open-source collective with 91 repos; dai-shi is a 14-year GitHub veteran and established React library author. Issues triaged promptly, release cadence demonstrates active maintenance. |
+| Do they tell you about problems? | **Amber** | 5 releases in 5 months with CHANGELOG tracking changes. Zero security advisories ever filed (clean history). But no SECURITY.md for private disclosure, and Dependabot alerts are explicitly disabled on the repo — reducing automated notification channels for transitive CVEs. |
 
 ---
 

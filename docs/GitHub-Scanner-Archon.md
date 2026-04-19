@@ -15,7 +15,7 @@
 | Short description | Remote agentic coding platform — a harness that lets you drive Claude Code and Codex through Slack, Telegram, GitHub, or a web UI, with its own DAG workflow engine. Ships as a Bun-compiled CLI binary plus a server + web UI. |
 | Category | AI/LLM tooling |
 | Subcategory | Remote agent orchestrator / workflow engine |
-| Verdict | **Caution** (split — see below) |
+| Verdict | **Critical** (split — see below) |
 | Scanned revision | `dev @ 3dedc22` (release tag `v0.3.6`) |
 | Prompt version | `v2.3` (first Archon scan under V2.3 pipeline) |
 | Prior scan | None — first run on this repo. Future re-runs should diff against `GitHub-Scanner-Archon-YYYY-MM-DD.md` snapshots. |

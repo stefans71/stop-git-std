@@ -530,55 +530,28 @@ def check_parity(md_path: Path, html_path: Path) -> tuple:
         print(f"  ⚠ Could not extract finding IDs from MD for comparison")
         warnings += 1
 
-    # 2. Scorecard questions — both must use the same 4-question set.
-    # Scanner prompt evolved V2.3 → V2.4 with different question wording.
-    # Either set is valid; mismatch between MD and HTML is an error.
-    scorecard_v23 = {
+    # 2. Scorecard questions — both MD and HTML must contain the canonical 4-question
+    # set defined in docs/repo-deep-dive-prompt.md §"Trust Scorecard" (~line 743).
+    # Non-canonical wording (e.g. "Can you trust the maintainers?") is authorial drift
+    # and must be flagged as a content bug, not accepted as a valid alternate.
+    canonical_qs = {
         "Does anyone check the code?",
         "Do they fix problems quickly?",
         "Do they tell you about problems?",
         "Is it safe out of the box?",
     }
-    # v2.4 "maintainer" question appears as both singular and plural in the wild
-    # (gstack HTML uses singular "Can you trust the maintainer?" — a single-dev repo).
-    scorecard_v24 = {
-        "Does anyone check the code?",
-        "Is it safe out of the box?",
-        "Can you trust the maintainers?",
-        "Is it actively maintained?",
-    }
-    scorecard_v24_maintainer_regex = re.compile(
-        r"can you trust the maintainer[s]?\?", re.IGNORECASE
-    )
-
-    def detect_scorecard(text: str):
-        t = text.lower()
-        hits_v23 = {q for q in scorecard_v23 if q.lower() in t}
-        hits_v24 = {q for q in scorecard_v24 if q.lower() in t}
-        # Accept singular "maintainer" as equivalent to plural in v2.4
-        if "Can you trust the maintainers?" not in hits_v24 and \
-           scorecard_v24_maintainer_regex.search(text):
-            hits_v24 = hits_v24 | {"Can you trust the maintainers?"}
-        if len(hits_v23) == 4:
-            return ("v2.3", hits_v23)
-        if len(hits_v24) == 4:
-            return ("v2.4", hits_v24)
-        return (None, hits_v23 | hits_v24)
-
-    md_ver, md_qs = detect_scorecard(md_raw)
-    html_ver, html_qs = detect_scorecard(html_raw)
-
-    if md_ver and html_ver and md_ver == html_ver:
-        print(f"  ✓ Scorecard questions match (4 {md_ver} questions in both)")
-    elif md_ver and html_ver and md_ver != html_ver:
-        print(f"  ✗ Scorecard version mismatch — MD uses {md_ver}, HTML uses {html_ver}")
-        total_errors += 1
+    md_qs = {q for q in canonical_qs if q.lower() in md_raw.lower()}
+    html_qs = {q for q in canonical_qs if q.lower() in html_raw.lower()}
+    if len(md_qs) == 4 and len(html_qs) == 4:
+        print(f"  ✓ Scorecard questions match (4 canonical questions in both)")
     else:
-        if not md_ver:
-            print(f"  ✗ MD scorecard incomplete — no full v2.3 or v2.4 set (got: {sorted(md_qs)})")
+        if len(md_qs) < 4:
+            missing_md = canonical_qs - md_qs
+            print(f"  ✗ MD scorecard missing canonical question(s): {sorted(missing_md)}")
             total_errors += 1
-        if not html_ver:
-            print(f"  ✗ HTML scorecard incomplete — no full v2.3 or v2.4 set (got: {sorted(html_qs)})")
+        if len(html_qs) < 4:
+            missing_html = canonical_qs - html_qs
+            print(f"  ✗ HTML scorecard missing canonical question(s): {sorted(missing_html)}")
             total_errors += 1
 
     # 3. Verdict level — both must agree
