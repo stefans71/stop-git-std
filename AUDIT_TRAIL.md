@@ -17,6 +17,55 @@ Canonical log of milestone commits with the verification state captured at commi
 
 ---
 
+## Checkpoint — 2026-04-19 — Session close: Step G pre-reqs all cleared + scan #11 multica
+
+**HEAD:** `5dbd5bf`
+**Cumulative session (this session's work spans 7 commits from `3845406` → `5dbd5bf`):**
+- `3845406` U-10 partial — validator regex extensions for V2.4 catalog reality
+- `b325d05` AUDIT_TRAIL checkpoint for 3845406
+- `6481533` U-10 complete — canonical scorecard + Archon verdict clean sweep
+- `3434ce5` AUDIT_TRAIL checkpoint for 6481533
+- `885bdcf` U-5/PD3 — `--bundle` mode + 16 tests + docs updates + package sync
+- `c1d3106` AUDIT_TRAIL checkpoint for 885bdcf
+- `d981e9c` .gitignore hygiene per REPO_MAP §3.6
+- `f5c523e` Scan #11 multica-ai/multica — Caution (split on Deployment ·)
+  (amended to canonical V2.4 DOM after initial Sonnet authorial drift)
+- `bc27e24` CLAUDE.md template-is-DOM-contract directive
+- `5dbd5bf` path-b-test-prompt.md directive propagation
+
+**Final state:**
+- pytest: `279 passed in 39.51s`
+- 13/13 MD+HTML pairs `--parity` clean (all 11 catalog entries + zustand-v2 + agency-agents + open-lovable)
+- Repo ↔ package validator: byte-identical (0-line diff)
+- 11 catalog entries (10 original + multica #11)
+
+**All 4 Step G pre-reqs cleared:**
+| Item | Commit | Status |
+|---|---|---|
+| U-1 V2.5-preview doc integration | `6a3e471` | ✅ |
+| U-3/FX-4 fixture provenance ledger | `3c09afb` | ✅ |
+| U-5/PD3 bundle/citation validator | `885bdcf` | ✅ |
+| U-10 catalog re-validation | `6481533` | ✅ |
+
+**Key decisions made this session (preserve for future sessions):**
+1. **Scorecard canonical = V2.3 question set** per the V2.4 prompt (lines 743-758). The "alt" questions (*Can you trust the maintainers?* / *Is it actively maintained?*) observed in 5 HTMLs were authorial drift, NOT a prompt evolution. Fix direction: align HTMLs backward to canonical.
+2. **Option A for U-10** — extend validator to match real-world V2.4 HTML variants before deciding which drifts are real content bugs. Three authorial variants documented: prefix h3 `<h3>F0 — Title</h3>`, suffix h3 `<h3>Title (F0 / C20)</h3>`, and header-span + bare h3 (the multica variant, which was subsequently rewritten to canonical).
+3. **Template is the DOM contract, not the validator.** When a delegated agent produces DOM drift, rewrite the HTML to canonical — do NOT widen the validator to accept the drift. `226335f` widening was reverted; multica HTML rewritten to canonical template DOM; directive now propagated to CLAUDE.md + path-b-test-prompt.md + feedback memory.
+4. **Multica scan baseline for Step G comparison:** Sonnet 4.6 delegated, 23.6 min end-to-end, 40k reported tokens, ~22 gh api calls, ~$1.50-$2.70 at Sonnet pricing. Use as V2.4 baseline; compare against V2.5-preview scans once Step G produces them.
+5. **Haiku 4.5 viability:** NOT for end-to-end V2.4 delegated scans (synthesis reasoning depth + multi-document consistency beyond Haiku's reliable window). Potentially viable for V2.5-preview constrained-by-schema work as a post-Step-G optimization, since the schema externalizes much of the decision surface.
+6. **U-5/PD3 lenient citation heuristic for MVP** — §11.1 line-ref (`L45`) / evidence-ID (`evidence.Governance`) formats are aspirational; existing V2.4 corpus uses informal citation. Step-G-specific tightening can layer on post-hoc.
+
+**Board approval:** Step G pre-req queue items were queued by `docs/External-Board-Reviews/041826-step-g-kickoff/CONSOLIDATION.md`; this session's deliverables execute that plan. No new board review required. Next board-required gate: Step G kickoff itself, before running the first live V2.5-preview Phase 1-6 pipeline.
+
+**Revert paths:**
+- `git reset --hard 5dbd5bf` — stay at session-close state
+- `git reset --hard c1d3106` — return to pre-gitignore state (loses multica scan + gitignore + directives; keeps U-5/PD3)
+- `git reset --hard 3434ce5` — return to pre-U-5/PD3 state (loses all session work from this point)
+
+**Next session starts here.** Read order: CLAUDE.md → REPO_MAP.md §2.2/§2.4/§2.5 → AUDIT_TRAIL.md top (this checkpoint) → `docs/External-Board-Reviews/041826-step-g-kickoff/CONSOLIDATION.md` → `docs/scanner-catalog.md`. Next work: Step G kickoff board review, then first live V2.5-preview Phase 1-6 pipeline run against a shape-matched target repo.
+
+---
+
 ## Checkpoint — 2026-04-19 — U-5/PD3 bundle/citation validator shipped
 
 **HEAD:** `885bdcf`

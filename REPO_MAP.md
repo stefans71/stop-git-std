@@ -80,13 +80,15 @@ Older flat-file board records (pre-`External-Board-Reviews/` layout, kept for hi
 
 ### 2.2 Current state
 
-- **HEAD:** `3c09afb` (2026-04-19 03:47 UTC) — U-3/FX-4 landed
-- **Tests:** 263/263 passing (`python3 -m pytest tests/ -q`)
+- **HEAD:** `5dbd5bf` (2026-04-19) — path-b-test-prompt.md DOM-contract directive propagation
+- **Tests:** 279/279 passing (`python3 -m pytest tests/ -q`) — includes 16 bundle-validator tests from U-5/PD3
 - **Validator on all 3 V1.1 fixtures:** `--report` clean, `--parity` zero errors + zero warnings
-- **Repo↔package validator:** byte-identical (0 diff lines, synced in `60e0bf2`)
+- **Parity sweep:** 13/13 MD+HTML pairs clean (10 catalog + zustand-v2 + agency-agents + open-lovable + multica)
+- **Repo↔package validator:** byte-identical (0 diff lines)
 - **CSS:** 824 lines
-- **Catalog:** 10 V2.4 scans (all `rendering-pipeline: v2.4`); Step G will produce the first V2.5-preview entry
-- **Commits ahead of origin:** 53
+- **Catalog:** 11 V2.4 scans — multica #11 added this session (first delegated Sonnet 4.6 scan in catalog; see `f5c523e`)
+- **All 4 Step G pre-reqs cleared** (see §2.4). Next gate: Step G kickoff board review, then first live V2.5-preview Phase 1-6 pipeline run.
+- **Commits ahead of origin:** ~60 (via git log check)
 
 ### 2.3 Board runbook — how to run the 3-model governance board
 
@@ -162,14 +164,16 @@ Then update `docs/External-Board-Reviews/README.md` master index.
 
 ### 2.4 Step G prerequisites queue
 
-Per `docs/External-Board-Reviews/041826-step-g-kickoff/CONSOLIDATION.md`. Status as of HEAD `3c09afb`:
+Per `docs/External-Board-Reviews/041826-step-g-kickoff/CONSOLIDATION.md`. **All 4 pre-reqs cleared as of HEAD `5dbd5bf` (2026-04-19).**
 
 | Item | Scope | Status |
 |---|---|---|
 | U-1 | V2.5-preview doc integration | ✅ Done (`6a3e471`) |
 | U-3/FX-4 | `tests/fixtures/provenance.json` — separate-file approach | ✅ Done (`3c09afb`) |
-| U-5/PD3 | Bundle/citation validator — validate fact/inference/synthesis separation in findings-bundle.md | ✅ Done — `--bundle` mode in validator, 16 tests, 5 V2.4 bundle corpus pass |
+| U-5/PD3 | Bundle/citation validator — validate fact/inference/synthesis separation in findings-bundle.md | ✅ Done (`885bdcf`) — `--bundle` mode in validator, 16 tests, 5 V2.4 bundle corpus pass |
 | U-10 | Re-validate all 10 catalog scans with fixed validator (check for shell-glob evidence corruption) | ✅ Done (`6481533`) — canonical scorecard + Archon verdict alignment, all pairs clean |
+
+**Next gate — Step G kickoff board review.** Board required before the first live V2.5-preview Phase 1-6 pipeline run. Brief should include: V2.5-preview pipeline readiness (renderer Steps A-F done), bundle validator now live (`--bundle` mode), catalog re-validated clean, multica #11 scan provides a V2.4 baseline for structural-parity comparison on the first live V2.5 run.
 
 **Step G itself:** run full Phase 1-6 pipeline against 3 shapes (likely zustand + caveman + Archon), produce form.json → render-md.py + render-html.py → validator clean + parity zero warnings + structural-parity vs V2.4 scan of same repo. See `docs/SCANNER-OPERATOR-GUIDE.md` §8.8 for the operator-facing spec.
 
@@ -179,9 +183,11 @@ Non-active items tracked for future trigger:
 
 - **Schema hardening** (Codex R2 defer-ledger) — `scan-schema.json` V1.1 doesn't fully formalize the prompt output spec. Gaps: Scanner Integrity section 00 hit-level structure; Section 08 methodology fields beyond version marker. Trigger: after Step G surfaces concrete schema pain.
 - **`github-scan-package-V2/` V2.5 refresh** — full docs + renderer sync to package. Trigger: after Step G passes acceptance.
-- **V1.1+ roadmap items** (from `docs/board-review-pipeline-methodology.md`): RD1 (automate structured LLM), SD2 (kind+domain typing), RD4 (assumptions field), PD3 (bundle validator — tied to U-5 above), SD3/SD4/SD7/SD8 (V1.2 schema items), SD9/SD10/RD5/PD1/PD4/PD6/PD7 (V2.0+). All triggers documented in the methodology record; none yet fired.
+- **V1.1+ roadmap items** (from `docs/board-review-pipeline-methodology.md`): RD1 (automate structured LLM), SD2 (kind+domain typing), RD4 (assumptions field), ~~PD3 (bundle validator)~~ **shipped 2026-04-19 as U-5/PD3** (`885bdcf`), SD3/SD4/SD7/SD8 (V1.2 schema items), SD9/SD10/RD5/PD1/PD4/PD6/PD7 (V2.0+). All triggers documented in the methodology record; none other than PD3 yet fired.
 - **Terminology cleanup** (Codex R3 trailing dissent) — Operator Guide §8.1/§8.2 body prose still contains legacy "Path A/B" in explanatory text. Collision bug already fixed in wizard; lingering prose is cleanup, not urgent.
 - **Catalog dual-label cosmetic** (Pragmatist R3 noted) — `methodology-used: path-a (continuous)` dual-label is transitional. Footnote-only variant possible later.
+- **Haiku 4.5 for V2.5-preview schema-constrained work** — post-Step-G optimization candidate. Assessment 2026-04-19: Haiku too limited for end-to-end V2.4 (synthesis reasoning depth + multi-document consistency), but potentially viable for V2.5-preview since the schema externalizes most of the decision surface. Trigger: after Step G produces a stable V2.5-preview baseline to compare against.
+- **V2.4 authorial-variant inventory** (deprecated by the template-is-DOM-contract rule) — 3 variants documented across the catalog (prefix h3, suffix h3, header-span + bare h3). The canonical template is the contract going forward; future delegated scans should fill it verbatim. See `CLAUDE.md` Delegated-mode directive.
 
 ---
 
