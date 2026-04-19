@@ -442,74 +442,154 @@ def check_parity(md_path: Path, html_path: Path) -> tuple:
 
     print(f"=== Parity check: {md_path.name} ↔ {html_path.name} ===")
 
-    # 1. Finding IDs — extract from both, MD is canonical
-    md_findings = set(re.findall(r"###\s+(F\d+|F-[\w-]+)\s*[—–-]", md_raw))
-    # HTML findings: look for finding IDs adjacent to severity/status markers in body text
-    # Strip CSS/style/script/comments first to avoid false positives from rule references
+    # 1. Finding IDs — extract from both, MD is canonical.
+    # F-ID pattern allows digits, hyphenated words, OR dots (e.g. F-crates.io).
+    # MD h3 separator allows em/en/hyphen OR &middot;/· (hermes-agent style).
+    fid_pat = r"F\d+|F-[\w.-]+"
+    md_findings = set(
+        re.findall(
+            rf"###\s+({fid_pat})\s*(?:[—–-]|&middot;|·)",
+            md_raw,
+        )
+    )
+    # HTML findings: look for finding IDs adjacent to severity/status markers in body text.
+    # Strip CSS/style/script/comments first to avoid false positives from rule references.
     html_body = re.sub(r"<style[^>]*>.*?</style>", "", html_raw, flags=re.DOTALL | re.IGNORECASE)
     html_body = re.sub(r"<!--.*?-->", "", html_body, flags=re.DOTALL)
     # NOTE: do NOT strip /* */ here — CSS comments are already removed with the <style>
     # block above. A global /\*.*?\*/ strip matches shell globs (e.g. /plugins/*/hooks/*.js)
     # and legitimate code comments in evidence text, eating finding cards. Found during
     # Step F parity work against caveman fixture.
-    # Match finding IDs in exhibit tags (most reliable HTML pattern)
-    # Pattern 1: exhibit-item-tag content like "Dependabot alerts · F1" or "· F0"
-    html_findings = set(re.findall(r'exhibit-item-tag[^<]*?(?:·|&middot;)\s*(F\d+|F-[\w-]+)', html_body))
-    # Pattern 2: finding IDs with severity in heading-like context
-    html_findings |= set(re.findall(r"(F\d+|F-[\w-]+)\s*(?:—|&mdash;|–)\s*(?:Warning|Critical|OK|Info)", html_body))
-    # Pattern 3: finding IDs inside <h3> finding-card headings (Step F renderer format)
-    # Strip nested tags first so span/chip wrappers don't break the match; then check if
-    # the h3 text starts with an F-ID token followed by a dash variant.
-    for h3_html in re.findall(r"<h3[^>]*>(.*?)</h3>", html_body, flags=re.DOTALL | re.IGNORECASE):
-        h3_text = re.sub(r"<[^>]+>", "", h3_html)
-        m = re.match(r"\s*(F\d+|F-[\w-]+)\s*(?:&mdash;|—|–|-)", h3_text)
+
+    # HTML extraction uses two buckets:
+    #   finding_card_ids — from h3 inside finding-card context (prefix or tail-parens).
+    #     These are the CANONICAL HTML finding set; must be subset of MD.
+    #   reference_ids — from exhibit-tags and severity-adjacent text in synthesis layers.
+    #     These are allowed to reference rule-IDs or compound finding groups (e.g.
+    #     "Distribution · F1+F2" summarizes a cluster without implying an F1 finding card).
+    #     Used only to warn on MD findings missing from HTML.
+    finding_card_ids = set()
+    reference_ids = set()
+
+    # Pattern 1 (reference): exhibit-item-tag content like "Dependabot alerts · F1" or "· F0"
+    reference_ids |= set(re.findall(
+        rf'exhibit-item-tag[^<]*?(?:·|&middot;)\s*({fid_pat})',
+        html_body,
+    ))
+    # Pattern 2 (reference): finding IDs with severity marker in heading-like context
+    reference_ids |= set(re.findall(
+        rf"({fid_pat})\s*(?:—|&mdash;|–)\s*(?:Warning|Critical|OK|Info)",
+        html_body,
+    ))
+    # Pattern 3 + 4 (finding-card): h3 inside finding-cards. Prefix "F0 — Title" OR
+    # tail "(F0 / C20)" / "(F11 + F14)". Match LAST parens at end to avoid mid-prose.
+    # V2.4 HTMLs share the `finding-card` CSS class between Finding cards and Evidence
+    # cards. Skip Evidence cards so their h3s don't get treated as finding-card IDs —
+    # detect by looking for the nearest preceding `<span class="tag…-tag">Evidence N</span>`.
+    tag_re = re.compile(r'<span\s+class="tag[^"]*-tag[^"]*"[^>]*>([^<]+)</span>',
+                        re.IGNORECASE)
+    for h3_match in re.finditer(r"<h3[^>]*>(.*?)</h3>", html_body,
+                                flags=re.DOTALL | re.IGNORECASE):
+        preceding = html_body[max(0, h3_match.start() - 1000):h3_match.start()]
+        preceding_tags = tag_re.findall(preceding)
+        if preceding_tags and re.match(r'Evidence\s+\d+', preceding_tags[-1].strip()):
+            continue
+        h3_text = re.sub(r"<[^>]+>", "", h3_match.group(1)).strip()
+        m = re.match(rf"({fid_pat})\s*(?:&mdash;|—|–|-)", h3_text)
         if m:
-            html_findings.add(m.group(1))
+            finding_card_ids.add(m.group(1))
+        tail_paren = re.search(r"\(([^()]*)\)\s*$", h3_text)
+        if tail_paren:
+            tail_inner = tail_paren.group(1).strip()
+            # Only treat tail parens as a finding-card ID when the parens contain
+            # an ID expression ONLY — "F-ID" or "F-ID / rule-ID", no prose. Reject:
+            #   "(F11 dual metric)" — prose word "dual metric"
+            #   "(F11 + F14)"       — compound rule reference
+            #   "(densest F7 surface in catalog)" — prose mentioning F-ID
+            tail_id_only = re.fullmatch(
+                rf"({fid_pat})(?:\s*/\s*[A-Z]\d+)?", tail_inner
+            )
+            if tail_id_only:
+                finding_card_ids.add(tail_id_only.group(1))
+
+    html_findings = finding_card_ids | reference_ids
 
     if md_findings:
-        html_only = html_findings - md_findings
-        md_only = md_findings - html_findings
-        if not html_only and not md_only:
+        card_only = finding_card_ids - md_findings
+        md_missing_from_html = md_findings - html_findings
+        if not card_only and not md_missing_from_html:
             print(f"  ✓ Finding IDs match: {sorted(md_findings)}")
         else:
-            if html_only:
-                print(f"  ✗ HTML has findings NOT in MD (violates MD-canonical rule): {sorted(html_only)}")
+            if card_only:
+                print(f"  ✗ HTML finding-card IDs NOT in MD (violates MD-canonical rule): {sorted(card_only)}")
                 total_errors += 1
-            if md_only:
-                print(f"  ⚠ MD findings missing from HTML: {sorted(md_only)}")
+            if md_missing_from_html:
+                print(f"  ⚠ MD findings missing from HTML: {sorted(md_missing_from_html)}")
                 warnings += 1
     else:
         print(f"  ⚠ Could not extract finding IDs from MD for comparison")
         warnings += 1
 
-    # 2. Scorecard questions — both must have the same 4
-    canonical_qs = [
+    # 2. Scorecard questions — both must use the same 4-question set.
+    # Scanner prompt evolved V2.3 → V2.4 with different question wording.
+    # Either set is valid; mismatch between MD and HTML is an error.
+    scorecard_v23 = {
         "Does anyone check the code?",
         "Do they fix problems quickly?",
         "Do they tell you about problems?",
         "Is it safe out of the box?",
-    ]
-    md_qs = [q for q in canonical_qs if q.lower() in md_raw.lower()]
-    html_qs = [q for q in canonical_qs if q.lower() in html_raw.lower()]
-    if set(md_qs) == set(html_qs):
-        print(f"  ✓ Scorecard questions match ({len(md_qs)} questions in both)")
+    }
+    # v2.4 "maintainer" question appears as both singular and plural in the wild
+    # (gstack HTML uses singular "Can you trust the maintainer?" — a single-dev repo).
+    scorecard_v24 = {
+        "Does anyone check the code?",
+        "Is it safe out of the box?",
+        "Can you trust the maintainers?",
+        "Is it actively maintained?",
+    }
+    scorecard_v24_maintainer_regex = re.compile(
+        r"can you trust the maintainer[s]?\?", re.IGNORECASE
+    )
+
+    def detect_scorecard(text: str):
+        t = text.lower()
+        hits_v23 = {q for q in scorecard_v23 if q.lower() in t}
+        hits_v24 = {q for q in scorecard_v24 if q.lower() in t}
+        # Accept singular "maintainer" as equivalent to plural in v2.4
+        if "Can you trust the maintainers?" not in hits_v24 and \
+           scorecard_v24_maintainer_regex.search(text):
+            hits_v24 = hits_v24 | {"Can you trust the maintainers?"}
+        if len(hits_v23) == 4:
+            return ("v2.3", hits_v23)
+        if len(hits_v24) == 4:
+            return ("v2.4", hits_v24)
+        return (None, hits_v23 | hits_v24)
+
+    md_ver, md_qs = detect_scorecard(md_raw)
+    html_ver, html_qs = detect_scorecard(html_raw)
+
+    if md_ver and html_ver and md_ver == html_ver:
+        print(f"  ✓ Scorecard questions match (4 {md_ver} questions in both)")
+    elif md_ver and html_ver and md_ver != html_ver:
+        print(f"  ✗ Scorecard version mismatch — MD uses {md_ver}, HTML uses {html_ver}")
+        total_errors += 1
     else:
-        md_only_q = set(md_qs) - set(html_qs)
-        html_only_q = set(html_qs) - set(md_qs)
-        if md_only_q:
-            print(f"  ✗ Scorecard questions in MD but not HTML: {md_only_q}")
+        if not md_ver:
+            print(f"  ✗ MD scorecard incomplete — no full v2.3 or v2.4 set (got: {sorted(md_qs)})")
             total_errors += 1
-        if html_only_q:
-            print(f"  ✗ Scorecard questions in HTML but not MD: {html_only_q}")
+        if not html_ver:
+            print(f"  ✗ HTML scorecard incomplete — no full v2.3 or v2.4 set (got: {sorted(html_qs)})")
             total_errors += 1
 
     # 3. Verdict level — both must agree
     # MD verdict: look for "Verdict: X" or "Verdict | **X**" in header area
     md_primary = re.search(r"(?i)verdict[:\s|*]+(clean|caution|critical)", md_raw[:1500])
-    # HTML verdict: look for verdict-banner class with verdict level
-    html_primary = re.search(r'verdict-banner\s+(clean|caution|critical)', html_raw, re.IGNORECASE)
+    # HTML verdict: look for verdict-banner class with verdict level. Search html_body
+    # (CSS stripped) so CSS rules like `.verdict-banner.critical { ... }` can't shadow
+    # the actual rendered `<div class="verdict-banner caution">`.
+    html_primary = re.search(r'verdict-banner\s+(clean|caution|critical)', html_body, re.IGNORECASE)
     if not html_primary:
-        html_primary = re.search(r"(?i)class=\"[^\"]*\b(clean|caution|critical)\b", html_raw[:5000])
+        html_primary = re.search(r"(?i)class=\"[^\"]*\b(clean|caution|critical)\b", html_body[:5000])
     if md_primary and html_primary:
         if md_primary.group(1).lower() == html_primary.group(1).lower():
             print(f"  ✓ Verdict level matches: {md_primary.group(1)}")

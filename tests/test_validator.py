@@ -407,6 +407,9 @@ class TestParityFailCases:
     """Synthetic pairs that should fail parity."""
 
     def test_html_extra_finding_fails(self):
+        # MD-canonical rule applies to HTML finding-card h3s. Synthesis exhibit-tags
+        # may reference rule-IDs or cluster names (e.g. "Distribution · F1+F2") that
+        # are not finding cards — those are warnings, not errors.
         md = (
             "## Verdict: Caution\n## Trust Scorecard\n"
             "| Does anyone check the code? | Yes |\n"
@@ -424,14 +427,14 @@ class TestParityFailCases:
             '<div>Do they fix problems quickly?</div>'
             '<div>Do they tell you about problems?</div>'
             '<div>Is it safe out of the box?</div>'
-            '<span class="exhibit-item-tag">Test &middot; F0</span>'
-            '<span class="exhibit-item-tag">Extra &middot; F99</span>'
+            '<div class="finding-card"><h3>F0 &mdash; Real finding</h3></div>'
+            '<div class="finding-card"><h3>F99 &mdash; Hallucinated finding</h3></div>'
             '</body></html>'
         )
         md_p = _tmp(md)
         html_p = _tmp(html, suffix=".html")
         errors, _ = check_parity(md_p, html_p)
-        assert errors > 0, "HTML with extra finding F99 not in MD should fail"
+        assert errors > 0, "HTML finding-card F99 not in MD should fail"
         md_p.unlink()
         html_p.unlink()
 
