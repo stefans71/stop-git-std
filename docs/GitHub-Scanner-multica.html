@@ -1,0 +1,1902 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Security Investigation Report: multica-ai/multica @ b8907dd (v0.2.6) | Generated 2026-04-19 | Prompt v2.4 -->
+<title>Security Investigation: multica-ai/multica</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Unbounded:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; script-src 'unsafe-inline';">
+<style>
+  /* SOURCE: scanner-design-system.css — do not edit here, edit the .css file */
+  /* ═══════════════════════════════════════════════
+     DESIGN SYSTEM — DO NOT MODIFY
+     Dark theme, security monitoring aesthetic
+     ═══════════════════════════════════════════════ */
+  :root {
+    --bg-void: #0a0a0c;
+    --bg-surface: #131316;
+    --bg-elevated: #1a1a1f;
+    --bg-hover: #222228;
+    --border: #32323c;
+    --border-subtle: #26262e;
+    --text-primary: #f0f0f4;
+    --text-secondary: #b0b0bc;
+    --text-muted: #7e7e8e;
+    --red-glow: #ff4545;
+    --red-dim: #ff454520;
+    --red-bg: #1a0f0f;
+    --amber-glow: #ffaa2a;
+    --amber-dim: #ffaa2a20;
+    --amber-bg: #1a150e;
+    --green-glow: #22c55e;
+    --green-dim: #22c55e20;
+    --green-bg: #0e1a12;
+    --cyan-glow: #06b6d4;
+    --cyan-dim: #06b6d420;
+    --font-mono: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace;
+    --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-display: 'Unbounded', 'Inter', sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--font-sans);
+    background: var(--bg-void);
+    color: var(--text-primary);
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Noise texture + horizontal scanlines — forensic console feel */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      repeating-linear-gradient(
+        to bottom,
+        rgba(255,255,255,0.008) 0px,
+        rgba(255,255,255,0.008) 1px,
+        transparent 1px,
+        transparent 3px
+      ),
+      url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+  }
+  /* Single-pass scan line — thin cyan line sweeps once then disappears */
+  body::after {
+    content: ''; position: fixed; left: 0; right: 0; height: 2px;
+    background: linear-gradient(to right, transparent 5%, var(--cyan-glow) 30%, var(--cyan-glow) 70%, transparent 95%);
+    box-shadow: 0 0 12px var(--cyan-glow), 0 0 4px var(--cyan-glow);
+    pointer-events: none; z-index: 9998; opacity: 0.7;
+    animation: scan-sweep 3s ease-in-out 1s 1 forwards;
+  }
+  @keyframes scan-sweep {
+    0% { top: -2px; opacity: 0.7; }
+    90% { opacity: 0.5; }
+    100% { top: 100vh; opacity: 0; }
+  }
+
+  /* Scan strip — the data ribbon above the hero */
+  .scan-strip {
+    display: flex; flex-wrap: wrap; gap: 1.25rem; align-items: center;
+    padding: 0.625rem 0 0.75rem; margin-bottom: 1.5rem;
+    border-top: 1px solid var(--border-subtle);
+    border-bottom: 1px solid var(--border-subtle);
+    font-family: var(--font-mono); font-size: 0.65rem;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--text-secondary);
+  }
+  .scan-strip-item { display: inline-flex; align-items: center; gap: 0.4rem; }
+  .scan-strip-item .dot {
+    display: inline-block; width: 6px; height: 6px; border-radius: 50%;
+    box-shadow: 0 0 6px currentColor;
+  }
+  .scan-strip-item.amber, .scan-strip-item .dot.amber { color: var(--amber-glow); background: var(--amber-glow); }
+  .scan-strip-item .dot.amber { background: var(--amber-glow); box-shadow: 0 0 8px var(--amber-glow); animation: pulse 3s ease-in-out infinite; }
+  .scan-strip-item.flash {
+    color: var(--red-glow); animation: flash-blink 1.4s ease-in-out infinite;
+  }
+  @keyframes flash-blink {
+    0%, 80%, 100% { opacity: 1; }
+    85%, 95% { opacity: 0.25; }
+  }
+
+  /* Hero caption — the editorial line under the H1.
+     Readable sans-serif, slightly larger than body, no italic (readability > flavor). */
+  .hero-caption {
+    font-family: var(--font-sans); font-size: 1.0625rem; line-height: 1.55;
+    color: var(--text-primary); font-weight: 400;
+    max-width: 68ch; margin: 0.75rem 0 1.75rem;
+    letter-spacing: -0.005em;
+  }
+
+  /* ─────────────── Utility classes (replaces inline style="" attributes) ─────────────── */
+  /* Semantic value colors — use on chip-value, vital-value, td.val, etc. */
+  .val-good  { color: var(--green-glow) !important; }
+  .val-bad   { color: var(--red-glow)   !important; }
+  .val-warn  { color: var(--amber-glow) !important; }
+  .val-info  { color: var(--cyan-glow)  !important; }
+  .fw-semi   { font-weight: 600; }
+  /* Card vertical rhythm — replaces margin-bottom:12px inline on cards */
+  .stack-md  { margin-bottom: 0.75rem; }
+  .stack-sm  { margin-top: 0.75rem; }
+  /* Subdued paragraph — replaces the meta-text inline patterns */
+  .p-meta {
+    color: var(--text-secondary); margin-bottom: 1rem;
+    font-size: 0.875rem; line-height: 1.55;
+  }
+  .p-meta-tight {
+    color: var(--text-secondary); margin: 0.75rem 0 1rem;
+    font-size: 0.8125rem; line-height: 1.55;
+  }
+  /* Priority-evidence visual uplift — replaces inline border-left hack */
+  .finding-card.evidence-priority {
+    border-left: 4px solid var(--amber-glow);
+  }
+  /* Inline-flag variant — when priority-flag appears mid-sentence, not block */
+  .priority-flag.inline { display: inline-block; }
+
+  a { color: var(--cyan-glow); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* Font size controls */
+  .font-controls {
+    position: fixed; top: 16px; right: 16px; z-index: 1000;
+    display: flex; align-items: center; gap: 2px;
+    background: var(--bg-elevated); border: 1px solid var(--border);
+    border-radius: 8px; padding: 4px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5); backdrop-filter: blur(12px);
+  }
+  .font-controls button {
+    font-family: var(--font-mono); font-size: 0.875rem; font-weight: 700;
+    width: 34px; height: 34px; border: none; border-radius: 6px;
+    background: transparent; color: var(--text-secondary); cursor: pointer;
+    display: flex; align-items: center; justify-content: center; transition: all 0.15s;
+  }
+  .font-controls button:hover { background: var(--bg-hover); color: var(--text-primary); }
+  .font-controls button:active { transform: scale(0.92); }
+  .font-controls .font-size-display {
+    font-family: var(--font-mono); font-size: 0.6875rem; color: var(--text-muted);
+    min-width: 38px; text-align: center; letter-spacing: 0.05em; user-select: none;
+  }
+
+  .page { max-width: 960px; margin: 0 auto; padding: 0 20px; }
+
+  /* Hero */
+  .hero { padding: 64px 0 48px; border-bottom: 1px solid var(--border); position: relative; }
+  .hero::after {
+    content: ''; position: absolute; bottom: -1px; left: 0; right: 0; height: 120px;
+    background: linear-gradient(to top, var(--bg-void), transparent); pointer-events: none;
+  }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-family: var(--font-mono); font-size: 0.6875rem; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--text-muted); margin-bottom: 20px;
+    padding: 6px 12px; border: 1px solid var(--border); border-radius: 6px; background: var(--bg-surface);
+  }
+  .hero-badge .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--text-muted); /* Neutral default — LLM must set .red, .green, or .amber */
+  }
+  .hero-badge .dot.red { background: var(--red-glow); box-shadow: 0 0 8px var(--red-glow); animation: pulse 2s ease-in-out infinite; }
+  .hero-badge .dot.green { background: var(--green-glow); box-shadow: 0 0 8px var(--green-glow); }
+  .hero-badge .dot.amber { background: var(--amber-glow); box-shadow: 0 0 8px var(--amber-glow); animation: pulse 3s ease-in-out infinite; }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+  .hero h1 {
+    font-family: var(--font-display); font-size: clamp(1.8rem, 4vw, 3.4rem);
+    font-weight: 800; letter-spacing: -0.04em; line-height: 1.05; margin-bottom: 16px;
+  }
+  .hero h1 .slash {
+    color: var(--text-muted); font-weight: 300;
+    margin: 0 0.1em; font-size: 0.85em;
+  }
+  .hero h1 span { color: var(--red-glow); }
+  .hero h1 span.green { color: var(--green-glow); }
+  .hero h1 span.amber { color: var(--amber-glow); }
+  .hero .meta { font-size: 0.875rem; color: var(--text-primary); display: flex; flex-wrap: wrap; gap: 16px; }
+  .hero .meta-item { display: flex; align-items: center; gap: 6px; }
+  .hero .meta-item .label { color: var(--text-secondary); font-size: 0.75rem; }
+
+  /* Verdict */
+  .verdict-section { padding: 48px 0 40px; }
+  .verdict-banner {
+    border-radius: 0; padding: 2.25rem 2.75rem 2rem 4.5rem;
+    position: relative; overflow: hidden;
+    border-left-width: 6px; border-left-style: solid;
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%);
+  }
+  .verdict-banner.critical { background: linear-gradient(135deg, #1f0a0a 0%, #0a0a0c 100%); border: 1px solid #ff454540; border-left-color: var(--red-glow); }
+  .verdict-banner.caution { background: linear-gradient(135deg, #1f1810 0%, #0a0a0c 100%); border: 1px solid #ffaa2a40; border-left-color: var(--amber-glow); }
+  .verdict-banner.clean { background: linear-gradient(135deg, #0a1f14 0%, #0a0a0c 100%); border: 1px solid #22c55e40; border-left-color: var(--green-glow); }
+  /* Radial wash */
+  .verdict-banner::before {
+    content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+    pointer-events: none;
+  }
+  .verdict-banner.critical::before { background: radial-gradient(circle at 20% 30%, #ff454510, transparent 55%); }
+  .verdict-banner.caution::before { background: radial-gradient(circle at 20% 30%, #ffaa2a12, transparent 55%); }
+  .verdict-banner.clean::before { background: radial-gradient(circle at 20% 30%, #22c55e10, transparent 55%); }
+  /* Vertical scan-ID bar on the left */
+  .verdict-banner::after {
+    content: attr(data-dossier); position: absolute;
+    left: 1.4rem; top: 2.1rem; bottom: 2rem;
+    writing-mode: vertical-rl; transform: rotate(180deg);
+    font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.25em;
+    color: var(--text-muted); text-transform: uppercase;
+    display: flex; align-items: center;
+    opacity: 0.55;
+  }
+  .verdict-banner .verdict-label {
+    font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.22em;
+    text-transform: uppercase; margin-bottom: 1rem; position: relative;
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    padding: 0.25rem 0.625rem; border-radius: 0.125rem;
+    background: rgba(255,170,42,0.08); border: 1px solid rgba(255,170,42,0.25);
+  }
+  .verdict-banner.critical .verdict-label { color: var(--red-glow); background: rgba(255,69,69,0.08); border-color: rgba(255,69,69,0.25); }
+  .verdict-banner.caution .verdict-label { color: var(--amber-glow); }
+  .verdict-banner.clean .verdict-label { color: var(--green-glow); background: rgba(34,197,94,0.08); border-color: rgba(34,197,94,0.25); }
+  .verdict-banner h2 {
+    font-family: var(--font-display);
+    font-size: clamp(1.5rem, 3.2vw, 2.2rem); font-weight: 600; line-height: 1.18;
+    letter-spacing: -0.025em; margin-bottom: 1rem; position: relative; color: #ff8c00;
+    max-width: 56ch;
+  }
+  .verdict-banner.clean h2 { color: var(--green-glow); }
+  .verdict-banner.critical h2 { color: var(--red-glow); }
+
+  /* Split-verdict layout — two audience blocks separated by a divider */
+  .verdict-split {
+    display: grid; grid-template-columns: 1fr auto 1fr; gap: 1.75rem;
+    margin-bottom: 1.25rem; align-items: stretch;
+  }
+  @media (max-width: 820px) {
+    .verdict-split { grid-template-columns: 1fr; gap: 1rem; }
+  }
+  .verdict-entry { display: flex; flex-direction: column; gap: 0.5rem; }
+  .verdict-entry-scope {
+    font-family: var(--font-mono); font-size: 0.65rem; letter-spacing: 0.2em;
+    text-transform: uppercase; color: var(--text-muted);
+    padding-bottom: 0.375rem; border-bottom: 1px solid var(--border-subtle);
+  }
+  .verdict-entry-headline {
+    font-family: var(--font-display); font-weight: 600;
+    font-size: clamp(1.35rem, 2.5vw, 1.85rem); line-height: 1.15;
+    letter-spacing: -0.02em; margin: 0;
+  }
+  .verdict-entry-headline.good { color: #8dd492; }
+  .verdict-entry-headline.warn { color: var(--amber-glow); }
+  .verdict-entry-headline.bad  { color: var(--red-glow); }
+  .verdict-entry-detail {
+    font-family: var(--font-sans); font-size: 0.8125rem; line-height: 1.55;
+    color: var(--text-secondary); margin-top: 0.25rem;
+  }
+  .verdict-split-divider {
+    width: 1px; background: linear-gradient(to bottom, transparent, var(--border), transparent);
+  }
+  @media (max-width: 820px) {
+    .verdict-split-divider { width: 100%; height: 1px; background: var(--border-subtle); }
+  }
+
+  /* Rolled verdict exhibits — 3 themed panels that replace the 10-bullet glaze list */
+  .verdict-exhibits { display: grid; gap: 0.875rem; margin-top: 0.5rem; }
+  .exhibit {
+    position: relative; overflow: hidden; border-radius: 10px;
+    border: 1px solid var(--border-subtle);
+  }
+  .exhibit.vuln    { background: linear-gradient(135deg, #1a1008 0%, #0f0a0a 100%); border-color: #ffaa2a30; }
+  .exhibit.govern  { background: linear-gradient(135deg, #100c1a 0%, #0a0a0f 100%); border-color: #ff808040; }
+  .exhibit.signals { background: linear-gradient(135deg, #0a1812 0%, #0a0f0a 100%); border-color: #22c55e30; }
+  /* Left accent bar */
+  .exhibit::before {
+    content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
+  }
+  .exhibit.vuln::before    { background: var(--amber-glow); }
+  .exhibit.govern::before  { background: var(--red-glow); }
+  .exhibit.signals::before { background: var(--green-glow); }
+  /* Summary row (collapsed state) */
+  .exhibit > summary {
+    list-style: none; cursor: pointer;
+    padding: 0.875rem 1rem 0.875rem 1.5rem;
+    display: flex; align-items: center; gap: 0.75rem;
+    position: relative;
+  }
+  .exhibit > summary::-webkit-details-marker { display: none; }
+  .exhibit > summary::after {
+    content: '\25B6'; margin-left: auto; font-size: 0.7rem;
+    color: var(--text-muted); transition: transform 0.2s;
+  }
+  .exhibit[open] > summary::after { transform: rotate(90deg); }
+  .exhibit-glyph {
+    width: 1.75rem; height: 1.75rem; border-radius: 50%;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 0.85rem; font-weight: 700; flex-shrink: 0;
+  }
+  .exhibit.vuln .exhibit-glyph    { background: rgba(255,170,42,0.18); color: var(--amber-glow); }
+  .exhibit.govern .exhibit-glyph  { background: rgba(255,69,69,0.18);  color: var(--red-glow); }
+  .exhibit.signals .exhibit-glyph { background: rgba(34,197,94,0.18);  color: var(--green-glow); }
+  .exhibit-title {
+    font-family: var(--font-display); font-size: 1.05rem; font-weight: 600;
+    letter-spacing: -0.01em; line-height: 1.25;
+  }
+  .exhibit-count {
+    margin-left: 0.5rem; font-family: var(--font-mono); font-size: 0.7rem;
+    letter-spacing: 0.12em; color: var(--text-muted); text-transform: uppercase;
+  }
+  .exhibit-summary-line {
+    font-family: var(--font-sans); font-size: 0.82rem; color: var(--text-secondary);
+    margin-left: 0.5rem; line-height: 1.45; font-weight: 400;
+  }
+  @media (max-width: 720px) {
+    .exhibit-summary-line { display: block; margin-left: 2.5rem; margin-top: 0.25rem; }
+  }
+  /* Expanded content — zebra-striped items */
+  .exhibit-body {
+    border-top: 1px solid var(--border-subtle);
+    padding: 0; background: rgba(0,0,0,0.15);
+  }
+  .exhibit-item {
+    display: grid; grid-template-columns: 1.5rem 1fr; gap: 0.75rem;
+    padding: 0.75rem 1rem 0.75rem 1.5rem;
+    font-size: 0.88rem; line-height: 1.55; color: var(--text-primary);
+    border-bottom: 1px solid var(--border-subtle);
+  }
+  .exhibit-item:last-child { border-bottom: none; }
+  /* Zebra striping — every other row gets a subtle background shift */
+  .exhibit-item:nth-child(even) { background: rgba(255,255,255,0.015); }
+  .exhibit-item-glyph {
+    font-family: var(--font-mono); font-weight: 700; font-size: 0.8rem;
+    text-align: center; padding-top: 0.15rem;
+  }
+  .exhibit.vuln .exhibit-item-glyph    { color: var(--amber-glow); }
+  .exhibit.govern .exhibit-item-glyph  { color: var(--red-glow); }
+  .exhibit.signals .exhibit-item-glyph { color: var(--green-glow); }
+  .exhibit-item-tag {
+    font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--text-muted); display: block;
+    margin-bottom: 0.15rem;
+  }
+
+  /* Verdict bullet list */
+  .verdict-bullets { list-style: none; padding: 0; margin: 0; position: relative; }
+  .verdict-bullets li {
+    display: flex; align-items: flex-start; gap: 12px; font-size: 0.9375rem;
+    color: var(--text-primary); line-height: 1.6; padding: 8px 0; border-bottom: 1px solid #ffffff08;
+  }
+  .verdict-bullets li:last-child { border-bottom: none; }
+  .verdict-bullets .bullet-icon {
+    flex-shrink: 0; width: 22px; height: 22px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center; font-size: 0.6875rem; margin-top: 2px;
+  }
+  .verdict-bullets .bullet-icon.red { background: var(--red-dim); color: var(--red-glow); box-shadow: 0 0 6px var(--red-dim); }
+  .verdict-bullets .bullet-icon.amber { background: var(--amber-dim); color: var(--amber-glow); box-shadow: 0 0 6px var(--amber-dim); }
+  .verdict-bullets .bullet-icon.green { background: var(--green-dim); color: var(--green-glow); box-shadow: 0 0 6px var(--green-dim); }
+
+  /* Scorecard */
+  .scorecard-section { padding: 0 0 48px; }
+  .scorecard-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px;
+    background: var(--border); border-radius: 12px; overflow: hidden;
+  }
+  .score-cell { background: var(--bg-surface); padding: 24px 20px; text-align: center; transition: background 0.2s; }
+  .score-cell:hover { background: var(--bg-elevated); }
+  .score-cell .score-icon {
+    width: 32px; height: 32px; margin: 0 auto 12px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center; font-size: 1rem;
+  }
+  .score-cell .score-icon.red { background: var(--red-dim); color: var(--red-glow); }
+  .score-cell .score-icon.amber { background: var(--amber-dim); color: var(--amber-glow); }
+  .score-cell .score-icon.green { background: var(--green-dim); color: var(--green-glow); }
+  .score-cell .score-label {
+    font-family: var(--font-mono); font-size: 0.625rem; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--text-muted); margin-bottom: 6px;
+  }
+  .score-cell .score-value { font-size: 1.125rem; font-weight: 700; line-height: 1.2; }
+  .score-cell .score-value.red { color: var(--red-glow); }
+  .score-cell .score-value.amber { color: var(--amber-glow); }
+  .score-cell .score-value.green { color: var(--green-glow); }
+
+  /* Collapsible sections */
+  details summary { cursor: pointer; list-style: none; }
+  details summary::-webkit-details-marker { display: none; }
+  .collapsible-section > summary { padding: 48px 0 0; border-top: 1px solid var(--border-subtle); }
+  .collapsible-section > summary .section-header { margin-bottom: 0; display: flex; align-items: center; gap: 12px; }
+  .collapsible-section[open] > summary .section-header { margin-bottom: 28px; }
+  .collapsible-section .section-body { padding-bottom: 0; }
+  .collapsible-section > summary .section-header::after {
+    content: '\25B6'; font-size: 0.625rem; color: var(--text-muted); transition: transform 0.2s; margin-left: auto;
+  }
+  .collapsible-section[open] > summary .section-header::after { transform: rotate(90deg); }
+  .section-header .section-number {
+    font-family: var(--font-mono); font-size: 0.6875rem; letter-spacing: 0.1em; color: var(--text-muted);
+    width: 28px; height: 28px; border-radius: 6px; border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .section-header h2 {
+    font-family: var(--font-display); font-size: 1.4rem; font-weight: 600;
+    letter-spacing: -0.02em; line-height: 1.15;
+    color: var(--cyan-glow);
+  }
+  /* Slightly emphasize the section number too so the landmark row reads as a unit */
+  .section-header .section-number {
+    color: var(--cyan-glow); opacity: 0.75;
+  }
+
+  /* Finding cards */
+  .finding-card {
+    background: var(--bg-surface); border: 1px solid var(--border); border-radius: 10px;
+    margin-bottom: 12px; overflow: hidden; transition: border-color 0.2s;
+  }
+  .finding-card:hover { border-color: #3a3a44; }
+  .finding-card.critical { border-left: 3px solid var(--red-glow); }
+  .finding-card.warning { border-left: 3px solid var(--amber-glow); }
+  .finding-card.info { border-left: 3px solid var(--cyan-glow); }
+  .finding-card.ok { border-left: 3px solid var(--green-glow); }
+  @keyframes border-pulse {
+    0%, 100% { border-left-color: var(--red-glow); box-shadow: -2px 0 8px var(--red-dim); }
+    50% { border-left-color: #ff454580; box-shadow: -2px 0 4px transparent; }
+  }
+  .finding-card.critical { animation: border-pulse 3s ease-in-out infinite; }
+
+  .finding-header {
+    padding: 16px 20px 12px; display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 16px;
+  }
+  .finding-header .tag {
+    font-family: var(--font-mono); font-size: 0.625rem; letter-spacing: 0.08em;
+    text-transform: uppercase; padding: 3px 8px; border-radius: 4px; font-weight: 600; flex-shrink: 0;
+  }
+  .tag.critical-tag { background: var(--red-dim); color: var(--red-glow); }
+  .tag.warning-tag { background: var(--amber-dim); color: var(--amber-glow); }
+  .tag.info-tag { background: var(--cyan-dim); color: var(--cyan-glow); }
+  .tag.ok-tag { background: var(--green-dim); color: var(--green-glow); }
+  .finding-header .finding-date { font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-secondary); }
+  .finding-header .finding-duration {
+    font-family: var(--font-mono); font-size: 0.6875rem; font-weight: 600;
+    color: var(--amber-glow); background: var(--amber-dim); border: 1px solid #ffaa2a30;
+    padding: 3px 10px; border-radius: 4px;
+  }
+  .finding-header h3 {
+    width: 100%; font-family: var(--font-display); font-size: 1.125rem;
+    font-weight: 600; line-height: 1.3; letter-spacing: -0.015em; margin-top: 4px;
+  }
+
+  /* Finding collapsible */
+  .finding-card summary { list-style: none; cursor: pointer; }
+  .finding-card summary::-webkit-details-marker { display: none; }
+  .finding-card summary .finding-header { position: relative; padding-right: 40px; }
+  .finding-card summary .finding-header::after {
+    content: '\25B6'; font-size: 0.625rem; color: var(--text-muted);
+    transition: transform 0.2s; position: absolute; right: 20px; top: 20px;
+  }
+  .finding-card details[open] > summary .finding-header::after { transform: rotate(90deg); }
+
+  .finding-body { padding: 0 20px 16px; }
+  .finding-body p { font-size: 0.875rem; color: var(--text-primary); line-height: 1.7; margin-bottom: 12px; }
+  .finding-meta {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 8px; margin-top: 12px;
+  }
+  .meta-chip {
+    font-size: 0.75rem; padding: 8px 12px; border-radius: 6px;
+    background: var(--bg-elevated); border: 1px solid var(--border-subtle);
+    display: flex; flex-direction: column; gap: 2px;
+  }
+  .meta-chip .chip-label {
+    font-family: var(--font-mono); font-size: 0.625rem; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--text-secondary);
+  }
+  .meta-chip .chip-value { color: var(--text-primary); font-weight: 500; }
+
+  /* Sub-finding (nested under parent finding) */
+  .sub-finding {
+    margin: 16px 0 8px; padding: 16px; border-left: 2px solid var(--amber-glow);
+    background: var(--bg-elevated); border-radius: 0 8px 8px 0;
+  }
+  .sub-finding .sub-finding-label {
+    font-family: var(--font-mono); font-size: 0.625rem; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--amber-glow); margin-bottom: 8px;
+  }
+  .sub-finding h4 { font-size: 1rem; font-weight: 700; line-height: 1.4; margin-bottom: 10px; }
+  .sub-finding p { font-size: 0.875rem; color: var(--text-primary); line-height: 1.7; margin-bottom: 12px; }
+
+  /* PR Table */
+  .pr-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.8125rem; }
+  th {
+    font-family: var(--font-mono); font-size: 0.625rem; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--text-secondary); text-align: left;
+    padding: 12px 16px; background: var(--bg-surface); border-bottom: 1px solid var(--border);
+    position: sticky; top: 0; white-space: nowrap;
+  }
+  td { padding: 14px 16px; border-bottom: 1px solid var(--border-subtle); color: var(--text-primary); vertical-align: top; }
+  tr:hover td { background: var(--bg-surface); }
+  td:first-child { font-family: var(--font-mono); font-weight: 600; color: var(--cyan-glow); white-space: nowrap; }
+  .td-concern { color: var(--amber-glow); font-weight: 500; }
+  .td-reviewed-no { color: var(--red-glow); font-family: var(--font-mono); font-weight: 600; }
+  .td-reviewed-yes { color: var(--green-glow); font-family: var(--font-mono); font-weight: 600; }
+  .td-reviewed-rejected { color: var(--amber-glow); font-family: var(--font-mono); font-weight: 600; }
+  .td-merge-fast { font-family: var(--font-mono); color: var(--red-glow); font-weight: 600; }
+  .td-person { font-weight: 500; color: var(--text-primary); }
+
+  /* Timeline */
+  .timeline { position: relative; padding-left: 28px; }
+  .timeline::before {
+    content: ''; position: absolute; left: 7px; top: 8px; bottom: 8px; width: 1px;
+    background: linear-gradient(to bottom, var(--border), var(--red-glow), var(--border));
+  }
+  .tl-item { position: relative; margin-bottom: 20px; padding-left: 8px; }
+  .tl-item::before {
+    content: ''; position: absolute; left: -24px; top: 7px; width: 9px; height: 9px;
+    border-radius: 50%; background: var(--text-muted); border: 2px solid var(--bg-void);
+  }
+  .tl-item.bad::before { background: var(--red-glow); box-shadow: 0 0 6px var(--red-dim); }
+  .tl-item.good::before { background: var(--green-glow); }
+  .tl-item.neutral::before { background: var(--amber-glow); }
+  .tl-date { font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-secondary); font-weight: 600; }
+  .tl-desc { font-size: 0.875rem; color: var(--text-primary); margin-top: 2px; line-height: 1.6; }
+
+  /* Vitals */
+  .vitals-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1px; background: var(--border); border-radius: 10px; overflow: hidden;
+  }
+  .vital-cell { background: var(--bg-surface); padding: 18px 20px; }
+  .vital-cell .vital-label {
+    font-family: var(--font-mono); font-size: 0.625rem; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--text-muted); margin-bottom: 4px;
+  }
+  .vital-cell .vital-value { font-size: 1rem; font-weight: 700; margin-bottom: 4px; }
+  .vital-cell .vital-note { font-size: 0.75rem; color: var(--text-secondary); line-height: 1.5; }
+  .vital-cell .vital-explainer {
+    font-size: 0.7rem; color: var(--text-muted); line-height: 1.5;
+    margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--border-subtle);
+  }
+  .vital-cell .vital-explainer a {
+    color: var(--cyan-glow); text-decoration: none;
+  }
+  .vital-cell .vital-explainer a:hover { text-decoration: underline; }
+
+  /* Action cards */
+  .action-card { padding: 24px; border-radius: 10px; margin-bottom: 12px; }
+  .action-card.stop { background: var(--red-bg); border: 1px solid #ff454530; }
+  .action-card.wait { background: var(--amber-bg); border: 1px solid #ffaa2a30; }
+  .action-card.info-action { background: var(--bg-surface); border: 1px solid var(--border); }
+  .action-card.ok-action { background: var(--green-bg); border: 1px solid #22c55e30; }
+  .action-card h3 { font-size: 0.9375rem; font-weight: 700; margin-bottom: 8px; }
+  .action-card p { font-size: 0.875rem; color: var(--text-primary); line-height: 1.7; }
+
+  /* Code blocks inside action cards */
+  .action-card pre {
+    background: var(--bg-void); border: 1px solid var(--border); border-radius: 8px;
+    padding: 16px; margin: 12px 0; overflow-x: auto;
+    font-family: var(--font-mono); font-size: 0.8125rem; color: var(--cyan-glow); line-height: 1.6;
+  }
+
+  /* Catalog metadata block — sits between hero and verdict
+     Font sizes use rem so the font +/- controls (which mutate root font-size) scale them. */
+  .catalog-meta {
+    background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: 10px;
+    padding: 1.125rem 1.375rem; margin-bottom: 1rem;
+  }
+  .catalog-meta .catalog-label {
+    font-family: var(--font-mono); font-size: 0.65rem; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--text-secondary); margin-bottom: 0.625rem;
+  }
+  .catalog-meta table { width: 100%; }
+  .catalog-meta td { padding: 0.375rem 0.75rem 0.375rem 0; border: none; font-size: 0.82rem; vertical-align: top; }
+  .catalog-meta td.key {
+    font-family: var(--font-mono); color: var(--text-secondary);
+    white-space: nowrap; width: 1%; font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.06em;
+  }
+  .catalog-meta td.val { color: var(--text-primary); }
+  .catalog-meta td.val a { color: var(--cyan-glow); text-decoration: none; }
+  .catalog-meta td.val a:hover { text-decoration: underline; }
+
+  /* ─────────────── UX-FIX CSS (section status pills, finding status chips,
+     timeline glyphs, evidence priority markers) ─────────────── */
+
+  /* Section status pills — shown on the collapsed <summary> row so readers know
+     at a glance whether a section needs attention. */
+  .section-status {
+    display: inline-flex; gap: 0.5rem; margin-left: auto; padding-right: 2.5rem;
+    font-size: 0.72rem; font-family: var(--font-mono); align-items: center;
+    flex-wrap: wrap;
+  }
+  .section-status .pill {
+    display: inline-flex; align-items: center; gap: 0.25rem;
+    padding: 0.1875rem 0.5rem; border-radius: 0.625rem; border: 1px solid;
+    letter-spacing: 0.04em; white-space: nowrap;
+  }
+  .section-status .pill.red {
+    color: var(--red-glow); border-color: var(--red-dim);
+    background: rgba(255, 69, 69, 0.1);
+  }
+  .section-status .pill.amber {
+    color: var(--amber-glow); border-color: var(--amber-dim);
+    background: rgba(255, 170, 42, 0.1);
+  }
+  .section-status .pill.green {
+    color: var(--green-glow); border-color: var(--green-dim);
+    background: rgba(34, 197, 94, 0.1);
+  }
+  .section-status .pill.info {
+    color: var(--cyan-glow); border-color: var(--cyan-dim);
+    background: rgba(6, 182, 212, 0.1);
+  }
+  .section-status .pill.muted {
+    color: var(--text-secondary); border-color: var(--border-subtle);
+    background: var(--bg-elevated);
+  }
+  .section-status .pill.urgent {
+    animation: urgent-pulse 1.8s ease-in-out infinite;
+  }
+  @keyframes urgent-pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(255, 69, 69, 0.4); }
+    50% { box-shadow: 0 0 0 0.5rem rgba(255, 69, 69, 0); }
+  }
+  /* Hide status pills when section is open — they're redundant with the content */
+  .collapsible-section[open] > summary .section-status { opacity: 0.5; }
+
+  /* Section subtitle — a one-line orientation under the H2, visible both open
+     and collapsed. Gives readers the "why should I look at this" answer. */
+  .section-subtitle {
+    font-family: var(--font-sans); font-size: 0.9375rem; color: var(--text-secondary);
+    font-weight: 400; margin-top: 0.5rem; line-height: 1.55;
+    max-width: 68ch; letter-spacing: -0.003em;
+  }
+  .section-subtitle .emph { color: var(--text-primary); font-weight: 600; }
+  .section-subtitle .hot { color: var(--amber-glow); font-weight: 600; }
+  .section-subtitle .cold { color: var(--green-glow); font-weight: 600; }
+
+  /* Section-level "Your action" line — every section that flags concerns
+     must answer "what do I do about this?" for the reader. */
+  .section-action {
+    display: block; margin-top: 0.5rem; padding: 0.5rem 0.75rem;
+    background: var(--bg-elevated); border-radius: 0.375rem;
+    border-left: 3px solid var(--amber-glow);
+    font-size: 0.85rem; color: var(--text-primary); line-height: 1.55;
+  }
+  .section-action.ok { border-left-color: var(--green-glow); }
+  .section-action.info { border-left-color: var(--cyan-glow); }
+  .section-action .lbl {
+    font-family: var(--font-mono); font-weight: 700;
+    font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--amber-glow); margin-right: 0.5rem;
+  }
+  .section-action.ok .lbl { color: var(--green-glow); }
+  .section-action.info .lbl { color: var(--cyan-glow); }
+
+  /* Finding-card status chip — distinguishes Active vs Resolved vs Ongoing.
+     Shown on every finding and evidence card next to the severity tag. */
+  .status-chip {
+    display: inline-flex; align-items: center; gap: 0.25rem;
+    padding: 0.1875rem 0.5rem; border-radius: 0.625rem; border: 1px solid;
+    font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.04em;
+    white-space: nowrap; margin-left: 0.375rem;
+  }
+  .status-chip.resolved {
+    color: var(--green-glow); border-color: var(--green-dim);
+    background: rgba(34, 197, 94, 0.12);
+  }
+  .status-chip.active {
+    color: var(--red-glow); border-color: var(--red-dim);
+    background: rgba(255, 69, 69, 0.12);
+  }
+  .status-chip.ongoing {
+    color: var(--amber-glow); border-color: var(--amber-dim);
+    background: rgba(255, 170, 42, 0.12);
+  }
+  .status-chip.mitigated {
+    color: var(--cyan-glow); border-color: var(--cyan-dim);
+    background: rgba(6, 182, 212, 0.12);
+  }
+  .status-chip.informational {
+    color: var(--text-secondary); border-color: var(--border-subtle);
+    background: var(--bg-elevated);
+  }
+
+  /* Action-needed hint on finding cards — one sentence that says "what the reader should do" */
+  .action-hint {
+    margin-top: 0.5rem; font-size: 0.78rem; color: var(--text-secondary);
+    line-height: 1.55;
+  }
+  .action-hint::before {
+    content: "→ "; color: var(--amber-glow); font-style: normal; font-weight: 600;
+  }
+  .action-hint.ok::before { color: var(--green-glow); }
+  .action-hint.warn::before { color: var(--amber-glow); }
+
+  /* Executable File Inventory — differentiate verdict on the tag clearly.
+     The card border already carries severity via .finding-card.warning/.ok/.info;
+     this makes the header tag match so the reader doesn't have to decode borders. */
+  .inv-verdict {
+    display: inline-flex; align-items: center; gap: 0.25rem;
+    padding: 0.1875rem 0.5rem; border-radius: 0.625rem; margin-left: 0.375rem;
+    font-family: var(--font-mono); font-size: 0.65rem; letter-spacing: 0.04em;
+    text-transform: uppercase; border: 1px solid;
+  }
+  .inv-verdict.warn {
+    color: var(--amber-glow); border-color: var(--amber-dim);
+    background: rgba(255, 170, 42, 0.12);
+  }
+  .inv-verdict.ok {
+    color: var(--green-glow); border-color: var(--green-dim);
+    background: rgba(34, 197, 94, 0.12);
+  }
+  .inv-verdict.info {
+    color: var(--cyan-glow); border-color: var(--cyan-dim);
+    background: rgba(6, 182, 212, 0.12);
+  }
+
+  /* Inventory one-line summary block — V2.2 F12 format */
+  .inventory-summary {
+    margin-bottom: 1.25rem; padding: 0.875rem 1rem;
+    background: var(--bg-elevated); border-radius: 0.5rem;
+    border-left: 3px solid var(--cyan-glow); font-size: 0.85rem;
+  }
+  .inventory-summary-title {
+    font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--text-secondary); margin-bottom: 0.5rem;
+  }
+  .inventory-summary ul { list-style: none; padding: 0; margin: 0; }
+  .inventory-summary li {
+    padding: 0.25rem 0; line-height: 1.55; display: flex; gap: 0.5rem; align-items: flex-start;
+  }
+  .inventory-summary li .glyph {
+    flex: 0 0 1.125rem; font-family: var(--font-mono); font-weight: 700;
+    text-align: center;
+  }
+  .inventory-summary li.warn .glyph { color: var(--amber-glow); }
+  .inventory-summary li.ok .glyph { color: var(--green-glow); }
+  .inventory-summary li.info .glyph { color: var(--cyan-glow); }
+
+  /* Timeline severity glyphs — per-item worry indicator beyond just dot color */
+  .tl-item .tl-severity-label {
+    display: inline-block; font-family: var(--font-mono); font-weight: 700;
+    font-size: 0.68rem; letter-spacing: 0.05em; margin-right: 0.375rem;
+    padding: 0.125rem 0.375rem; border-radius: 0.25rem;
+  }
+  .tl-item.bad .tl-severity-label {
+    color: var(--red-glow); background: rgba(255, 69, 69, 0.12);
+  }
+  .tl-item.good .tl-severity-label {
+    color: var(--green-glow); background: rgba(34, 197, 94, 0.12);
+  }
+  .tl-item.neutral .tl-severity-label {
+    color: var(--amber-glow); background: rgba(255, 170, 42, 0.12);
+  }
+
+  /* Evidence priority banner — "read this first" marker on the most important evidence */
+  .evidence-priority {
+    position: relative; border-left-width: 4px !important;
+  }
+  .evidence-priority .priority-flag {
+    display: inline-block; margin-left: 0.5rem; padding: 0.1875rem 0.5rem;
+    background: var(--amber-glow); color: var(--bg-void);
+    border-radius: 0.25rem; font-family: var(--font-mono);
+    font-size: 0.62rem; font-weight: 700; letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .evidence-group-label {
+    margin: 1.5rem 0 0.75rem; font-family: var(--font-mono);
+    font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--text-secondary); padding: 0.5rem 0.75rem;
+    background: var(--bg-elevated); border-radius: 0.375rem;
+    border-left: 3px solid var(--border);
+  }
+  .evidence-group-label.warns { border-left-color: var(--amber-glow); color: var(--amber-glow); }
+  .evidence-group-label.positives { border-left-color: var(--green-glow); color: var(--green-glow); }
+  .evidence-group-label.context { border-left-color: var(--cyan-glow); color: var(--cyan-glow); }
+
+  /* Evidence Appendix — <pre> blocks for command and multi-line result */
+  .evidence-row { margin-bottom: 10px; }
+  .evidence-row .evidence-label {
+    font-family: var(--font-mono); font-size: 0.625rem; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--text-secondary); margin-bottom: 4px;
+  }
+  .evidence-pre {
+    background: var(--bg-void); border: 1px solid var(--border); border-radius: 6px;
+    padding: 12px 14px; margin: 0; overflow-x: auto; white-space: pre-wrap; word-break: break-word;
+    font-family: var(--font-mono); font-size: 0.75rem; color: var(--cyan-glow); line-height: 1.55;
+    max-height: 320px; overflow-y: auto;
+  }
+  .evidence-pre.result { color: var(--text-primary); }
+  .evidence-classification {
+    font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-primary);
+    padding: 8px 12px; background: var(--bg-elevated);
+    border: 1px solid var(--border-subtle); border-radius: 6px;
+  }
+  .evidence-classification.inference { color: var(--amber-glow); }
+  .evidence-classification.fact { color: var(--green-glow); }
+
+  /* Footer */
+  .footer {
+    padding: 40px 0; border-top: 1px solid var(--border-subtle);
+    text-align: center; font-size: 0.75rem; color: var(--text-muted);
+  }
+  .footer a { color: var(--text-secondary); }
+
+  /* Responsive */
+  @media (max-width: 700px) {
+    .scorecard-grid { grid-template-columns: repeat(2, 1fr); }
+    .finding-meta { grid-template-columns: 1fr; }
+    .hero { padding: 40px 0 32px; }
+    .collapsible-section > summary { padding-top: 32px; }
+    table { font-size: 0.75rem; }
+    th, td { padding: 10px 12px; }
+    .vitals-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 420px) {
+    .scorecard-grid { grid-template-columns: 1fr; }
+  }
+
+</style>
+</head>
+<body>
+
+<div class="font-controls">
+  <button onclick="adjustFont(-1)" title="Decrease font size" aria-label="Decrease font size">A&minus;</button>
+  <span class="font-size-display" id="fontDisplay">100%</span>
+  <button onclick="adjustFont(1)" title="Increase font size" aria-label="Increase font size">A+</button>
+</div>
+<script>
+  let fontScale = 100;
+  function adjustFont(dir) {
+    fontScale = Math.min(150, Math.max(75, fontScale + dir * 10));
+    document.documentElement.style.fontSize = fontScale + '%';
+    document.getElementById('fontDisplay').textContent = fontScale + '%';
+  }
+</script>
+
+<div class="page">
+
+  <!-- ═══════════════ HERO ═══════════════ -->
+  <div class="hero">
+    <div class="scan-strip">
+      <span class="scan-strip-item"><span class="dot amber"></span>Security Investigation</span>
+      <span class="scan-strip-item">Dossier &middot; multica</span>
+      <span class="scan-strip-item">Rev &middot; b8907dd</span>
+      <span class="scan-strip-item">v2.4 &middot; 2026-04-19</span>
+      <span class="scan-strip-item flash">&#x25CF; Live</span>
+    </div>
+    <h1>multica-ai<span class="slash">/</span><span class="amber">multica</span></h1>
+    <div class="hero-caption">A fast-growing agentic task-management platform that ships a CLI, Electron desktop app, and self-hostable server &mdash; but operates with no branch protection gate, a 1% PR review rate, a curl-pipe-from-main installer with no binary checksum on Linux/Mac, and no SECURITY.md, meaning a single maintainer account compromise could ship malicious code to every new install before anyone noticed.</div>
+    <div class="meta">
+      <div class="meta-item"><span class="label">Investigated</span> 2026-04-19</div>
+      <div class="meta-item"><span class="label">Applies to</span> main @ b8907dd &middot; v0.2.6</div>
+      <div class="meta-item"><span class="label">Repo age</span> 3 months</div>
+      <div class="meta-item"><span class="label">Stars</span> 16,457</div>
+      <div class="meta-item"><span class="label">License</span> Other (NOASSERTION)</div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ CATALOG METADATA ═══════════════ -->
+  <div class="catalog-meta">
+    <div class="catalog-label">Catalog metadata</div>
+    <table>
+      <tr><td class="key">Report file</td><td class="val"><code>GitHub-Scanner-multica.md</code> (+ <code>.html</code> companion)</td></tr>
+      <tr><td class="key">Repo</td><td class="val"><a href="https://github.com/multica-ai/multica">github.com/multica-ai/multica</a></td></tr>
+      <tr><td class="key">Short description</td><td class="val">Open-source managed agents platform &mdash; assigns AI coding agents (Claude Code, Codex, Gemini, Cursor Agent, etc.) to tasks, tracks progress, and compounds reusable skills. Ships a Go CLI, Electron desktop app, Next.js web app, and self-hosted Docker stack.</td></tr>
+      <tr><td class="key">Category</td><td class="val">AI/LLM tooling</td></tr>
+      <tr><td class="key">Subcategory</td><td class="val">Agentic task management / agent orchestration platform</td></tr>
+      <tr><td class="key">Verdict</td><td class="val val-warn fw-semi">Caution (split &mdash; Deployment axis)</td></tr>
+      <tr><td class="key">Scanned revision</td><td class="val">main @ b8907dd (release tag v0.2.6)</td></tr>
+      <tr><td class="key">Prompt version</td><td class="val">V2.4</td></tr>
+      <tr><td class="key">Prior scan</td><td class="val">None &mdash; first scan of this repo. Future re-runs should rename this file to <code>GitHub-Scanner-multica-2026-04-19.md</code> before generating the new report.</td></tr>
+    </table>
+  </div>
+
+  <!-- ═══════════════ VERDICT BANNER ═══════════════ -->
+  <div class="verdict-section">
+    <div class="verdict-banner caution" data-dossier="DOSSIER &middot; MULTICA &middot; b8907dd &middot; 2026-04-19 &middot; V2.4">
+      <div class="verdict-label">&#x25CF; Split verdict &middot; Deployment axis &middot; F0/F1/F4</div>
+
+      <div class="verdict-split">
+        <div class="verdict-entry">
+          <div class="verdict-entry-scope">Deployment &middot; Cloud users &middot; multica.ai managed service</div>
+          <h2 class="verdict-entry-headline warn">Proceed with caution &mdash; install via Homebrew, not curl-pipe</h2>
+          <div class="verdict-entry-detail">The managed cloud service itself looks fine at code level &mdash; no critical runtime vulnerabilities found. The install-time exposure is real: the default README install command fetches from live <code>main</code> with no binary checksum verification on Linux and Mac. Use <code>brew install multica-ai/tap/multica</code> instead, which uses GoReleaser-produced release assets with checksums.</div>
+        </div>
+        <div class="verdict-split-divider"></div>
+        <div class="verdict-entry">
+          <div class="verdict-entry-scope">Deployment &middot; Self-hosted users &middot; Docker or manual setup</div>
+          <h2 class="verdict-entry-headline warn">Review your configuration before exposing to the network</h2>
+          <div class="verdict-entry-detail">Self-hosted users carry all the cloud-user risks plus two deployment-specific concerns: the <code>888888</code> master authentication bypass is still active in the Go source and triggers if <code>APP_ENV</code> is not explicitly set to <code>production</code>. Docker now defaults correctly after v0.2.6 but non-Docker self-hosters must set this manually. The <code>docker-compose.selfhost.yml</code> default <code>JWT_SECRET</code> falls back to <code>change-me-in-production</code> if <code>.env</code> was created without running the install script.</div>
+        </div>
+      </div>
+
+      <div class="verdict-exhibits">
+
+        <details class="exhibit govern">
+          <summary>
+            <span class="exhibit-glyph">&#x26A0;</span>
+            <span>
+              <span class="exhibit-title">Governance and supply-chain gaps</span>
+              <span class="exhibit-count">&middot; 3 findings</span>
+              <span class="exhibit-summary-line">No branch protection, 1% review rate, security PRs self-merged; install script fetches live main without checksum</span>
+            </span>
+          </summary>
+          <div class="exhibit-body">
+            <div class="exhibit-item">
+              <span class="exhibit-item-glyph">01</span>
+              <span>
+                <span class="exhibit-item-tag">Governance &middot; F0 / C20</span>
+                No effective branch protection on <code>main</code>. Ruleset <code>protect-main-branch</code> exists but enforcement is <code>disabled</code>. CODEOWNERS absent. No SECURITY.md. Ships executables daily. Any maintainer account compromise propagates to users before any gate fires.
+              </span>
+            </div>
+            <div class="exhibit-item">
+              <span class="exhibit-item-glyph">02</span>
+              <span>
+                <span class="exhibit-item-tag">Supply chain &middot; F1</span>
+                <code>curl -fsSL https://raw.githubusercontent.com/multica-ai/multica/main/scripts/install.sh | bash</code> fetches the installer from live <code>main</code> (no tag pin). The Linux/Mac binary download path has no checksum verification. The <code>--with-server</code> mode clones and tracks live <code>main</code>. Windows PS1 path <em>does</em> verify SHA256 checksums &mdash; asymmetric coverage.
+              </span>
+            </div>
+            <div class="exhibit-item">
+              <span class="exhibit-item-glyph">03</span>
+              <span>
+                <span class="exhibit-item-tag">CI actions &middot; F2</span>
+                <code>goreleaser/goreleaser-action@v6</code> in <code>release.yml</code> is a third-party action pinned to a mutable tag, not a SHA. It has access to <code>GITHUB_TOKEN</code> and <code>HOMEBREW_TAP_GITHUB_TOKEN</code>. A goreleaser action compromise could rewrite the Homebrew formula, affecting all <code>brew upgrade</code> users.
+              </span>
+            </div>
+          </div>
+        </details>
+
+        <details class="exhibit govern">
+          <summary>
+            <span class="exhibit-glyph">&#x26A0;</span>
+            <span>
+              <span class="exhibit-title">Code review gaps and self-host defaults</span>
+              <span class="exhibit-count">&middot; 2 findings</span>
+              <span class="exhibit-summary-line">1% review rate; auth redirect fix self-merged in 3 min; 888888 master code lives in source</span>
+            </span>
+          </summary>
+          <div class="exhibit-body">
+            <div class="exhibit-item">
+              <span class="exhibit-item-glyph">01</span>
+              <span>
+                <span class="exhibit-item-tag">Review rate &middot; F3</span>
+                1 of 100 sampled merged PRs had any review event (formal or informal). The auth redirect fix (PR #1309) was self-merged by its author in 3 minutes. The master code disable (PR #1307, security-sensitive) was merged without review. Not a solo-maintainer project (4-person team) &mdash; the low rate reflects a process gap, not a structural constraint.
+              </span>
+            </div>
+            <div class="exhibit-item">
+              <span class="exhibit-item-glyph">02</span>
+              <span>
+                <span class="exhibit-item-tag">Self-host defaults &middot; F4</span>
+                <code>server/internal/handler/auth.go:169</code> contains <code>isMasterCode := code == "888888" &amp;&amp; os.Getenv("APP_ENV") != "production"</code>. Docker deployment now defaults <code>APP_ENV=production</code> (v0.2.6). Non-Docker self-hosters who copy <code>.env.example</code> without modification start with the dev backdoor active. The <code>JWT_SECRET</code> docker-compose fallback is <code>change-me-in-production</code>.
+              </span>
+            </div>
+          </div>
+        </details>
+
+        <details class="exhibit signals">
+          <summary>
+            <span class="exhibit-glyph">&#x2714;</span>
+            <span>
+              <span class="exhibit-title">Positive signals &mdash; experienced team, artifact checksums, sanitized rendering, partial mitigations</span>
+              <span class="exhibit-count">&middot; 5 signals</span>
+              <span class="exhibit-summary-line">4-person founding team (7-13yr accounts), GoReleaser checksums.txt, rehypeSanitize on all markdown, no hardcoded secrets</span>
+            </span>
+          </summary>
+          <div class="exhibit-body">
+            <div class="exhibit-item">
+              <span class="exhibit-item-glyph">01</span>
+              <span>
+                <span class="exhibit-item-tag">Team legitimacy</span>
+                Three of four core founders have 7-13 year GitHub accounts with independent prior work (forrestchang: 103 repos, 2,124 followers; Bohan-J: bio &ldquo;coFounder of @multica-ai&rdquo;; ldnvnbl: 44 repos, 13yr account). Not a sockpuppet pattern.
+              </span>
+            </div>
+            <div class="exhibit-item">
+              <span class="exhibit-item-glyph">02</span>
+              <span>
+                <span class="exhibit-item-tag">Release checksums</span>
+                GoReleaser publishes <code>checksums.txt</code> with every release. Homebrew formula pins to tagged release assets. Windows PS1 installer verifies SHA256 before extracting. The supply-chain concern is the curl-pipe entry point, not the releases themselves.
+              </span>
+            </div>
+            <div class="exhibit-item">
+              <span class="exhibit-item-glyph">03</span>
+              <span>
+                <span class="exhibit-item-tag">XSS mitigated</span>
+                All <code>dangerouslySetInnerHTML</code> usage is via <code>lowlight</code>/Shiki syntax highlighters or sanitized through <code>rehypeSanitize</code> before rendering. No unescaped user content injected into the DOM.
+              </span>
+            </div>
+            <div class="exhibit-item">
+              <span class="exhibit-item-glyph">04</span>
+              <span>
+                <span class="exhibit-item-tag">CORS is explicit whitelist</span>
+                No <code>Access-Control-Allow-Origin: *</code> found. <code>allowedOrigins()</code> uses an explicit list (defaults to localhost dev ports). No TLS verification disabled.
+              </span>
+            </div>
+            <div class="exhibit-item">
+              <span class="exhibit-item-glyph">05</span>
+              <span>
+                <span class="exhibit-item-tag">Partial security fixes shipped</span>
+                PR #1307 disabled <code>888888</code> in Docker (2026-04-18). PR #1309 fixed open-redirect in auth (2026-04-18). No lifecycle scripts in inner npm packages. <code>install.sh --with-server</code> generates a random <code>JWT_SECRET</code> via <code>openssl rand</code>.
+              </span>
+            </div>
+          </div>
+        </details>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ TRUST SCORECARD ═══════════════ -->
+  <div class="scorecard-section">
+    <div class="scorecard-grid">
+      <div class="score-cell">
+        <div class="score-icon red">&#x26D4;</div>
+        <div class="score-label">Does anyone check the code?</div>
+        <div class="score-value red">Rare &mdash; 1% review rate</div>
+        <p class="p-meta-tight">Security PRs self-merged; no branch protection gate. 1/100 sampled PRs had any review.</p>
+      </div>
+      <div class="score-cell">
+        <div class="score-icon amber">&#x26A0;</div>
+        <div class="score-label">Do they fix problems quickly?</div>
+        <div class="score-value amber">Open fixes, not merged yet</div>
+        <p class="p-meta-tight">Docker default fixed (888888 disabled). Non-Docker path still exposed. Unknown Dependabot state.</p>
+      </div>
+      <div class="score-cell">
+        <div class="score-icon red">&#x26D4;</div>
+        <div class="score-label">Do they tell you about problems?</div>
+        <div class="score-value red">No advisory &middot; No SECURITY.md</div>
+        <p class="p-meta-tight">No SECURITY.md, no private reporting channel, zero published advisories.</p>
+      </div>
+      <div class="score-cell">
+        <div class="score-icon amber">&#x26A0;</div>
+        <div class="score-label">Is it safe out of the box?</div>
+        <div class="score-value amber">Safer via Homebrew &middot; Avoid curl-pipe</div>
+        <p class="p-meta-tight">Unverified curl-pipe channel caps this amber. Homebrew path is safer.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ SECTION 01: WHAT SHOULD I DO? ═══════════════ -->
+  <details class="collapsible-section" open>
+    <summary>
+      <div class="section-header">
+        <span class="section-number">01</span>
+        <h2>What Should I Do?</h2>
+        <span class="section-status">
+          <span class="pill red urgent">&#x26A0; 1 Critical finding</span>
+          <span class="pill amber">3 Warnings</span>
+          <span class="pill info">3 steps</span>
+        </span>
+      </div>
+      <div class="section-subtitle">
+        <span class="hot">Three concrete actions ordered by urgency.</span> Use Homebrew install, not curl-pipe; if self-hosting, harden your config before network exposure; subscribe to releases for future security updates.
+      </div>
+    </summary>
+    <div class="section-body">
+
+    <div class="action-card wait">
+      <h3 class="val-warn">Step 1: Use the Homebrew install path, not the curl-pipe command (&#x26A0;)</h3>
+      <p><strong>Non-technical:</strong> The README&rsquo;s default install command (<code>curl ... | bash</code>) downloads and runs a script directly from the live <code>main</code> branch &mdash; no verification of what you&rsquo;re getting. If a maintainer account were compromised and the script tampered with, you&rsquo;d run malicious code without knowing. The Homebrew path is safer because it installs a release binary whose checksum was published by GoReleaser at release time.</p>
+      <pre># Safer install (macOS/Linux with Homebrew)
+brew install multica-ai/tap/multica
+
+# Verify the installed binary version
+multica version</pre>
+      <p><strong>Non-technical:</strong> On Windows, the PowerShell installer already verifies a SHA256 checksum before extracting &mdash; that path is fine.</p>
+    </div>
+
+    <div class="action-card wait">
+      <h3 class="val-warn">Step 2: If self-hosting, set APP_ENV=production and change your JWT_SECRET (&#x26A0;)</h3>
+      <p><strong>Non-technical:</strong> The Multica Go server has a developer shortcut: if you don&rsquo;t tell it you&rsquo;re in production, it accepts <code>888888</code> as a magic login code that bypasses email verification for any account. Recent Docker images default this correctly, but if you&rsquo;re running the server any other way, you need to set this manually.</p>
+      <pre># In your .env file:
+APP_ENV=production
+JWT_SECRET=$(openssl rand -hex 32)
+
+# If using the Docker Compose self-host stack, verify your override:
+grep APP_ENV .env  # should be: APP_ENV=production
+grep JWT_SECRET .env  # should NOT be: JWT_SECRET=change-me-in-production</pre>
+    </div>
+
+    <div class="action-card info-action">
+      <h3>Step 3: Subscribe to repo releases to catch future security fixes (&#x2139;)</h3>
+      <p><strong>Non-technical:</strong> Multica has no SECURITY.md or advisory channel &mdash; the most recent security fixes (auth redirect and master code) shipped as regular PRs with no advisory notification. Watch the GitHub releases page so you hear about security-relevant updates.</p>
+      <pre># Watch releases on GitHub: https://github.com/multica-ai/multica/releases
+# Or subscribe via gh:
+gh api user/subscriptions -X PUT -H "Accept: application/vnd.github+json" \
+  --field reason=releases 2>/dev/null || echo "Visit https://github.com/multica-ai/multica/subscription"</pre>
+    </div>
+
+    </div>
+  </details>
+
+  <!-- ═══════════════ SECTION 02: WHAT WE FOUND ═══════════════ -->
+  <details class="collapsible-section" open>
+    <summary>
+      <div class="section-header">
+        <span class="section-number">02</span>
+        <h2>What We Found</h2>
+        <span class="section-status">
+          <span class="pill red urgent">&#x1F6A8; 1 Critical</span>
+          <span class="pill amber">&#x26A0; 3 Warning</span>
+          <span class="pill info">&#x2139; 2 Info</span>
+          <span class="pill green">&#x2713; 5 OK</span>
+        </span>
+      </div>
+      <div class="section-subtitle">
+        6 active findings. <span class="hot">Governance and supply-chain are the dominant themes</span> &mdash; no critical runtime code vulnerabilities, but the trust chain from source to install has gaps at nearly every step.
+      </div>
+      <div class="section-action">
+        <span class="lbl">Your action</span>
+        Use Homebrew install, set <code>APP_ENV=production</code> if self-hosting, and watch releases for security updates. No emergency action required unless you&rsquo;re already running a non-Docker self-host without <code>APP_ENV=production</code>.
+      </div>
+    </summary>
+    <div class="section-body">
+
+    <!-- F0 CRITICAL -->
+    <div class="finding-card critical stack-md">
+      <div class="finding-header">
+        <span class="tag critical-tag">Critical</span>
+        <span class="status-chip active">Active</span>
+        <h3>F0 &mdash; Governance &middot; C20 &mdash; No effective branch protection, no CODEOWNERS, no SECURITY.md</h3>
+        <div class="action-hint warn">If you install: use Homebrew and pin to a release tag. If you maintain: enable branch protection with required reviews, add CODEOWNERS for <code>scripts/</code>, <code>.github/workflows/</code>, and add SECURITY.md.</div>
+      </div>
+      <div class="finding-body">
+        <p class="p-meta-tight"><em>Active &middot; Ships daily releases &middot; &rarr; Governance single-point-of-failure</em></p>
+        <p>The repository has a ruleset named <code>protect-main-branch</code> but its <code>enforcement</code> field is set to <code>disabled</code> &mdash; it has no effect. Classic branch protection on <code>main</code> returns 404 (absent). <code>rules/branches/main</code> returns an empty array &mdash; no rules apply to the default branch. CODEOWNERS is absent from all four standard paths. There is no SECURITY.md.</p>
+        <p><strong>What this means for you.</strong> Any of the four core maintainers can push directly to <code>main</code> with no second reviewer. A compromised GitHub account, a phished session cookie, a rogue browser extension running in a maintainer&rsquo;s browser &mdash; any of these paths gives an attacker the ability to push a tampered commit to <code>main</code>. Because the README install command fetches the installer script from live <code>main</code>, the window between compromise and victim installation is the time between the push and the user next running <code>curl ... | bash</code>.</p>
+        <p><strong>What this does NOT mean.</strong> This does not mean multica is actively compromised or that the maintainers have bad intentions. It means the safety net that would catch a compromise <em>before users are affected</em> is not present. The four-person founding team has strong GitHub track records.</p>
+        <p><strong>Threat model (F13).</strong> An attacker arrives at a maintainer account via: phishing email targeting the company domain, a compromised browser extension exfiltrating a GitHub session token, a malicious VSCode/IDE extension running code in the maintainer&rsquo;s user context, or a supply-chain compromise of a dev dependency the team installs locally. Once the attacker has write access to <code>main</code>, they push a one-line change to <code>scripts/install.sh</code>, <code>docker-compose.selfhost.yml</code>, or a Go server file. No reviewer, no status check, no required approval. The blast radius is 16,457 GitHub stars plus every downstream install.</p>
+        <div class="finding-meta">
+          <div class="meta-chip"><span class="chip-label">Branch protection</span><span class="chip-value val-bad">None (ruleset exists but enforcement: disabled)</span></div>
+          <div class="meta-chip"><span class="chip-label">CODEOWNERS</span><span class="chip-value val-bad">Absent (all 4 standard paths checked)</span></div>
+          <div class="meta-chip"><span class="chip-label">SECURITY.md</span><span class="chip-value val-bad">Absent</span></div>
+          <div class="meta-chip"><span class="chip-label">Org rulesets</span><span class="chip-value val-warn">Unknown (admin:org scope required &mdash; not tested)</span></div>
+          <div class="meta-chip"><span class="chip-label">Stars / blast radius</span><span class="chip-value">16,457 stars, 2,038 forks</span></div>
+        </div>
+        <p><strong>How to fix (maintainer, low effort, 15 min).</strong> Go to Settings &rarr; Branches &rarr; Add branch protection rule for <code>main</code>. Enable: &ldquo;Require a pull request before merging&rdquo; (1 required reviewer), &ldquo;Require status checks to pass&rdquo; (CI/CD). Add <code>.github/CODEOWNERS</code> with <code>scripts/ @multica-ai/core</code> and <code>.github/workflows/ @multica-ai/core</code>. Create <code>SECURITY.md</code> with a private disclosure email.</p>
+      </div>
+    </div>
+
+    <!-- F1 WARNING -->
+    <div class="finding-card warning stack-md">
+      <div class="finding-header">
+        <span class="tag warning-tag">Warning</span>
+        <span class="status-chip active">Active</span>
+        <h3>F1 &mdash; Supply chain / Install &mdash; curl-pipe-from-main, no Linux/Mac binary checksum</h3>
+        <div class="action-hint warn">If you install: use Homebrew. If you maintain: fetch the installer from a pinned release tag; add checksum verification to <code>install_cli_binary()</code>.</div>
+      </div>
+      <div class="finding-body">
+        <p class="p-meta-tight"><em>Active &middot; Default README install path &middot; &rarr; Warning finding</em></p>
+        <p>The primary install method in the README is <code>curl -fsSL https://raw.githubusercontent.com/multica-ai/multica/main/scripts/install.sh | bash</code>. This fetches the installer script from the live, unpinned <code>main</code> branch and executes it immediately. Inside <code>install_cli_binary()</code>, the script downloads the CLI binary from <code>releases/latest</code> but performs no SHA256 checksum verification before executing the binary. By contrast, the Windows PowerShell installer (<code>install.ps1</code>) <em>does</em> download <code>checksums.txt</code> and verify the SHA256 before extracting. The <code>--with-server</code> mode clones from <code>main</code> and on upgrades runs <code>git reset --hard origin/main</code> &mdash; also unpinned.</p>
+        <p><strong>What this does NOT mean.</strong> The Homebrew distribution channel (<code>brew install multica-ai/tap/multica</code>) uses GoReleaser-produced release artifacts with a published <code>checksums.txt</code>, managed by Homebrew&rsquo;s formula pinning. Users installing via Homebrew are protected against this specific vector. The concern is limited to the curl-pipe path.</p>
+        <div class="finding-meta">
+          <div class="meta-chip"><span class="chip-label">Script fetch</span><span class="chip-value val-bad">Unpinned from main</span></div>
+          <div class="meta-chip"><span class="chip-label">Linux/Mac binary checksum</span><span class="chip-value val-bad">Not verified</span></div>
+          <div class="meta-chip"><span class="chip-label">Windows binary checksum</span><span class="chip-value val-good">SHA256 verified</span></div>
+          <div class="meta-chip"><span class="chip-label">Homebrew path</span><span class="chip-value val-good">GoReleaser checksums + Homebrew formula pin</span></div>
+          <div class="meta-chip"><span class="chip-label">--with-server clone</span><span class="chip-value val-bad">git clone --depth 1 main, upgrades track live main</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- F2 WARNING -->
+    <div class="finding-card warning stack-md">
+      <div class="finding-header">
+        <span class="tag warning-tag">Warning</span>
+        <span class="status-chip active">Active</span>
+        <h3>F2 &mdash; CI/Actions &mdash; Unpinned goreleaser third-party action; Homebrew PAT exposure</h3>
+        <div class="action-hint warn">If you maintain: pin <code>goreleaser/goreleaser-action</code> and <code>pnpm/action-setup</code> to full SHA hashes. Rotate <code>HOMEBREW_TAP_GITHUB_TOKEN</code> to a fine-grained PAT scoped only to the homebrew-tap repo.</div>
+      </div>
+      <div class="finding-body">
+        <p class="p-meta-tight"><em>Active &middot; Release workflow &middot; &rarr; Warning finding</em></p>
+        <p><code>release.yml</code> uses <code>goreleaser/goreleaser-action@v6</code> &mdash; a third-party action pinned only to a mutable <code>v6</code> tag. The same job passes <code>HOMEBREW_TAP_GITHUB_TOKEN: $&#123;&#123; secrets.HOMEBREW_TAP_GITHUB_TOKEN &#125;&#125;</code> to the action. If the goreleaser action&rsquo;s <code>v6</code> tag is repointed to a compromised release, the action runs with access to both the GITHUB_TOKEN (write to this repo) and the Homebrew PAT (write to <code>multica-ai/homebrew-tap</code>). A Homebrew formula rewrite could push a malicious binary to every user who runs <code>brew upgrade</code>. <code>ci.yml</code> also uses <code>pnpm/action-setup@v4</code> (third-party, no secrets, lower impact).</p>
+        <p><strong>What this does NOT mean.</strong> The goreleaser project itself is well-maintained. This finding is about the lack of a SHA pin &mdash; not a claim that goreleaser is currently compromised.</p>
+        <div class="finding-meta">
+          <div class="meta-chip"><span class="chip-label">goreleaser/goreleaser-action@v6</span><span class="chip-value val-bad">Third-party, mutable tag, has HOMEBREW_TAP_GITHUB_TOKEN</span></div>
+          <div class="meta-chip"><span class="chip-label">pnpm/action-setup@v4</span><span class="chip-value val-warn">Third-party, mutable tag, no secrets</span></div>
+          <div class="meta-chip"><span class="chip-label">actions/checkout, actions/setup-*</span><span class="chip-value val-good">GitHub-org actions (lower risk at mutable tags)</span></div>
+          <div class="meta-chip"><span class="chip-label">pull_request_target</span><span class="chip-value val-good">0 occurrences</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- F3 WARNING -->
+    <div class="finding-card warning stack-md">
+      <div class="finding-header">
+        <span class="tag warning-tag">Warning</span>
+        <span class="status-chip ongoing">Ongoing</span>
+        <h3>F3 &mdash; Code Review &mdash; 1% review rate; security-relevant PRs self-merged or unreviewed</h3>
+        <div class="action-hint warn">Configure branch protection with required reviewer to force review workflow going forward.</div>
+      </div>
+      <div class="finding-body">
+        <p class="p-meta-tight"><em>Ongoing &middot; All development &middot; &rarr; Warning finding</em></p>
+        <p>Of 100 sampled merged PRs (most recent, out of 739 total), 1 had any review event (formal or informal). This is below the red threshold (any-review &lt; 30%). Notable examples:</p>
+        <ul>
+          <li><strong>PR <a href="https://github.com/multica-ai/multica/pull/1309">#1309</a></strong> (<code>fix(auth): validate next= redirect target to prevent open redirect</code>) &mdash; Author: Bohan-J, merged by Bohan-J. Created at 05:21 UTC, merged at 05:24 UTC (3-minute self-merge on an auth security fix).</li>
+          <li><strong>PR <a href="https://github.com/multica-ai/multica/pull/1307">#1307</a></strong> (<code>fix(selfhost): disable dev master code by default in Docker</code>) &mdash; Authored by <code>kagura-agent</code> (a self-described AI agent account), merged by Bohan-J at 06:25 UTC. Security-sensitive, no review.</li>
+          <li><strong>PR <a href="https://github.com/multica-ai/multica/pull/1280">#1280</a></strong> (<code>ci(release): restrict tag pattern to semver and reject -dirty tags</code>) &mdash; CI change, cross-merged by <code>devv-eve</code>, no review.</li>
+        </ul>
+        <p>This is not a solo-maintainer project (top contributor holds 30.2% of commits, four-person team covers 97.9%). The low review rate is a process choice in a hypergrowth startup, not a structural limit.</p>
+        <p><strong>What this does NOT mean.</strong> Cross-merges (author &ne; merger, approximately 40% of sample) are not the same as no review, but the evidence shows mergers are not leaving review comments &mdash; they&rsquo;re merge-clicking without code examination.</p>
+        <div class="finding-meta">
+          <div class="meta-chip"><span class="chip-label">Formal review rate</span><span class="chip-value val-bad">1% (1/100 sampled &mdash; reviewDecision set)</span></div>
+          <div class="meta-chip"><span class="chip-label">Any-review rate</span><span class="chip-value val-bad">1% (1/100 &mdash; any review event)</span></div>
+          <div class="meta-chip"><span class="chip-label">Total merged PRs</span><span class="chip-value">739 (sampled 100)</span></div>
+          <div class="meta-chip"><span class="chip-label">Auth PR self-merge</span><span class="chip-value val-bad">PR #1309 self-merged in 3 min</span></div>
+          <div class="meta-chip"><span class="chip-label">Top contributor</span><span class="chip-value">NevilleQingNY 30.2% &mdash; multi-contributor team</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- F4 INFO -->
+    <div class="finding-card info stack-md">
+      <div class="finding-header">
+        <span class="tag info-tag">Info</span>
+        <span class="status-chip mitigated">Partially mitigated</span>
+        <h3>F4 &mdash; Self-host defaults &mdash; 888888 master auth code; JWT_SECRET default value</h3>
+        <div class="action-hint warn">If you self-host: explicitly set <code>APP_ENV=production</code> in <code>.env</code> and change <code>JWT_SECRET</code> from the default.</div>
+      </div>
+      <div class="finding-body">
+        <p class="p-meta-tight"><em>Partially mitigated &middot; Non-Docker self-host path &middot; &rarr; Info finding</em></p>
+        <p><code>server/internal/handler/auth.go:169</code>: <code>isMasterCode := code == "888888" &amp;&amp; os.Getenv("APP_ENV") != "production"</code>. This allows any actor who knows the email of a registered user to log in as that user using the code <code>888888</code> &mdash; bypassing email verification entirely &mdash; when <code>APP_ENV</code> is not set to <code>production</code>. PR #1307 (2026-04-18) updated the Docker self-host stack to default <code>APP_ENV=production</code>, which disables the bypass for new Docker deployments. Non-Docker self-hosters who copy <code>.env.example</code> without modification do not have <code>APP_ENV</code> in <code>.env.example</code> and must add it manually. The <code>docker-compose.selfhost.yml</code> also sets <code>JWT_SECRET: ${JWT_SECRET:-change-me-in-production}</code> &mdash; the fallback is a known string if <code>.env</code> does not override it. The <code>install.sh --with-server</code> path generates a random JWT_SECRET via <code>openssl rand -hex 32</code>, mitigating this for users who install via that path.</p>
+        <p><strong>What this does NOT mean.</strong> The cloud-managed service (multica.ai) is not affected by this finding. This applies only to self-hosted deployments.</p>
+        <div class="finding-meta">
+          <div class="meta-chip"><span class="chip-label">888888 gate</span><span class="chip-value"><code>APP_ENV != "production"</code> &mdash; Docker now defaults to production</span></div>
+          <div class="meta-chip"><span class="chip-label">Non-Docker self-host</span><span class="chip-value val-warn">Must set APP_ENV=production manually</span></div>
+          <div class="meta-chip"><span class="chip-label">JWT_SECRET default</span><span class="chip-value"><code>change-me-in-production</code> in compose fallback</span></div>
+          <div class="meta-chip"><span class="chip-label">install.sh --with-server</span><span class="chip-value val-good">Generates random JWT_SECRET via openssl</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- F5 INFO -->
+    <div class="finding-card info stack-md">
+      <div class="finding-header">
+        <span class="tag info-tag">Info</span>
+        <span class="status-chip informational">Informational</span>
+        <h3>F5 &mdash; Agent-rule files &mdash; CLAUDE.md and AGENTS.md committed (Tier 1 auto-loaded; content OK)</h3>
+        <div class="action-hint ok">No action needed today. Subscribe to repo releases &mdash; a future change to either file reaches every contributor&rsquo;s Claude Code session automatically.</div>
+      </div>
+      <div class="finding-body">
+        <p class="p-meta-tight"><em>Informational &middot; Repo contributors &middot; &rarr; Subscribe to releases for changes</em></p>
+        <p>Two Tier 1 auto-loaded agent-rule files are committed to the repository root: <code>CLAUDE.md</code> (300+ line developer guide for Claude Code, auto-loaded at every session start in this repo) and <code>AGENTS.md</code> (pointer document to <code>CLAUDE.md</code>, auto-loaded by AI agent platforms that honor the AGENTS.md convention).</p>
+        <p>Content scan of both files: no AI-directed manipulation language found. No <code>ignore previous instructions</code>, no jailbreak patterns, no credential requests, no file path exfiltration, no network command invocations targeting the scanner. The imperative language is standard developer guidance (&ldquo;run <code>make check</code>&rdquo;, &ldquo;use atomic commits&rdquo;).</p>
+        <p><strong>Capability statement.</strong> These files currently instruct contributors&rsquo; Claude Code sessions to follow multica&rsquo;s architectural conventions, run the verification pipeline before pushing, and use specific Go/TypeScript patterns.</p>
+        <p><strong>Risk statement.</strong> If either file were tampered with (e.g., via a compromised maintainer account and the absent branch protection of F0), malicious instructions would reach every contributor&rsquo;s Claude Code session on the next session start &mdash; without opt-in or notification.</p>
+        <div class="finding-meta">
+          <div class="meta-chip"><span class="chip-label">CLAUDE.md</span><span class="chip-value">Auto-load Tier 1 &middot; No manipulation language &middot; 300+ lines</span></div>
+          <div class="meta-chip"><span class="chip-label">AGENTS.md</span><span class="chip-value">Auto-load Tier 1 &middot; Pointer doc only</span></div>
+          <div class="meta-chip"><span class="chip-label">Injection patterns</span><span class="chip-value val-good">0 found (0 actionable)</span></div>
+        </div>
+      </div>
+    </div>
+
+    </div>
+  </details>
+
+  <!-- ═══════════════ SECTION 02A: EXECUTABLE FILE INVENTORY ═══════════════ -->
+  <details class="collapsible-section">
+    <summary>
+      <div class="section-header">
+        <span class="section-number">02A</span>
+        <h2>Executable File Inventory</h2>
+        <span class="section-status">
+          <span class="pill amber">&#x26A0; 3 install-time executables</span>
+          <span class="pill info">&#x2139; 5 runtime files inventoried</span>
+        </span>
+      </div>
+      <div class="section-subtitle">
+        Multica ships a Go CLI binary (via Homebrew, GitHub Releases, curl-pipe), a PowerShell installer, and a full Docker stack. No lifecycle scripts in inner npm packages. No prompt injection attempts found in any inventoried file.
+      </div>
+    </summary>
+    <div class="section-body">
+
+    <div class="inventory-summary">
+      <ul>
+        <li>&#x26A0; <code>scripts/install.sh</code> &mdash; runs at install time; downloads and executes CLI binary from GitHub Releases; no checksum on Linux/Mac. <strong>F1 finding.</strong></li>
+        <li>&#x2705; <code>scripts/install.ps1</code> &mdash; runs at install time on Windows; downloads CLI zip; SHA256 verified. Safer than Linux path.</li>
+        <li>&#x2705; <code>apps/desktop/src/main/daemon-manager.ts</code> &mdash; runs at Electron app start; spawns multica CLI daemon via <code>execFile</code>; binary path is hardcoded to installed CLI location, not user-controlled.</li>
+        <li>&#x2705; <code>apps/desktop/src/main/cli-bootstrap.ts</code> &mdash; runs when Electron detects CLI version mismatch; downloads updated CLI binary via release URL; no checksum verification (same gap as install.sh on Linux/Mac).</li>
+        <li>&#x2705; <code>.github/workflows/ci.yml</code> &mdash; runs on every push/PR; builds and tests only; no secrets access.</li>
+        <li>&#x26A0; <code>.github/workflows/release.yml</code> &mdash; runs on semver tag push; uses goreleaser with GITHUB_TOKEN + HOMEBREW_TAP_GITHUB_TOKEN. <strong>F2 finding.</strong></li>
+        <li>&#x2139; <code>CLAUDE.md</code> &mdash; Tier 1 auto-loaded for every Claude Code contributor session. Content clean. <strong>F5.</strong></li>
+        <li>&#x2139; <code>AGENTS.md</code> &mdash; Tier 1 auto-loaded for AGENTS.md-aware platforms. Pointer doc. <strong>F5.</strong></li>
+      </ul>
+    </div>
+
+    <table>
+      <thead>
+        <tr><th>File</th><th>Kind</th><th>Runtime</th><th>Dangerous calls</th><th>Network</th><th>Notes</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>scripts/install.sh</code></td><td>Bash installer</td><td>Install-time (user runs)</td><td>None (no eval, no dynamic exec)</td><td>curl releases/latest + raw.githubusercontent.com/main</td><td>No checksum on binary download (Linux/Mac)</td></tr>
+        <tr><td><code>scripts/install.ps1</code></td><td>PowerShell installer</td><td>Install-time (Windows)</td><td>Invoke-WebRequest, Invoke-RestMethod</td><td>GitHub API + Releases</td><td>SHA256 verified before extract</td></tr>
+        <tr><td><code>apps/desktop/src/main/daemon-manager.ts</code></td><td>Electron main process</td><td>App startup</td><td>execFile (multica CLI binary)</td><td>None (IPC to renderer only)</td><td>bin path resolved from app bundle, not user input</td></tr>
+        <tr><td><code>apps/desktop/src/main/cli-bootstrap.ts</code></td><td>Electron main process</td><td>On CLI version mismatch</td><td>execFile (CLI binary)</td><td>curl GitHub Releases</td><td>No checksum on downloaded CLI update</td></tr>
+        <tr><td><code>.github/workflows/release.yml</code></td><td>GitHub Actions</td><td>Tag push</td><td>goreleaser action (builds+publishes)</td><td>GitHub Releases, Homebrew tap</td><td>HOMEBREW_TAP_GITHUB_TOKEN scope</td></tr>
+        <tr><td><code>CLAUDE.md</code></td><td>Agent rule file</td><td>Every contributor Claude Code session</td><td>n/a</td><td>n/a</td><td>Tier 1 auto-load, content clean</td></tr>
+        <tr><td><code>AGENTS.md</code></td><td>Agent rule file</td><td>Every AGENTS-aware agent session</td><td>n/a</td><td>n/a</td><td>Pointer to CLAUDE.md</td></tr>
+      </tbody>
+    </table>
+
+    </div>
+  </details>
+
+  <!-- ═══════════════ SECTION 03: SUSPICIOUS CODE CHANGES ═══════════════ -->
+  <details class="collapsible-section">
+    <summary>
+      <div class="section-header">
+        <span class="section-number">03</span>
+        <h2>Suspicious Code Changes</h2>
+        <span class="section-status">
+          <span class="pill green">&#x2713; 0 externally-reported security PRs</span>
+          <span class="pill amber">&#x26A0; 2 security self-merges flagged</span>
+          <span class="pill info">&#x2139; 100 recent merges sampled</span>
+        </span>
+      </div>
+      <div class="section-subtitle">
+        High-velocity team shipping features and bug fixes daily. Two PRs flagged: a 3-minute auth-fix self-merge and an AI-agent-authored master-code-disable that was merged without review.
+      </div>
+    </summary>
+    <div class="section-body">
+
+    <p class="p-meta">Sample: 100 most recent merged PRs (of 739 total). Formal review rate: 1/100 = 1%. Any-review rate: 1/100 = 1%. Sampled 2026-03-xx through 2026-04-18.</p>
+
+    <table>
+      <thead>
+        <tr><th>PR</th><th>What it did</th><th>Submitted by</th><th>Merged by</th><th>Reviewed?</th><th>Concern</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><a href="https://github.com/multica-ai/multica/pull/1309">#1309</a></td><td>fix(auth): validate next= redirect to prevent open redirect</td><td>Bohan-J (founder)</td><td>Bohan-J</td><td>No</td><td>Self-merge in 3 min &mdash; security fix, no second reviewer</td></tr>
+        <tr><td><a href="https://github.com/multica-ai/multica/pull/1307">#1307</a></td><td>fix(selfhost): disable dev master code by default in Docker</td><td>kagura-agent (AI)</td><td>Bohan-J</td><td>No</td><td>Security-sensitive; AI agent authored; no review</td></tr>
+        <tr><td><a href="https://github.com/multica-ai/multica/pull/1280">#1280</a></td><td>ci(release): restrict tag pattern to semver; reject -dirty</td><td>ldnvnbl</td><td>devv-eve</td><td>No</td><td>CI security improvement; cross-merge, no review</td></tr>
+        <tr><td><a href="https://github.com/multica-ai/multica/pull/1322">#1322</a></td><td>fix(views): prevent infinite re-render loops</td><td>forrestchang</td><td>forrestchang</td><td>No</td><td>Bug fix; not security-critical</td></tr>
+        <tr><td><a href="https://github.com/multica-ai/multica/pull/1313">#1313</a></td><td>docs(selfhost): clarify 888888 is disabled by default</td><td>Bohan-J</td><td>Bohan-J</td><td>No</td><td>Documentation; follows PR #1307</td></tr>
+      </tbody>
+    </table>
+
+    <p class="p-meta stack-sm">No changelog-hiding pattern detected (security PRs are labeled <code>fix(auth)</code> and <code>fix(selfhost)</code> &mdash; security keywords present in titles). No rejected community security fixes. No first-time contributors touching security-critical files in the sample.</p>
+
+    </div>
+  </details>
+
+  <!-- ═══════════════ SECTION 04: TIMELINE ═══════════════ -->
+  <details class="collapsible-section">
+    <summary>
+      <div class="section-header">
+        <span class="section-number">04</span>
+        <h2>Timeline</h2>
+        <span class="section-status">
+          <span class="pill green">&#x2713; 5 positive</span>
+          <span class="pill amber">&#x26A0; 3 caution</span>
+          <span class="pill info">&#x2139; 2 context</span>
+        </span>
+      </div>
+      <div class="section-subtitle">
+        10 beats across 3 months of active development. Story arc: fast-growing startup shipping daily with improving security hygiene (auth redirect fix, master code disable, CI tag restriction all in the last week) but governance infrastructure still lagging the release velocity.
+      </div>
+    </summary>
+    <div class="section-body">
+
+    <div class="timeline">
+      <div class="tl-item good">
+        <div class="tl-date">2026-01-13 <span class="tl-severity-label">FOUNDED</span></div>
+        <div class="tl-content">multica-ai org created; repo launched as open-source with TypeScript+Go monorepo, Homebrew distribution, and GoReleaser checksums from day one.</div>
+      </div>
+      <div class="tl-item neutral">
+        <div class="tl-date">2026-01-15 <span class="tl-severity-label">RULESET CREATED</span></div>
+        <div class="tl-content">Ruleset <code>protect-main-branch</code> created but with <code>enforcement: disabled</code>. Branch protection exists on paper, not in practice.</div>
+      </div>
+      <div class="tl-item good">
+        <div class="tl-date">2026-04-14 to 15 <span class="tl-severity-label">STEADY SHIP</span></div>
+        <div class="tl-content">v0.1.35 &rarr; v0.2.0 shipped (major version bump). Daily release cadence established. 16,000+ stars accumulated in 3 months.</div>
+      </div>
+      <div class="tl-item bad">
+        <div class="tl-date">2026-04-18 <span class="tl-severity-label">SECURITY FIX 1</span></div>
+        <div class="tl-content">PR <a href="https://github.com/multica-ai/multica/pull/1309">#1309</a>: open-redirect fix in auth handler. Self-merged by author in 3 minutes. No advisory filed.</div>
+      </div>
+      <div class="tl-item bad">
+        <div class="tl-date">2026-04-18 <span class="tl-severity-label">SECURITY FIX 2</span></div>
+        <div class="tl-content">PR <a href="https://github.com/multica-ai/multica/pull/1307">#1307</a>: 888888 master code disabled in Docker default. Authored by AI agent <code>kagura-agent</code>, merged by Bohan-J in 73 min. No advisory filed.</div>
+      </div>
+      <div class="tl-item good">
+        <div class="tl-date">2026-04-18 <span class="tl-severity-label">CI HARDENING</span></div>
+        <div class="tl-content">PR <a href="https://github.com/multica-ai/multica/pull/1280">#1280</a>: tag pattern restricted to semver; <code>-dirty</code> tags rejected. Prevents accidental dirty releases.</div>
+      </div>
+      <div class="tl-item bad">
+        <div class="tl-date">2026-04-19 <span class="tl-severity-label">SCAN</span></div>
+        <div class="tl-content">At scan time: no SECURITY.md, no branch protection, 1% review rate, curl-pipe-from-main installer with no Linux/Mac checksum. Active daily release cadence.</div>
+      </div>
+    </div>
+
+    </div>
+  </details>
+
+  <!-- ═══════════════ SECTION 05: REPO VITALS ═══════════════ -->
+  <details class="collapsible-section">
+    <summary>
+      <div class="section-header">
+        <span class="section-number">05</span>
+        <h2>Repo Vitals</h2>
+        <span class="section-status">
+          <span class="pill info">&#x2139; Informational</span>
+        </span>
+      </div>
+      <div class="section-subtitle">
+        Key metrics at scan time.
+      </div>
+    </summary>
+    <div class="section-body">
+
+    <div class="vitals-grid">
+      <div class="vital-cell">
+        <div class="vital-label">Repo age</div>
+        <div class="vital-value">3 months</div>
+        <div class="vital-note">Created 2026-01-13 &mdash; very new</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Stars / Forks</div>
+        <div class="vital-value">16,457 / 2,038</div>
+        <div class="vital-note">Rapid growth &mdash; 3 months old</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Primary maintainer</div>
+        <div class="vital-value">NevilleQingNY (739 commits)</div>
+        <div class="vital-note">2.5yr account, 39 followers &mdash; established but younger than co-founders</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Co-founders</div>
+        <div class="vital-value">forrestchang, Bohan-J, ldnvnbl</div>
+        <div class="vital-note">7-13yr accounts, legitimate histories</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Review rate (sample of 100)</div>
+        <div class="vital-value val-bad">1% formal / 1% any-review</div>
+        <div class="vital-note">Well below 30% threshold; process gap in fast-moving startup</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Branch protection</div>
+        <div class="vital-value val-bad">None effective</div>
+        <div class="vital-note">Classic: 404. Ruleset: exists but enforcement=disabled</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">CODEOWNERS</div>
+        <div class="vital-value val-bad">Absent</div>
+        <div class="vital-note">All 4 standard paths checked</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Dependabot alerts</div>
+        <div class="vital-value val-warn">Unknown</div>
+        <div class="vital-note">403 &mdash; admin scope required; osv.dev: pg package has 1 known vuln</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Security advisories</div>
+        <div class="vital-value val-bad">0 filed</div>
+        <div class="vital-note">No GHSA advisories; recent security fixes shipped without advisory</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Runtime dependencies</div>
+        <div class="vital-value">Go: 12 direct; Node: pnpm monorepo</div>
+        <div class="vital-note">AWS SDK, chi, jwt, pgx, gorilla/websocket</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Install-time hooks</div>
+        <div class="vital-value val-good">None</div>
+        <div class="vital-note">No preinstall/postinstall in inner npm packages</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Publish auth</div>
+        <div class="vital-value">GoReleaser via tag push</div>
+        <div class="vital-note">GITHUB_TOKEN + HOMEBREW_TAP_GITHUB_TOKEN</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">CI workflows</div>
+        <div class="vital-value">2 (ci.yml, release.yml)</div>
+        <div class="vital-note">0 pull_request_target; 2 unpinned third-party actions</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Releases</div>
+        <div class="vital-value">35+ (daily cadence)</div>
+        <div class="vital-note">Latest: v0.2.6 on 2026-04-18</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">OSSF Scorecard</div>
+        <div class="vital-value val-warn">Not indexed</div>
+        <div class="vital-note">Not yet indexed by securityscorecards.dev</div>
+        <div class="vital-explainer">Independent security rating from the <a href="https://securityscorecards.dev/" target="_blank" rel="noopener">Open Source Security Foundation</a>. Scores 24 security practices 0&ndash;10; most repos score 3&ndash;5.</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Dependency Vulnerabilities</div>
+        <div class="vital-value val-warn">pg devDep: 1 known vuln</div>
+        <div class="vital-note">Queried root devDependencies; pg is a dev-only dep</div>
+        <div class="vital-explainer">Checked against <a href="https://osv.dev/" target="_blank" rel="noopener">osv.dev</a>, a free Google-backed vulnerability database.</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Secrets in Code History</div>
+        <div class="vital-value val-warn">Not scanned</div>
+        <div class="vital-note">gitleaks not available on this scanner instance</div>
+        <div class="vital-explainer">Scanned by <a href="https://gitleaks.io/" target="_blank" rel="noopener">gitleaks</a> for secrets in git history. &ldquo;Not scanned&rdquo; means tool unavailable, not that the code is clean.</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">API Rate Budget</div>
+        <div class="vital-value val-good">4,974 / 5000</div>
+        <div class="vital-note">PR sample: 100 (full)</div>
+        <div class="vital-explainer">GitHub limits API calls to 5,000/hour. &ldquo;Full&rdquo; means every PR was checked.</div>
+      </div>
+    </div>
+
+    </div>
+  </details>
+
+  <!-- ═══════════════ SECTION 06: INVESTIGATION COVERAGE ═══════════════ -->
+  <details class="collapsible-section">
+    <summary>
+      <div class="section-header">
+        <span class="section-number">06</span>
+        <h2>Investigation Coverage</h2>
+        <span class="section-status">
+          <span class="pill green">&#x2713; 15/15 coverage cells attempted</span>
+          <span class="pill amber">&#x26A0; 3 caveats</span>
+        </span>
+      </div>
+      <div class="section-subtitle">
+        Comprehensive coverage. Tarball extracted at pinned SHA. All CI workflows read. Main coverage gap is Dependabot (scope) and OSSF Scorecard (not indexed).
+      </div>
+    </summary>
+    <div class="section-body">
+
+    <div class="vitals-grid">
+      <div class="vital-cell">
+        <div class="vital-label">Tarball extraction</div>
+        <div class="vital-value val-good">951 files extracted</div>
+        <div class="vital-note">Pinned to <code>b8907dda8d313cc96f0927da6dce2ea121fde43e</code></div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Workflow files read</div>
+        <div class="vital-value val-good">2 of 2</div>
+        <div class="vital-note">ci.yml, release.yml</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">SHA-pinning coverage</div>
+        <div class="vital-value val-warn">2/7 external actions at mutable tags</div>
+        <div class="vital-note">goreleaser, pnpm; 5/7 are GitHub-org actions</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">pull_request_target scan</div>
+        <div class="vital-value val-good">0 occurrences</div>
+        <div class="vital-note">Verified across 2 workflows</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Monorepo scope</div>
+        <div class="vital-value val-good">Verified</div>
+        <div class="vital-note">9 package.json files; inner lifecycle scripts: none</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">README paste-scan (Step 7.5)</div>
+        <div class="vital-value val-good">0 paste-blocks found</div>
+        <div class="vital-note">Verified &mdash; 0 paste-blocks found</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Agent-rule files (Step 2.5)</div>
+        <div class="vital-value val-good">2 found</div>
+        <div class="vital-note">CLAUDE.md (Tier 1), AGENTS.md (Tier 1)</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Prompt-injection scan (F8)</div>
+        <div class="vital-value val-good">1 match / 0 actionable</div>
+        <div class="vital-note">1 file matched pattern; 0 actionable (false positive: code comment in hermes.go)</div>
+        <div class="vital-explainer">Checks if the repo contains text designed to manipulate AI tools that read it.</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Distribution channels (F1)</div>
+        <div class="vital-value val-warn">3/4 verified</div>
+        <div class="vital-note">Homebrew &#x2713;, Windows PS1 &#x2713;, git clone &#x2713;; curl-pipe &#x26A0; no Linux/Mac binary checksum</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Windows surface (F16)</div>
+        <div class="vital-value val-good">Inspected</div>
+        <div class="vital-note">install.ps1 inspected &mdash; checksum verification present; no -ExecutionPolicy Bypass</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Dangerous-primitive grep</div>
+        <div class="vital-value val-good">0 actionable hits</div>
+        <div class="vital-note">dangerouslySetInnerHTML is sanitized; execFile bounded to known binary path</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Review-rate sample</div>
+        <div class="vital-value val-good">100 of 739 sampled</div>
+        <div class="vital-note">1/100 formal (1%), 1/100 any-review (1%)</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Dependency scan</div>
+        <div class="vital-value val-warn">Dependabot: 403</div>
+        <div class="vital-note">admin:repo_hook scope missing &mdash; state unknown</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">OSSF Scorecard</div>
+        <div class="vital-value val-warn">Not indexed</div>
+        <div class="vital-note">Repo is 3 months old; likely not yet indexed</div>
+        <div class="vital-explainer">Independent security rating from the <a href="https://securityscorecards.dev/" target="_blank" rel="noopener">Open Source Security Foundation</a>.</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Dependency Vulnerabilities</div>
+        <div class="vital-value val-warn">pg: 1 vuln found</div>
+        <div class="vital-note">12 root devDeps queried</div>
+        <div class="vital-explainer">Checked against <a href="https://osv.dev/" target="_blank" rel="noopener">osv.dev</a>, free Google-backed vulnerability database.</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Secrets in Code History</div>
+        <div class="vital-value val-warn">Not scanned</div>
+        <div class="vital-note">gitleaks not available</div>
+        <div class="vital-explainer">Scanned by <a href="https://gitleaks.io/" target="_blank" rel="noopener">gitleaks</a> for secrets/API keys in git history.</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">API Rate Budget</div>
+        <div class="vital-value val-good">4,974/5000 remaining</div>
+        <div class="vital-note">PR sample: 100 (full)</div>
+        <div class="vital-explainer">GitHub limits API calls to 5,000/hour.</div>
+      </div>
+    </div>
+
+    <p class="p-meta stack-sm"><strong>Gaps noted:</strong></p>
+    <ol>
+      <li class="p-meta">Dependabot alerts &mdash; 403 returned (admin:repo_hook scope required). Cannot confirm whether Dependabot is enabled or whether any alerts are open. State: unknown.</li>
+      <li class="p-meta">OSSF Scorecard &mdash; not indexed. Repo is 3 months old; likely not yet indexed.</li>
+      <li class="p-meta">Org-level rulesets &mdash; admin:org scope required. Cannot confirm whether org rulesets provide additional protection. State: unknown.</li>
+      <li class="p-meta">Secrets-in-history (gitleaks) &mdash; tool not available. Not a clean-history claim.</li>
+    </ol>
+
+    </div>
+  </details>
+
+  <!-- ═══════════════ SECTION 07: EVIDENCE APPENDIX ═══════════════ -->
+  <details class="collapsible-section">
+    <summary>
+      <div class="section-header">
+        <span class="section-number">07</span>
+        <h2>Evidence Appendix</h2>
+        <span class="section-status">
+          <span class="pill green">&#x2713; 12 facts</span>
+          <span class="pill amber">&#x26A0; 3 priority</span>
+        </span>
+      </div>
+      <div class="section-subtitle">
+        12 command-backed claims. <strong>Skip ahead to items marked START HERE</strong> &mdash; those are the most consequential for the verdict.
+      </div>
+    </summary>
+    <div class="section-body">
+
+    <div class="evidence-group-label warns">&#x2605; Priority evidence (read first)</div>
+
+    <div class="finding-card evidence-priority stack-md">
+      <div class="finding-header">
+        <span class="priority-flag inline">&#x2605; START HERE</span>
+        <h3>E1 &mdash; No effective branch protection on main (F0 / C20)</h3>
+      </div>
+      <div class="finding-body">
+        <pre>gh api "repos/multica-ai/multica/branches/main/protection" 2&gt;&amp;1 | head -5
+gh api "repos/multica-ai/multica/rulesets" 2&gt;&amp;1
+gh api "repos/multica-ai/multica/rules/branches/main" 2&gt;&amp;1</pre>
+        <pre>Branch protection: {"message":"Not Found","status":"404"}
+Rulesets: [{"id":11828157,"name":"protect-main-branch","enforcement":"disabled",
+  "rules":[{"type":"deletion"},{"type":"non_fast_forward"}],...}]
+Rules on main: []</pre>
+        <p class="p-meta"><em>Classification: Confirmed fact &mdash; three separate API calls confirm: no classic protection (404), one ruleset exists but enforcement=disabled, and no rules apply to the main branch.</em></p>
+      </div>
+    </div>
+
+    <div class="finding-card evidence-priority stack-md">
+      <div class="finding-header">
+        <span class="priority-flag inline">&#x2605; START HERE</span>
+        <h3>E2 &mdash; install.sh fetches from main with no binary checksum (F1)</h3>
+      </div>
+      <div class="finding-body">
+        <pre># Script delivery:
+head -10 scripts/install.sh
+# Binary verification function:
+grep -n 'checksum\|sha256\|hash\|verify' scripts/install.sh</pre>
+        <pre># curl -fsSL https://raw.githubusercontent.com/multica-ai/multica/main/scripts/install.sh | bash
+install_cli_binary() {
+  # Get latest release tag
+  local latest
+  latest=$(curl -sI "$REPO_WEB_URL/releases/latest" ...)
+  ...
+  curl -fsSL "$url" -o "$tmp_dir/multica.tar.gz"
+  tar -xzf "$tmp_dir/multica.tar.gz" -C "$tmp_dir" multica
+  ...
+}
+# No checksum lines found in install.sh (grep returned no output)</pre>
+        <p class="p-meta"><em>Classification: Confirmed fact &mdash; grep for checksum/sha256/hash/verify in install.sh returned zero matches on the Linux/Mac binary installation path.</em></p>
+      </div>
+    </div>
+
+    <div class="finding-card evidence-priority stack-md">
+      <div class="finding-header">
+        <span class="priority-flag inline">&#x2605; START HERE</span>
+        <h3>E3 &mdash; 888888 master auth code in source (F4)</h3>
+      </div>
+      <div class="finding-body">
+        <pre>grep -nP '888888|APP_ENV' server/internal/handler/auth.go
+grep -nP 'JWT_SECRET' docker-compose.selfhost.yml .env.example</pre>
+        <pre>auth.go:169: isMasterCode := code == "888888" &amp;&amp; os.Getenv("APP_ENV") != "production"
+docker-compose.selfhost.yml:45: JWT_SECRET: ${JWT_SECRET:-change-me-in-production}
+.env.example:10: JWT_SECRET=change-me-in-production</pre>
+        <p class="p-meta"><em>Classification: Confirmed fact &mdash; source code at scanned SHA contains the 888888 bypass gated on APP_ENV. Default JWT_SECRET is a known string in both .env.example and the docker-compose fallback.</em></p>
+      </div>
+    </div>
+
+    <div class="evidence-group-label context">Other evidence supporting Warnings</div>
+
+    <div class="finding-card stack-md">
+      <div class="finding-header">
+        <h3>E4 &mdash; goreleaser action unpinned with Homebrew PAT (F2)</h3>
+      </div>
+      <div class="finding-body">
+        <pre>grep -nP 'uses:|HOMEBREW_TAP_GITHUB_TOKEN' .github/workflows/release.yml</pre>
+        <pre>uses: goreleaser/goreleaser-action@v6
+env:
+  GITHUB_TOKEN: $&#123;&#123; secrets.GITHUB_TOKEN &#125;&#125;
+  HOMEBREW_TAP_GITHUB_TOKEN: $&#123;&#123; secrets.HOMEBREW_TAP_GITHUB_TOKEN &#125;&#125;</pre>
+        <p class="p-meta"><em>Classification: Confirmed fact &mdash; third-party action using mutable @v6 tag, with Homebrew PAT in scope.</em></p>
+      </div>
+    </div>
+
+    <div class="finding-card stack-md">
+      <div class="finding-header">
+        <h3>E5 &mdash; 1% PR review rate (F3)</h3>
+      </div>
+      <div class="finding-body">
+        <pre>gh pr list -R multica-ai/multica --state merged --limit 100 \
+  --json number,title,reviewDecision,reviews | python3 -c "
+import sys,json
+prs=json.load(sys.stdin)
+formal=sum(1 for p in prs if p.get('reviewDecision'))
+any_r=sum(1 for p in prs if p.get('reviews'))
+print(f'Formal: {formal}/100. Any-review: {any_r}/100.')
+"</pre>
+        <pre>Formal: 1/100. Any-review: 1/100.</pre>
+        <p class="p-meta"><em>Classification: Confirmed fact &mdash; sampled 100 most recent merged PRs, 1 had formal reviewDecision set.</em></p>
+      </div>
+    </div>
+
+    <div class="finding-card stack-md">
+      <div class="finding-header">
+        <h3>E6 &mdash; PR #1309 auth fix self-merged in 3 minutes (F3)</h3>
+      </div>
+      <div class="finding-body">
+        <pre>gh pr view 1309 -R multica-ai/multica --json title,author,mergedBy,createdAt,mergedAt,reviewDecision</pre>
+        <pre>{"title":"fix(auth): validate next= redirect target to prevent open redirect",
+ "author":{"login":"Bohan-J"},"mergedBy":{"login":"Bohan-J"},
+ "createdAt":"2026-04-18T05:21:04Z","mergedAt":"2026-04-18T05:24:01Z",
+ "reviewDecision":null}</pre>
+        <p class="p-meta"><em>Classification: Confirmed fact &mdash; author equals mergedBy (self-merge), 3-minute window, no reviewDecision.</em></p>
+      </div>
+    </div>
+
+    <div class="finding-card stack-md">
+      <div class="finding-header">
+        <h3>E7 &mdash; No CODEOWNERS found (F0)</h3>
+      </div>
+      <div class="finding-body">
+        <pre>for P in CODEOWNERS .github/CODEOWNERS docs/CODEOWNERS .gitlab/CODEOWNERS; do
+  gh api "repos/multica-ai/multica/contents/$P" 2&gt;&amp;1 | head -1
+done</pre>
+        <pre>{"message":"Not Found",...}
+{"message":"Not Found",...}
+{"message":"Not Found",...}
+{"message":"Not Found",...}</pre>
+        <p class="p-meta"><em>Classification: Confirmed fact &mdash; all four standard CODEOWNERS locations returned 404.</em></p>
+      </div>
+    </div>
+
+    <div class="finding-card stack-md">
+      <div class="finding-header">
+        <h3>E8 &mdash; No SECURITY.md (F0 / scorecard)</h3>
+      </div>
+      <div class="finding-body">
+        <pre>gh api "repos/multica-ai/multica/community/profile" -q '.files.security_policy'</pre>
+        <pre>null</pre>
+        <p class="p-meta"><em>Classification: Confirmed fact &mdash; security_policy field is null; no SECURITY.md present.</em></p>
+      </div>
+    </div>
+
+    <div class="evidence-group-label positives">Evidence supporting OK findings</div>
+
+    <div class="finding-card ok stack-md">
+      <div class="finding-header">
+        <h3>E9 &mdash; dangerouslySetInnerHTML is sanitized (OK)</h3>
+      </div>
+      <div class="finding-body">
+        <pre>grep -n 'rehypeSanitize\|sanitizeSchema' packages/views/editor/readonly-content.tsx packages/ui/markdown/Markdown.tsx</pre>
+        <pre>readonly-content.tsx:26: import rehypeSanitize, { defaultSchema } from "rehype-sanitize";
+readonly-content.tsx:52: const sanitizeSchema = { ... }
+readonly-content.tsx:298: rehypePlugins={[rehypeRaw, [rehypeSanitize, sanitizeSchema]]}
+Markdown.tsx:4: import rehypeSanitize, { defaultSchema } from 'rehype-sanitize'
+Markdown.tsx:404: rehypePlugins={[rehypeRaw, [rehypeSanitize, sanitizeSchema]]}</pre>
+        <p class="p-meta"><em>Classification: Confirmed fact &mdash; rehypeSanitize is imported and applied in the rehypePlugins chain before rendering.</em></p>
+      </div>
+    </div>
+
+    <div class="finding-card ok stack-md">
+      <div class="finding-header">
+        <h3>E10 &mdash; CORS uses explicit whitelist, no wildcard (OK)</h3>
+      </div>
+      <div class="finding-body">
+        <pre>grep -n 'AllowedOrigins\|Access-Control-Allow-Origin.*\*' server/cmd/server/router.go</pre>
+        <pre>AllowedOrigins: origins,  (line 88)
+# No wildcard match found</pre>
+        <p class="p-meta"><em>Classification: Confirmed fact &mdash; CORS uses computed origins array from allowedOrigins() function; no wildcard pattern found.</em></p>
+      </div>
+    </div>
+
+    <div class="finding-card ok stack-md">
+      <div class="finding-header">
+        <h3>E11 &mdash; No lifecycle scripts in inner npm packages (OK)</h3>
+      </div>
+      <div class="finding-body">
+        <pre>for P in $(head -5 /tmp/pkg-list.txt); do
+  grep -HE '"(preinstall|install|postinstall|prepare|prepublishOnly)"' "$P" 2>/dev/null
+done
+echo "Lifecycle check done"</pre>
+        <pre>Lifecycle check done</pre>
+        <p class="p-meta"><em>Classification: Confirmed fact &mdash; grep returned no output; no lifecycle scripts in sampled inner packages.</em></p>
+      </div>
+    </div>
+
+    <div class="finding-card ok stack-md">
+      <div class="finding-header">
+        <h3>E12 &mdash; Windows PS1 verifies SHA256 checksum (OK)</h3>
+      </div>
+      <div class="finding-body">
+        <pre>grep -nP 'checksum\|SHA256\|hash\|verify' scripts/install.ps1 | head -5</pre>
+        <pre>72:    # Verify SHA256 checksum
+73:    $checksumUrl = "https://github.com/.../checksums.txt"
+77:    $actualHash = (Get-FileHash -Path $zipFile -Algorithm SHA256).Hash.ToLower()
+78:    $expectedLine = ...multica_windows_$arch\.zip...</pre>
+        <p class="p-meta"><em>Classification: Confirmed fact &mdash; PS1 downloads and verifies SHA256 checksum before extracting CLI binary.</em></p>
+      </div>
+    </div>
+
+    </div>
+  </details>
+
+  <!-- ═══════════════ SECTION 08: HOW THIS SCAN WORKS ═══════════════ -->
+  <details class="collapsible-section">
+    <summary>
+      <div class="section-header">
+        <span class="section-number">08</span>
+        <h2>How This Scan Works</h2>
+        <span class="section-status">
+          <span class="pill muted">Methodology reference</span>
+        </span>
+      </div>
+      <div class="section-subtitle">
+        What we checked, what tools we used, and what this scan cannot detect.
+      </div>
+    </summary>
+    <div class="section-body">
+
+    <p><strong>What this scan is.</strong> An LLM-driven security investigation using the GitHub CLI (<code>gh</code>) and free public APIs. Not a static analyzer, penetration test, or formal audit. The investigator ran specific commands, read specific files, and synthesized findings from what was observed.</p>
+    <p><strong>What we checked.</strong> Governance and trust (branch protection, CODEOWNERS, maintainer background, review rate), code patterns (dangerous primitives, XSS sinks, auth bypass patterns, hardcoded credentials), supply chain (CI workflow actions, install scripts, artifact verification), AI agent rules (CLAUDE.md, AGENTS.md), and distribution channels (Homebrew, curl-pipe, PowerShell).</p>
+    <p><strong>External tools used.</strong>
+      <a href="https://cli.github.com/" target="_blank" rel="noopener">GitHub CLI</a> &mdash; repo metadata, PRs, issues, workflows.
+      <a href="https://securityscorecards.dev/" target="_blank" rel="noopener">OSSF Scorecard</a> &mdash; not indexed for this repo.
+      <a href="https://osv.dev/" target="_blank" rel="noopener">osv.dev</a> &mdash; dependency vulnerability database (pg devDep: 1 vuln found).
+      <a href="https://gitleaks.io/" target="_blank" rel="noopener">gitleaks</a> &mdash; not available on this scanner instance.
+    </p>
+    <p><strong>What this scan cannot detect.</strong> Transitive dependency vulnerabilities (only direct deps queried), runtime behavior (what the code does when running with real data), published artifact tampering after the GoReleaser checksum is published, sophisticated backdoors designed to evade grep patterns, container contents at runtime, or vulnerabilities introduced after the scanned commit (<code>b8907dd</code>).</p>
+    <p class="p-meta"><strong>Scan methodology version.</strong> Scanner prompt V2.4 &middot; Operator Guide V0.2 &middot; Validator: python3 validate-scanner-report.py</p>
+
+    </div>
+  </details>
+
+  <!-- ═══════════════ FOOTER ═══════════════ -->
+  <div class="footer">
+    Generated by <a href="https://github.com/stefans71/stop-git-std">stop-git-std</a> deep dive &middot; 2026-04-19 &middot; scanned main @ b8907dd (v0.2.6)
+    <br>This report is an automated investigation, not a professional security audit. It may miss issues. If you are making a business decision, consult a security professional.
+  </div>
+
+</div>
+
+</body>
+</html>

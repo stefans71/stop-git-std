@@ -27,8 +27,9 @@ Column notes:
 | 8 | [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) | `764536b` | 2026-04-17 | Caution | -- | First org-owned repo; first Python platform; open security issues; 5 vulns via issue search | `methodology-used: path-b` (delegated) | `v2.4` | [html](GitHub-Scanner-hermes-agent.html) · [md](GitHub-Scanner-hermes-agent.md) |
 | 9 | [gitroomhq/postiz-app](https://github.com/gitroomhq/postiz-app) | `386fc7b` | 2026-04-17 | Caution | -- | Web application; first CVE hits (8 via advisory API); first `pull_request_target` finding; Docker defaults | `methodology-used: path-b` (delegated) | `v2.4` | [html](GitHub-Scanner-postiz-app.html) · [md](GitHub-Scanner-postiz-app.md) |
 | 10 | [pmndrs/zustand](https://github.com/pmndrs/zustand) (V2.4 re-scan) | `3201328` | 2026-04-17 | Clean | -- | V2.4 methodology validation re-scan; OSSF Scorecard 5.9/10; first scan with V2.4 coverage cells | `methodology-used: path-b` (delegated) | `v2.4` | [html](GitHub-Scanner-zustand-v3.html) · [md](GitHub-Scanner-zustand-v3.md) |
+| 11 | [multica-ai/multica](https://github.com/multica-ai/multica) | `b8907dd` | 2026-04-19 | Caution (split) | Deployment · | Agentic task management platform (Go CLI + Electron + Next.js + Docker self-host); curl-pipe-from-main with no binary checksum on Linux/Mac; 888888 dev auth bypass; no branch protection; 1% review rate; GoReleaser checksums on release assets | `methodology-used: path-b` (delegated) | `v2.4` | [html](GitHub-Scanner-multica.html) · [md](GitHub-Scanner-multica.md) |
 
-**Current count: 10 entries (9 full scans + 1 re-run determinism record), all `rendering-pipeline: v2.4`.** JSON-first Trigger #1 fires at 10 full scans — **TRIGGER MET**. Step G will produce the first `v2.5-preview` entry.
+**Current count: 11 entries (10 full scans + 1 re-run determinism record), all `rendering-pipeline: v2.4`.** JSON-first Trigger #1 fires at 10 full scans — **TRIGGER MET**. Step G will produce the first `v2.5-preview` entry.
 
 ---
 
@@ -52,4 +53,4 @@ Column notes:
 ## Changelog
 
 - **2026-04-16** — Catalog created as part of V0.1 Operator Guide promotion. Initial 7 entries (6 full scans + 1 re-run record) migrated from inline §13 of the DRAFT guide. All entries use `methodology-used: path-a`.
-- **2026-04-19** — Added `rendering-pipeline` column (all 10 existing entries tagged `v2.4`). Methodology column annotated with canonical `continuous`/`delegated` names alongside legacy `path-a`/`path-b` flag values. Rename done per U-1 board review (`docs/External-Board-Reviews/041826-step-g-kickoff/`) to eliminate naming collision with the V2.4/V2.5-preview rendering-pipeline axis introduced when `docs/render-md.py` and `docs/render-html.py` shipped in commits `402f933` + `ce698d4`.
+- **2026-04-19** — Added `rendering-pipeline` column (all 10 existing entries tagged `v2.4`). Methodology column annotated with canonical `continuous`/`delegated` names alongside legacy `path-a`/`path-b` flag values. Rename done per U-1 board review (`docs/External-Board-Reviews/041826-step-g-kickoff/`) to eliminate naming collision with the V2.4/V2.5-preview rendering-pipeline axis introduced when `docs/render-md.py` and `docs/render-html.py` shipped in commits `402f933` + `ce698d4`. Added entry #11: multica-ai/multica (path-b delegated, v2.4).
