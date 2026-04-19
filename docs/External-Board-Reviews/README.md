@@ -22,6 +22,7 @@ Per 2026-04-18 SOP compliance: minimum 3 agents per round. Never drop below 3.
 | 2026-04-18 | `041826-fixture-enrichment/` | Step C fix-artifact review (10 FAs for zustand-form.json) | R1 | UNANIMOUS 3-0 APPROVE, applied |
 | 2026-04-18 | `041826-step-f-alignment-validation/` | Step F validation + Step G readiness — XSS, CSS escape, parity regex, deferred-items reconciliation | R1-R4 full | SIGN OFF (2) + SIGN OFF W/ DISSENTS (1, bookkeeping only). Owner fixes in `ce698d4`. |
 | 2026-04-18 → 2026-04-19 | `041826-step-g-kickoff/` | Step G kickoff / U-1 doc integration — V2.5-preview pipeline documented as Step-G-experimental across 5 docs, FX-3b synced to package | R1-R3 | SIGN OFF (1) + SIGN OFF W/ DISSENTS (2, non-blocking carried awareness). Owner commits `60e0bf2` (FX-3b parallel) + `6a3e471` (U-1). |
+| 2026-04-19 | `041926-step-g-execution/` | Step G execution approach — first live V2.5-preview pipeline run on 3 shape-matched repos (zustand/caveman/Archon). 9 fix artifacts + 15 carry-forward dispositions + graduated failure rubric + pilot-and-checkpoint ordering. | R1-R3 | **UNANIMOUS CLEAN SIGN OFF.** 41-item dissent audit, zero silent drops. First review to use SOP §4 pre-archive dissent audit gate. |
 
 ## Current state in the renderer workstream
 
