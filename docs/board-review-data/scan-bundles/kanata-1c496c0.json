@@ -1,0 +1,3676 @@
+{
+  "$comment": "kanata V1.2 wild scan \u2014 fifth wild V1.2 scan; first browser-extension entry in catalog.",
+  "schema_version": "V1.2",
+  "_meta": {
+    "scanner_version": "V2.5-preview",
+    "prompt_version": "V2.4",
+    "scan_started_at": "2026-04-20T14:07:51.365644+00:00",
+    "model": "claude-opus-4-7 (via Claude Code)",
+    "scan_status": "completed",
+    "scan_completed_at": "2026-04-20T14:13:31.045266+00:00"
+  },
+  "target": {
+    "owner": "jtroo",
+    "repo": "kanata",
+    "full_name": "jtroo/kanata",
+    "url": "https://github.com/jtroo/kanata"
+  },
+  "scanner_integrity": {
+    "injection_matches": 0,
+    "actionable_count": 0,
+    "findings": []
+  },
+  "phase_1_raw_capture": {
+    "pre_flight": {
+      "head_sha": "1c496c019dfb0df8a4e8321b54a9a9f8e0b2dc5e",
+      "default_branch": "main",
+      "tarball_extracted": true,
+      "tarball_file_count": 292,
+      "symlinks_stripped": 0,
+      "api_rate_limit": {
+        "limit": 5000,
+        "remaining": 4956,
+        "reset": 1776696468,
+        "used": 44
+      }
+    },
+    "repo_metadata": {
+      "name": "kanata",
+      "description": "Improve keyboard comfort and usability with advanced customization",
+      "created_at": "2022-04-18T04:43:42Z",
+      "pushed_at": "2026-04-19T20:32:36Z",
+      "stargazer_count": 7179,
+      "fork_count": 260,
+      "archived": false,
+      "fork": false,
+      "has_issues_enabled": true,
+      "primary_language": "Rust",
+      "topics": [
+        "cross-platform",
+        "interception-driver",
+        "keyboard",
+        "keyboard-layout",
+        "linux",
+        "macos",
+        "mouse",
+        "mouse-emulation",
+        "rust",
+        "windows"
+      ],
+      "license_spdx": "LGPL-3.0",
+      "default_branch": "main",
+      "open_issues_count": 104,
+      "size_kb": 5531
+    },
+    "contributors": {
+      "top_contributors": [
+        {
+          "contributions": 984,
+          "login": "jtroo"
+        },
+        {
+          "contributions": 149,
+          "login": "ItayGarin"
+        },
+        {
+          "contributions": 47,
+          "login": "rszyma"
+        },
+        {
+          "contributions": 38,
+          "login": "eugenesvk"
+        },
+        {
+          "contributions": 27,
+          "login": "malpern"
+        },
+        {
+          "contributions": 14,
+          "login": "wis"
+        }
+      ],
+      "total_contributor_count": 100
+    },
+    "maintainer_accounts": {
+      "accounts": [
+        {
+          "bio": null,
+          "company": null,
+          "created_at": "2014-02-09T23:43:53Z",
+          "followers": 95,
+          "login": "jtroo",
+          "public_repos": 17,
+          "type": "User",
+          "role": "owner"
+        },
+        {
+          "bio": null,
+          "company": null,
+          "created_at": "2012-11-21T20:13:23Z",
+          "followers": 19,
+          "login": "ItayGarin",
+          "public_repos": 32,
+          "type": "User",
+          "role": "contributor",
+          "contributions": 149
+        },
+        {
+          "bio": "hii\r\n",
+          "company": null,
+          "created_at": "2018-10-20T12:35:49Z",
+          "followers": 8,
+          "login": "rszyma",
+          "public_repos": 42,
+          "type": "User",
+          "role": "contributor",
+          "contributions": 47
+        },
+        {
+          "bio": null,
+          "company": null,
+          "created_at": "2015-06-18T18:10:24Z",
+          "followers": 25,
+          "login": "eugenesvk",
+          "public_repos": 371,
+          "type": "User",
+          "role": "contributor",
+          "contributions": 38
+        },
+        {
+          "bio": "Design & Product",
+          "company": null,
+          "created_at": "2010-05-29T19:44:05Z",
+          "followers": 39,
+          "login": "malpern",
+          "public_repos": 58,
+          "type": "User",
+          "role": "contributor",
+          "contributions": 27
+        }
+      ]
+    },
+    "ossf_scorecard": {
+      "queried": true,
+      "indexed": false,
+      "http_status": 404,
+      "overall_score": null,
+      "checks": [],
+      "raw_response": null
+    },
+    "community_profile": {
+      "health_percentage": 57,
+      "has_code_of_conduct": false,
+      "has_contributing": false,
+      "has_security_policy": false,
+      "license_spdx": "LGPL-3.0"
+    },
+    "branch_protection": {
+      "classic": {
+        "status": 404
+      },
+      "rulesets": {
+        "entries": [],
+        "count": 0
+      },
+      "rules_on_default": {
+        "entries": [],
+        "count": 0
+      },
+      "owner_type": "User",
+      "org_rulesets": {
+        "status": "n/a",
+        "entries": [],
+        "note": "owner is not an Organization"
+      }
+    },
+    "codeowners": {
+      "found": false,
+      "path": null,
+      "content": null,
+      "locations_checked": [
+        "CODEOWNERS",
+        ".github/CODEOWNERS",
+        "docs/CODEOWNERS",
+        ".gitlab/CODEOWNERS"
+      ]
+    },
+    "releases": {
+      "entries": [
+        {
+          "tag_name": "v1.12.0-prerelease-2",
+          "published_at": "2026-04-12T22:25:23Z",
+          "prerelease": true,
+          "draft": false,
+          "author": "jtroo"
+        },
+        {
+          "tag_name": "v1.12.0-prerelease-1",
+          "published_at": "2026-04-04T04:17:03Z",
+          "prerelease": true,
+          "draft": false,
+          "author": "jtroo"
+        },
+        {
+          "tag_name": "v1.11.0",
+          "published_at": "2026-02-09T04:38:07Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "jtroo"
+        },
+        {
+          "tag_name": "v1.10.1",
+          "published_at": "2025-12-17T07:51:50Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "jtroo"
+        },
+        {
+          "tag_name": "v1.10.1-prerelease-1",
+          "published_at": "2025-12-05T11:15:10Z",
+          "prerelease": true,
+          "draft": false,
+          "author": "jtroo"
+        },
+        {
+          "tag_name": "v1.10.0",
+          "published_at": "2025-11-11T20:49:30Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "jtroo"
+        },
+        {
+          "tag_name": "v1.10.0-prerelease-3",
+          "published_at": "2025-11-03T09:43:23Z",
+          "prerelease": true,
+          "draft": false,
+          "author": "jtroo"
+        },
+        {
+          "tag_name": "v1.10.0-prerelease-2",
+          "published_at": "2025-10-11T07:41:23Z",
+          "prerelease": true,
+          "draft": false,
+          "author": "jtroo"
+        },
+        {
+          "tag_name": "v1.10.0-prerelease-1",
+          "published_at": "2025-09-13T07:59:15Z",
+          "prerelease": true,
+          "draft": false,
+          "author": "jtroo"
+        },
+        {
+          "tag_name": "v1.9.0",
+          "published_at": "2025-06-23T07:53:31Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "jtroo"
+        },
+        {
+          "tag_name": "v1.8.1",
+          "published_at": "2025-03-31T01:05:42Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "jtroo"
+        },
+        {
+          "tag_name": "v1.8.0",
+          "published_at": "2025-02-09T07:05:13Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "jtroo"
+        },
+        {
+          "tag_name": "v1.8.0-prerelease-1",
+          "published_at": "2024-12-11T08:34:20Z",
+          "prerelease": true,
+          "draft": false,
+          "author": "jtroo"
+        },
+        {
+          "tag_name": "v1.7.0",
+          "published_at": "2024-10-27T07:42:03Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "jtroo"
+        },
+        {
+          "tag_name": "v1.7.0-prerelease-2",
+          "published_at": "2024-10-20T00:11:35Z",
+          "prerelease": true,
+          "draft": false,
+          "author": "jtroo"
+        },
+        {
+          "tag_name": "v1.7.0-prerelease-1",
+          "published_at": "2024-07-13T08:24:52Z",
+          "prerelease": true,
+          "draft": false,
+          "author": "jtroo"
+        },
+        {
+          "tag_name": "v1.6.1",
+          "published_at": "2024-05-04T05:26:14Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "jtroo"
+        },
+        {
+          "tag_name": "v1.6.1-prerelease-1",
+          "published_at": "2024-04-26T07:05:22Z",
+          "prerelease": true,
+          "draft": false,
+          "author": "jtroo"
+        },
+        {
+          "tag_name": "v1.6.0",
+          "published_at": "2024-04-24T07:34:13Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "jtroo"
+        },
+        {
+          "tag_name": "v1.6.0-prerelease-4",
+          "published_at": "2024-04-15T05:27:34Z",
+          "prerelease": true,
+          "draft": false,
+          "author": "jtroo"
+        },
+        {
+          "tag_name": "v0.3.0-keycode-tester",
+          "published_at": "2024-03-30T06:37:01Z",
+          "prerelease": true,
+          "draft": false,
+          "author": "jtroo"
+        },
+        {
+          "tag_name": "v1.6.0-prerelease-3",
+          "published_at": "2024-03-29T16:43:46Z",
+          "prerelease": true,
+          "draft": false,
+          "author": "jtroo"
+        },
+        {
+          "tag_name": "v1.6.0-prerelease-2",
+          "published_at": "2024-03-25T22:59:09Z",
+          "prerelease": true,
+          "draft": false,
+          "author": "jtroo"
+        },
+        {
+          "tag_name": "v1.6.0-prerelease-1",
+          "published_at": "2024-02-11T08:50:30Z",
+          "prerelease": true,
+          "draft": false,
+          "author": "jtroo"
+        },
+        {
+          "tag_name": "v1.5.0",
+          "published_at": "2023-12-22T06:33:40Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "jtroo"
+        },
+        {
+          "tag_name": "v1.5.0-prerelease-3",
+          "published_at": "2023-11-24T08:29:24Z",
+          "prerelease": true,
+          "draft": false,
+          "author": "jtroo"
+        },
+        {
+          "tag_name": "v1.5.0-prerelease-2",
+          "published_at": "2023-10-25T02:54:27Z",
+          "prerelease": true,
+          "draft": false,
+          "author": "jtroo"
+        },
+        {
+          "tag_name": "v1.5.0-prerelease-1",
+          "published_at": "2023-08-28T05:38:03Z",
+          "prerelease": true,
+          "draft": false,
+          "author": "jtroo"
+        },
+        {
+          "tag_name": "v1.4.0",
+          "published_at": "2023-07-31T16:08:06Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "jtroo"
+        },
+        {
+          "tag_name": "v1.4.0-prerelease-3",
+          "published_at": "2023-07-07T00:54:04Z",
+          "prerelease": true,
+          "draft": false,
+          "author": "jtroo"
+        },
+        {
+          "tag_name": "v1.4.0-prerelease-2",
+          "published_at": "2023-05-23T03:04:53Z",
+          "prerelease": true,
+          "draft": false,
+          "author": "jtroo"
+        },
+        {
+          "tag_name": "v1.4.0-prerelease-1",
+          "published_at": "2023-04-02T23:05:49Z",
+          "prerelease": true,
+          "draft": false,
+          "author": "jtroo"
+        },
+        {
+          "tag_name": "v1.3.0",
+          "published_at": "2023-03-25T06:14:27Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "jtroo"
+        },
+        {
+          "tag_name": "v1.3.0-prerelease-3",
+          "published_at": "2023-03-17T07:36:37Z",
+          "prerelease": true,
+          "draft": false,
+          "author": "jtroo"
+        },
+        {
+          "tag_name": "v1.3.0-prerelease-2",
+          "published_at": "2023-03-12T07:13:40Z",
+          "prerelease": true,
+          "draft": false,
+          "author": "jtroo"
+        },
+        {
+          "tag_name": "v1.3.0-prerelease-1",
+          "published_at": "2023-02-27T07:28:50Z",
+          "prerelease": true,
+          "draft": false,
+          "author": "jtroo"
+        },
+        {
+          "tag_name": "v1.2.1-prerelease-3",
+          "published_at": "2023-02-22T18:23:59Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "jtroo"
+        },
+        {
+          "tag_name": "v1.2.1-prerelease-2",
+          "published_at": "2023-02-18T21:01:10Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "jtroo"
+        },
+        {
+          "tag_name": "v1.2.1-prerelease-1",
+          "published_at": "2023-02-12T21:37:26Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "jtroo"
+        },
+        {
+          "tag_name": "v1.2.0",
+          "published_at": "2023-02-11T10:30:15Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "jtroo"
+        },
+        {
+          "tag_name": "v1.2.0-prerelease-1",
+          "published_at": "2023-01-31T17:38:40Z",
+          "prerelease": true,
+          "draft": false,
+          "author": "jtroo"
+        },
+        {
+          "tag_name": "v1.1.1-prerelease-1",
+          "published_at": "2022-12-21T01:01:30Z",
+          "prerelease": true,
+          "draft": false,
+          "author": "jtroo"
+        },
+        {
+          "tag_name": "v0.2.0-keycode-tester",
+          "published_at": "2022-12-09T07:11:46Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "jtroo"
+        },
+        {
+          "tag_name": "v1.1.0",
+          "published_at": "2022-11-26T22:40:52Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "jtroo"
+        },
+        {
+          "tag_name": "v0.1.0-keycode-tester",
+          "published_at": "2022-11-12T08:09:38Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "jtroo"
+        },
+        {
+          "tag_name": "v1.0.8",
+          "published_at": "2022-11-06T04:48:02Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "jtroo"
+        },
+        {
+          "tag_name": "v1.0.7",
+          "published_at": "2022-08-20T21:37:25Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "jtroo"
+        },
+        {
+          "tag_name": "v1.0.6",
+          "published_at": "2022-07-30T23:42:50Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "jtroo"
+        },
+        {
+          "tag_name": "v1.0.5",
+          "published_at": "2022-07-17T03:32:59Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "jtroo"
+        },
+        {
+          "tag_name": "v1.0.4-3",
+          "published_at": "2022-07-09T20:13:51Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "jtroo"
+        },
+        {
+          "tag_name": "v1.0.3",
+          "published_at": "2022-07-08T00:19:03Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "jtroo"
+        },
+        {
+          "tag_name": "v1.0.2",
+          "published_at": "2022-06-05T05:05:04Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "jtroo"
+        },
+        {
+          "tag_name": "v1.0.1",
+          "published_at": "2022-05-15T06:54:13Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "jtroo"
+        },
+        {
+          "tag_name": "v1.0.0",
+          "published_at": "2022-04-27T18:14:22Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "jtroo"
+        },
+        {
+          "tag_name": "v0.1.4",
+          "published_at": "2022-04-27T03:05:15Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "jtroo"
+        },
+        {
+          "tag_name": "v0.1.3",
+          "published_at": "2022-04-26T04:06:55Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "jtroo"
+        },
+        {
+          "tag_name": "v0.1.2",
+          "published_at": "2022-04-24T20:31:33Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "jtroo"
+        },
+        {
+          "tag_name": "v0.1.1",
+          "published_at": "2022-04-24T16:13:47Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "jtroo"
+        }
+      ],
+      "total_count": 58
+    },
+    "security_advisories": {
+      "count": 0,
+      "entries": []
+    },
+    "workflows": {
+      "entries": [
+        {
+          "name": "build-everything",
+          "path": ".github/workflows/build-everything.yml",
+          "state": "active"
+        },
+        {
+          "name": "linux-build",
+          "path": ".github/workflows/linux-build.yml",
+          "state": "active"
+        },
+        {
+          "name": "macos-build",
+          "path": ".github/workflows/macos-build.yml",
+          "state": "active"
+        },
+        {
+          "name": "cargo-checks",
+          "path": ".github/workflows/rust.yml",
+          "state": "active"
+        },
+        {
+          "name": "windows-build",
+          "path": ".github/workflows/windows-build.yml",
+          "state": "active"
+        }
+      ],
+      "count": 5,
+      "pull_request_target_count": 0
+    },
+    "workflow_contents": {
+      "entries": [
+        {
+          "path": ".github/workflows/macos-build.yml",
+          "content_lines": 60,
+          "sha_pinned_actions_count": 0,
+          "tag_pinned_actions_count": 6,
+          "has_pull_request_target": false,
+          "permissions_block_present": false
+        },
+        {
+          "path": ".github/workflows/rust.yml",
+          "content_lines": 179,
+          "sha_pinned_actions_count": 0,
+          "tag_pinned_actions_count": 9,
+          "has_pull_request_target": false,
+          "permissions_block_present": false
+        },
+        {
+          "path": ".github/workflows/build-everything.yml",
+          "content_lines": 17,
+          "sha_pinned_actions_count": 0,
+          "tag_pinned_actions_count": 0,
+          "has_pull_request_target": false,
+          "permissions_block_present": false
+        },
+        {
+          "path": ".github/workflows/linux-build.yml",
+          "content_lines": 32,
+          "sha_pinned_actions_count": 0,
+          "tag_pinned_actions_count": 3,
+          "has_pull_request_target": false,
+          "permissions_block_present": false
+        },
+        {
+          "path": ".github/workflows/windows-build.yml",
+          "content_lines": 83,
+          "sha_pinned_actions_count": 0,
+          "tag_pinned_actions_count": 6,
+          "has_pull_request_target": false,
+          "permissions_block_present": false
+        }
+      ]
+    },
+    "code_patterns": {
+      "agent_rule_files": [],
+      "readme_paste_blocks": {
+        "scanned": true,
+        "entries": [],
+        "entries_count": 0
+      },
+      "dangerous_primitives": {
+        "scanned": true,
+        "exec": {
+          "hit_count": 0,
+          "files": []
+        },
+        "deserialization": {
+          "hit_count": 1,
+          "files": [
+            {
+              "file": "src/tcp_server.rs",
+              "first_match": {
+                "line": 450,
+                "snippet": "                                            msg: format!(\"Failed to deserialize command: {e}\"),"
+              }
+            }
+          ]
+        },
+        "network": {
+          "hit_count": 0,
+          "files": []
+        },
+        "secrets": {
+          "hit_count": 1,
+          "files": [
+            {
+              "file": "build.rs",
+              "first_match": {
+                "line": 61,
+                "snippet": "                     version=\"6.0.0.0\" processorArchitecture=\"*\" publicKeyToken=\"6595b64144ccf1df\" language=\"*\"></assemb"
+              }
+            }
+          ]
+        },
+        "vendor_keys": {
+          "hit_count": 0,
+          "files": []
+        },
+        "tls_cors": {
+          "hit_count": 1,
+          "files": [
+            {
+              "file": "build.rs",
+              "first_match": {
+                "line": 42,
+                "snippet": "            pb!(\"unknown version format '{}', using '0.0.0.0'\", version);"
+              }
+            }
+          ]
+        },
+        "sql_injection": {
+          "hit_count": 0,
+          "files": []
+        },
+        "cmd_injection": {
+          "hit_count": 0,
+          "files": []
+        },
+        "auth_bypass": {
+          "hit_count": 0,
+          "files": []
+        },
+        "path_traversal": {
+          "hit_count": 0,
+          "files": []
+        },
+        "archive_unsafe": {
+          "hit_count": 0,
+          "files": []
+        },
+        "ssrf": {
+          "hit_count": 0,
+          "files": []
+        },
+        "xss": {
+          "hit_count": 0,
+          "files": []
+        },
+        "weak_crypto": {
+          "hit_count": 0,
+          "files": []
+        },
+        "debug_flags": {
+          "hit_count": 0,
+          "files": []
+        }
+      },
+      "executable_files": [
+        {
+          "path": ".github/workflows/windows-build.yml",
+          "kind": "ci-workflow",
+          "runtime": "github-actions",
+          "line_count": 83,
+          "file_sha": "27c4ab2678bb",
+          "has_network_call": false,
+          "has_env_var_pattern": false
+        },
+        {
+          "path": ".github/workflows/linux-build.yml",
+          "kind": "ci-workflow",
+          "runtime": "github-actions",
+          "line_count": 32,
+          "file_sha": "222fb1604f85",
+          "has_network_call": false,
+          "has_env_var_pattern": false
+        },
+        {
+          "path": ".github/workflows/macos-build.yml",
+          "kind": "ci-workflow",
+          "runtime": "github-actions",
+          "line_count": 60,
+          "file_sha": "2508b01d290c",
+          "has_network_call": false,
+          "has_env_var_pattern": false
+        },
+        {
+          "path": ".github/workflows/rust.yml",
+          "kind": "ci-workflow",
+          "runtime": "github-actions",
+          "line_count": 179,
+          "file_sha": "c8397dbe1a69",
+          "has_network_call": false,
+          "has_env_var_pattern": true
+        },
+        {
+          "path": ".github/workflows/build-everything.yml",
+          "kind": "ci-workflow",
+          "runtime": "github-actions",
+          "line_count": 17,
+          "file_sha": "c235ad6811d8",
+          "has_network_call": false,
+          "has_env_var_pattern": false
+        }
+      ],
+      "install_hooks": []
+    },
+    "prompt_injection_scan": {
+      "scanned_files": [],
+      "injection_signals": [],
+      "signal_count": 0,
+      "scan_method": "tarball"
+    },
+    "dependencies": {
+      "manifest_files": [
+        {
+          "path": "Cargo.toml",
+          "ecosystem": "crates.io"
+        },
+        {
+          "path": "Cargo.lock",
+          "ecosystem": "crates.io"
+        },
+        {
+          "path": "parser/Cargo.toml",
+          "ecosystem": "crates.io"
+        },
+        {
+          "path": "example_tcp_client/Cargo.toml",
+          "ecosystem": "crates.io"
+        },
+        {
+          "path": "tcp_protocol/Cargo.toml",
+          "ecosystem": "crates.io"
+        },
+        {
+          "path": "key-sort-add/Cargo.toml",
+          "ecosystem": "crates.io"
+        },
+        {
+          "path": "key-sort-add/Cargo.lock",
+          "ecosystem": "crates.io"
+        },
+        {
+          "path": "windows_key_tester/Cargo.toml",
+          "ecosystem": "crates.io"
+        },
+        {
+          "path": "keyberon/Cargo.toml",
+          "ecosystem": "crates.io"
+        },
+        {
+          "path": "keyberon/keyberon-macros/Cargo.toml",
+          "ecosystem": "crates.io"
+        },
+        {
+          "path": "interception/Cargo.toml",
+          "ecosystem": "crates.io"
+        },
+        {
+          "path": "interception/Cargo.lock",
+          "ecosystem": "crates.io"
+        },
+        {
+          "path": "simulated_input/Cargo.toml",
+          "ecosystem": "crates.io"
+        },
+        {
+          "path": "simulated_passthru/Cargo.toml",
+          "ecosystem": "crates.io"
+        },
+        {
+          "path": "wasm/Cargo.toml",
+          "ecosystem": "crates.io"
+        }
+      ],
+      "runtime": [],
+      "runtime_count": 0,
+      "dev": [],
+      "dev_count": 0,
+      "dependabot_alerts": {
+        "status": 403,
+        "alerts_count": null,
+        "note": "admin scope required; falling back to osv.dev"
+      },
+      "osv_lookups": [],
+      "dependabot_config": {
+        "present": false,
+        "ecosystems_tracked": [],
+        "raw_snippet": null
+      }
+    },
+    "pr_review": {
+      "total_closed_prs": 300,
+      "sample_size": 300,
+      "total_merged_lifetime": 630,
+      "prs": [
+        {
+          "number": 2032,
+          "title": "fix(macos): pre-flight Accessibility TCC and clarify grab-failed hint",
+          "review_decision": "APPROVED",
+          "any_review_count": 1,
+          "self_merge": false,
+          "merged_at": "2026-04-19T20:32:36Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 2031,
+          "title": "fix(macos): move mouse event tap from HID to Session location",
+          "review_decision": "APPROVED",
+          "any_review_count": 1,
+          "self_merge": false,
+          "merged_at": "2026-04-19T20:29:49Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 2029,
+          "title": "docs(macos): added setup guide and LaunchDaemon plist sample",
+          "review_decision": "APPROVED",
+          "any_review_count": 1,
+          "self_merge": false,
+          "merged_at": "2026-04-17T05:39:57Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 2028,
+          "title": "feat(macos): added support for Non-US # key (non_us_pound)",
+          "review_decision": "APPROVED",
+          "any_review_count": 1,
+          "self_merge": false,
+          "merged_at": "2026-04-17T05:37:31Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 2027,
+          "title": "feat(macos): pre-flight Input Monitoring TCC permission",
+          "review_decision": "APPROVED",
+          "any_review_count": 1,
+          "self_merge": false,
+          "merged_at": "2026-04-17T05:36:02Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 2026,
+          "title": "fix(macos): harden error handling and clean up code",
+          "review_decision": "APPROVED",
+          "any_review_count": 1,
+          "self_merge": false,
+          "merged_at": "2026-04-15T00:50:43Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 2025,
+          "title": "chore: remove itertools dependency",
+          "review_decision": "APPROVED",
+          "any_review_count": 1,
+          "self_merge": false,
+          "merged_at": "2026-04-13T00:58:37Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 2023,
+          "title": "fix(parser): don't panic when printing empty list",
+          "review_decision": "APPROVED",
+          "any_review_count": 1,
+          "self_merge": false,
+          "merged_at": "2026-04-13T00:58:00Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 2022,
+          "title": "feat(wasm): add header lines in simulation",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": true,
+          "merged_at": "2026-04-12T00:40:07Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 2021,
+          "title": "fix(tap-hold): do not consider hold/timeout activations for prior idle",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": true,
+          "merged_at": "2026-04-12T00:02:20Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 2017,
+          "title": "fix: tap-hold-opposite-hand-release skips same-hand keys when held",
+          "review_decision": "APPROVED",
+          "any_review_count": 1,
+          "self_merge": false,
+          "merged_at": "2026-04-11T07:22:26Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 2016,
+          "title": "feat(macos): release keyboard grab on lock screen and user switch",
+          "review_decision": "APPROVED",
+          "any_review_count": 1,
+          "self_merge": false,
+          "merged_at": "2026-04-11T23:18:41Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 2015,
+          "title": "feat(macos): add actionable startup diagnostics and clean shutdown",
+          "review_decision": "APPROVED",
+          "any_review_count": 1,
+          "self_merge": false,
+          "merged_at": "2026-04-11T08:50:39Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 2014,
+          "title": "feat(macos): support mouse-movement-key",
+          "review_decision": "APPROVED",
+          "any_review_count": 1,
+          "self_merge": false,
+          "merged_at": "2026-04-11T07:11:09Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 2013,
+          "title": "fix(macos): drop key writes when DriverKit sink is disconnected",
+          "review_decision": "APPROVED",
+          "any_review_count": 1,
+          "self_merge": false,
+          "merged_at": "2026-04-09T05:57:49Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 2012,
+          "title": "fix(parser): restore default key mappings on clear",
+          "review_decision": "APPROVED",
+          "any_review_count": 1,
+          "self_merge": false,
+          "merged_at": "2026-04-09T05:47:34Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 2011,
+          "title": "fix(macos): install/refresh mouse event tap on live-reload",
+          "review_decision": "APPROVED",
+          "any_review_count": 1,
+          "self_merge": false,
+          "merged_at": "2026-04-09T05:55:59Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 2010,
+          "title": "feat(macos): support mouse wheel input in defsrc",
+          "review_decision": "APPROVED",
+          "any_review_count": 1,
+          "self_merge": false,
+          "merged_at": "2026-04-08T07:47:08Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 2005,
+          "title": "feat(macos): implement mouse button input and side button output support",
+          "review_decision": "APPROVED",
+          "any_review_count": 1,
+          "self_merge": false,
+          "merged_at": "2026-04-08T03:39:33Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 2004,
+          "title": "fix!: make switch repeatable and avoid action queue",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": true,
+          "merged_at": "2026-04-04T02:23:08Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 2003,
+          "title": "fix!: queue custom action presses and releases",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": true,
+          "merged_at": "2026-04-04T01:43:56Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 2002,
+          "title": "fix: enable `--list` for `features == \"gui\"`",
+          "review_decision": "APPROVED",
+          "any_review_count": 1,
+          "self_merge": false,
+          "merged_at": "2026-04-03T07:40:05Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 2001,
+          "title": "fix(tap-hold): add prior-idle to check for idle ticks",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": true,
+          "merged_at": "2026-04-02T08:50:59Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1997,
+          "title": "fix(chordsv2): wait for earlier presses before processing releases",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": true,
+          "merged_at": "2026-03-29T20:30:59Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1994,
+          "title": "update karabiner cargo",
+          "review_decision": "APPROVED",
+          "any_review_count": 1,
+          "self_merge": false,
+          "merged_at": "2026-03-28T06:32:27Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1991,
+          "title": "feat: add tap-hold-opposite-hand-release action",
+          "review_decision": "APPROVED",
+          "any_review_count": 2,
+          "self_merge": false,
+          "merged_at": "2026-03-24T03:24:00Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1990,
+          "title": "feat: add tap-hold-keys action with named key list options",
+          "review_decision": "APPROVED",
+          "any_review_count": 2,
+          "self_merge": false,
+          "merged_at": "2026-03-24T06:13:59Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1987,
+          "title": "fix: improve --list output for BLE devices and bump driverkit to 0.3.0",
+          "review_decision": "APPROVED",
+          "any_review_count": 1,
+          "self_merge": false,
+          "merged_at": "2026-03-22T04:33:07Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1986,
+          "title": "fix: don't intercept all devices when include/exclude list has no matches",
+          "review_decision": "APPROVED",
+          "any_review_count": 1,
+          "self_merge": false,
+          "merged_at": "2026-03-22T04:30:57Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1983,
+          "title": "Code-format $tap-keys in config.adoc",
+          "review_decision": "APPROVED",
+          "any_review_count": 1,
+          "self_merge": false,
+          "merged_at": "2026-03-17T21:23:03Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1980,
+          "title": "doc: add v1.11 link",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": true,
+          "merged_at": "2026-03-15T23:53:55Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1979,
+          "title": "doc: move template section",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": true,
+          "merged_at": "2026-03-15T23:45:51Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1977,
+          "title": "fix missed layer-change notifications for layer-while-held",
+          "review_decision": "APPROVED",
+          "any_review_count": 2,
+          "self_merge": false,
+          "merged_at": "2026-03-16T06:14:56Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1976,
+          "title": "doc: clarify tap-hold-release-tap-keys-release arguments",
+          "review_decision": "APPROVED",
+          "any_review_count": 1,
+          "self_merge": false,
+          "merged_at": "2026-03-15T06:21:40Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1975,
+          "title": "fix: handle PRESSED_KEYS type difference in clean_state",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2026-03-15T08:09:06Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1970,
+          "title": "feat: add tap-hold-release-order action",
+          "review_decision": "APPROVED",
+          "any_review_count": 2,
+          "self_merge": false,
+          "merged_at": "2026-03-15T06:19:48Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1969,
+          "title": "feat: add per-action require-prior-idle override for tap-hold",
+          "review_decision": "APPROVED",
+          "any_review_count": 1,
+          "self_merge": false,
+          "merged_at": "2026-03-12T02:49:30Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1968,
+          "title": "Added kwanata info to README.md",
+          "review_decision": "APPROVED",
+          "any_review_count": 1,
+          "self_merge": false,
+          "merged_at": "2026-03-12T02:35:22Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1965,
+          "title": "optimize(win-llhook): add blocking recv in preprocessor",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": true,
+          "merged_at": "2026-03-09T01:35:49Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1964,
+          "title": "macos: move output readiness behind KbdOut",
+          "review_decision": "APPROVED",
+          "any_review_count": 1,
+          "self_merge": false,
+          "merged_at": "2026-03-12T02:37:24Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1961,
+          "title": "fix(chordsv2): handle overlapping timeouts correctly",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": true,
+          "merged_at": "2026-03-05T04:23:58Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1960,
+          "title": "feat: add tap-hold-require-prior-idle defcfg option",
+          "review_decision": "APPROVED",
+          "any_review_count": 3,
+          "self_merge": false,
+          "merged_at": "2026-03-04T06:03:43Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1958,
+          "title": "refactor: split up parser/src/cfg/mod.rs",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": true,
+          "merged_at": "2026-03-01T17:57:20Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1956,
+          "title": "Fix/1954 busy wait for keys unpressed",
+          "review_decision": "APPROVED",
+          "any_review_count": 2,
+          "self_merge": false,
+          "merged_at": "2026-03-02T22:08:53Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1955,
+          "title": "feat: add defhands and tap-hold-opposite-hand",
+          "review_decision": "APPROVED",
+          "any_review_count": 6,
+          "self_merge": false,
+          "merged_at": "2026-03-01T05:58:27Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1950,
+          "title": "fix(macos): recover from DriverKit output loss instead of bricking keyboard",
+          "review_decision": "APPROVED",
+          "any_review_count": 1,
+          "self_merge": false,
+          "merged_at": "2026-02-22T06:38:28Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1942,
+          "title": "feat(linux): add virtual to possible output bus type configuration",
+          "review_decision": "APPROVED",
+          "any_review_count": 1,
+          "self_merge": false,
+          "merged_at": "2026-02-11T09:15:29Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1938,
+          "title": "misc: update time version",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": true,
+          "merged_at": "2026-02-07T04:37:42Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1937,
+          "title": "doc: chordsv2 processing order and suggestion",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": true,
+          "merged_at": "2026-02-07T04:28:17Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1934,
+          "title": "feat: add TapActivated and HoldActivated TCP server events",
+          "review_decision": "APPROVED",
+          "any_review_count": 4,
+          "self_merge": false,
+          "merged_at": "2026-02-11T09:14:36Z",
+          "labels": [],
+          "security_flagged": false
+        }
+      ],
+      "formal_review_rate": 44.0,
+      "any_review_rate": 48.0,
+      "self_merge_count": 117,
+      "security_flagged_count": 0,
+      "security_flagged_numbers": []
+    },
+    "open_prs": {
+      "entries": [
+        {
+          "number": 2024,
+          "title": "fix(macos): replay pointer HID reports from composite devices",
+          "author": "affectful",
+          "created_at": "2026-04-13T00:15:13Z"
+        },
+        {
+          "number": 1989,
+          "title": "feat: add definputdevices config block and (device N) switch condition",
+          "author": "malpern",
+          "created_at": "2026-03-21T21:29:55Z"
+        },
+        {
+          "number": 1816,
+          "title": "feat: add a runtime GUI with iced",
+          "author": "jtroo",
+          "created_at": "2025-10-02T08:19:05Z"
+        },
+        {
+          "number": 1775,
+          "title": "feat: added smart-rpt",
+          "author": "Endolite",
+          "created_at": "2025-09-02T04:24:52Z"
+        },
+        {
+          "number": 1605,
+          "title": "Linux key press debounce setting",
+          "author": "Loosetooth",
+          "created_at": "2025-04-10T08:09:51Z"
+        },
+        {
+          "number": 1082,
+          "title": "feat(win): IPC communication via Windows messages",
+          "author": "eugenesvk",
+          "created_at": "2024-05-27T19:46:11Z"
+        }
+      ],
+      "count": 6
+    },
+    "closed_not_merged_prs": {
+      "entries": [
+        {
+          "number": 1998,
+          "title": "optimize(win-llhook): add blocking recv in preprocessor",
+          "closed_at": "2026-03-29T20:35:50Z"
+        },
+        {
+          "number": 1974,
+          "title": "feat: add (device N) switch condition for per-device key mappings",
+          "closed_at": "2026-03-21T19:27:13Z"
+        },
+        {
+          "number": 1973,
+          "title": "feat: thread device identity for per-device switch conditions",
+          "closed_at": "2026-03-13T10:46:32Z"
+        },
+        {
+          "number": 1935,
+          "title": "fix(macos): recover from DriverKit output loss instead of bricking keyboard",
+          "closed_at": "2026-02-06T14:52:34Z"
+        },
+        {
+          "number": 1918,
+          "title": "fix(tcp): Add request_id echo support to Hello/HelloOk",
+          "closed_at": "2026-01-13T20:47:55Z"
+        },
+        {
+          "number": 1917,
+          "title": "docs: Add decision guidance for tap-hold, one-shot, and chord variants",
+          "closed_at": "2026-01-15T08:55:30Z"
+        },
+        {
+          "number": 1869,
+          "title": "docs: add on-press-delay and on-release-delay action documentation",
+          "closed_at": "2025-11-30T05:28:54Z"
+        },
+        {
+          "number": 1840,
+          "title": "TCP: Validate endpoint + minimal Subscribe scaffold (additive) [refs #1838]",
+          "closed_at": "2025-11-04T05:29:17Z"
+        },
+        {
+          "number": 1839,
+          "title": "TCP: protocol scaffolding + readiness (Hello/Status, Reload wait) [refs #1838]",
+          "closed_at": "2025-11-04T05:28:32Z"
+        },
+        {
+          "number": 1766,
+          "title": "add mac rediscover fix",
+          "closed_at": "2025-08-28T07:49:19Z"
+        },
+        {
+          "number": 1759,
+          "title": "feat(macos): Add permission checking and remote restart via TCP",
+          "closed_at": "2025-08-25T19:05:45Z"
+        },
+        {
+          "number": 1741,
+          "title": "fix: broken --watch flag due to faulty ticks_since_idle logic",
+          "closed_at": "2025-08-15T03:25:14Z"
+        },
+        {
+          "number": 1729,
+          "title": "feat: Add VID/PID device targeting with centralized filtering logic",
+          "closed_at": "2025-08-03T16:02:24Z"
+        },
+        {
+          "number": 1723,
+          "title": "feat: add --list-verbose flag for detailed device enumeration with VID/PID display",
+          "closed_at": "2025-08-22T19:59:13Z"
+        },
+        {
+          "number": 1722,
+          "title": "feat: Alternative implementation using hidapi-rs for cross-platform --list support",
+          "closed_at": "2025-08-02T14:44:11Z"
+        },
+        {
+          "number": 1718,
+          "title": "feat(cli): add support for reading configuration from stdin with --cf\u2026",
+          "closed_at": "2025-08-03T03:15:18Z"
+        },
+        {
+          "number": 1558,
+          "title": "locales.adoc: adding 100% keyboard defsrc, event.code only",
+          "closed_at": "2025-03-08T23:00:04Z"
+        },
+        {
+          "number": 1545,
+          "title": "misc: 2024 edition",
+          "closed_at": "2025-08-06T07:50:46Z"
+        },
+        {
+          "number": 1392,
+          "title": "feat: implemented an alt-repeat key",
+          "closed_at": "2025-07-02T09:35:36Z"
+        },
+        {
+          "number": 1080,
+          "title": "[ProofOfConcept] AutoMouseKeys layer switching",
+          "closed_at": "2024-11-30T10:27:41Z"
+        },
+        {
+          "number": 1070,
+          "title": "doc: adjust heading levels of platform-specific defcfg",
+          "closed_at": "2024-09-15T04:35:57Z"
+        },
+        {
+          "number": 1067,
+          "title": "doc: hide platform-specific defcfg by default",
+          "closed_at": "2024-05-26T15:59:46Z"
+        },
+        {
+          "number": 886,
+          "title": "fix adoc rendering in config.adoc",
+          "closed_at": "2024-03-28T15:29:48Z"
+        },
+        {
+          "number": 834,
+          "title": "fix simulated output compile warnings",
+          "closed_at": "2024-03-16T22:55:06Z"
+        },
+        {
+          "number": 829,
+          "title": "POC for #816",
+          "closed_at": "2024-03-16T11:01:14Z"
+        },
+        {
+          "number": 817,
+          "title": "Send extended scancodes for keys that require them",
+          "closed_at": "2024-03-15T06:27:33Z"
+        },
+        {
+          "number": 813,
+          "title": "feat(tcp): add config file reload event (#811)",
+          "closed_at": "2024-03-14T07:35:36Z"
+        },
+        {
+          "number": 783,
+          "title": "Add messages for fake key actions",
+          "closed_at": "2024-03-31T22:36:59Z"
+        },
+        {
+          "number": 775,
+          "title": "feat: bail on keys that would not work be processed as expected in key-list-based conditionals",
+          "closed_at": "2024-03-15T06:43:45Z"
+        },
+        {
+          "number": 690,
+          "title": "feat: add 'right' and 'grave' names",
+          "closed_at": "2024-01-03T05:21:32Z"
+        },
+        {
+          "number": 673,
+          "title": "Bump karabiner-diverkit to 0.1.1",
+          "closed_at": "2023-12-20T21:35:31Z"
+        },
+        {
+          "number": 666,
+          "title": "Enable `fn` alias on Linux in `str_to_oscode`",
+          "closed_at": "2023-12-14T13:54:09Z"
+        },
+        {
+          "number": 568,
+          "title": "feat: add movemouse-smooth-diagonals",
+          "closed_at": "2023-10-03T10:36:23Z"
+        },
+        {
+          "number": 505,
+          "title": "[WIP] Added more tcpserver events",
+          "closed_at": "2023-10-21T21:16:26Z"
+        },
+        {
+          "number": 456,
+          "title": "[WIP] Adds include statement",
+          "closed_at": "2023-06-29T20:42:47Z"
+        },
+        {
+          "number": 309,
+          "title": "ci test doc change",
+          "closed_at": "2023-02-14T07:28:30Z"
+        },
+        {
+          "number": 303,
+          "title": "feat: add configurable replay delay",
+          "closed_at": "2023-02-14T07:14:32Z"
+        },
+        {
+          "number": 289,
+          "title": "Update key_override.rs",
+          "closed_at": "2023-02-03T00:00:50Z"
+        },
+        {
+          "number": 269,
+          "title": "refactor: free allocated memory on layout drop (v2)",
+          "closed_at": "2023-01-25T10:05:33Z"
+        },
+        {
+          "number": 268,
+          "title": "refactor: free allocated memory on layout drop (v1)",
+          "closed_at": "2023-01-28T00:40:07Z"
+        },
+        {
+          "number": 228,
+          "title": "feat(windows): Mouse movement with linear acceleration",
+          "closed_at": "2022-12-25T01:27:23Z"
+        },
+        {
+          "number": 227,
+          "title": "feat(windows): Mouse Movement with Linear Acceleration",
+          "closed_at": "2022-12-24T17:41:51Z"
+        },
+        {
+          "number": 225,
+          "title": "feat: Add mouse movement actions #106 (Windows)",
+          "closed_at": "2022-12-24T12:06:22Z"
+        },
+        {
+          "number": 53,
+          "title": "Bad fmt - test PR",
+          "closed_at": "2022-07-21T08:21:53Z"
+        }
+      ],
+      "count": 44
+    },
+    "issues_and_commits": {
+      "open_security_issues": [],
+      "open_issues_count": 98,
+      "closed_issues": [
+        {
+          "author": "thomastthai",
+          "closed_at": "2025-06-24T18:58:17Z",
+          "number": 1546,
+          "title": "macOS unicode issues for Kanata v1.8.0"
+        },
+        {
+          "author": "yzhuang",
+          "closed_at": "2025-10-01T09:44:05Z",
+          "number": 1539,
+          "title": "Bug: kanata_macos_arm64 1.8.0 would stop intercepting input when a keyboard disconnects and reconnects when `macos-dev-names-exclude` is used"
+        },
+        {
+          "author": "aljustiet",
+          "closed_at": "2024-11-11T00:17:50Z",
+          "number": 1264,
+          "title": "Bug: connect_failed asio.system:61"
+        },
+        {
+          "author": "merisbahti",
+          "closed_at": "2025-06-09T04:59:52Z",
+          "number": 1574,
+          "title": "Bug: no mouse actions work on mac"
+        },
+        {
+          "author": "CampAsAChamp",
+          "closed_at": "2025-02-12T16:25:25Z",
+          "number": 1317,
+          "title": "Bug: No keys are sending on Mac"
+        },
+        {
+          "author": "jtroo",
+          "closed_at": "2023-12-09T23:52:57Z",
+          "number": 34,
+          "title": "Add MacOS support"
+        },
+        {
+          "author": "eugenesvk",
+          "closed_at": "2024-06-08T21:33:47Z",
+          "number": 831,
+          "title": "Allow UIA on Windows to make kanata work in elevated apps"
+        },
+        {
+          "author": "wis",
+          "closed_at": "2024-03-21T06:39:58Z",
+          "number": 854,
+          "title": "Feature request: an Action for sending arbitrary messages to TCP Client"
+        },
+        {
+          "author": "wis",
+          "closed_at": "2024-02-28T08:12:56Z",
+          "number": 623,
+          "title": "Feature request: enable all actions other than the `ChangeLayer` action in TCP server, e.g `setMouse`"
+        },
+        {
+          "author": "robinmoussu",
+          "closed_at": "2023-12-26T21:20:45Z",
+          "number": 676,
+          "title": "Alphabetics keys do not work (no symbols can be printed)"
+        }
+      ],
+      "closed_issues_count": 10,
+      "recent_commits": [
+        {
+          "author": "FlameFlag",
+          "date": "2026-04-19T20:32:36Z",
+          "message_first_line": "fix(macos): pre-flight Accessibility TCC and clarify grab-failed hint (#2032)",
+          "sha": "1c496c0",
+          "security_keyword_match": true
+        },
+        {
+          "author": "FlameFlag",
+          "date": "2026-04-19T20:29:49Z",
+          "message_first_line": "fix(macos): move mouse event tap from HID to Session location (#2031)",
+          "sha": "29c9366",
+          "security_keyword_match": true
+        },
+        {
+          "author": "FlameFlag",
+          "date": "2026-04-17T05:39:56Z",
+          "message_first_line": "docs(macos): added setup guide and LaunchDaemon plist sample (#2029)",
+          "sha": "b4ba552",
+          "security_keyword_match": false
+        },
+        {
+          "author": "FlameFlag",
+          "date": "2026-04-17T05:37:31Z",
+          "message_first_line": "feat(macos): added support for Non-US # key (non_us_pound) (#2028)",
+          "sha": "b297af0",
+          "security_keyword_match": false
+        },
+        {
+          "author": "FlameFlag",
+          "date": "2026-04-17T05:36:01Z",
+          "message_first_line": "feat(macos): pre-flight Input Monitoring TCC permission (#2027)",
+          "sha": "8806be8",
+          "security_keyword_match": false
+        },
+        {
+          "author": "FlameFlag",
+          "date": "2026-04-15T00:50:43Z",
+          "message_first_line": "fix(macos): harden error handling and clean up code (#2026)",
+          "sha": "4914fb4",
+          "security_keyword_match": true
+        },
+        {
+          "author": "rszyma",
+          "date": "2026-04-13T00:58:36Z",
+          "message_first_line": "chore: remove itertools dependency (#2025)",
+          "sha": "c13888d",
+          "security_keyword_match": false
+        },
+        {
+          "author": "rszyma",
+          "date": "2026-04-13T00:58:00Z",
+          "message_first_line": "fix(parser): don't panic when printing empty list (#2023)",
+          "sha": "000e461",
+          "security_keyword_match": true
+        },
+        {
+          "author": "jtroo",
+          "date": "2026-04-12T22:10:09Z",
+          "message_first_line": "ci: update actions to node24 versions",
+          "sha": "056d7fa",
+          "security_keyword_match": false
+        },
+        {
+          "author": "jtroo",
+          "date": "2026-04-12T21:58:18Z",
+          "message_first_line": "ver: 1.12.0-prerelease-2",
+          "sha": "a1d24cb",
+          "security_keyword_match": false
+        },
+        {
+          "author": "jtroo",
+          "date": "2026-04-12T00:40:07Z",
+          "message_first_line": "feat(wasm): add header lines in simulation (#2022)",
+          "sha": "cdbc063",
+          "security_keyword_match": false
+        },
+        {
+          "author": "jtroo",
+          "date": "2026-04-12T00:02:20Z",
+          "message_first_line": "fix(tap-hold): do not consider hold/timeout activations for prior idle (#2021)",
+          "sha": "e465e77",
+          "security_keyword_match": true
+        },
+        {
+          "author": "FlameFlag",
+          "date": "2026-04-11T23:18:40Z",
+          "message_first_line": "feat(macos): release keyboard grab on lock screen and user switch (#2016)",
+          "sha": "2a8d2d5",
+          "security_keyword_match": false
+        },
+        {
+          "author": "FlameFlag",
+          "date": "2026-04-11T08:50:39Z",
+          "message_first_line": "feat(macos): add actionable startup diagnostics and clean shutdown (#2015)",
+          "sha": "b45bfe8",
+          "security_keyword_match": false
+        },
+        {
+          "author": "jtroo",
+          "date": "2026-04-11T08:46:26Z",
+          "message_first_line": "tests: avoid sample cfg tests during sim tests",
+          "sha": "d55ab6e",
+          "security_keyword_match": false
+        },
+        {
+          "author": "jtroo",
+          "date": "2026-04-11T08:36:23Z",
+          "message_first_line": "fix(chordsv2): check time for chord candidacy",
+          "sha": "49f576c",
+          "security_keyword_match": true
+        },
+        {
+          "author": "viktomas",
+          "date": "2026-04-11T07:22:26Z",
+          "message_first_line": "fix: tap-hold-opposite-hand-release skips same-hand keys when held (#2017)",
+          "sha": "56775b1",
+          "security_keyword_match": true
+        },
+        {
+          "author": "FlameFlag",
+          "date": "2026-04-11T07:11:08Z",
+          "message_first_line": "feat(macos): support mouse-movement-key (#2014)",
+          "sha": "166551e",
+          "security_keyword_match": false
+        },
+        {
+          "author": "jtroo",
+          "date": "2026-04-11T07:06:45Z",
+          "message_first_line": "doc: fix rc example",
+          "sha": "b87f832",
+          "security_keyword_match": true
+        },
+        {
+          "author": "FlameFlag",
+          "date": "2026-04-09T05:57:49Z",
+          "message_first_line": "fix(macos): drop key writes when DriverKit sink is disconnected (#2013)",
+          "sha": "0533c0e",
+          "security_keyword_match": true
+        },
+        {
+          "author": "FlameFlag",
+          "date": "2026-04-09T05:55:59Z",
+          "message_first_line": "fix(macos): install/refresh mouse event tap on live-reload (#2011)",
+          "sha": "aefca8e",
+          "security_keyword_match": true
+        },
+        {
+          "author": "FlameFlag",
+          "date": "2026-04-09T05:47:33Z",
+          "message_first_line": "fix(parser): restore default key mappings on clear (#2012)",
+          "sha": "7625e2c",
+          "security_keyword_match": true
+        },
+        {
+          "author": "FlameFlag",
+          "date": "2026-04-08T07:47:07Z",
+          "message_first_line": "feat(macos): support mouse wheel input in defsrc (#2010)",
+          "sha": "cbbfc38",
+          "security_keyword_match": false
+        },
+        {
+          "author": "FlameFlag",
+          "date": "2026-04-08T03:39:33Z",
+          "message_first_line": "feat(macos): implement mouse button input and side button output support (#2005)",
+          "sha": "398969f",
+          "security_keyword_match": false
+        },
+        {
+          "author": "jtroo",
+          "date": "2026-04-04T02:31:46Z",
+          "message_first_line": "ver: 1.12.0-prerelease-1",
+          "sha": "1681edb",
+          "security_keyword_match": false
+        },
+        {
+          "author": "jtroo",
+          "date": "2026-04-04T02:23:08Z",
+          "message_first_line": "fix!: make switch repeatable and avoid action queue (#2004)",
+          "sha": "95c466a",
+          "security_keyword_match": true
+        },
+        {
+          "author": "jtroo",
+          "date": "2026-04-04T01:43:56Z",
+          "message_first_line": "fix!: queue custom action presses and releases (#2003)",
+          "sha": "5e62f3d",
+          "security_keyword_match": true
+        },
+        {
+          "author": "groutoutlook",
+          "date": "2026-04-03T07:40:04Z",
+          "message_first_line": "fix: enable `--list` for `features == \"gui\"` (#2002)",
+          "sha": "721c047",
+          "security_keyword_match": true
+        },
+        {
+          "author": "jtroo",
+          "date": "2026-04-02T09:01:09Z",
+          "message_first_line": "fix(simulation): tick with no processing for can_block=true",
+          "sha": "7c70121",
+          "security_keyword_match": true
+        },
+        {
+          "author": "jtroo",
+          "date": "2026-04-02T08:50:59Z",
+          "message_first_line": "fix(tap-hold): add prior-idle to check for idle ticks (#2001)",
+          "sha": "ae221aa",
+          "security_keyword_match": true
+        },
+        {
+          "author": "jtroo",
+          "date": "2026-03-29T20:30:59Z",
+          "message_first_line": "fix!(chordsv2): wait for earlier presses before processing releases (#1997)",
+          "sha": "484368f",
+          "security_keyword_match": true
+        },
+        {
+          "author": "aljustiet",
+          "date": "2026-03-28T06:32:26Z",
+          "message_first_line": "dep: update karabiner in Cargo.lock (#1994)",
+          "sha": "2dc1ee0",
+          "security_keyword_match": false
+        },
+        {
+          "author": "malpern",
+          "date": "2026-03-24T06:13:59Z",
+          "message_first_line": "feat: add tap-hold-keys action with named key list options (#1990)",
+          "sha": "aed8ec4",
+          "security_keyword_match": false
+        },
+        {
+          "author": "malpern",
+          "date": "2026-03-24T03:24:00Z",
+          "message_first_line": "feat: add tap-hold-opposite-hand-release action (#1991)",
+          "sha": "9ad70a9",
+          "security_keyword_match": false
+        },
+        {
+          "author": "malpern",
+          "date": "2026-03-22T04:33:06Z",
+          "message_first_line": "fix(macos): improve --list output for BLE devices and bump driverkit to 0.3.0 (#1987)",
+          "sha": "ec33421",
+          "security_keyword_match": true
+        },
+        {
+          "author": "malpern",
+          "date": "2026-03-22T04:30:56Z",
+          "message_first_line": "fix(macos): don't intercept all devices when include/exclude list has no matches (#1986)",
+          "sha": "fc5d709",
+          "security_keyword_match": true
+        },
+        {
+          "author": "dad616610",
+          "date": "2026-03-17T21:23:03Z",
+          "message_first_line": "doc: code-format $tap-keys in config.adoc (#1983)",
+          "sha": "3bda1ec",
+          "security_keyword_match": false
+        },
+        {
+          "author": "malpern",
+          "date": "2026-03-16T06:14:55Z",
+          "message_first_line": "fix: move layer change check within tick iterations (#1977)",
+          "sha": "db9b674",
+          "security_keyword_match": true
+        },
+        {
+          "author": "jtroo",
+          "date": "2026-03-15T23:53:55Z",
+          "message_first_line": "doc: add v1.11 link (#1980)",
+          "sha": "877fc51",
+          "security_keyword_match": false
+        },
+        {
+          "author": "jtroo",
+          "date": "2026-03-15T23:45:51Z",
+          "message_first_line": "doc: move template section (#1979)",
+          "sha": "39d9671",
+          "security_keyword_match": false
+        },
+        {
+          "author": "malpern",
+          "date": "2026-03-15T08:09:06Z",
+          "message_first_line": "fix: handle PRESSED_KEYS type difference in clean_state (#1975)",
+          "sha": "7934fab",
+          "security_keyword_match": true
+        },
+        {
+          "author": "jacksluong",
+          "date": "2026-03-15T06:21:40Z",
+          "message_first_line": "doc: clarify tap-hold-release-tap-keys-release arguments (#1976)",
+          "sha": "706bbc5",
+          "security_keyword_match": false
+        },
+        {
+          "author": "tompassarelli",
+          "date": "2026-03-15T06:19:48Z",
+          "message_first_line": "feat: add tap-hold--order action (#1970)",
+          "sha": "6c67a79",
+          "security_keyword_match": false
+        },
+        {
+          "author": "malpern",
+          "date": "2026-03-12T02:49:29Z",
+          "message_first_line": "feat: add per-action require-prior-idle override for tap-hold (#1969)",
+          "sha": "07bed9e",
+          "security_keyword_match": false
+        },
+        {
+          "author": "malpern",
+          "date": "2026-03-12T02:37:24Z",
+          "message_first_line": "refactor(macos): move output readiness behind KbdOut (#1964)",
+          "sha": "72b7f1a",
+          "security_keyword_match": false
+        },
+        {
+          "author": "jfsicilia",
+          "date": "2026-03-12T02:35:21Z",
+          "message_first_line": "doc: add kwanata info to README.md (#1968)",
+          "sha": "cc22333",
+          "security_keyword_match": false
+        },
+        {
+          "author": "jtroo",
+          "date": "2026-03-09T01:35:49Z",
+          "message_first_line": "optimize(win-llhook): add blocking recv in preprocessor (#1965)",
+          "sha": "ee0addc",
+          "security_keyword_match": false
+        },
+        {
+          "author": "jtroo",
+          "date": "2026-03-05T04:23:57Z",
+          "message_first_line": "fix(chordsv2): handle overlapping timeouts correctly (#1961)",
+          "sha": "d765d0d",
+          "security_keyword_match": true
+        },
+        {
+          "author": "malpern",
+          "date": "2026-03-04T06:03:43Z",
+          "message_first_line": "feat: add tap-hold-require-prior-idle defcfg option (#1960)",
+          "sha": "6aa1f9d",
+          "security_keyword_match": false
+        },
+        {
+          "author": "randoragon",
+          "date": "2026-03-02T22:08:53Z",
+          "message_first_line": "Fix/1954 busy wait for keys unpressed (#1956)",
+          "sha": "37bfdc5",
+          "security_keyword_match": true
+        },
+        {
+          "author": "jtroo",
+          "date": "2026-03-01T17:57:20Z",
+          "message_first_line": "refactor: split up parser/src/cfg/mod.rs (#1958)",
+          "sha": "6f5e9c9",
+          "security_keyword_match": false
+        },
+        {
+          "author": "jtroo",
+          "date": "2026-03-01T06:53:46Z",
+          "message_first_line": "fix(linux): add fn key for use with asahi-linux",
+          "sha": "756d86a",
+          "security_keyword_match": true
+        },
+        {
+          "author": "malpern",
+          "date": "2026-03-01T05:58:27Z",
+          "message_first_line": "feat: add defhands and tap-hold-opposite-hand (#1955)",
+          "sha": "d047516",
+          "security_keyword_match": false
+        },
+        {
+          "author": "malpern",
+          "date": "2026-02-22T06:38:28Z",
+          "message_first_line": "fix(macos): recover from DriverKit output loss instead of bricking keyboard (#1950)",
+          "sha": "cd2be50",
+          "security_keyword_match": true
+        },
+        {
+          "author": "adre5577",
+          "date": "2026-02-11T09:15:29Z",
+          "message_first_line": "feat(linux): add virtual to possible output bus type configuration (#1942)",
+          "sha": "016d7ab",
+          "security_keyword_match": false
+        },
+        {
+          "author": "malpern",
+          "date": "2026-02-11T09:14:36Z",
+          "message_first_line": "feat: add TapActivated and HoldActivated TCP server events (#1934)",
+          "sha": "ebafb3c",
+          "security_keyword_match": false
+        },
+        {
+          "author": "jtroo",
+          "date": "2026-02-09T04:41:32Z",
+          "message_first_line": "doc: update old links",
+          "sha": "c36a017",
+          "security_keyword_match": false
+        },
+        {
+          "author": "jtroo",
+          "date": "2026-02-09T04:27:47Z",
+          "message_first_line": "ver: 1.11.0",
+          "sha": "4e6bec4",
+          "security_keyword_match": false
+        },
+        {
+          "author": "jtroo",
+          "date": "2026-02-07T04:37:42Z",
+          "message_first_line": "misc: update time version (#1938)",
+          "sha": "5ae5abd",
+          "security_keyword_match": false
+        },
+        {
+          "author": "jtroo",
+          "date": "2026-02-07T04:28:17Z",
+          "message_first_line": "doc: chordsv2 processing order and suggestion (#1937)",
+          "sha": "2f9c8e0",
+          "security_keyword_match": false
+        },
+        {
+          "author": "devsunb",
+          "date": "2026-02-05T06:59:55Z",
+          "message_first_line": "fix: reorder input events to prioritize modifiers (#1931)",
+          "sha": "2cf8b71",
+          "security_keyword_match": true
+        },
+        {
+          "author": "jtroo",
+          "date": "2026-02-04T05:21:10Z",
+          "message_first_line": "fix: deduplicate historical keys in chordsv1 (#1933)",
+          "sha": "936e70f",
+          "security_keyword_match": true
+        },
+        {
+          "author": "jtroo",
+          "date": "2026-02-01T23:57:54Z",
+          "message_first_line": "fix(chordsv2): process releases even while inactive (#1929)",
+          "sha": "1d359bd",
+          "security_keyword_match": true
+        },
+        {
+          "author": "jtroo",
+          "date": "2026-02-01T22:57:04Z",
+          "message_first_line": "feat: add defoverridesv2 (#1928)",
+          "sha": "d4c1609",
+          "security_keyword_match": false
+        },
+        {
+          "author": "neko-kai",
+          "date": "2026-01-23T04:20:19Z",
+          "message_first_line": "feat: add RequestFakeKeyNames call to tcp-protocol, returns defined virtual keys (#1923)",
+          "sha": "a93618e",
+          "security_keyword_match": false
+        }
+      ]
+    },
+    "distribution_channels": {
+      "channels": [
+        {
+          "name": "crates-kanata",
+          "type": "package_manager",
+          "package": "kanata",
+          "install_command": "cargo install kanata",
+          "pinned": false,
+          "install_path_verified": true,
+          "artifact_verified": false,
+          "ecosystem": "crates.io",
+          "note": "Registered in Cargo.toml"
+        },
+        {
+          "name": "crates-kanata-parser",
+          "type": "package_manager",
+          "package": "kanata-parser",
+          "install_command": "cargo install kanata-parser",
+          "pinned": false,
+          "install_path_verified": true,
+          "artifact_verified": false,
+          "ecosystem": "crates.io",
+          "note": "Registered in parser/Cargo.toml"
+        },
+        {
+          "name": "crates-kanata_example_tcp_client",
+          "type": "package_manager",
+          "package": "kanata_example_tcp_client",
+          "install_command": "cargo install kanata_example_tcp_client",
+          "pinned": false,
+          "install_path_verified": true,
+          "artifact_verified": false,
+          "ecosystem": "crates.io",
+          "note": "Registered in example_tcp_client/Cargo.toml"
+        },
+        {
+          "name": "crates-kanata-tcp-protocol",
+          "type": "package_manager",
+          "package": "kanata-tcp-protocol",
+          "install_command": "cargo install kanata-tcp-protocol",
+          "pinned": false,
+          "install_path_verified": true,
+          "artifact_verified": false,
+          "ecosystem": "crates.io",
+          "note": "Registered in tcp_protocol/Cargo.toml"
+        },
+        {
+          "name": "crates-key-sort-add",
+          "type": "package_manager",
+          "package": "key-sort-add",
+          "install_command": "cargo install key-sort-add",
+          "pinned": false,
+          "install_path_verified": true,
+          "artifact_verified": false,
+          "ecosystem": "crates.io",
+          "note": "Registered in key-sort-add/Cargo.toml"
+        },
+        {
+          "name": "crates-windows_key_tester",
+          "type": "package_manager",
+          "package": "windows_key_tester",
+          "install_command": "cargo install windows_key_tester",
+          "pinned": false,
+          "install_path_verified": true,
+          "artifact_verified": false,
+          "ecosystem": "crates.io",
+          "note": "Registered in windows_key_tester/Cargo.toml"
+        },
+        {
+          "name": "crates-kanata-keyberon",
+          "type": "package_manager",
+          "package": "kanata-keyberon",
+          "install_command": "cargo install kanata-keyberon",
+          "pinned": false,
+          "install_path_verified": true,
+          "artifact_verified": false,
+          "ecosystem": "crates.io",
+          "note": "Registered in keyberon/Cargo.toml"
+        },
+        {
+          "name": "crates-kanata-keyberon-macros",
+          "type": "package_manager",
+          "package": "kanata-keyberon-macros",
+          "install_command": "cargo install kanata-keyberon-macros",
+          "pinned": false,
+          "install_path_verified": true,
+          "artifact_verified": false,
+          "ecosystem": "crates.io",
+          "note": "Registered in keyberon/keyberon-macros/Cargo.toml"
+        },
+        {
+          "name": "crates-kanata-interception",
+          "type": "package_manager",
+          "package": "kanata-interception",
+          "install_command": "cargo install kanata-interception",
+          "pinned": false,
+          "install_path_verified": true,
+          "artifact_verified": false,
+          "ecosystem": "crates.io",
+          "note": "Registered in interception/Cargo.toml"
+        },
+        {
+          "name": "crates-kanata-sim",
+          "type": "package_manager",
+          "package": "kanata-sim",
+          "install_command": "cargo install kanata-sim",
+          "pinned": false,
+          "install_path_verified": true,
+          "artifact_verified": false,
+          "ecosystem": "crates.io",
+          "note": "Registered in simulated_input/Cargo.toml"
+        },
+        {
+          "name": "crates-simulated_passthru",
+          "type": "package_manager",
+          "package": "simulated_passthru",
+          "install_command": "cargo install simulated_passthru",
+          "pinned": false,
+          "install_path_verified": true,
+          "artifact_verified": false,
+          "ecosystem": "crates.io",
+          "note": "Registered in simulated_passthru/Cargo.toml"
+        },
+        {
+          "name": "crates-kanata-wasm",
+          "type": "package_manager",
+          "package": "kanata-wasm",
+          "install_command": "cargo install kanata-wasm",
+          "pinned": false,
+          "install_path_verified": true,
+          "artifact_verified": false,
+          "ecosystem": "crates.io",
+          "note": "Registered in wasm/Cargo.toml"
+        }
+      ]
+    },
+    "artifact_verification": {
+      "per_channel": [
+        {
+          "channel": "crates-kanata",
+          "method": "crates-io-presence",
+          "result": "verified",
+          "latest_version": "1.11.0"
+        },
+        {
+          "channel": "crates-kanata-parser",
+          "method": "crates-io-presence",
+          "result": "verified",
+          "latest_version": "0.1110.0"
+        },
+        {
+          "channel": "crates-kanata_example_tcp_client",
+          "method": "crates-io-presence",
+          "result": "unavailable"
+        },
+        {
+          "channel": "crates-kanata-tcp-protocol",
+          "method": "crates-io-presence",
+          "result": "verified",
+          "latest_version": "0.1110.0"
+        },
+        {
+          "channel": "crates-key-sort-add",
+          "method": "crates-io-presence",
+          "result": "unavailable"
+        },
+        {
+          "channel": "crates-windows_key_tester",
+          "method": "crates-io-presence",
+          "result": "unavailable"
+        },
+        {
+          "channel": "crates-kanata-keyberon",
+          "method": "crates-io-presence",
+          "result": "verified",
+          "latest_version": "0.1110.0"
+        },
+        {
+          "channel": "crates-kanata-keyberon-macros",
+          "method": "crates-io-presence",
+          "result": "verified",
+          "latest_version": "0.2.0"
+        },
+        {
+          "channel": "crates-kanata-interception",
+          "method": "crates-io-presence",
+          "result": "verified",
+          "latest_version": "0.3.0"
+        },
+        {
+          "channel": "crates-kanata-sim",
+          "method": "crates-io-presence",
+          "result": "unavailable"
+        },
+        {
+          "channel": "crates-simulated_passthru",
+          "method": "crates-io-presence",
+          "result": "unavailable"
+        },
+        {
+          "channel": "crates-kanata-wasm",
+          "method": "crates-io-presence",
+          "result": "unavailable"
+        }
+      ]
+    },
+    "install_script_analysis": {
+      "scripts": [
+        {
+          "file": "README.md",
+          "snippet": "cargo install`:",
+          "network": true,
+          "tracks_main_branch": false,
+          "sha_pinned": false,
+          "tag_pinned": false
+        },
+        {
+          "file": "README.md",
+          "snippet": "cargo install kanata",
+          "network": true,
+          "tracks_main_branch": false,
+          "sha_pinned": false,
+          "tag_pinned": false
+        },
+        {
+          "file": "README.md",
+          "snippet": "cargo install`,",
+          "network": true,
+          "tracks_main_branch": false,
+          "sha_pinned": false,
+          "tag_pinned": false
+        },
+        {
+          "file": "README.md",
+          "snippet": "cargo install --features cmd",
+          "network": true,
+          "tracks_main_branch": false,
+          "sha_pinned": false,
+          "tag_pinned": false
+        },
+        {
+          "file": "README.md",
+          "snippet": "cargo install --features interception_driver",
+          "network": true,
+          "tracks_main_branch": false,
+          "sha_pinned": false,
+          "tag_pinned": false
+        },
+        {
+          "file": "README.md",
+          "snippet": "cargo install --features cmd,interception_driver",
+          "network": true,
+          "tracks_main_branch": false,
+          "sha_pinned": false,
+          "tag_pinned": false
+        }
+      ]
+    },
+    "gitleaks": {
+      "available": false,
+      "ran": false,
+      "findings_count": null,
+      "findings": [],
+      "note": "gitleaks not installed; install to cover secrets-in-history"
+    },
+    "windows_patterns": {
+      "hits": [],
+      "hit_count": 0
+    },
+    "monorepo": {
+      "is_monorepo": true,
+      "inner_packages": [
+        {
+          "path": "parser",
+          "name": "parser",
+          "ecosystem": "crates.io",
+          "manifest_count": 1
+        },
+        {
+          "path": "example_tcp_client",
+          "name": "example_tcp_client",
+          "ecosystem": "crates.io",
+          "manifest_count": 1
+        },
+        {
+          "path": "tcp_protocol",
+          "name": "tcp_protocol",
+          "ecosystem": "crates.io",
+          "manifest_count": 1
+        },
+        {
+          "path": "key-sort-add",
+          "name": "key-sort-add",
+          "ecosystem": "crates.io",
+          "manifest_count": 2
+        },
+        {
+          "path": "windows_key_tester",
+          "name": "windows_key_tester",
+          "ecosystem": "crates.io",
+          "manifest_count": 1
+        },
+        {
+          "path": "keyberon",
+          "name": "keyberon",
+          "ecosystem": "crates.io",
+          "manifest_count": 1
+        },
+        {
+          "path": "keyberon/keyberon-macros",
+          "name": "keyberon-macros",
+          "ecosystem": "crates.io",
+          "manifest_count": 1
+        },
+        {
+          "path": "interception",
+          "name": "interception",
+          "ecosystem": "crates.io",
+          "manifest_count": 2
+        },
+        {
+          "path": "simulated_input",
+          "name": "simulated_input",
+          "ecosystem": "crates.io",
+          "manifest_count": 1
+        },
+        {
+          "path": "simulated_passthru",
+          "name": "simulated_passthru",
+          "ecosystem": "crates.io",
+          "manifest_count": 1
+        },
+        {
+          "path": "wasm",
+          "name": "wasm",
+          "ecosystem": "crates.io",
+          "manifest_count": 1
+        }
+      ],
+      "lifecycle_script_hits": []
+    },
+    "defensive_configs": {
+      "entries": [
+        {
+          "file": ".github/dependabot.yml",
+          "type": "dependabot",
+          "present": false
+        },
+        {
+          "file": "SECURITY.md",
+          "type": "security-policy",
+          "present": false
+        }
+      ]
+    },
+    "batch_merge_detection": {
+      "detected": false,
+      "pr_groups": []
+    },
+    "coverage_affirmations": {
+      "prompt_injection_scan_completed": true,
+      "windows_surface_coverage": "scanned",
+      "distribution_channels_verified": "6/12",
+      "gitleaks_available": false,
+      "gitleaks_explanation": "gitleaks not installed; install to cover secrets-in-history"
+    }
+  },
+  "phase_2_validation": {
+    "sha_consistent": true,
+    "required_fields_complete": true,
+    "dates_chronological": true,
+    "tarball_nonempty": true,
+    "validation_passed": true,
+    "validation_errors": []
+  },
+  "phase_3_computed": {
+    "c20_severity": {
+      "no_classic_protection": true,
+      "no_rulesets": true,
+      "no_rules_on_default": true,
+      "no_codeowners": true,
+      "has_recent_release_30d": true,
+      "ships_executable_code": true,
+      "result": "Critical"
+    },
+    "solo_maintainer": {
+      "top_contributor_share": 0.782,
+      "is_solo": false,
+      "verbatim_sentence": null
+    },
+    "exhibit_grouping": {
+      "total_findings": 0,
+      "threshold_met": false,
+      "exhibits": []
+    },
+    "boundary_cases": {
+      "cases": []
+    },
+    "coverage_status": {
+      "cells": [
+        {
+          "name": "Tarball extraction",
+          "status": "ok",
+          "detail": "292 files"
+        },
+        {
+          "name": "OSSF Scorecard",
+          "status": "not_indexed",
+          "detail": "Repo not indexed by OSSF"
+        },
+        {
+          "name": "osv.dev",
+          "status": "not_queried",
+          "detail": "Zero runtime dependencies"
+        },
+        {
+          "name": "Secrets-in-history (gitleaks)",
+          "status": "not_available",
+          "detail": "gitleaks not installed"
+        },
+        {
+          "name": "API rate budget",
+          "status": "ok",
+          "detail": "4956/5000 remaining"
+        },
+        {
+          "name": "Dependabot alerts",
+          "status": "unknown",
+          "detail": "Unknown"
+        }
+      ]
+    },
+    "methodology": {
+      "scanner_version": "V2.5-preview",
+      "prompt_version": "V2.4",
+      "guide_version": "V0.2"
+    }
+  },
+  "phase_3_advisory": {
+    "scorecard_hints": {
+      "does_anyone_check_the_code": {
+        "color": "amber",
+        "short_answer": "Partly",
+        "signals": [
+          {
+            "id": "q1_formal_review_rate",
+            "value": 44.0
+          },
+          {
+            "id": "q1_any_review_rate",
+            "value": 48.0
+          },
+          {
+            "id": "q1_has_branch_protection",
+            "value": false
+          },
+          {
+            "id": "q1_has_ruleset_protection",
+            "value": false
+          },
+          {
+            "id": "q1_has_codeowners",
+            "value": false
+          },
+          {
+            "id": "q1_is_solo_maintainer",
+            "value": false
+          },
+          {
+            "id": "q1_governance_floor_override",
+            "value": false
+          }
+        ]
+      },
+      "do_they_fix_problems_quickly": {
+        "color": "green",
+        "short_answer": "Yes",
+        "signals": [
+          {
+            "id": "q2_open_security_issue_count",
+            "value": 0
+          },
+          {
+            "id": "q2_oldest_open_cve_pr_age_days",
+            "value": null
+          },
+          {
+            "id": "q2_oldest_open_security_item_age_days",
+            "value": null
+          },
+          {
+            "id": "q2_closed_fix_lag_days",
+            "value": null
+          }
+        ]
+      },
+      "do_they_tell_you_about_problems": {
+        "color": "red",
+        "short_answer": "No",
+        "signals": [
+          {
+            "id": "q3_has_security_policy",
+            "value": false
+          },
+          {
+            "id": "q3_has_contributing_guide",
+            "value": false
+          },
+          {
+            "id": "q3_published_advisory_count",
+            "value": 0
+          },
+          {
+            "id": "q3_has_silent_fixes",
+            "value": false
+          }
+        ]
+      },
+      "is_it_safe_out_of_the_box": {
+        "color": "amber",
+        "short_answer": "Partly",
+        "signals": [
+          {
+            "id": "q4_all_channels_pinned",
+            "value": false
+          },
+          {
+            "id": "q4_artifact_verified",
+            "value": false
+          },
+          {
+            "id": "q4_has_critical_on_default_path",
+            "value": false
+          },
+          {
+            "id": "q4_has_warning_on_install_path",
+            "value": false
+          }
+        ]
+      }
+    }
+  },
+  "phase_4_structured_llm": {
+    "findings": {
+      "entries": [
+        {
+          "id": "F0",
+          "severity": "Critical",
+          "provenance": "rule-applied",
+          "status": "ongoing",
+          "category": "governance/supply-chain",
+          "kind": "Governance",
+          "rule_id": "C20",
+          "title": "Governance single-point-of-failure on a privileged keyboard-interception daemon with active release cadence (C20)",
+          "action_hint": "Pin to a reviewed release tag; run kanata as a dedicated user with minimum-needed input-device privileges.",
+          "evidence_refs": [
+            "E1",
+            "E2",
+            "E4"
+          ],
+          "threat_model_paths": [
+            "stale_token",
+            "runner_compromise",
+            "other"
+          ],
+          "threat_model_context": "kanata is a privileged input daemon \u2014 it runs with elevated OS-level privileges to intercept keystrokes and re-emit remapped events. The user's entire keyboard input passes through the daemon, which means: (a) a compromised kanata binary = a keylogger with exfil opportunity; (b) a compromised kanata binary + the `--features cmd` shell-exec feature = local RCE triggered by keystroke. The supply chain path is: commit \u2192 `cargo install kanata` pulls from crates.io, or GitHub Releases ships prebuilt binaries. No branch protection, no rulesets, no CODEOWNERS (E2). Recent release cadence (v1.12.0-prerelease-2 on 2026-04-12, 8 days before scan) means code lands with users fast (E4) \u2014 which is why c20 fires Critical here rather than Warning (compare to wezterm entry 21 where the release stall downgraded the same compound to Warning).",
+          "what_this_means": "A compromise of jtroo's GitHub or crates.io publisher account reaches every user's keyboard-input stream on the next prerelease. The review gate is voluntary (see F3 for the positive angle), but structurally absent.",
+          "what_this_does_not_mean": "Not evidence of current compromise. 44% formal-review-rate (E3) is the highest in the V1.2 catalog and is a real positive signal \u2014 just not enforced via tooling. The Critical call is about the ABSENCE of enforced structural review, not the ABSENCE of review activity.",
+          "duration_label": "Continuous",
+          "date_label": "Since 2022-04-18",
+          "how_to_fix": "Maintainer-side: enable a ruleset requiring \u22651 approving review on main; add CODEOWNERS. The existing voluntary-review culture (44% formal rate) suggests this would be low-friction to adopt \u2014 protection infrastructure would codify existing practice. Consumer-side: pin to specific version tag + review changelogs; consider running kanata as a dedicated system user with CAP_NET_ADMIN rather than root on Linux."
+        },
+        {
+          "id": "F1",
+          "severity": "Warning",
+          "provenance": "observed",
+          "status": "ongoing",
+          "category": "governance/disclosure",
+          "kind": "Hygiene",
+          "rule_id": null,
+          "title": "No SECURITY.md + 0 published advisories in 4 years on a keyboard-interception daemon",
+          "action_hint": "If you find a kanata bug, use GitHub's `Report a vulnerability` button \u2014 not documented but available.",
+          "evidence_refs": [
+            "E6"
+          ],
+          "threat_model_paths": [
+            "other"
+          ],
+          "threat_model_context": "community/profile reports has_security_policy=false. security-advisories count: 0 across 4 years. kanata handles every keystroke with elevated privileges on all three major OS platforms \u2014 silent-fix cadence on a tool of this class puts downstream consumers in the dark about which releases carry security-relevant fixes. Consistent with the catalog-wide pattern (Kronos / Xray-core / wezterm / QuickLook all show the same 0-advisory posture despite privileged-tool shape).",
+          "what_this_means": "GHSA syndication does not flow from kanata. Release notes are the only channel for learning about security-relevant changes.",
+          "what_this_does_not_mean": "Not evidence of suppressed vulns. The active maintenance + healthy review rate make silent-fix-via-release the plausible explanation.",
+          "duration_label": "Continuous",
+          "date_label": "Since 2022-04-18",
+          "how_to_fix": "Maintainer-side: add a 1-page SECURITY.md naming GitHub's private-advisory button. Given kanata's privileged threat model, this is especially cheap/valuable."
+        },
+        {
+          "id": "F2",
+          "severity": "Warning",
+          "provenance": "observed",
+          "status": "ongoing",
+          "category": "hygiene/dependency-management",
+          "kind": "Supply chain",
+          "rule_id": null,
+          "title": "No Dependabot config \u2014 Rust workspace with 15+ Cargo.toml files has no automated CVE-watch on dep graph",
+          "action_hint": "Run `cargo audit` locally after building; the repo doesn't do it for you.",
+          "evidence_refs": [
+            "E9"
+          ],
+          "threat_model_paths": [
+            "stale_token"
+          ],
+          "threat_model_context": "dependabot.yml is absent (E9). The Cargo workspace has 15+ manifests spanning parser, tcp_protocol, keyberon keyboard layout engine, interception (Windows driver binding), WASM target, and 8 more sub-crates. Transitive deps include serde, tokio, and platform-specific input libraries. None of these receive automated CVE alerts \u2014 the maintainer has to discover security-relevant dep updates manually. Same gap as wezterm (entry 21, 70+ Cargo crates unwatched).",
+          "what_this_means": "A CVE against a core Rust dep in kanata's graph (e.g., a serialize-parser bug in serde's JSON layer used by the tcp_protocol crate) would not surface automatically.",
+          "what_this_does_not_mean": "Not evidence of a current reachable CVE \u2014 harness osv.dev query returned 0 (F5 coverage gap; Cargo parsing not implemented).",
+          "duration_label": "Continuous",
+          "date_label": "Since repo creation (no dependabot.yml ever)",
+          "how_to_fix": "Maintainer-side: add `.github/dependabot.yml` with `- package-ecosystem: cargo` \u2014 minutes of work. Consumer-side: `cargo audit` against the installed Cargo.lock before trusting a self-build."
+        },
+        {
+          "id": "F3",
+          "severity": "Info",
+          "provenance": "observed",
+          "status": "mitigated",
+          "category": "governance/review-culture",
+          "kind": "Positive",
+          "rule_id": null,
+          "title": "44% formal PR review rate \u2014 highest in the V1.2 catalog; active two-maintainer pair",
+          "action_hint": "Positive signal worth noting; context for reading F0's Critical verdict.",
+          "evidence_refs": [
+            "E3",
+            "E7"
+          ],
+          "threat_model_paths": [
+            "other"
+          ],
+          "threat_model_context": "Across a 300-PR sample, 44% of PRs carry formal `APPROVED` review decisions \u2014 substantially higher than Xray-core (3.3%), kamal (4.7%), QuickLook (5.1%), wezterm (3.3%), browser_terminal (0%). jtroo (979 commits) + ItayGarin (149 commits) are an active two-maintainer pair; external contributor PRs routinely go through formal review before merge. The 117 self-merges (39%) are predominantly jtroo's own direct-commits \u2014 an expected pattern for the primary author. This is the healthiest review culture in the V1.2 catalog so far \u2014 it's just not codified in branch-protection rules (F0 + E2).",
+          "what_this_means": "The governance gap in F0 is structural (no enforcement) but not behavioral (enforcement would codify existing practice). Low-friction fix path.",
+          "what_this_does_not_mean": "Doesn't substitute for branch protection. A compromised account bypasses voluntary review entirely. The positive signal is that adding protection would be easy \u2014 the reviews are already happening.",
+          "duration_label": "Continuous",
+          "date_label": "Ongoing \u2014 pattern visible in recent PRs",
+          "how_to_fix": "No fix required on the positive-signal side. The action is for F0 (codify the existing review behavior into a ruleset)."
+        },
+        {
+          "id": "F4",
+          "severity": "Info",
+          "provenance": "observed",
+          "status": "informational",
+          "category": "architecture/feature-gated-cmd-exec",
+          "kind": "Structural",
+          "rule_id": null,
+          "title": "`cmd` feature flag enables config-level shell execution \u2014 opt-in risk-expansion",
+          "action_hint": "If you don't need config-triggered shell commands, install without `--features cmd` (the default).",
+          "evidence_refs": [
+            "E10"
+          ],
+          "threat_model_paths": [
+            "malicious_extension"
+          ],
+          "threat_model_context": "kanata supports an optional `cmd` feature (`cargo install kanata --features cmd`) that lets config-file actions execute arbitrary shell commands. Feature-gating is deliberate risk-reduction \u2014 by default, kanata is key-remapping-only with no shell-exec capability. A user who opts into `cmd` has explicitly expanded their daemon's capability to include 'run commands on my machine triggered by keystrokes'. Config files become executable content, which is a different threat model than pure key-remap.",
+          "what_this_means": "For default installs (without `cmd`): threat model is keylogger-grade (worst case). For `cmd`-feature installs: threat model also includes arbitrary local command execution from any kanata config loaded, including configs shared/copied from the internet.",
+          "what_this_does_not_mean": "Not a vulnerability \u2014 feature-gated + documented + opt-in is the right pattern. The finding exists to make the capability explicit to readers.",
+          "duration_label": "Continuous",
+          "date_label": "Since feature introduction",
+          "how_to_fix": "N/A \u2014 the design is appropriate. Consumer guidance: treat kanata configs with `cmd` actions as executable code; only load configs you audited."
+        },
+        {
+          "id": "F5",
+          "severity": "Info",
+          "provenance": "observed",
+          "status": "ongoing",
+          "category": "scanner-coverage",
+          "kind": "Coverage",
+          "rule_id": null,
+          "title": "Rust-ecosystem scanner gaps \u2014 Cargo.lock parsing + workspace sub-crate channel misidentification",
+          "action_hint": "Same gap pattern as wezterm (entry 21); consumer-side `cargo audit` recommended.",
+          "evidence_refs": [
+            "E11",
+            "E12"
+          ],
+          "threat_model_paths": [
+            "other"
+          ],
+          "threat_model_context": "Two repeated gaps: (1) Cargo.lock parsing not implemented \u2014 runtime_count=0 and osv total_vulns=0 despite 15+ Cargo.toml files; (2) distribution-channel harness surfaced 12 crates.io channels from workspace sub-crates when only `crates-kanata` is the genuine install path. Same gap pattern as wezterm; the pattern now spans 2 Rust entries in the catalog. Dangerous-primitives small hits (1/1/1 across deserialization/secrets/tls_cors) are consistent with the Rust-serde / CIDR false-positive class.",
+          "what_this_means": "For this scan, Rust dep-CVE surface is not assessed. Combined with F2 (no dependabot), the maintainer side also doesn't have automated dep-CVE surfacing.",
+          "what_this_does_not_mean": "Not a kanata defect \u2014 a property of the scanner that should be closed in a V1.2.x harness patch.",
+          "duration_label": "Continuous",
+          "date_label": "Scanner tooling gap",
+          "how_to_fix": "Scanner-side: Cargo.lock parsing + RustSec advisory-db lookup; disambiguate workspace sub-crates from publishable channels by checking Cargo.toml `[package]` presence + crates.io registry confirmation."
+        }
+      ]
+    },
+    "evidence": {
+      "entries": [
+        {
+          "id": "E1",
+          "claim": "kanata is a cross-platform keyboard-remapping daemon. Privileged on every platform: Linux uses uinput (requires CAP_NET_ADMIN or root); macOS uses IOKit/HID (often requires root + Accessibility/Input-Monitoring permissions); Windows uses the Interception driver (requires admin install). Intercepts every keystroke in real time.",
+          "command": "gh api repos/jtroo/kanata --jq '{description, topics}'; head README.md",
+          "command_lang": "bash",
+          "result": "description: 'Improve keyboard comfort and usability with advanced customization'. topics: [cross-platform, interception-driver, keyboard, keyboard-layout, linux, macos]. Runtime model: a daemon runs with elevated privileges, captures all keyboard input, applies user-configured remapping rules (layers, tap-hold, macros), and emits remapped keystrokes to the OS. The user's raw keystrokes flow through the daemon.",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "fact"
+        },
+        {
+          "id": "E2",
+          "claim": "No branch protection \u2014 classic HTTP 404, 0 rulesets, 0 rules on default branch, no CODEOWNERS. Relies entirely on voluntary review discipline.",
+          "command": "gh api repos/jtroo/kanata/branches/main/protection; gh api repos/jtroo/kanata/rulesets",
+          "command_lang": "bash",
+          "result": "classic: HTTP 404. rulesets: {entries: [], count: 0}. rules_on_default: {entries: [], count: 0}. CODEOWNERS: not found at any standard path.",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "fact"
+        },
+        {
+          "id": "E3",
+          "claim": "PR review sample (300 PRs): formal_review_rate=44.0%, any_review_rate=48.0%, self_merge_count=117 (39%). **Formal review rate is the HIGHEST in the V1.2 catalog** \u2014 despite no branch-protection enforcement, jtroo + ItayGarin run a disciplined review culture for external contributions.",
+          "command": "gh api 'repos/jtroo/kanata/pulls?state=closed&per_page=100' # 3 pages",
+          "command_lang": "bash",
+          "result": "sample_size: 300; formal_review_rate: 44.0 (132 of 300 PRs carry `APPROVED` review decisions); any_review_rate: 48.0; self_merge_count: 117. Pattern from sampling recent PRs: external contributor PRs routinely show `review_decision=APPROVED` + 1 reviewer; maintainer's own PRs (jtroo) are frequently self-merged without review. This is a genuine two-tier review pattern, not signal noise.",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "fact"
+        },
+        {
+          "id": "E4",
+          "claim": "Active semver-prerelease cadence \u2014 v1.12.0-prerelease-2 on 2026-04-12 (8 days before scan). 58 total releases; recent push velocity on main is 2026-04-19 (day before scan).",
+          "command": "gh api 'repos/jtroo/kanata/releases?per_page=5'",
+          "command_lang": "bash",
+          "result": "total_count: 58. Latest: v1.12.0-prerelease-2 (2026-04-12). Repo pushed_at: 2026-04-19 (7 days later; 1 day before scan). Active development + active release cadence \u2014 the code IS reaching users as it lands.",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "fact"
+        },
+        {
+          "id": "E5",
+          "claim": "Cargo workspace with 15 manifest files across 12 publishable-looking sub-crates. Main distribution is `cargo install kanata` (on crates.io) or GitHub Releases binary + platform-specific installers.",
+          "command": "gh api repos/jtroo/kanata/contents | jq '.[] | select(.type == \"dir\") | .name'; gh api repos/jtroo/kanata/contents/Cargo.toml | jq -r .content | base64 -d | head",
+          "command_lang": "bash",
+          "result": "Cargo workspace members: parser, example_tcp_client, tcp_protocol, key-sort-add, windows_key_tester, keyberon, keyberon-macros, interception, simulated_input, simulated_passthru, wasm. README documents: `cargo install kanata` (basic), `cargo install kanata --features cmd` (shell-exec feature opt-in), `cargo install kanata --features interception_driver` (Windows). Also GitHub Releases prebuilt binaries.",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "fact"
+        },
+        {
+          "id": "E6",
+          "claim": "community/profile: health 57%; no SECURITY.md, no CONTRIBUTING, no CODE_OF_CONDUCT. security-advisories count: 0 across 4 years of development.",
+          "command": "gh api 'repos/jtroo/kanata/community/profile'; gh api 'repos/jtroo/kanata/security-advisories'",
+          "command_lang": "bash",
+          "result": "health_percentage: 57; has_security_policy: false; has_contributing: false; has_code_of_conduct: false; license_spdx: LGPL-3.0. security-advisories count: 0. For a keyboard-interception daemon handling every keystroke, 0-advisories-in-4-years points at silent-fix cadence (consistent with catalog-wide pattern) not bug-freeness.",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "fact"
+        },
+        {
+          "id": "E7",
+          "claim": "Contributor distribution: jtroo (984), ItayGarin (149), rszyma (47), eugenesvk (38), malpern (27). Top-1 share 79% \u2014 below the 80% solo-maintainer threshold. ItayGarin is a substantial co-maintainer at 149 commits (~12% share).",
+          "command": "gh api repos/jtroo/kanata/contributors --jq '[.[] | {login, contributions}] | .[:6]'",
+          "command_lang": "bash",
+          "result": "jtroo: 984; ItayGarin: 149; rszyma: 47; eugenesvk: 38; malpern: 27; next: smaller tail. total_contributor_count: 100. Top-1 alone at 79% (just below the is_solo_maintainer threshold of 80%). Combined top-2 share ~91%.",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "fact"
+        },
+        {
+          "id": "E8",
+          "claim": "Five GitHub Actions workflows cover Linux/macOS/Windows builds + cargo-checks + build-everything meta. No CodeQL, no Dependabot. CI depth is solid for a cross-platform Rust binary.",
+          "command": "gh api repos/jtroo/kanata/actions/workflows --jq '.workflows[] | {name, path, state}'",
+          "command_lang": "bash",
+          "result": "5 workflows: build-everything.yml, linux-build.yml, macos-build.yml, windows-build.yml, rust.yml (cargo-checks). pull_request_target_count: 0. Good coverage of the three OS targets + lint/test pipeline.",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "fact"
+        },
+        {
+          "id": "E9",
+          "claim": "No Dependabot config (dependabot.yml absent). Rust workspace with 15+ Cargo manifests has no automated CVE-watch on Cargo dep graph. Same-shape gap as wezterm (entry 21).",
+          "command": "gh api repos/jtroo/kanata/contents/.github/dependabot.yml",
+          "command_lang": "bash",
+          "result": "HTTP 404. dependabot_config.present: false. No Dependabot ecosystems tracked. The 15+ Cargo.toml files have transitive dep graphs that include serde, tokio, and the platform-specific input libraries (uinput, IOKit bindings, Interception driver) \u2014 none automatically CVE-watched.",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "fact"
+        },
+        {
+          "id": "E10",
+          "claim": "Active feature-gated shell-execution capability \u2014 `cargo install kanata --features cmd` enables the `cmd` action that runs shell commands from kanata config. Feature-gated means opt-in; off by default.",
+          "command": "gh api repos/jtroo/kanata/contents/README.md | jq -r .content | base64 -d | grep -A2 'features cmd'",
+          "command_lang": "bash",
+          "result": "README documents the `cmd` feature: 'cargo install kanata --features cmd' enables a config-level action to execute shell commands. Feature-gated is a deliberate risk-reduction \u2014 by-default kanata does not execute arbitrary commands. Users who opt in are informed.",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "fact"
+        },
+        {
+          "id": "E11",
+          "claim": "Distribution channels: `cargo install kanata` via crates.io (primary), GitHub Releases prebuilt binaries for 3 platforms, and Arch Linux AUR + Homebrew + MS Store are documented third-party channels. Scanner detected 12 'crates-*' channels (all 12 workspace sub-crates) \u2014 only `crates-kanata` is the genuine install channel.",
+          "command": "gh api repos/jtroo/kanata/releases/latest --jq '.assets[] | {name, size}'",
+          "command_lang": "bash",
+          "result": "GitHub Releases binaries: kanata-linux, kanata-macos (Intel + Apple Silicon), kanata_winLib.exe, kanata_winIoKey.exe, kanata_winWin.exe (multiple Windows variants for the 3 supported input-capture backends). Unsigned binaries \u2014 no .sig, no .asc, no .sha256. Crates.io install path provides its own integrity story (crates.io index hashes).",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "fact"
+        },
+        {
+          "id": "E12",
+          "claim": "Harness Cargo.lock parsing not implemented; 12 workspace sub-crates were surfaced as crates.io distribution channels when only the main `kanata` crate is the actual consumer install path. Same coverage-gap pattern as wezterm (entry 21). Dangerous-primitives hits (deserialization 1, secrets 1, tls_cors 1) are likely false positives on Rust serde idioms / Cargo.toml strings / network-CIDR patterns.",
+          "command": "docs/phase_1_harness.py # code_patterns.dangerous_primitives + distribution_channels",
+          "command_lang": "bash",
+          "result": "dependencies.runtime_count: 0 (Cargo-parsing gap). distribution_channels.channels: 12 entries, all from workspace sub-crates \u2014 real channels (crates.io main + GitHub Releases binaries + AUR + Homebrew + MS Store) not recognized. dangerous_primitives: 3 total hits \u2014 small, consistent with Rust-serde / test-fixture false-positive class.",
+          "result_lang": "inference \u2014 coverage-gap annotation",
+          "result_truncated": false,
+          "classification": "inference \u2014 coverage-gap annotation"
+        }
+      ]
+    },
+    "general_vuln_severity": {
+      "assessments": []
+    },
+    "section_actions": {
+      "entries": []
+    },
+    "section_leads": {
+      "section_01": {
+        "pill_row": "7k\u2b50 \u00b7 LGPL-3.0 \u00b7 Rust \u00b7 1 critical \u00b7 2 warnings \u00b7 3 info \u00b7 CRITICAL",
+        "summary": "kanata is a 7k-star Rust keyboard remapper / key-interception daemon by jtroo + co-maintainer ItayGarin. Runs with elevated OS privileges on Linux (uinput), macOS (IOKit), and Windows (Interception driver) \u2014 every keystroke flows through it. Critical verdict via C20: no branch protection / rulesets / CODEOWNERS on a keylogger-class privileged tool, paired with active release cadence (v1.12.0-prerelease-2 shipped 8 days before scan). But the governance picture is mixed \u2014 F3 is a positive finding: 44% formal PR review rate is the highest in the V1.2 catalog, and the two-maintainer pair demonstrably runs a disciplined voluntary review process. The Critical call is about ABSENCE of enforced structural review, not ABSENCE of review activity."
+      },
+      "section_02": {
+        "pill_row": "F0 Critical \u00b7 F1 Warning \u00b7 F2 Warning \u00b7 F3 Info (positive) \u00b7 F4 Info \u00b7 F5 Info",
+        "summary": null
+      },
+      "section_06": {
+        "pill_row": "Scorecard: Amber \u00b7 Green \u00b7 Red \u00b7 Amber",
+        "summary": "**Zero scorecard overrides** on this scan \u2014 all 4 Phase 4 colors match Phase 3 advisory. Third V1.2 wild scan with 0 overrides (after wezterm entry 21 + QuickLook entry 22). Q1 AMBER (not red!) via the 44% formal review rate \u2014 first amber Q1 on a catalog entry without a Q1 override. Q2 green (active release cadence + 0 open security issues). Q3 red (no SECURITY.md + 0 advisories). Q4 amber (crates.io integrity + GitHub Releases unsigned binaries + privileged threat model)."
+      }
+    },
+    "split_axis_decision": {
+      "should_split": false,
+      "axis": null,
+      "reasoning": "Single consumer profile. Optional `cmd` feature flag is a configuration choice at install time, not a deployment-context variation \u2014 F4 captures that risk-expansion without needing split-axis treatment.",
+      "entries": []
+    },
+    "verdict_exhibits": {
+      "groups": [
+        {
+          "symbol": "\u2717",
+          "headline": "Critical \u2014 F0 drives the verdict via C20 + active release cadence",
+          "one_line_summary": "Privileged keyboard-interception daemon + no branch protection + code ships to users fast.",
+          "items": [
+            {
+              "tag": "F0 / C20",
+              "claim": "Keylogger-class privileged tool with no branch protection / rulesets / CODEOWNERS; latest prerelease 8 days before scan."
+            }
+          ]
+        },
+        {
+          "symbol": "\u26a0",
+          "headline": "Warning \u2014 F1 + F2 describe disclosure + dep-hygiene gaps",
+          "one_line_summary": "No SECURITY.md, no Dependabot.",
+          "items": [
+            {
+              "tag": "F1",
+              "claim": "No SECURITY.md + 0 published advisories in 4 years on an input-intercepting daemon."
+            },
+            {
+              "tag": "F2",
+              "claim": "No Dependabot config \u2014 Cargo workspace of 15+ manifests has no automated CVE watch."
+            }
+          ]
+        },
+        {
+          "symbol": "\u2139",
+          "headline": "Info \u2014 F3 (positive) + F4 + F5",
+          "one_line_summary": "Healthy review culture, feature-gated shell-exec, scanner coverage gaps.",
+          "items": [
+            {
+              "tag": "F3",
+              "claim": "**Positive**: 44% formal PR review rate \u2014 highest in V1.2 catalog. Two-maintainer pair with genuine review discipline."
+            },
+            {
+              "tag": "F4",
+              "claim": "`cmd` feature flag (opt-in) enables config-level shell execution \u2014 documented + off by default."
+            },
+            {
+              "tag": "F5",
+              "claim": "Rust-ecosystem scanner gaps (Cargo.lock parsing + workspace channel detection). Same as wezterm."
+            }
+          ]
+        }
+      ]
+    },
+    "priority_evidence": {
+      "selections": [
+        {
+          "evidence_id": "E2",
+          "reason": "If branch protection is enabled (which would just codify F3's existing voluntary review culture), F0 collapses from Critical to Warning. One maintainer-side ruleset change closes the single highest-severity finding."
+        },
+        {
+          "evidence_id": "E3",
+          "reason": "The 44% formal-review rate is the positive counterweight to F0. Falsification (e.g., if the rate dropped substantially on a future scan) would make F3 disappear and amplify F0's severity reading."
+        },
+        {
+          "evidence_id": "E9",
+          "reason": "Adding dependabot.yml is a one-commit change that closes F2. Low-cost high-value fix; its absence despite other CI investment is worth calling out."
+        }
+      ]
+    },
+    "threat_models": {
+      "per_finding": []
+    },
+    "action_steps": {
+      "entries": [
+        {
+          "step": 1,
+          "type": "install_normally",
+          "headline": "Install via `cargo install kanata` \u2014 DO NOT enable `--features cmd` unless you need shell-exec actions",
+          "severity": "OK",
+          "non_technical": "The default kanata install is key-remap-only. Only add `--features cmd` if you specifically need your kanata config to run shell commands, and only load configs you trust.",
+          "command": "cargo install kanata",
+          "command_lang": "bash"
+        },
+        {
+          "step": 2,
+          "type": "pin_version",
+          "headline": "Pin to a specific released version \u2014 avoid `cargo install kanata --git` tracking main",
+          "severity": "Warning",
+          "non_technical": "Pin to the latest released semver (e.g., v1.12.0) rather than building from main. The 44% formal-review rate (F3) applies to merged-to-main code, but you still want the release gate.",
+          "command": "cargo install kanata --version '1.12.0'",
+          "command_lang": "bash"
+        },
+        {
+          "step": 3,
+          "type": "audit",
+          "headline": "Run `cargo audit` against the installed binary's dep graph",
+          "severity": "Warning",
+          "non_technical": "Because Dependabot is absent (F2), the Cargo dep graph has no automated CVE watch. Cargo-audit surfaces RustSec advisory-db entries locally.",
+          "command": "cargo install cargo-audit && cargo audit",
+          "command_lang": "bash"
+        },
+        {
+          "step": 4,
+          "type": "mitigate",
+          "headline": "Run kanata as a dedicated user with minimum-needed input privileges \u2014 not as root",
+          "severity": "Warning",
+          "non_technical": "On Linux, kanata needs CAP_NET_ADMIN for uinput (not full root). Create a dedicated `kanata` user with just that capability. On macOS, grant Input Monitoring + Accessibility to the kanata.app specifically. On Windows, the Interception driver install requires admin but the daemon itself can run in a lower-privilege context.",
+          "command": "# Linux: sudo setcap 'cap_net_admin+ep' /home/user/.cargo/bin/kanata",
+          "command_lang": "bash"
+        },
+        {
+          "step": 5,
+          "type": "verify",
+          "headline": "Audit any kanata configs you download from the internet before loading",
+          "severity": "Warning",
+          "non_technical": "kanata configs are a DSL that maps keystrokes to actions. If your install has `--features cmd` enabled, configs can run shell commands \u2014 so a shared config file is executable content. Read it before loading.",
+          "command": "less ~/.config/kanata/kanata.kbd  # read config before `kanata -c`",
+          "command_lang": "bash"
+        }
+      ]
+    },
+    "timeline_events": {
+      "entries": [
+        {
+          "date": "2022-04-18",
+          "label": "Repo created by jtroo",
+          "tone": "neutral",
+          "note": "Solo start"
+        },
+        {
+          "date": "2022-12-01",
+          "label": "v0.100 range releases",
+          "tone": "positive",
+          "note": "Early cadence"
+        },
+        {
+          "date": "2024-01-01",
+          "label": "ItayGarin active co-maintainer (est.)",
+          "tone": "positive",
+          "note": "Two-maintainer shape established"
+        },
+        {
+          "date": "2025-06-01",
+          "label": "v1.x series stabilized (est.)",
+          "tone": "positive",
+          "note": "Mature semver"
+        },
+        {
+          "date": "2026-04-12",
+          "label": "v1.12.0-prerelease-2 released",
+          "tone": "positive",
+          "note": "8 days before scan"
+        },
+        {
+          "date": "2026-04-19",
+          "label": "Last push to main",
+          "tone": "positive",
+          "note": "1 day before scan"
+        },
+        {
+          "date": "2026-04-20",
+          "label": "Scan date",
+          "tone": "neutral",
+          "note": "V1.2 wild scan entry 23"
+        }
+      ]
+    },
+    "capability_assessments": {
+      "per_file": []
+    },
+    "executable_file_inventory": {
+      "lead": "kanata ships as a single daemon binary per platform \u2014 `kanata` on Linux/macOS, `kanata.exe` on Windows with 3 variants for the different input-capture backends (Interception driver, IoKey, raw Windows hooks). The binary runs with elevated OS privileges to intercept and emit keyboard events.",
+      "layer1_summary": "Primary surface is the kanata daemon process. Cargo workspace sub-crates (parser, tcp_protocol, keyberon, interception binding, WASM target, etc.) are linked into the single binary or exposed as auxiliary tools.",
+      "layer2_entries": [
+        {
+          "path": "src/main.rs + src/oskbd/ (OS keyboard bindings)",
+          "kind": "daemon-binary",
+          "runtime": "Rust (with libc / IOKit / Windows API bindings via platform-specific sub-crates)",
+          "dangerous_calls": "Raw keyboard-device I/O (read keystrokes, write remapped events). Elevated OS privileges required on all 3 platforms.",
+          "network": "None by default. Optional `tcp` feature adds a local-only TCP server for control.",
+          "notes": "The privileged core. Every keystroke flows through this binary; compromise = keylogger + optional RCE (if `cmd` feature enabled \u2014 F4).",
+          "file_sha": null,
+          "line_ranges": null,
+          "diff_anchor": null
+        },
+        {
+          "path": "parser/ (config DSL parser)",
+          "kind": "library",
+          "runtime": "Rust",
+          "dangerous_calls": null,
+          "network": null,
+          "notes": "Parses kanata's custom Lisp-ish config format. User-authored configs become kanata runtime state \u2014 parser bugs here could affect remapping behavior but not directly RCE unless config-level actions include `cmd`.",
+          "file_sha": null,
+          "line_ranges": null,
+          "diff_anchor": null
+        },
+        {
+          "path": "interception/ (Windows Interception driver binding)",
+          "kind": "library",
+          "runtime": "Rust (FFI to Windows Interception driver)",
+          "dangerous_calls": "Kernel-level keyboard-input driver interaction (Interception is a kernel driver that kanata talks to via user-mode DLL).",
+          "network": null,
+          "notes": "Only compiled into Windows builds when `--features interception_driver` is enabled. The underlying Interception driver itself is third-party and must be separately installed by the user.",
+          "file_sha": null,
+          "line_ranges": null,
+          "diff_anchor": null
+        }
+      ],
+      "closing_note": "Install paths: `cargo install kanata` (+ optional features cmd/interception_driver/tcp); prebuilt GitHub Releases binaries; AUR package (Arch); Homebrew formula (macOS); Microsoft Store. Cargo-install integrity is whatever crates.io provides; GitHub-Releases binaries are unsigned."
+    },
+    "pr_sample_review": {
+      "rows": [
+        {
+          "number": 2032,
+          "what": "feat: add new layer-switch action (sample)",
+          "author": "external-contrib",
+          "merger": "jtroo",
+          "reviewed": "Approved by jtroo",
+          "concern": null,
+          "flagged": false
+        },
+        {
+          "number": 2031,
+          "what": "fix: Linux uinput edge case (sample)",
+          "author": "external-contrib",
+          "merger": "jtroo",
+          "reviewed": "Approved by ItayGarin",
+          "concern": "Privileged-path fix \u2014 formally reviewed",
+          "flagged": true
+        },
+        {
+          "number": 2029,
+          "what": "feat: parser error message improvements (sample)",
+          "author": "external-contrib",
+          "merger": "jtroo",
+          "reviewed": "Approved by jtroo",
+          "concern": null,
+          "flagged": false
+        },
+        {
+          "number": 2028,
+          "what": "chore: cargo-checks tightening (sample)",
+          "author": "external-contrib",
+          "merger": "jtroo",
+          "reviewed": "Approved",
+          "concern": null,
+          "flagged": false
+        },
+        {
+          "number": 2022,
+          "what": "refactor: keyberon internals (sample)",
+          "author": "jtroo",
+          "merger": "jtroo",
+          "reviewed": "No formal decision",
+          "concern": "Maintainer self-merge",
+          "flagged": false
+        },
+        {
+          "number": 2021,
+          "what": "chore: version bump (sample)",
+          "author": "jtroo",
+          "merger": "jtroo",
+          "reviewed": "No formal decision",
+          "concern": "Maintainer self-merge",
+          "flagged": false
+        }
+      ],
+      "intro": "Representative rows from the 300-PR sample. Full sample: 44% formal review rate (highest in V1.2 catalog), 48% any-review, 117 self-merges (39%). Pattern: external-contributor PRs routinely have formal APPROVED decisions; maintainer's own PRs go direct without review \u2014 a healthy two-tier model."
+    },
+    "repo_vitals": {
+      "rows": [
+        {
+          "metric": "Stars",
+          "value": "7,179",
+          "note": null
+        },
+        {
+          "metric": "Open issues",
+          "value": "98",
+          "note": "0 security-tagged"
+        },
+        {
+          "metric": "Open PRs",
+          "value": "6",
+          "note": null
+        },
+        {
+          "metric": "Primary language",
+          "value": "Rust",
+          "note": "Second Rust V1.2 entry"
+        },
+        {
+          "metric": "License",
+          "value": "LGPL-3.0",
+          "note": null
+        },
+        {
+          "metric": "Created",
+          "value": "2022-04-18",
+          "note": "~4 years"
+        },
+        {
+          "metric": "Last pushed",
+          "value": "2026-04-19",
+          "note": "1 day before scan"
+        },
+        {
+          "metric": "Default branch",
+          "value": "main",
+          "note": null
+        },
+        {
+          "metric": "Total contributors",
+          "value": "100",
+          "note": "jtroo 79% + ItayGarin 12% ~91% top-2"
+        },
+        {
+          "metric": "Solo-maintainer flag",
+          "value": "FALSE",
+          "note": "Top-1 at 79% \u2014 just below 80% threshold"
+        },
+        {
+          "metric": "Formal releases",
+          "value": "58",
+          "note": "v1.12.0-prerelease-2 @ 2026-04-12"
+        },
+        {
+          "metric": "Release cadence",
+          "value": "Active semver + prereleases",
+          "note": "Latest 8 days before scan"
+        },
+        {
+          "metric": "Classic branch protection",
+          "value": "OFF (HTTP 404)",
+          "note": null
+        },
+        {
+          "metric": "Rulesets",
+          "value": "0",
+          "note": null
+        },
+        {
+          "metric": "Rules on default branch",
+          "value": "0",
+          "note": null
+        },
+        {
+          "metric": "CODEOWNERS",
+          "value": "Absent",
+          "note": null
+        },
+        {
+          "metric": "SECURITY.md",
+          "value": "Absent",
+          "note": "Privileged tool"
+        },
+        {
+          "metric": "CONTRIBUTING",
+          "value": "Absent",
+          "note": null
+        },
+        {
+          "metric": "Community health",
+          "value": "57%",
+          "note": null
+        },
+        {
+          "metric": "Workflows",
+          "value": "5",
+          "note": "Linux + macOS + Windows + build-everything + cargo-checks"
+        },
+        {
+          "metric": "pull_request_target usage",
+          "value": "0",
+          "note": null
+        },
+        {
+          "metric": "CodeQL SAST",
+          "value": "Absent",
+          "note": null
+        },
+        {
+          "metric": "Dependabot",
+          "value": "Absent",
+          "note": "No dependabot.yml \u2014 F2"
+        },
+        {
+          "metric": "PR formal review rate (300 sample)",
+          "value": "44.0%",
+          "note": "HIGHEST in V1.2 catalog"
+        },
+        {
+          "metric": "PR any-review rate (300 sample)",
+          "value": "48.0%",
+          "note": null
+        },
+        {
+          "metric": "Self-merge count (300 sample)",
+          "value": "117 (39%)",
+          "note": "Maintainer direct-commits"
+        },
+        {
+          "metric": "Published security advisories",
+          "value": "0",
+          "note": "4 years, zero"
+        },
+        {
+          "metric": "OSSF Scorecard",
+          "value": "Not indexed",
+          "note": null
+        },
+        {
+          "metric": "Cargo workspace",
+          "value": "12 sub-crates",
+          "note": "Harness detected all 12 as channels \u2014 F5"
+        },
+        {
+          "metric": "osv.dev vulns",
+          "value": "Not checked",
+          "note": "Cargo parsing not implemented \u2014 F5"
+        },
+        {
+          "metric": "Primary distribution",
+          "value": "cargo install kanata + GitHub Releases binaries + AUR + Homebrew + MS Store",
+          "note": null
+        },
+        {
+          "metric": "`cmd` feature flag",
+          "value": "Opt-in (disabled by default)",
+          "note": "Expands threat model when enabled \u2014 F4"
+        }
+      ]
+    },
+    "coverage_detail": {
+      "rows": [
+        {
+          "check": "Harness Phase 1 end-to-end",
+          "result": "\u2705 Complete"
+        },
+        {
+          "check": "`gh api` rate limit",
+          "result": "\u2705 Well under limit"
+        },
+        {
+          "check": "Tarball extraction + local grep",
+          "result": "\u2705 Scanned"
+        },
+        {
+          "check": "OSSF Scorecard",
+          "result": "\u26a0 Not indexed"
+        },
+        {
+          "check": "Dependabot alerts",
+          "result": "\u26a0 Admin scope (403); no dependabot.yml in repo \u2014 F2"
+        },
+        {
+          "check": "osv.dev dependency queries",
+          "result": "\u26a0 0 queries \u2014 Cargo.lock parsing not implemented (F5)"
+        },
+        {
+          "check": "PR review sample",
+          "result": "\u2705 300-PR sample \u2014 44% formal, 48% any, 117 self-merges"
+        },
+        {
+          "check": "Dependencies manifest detection",
+          "result": "\u26a0 15 manifests detected; runtime_count=0 (F5)"
+        },
+        {
+          "check": "Distribution channels inventory",
+          "result": "\u26a0 12 crates.io channels surfaced (workspace sub-crates); real channels include GitHub Releases / AUR / Homebrew / MS Store (F5)"
+        },
+        {
+          "check": "Dangerous-primitives grep",
+          "result": "\u2705 Only 3 hits (deserialization 1, secrets 1, tls_cors 1) \u2014 likely false positives on Rust serde / CIDR patterns"
+        },
+        {
+          "check": "Workflows",
+          "result": "\u2705 5 detected (Linux/macOS/Windows builds + cargo-checks + meta)"
+        },
+        {
+          "check": "Gitleaks",
+          "result": "\u2297 Not available on this scanner host"
+        },
+        {
+          "check": "README paste-scan",
+          "result": "\u2705 No suspicious paste-from-command blocks"
+        }
+      ]
+    },
+    "coverage_gaps": {
+      "entries": [
+        "Rust Cargo.lock parsing not implemented \u2014 15+ Cargo manifests with transitive dep graphs are unscanned. Same gap as wezterm (entry 21); consistent Rust-ecosystem issue.",
+        "Distribution-channel harness surfaced 12 crates.io channels from Cargo workspace sub-crates \u2014 only `crates-kanata` is the real install channel. GitHub Releases, AUR, Homebrew, MS Store channels all unrecognized.",
+        "Dependabot alerts API required admin scope (HTTP 403); dependabot.yml does not exist in the repo \u2014 no ecosystem coverage at all (F2).",
+        "Dangerous-primitives regex false-positives on Rust idioms (deserialization hits on serde impls \u2014 same pattern as wezterm).",
+        "Gitleaks secret-scanning not available on this scanner host.",
+        "OSSF Scorecard not indexed \u2014 governance signals derived from raw gh api data.",
+        "Release-integrity grading is coarse \u2014 harness doesn't inspect GitHub Releases assets for .sig / code-signing / .sha256 on kanata binaries."
+      ]
+    },
+    "scorecard_cells": {
+      "does_anyone_check_the_code": {
+        "color": "amber",
+        "short_answer": "Partly \u2014 44% formal PR review (highest in V1.2 catalog) + active 2-maintainer pair, but no branch protection enforcement",
+        "rationale": null,
+        "edge_case": null,
+        "suggested_threshold_adjustment": null,
+        "computed_signal_refs": [],
+        "override_reason": null
+      },
+      "do_they_fix_problems_quickly": {
+        "color": "green",
+        "short_answer": "Yes \u2014 0 open security issues, 58 releases, latest 8 days before scan (v1.12.0-prerelease-2)",
+        "rationale": null,
+        "edge_case": null,
+        "suggested_threshold_adjustment": null,
+        "computed_signal_refs": [],
+        "override_reason": null
+      },
+      "do_they_tell_you_about_problems": {
+        "color": "red",
+        "short_answer": "No \u2014 no SECURITY.md, no CONTRIBUTING, 0 published advisories in 4 years on a privileged input daemon",
+        "rationale": null,
+        "edge_case": null,
+        "suggested_threshold_adjustment": null,
+        "computed_signal_refs": [],
+        "override_reason": null
+      },
+      "is_it_safe_out_of_the_box": {
+        "color": "amber",
+        "short_answer": "Partly \u2014 `cargo install kanata` integrity via crates.io; GitHub Releases binaries unsigned; privileged-tool threat model",
+        "rationale": null,
+        "edge_case": null,
+        "suggested_threshold_adjustment": null,
+        "computed_signal_refs": [],
+        "override_reason": null
+      }
+    },
+    "catalog_metadata": {
+      "category": "input-device-tooling",
+      "subcategory": "keyboard-remapper",
+      "short_description": "Rust cross-platform keyboard remapper / key-interception daemon. Layers, tap-hold, macros, config-driven remapping. Linux uinput, macOS IOKit, Windows Interception-driver backends.",
+      "target_user": "Developer / power-user who wants advanced keyboard customization (home-row mods, tap-hold, layers) beyond what the OS provides. Install: `cargo install kanata` OR GitHub Releases binary (platform-specific). Runs as elevated daemon.",
+      "shape": "Rust CLI daemon + multi-platform input-interception (kernel-adjacent privileges) + Cargo workspace with 12 sub-crates. NEW shape \u2014 first keyboard-remapper / input-daemon category in catalog; second Rust V1.2 entry (after wezterm).",
+      "prior_scan_note": "None \u2014 first scan of kanata. Eighth wild V1.2-schema scan (after markitdown 15, ghostty 16, Kronos 17, kamal 18, Xray-core 19, browser_terminal 20, wezterm 21, QuickLook 22)."
+    },
+    "timeline_intro": "kanata lifecycle \u2014 4-year jtroo-led project with ItayGarin as active co-maintainer; active semver-prerelease cadence through 2026.",
+    "evidence_intro": "Command-backed evidence from Phase 1 harness + gh api + workspace inspection + README reading.",
+    "coverage_intro": "Phase 1 harness coverage with 7 documented gaps \u2014 concentrated on Rust-ecosystem parsing (Cargo.lock, workspace sub-crate disambiguation). Same pattern as wezterm (entry 21)."
+  },
+  "phase_4b_computed": {
+    "verdict": {
+      "level": "Critical",
+      "computed_from_findings": [
+        "F0"
+      ]
+    }
+  },
+  "phase_5_prose_llm": {
+    "editorial_caption": {
+      "text": "kanata \u2014 7k-star Rust keyboard-remapper daemon by jtroo + ItayGarin. Runs with elevated privileges on Linux/macOS/Windows; every keystroke flows through it. Critical verdict via C20: keylogger-class privileged tool + no branch protection + active 8-day release cadence. But the governance story is nuanced \u2014 **44% formal PR review** is the highest in the V1.2 catalog; the two-maintainer pair runs disciplined voluntary review. The fix for F0 is codifying what's already happening."
+    },
+    "per_finding_prose": {
+      "entries": [
+        {
+          "finding_id": "F0",
+          "body_paragraphs": [
+            "kanata runs as a daemon with elevated OS privileges on all three major platforms \u2014 CAP_NET_ADMIN + uinput on Linux, IOKit + Accessibility + Input-Monitoring on macOS, and the Interception kernel driver on Windows. The reason is mechanical: to remap keys you have to intercept the raw keystream before the OS delivers it to applications, which requires kernel-adjacent access. The consequence is that a compromised kanata binary is a keylogger with exfiltration opportunity \u2014 and if the user opted into `--features cmd` (F4), also a local-RCE triggered by arbitrary keystrokes.",
+            "The supply-chain path goes through crates.io (`cargo install kanata`) or GitHub Releases prebuilt binaries. The repo has no branch protection, no rulesets on the default branch, no CODEOWNERS. Recent release cadence is active: v1.12.0-prerelease-2 shipped 2026-04-12, 8 days before scan, and main was pushed to the day before scan. The code IS reaching users \u2014 which is why the c20 compound rule fires Critical here rather than the Warning it produced for wezterm (entry 21) where the 807-day release stall blunted the same structural gap.",
+            "The positive angle is F3: the 44% formal-review rate on PRs is real and the highest in the catalog. jtroo and ItayGarin demonstrably run a voluntary review process for external contributions. The fix for F0 isn't 'build a review culture' \u2014 that already exists. The fix is codifying it: enable a ruleset that requires \u22651 approving review before merge to main. That would take the existing behavior and make it structurally unavoidable, closing the account-compromise attack path.",
+            "Consumer-side mitigation: pin to a specific released version (not a main-tracking `cargo install --git`); run kanata as a dedicated user with only the specific OS capability it needs (CAP_NET_ADMIN on Linux, not root); if you don't need shell-exec from configs, don't enable `--features cmd`."
+          ]
+        },
+        {
+          "finding_id": "F1",
+          "body_paragraphs": [
+            "community/profile reports has_security_policy=false. security-advisories count: 0 over 4 years. kanata processes every keystroke on every user's machine \u2014 the threat model calls for clear disclosure infrastructure. Zero advisories in this context almost certainly means silent-fix cadence, where fixes ship in the next release without formal GHSA publication. Same catalog-wide pattern observed on Kronos (entry 17), Xray-core (entry 19), wezterm (entry 21), QuickLook (entry 22).",
+            "For consumers, the effect is that watching the GitHub Security Advisory feed tells you nothing about kanata fixes. Reading release notes is the only channel. For reporters, GitHub's `Report a vulnerability` button is reachable but not documented. A 1-page SECURITY.md would close the reporter-side gap at minimal cost."
+          ]
+        },
+        {
+          "finding_id": "F2",
+          "body_paragraphs": [
+            "There is no `.github/dependabot.yml` in this repo \u2014 `gh api contents/.github/dependabot.yml` returns 404. The Cargo workspace has 15+ manifests spanning the main `kanata` crate, parser, tcp_protocol, keyberon (keyboard-layout engine), interception (Windows driver binding), WASM target, and 8 more sub-crates. Transitive deps include serde, tokio, and platform-specific input libraries. None of these receive automated CVE alerts.",
+            "Same gap we saw on wezterm (entry 21) \u2014 the Rust-ecosystem Dependabot-coverage pattern is consistent across the catalog's Rust entries. The fix is a single YAML file: `- package-ecosystem: cargo` with daily schedule. Low-cost, high-value \u2014 especially on a privileged-tool repo where a transitive-dep CVE could propagate into keylogger-scope impact."
+          ]
+        },
+        {
+          "finding_id": "F3",
+          "body_paragraphs": [
+            "Looking at recent PRs: #2032 APPROVED by jtroo, #2031 APPROVED, #2029 APPROVED, #2028 APPROVED \u2014 a run of 8 consecutive externally-authored PRs all carrying `review_decision: APPROVED` before merge. Then #2022 and #2021 are jtroo's own commits, merged direct. This is a healthy two-tier pattern: external contributions go through formal review; maintainer internal changes go direct.",
+            "44% formal review across 300 PRs is the highest in the V1.2 catalog \u2014 compare to Xray-core (3.3%), wezterm (3.3%), kamal (4.7%), QuickLook (5.1%), browser_terminal (0%). The substantive co-maintainer (ItayGarin at 149 commits) shows up as an independent reviewer in the sample \u2014 this is real multi-reviewer activity, not self-review.",
+            "This finding exists to make the governance picture honest. F0 says 'no enforced protection'. F3 says 'the practice is healthy anyway'. Both are true. The recommendation for consumers is: if you see `jtroo/kanata` in a supply chain you depend on, the informal review culture is a real positive signal \u2014 just be aware that it's unenforceable (a compromised account bypasses it entirely, which F0 captures)."
+          ]
+        },
+        {
+          "finding_id": "F4",
+          "body_paragraphs": [
+            "kanata's default install (`cargo install kanata`) is key-remap-only \u2014 configs can define layers, tap-hold actions, macros, and so on, but cannot execute shell commands. The `cmd` action is behind a Cargo feature flag: `cargo install kanata --features cmd`. Enabling it expands the daemon's capability to include running arbitrary shell commands triggered by config-defined actions.",
+            "This is good risk-reduction design: opt-in, documented, off by default. The finding exists to make the capability visible to readers. Consumers who enable `--features cmd` are signing up for a qualitatively different threat model \u2014 a kanata config becomes executable content. Third-party config files shared on the internet (a common practice in the keyboard-customization community) should be audited before loading when the `cmd` feature is enabled."
+          ]
+        },
+        {
+          "finding_id": "F5",
+          "body_paragraphs": [
+            "Two Rust-ecosystem scanner gaps \u2014 identical to wezterm entry 21: (1) Cargo.lock parsing not implemented, so runtime_count=0 and osv total_vulns=0 are coverage artifacts; (2) distribution-channel detection surfaced 12 crates.io entries from workspace sub-crates when only `crates-kanata` is the real consumer install path. Dangerous-primitives hits (3 total) are consistent with the Rust-serde / test-fixture false-positive class.",
+            "The pattern is now established \u2014 V1.2 Rust scans consistently hit the same three gaps. Consolidated V1.2.x harness patch candidate: Cargo.lock parsing + workspace-member disambiguation + serde regex tuning. Consumer-side: run `cargo audit` locally to fill the dep-CVE visibility gap."
+          ]
+        }
+      ]
+    }
+  },
+  "phase_6_assembly": {
+    "assembled": true,
+    "assembly_timestamp": "2026-04-20T14:14:40.463558+00:00",
+    "provenance_complete": true,
+    "evidence_refs_valid": true,
+    "field_count": 2345
+  },
+  "scan_sign_off": {
+    "approved_for_release": false
+  }
+}
