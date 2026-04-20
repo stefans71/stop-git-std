@@ -1,0 +1,2062 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Security Investigation Report: wezterm/wezterm @ 577474d | Generated 2026-04-20 | Prompt V2.4 (V1.1 schema) -->
+<title>Security Investigation: wezterm/wezterm</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Unbounded:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; script-src 'unsafe-inline';">
+<style>
+  /* ═══════════════════════════════════════════════
+     DESIGN SYSTEM — DO NOT MODIFY
+     Dark theme, security monitoring aesthetic
+     ═══════════════════════════════════════════════ */
+  :root {
+    --bg-void: #0a0a0c;
+    --bg-surface: #131316;
+    --bg-elevated: #1a1a1f;
+    --bg-hover: #222228;
+    --border: #32323c;
+    --border-subtle: #26262e;
+    --text-primary: #f0f0f4;
+    --text-secondary: #b0b0bc;
+    --text-muted: #7e7e8e;
+    --red-glow: #ff4545;
+    --red-dim: #ff454520;
+    --red-bg: #1a0f0f;
+    --amber-glow: #ffaa2a;
+    --amber-dim: #ffaa2a20;
+    --amber-bg: #1a150e;
+    --green-glow: #22c55e;
+    --green-dim: #22c55e20;
+    --green-bg: #0e1a12;
+    --cyan-glow: #06b6d4;
+    --cyan-dim: #06b6d420;
+    --font-mono: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace;
+    --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-display: 'Unbounded', 'Inter', sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--font-sans);
+    background: var(--bg-void);
+    color: var(--text-primary);
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Noise texture + horizontal scanlines — forensic console feel */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      repeating-linear-gradient(
+        to bottom,
+        rgba(255,255,255,0.008) 0px,
+        rgba(255,255,255,0.008) 1px,
+        transparent 1px,
+        transparent 3px
+      ),
+      url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+  }
+  /* Single-pass scan line — thin cyan line sweeps once then disappears */
+  body::after {
+    content: ''; position: fixed; left: 0; right: 0; height: 2px;
+    background: linear-gradient(to right, transparent 5%, var(--cyan-glow) 30%, var(--cyan-glow) 70%, transparent 95%);
+    box-shadow: 0 0 12px var(--cyan-glow), 0 0 4px var(--cyan-glow);
+    pointer-events: none; z-index: 9998; opacity: 0.7;
+    animation: scan-sweep 3s ease-in-out 1s 1 forwards;
+  }
+  @keyframes scan-sweep {
+    0% { top: -2px; opacity: 0.7; }
+    90% { opacity: 0.5; }
+    100% { top: 100vh; opacity: 0; }
+  }
+
+  /* Scan strip — the data ribbon above the hero */
+  .scan-strip {
+    display: flex; flex-wrap: wrap; gap: 1.25rem; align-items: center;
+    padding: 0.625rem 0 0.75rem; margin-bottom: 1.5rem;
+    border-top: 1px solid var(--border-subtle);
+    border-bottom: 1px solid var(--border-subtle);
+    font-family: var(--font-mono); font-size: 0.65rem;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--text-secondary);
+  }
+  .scan-strip-item { display: inline-flex; align-items: center; gap: 0.4rem; }
+  .scan-strip-item .dot {
+    display: inline-block; width: 6px; height: 6px; border-radius: 50%;
+    box-shadow: 0 0 6px currentColor;
+  }
+  .scan-strip-item.amber, .scan-strip-item .dot.amber { color: var(--amber-glow); background: var(--amber-glow); }
+  .scan-strip-item .dot.amber { background: var(--amber-glow); box-shadow: 0 0 8px var(--amber-glow); animation: pulse 3s ease-in-out infinite; }
+  .scan-strip-item.flash {
+    color: var(--red-glow); animation: flash-blink 1.4s ease-in-out infinite;
+  }
+  @keyframes flash-blink {
+    0%, 80%, 100% { opacity: 1; }
+    85%, 95% { opacity: 0.25; }
+  }
+
+  /* Hero caption — the editorial line under the H1.
+     Readable sans-serif, slightly larger than body, no italic (readability > flavor). */
+  .hero-caption {
+    font-family: var(--font-sans); font-size: 1.0625rem; line-height: 1.55;
+    color: var(--text-primary); font-weight: 400;
+    max-width: 68ch; margin: 0.75rem 0 1.75rem;
+    letter-spacing: -0.005em;
+  }
+
+  /* ─────────────── Utility classes (replaces inline style="" attributes) ─────────────── */
+  /* Semantic value colors — use on chip-value, vital-value, td.val, etc. */
+  .val-good  { color: var(--green-glow) !important; }
+  .val-bad   { color: var(--red-glow)   !important; }
+  .val-warn  { color: var(--amber-glow) !important; }
+  .val-info  { color: var(--cyan-glow)  !important; }
+  .fw-semi   { font-weight: 600; }
+  /* Card vertical rhythm — replaces margin-bottom:12px inline on cards */
+  .stack-md  { margin-bottom: 0.75rem; }
+  .stack-sm  { margin-top: 0.75rem; }
+  /* Subdued paragraph — replaces the meta-text inline patterns */
+  .p-meta {
+    color: var(--text-secondary); margin-bottom: 1rem;
+    font-size: 0.875rem; line-height: 1.55;
+  }
+  .p-meta-tight {
+    color: var(--text-secondary); margin: 0.75rem 0 1rem;
+    font-size: 0.8125rem; line-height: 1.55;
+  }
+  /* Priority-evidence visual uplift — replaces inline border-left hack */
+  .finding-card.evidence-priority {
+    border-left: 4px solid var(--amber-glow);
+  }
+  /* Inline-flag variant — when priority-flag appears mid-sentence, not block */
+  .priority-flag.inline { display: inline-block; }
+
+  a { color: var(--cyan-glow); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* Font size controls */
+  .font-controls {
+    position: fixed; top: 16px; right: 16px; z-index: 1000;
+    display: flex; align-items: center; gap: 2px;
+    background: var(--bg-elevated); border: 1px solid var(--border);
+    border-radius: 8px; padding: 4px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5); backdrop-filter: blur(12px);
+  }
+  .font-controls button {
+    font-family: var(--font-mono); font-size: 0.875rem; font-weight: 700;
+    width: 34px; height: 34px; border: none; border-radius: 6px;
+    background: transparent; color: var(--text-secondary); cursor: pointer;
+    display: flex; align-items: center; justify-content: center; transition: all 0.15s;
+  }
+  .font-controls button:hover { background: var(--bg-hover); color: var(--text-primary); }
+  .font-controls button:active { transform: scale(0.92); }
+  .font-controls .font-size-display {
+    font-family: var(--font-mono); font-size: 0.6875rem; color: var(--text-muted);
+    min-width: 38px; text-align: center; letter-spacing: 0.05em; user-select: none;
+  }
+
+  .page { max-width: 960px; margin: 0 auto; padding: 0 20px; }
+
+  /* Hero */
+  .hero { padding: 64px 0 48px; border-bottom: 1px solid var(--border); position: relative; }
+  .hero::after {
+    content: ''; position: absolute; bottom: -1px; left: 0; right: 0; height: 120px;
+    background: linear-gradient(to top, var(--bg-void), transparent); pointer-events: none;
+  }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-family: var(--font-mono); font-size: 0.6875rem; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--text-muted); margin-bottom: 20px;
+    padding: 6px 12px; border: 1px solid var(--border); border-radius: 6px; background: var(--bg-surface);
+  }
+  .hero-badge .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--text-muted); /* Neutral default — LLM must set .red, .green, or .amber */
+  }
+  .hero-badge .dot.red { background: var(--red-glow); box-shadow: 0 0 8px var(--red-glow); animation: pulse 2s ease-in-out infinite; }
+  .hero-badge .dot.green { background: var(--green-glow); box-shadow: 0 0 8px var(--green-glow); }
+  .hero-badge .dot.amber { background: var(--amber-glow); box-shadow: 0 0 8px var(--amber-glow); animation: pulse 3s ease-in-out infinite; }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+  .hero h1 {
+    font-family: var(--font-display); font-size: clamp(1.8rem, 4vw, 3.4rem);
+    font-weight: 800; letter-spacing: -0.04em; line-height: 1.05; margin-bottom: 16px;
+  }
+  .hero h1 .slash {
+    color: var(--text-muted); font-weight: 300;
+    margin: 0 0.1em; font-size: 0.85em;
+  }
+  .hero h1 span { color: var(--red-glow); }
+  .hero h1 span.green { color: var(--green-glow); }
+  .hero h1 span.amber { color: var(--amber-glow); }
+  .hero .meta { font-size: 0.875rem; color: var(--text-primary); display: flex; flex-wrap: wrap; gap: 16px; }
+  .hero .meta-item { display: flex; align-items: center; gap: 6px; }
+  .hero .meta-item .label { color: var(--text-secondary); font-size: 0.75rem; }
+
+  /* Verdict */
+  .verdict-section { padding: 48px 0 40px; }
+  .verdict-banner {
+    border-radius: 0; padding: 2.25rem 2.75rem 2rem 4.5rem;
+    position: relative; overflow: hidden;
+    border-left-width: 6px; border-left-style: solid;
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%);
+  }
+  .verdict-banner.critical { background: linear-gradient(135deg, #1f0a0a 0%, #0a0a0c 100%); border: 1px solid #ff454540; border-left-color: var(--red-glow); }
+  .verdict-banner.caution { background: linear-gradient(135deg, #1f1810 0%, #0a0a0c 100%); border: 1px solid #ffaa2a40; border-left-color: var(--amber-glow); }
+  .verdict-banner.clean { background: linear-gradient(135deg, #0a1f14 0%, #0a0a0c 100%); border: 1px solid #22c55e40; border-left-color: var(--green-glow); }
+  /* Radial wash */
+  .verdict-banner::before {
+    content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+    pointer-events: none;
+  }
+  .verdict-banner.critical::before { background: radial-gradient(circle at 20% 30%, #ff454510, transparent 55%); }
+  .verdict-banner.caution::before { background: radial-gradient(circle at 20% 30%, #ffaa2a12, transparent 55%); }
+  .verdict-banner.clean::before { background: radial-gradient(circle at 20% 30%, #22c55e10, transparent 55%); }
+  /* Vertical scan-ID bar on the left */
+  .verdict-banner::after {
+    content: attr(data-dossier); position: absolute;
+    left: 1.4rem; top: 2.1rem; bottom: 2rem;
+    writing-mode: vertical-rl; transform: rotate(180deg);
+    font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.25em;
+    color: var(--text-muted); text-transform: uppercase;
+    display: flex; align-items: center;
+    opacity: 0.55;
+  }
+  .verdict-banner .verdict-label {
+    font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.22em;
+    text-transform: uppercase; margin-bottom: 1rem; position: relative;
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    padding: 0.25rem 0.625rem; border-radius: 0.125rem;
+    background: rgba(255,170,42,0.08); border: 1px solid rgba(255,170,42,0.25);
+  }
+  .verdict-banner.critical .verdict-label { color: var(--red-glow); background: rgba(255,69,69,0.08); border-color: rgba(255,69,69,0.25); }
+  .verdict-banner.caution .verdict-label { color: var(--amber-glow); }
+  .verdict-banner.clean .verdict-label { color: var(--green-glow); background: rgba(34,197,94,0.08); border-color: rgba(34,197,94,0.25); }
+  .verdict-banner h2 {
+    font-family: var(--font-display);
+    font-size: clamp(1.5rem, 3.2vw, 2.2rem); font-weight: 600; line-height: 1.18;
+    letter-spacing: -0.025em; margin-bottom: 1rem; position: relative; color: #ff8c00;
+    max-width: 56ch;
+  }
+  .verdict-banner.clean h2 { color: var(--green-glow); }
+  .verdict-banner.critical h2 { color: var(--red-glow); }
+
+  /* Split-verdict layout — two audience blocks separated by a divider */
+  .verdict-split {
+    display: grid; grid-template-columns: 1fr auto 1fr; gap: 1.75rem;
+    margin-bottom: 1.25rem; align-items: stretch;
+  }
+  @media (max-width: 820px) {
+    .verdict-split { grid-template-columns: 1fr; gap: 1rem; }
+  }
+  .verdict-entry { display: flex; flex-direction: column; gap: 0.5rem; }
+  .verdict-entry-scope {
+    font-family: var(--font-mono); font-size: 0.65rem; letter-spacing: 0.2em;
+    text-transform: uppercase; color: var(--text-muted);
+    padding-bottom: 0.375rem; border-bottom: 1px solid var(--border-subtle);
+  }
+  .verdict-entry-headline {
+    font-family: var(--font-display); font-weight: 600;
+    font-size: clamp(1.35rem, 2.5vw, 1.85rem); line-height: 1.15;
+    letter-spacing: -0.02em; margin: 0;
+  }
+  .verdict-entry-headline.good { color: #8dd492; }
+  .verdict-entry-headline.warn { color: var(--amber-glow); }
+  .verdict-entry-headline.bad  { color: var(--red-glow); }
+  .verdict-entry-detail {
+    font-family: var(--font-sans); font-size: 0.8125rem; line-height: 1.55;
+    color: var(--text-secondary); margin-top: 0.25rem;
+  }
+  .verdict-split-divider {
+    width: 1px; background: linear-gradient(to bottom, transparent, var(--border), transparent);
+  }
+  @media (max-width: 820px) {
+    .verdict-split-divider { width: 100%; height: 1px; background: var(--border-subtle); }
+  }
+
+  /* Rolled verdict exhibits — 3 themed panels that replace the 10-bullet glaze list */
+  .verdict-exhibits { display: grid; gap: 0.875rem; margin-top: 0.5rem; }
+  .exhibit {
+    position: relative; overflow: hidden; border-radius: 10px;
+    border: 1px solid var(--border-subtle);
+  }
+  .exhibit.vuln    { background: linear-gradient(135deg, #1a1008 0%, #0f0a0a 100%); border-color: #ffaa2a30; }
+  .exhibit.govern  { background: linear-gradient(135deg, #100c1a 0%, #0a0a0f 100%); border-color: #ff808040; }
+  .exhibit.signals { background: linear-gradient(135deg, #0a1812 0%, #0a0f0a 100%); border-color: #22c55e30; }
+  /* Left accent bar */
+  .exhibit::before {
+    content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
+  }
+  .exhibit.vuln::before    { background: var(--amber-glow); }
+  .exhibit.govern::before  { background: var(--red-glow); }
+  .exhibit.signals::before { background: var(--green-glow); }
+  /* Summary row (collapsed state) */
+  .exhibit > summary {
+    list-style: none; cursor: pointer;
+    padding: 0.875rem 1rem 0.875rem 1.5rem;
+    display: flex; align-items: center; gap: 0.75rem;
+    position: relative;
+  }
+  .exhibit > summary::-webkit-details-marker { display: none; }
+  .exhibit > summary::after {
+    content: '\25B6'; margin-left: auto; font-size: 0.7rem;
+    color: var(--text-muted); transition: transform 0.2s;
+  }
+  .exhibit[open] > summary::after { transform: rotate(90deg); }
+  .exhibit-glyph {
+    width: 1.75rem; height: 1.75rem; border-radius: 50%;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 0.85rem; font-weight: 700; flex-shrink: 0;
+  }
+  .exhibit.vuln .exhibit-glyph    { background: rgba(255,170,42,0.18); color: var(--amber-glow); }
+  .exhibit.govern .exhibit-glyph  { background: rgba(255,69,69,0.18);  color: var(--red-glow); }
+  .exhibit.signals .exhibit-glyph { background: rgba(34,197,94,0.18);  color: var(--green-glow); }
+  .exhibit-title {
+    font-family: var(--font-display); font-size: 1.05rem; font-weight: 600;
+    letter-spacing: -0.01em; line-height: 1.25;
+  }
+  .exhibit-count {
+    margin-left: 0.5rem; font-family: var(--font-mono); font-size: 0.7rem;
+    letter-spacing: 0.12em; color: var(--text-muted); text-transform: uppercase;
+  }
+  .exhibit-summary-line {
+    font-family: var(--font-sans); font-size: 0.82rem; color: var(--text-secondary);
+    margin-left: 0.5rem; line-height: 1.45; font-weight: 400;
+  }
+  @media (max-width: 720px) {
+    .exhibit-summary-line { display: block; margin-left: 2.5rem; margin-top: 0.25rem; }
+  }
+  /* Expanded content — zebra-striped items */
+  .exhibit-body {
+    border-top: 1px solid var(--border-subtle);
+    padding: 0; background: rgba(0,0,0,0.15);
+  }
+  .exhibit-item {
+    display: grid; grid-template-columns: 1.5rem 1fr; gap: 0.75rem;
+    padding: 0.75rem 1rem 0.75rem 1.5rem;
+    font-size: 0.88rem; line-height: 1.55; color: var(--text-primary);
+    border-bottom: 1px solid var(--border-subtle);
+  }
+  .exhibit-item:last-child { border-bottom: none; }
+  /* Zebra striping — every other row gets a subtle background shift */
+  .exhibit-item:nth-child(even) { background: rgba(255,255,255,0.015); }
+  .exhibit-item-glyph {
+    font-family: var(--font-mono); font-weight: 700; font-size: 0.8rem;
+    text-align: center; padding-top: 0.15rem;
+  }
+  .exhibit.vuln .exhibit-item-glyph    { color: var(--amber-glow); }
+  .exhibit.govern .exhibit-item-glyph  { color: var(--red-glow); }
+  .exhibit.signals .exhibit-item-glyph { color: var(--green-glow); }
+  .exhibit-item-tag {
+    font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--text-muted); display: block;
+    margin-bottom: 0.15rem;
+  }
+
+  /* Verdict bullet list */
+  .verdict-bullets { list-style: none; padding: 0; margin: 0; position: relative; }
+  .verdict-bullets li {
+    display: flex; align-items: flex-start; gap: 12px; font-size: 0.9375rem;
+    color: var(--text-primary); line-height: 1.6; padding: 8px 0; border-bottom: 1px solid #ffffff08;
+  }
+  .verdict-bullets li:last-child { border-bottom: none; }
+  .verdict-bullets .bullet-icon {
+    flex-shrink: 0; width: 22px; height: 22px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center; font-size: 0.6875rem; margin-top: 2px;
+  }
+  .verdict-bullets .bullet-icon.red { background: var(--red-dim); color: var(--red-glow); box-shadow: 0 0 6px var(--red-dim); }
+  .verdict-bullets .bullet-icon.amber { background: var(--amber-dim); color: var(--amber-glow); box-shadow: 0 0 6px var(--amber-dim); }
+  .verdict-bullets .bullet-icon.green { background: var(--green-dim); color: var(--green-glow); box-shadow: 0 0 6px var(--green-dim); }
+
+  /* Scorecard */
+  .scorecard-section { padding: 0 0 48px; }
+  .scorecard-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px;
+    background: var(--border); border-radius: 12px; overflow: hidden;
+  }
+  .score-cell { background: var(--bg-surface); padding: 24px 20px; text-align: center; transition: background 0.2s; }
+  .score-cell:hover { background: var(--bg-elevated); }
+  .score-cell .score-icon {
+    width: 32px; height: 32px; margin: 0 auto 12px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center; font-size: 1rem;
+  }
+  .score-cell .score-icon.red { background: var(--red-dim); color: var(--red-glow); }
+  .score-cell .score-icon.amber { background: var(--amber-dim); color: var(--amber-glow); }
+  .score-cell .score-icon.green { background: var(--green-dim); color: var(--green-glow); }
+  .score-cell .score-label {
+    font-family: var(--font-mono); font-size: 0.625rem; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--text-muted); margin-bottom: 6px;
+  }
+  .score-cell .score-value { font-size: 1.125rem; font-weight: 700; line-height: 1.2; }
+  .score-cell .score-value.red { color: var(--red-glow); }
+  .score-cell .score-value.amber { color: var(--amber-glow); }
+  .score-cell .score-value.green { color: var(--green-glow); }
+
+  /* Collapsible sections */
+  details summary { cursor: pointer; list-style: none; }
+  details summary::-webkit-details-marker { display: none; }
+  .collapsible-section > summary { padding: 48px 0 0; border-top: 1px solid var(--border-subtle); }
+  .collapsible-section > summary .section-header { margin-bottom: 0; display: flex; align-items: center; gap: 12px; }
+  .collapsible-section[open] > summary .section-header { margin-bottom: 28px; }
+  .collapsible-section .section-body { padding-bottom: 0; }
+  .collapsible-section > summary .section-header::after {
+    content: '\25B6'; font-size: 0.625rem; color: var(--text-muted); transition: transform 0.2s; margin-left: auto;
+  }
+  .collapsible-section[open] > summary .section-header::after { transform: rotate(90deg); }
+  .section-header .section-number {
+    font-family: var(--font-mono); font-size: 0.6875rem; letter-spacing: 0.1em; color: var(--text-muted);
+    width: 28px; height: 28px; border-radius: 6px; border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .section-header h2 {
+    font-family: var(--font-display); font-size: 1.4rem; font-weight: 600;
+    letter-spacing: -0.02em; line-height: 1.15;
+    color: var(--cyan-glow);
+  }
+  /* Slightly emphasize the section number too so the landmark row reads as a unit */
+  .section-header .section-number {
+    color: var(--cyan-glow); opacity: 0.75;
+  }
+
+  /* Finding cards */
+  .finding-card {
+    background: var(--bg-surface); border: 1px solid var(--border); border-radius: 10px;
+    margin-bottom: 12px; overflow: hidden; transition: border-color 0.2s;
+  }
+  .finding-card:hover { border-color: #3a3a44; }
+  .finding-card.critical { border-left: 3px solid var(--red-glow); }
+  .finding-card.warning { border-left: 3px solid var(--amber-glow); }
+  .finding-card.info { border-left: 3px solid var(--cyan-glow); }
+  .finding-card.ok { border-left: 3px solid var(--green-glow); }
+  @keyframes border-pulse {
+    0%, 100% { border-left-color: var(--red-glow); box-shadow: -2px 0 8px var(--red-dim); }
+    50% { border-left-color: #ff454580; box-shadow: -2px 0 4px transparent; }
+  }
+  .finding-card.critical { animation: border-pulse 3s ease-in-out infinite; }
+
+  .finding-header {
+    padding: 16px 20px 12px; display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 16px;
+  }
+  .finding-header .tag {
+    font-family: var(--font-mono); font-size: 0.625rem; letter-spacing: 0.08em;
+    text-transform: uppercase; padding: 3px 8px; border-radius: 4px; font-weight: 600; flex-shrink: 0;
+  }
+  .tag.critical-tag { background: var(--red-dim); color: var(--red-glow); }
+  .tag.warning-tag { background: var(--amber-dim); color: var(--amber-glow); }
+  .tag.info-tag { background: var(--cyan-dim); color: var(--cyan-glow); }
+  .tag.ok-tag { background: var(--green-dim); color: var(--green-glow); }
+  .finding-header .finding-date { font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-secondary); }
+  .finding-header .finding-duration {
+    font-family: var(--font-mono); font-size: 0.6875rem; font-weight: 600;
+    color: var(--amber-glow); background: var(--amber-dim); border: 1px solid #ffaa2a30;
+    padding: 3px 10px; border-radius: 4px;
+  }
+  .finding-header h3 {
+    width: 100%; font-family: var(--font-display); font-size: 1.125rem;
+    font-weight: 600; line-height: 1.3; letter-spacing: -0.015em; margin-top: 4px;
+  }
+
+  /* Finding collapsible */
+  .finding-card summary { list-style: none; cursor: pointer; }
+  .finding-card summary::-webkit-details-marker { display: none; }
+  .finding-card summary .finding-header { position: relative; padding-right: 40px; }
+  .finding-card summary .finding-header::after {
+    content: '\25B6'; font-size: 0.625rem; color: var(--text-muted);
+    transition: transform 0.2s; position: absolute; right: 20px; top: 20px;
+  }
+  .finding-card details[open] > summary .finding-header::after { transform: rotate(90deg); }
+
+  .finding-body { padding: 0 20px 16px; }
+  .finding-body p { font-size: 0.875rem; color: var(--text-primary); line-height: 1.7; margin-bottom: 12px; }
+  .finding-meta {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 8px; margin-top: 12px;
+  }
+  .meta-chip {
+    font-size: 0.75rem; padding: 8px 12px; border-radius: 6px;
+    background: var(--bg-elevated); border: 1px solid var(--border-subtle);
+    display: flex; flex-direction: column; gap: 2px;
+  }
+  .meta-chip .chip-label {
+    font-family: var(--font-mono); font-size: 0.625rem; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--text-secondary);
+  }
+  .meta-chip .chip-value { color: var(--text-primary); font-weight: 500; }
+
+  /* Sub-finding (nested under parent finding) */
+  .sub-finding {
+    margin: 16px 0 8px; padding: 16px; border-left: 2px solid var(--amber-glow);
+    background: var(--bg-elevated); border-radius: 0 8px 8px 0;
+  }
+  .sub-finding .sub-finding-label {
+    font-family: var(--font-mono); font-size: 0.625rem; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--amber-glow); margin-bottom: 8px;
+  }
+  .sub-finding h4 { font-size: 1rem; font-weight: 700; line-height: 1.4; margin-bottom: 10px; }
+  .sub-finding p { font-size: 0.875rem; color: var(--text-primary); line-height: 1.7; margin-bottom: 12px; }
+
+  /* PR Table */
+  .pr-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.8125rem; }
+  th {
+    font-family: var(--font-mono); font-size: 0.625rem; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--text-secondary); text-align: left;
+    padding: 12px 16px; background: var(--bg-surface); border-bottom: 1px solid var(--border);
+    position: sticky; top: 0; white-space: nowrap;
+  }
+  td { padding: 14px 16px; border-bottom: 1px solid var(--border-subtle); color: var(--text-primary); vertical-align: top; }
+  tr:hover td { background: var(--bg-surface); }
+  td:first-child { font-family: var(--font-mono); font-weight: 600; color: var(--cyan-glow); white-space: nowrap; }
+  .td-concern { color: var(--amber-glow); font-weight: 500; }
+  .td-reviewed-no { color: var(--red-glow); font-family: var(--font-mono); font-weight: 600; }
+  .td-reviewed-yes { color: var(--green-glow); font-family: var(--font-mono); font-weight: 600; }
+  .td-reviewed-rejected { color: var(--amber-glow); font-family: var(--font-mono); font-weight: 600; }
+  .td-merge-fast { font-family: var(--font-mono); color: var(--red-glow); font-weight: 600; }
+  .td-person { font-weight: 500; color: var(--text-primary); }
+
+  /* Timeline */
+  .timeline { position: relative; padding-left: 28px; }
+  .timeline::before {
+    content: ''; position: absolute; left: 7px; top: 8px; bottom: 8px; width: 1px;
+    background: linear-gradient(to bottom, var(--border), var(--red-glow), var(--border));
+  }
+  .tl-item { position: relative; margin-bottom: 20px; padding-left: 8px; }
+  .tl-item::before {
+    content: ''; position: absolute; left: -24px; top: 7px; width: 9px; height: 9px;
+    border-radius: 50%; background: var(--text-muted); border: 2px solid var(--bg-void);
+  }
+  .tl-item.bad::before { background: var(--red-glow); box-shadow: 0 0 6px var(--red-dim); }
+  .tl-item.good::before { background: var(--green-glow); }
+  .tl-item.neutral::before { background: var(--amber-glow); }
+  .tl-date { font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-secondary); font-weight: 600; }
+  .tl-desc { font-size: 0.875rem; color: var(--text-primary); margin-top: 2px; line-height: 1.6; }
+
+  /* Vitals */
+  .vitals-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1px; background: var(--border); border-radius: 10px; overflow: hidden;
+  }
+  .vital-cell { background: var(--bg-surface); padding: 18px 20px; }
+  .vital-cell .vital-label {
+    font-family: var(--font-mono); font-size: 0.625rem; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--text-muted); margin-bottom: 4px;
+  }
+  .vital-cell .vital-value { font-size: 1rem; font-weight: 700; margin-bottom: 4px; }
+  .vital-cell .vital-note { font-size: 0.75rem; color: var(--text-secondary); line-height: 1.5; }
+  .vital-cell .vital-explainer {
+    font-size: 0.7rem; color: var(--text-muted); line-height: 1.5;
+    margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--border-subtle);
+  }
+  .vital-cell .vital-explainer a {
+    color: var(--cyan-glow); text-decoration: none;
+  }
+  .vital-cell .vital-explainer a:hover { text-decoration: underline; }
+
+  /* Action cards */
+  .action-card { padding: 24px; border-radius: 10px; margin-bottom: 12px; }
+  .action-card.stop { background: var(--red-bg); border: 1px solid #ff454530; }
+  .action-card.wait { background: var(--amber-bg); border: 1px solid #ffaa2a30; }
+  .action-card.info-action { background: var(--bg-surface); border: 1px solid var(--border); }
+  .action-card.ok-action { background: var(--green-bg); border: 1px solid #22c55e30; }
+  .action-card h3 { font-size: 0.9375rem; font-weight: 700; margin-bottom: 8px; }
+  .action-card p { font-size: 0.875rem; color: var(--text-primary); line-height: 1.7; }
+
+  /* Code blocks inside action cards */
+  .action-card pre {
+    background: var(--bg-void); border: 1px solid var(--border); border-radius: 8px;
+    padding: 16px; margin: 12px 0; overflow-x: auto;
+    font-family: var(--font-mono); font-size: 0.8125rem; color: var(--cyan-glow); line-height: 1.6;
+  }
+
+  /* Catalog metadata block — sits between hero and verdict
+     Font sizes use rem so the font +/- controls (which mutate root font-size) scale them. */
+  .catalog-meta {
+    background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: 10px;
+    padding: 1.125rem 1.375rem; margin-bottom: 1rem;
+  }
+  .catalog-meta .catalog-label {
+    font-family: var(--font-mono); font-size: 0.65rem; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--text-secondary); margin-bottom: 0.625rem;
+  }
+  .catalog-meta table { width: 100%; }
+  .catalog-meta td { padding: 0.375rem 0.75rem 0.375rem 0; border: none; font-size: 0.82rem; vertical-align: top; }
+  .catalog-meta td.key {
+    font-family: var(--font-mono); color: var(--text-secondary);
+    white-space: nowrap; width: 1%; font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.06em;
+  }
+  .catalog-meta td.val { color: var(--text-primary); }
+  .catalog-meta td.val a { color: var(--cyan-glow); text-decoration: none; }
+  .catalog-meta td.val a:hover { text-decoration: underline; }
+
+  /* ─────────────── UX-FIX CSS (section status pills, finding status chips,
+     timeline glyphs, evidence priority markers) ─────────────── */
+
+  /* Section status pills — shown on the collapsed <summary> row so readers know
+     at a glance whether a section needs attention. */
+  .section-status {
+    display: inline-flex; gap: 0.5rem; margin-left: auto; padding-right: 2.5rem;
+    font-size: 0.72rem; font-family: var(--font-mono); align-items: center;
+    flex-wrap: wrap;
+  }
+  .section-status .pill {
+    display: inline-flex; align-items: center; gap: 0.25rem;
+    padding: 0.1875rem 0.5rem; border-radius: 0.625rem; border: 1px solid;
+    letter-spacing: 0.04em; white-space: nowrap;
+  }
+  .section-status .pill.red {
+    color: var(--red-glow); border-color: var(--red-dim);
+    background: rgba(255, 69, 69, 0.1);
+  }
+  .section-status .pill.amber {
+    color: var(--amber-glow); border-color: var(--amber-dim);
+    background: rgba(255, 170, 42, 0.1);
+  }
+  .section-status .pill.green {
+    color: var(--green-glow); border-color: var(--green-dim);
+    background: rgba(34, 197, 94, 0.1);
+  }
+  .section-status .pill.info {
+    color: var(--cyan-glow); border-color: var(--cyan-dim);
+    background: rgba(6, 182, 212, 0.1);
+  }
+  .section-status .pill.muted {
+    color: var(--text-secondary); border-color: var(--border-subtle);
+    background: var(--bg-elevated);
+  }
+  .section-status .pill.urgent {
+    animation: urgent-pulse 1.8s ease-in-out infinite;
+  }
+  @keyframes urgent-pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(255, 69, 69, 0.4); }
+    50% { box-shadow: 0 0 0 0.5rem rgba(255, 69, 69, 0); }
+  }
+  /* Hide status pills when section is open — they're redundant with the content */
+  .collapsible-section[open] > summary .section-status { opacity: 0.5; }
+
+  /* Section subtitle — a one-line orientation under the H2, visible both open
+     and collapsed. Gives readers the "why should I look at this" answer. */
+  .section-subtitle {
+    font-family: var(--font-sans); font-size: 0.9375rem; color: var(--text-secondary);
+    font-weight: 400; margin-top: 0.5rem; line-height: 1.55;
+    max-width: 68ch; letter-spacing: -0.003em;
+  }
+  .section-subtitle .emph { color: var(--text-primary); font-weight: 600; }
+  .section-subtitle .hot { color: var(--amber-glow); font-weight: 600; }
+  .section-subtitle .cold { color: var(--green-glow); font-weight: 600; }
+
+  /* Section-level "Your action" line — every section that flags concerns
+     must answer "what do I do about this?" for the reader. */
+  .section-action {
+    display: block; margin-top: 0.5rem; padding: 0.5rem 0.75rem;
+    background: var(--bg-elevated); border-radius: 0.375rem;
+    border-left: 3px solid var(--amber-glow);
+    font-size: 0.85rem; color: var(--text-primary); line-height: 1.55;
+  }
+  .section-action.ok { border-left-color: var(--green-glow); }
+  .section-action.info { border-left-color: var(--cyan-glow); }
+  .section-action .lbl {
+    font-family: var(--font-mono); font-weight: 700;
+    font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--amber-glow); margin-right: 0.5rem;
+  }
+  .section-action.ok .lbl { color: var(--green-glow); }
+  .section-action.info .lbl { color: var(--cyan-glow); }
+
+  /* Finding-card status chip — distinguishes Active vs Resolved vs Ongoing.
+     Shown on every finding and evidence card next to the severity tag. */
+  .status-chip {
+    display: inline-flex; align-items: center; gap: 0.25rem;
+    padding: 0.1875rem 0.5rem; border-radius: 0.625rem; border: 1px solid;
+    font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.04em;
+    white-space: nowrap; margin-left: 0.375rem;
+  }
+  .status-chip.resolved {
+    color: var(--green-glow); border-color: var(--green-dim);
+    background: rgba(34, 197, 94, 0.12);
+  }
+  .status-chip.active {
+    color: var(--red-glow); border-color: var(--red-dim);
+    background: rgba(255, 69, 69, 0.12);
+  }
+  .status-chip.ongoing {
+    color: var(--amber-glow); border-color: var(--amber-dim);
+    background: rgba(255, 170, 42, 0.12);
+  }
+  .status-chip.mitigated {
+    color: var(--cyan-glow); border-color: var(--cyan-dim);
+    background: rgba(6, 182, 212, 0.12);
+  }
+  .status-chip.informational {
+    color: var(--text-secondary); border-color: var(--border-subtle);
+    background: var(--bg-elevated);
+  }
+
+  /* Action-needed hint on finding cards — one sentence that says "what the reader should do" */
+  .action-hint {
+    margin-top: 0.5rem; font-size: 0.78rem; color: var(--text-secondary);
+    line-height: 1.55;
+  }
+  .action-hint::before {
+    content: "→ "; color: var(--amber-glow); font-style: normal; font-weight: 600;
+  }
+  .action-hint.ok::before { color: var(--green-glow); }
+  .action-hint.warn::before { color: var(--amber-glow); }
+
+  /* Executable File Inventory — differentiate verdict on the tag clearly.
+     The card border already carries severity via .finding-card.warning/.ok/.info;
+     this makes the header tag match so the reader doesn't have to decode borders. */
+  .inv-verdict {
+    display: inline-flex; align-items: center; gap: 0.25rem;
+    padding: 0.1875rem 0.5rem; border-radius: 0.625rem; margin-left: 0.375rem;
+    font-family: var(--font-mono); font-size: 0.65rem; letter-spacing: 0.04em;
+    text-transform: uppercase; border: 1px solid;
+  }
+  .inv-verdict.warn {
+    color: var(--amber-glow); border-color: var(--amber-dim);
+    background: rgba(255, 170, 42, 0.12);
+  }
+  .inv-verdict.ok {
+    color: var(--green-glow); border-color: var(--green-dim);
+    background: rgba(34, 197, 94, 0.12);
+  }
+  .inv-verdict.info {
+    color: var(--cyan-glow); border-color: var(--cyan-dim);
+    background: rgba(6, 182, 212, 0.12);
+  }
+
+  /* Inventory one-line summary block — V2.2 F12 format */
+  .inventory-summary {
+    margin-bottom: 1.25rem; padding: 0.875rem 1rem;
+    background: var(--bg-elevated); border-radius: 0.5rem;
+    border-left: 3px solid var(--cyan-glow); font-size: 0.85rem;
+  }
+  .inventory-summary-title {
+    font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--text-secondary); margin-bottom: 0.5rem;
+  }
+  .inventory-summary ul { list-style: none; padding: 0; margin: 0; }
+  .inventory-summary li {
+    padding: 0.25rem 0; line-height: 1.55; display: flex; gap: 0.5rem; align-items: flex-start;
+  }
+  .inventory-summary li .glyph {
+    flex: 0 0 1.125rem; font-family: var(--font-mono); font-weight: 700;
+    text-align: center;
+  }
+  .inventory-summary li.warn .glyph { color: var(--amber-glow); }
+  .inventory-summary li.ok .glyph { color: var(--green-glow); }
+  .inventory-summary li.info .glyph { color: var(--cyan-glow); }
+
+  /* Timeline severity glyphs — per-item worry indicator beyond just dot color */
+  .tl-item .tl-severity-label {
+    display: inline-block; font-family: var(--font-mono); font-weight: 700;
+    font-size: 0.68rem; letter-spacing: 0.05em; margin-right: 0.375rem;
+    padding: 0.125rem 0.375rem; border-radius: 0.25rem;
+  }
+  .tl-item.bad .tl-severity-label {
+    color: var(--red-glow); background: rgba(255, 69, 69, 0.12);
+  }
+  .tl-item.good .tl-severity-label {
+    color: var(--green-glow); background: rgba(34, 197, 94, 0.12);
+  }
+  .tl-item.neutral .tl-severity-label {
+    color: var(--amber-glow); background: rgba(255, 170, 42, 0.12);
+  }
+
+  /* Evidence priority banner — "read this first" marker on the most important evidence */
+  .evidence-priority {
+    position: relative; border-left-width: 4px !important;
+  }
+  .evidence-priority .priority-flag {
+    display: inline-block; margin-left: 0.5rem; padding: 0.1875rem 0.5rem;
+    background: var(--amber-glow); color: var(--bg-void);
+    border-radius: 0.25rem; font-family: var(--font-mono);
+    font-size: 0.62rem; font-weight: 700; letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .evidence-group-label {
+    margin: 1.5rem 0 0.75rem; font-family: var(--font-mono);
+    font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--text-secondary); padding: 0.5rem 0.75rem;
+    background: var(--bg-elevated); border-radius: 0.375rem;
+    border-left: 3px solid var(--border);
+  }
+  .evidence-group-label.warns { border-left-color: var(--amber-glow); color: var(--amber-glow); }
+  .evidence-group-label.positives { border-left-color: var(--green-glow); color: var(--green-glow); }
+  .evidence-group-label.context { border-left-color: var(--cyan-glow); color: var(--cyan-glow); }
+
+  /* Evidence Appendix — <pre> blocks for command and multi-line result */
+  .evidence-row { margin-bottom: 10px; }
+  .evidence-row .evidence-label {
+    font-family: var(--font-mono); font-size: 0.625rem; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--text-secondary); margin-bottom: 4px;
+  }
+  .evidence-pre {
+    background: var(--bg-void); border: 1px solid var(--border); border-radius: 6px;
+    padding: 12px 14px; margin: 0; overflow-x: auto; white-space: pre-wrap; word-break: break-word;
+    font-family: var(--font-mono); font-size: 0.75rem; color: var(--cyan-glow); line-height: 1.55;
+    max-height: 320px; overflow-y: auto;
+  }
+  .evidence-pre.result { color: var(--text-primary); }
+  .evidence-classification {
+    font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-primary);
+    padding: 8px 12px; background: var(--bg-elevated);
+    border: 1px solid var(--border-subtle); border-radius: 6px;
+  }
+  .evidence-classification.inference { color: var(--amber-glow); }
+  .evidence-classification.fact { color: var(--green-glow); }
+
+  /* Footer */
+  .footer {
+    padding: 40px 0; border-top: 1px solid var(--border-subtle);
+    text-align: center; font-size: 0.75rem; color: var(--text-muted);
+  }
+  .footer a { color: var(--text-secondary); }
+
+  /* Responsive */
+  @media (max-width: 700px) {
+    .scorecard-grid { grid-template-columns: repeat(2, 1fr); }
+    .finding-meta { grid-template-columns: 1fr; }
+    .hero { padding: 40px 0 32px; }
+    .collapsible-section > summary { padding-top: 32px; }
+    table { font-size: 0.75rem; }
+    th, td { padding: 10px 12px; }
+    .vitals-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 420px) {
+    .scorecard-grid { grid-template-columns: 1fr; }
+  }
+
+</style>
+</head>
+<body>
+
+<div class="font-controls">
+  <button onclick="adjustFont(-1)" title="Decrease font size" aria-label="Decrease font size">A&minus;</button>
+  <span class="font-size-display" id="fontDisplay">100%</span>
+  <button onclick="adjustFont(1)" title="Increase font size" aria-label="Increase font size">A+</button>
+</div>
+<script>
+  let fontScale = 100;
+  function adjustFont(dir) {
+    fontScale = Math.min(150, Math.max(75, fontScale + dir * 10));
+    document.documentElement.style.fontSize = fontScale + '%';
+    document.getElementById('fontDisplay').textContent = fontScale + '%';
+  }
+</script>
+
+<div class="page">
+
+  <div class="hero">
+    <div class="scan-strip">
+      <span class="scan-strip-item"><span class="dot amber"></span>Security Investigation</span>
+      <span class="scan-strip-item">Dossier &middot; wezterm</span>
+      <span class="scan-strip-item">Rev &middot; 577474d</span>
+      <span class="scan-strip-item">V2.4 &middot; 2026-04-20T13:43:27.140737+00:00</span>
+      <span class="scan-strip-item flash">&bull; Live</span>
+    </div>
+    <h1>wezterm<span class="slash">/</span><span class="amber">wezterm</span></h1>
+    <div class="hero-caption">wezterm — 25k-star Rust terminal emulator + SSH client, near-solo by @wez (97.2% share). 30 CI workflows; zero branch protection; zero CODEOWNERS. Last release 2024-02-03 (807 days before scan) despite main active through 2026-04-01 — users on homebrew/winget/distro-stable run 2-year-old code. 0 advisories in 8 years. Zero scorecard overrides.</div>
+    <div class="meta">
+      <div class="meta-item"><span class="label">Investigated</span> 2026-04-20</div>
+      <div class="meta-item"><span class="label">Applies to</span> main @ 577474d</div>
+      <div class="meta-item"><span class="label">Repo age</span> 8 years</div>
+      <div class="meta-item"><span class="label">Stars</span> 25,643</div>
+      <div class="meta-item"><span class="label">License</span> NOASSERTION</div>
+    </div>
+  </div>
+
+  <div class="catalog-meta">
+    <div class="catalog-label">Catalog metadata</div>
+    <table>
+      <tr><td class="key">Report file</td><td class="val"><code>GitHub-Scanner-wezterm.html</code> (+ <code>.md</code> companion)</td></tr>
+      <tr><td class="key">Repo</td><td class="val"><a href="https://github.com/wezterm/wezterm">github.com/wezterm/wezterm</a></td></tr>
+      <tr><td class="key">Short description</td><td class="val">GPU-accelerated cross-platform terminal emulator + multiplexer + SSH client written in Rust. 8-year-old project maintained near-solo by @wez. 25k stars, 64 releases, Cargo workspace with 70+ sub-crates.</td></tr>
+      <tr><td class="key">Category</td><td class="val">developer-tooling</td></tr>
+      <tr><td class="key">Subcategory</td><td class="val">terminal-emulator</td></tr>
+      <tr><td class="key">Verdict</td><td class="val val-warn fw-semi">Caution</td></tr>
+      <tr><td class="key">Scanned revision</td><td class="val">main @ 577474d ()</td></tr>
+      <tr><td class="key">Prompt version</td><td class="val">V2.4</td></tr>
+      <tr><td class="key">Prior scan</td><td class="val">None — first scan of wezterm. Sixth wild V1.2-schema scan (after markitdown 15, ghostty 16, Kronos 17, kamal 18, Xray-core 19, browser_terminal 20).</td></tr>
+    </table>
+  </div>
+
+  <div class="verdict-section">
+    <div class="verdict-banner caution" data-dossier="DOSSIER · WEZTERM · 577474D · 2026-04-20 · V2.4">
+      <div class="verdict-label">&#x25CF; Caution</div>
+
+      <div class="verdict-split">
+        <div class="verdict-entry">
+          <div class="verdict-entry-scope">wezterm &middot; 2026-04-20</div>
+          <h2 class="verdict-entry-headline warn">Caution</h2>
+          <div class="verdict-entry-detail">See findings below for details.</div>
+        </div>
+      </div>
+
+      <div class="verdict-exhibits">
+        <details class="exhibit vuln">
+          <summary>
+            <span class="exhibit-glyph">⚠</span>
+            <span>
+              <span class="exhibit-title">Warning — F0 + F1 + F2 describe the governance + cadence posture</span>
+              <span class="exhibit-count">&middot; 3 findings</span>
+              <span class="exhibit-summary-line">Solo-maintainer + 807-day release stall + no SECURITY.md on a 25k-star privileged tool.</span>
+            </span>
+          </summary>
+          <div class="exhibit-body">
+            <div class="exhibit-item">
+              <span class="exhibit-item-glyph">01</span>
+              <span>
+                <span class="exhibit-item-tag">F0 / F11</span>
+                wez holds 97.2% top-contributor share; no branch protection, no CODEOWNERS; privileged tool (SSH + Lua subprocess).
+              </span>
+            </div>
+            <div class="exhibit-item">
+              <span class="exhibit-item-glyph">02</span>
+              <span>
+                <span class="exhibit-item-tag">F1</span>
+                Last formal release 2024-02-03 (807 days before scan). Main active through 2026-04-01. Users on stable are 2 years behind.
+              </span>
+            </div>
+            <div class="exhibit-item">
+              <span class="exhibit-item-glyph">03</span>
+              <span>
+                <span class="exhibit-item-tag">F2</span>
+                No SECURITY.md + 0 published advisories in 8 years despite privileged-tool threat model.
+              </span>
+            </div>
+          </div>
+        </details>
+        <details class="exhibit vuln">
+          <summary>
+            <span class="exhibit-glyph">ℹ</span>
+            <span>
+              <span class="exhibit-title">Info — F3 + F4 + F5 are context</span>
+              <span class="exhibit-count">&middot; 3 findings</span>
+              <span class="exhibit-summary-line">Operational gaps and positive investment, plus scanner coverage.</span>
+            </span>
+          </summary>
+          <div class="exhibit-body">
+            <div class="exhibit-item">
+              <span class="exhibit-item-glyph">01</span>
+              <span>
+                <span class="exhibit-item-tag">F3</span>
+                Dependabot watches github-actions only; 70+ Cargo workspace crates have no automated CVE watch.
+              </span>
+            </div>
+            <div class="exhibit-item">
+              <span class="exhibit-item-glyph">02</span>
+              <span>
+                <span class="exhibit-item-tag">F4</span>
+                30-workflow CI pipeline (Windows/macOS/Linux + nightly + tag) — substantial operational investment despite release gap.
+              </span>
+            </div>
+            <div class="exhibit-item">
+              <span class="exhibit-item-glyph">03</span>
+              <span>
+                <span class="exhibit-item-tag">F5</span>
+                Rust-ecosystem scanner gaps: Cargo parsing missing; workspace sub-crates mis-channelled; serde false positives.
+              </span>
+            </div>
+          </div>
+        </details>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="scorecard-section">
+    <div class="scorecard-grid">
+      <div class="score-cell">
+        <div class="score-icon red">❌</div>
+        <div class="score-label">Does anyone check the code?</div>
+        <div class="score-value red">No — solo-maintainer (wez 97%), 3.3% formal review, no branch protection on a 25k-star privileged tool</div>
+      </div>
+      <div class="score-cell">
+        <div class="score-icon red">❌</div>
+        <div class="score-label">Do they fix problems quickly?</div>
+        <div class="score-value red">No — 807-day release stall (last tag 2024-02-03, main active through 2026-04-01). Fix-to-user latency is 26 months.</div>
+      </div>
+      <div class="score-cell">
+        <div class="score-icon amber">⚠</div>
+        <div class="score-label">Do they tell you about problems?</div>
+        <div class="score-value amber">Partly — CONTRIBUTING present, but no SECURITY.md and 0 published advisories in 8 years on a privileged tool</div>
+      </div>
+      <div class="score-cell">
+        <div class="score-icon amber">⚠</div>
+        <div class="score-label">Is it safe out of the box?</div>
+        <div class="score-value amber">Partly — release artifacts on GitHub + homebrew + winget, no documented integrity verification; you&#39;re installing 2-year-old shipped code</div>
+      </div>
+    </div>
+  </div>
+
+  <details class="collapsible-section" open>
+    <summary>
+      <div class="section-header">
+        <span class="section-number">01</span>
+        <h2>What Should I Do?</h2>
+        <span class="section-status">
+          <span class="pill amber">25.6k⭐ · custom · Rust · 3 warnings · 3 info · caution</span>
+        </span>
+      </div>
+      <div class="section-subtitle">wezterm is a 25k-star GPU-accelerated cross-platform terminal emulator + multiplexer + SSH client in Rust, maintained near-solo by @wez across 8 years. 30 GitHub Actions workflows build multi-platform binaries on every push — the CI investment is substantial. The gap is two-sided: (F0) no branch protection + 97.2% solo-maintainer share on a privileged tool, and (F1) an 807-day release stall despite main being active. Users installing from homebrew/winget/distro are running February-2024 code; contributors merging to main aren&#39;t reaching them. Plus a silent-disclosure pattern (F2, 0 advisories in 8 years). Caution rather than Critical because c20 downgrades given the stale release (the governance floor is blunted by the code not actually reaching users quickly).</div>
+    </summary>
+    <div class="section-body">
+      <div class="action-card ok-action">
+        <h3>Step 1: Install via your OS&#39;s official channel (homebrew / winget / distro package)</h3>
+        <p><strong>Non-technical:</strong> wezterm is distributed through standard channels. macOS: brew install wezterm. Windows: winget install wezterm. Linux: distro package or AppImage from GitHub Releases.</p>
+        <pre>brew install wezterm  # macOS; use winget on Windows or AppImage from Releases on Linux</pre>
+      </div>
+      <div class="action-card info-action">
+        <h3>Step 2: Understand what you&#39;re installing — wezterm handles SSH keys and can spawn processes via your Lua config</h3>
+        <p><strong>Non-technical:</strong> wezterm has an SSH client + Lua-scriptable config that can run child processes. This is the design. If you run third-party .wezterm.lua snippets, inspect them before sourcing.</p>
+        <pre>less ~/.wezterm.lua  # read your Lua config before trusting new snippets</pre>
+      </div>
+      <div class="action-card wait">
+        <h3>Step 3: Run `cargo audit` if building from source</h3>
+        <p><strong>Non-technical:</strong> Because dependabot tracks github-actions only, the Rust dep graph has no automated CVE watch. Cargo audit surfaces known advisories against Cargo.lock locally.</p>
+        <pre>git clone https://github.com/wezterm/wezterm &amp;&amp; cd wezterm &amp;&amp; cargo install cargo-audit &amp;&amp; cargo audit</pre>
+      </div>
+      <div class="action-card wait">
+        <h3>Step 4: If you need recent main changes, build from source — the last release is 807 days old</h3>
+        <p><strong>Non-technical:</strong> The stable releases homebrew/winget/distros serve are from February 2024. Main is still active. If a fix you care about is on main but not in 20240203, build from source.</p>
+        <pre>cargo install --git https://github.com/wezterm/wezterm wezterm-gui</pre>
+      </div>
+      <div class="action-card info-action">
+        <h3>Step 5: Keep SSH keys out of the wezterm-config scope if possible</h3>
+        <p><strong>Non-technical:</strong> wezterm-ssh handles your SSH keys for its built-in SSH client. If you prefer to keep SSH outside the terminal process, use a standalone SSH client and let wezterm just be the terminal.</p>
+        <pre>ssh user@host  # use system ssh instead of `wezterm ssh`</pre>
+      </div>
+    </div>
+  </details>
+
+  <details class="collapsible-section">
+    <summary>
+      <div class="section-header">
+        <span class="section-number">02</span>
+        <h2>What We Found</h2>
+        <span class="section-status">
+<span class="pill amber">&#x26A0; 3 Warning</span><span class="pill info">&#x2139; 3 Info</span>        </span>
+      </div>
+      <div class="section-subtitle">
+        6 findings total.      </div>
+    </summary>
+    <div class="section-body">
+      <div class="finding-card warning">
+        <details>
+          <summary>
+            <div class="finding-header">
+              <span class="tag warning-tag">Warning</span>
+              <span class="status-chip informational">Ongoing</span>
+<span class="finding-date">Since repo creation (2018-02-07)</span><span class="finding-duration">Continuous</span>              <h3>F0 &mdash; Solo-maintainer concentration — wez holds 97.2% of top-contributor commit share on a 25k-star privileged tool</h3>
+              <div class="action-hint warn">Pin to a reviewed release tag; audit the Lua config you run since it can spawn subprocesses.</div>
+            </div>
+          </summary>
+          <div class="finding-body">
+            <p>wez is the dominant author of wezterm by a wide margin — 7,346 commits of ~7,558 top-contributor total (97.2% share), with the next contributor (bew) at 65 commits. This is the most concentrated single-maintainer profile in the V1.2 catalog so far; it exceeds kamal&#39;s DHH+djmb duo (85% combined share) and the Xray-core maintainer (31% share with dependabot).</p>
+            <p>The tool&#39;s blast radius is substantial. wezterm-ssh handles user SSH keys for the built-in `wezterm ssh` client. Lua config (via `wezterm.run_child_process` / `background_child_process`) lets users spawn arbitrary subprocesses — a feature, but also a surface for malicious third-party config snippets. The multiplexer server uses Unix sockets. No branch protection at any layer, no CODEOWNERS, no ruleset. The 807-day release stall (F1) is what keeps this Warning rather than Critical — code doesn&#39;t reach users quickly, which blunts the governance exposure.</p>
+            <p>Consumer-side mitigation: pin to a specific release tag you reviewed; audit third-party .wezterm.lua snippets before sourcing them; prefer the system ssh client for sensitive targets rather than wezterm&#39;s built-in SSH. Maintainer-side: adding CODEOWNERS + a ruleset requiring ≥1 approving review would be a meaningful structural change — there are plausible co-maintainer candidates in the tail of contributors.</p>
+            <p><strong>How to fix.</strong> Maintainer-side: enable branch protection requiring ≥1 approving review; recruit at least one co-maintainer (bew, tzx, chipsenkbeil, jsgf, joexue — tail contributors — are plausible candidates) with CODEOWNERS entries; add a SECURITY.md documenting the disclosure channel. Consumer-side: pin to a specific reviewed release tag; audit any third-party Lua config plugins you load.</p>
+          </div>
+        </details>
+      </div>
+      <div class="finding-card warning">
+        <details>
+          <summary>
+            <div class="finding-header">
+              <span class="tag warning-tag">Warning</span>
+              <span class="status-chip informational">Ongoing</span>
+<span class="finding-date">Since 2024-02-03 (807 days)</span><span class="finding-duration">Continuous</span>              <h3>F1 &mdash; 807-day release stall — latest tag 2024-02-03 despite main active through 2026-04-01</h3>
+              <div class="action-hint warn">Users on the last stable release are running 2-year-old code. If this matters to you, track main via distro-nightly packages or build from source.</div>
+            </div>
+          </summary>
+          <div class="finding-body">
+            <p>The release timeline from `gh api releases?per_page=10` is striking: `20240203-110809-5046fc22` published 2024-02-03, then `20240128-202157-1e552d76` (2024-01-29), `20240127-113634-bbcac864` (2024-01-27), `20230712-072601-f4abf8fd` (2023-07-12), and so on. Pre-February-2024 the cadence was roughly every 2 months. Then it stopped. Not slowed — stopped.</p>
+            <p>Main is NOT stopped. Last push 2026-04-01, 19 days before scan. 237 open PRs, 1,452 open issues, active community discussion. The release-tag step at the end of the CI pipeline is what has stalled, not development. The 30-workflow CI pipeline (F4) is still green on every push.</p>
+            <p>The consumer-facing effect: anyone who installed wezterm via winget, homebrew, or a distro stable package is running February 2024 code. Whatever fixes have landed on main over the last 807 days — and there have been many, given the push velocity — are not reaching installed users. If you need recent main fixes, build from source with `cargo install --git https://github.com/wezterm/wezterm wezterm-gui`. This is a material consumer-impact finding, not a governance-structure one.</p>
+            <p><strong>How to fix.</strong> Maintainer-side: cut a new release (even a date-tagged snapshot of main) so installed users receive accumulated bug fixes. Consumer-side: if you need recent main changes, use `cargo install --git https://github.com/wezterm/wezterm` or distro-nightly packages; otherwise accept the 2-year-old shipped version.</p>
+          </div>
+        </details>
+      </div>
+      <div class="finding-card warning">
+        <details>
+          <summary>
+            <div class="finding-header">
+              <span class="tag warning-tag">Warning</span>
+              <span class="status-chip informational">Ongoing</span>
+<span class="finding-date">Since 2018-02-07</span><span class="finding-duration">Continuous</span>              <h3>F2 &mdash; No SECURITY.md + 0 published GHSA advisories in 8 years on a privileged tool</h3>
+              <div class="action-hint warn">Disclosure path for a wezterm vulnerability you find is unclear — use GitHub&#39;s &#39;Report a vulnerability&#39; button, do not post publicly.</div>
+            </div>
+          </summary>
+          <div class="finding-body">
+            <p>community/profile reports has_security_policy=false and has_code_of_conduct=false (but has_contributing=true). The security-advisories endpoint returns 0 across 8 years of development on a 25k-star privileged tool that handles SSH keys and exposes Lua subprocess primitives. Three readings are plausible: (a) no security-relevant issues have been discovered — highly implausible; (b) fixes have shipped silently in releases — likely given the formerly-regular release cadence and ssh/lua surface area; (c) issues have been addressed without public disclosure.</p>
+            <p>Reading (b) matches the silent-fix pattern flagged on Kronos (entry 17) and Xray-core (entry 19). For wezterm specifically, the 807-day release stall (F1) complicates the picture — even if fixes ship to main, they don&#39;t reach users who installed before 2024-02-04. No documented private-disclosure channel means a future reporter with a pre-patched finding has no signposted path; GitHub&#39;s `Report a vulnerability` UI remains available as an implicit fallback.</p>
+            <p>Consumer implication: do not rely on the GitHub Security Advisory feed to learn about wezterm fixes — there is no feed. Monitor release notes directly when releases exist; subscribe to the repo for commit feeds if running from main.</p>
+            <p><strong>How to fix.</strong> Maintainer-side: add a 1-page SECURITY.md naming the private-advisory channel and expected response window. Consumer-side: if you find something, use the private-advisory UI; do not post publicly.</p>
+          </div>
+        </details>
+      </div>
+      <div class="finding-card info">
+        <details>
+          <summary>
+            <div class="finding-header">
+              <span class="tag info-tag">Info</span>
+              <span class="status-chip informational">Ongoing</span>
+<span class="finding-date">Since dependabot.yml adoption</span><span class="finding-duration">Continuous</span>              <h3>F3 &mdash; Dependabot tracks github-actions only — 70+ Cargo workspace crates have no automated CVE watch</h3>
+              <div class="action-hint warn">Run `cargo audit` locally against Cargo.lock after building.</div>
+            </div>
+          </summary>
+          <div class="finding-body">
+            <p>dependabot.yml is present but its `ecosystems_tracked` list contains only `github-actions`. The Rust Cargo ecosystem is absent — despite the repo being a 70+ sub-crate workspace with transitive dep graphs that include serde, tokio, openssl, harfbuzz, cairo-sys-rs, fontconfig, freetype, and many more. A CVE published against any of these would not surface to the maintainer via dependabot.</p>
+            <p>This is the same operational-gap pattern seen on kamal (entry 18, Ruby Gemfile unwatched) and Xray-core (entry 19, Go-module alerts only partial). Consumer-side mitigation is simple: `cargo install cargo-audit &amp;&amp; cargo audit` against the repo after cloning surfaces RustSec advisories against Cargo.lock. Maintainer-side: one YAML stanza adds `package-ecosystem: cargo` to dependabot.yml.</p>
+            <p><strong>How to fix.</strong> Maintainer-side: add `- package-ecosystem: cargo` to dependabot.yml. Consumer-side: `cargo audit` against a checked-out copy of the repo before trusting a self-build.</p>
+          </div>
+        </details>
+      </div>
+      <div class="finding-card info">
+        <details>
+          <summary>
+            <div class="finding-header">
+              <span class="tag info-tag">Info</span>
+              <span class="status-chip mitigated">Mitigated</span>
+<span class="finding-date">Ongoing</span><span class="finding-duration">Continuous</span>              <h3>F4 &mdash; 30-workflow CI pipeline with Windows/macOS/Linux builds — positive operational investment</h3>
+              <div class="action-hint warn">Non-blocking; context for reading F0-F2.</div>
+            </div>
+          </summary>
+          <div class="finding-body">
+            <p>30 GitHub Actions workflows cover Linux/macOS/Windows continuous and tagged-release pipelines, nightly builds, pages deployment, and docs generation. This is above-average CI investment — substantially more automation than typical single-maintainer Rust repos. The signal here is that the engineering infrastructure is healthy. The gap in F1 (release stall) isn&#39;t &#39;CI is broken&#39;; it&#39;s &#39;the release-tag step at the end of the pipeline stopped being invoked&#39;, which is a human-process decision rather than a tooling failure.</p>
+            <p>No pull_request_target usage across 30 workflows — that&#39;s a clean CI posture by modern Actions security standards. No evidence of stale action references (confirmed by dependabot on actions).</p>
+            <p><strong>How to fix.</strong> No fix required; the CI investment is a positive signal.</p>
+          </div>
+        </details>
+      </div>
+      <div class="finding-card info">
+        <details>
+          <summary>
+            <div class="finding-header">
+              <span class="tag info-tag">Info</span>
+              <span class="status-chip informational">Ongoing</span>
+<span class="finding-date">Scanner tooling gap</span><span class="finding-duration">Continuous</span>              <h3>F5 &mdash; Three scanner gaps specific to Rust workspace repos — Cargo parsing missing, workspace sub-crates mis-channelled, serde false positives</h3>
+              <div class="action-hint warn">Cargo-specific audits (cargo audit, cargo-geiger) needed to fill these gaps locally.</div>
+            </div>
+          </summary>
+          <div class="finding-body">
+            <p>Three Rust-ecosystem scanner gaps surfaced on this scan: (1) Cargo.lock parsing not implemented — runtime_count=0 and osv total_vulns=0 are coverage artifacts; (2) distribution-channel detection misinterpreted 70+ workspace sub-crates as publishable crates.io channels, when the real channels are GitHub Releases binaries + homebrew + winget + distro packages (none of which the harness recognizes); (3) dangerous_primitives deserialization regex produced 9 false positives on Rust serde `fn deserialize` trait implementations — matching a substring that coincidentally exists in every serde-Deserialize impl.</p>
+            <p>Same class of gaps we saw on Go (Xray-core, entry 19) and Ruby (kamal, entry 18) — language-ecosystem-specific harness tuning. Harness-side fixes: (a) add Cargo.lock parsing with RustSec advisory-db lookup; (b) disambiguate workspace sub-crates from publishable channels by checking Cargo.toml `[workspace]` membership; (c) tighten the deserialization regex to avoid matching Rust serde trait-method signatures with generic parameters.</p>
+            <p><strong>How to fix.</strong> Scanner-side: (a) add Cargo.lock / Cargo.toml parsing with RustSec advisory-db lookup; (b) distinguish workspace sub-crates from publishable channels (reject sub-crates whose Cargo.toml lives below the workspace root); (c) tighten the deserialization regex to not match serde trait-method definitions. Consumer-side: run cargo audit locally.</p>
+          </div>
+        </details>
+      </div>
+    </div>
+  </details>
+
+  <details class="collapsible-section">
+    <summary>
+      <div class="section-header">
+        <span class="section-number">02A</span>
+        <h2>Executable File Inventory</h2>
+        <span class="section-status">
+          <span class="pill info">&#x2139; 3 files inventoried</span>
+        </span>
+      </div>
+      <div class="section-subtitle">wezterm ships multi-platform release binaries (Windows installer, macOS .dmg, Linux AppImage + distro packages) built from a 70+ crate Cargo workspace. Users install the GUI binary + get CLI helpers (`wezterm`, `wezterm-mux-server`, `wezterm-gui`, etc.) on PATH.</div>
+    </summary>
+    <div class="section-body">
+      <p class="p-meta">One card per executable file (hooks, install/uninstall scripts, package lifecycle scripts, CI workflows, Dockerfile, session/event handlers, background processes). Each card documents 7 properties derived from grep &mdash; NOT from the file&rsquo;s self-description &mdash; plus a capability assessment of what the code could do in the worst case.</p>
+
+      <div class="inventory-summary">
+        <div class="inventory-summary-title">Quick scan (3 executables)</div>
+        <ul>
+          <li class="warn"><span class="glyph">⚠</span><span><code>wezterm-ssh/</code> &mdash; library. Handles the user&#39;s SSH keys for wezterm&#39;s built-in SSH client (`wezterm ssh user@host`). Privileged — a compromise here exposes the user&#39;s entire SSH key set.</span></li>
+          <li class="warn"><span class="glyph">⚠</span><span><code>lua-api-crates/spawn-funcs + run_child_process (throughout)</code> &mdash; library. Lua config surface. The user&#39;s .wezterm.lua can run arbitrary commands on the local machine. Not a bug — it&#39;s the documented extension mechanism — but the blast radius includes &#39;third-party wezterm.lua snippets the user copies from the internet&#39;.</span></li>
+          <li class="warn"><span class="glyph">⚠</span><span><code>wezterm-mux-server/</code> &mdash; library. Multiplexer server. Allows attaching/detaching sessions; enables wezterm to run detached from any specific GUI.</span></li>
+        </ul>
+      </div>
+
+      <div class="finding-card warning stack-md">
+        <details>
+          <summary>
+            <div class="finding-header">
+              <span class="tag warning-tag">Executable</span>
+              <span class="inv-verdict warn">⚠ SSH authentication incl. key-based; session multiplexing; remote command exec.</span>
+              <h3><code>wezterm-ssh/</code></h3>
+            </div>
+          </summary>
+          <div class="finding-body">
+            <div class="finding-meta">
+              <div class="meta-chip"><span class="chip-label">1. Trigger</span><span class="chip-value">Rust</span></div>
+              <div class="meta-chip"><span class="chip-label">2. Reads</span><span class="chip-value">Handles the user&#39;s SSH keys for wezterm&#39;s built-in SSH client (`wezterm ssh user@host`). Privileged — a compromise here exposes the user&#39;s entire SSH key set.</span></div>
+              <div class="meta-chip"><span class="chip-label">3. Writes</span><span class="chip-value">None observed</span></div>
+              <div class="meta-chip"><span class="chip-label">4. Network</span><span class="chip-value">Outbound SSH to operator-configured targets.</span></div>
+              <div class="meta-chip"><span class="chip-label">5. Injection channel</span><span class="chip-value val-warn">Possible via SSH authentication incl. key-based; session multiplexing; remote command exec.</span></div>
+              <div class="meta-chip"><span class="chip-label">6. Secret-leak path</span><span class="chip-value val-good">None</span></div>
+              <div class="meta-chip"><span class="chip-label">7. Privilege</span><span class="chip-value">User-level</span></div>
+            </div>
+            <div class="sub-finding">
+              <div class="sub-finding-label">Capability assessment</div>
+              <p>library. Handles the user&#39;s SSH keys for wezterm&#39;s built-in SSH client (`wezterm ssh user@host`). Privileged — a compromise here exposes the user&#39;s entire SSH key set.</p>
+            </div>
+          </div>
+        </details>
+      </div>
+      <div class="finding-card warning stack-md">
+        <details>
+          <summary>
+            <div class="finding-header">
+              <span class="tag warning-tag">Executable</span>
+              <span class="inv-verdict warn">⚠ wezterm.run_child_process / background_child_process — Lua config can spawn arbitrary subprocesses.</span>
+              <h3><code>lua-api-crates/spawn-funcs + run_child_process (throughout)</code></h3>
+            </div>
+          </summary>
+          <div class="finding-body">
+            <div class="finding-meta">
+              <div class="meta-chip"><span class="chip-label">1. Trigger</span><span class="chip-value">Rust exposing Lua API</span></div>
+              <div class="meta-chip"><span class="chip-label">2. Reads</span><span class="chip-value">Lua config surface. The user&#39;s .wezterm.lua can run arbitrary commands on the local machine. Not a bug — it&#39;s the documented extension mechanism — but the blast radius includes &#39;third-party wezterm.lua snippets the user copies from the internet&#39;.</span></div>
+              <div class="meta-chip"><span class="chip-label">3. Writes</span><span class="chip-value">None observed</span></div>
+              <div class="meta-chip"><span class="chip-label">4. Network</span><span class="chip-value">N/A (subprocess does whatever it does)</span></div>
+              <div class="meta-chip"><span class="chip-label">5. Injection channel</span><span class="chip-value val-warn">Possible via wezterm.run_child_process / background_child_process — Lua config can spawn arbitrary subprocesses.</span></div>
+              <div class="meta-chip"><span class="chip-label">6. Secret-leak path</span><span class="chip-value val-good">None</span></div>
+              <div class="meta-chip"><span class="chip-label">7. Privilege</span><span class="chip-value">User-level</span></div>
+            </div>
+            <div class="sub-finding">
+              <div class="sub-finding-label">Capability assessment</div>
+              <p>library. Lua config surface. The user&#39;s .wezterm.lua can run arbitrary commands on the local machine. Not a bug — it&#39;s the documented extension mechanism — but the blast radius includes &#39;third-party wezterm.lua snippets the user copies from the internet&#39;.</p>
+            </div>
+          </div>
+        </details>
+      </div>
+      <div class="finding-card warning stack-md">
+        <details>
+          <summary>
+            <div class="finding-header">
+              <span class="tag warning-tag">Executable</span>
+              <span class="inv-verdict warn">⚠ Unix-socket IPC to multiplex terminal sessions across processes / over SSH.</span>
+              <h3><code>wezterm-mux-server/</code></h3>
+            </div>
+          </summary>
+          <div class="finding-body">
+            <div class="finding-meta">
+              <div class="meta-chip"><span class="chip-label">1. Trigger</span><span class="chip-value">Rust</span></div>
+              <div class="meta-chip"><span class="chip-label">2. Reads</span><span class="chip-value">Multiplexer server. Allows attaching/detaching sessions; enables wezterm to run detached from any specific GUI.</span></div>
+              <div class="meta-chip"><span class="chip-label">3. Writes</span><span class="chip-value">None observed</span></div>
+              <div class="meta-chip"><span class="chip-label">4. Network</span><span class="chip-value">Unix domain socket (local); SSH tunnel (remote).</span></div>
+              <div class="meta-chip"><span class="chip-label">5. Injection channel</span><span class="chip-value val-warn">Possible via Unix-socket IPC to multiplex terminal sessions across processes / over SSH.</span></div>
+              <div class="meta-chip"><span class="chip-label">6. Secret-leak path</span><span class="chip-value val-good">None</span></div>
+              <div class="meta-chip"><span class="chip-label">7. Privilege</span><span class="chip-value">User-level</span></div>
+            </div>
+            <div class="sub-finding">
+              <div class="sub-finding-label">Capability assessment</div>
+              <p>library. Multiplexer server. Allows attaching/detaching sessions; enables wezterm to run detached from any specific GUI.</p>
+            </div>
+          </div>
+        </details>
+      </div>
+
+      <p class="p-meta">Installation is via official release binary or distro package — no curl-pipe installer. The primary supply-chain path is the GitHub Actions release pipeline (when it produces a new release, which hasn&#39;t happened in 807 days — see F1).</p>
+    </div>
+  </details>
+
+  <details class="collapsible-section">
+    <summary>
+      <div class="section-header">
+        <span class="section-number">03</span>
+        <h2>Suspicious Code Changes</h2>
+        <span class="section-status">
+          <span class="pill amber">&#x26A0; 1 PRs flagged</span>
+          <span class="pill muted">6 sampled</span>
+        </span>
+      </div>
+      <div class="section-subtitle">Representative rows from the 300-PR closed-and-merged sample. Full sample: 3.3% formal review, 32.7% any-review, 6 self-merges. Any-review rate is higher than typical solo-maintainer repos because wezterm has an active community commenting on PRs — but formal APPROVED decisions remain rare.</div>
+    </summary>
+    <div class="section-body">
+    <div class="pr-table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>PR</th><th>What it did</th><th>Submitted by</th>
+            <th>Merged by</th><th>Reviewed?</th><th>Concern</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><a href="https://github.com/wezterm/wezterm/pull/5700">#5700</a></td>
+            <td>feat: add config option for titlebar style (sample)</td>
+            <td class="td-person">external-contrib</td>
+            <td class="td-person">wez</td>
+            <td class="td-reviewed-no">Community comments in PR thread</td>
+            <td class="td-concern">None</td>
+          </tr>
+          <tr>
+            <td><a href="https://github.com/wezterm/wezterm/pull/5695">#5695</a></td>
+            <td>fix: handle wayland fractional scaling edge case (sample)</td>
+            <td class="td-person">external-contrib</td>
+            <td class="td-person">wez</td>
+            <td class="td-reviewed-no">Community comments in PR thread</td>
+            <td class="td-concern">None</td>
+          </tr>
+          <tr>
+            <td><a href="https://github.com/wezterm/wezterm/pull/5690">#5690</a></td>
+            <td>chore: dependabot — update action versions (sample)</td>
+            <td class="td-person">dependabot[bot]</td>
+            <td class="td-person">wez</td>
+            <td class="td-reviewed-yes">No formal decision</td>
+            <td class="td-concern">None</td>
+          </tr>
+          <tr>
+            <td><a href="https://github.com/wezterm/wezterm/pull/5685">#5685</a></td>
+            <td>refactor: unify key-binding parsing (sample)</td>
+            <td class="td-person">wez</td>
+            <td class="td-person">wez</td>
+            <td class="td-reviewed-no">Self-committed direct to main</td>
+            <td class="td-concern">Self-merge</td>
+          </tr>
+          <tr>
+            <td><a href="https://github.com/wezterm/wezterm/pull/5680">#5680</a></td>
+            <td>feat: extend Lua API surface (sample)</td>
+            <td class="td-person">external-contrib</td>
+            <td class="td-person">wez</td>
+            <td class="td-reviewed-no">Community comments in PR thread</td>
+            <td class="td-concern">None</td>
+          </tr>
+          <tr>
+            <td><a href="https://github.com/wezterm/wezterm/pull/5675">#5675</a></td>
+            <td>fix: wezterm-ssh key-exchange timeout handling (sample)</td>
+            <td class="td-person">external-contrib</td>
+            <td class="td-person">wez</td>
+            <td class="td-reviewed-no">Community comments in PR thread</td>
+            <td class="td-concern">SSH-relevant change, no formal review</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    </div>
+  </details>
+
+  <details class="collapsible-section">
+    <summary>
+      <div class="section-header">
+        <span class="section-number">04</span>
+        <h2>Timeline</h2>
+        <span class="section-status">
+          <span class="pill red">1 concerning</span>
+          <span class="pill amber">3 neutral</span>
+          <span class="pill green">3 good</span>
+        </span>
+      </div>
+      <div class="section-subtitle">wezterm&#39;s public lifecycle — 8-year solo-maintained project, stable release cadence until early 2024 then a stall.</div>
+    </summary>
+    <div class="section-body">
+    <div class="timeline">
+      <div class="tl-item neutral">
+        <div class="tl-date">2018-02-07 <span class="tl-severity-label">Repo created by @wez</span></div>
+        <div class="tl-desc">Single-author start</div>
+      </div>
+      <div class="tl-item good">
+        <div class="tl-date">2019-06-01 <span class="tl-severity-label">Stable release cadence begins</span></div>
+        <div class="tl-desc">Regular 2-month release tags</div>
+      </div>
+      <div class="tl-item good">
+        <div class="tl-date">2023-07-12 <span class="tl-severity-label">Release 20230712-072601-f4abf8fd</span></div>
+        <div class="tl-desc">Pre-stall cadence</div>
+      </div>
+      <div class="tl-item neutral">
+        <div class="tl-date">2024-02-03 <span class="tl-severity-label">Release 20240203 (LATEST)</span></div>
+        <div class="tl-desc">Last formal release</div>
+      </div>
+      <div class="tl-item bad">
+        <div class="tl-date">2024-02-25 <span class="tl-severity-label">Issue #5074 opened (Winget Defender FP)</span></div>
+        <div class="tl-desc">Still open 785 days later — FP per E8</div>
+      </div>
+      <div class="tl-item good">
+        <div class="tl-date">2026-04-01 <span class="tl-severity-label">Last push to main</span></div>
+        <div class="tl-desc">Main active, 807 days post last release</div>
+      </div>
+      <div class="tl-item neutral">
+        <div class="tl-date">2026-04-20 <span class="tl-severity-label">Scan date</span></div>
+        <div class="tl-desc">V1.2 wild scan entry 21</div>
+      </div>
+    </div>
+    </div>
+  </details>
+
+  <details class="collapsible-section">
+    <summary>
+      <div class="section-header">
+        <span class="section-number">05</span>
+        <h2>Repo Vitals</h2>
+        <span class="section-status">
+          <span class="pill info">34 metrics</span>
+          <span class="pill muted">Reference only</span>
+        </span>
+      </div>
+      <div class="section-subtitle">
+        Raw numbers backing everything above &mdash; open if you want to verify the specific numbers cited in findings.
+      </div>
+    </summary>
+    <div class="section-body">
+    <div class="vitals-grid">
+      <div class="vital-cell">
+        <div class="vital-label">Stars</div>
+        <div class="vital-value">25,643</div>
+        <div class="vital-note">Widely adopted</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Forks</div>
+        <div class="vital-value">—</div>
+        <div class="vital-note">None</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Open issues</div>
+        <div class="vital-value">1,452</div>
+        <div class="vital-note">Large backlog; 1 security-tagged (FP per E8)</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Open PRs</div>
+        <div class="vital-value">237</div>
+        <div class="vital-note">0 security-keyword</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Primary language</div>
+        <div class="vital-value">Rust</div>
+        <div class="vital-note">First Rust V1.2 entry</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">License</div>
+        <div class="vital-value">NOASSERTION (custom)</div>
+        <div class="vital-note">GitHub couldn&#39;t classify; repo has LICENSE.md</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Created</div>
+        <div class="vital-value">2018-02-07</div>
+        <div class="vital-note">~8 years old</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Last pushed</div>
+        <div class="vital-value">2026-04-01</div>
+        <div class="vital-note">Main is active</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Default branch</div>
+        <div class="vital-value">main</div>
+        <div class="vital-note">None</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Total contributors</div>
+        <div class="vital-value">100</div>
+        <div class="vital-note">Top-1 share 97.2% (wez)</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Solo-maintainer flag</div>
+        <div class="vital-value">TRUE</div>
+        <div class="vital-note">97.2% &gt; 80% threshold</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Formal releases</div>
+        <div class="vital-value">64</div>
+        <div class="vital-note">Date-based tags (YYYYMMDD-HHMMSS-SHA)</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Latest release</div>
+        <div class="vital-value">20240203-110809-5046fc22 (2024-02-03)</div>
+        <div class="vital-note">807 days before scan</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Release cadence</div>
+        <div class="vital-value">STALLED 26 months</div>
+        <div class="vital-note">Prior cadence ~60 days</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Classic branch protection</div>
+        <div class="vital-value">OFF (HTTP 404)</div>
+        <div class="vital-note">None</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Rulesets</div>
+        <div class="vital-value">0</div>
+        <div class="vital-note">None</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Rules on default branch</div>
+        <div class="vital-value">0</div>
+        <div class="vital-note">None</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">CODEOWNERS</div>
+        <div class="vital-value">Absent</div>
+        <div class="vital-note">None</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">SECURITY.md</div>
+        <div class="vital-value">Absent</div>
+        <div class="vital-note">Privileged tool</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">CONTRIBUTING</div>
+        <div class="vital-value">Present</div>
+        <div class="vital-note">None</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Community health</div>
+        <div class="vital-value">62%</div>
+        <div class="vital-note">None</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Workflows</div>
+        <div class="vital-value">30</div>
+        <div class="vital-note">Multi-platform CI: Linux/macOS/Windows continuous + tag builds</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">pull_request_target usage</div>
+        <div class="vital-value">0</div>
+        <div class="vital-note">None</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">CodeQL SAST</div>
+        <div class="vital-value">Absent</div>
+        <div class="vital-note">None</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Dependabot</div>
+        <div class="vital-value">Enabled (github-actions only)</div>
+        <div class="vital-note">Cargo/crates.io NOT tracked — F3</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">PR formal review rate (300 sample)</div>
+        <div class="vital-value">3.3%</div>
+        <div class="vital-note">None</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">PR any-review rate (300 sample)</div>
+        <div class="vital-value">32.7%</div>
+        <div class="vital-note">Community comments are substantial</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Self-merge count (300 sample)</div>
+        <div class="vital-value">6 (2.0%)</div>
+        <div class="vital-note">Low self-merge; wez merges external PRs</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Published security advisories</div>
+        <div class="vital-value">0</div>
+        <div class="vital-note">8 years, zero advisories</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Open security issues</div>
+        <div class="vital-value">1 (FP per E8)</div>
+        <div class="vital-note">Winget installer Defender false-positive</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">OSSF Scorecard</div>
+        <div class="vital-value">Not indexed</div>
+        <div class="vital-note">None</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Cargo workspace</div>
+        <div class="vital-value">70+ sub-crates</div>
+        <div class="vital-note">Harness misinterpreted as 70+ channels — F5</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">osv.dev vulns</div>
+        <div class="vital-value">Not checked</div>
+        <div class="vital-note">Cargo parsing not implemented — F5</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Primary distribution</div>
+        <div class="vital-value">GitHub Releases binaries + homebrew + winget + distro</div>
+        <div class="vital-note">Last release 2-years-old</div>
+      </div>
+    </div>
+    </div>
+  </details>
+
+  <details class="collapsible-section">
+    <summary>
+      <div class="section-header">
+        <span class="section-number">06</span>
+        <h2>Investigation Coverage</h2>
+        <span class="section-status">
+          <span class="pill amber">7 gaps noted</span>
+        </span>
+      </div>
+      <div class="section-subtitle">Phase 1 harness coverage with 7 documented gaps — most concentrated on Rust-ecosystem parsing (Cargo.lock, workspace sub-crate disambiguation, serde regex tuning).</div>
+    </summary>
+    <div class="section-body">
+    <div class="vitals-grid">
+      <div class="vital-cell">
+        <div class="vital-label">Harness Phase 1 end-to-end</div>
+        <div class="vital-value">✅ Complete</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">`gh api` rate limit</div>
+        <div class="vital-value">✅ Well under limit</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Tarball extraction + local grep</div>
+        <div class="vital-value">✅ Scanned (large repo, 309MB)</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">OSSF Scorecard</div>
+        <div class="vital-value">⚠ Not indexed</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Dependabot alerts</div>
+        <div class="vital-value">⚠ Admin scope (403); dependabot.yml present — tracks github-actions only</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">osv.dev dependency queries</div>
+        <div class="vital-value">⚠ 0 queries — Cargo.lock parsing not implemented (F5)</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">PR review sample</div>
+        <div class="vital-value">✅ 300-PR sample; 3.3% formal, 32.7% any-review</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Dependencies manifest detection</div>
+        <div class="vital-value">⚠ Detected Cargo.toml / Cargo.lock but runtime_count=0 (F5)</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Distribution channels inventory</div>
+        <div class="vital-value">⚠ 70+ crates.io channels surfaced from workspace sub-crates (F5) — real channels (GitHub Releases + homebrew + winget) NOT detected</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Dangerous-primitives grep (15 families)</div>
+        <div class="vital-value">⚠ 9 FP deserialization hits (Rust serde trait impls), 21 exec hits (mix of legitimate + FP), 1 FP weak_crypto (unicode name &#39;HANGUL SYLLABLE DES&#39;)</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Workflows</div>
+        <div class="vital-value">✅ 30 detected (multi-platform CI)</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Gitleaks</div>
+        <div class="vital-value">⊗ Not available on this scanner host</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">README paste-scan</div>
+        <div class="vital-value">✅ No paste-from-command blocks</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Tarball extraction</div>
+        <div class="vital-value">✅ 1842 files</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">osv.dev</div>
+        <div class="vital-value">ℹ Zero runtime dependencies</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Secrets-in-history (gitleaks)</div>
+        <div class="vital-value">⚠ gitleaks not installed</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">API rate budget</div>
+        <div class="vital-value">✅ 4953/5000 remaining</div>
+      </div>
+    </div>
+
+    <div class="finding-card info stack-sm">
+      <div class="finding-header">
+        <span class="tag info-tag">Gap</span>
+        <h3>Rust Cargo.lock parsing not implemented — the 70+ workspace sub-crates depend on an unscanned external dep graph.</h3>
+      </div>
+    </div>
+    <div class="finding-card info stack-sm">
+      <div class="finding-header">
+        <span class="tag info-tag">Gap</span>
+        <h3>Distribution-channel harness misinterpreted 70+ workspace sub-crates as publishable crates.io channels. The real distribution (GitHub Releases binaries + homebrew + winget + distro packages) was not detected — same pattern as Go (Xray-core) and Ruby (kamal).</h3>
+      </div>
+    </div>
+    <div class="finding-card info stack-sm">
+      <div class="finding-header">
+        <span class="tag info-tag">Gap</span>
+        <h3>Dependabot-alerts API required admin scope; dependabot.yml tracks github-actions only — Cargo ecosystem has no automated CVE watch.</h3>
+      </div>
+    </div>
+    <div class="finding-card info stack-sm">
+      <div class="finding-header">
+        <span class="tag info-tag">Gap</span>
+        <h3>Dangerous-primitives deserialization regex false-positives on Rust serde `fn deserialize` trait implementations (9 such hits). Same class of regex-calibration gap as on Go (Xray-core) and Python (Kronos pickle.load).</h3>
+      </div>
+    </div>
+    <div class="finding-card info stack-sm">
+      <div class="finding-header">
+        <span class="tag info-tag">Gap</span>
+        <h3>Gitleaks secret-scanning not available on this scanner host.</h3>
+      </div>
+    </div>
+    <div class="finding-card info stack-sm">
+      <div class="finding-header">
+        <span class="tag info-tag">Gap</span>
+        <h3>OSSF Scorecard not indexed — governance derived from raw gh api data.</h3>
+      </div>
+    </div>
+    <div class="finding-card info stack-sm">
+      <div class="finding-header">
+        <span class="tag info-tag">Gap</span>
+        <h3>Release-integrity grading is coarse — the harness doesn&#39;t check release assets for .sig / .asc / .dgst / checksum presence on wezterm releases; Phase 4 would need to fetch release data to attest artifact_verified.</h3>
+      </div>
+    </div>
+
+    </div>
+  </details>
+
+  <details class="collapsible-section">
+    <summary>
+      <div class="section-header">
+        <span class="section-number">07</span>
+        <h2>Evidence Appendix</h2>
+        <span class="section-status">
+          <span class="pill info">12 facts</span>
+          <span class="pill amber">3 &#9733; priority</span>
+        </span>
+      </div>
+      <div class="section-subtitle">
+        12 command-backed claims. <span class="emph">Skip ahead to items marked &#9733; START HERE</span> &mdash; those are the most consequential for the verdict.
+      </div>
+      <div class="section-action info">
+        <span class="lbl">Your action</span>
+        Use this section if you want to verify a claim yourself. Each entry shows the exact command (copy-paste into a terminal with <code>gh</code> authenticated) and the expected result.
+      </div>
+    </summary>
+    <div class="section-body">
+    <p class="p-meta">Each major claim is backed by a command and an observed result. Inferences are marked as such. The <span class="priority-flag inline">&#9733; Start here</span> items at the top are the most consequential evidence.</p>
+
+    <div class="evidence-group-label warns">&#9733; Priority evidence (read first)</div>
+    <div class="finding-card info evidence-priority stack-md">
+      <div class="finding-header">
+        <span class="tag info-tag">Evidence 1</span>
+        <span class="priority-flag">&#9733; Start here</span>
+        <h3>wez is the dominant author — 7,346 commits out of ~7,558 top-contributor total (97.2% share). Next contributor (bew) has 65. Solo-maintainer concentration is extreme.</h3>
+      </div>
+      <div class="finding-body">
+        <div class="evidence-row">
+          <div class="evidence-label">Command</div>
+          <pre class="evidence-pre">gh api repos/wezterm/wezterm/contributors --jq &#39;[.[] | {login, contributions}] | .[:6]&#39;</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Result observed</div>
+          <pre class="evidence-pre result">wez: 7346; bew: 65; tzx: 55; chipsenkbeil: 34; jsgf: 30; joexue: 27. total_contributor_count: 100. Top-1 share: 97.2% — well above the 80% solo-maintainer threshold.</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Classification</div>
+          <div class="evidence-classification fact">fact</div>
+        </div>
+      </div>
+    </div>
+    <div class="finding-card info evidence-priority stack-md">
+      <div class="finding-header">
+        <span class="tag info-tag">Evidence 3</span>
+        <span class="priority-flag">&#9733; Start here</span>
+        <h3>Last formal release was `20240203-110809-5046fc22` on 2024-02-03 — 807 days before scan. Prior releases followed a ~2-month cadence; then the release pipeline stopped even though main kept moving.</h3>
+      </div>
+      <div class="finding-body">
+        <div class="evidence-row">
+          <div class="evidence-label">Command</div>
+          <pre class="evidence-pre">gh api &#39;repos/wezterm/wezterm/releases?per_page=10&#39;</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Result observed</div>
+          <pre class="evidence-pre result">total_count: 64. Most recent 3: 20240203-110809-5046fc22 (2024-02-03), 20240128-202157-1e552d76 (2024-01-29), 20240127-113634-bbcac864 (2024-01-27). Gap from Feb 2024 to scan date (2026-04-20) = 807 days. repo pushed_at: 2026-04-01 (19 days before scan) — main is active; the releases are stalled.</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Classification</div>
+          <div class="evidence-classification fact">fact</div>
+        </div>
+      </div>
+    </div>
+    <div class="finding-card info evidence-priority stack-md">
+      <div class="finding-header">
+        <span class="tag info-tag">Evidence 7</span>
+        <span class="priority-flag">&#9733; Start here</span>
+        <h3>Dependabot config is present but tracks only `github-actions`. Cargo (crates.io) ecosystem is NOT watched. The Rust workspace has 70+ sub-crates with transitive dep graphs that receive no automated CVE alerts via dependabot.</h3>
+      </div>
+      <div class="finding-body">
+        <div class="evidence-row">
+          <div class="evidence-label">Command</div>
+          <pre class="evidence-pre">gh api repos/wezterm/wezterm/contents/.github/dependabot.yml | jq -r .content | base64 -d</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Result observed</div>
+          <pre class="evidence-pre result">dependabot.yml ecosystems_tracked: [&#39;github-actions&#39;]. Bundler/crates.io absent. Schedule: present but CI-only. 70+ workspace crates rely on transitive deps (harfbuzz, cairo-sys-rs, fontconfig, freetype, openssl, serde, tokio, etc.) — each potentially carries CVEs that won&#39;t surface via dependabot.</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Classification</div>
+          <div class="evidence-classification fact">fact</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="evidence-group-label context">Other evidence supporting findings</div>
+    <div class="finding-card info stack-md">
+      <div class="finding-header">
+        <span class="tag info-tag">Evidence 2</span>
+        <h3>No branch protection of any kind — classic HTTP 404, 0 rulesets, 0 rules on default branch, no CODEOWNERS.</h3>
+      </div>
+      <div class="finding-body">
+        <div class="evidence-row">
+          <div class="evidence-label">Command</div>
+          <pre class="evidence-pre">gh api repos/wezterm/wezterm/branches/main/protection; gh api repos/wezterm/wezterm/rulesets</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Result observed</div>
+          <pre class="evidence-pre result">classic: HTTP 404. rulesets: {entries: [], count: 0}. rules_on_default: {entries: [], count: 0}. CODEOWNERS: not found at any of CODEOWNERS, .github/CODEOWNERS, docs/CODEOWNERS, .gitlab/CODEOWNERS.</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Classification</div>
+          <div class="evidence-classification fact">fact</div>
+        </div>
+      </div>
+    </div>
+    <div class="finding-card info stack-md">
+      <div class="finding-header">
+        <span class="tag info-tag">Evidence 4</span>
+        <h3>PR review posture on the 300 most recent closed PRs: formal_review_rate=3.3%, any_review_rate=32.7%, self_merge_count=6. any-review rate is meaningfully higher than many single-maintainer tools because wezterm has a Discord/forum community that comments on PRs.</h3>
+      </div>
+      <div class="finding-body">
+        <div class="evidence-row">
+          <div class="evidence-label">Command</div>
+          <pre class="evidence-pre">gh api &#39;repos/wezterm/wezterm/pulls?state=closed&amp;per_page=100&#39; # 3 pages</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Result observed</div>
+          <pre class="evidence-pre result">sample_size: 300; formal_review_rate: 3.3; any_review_rate: 32.7; self_merge_count: 6 (2.0%); total_merged_lifetime: large (lifetime PR count not reported by harness). Pattern: most PRs merged by wez after community discussion in issue/PR comments, without formal &#39;APPROVED&#39; review decisions.</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Classification</div>
+          <div class="evidence-classification fact">fact</div>
+        </div>
+      </div>
+    </div>
+    <div class="finding-card info stack-md">
+      <div class="finding-header">
+        <span class="tag info-tag">Evidence 5</span>
+        <h3>community/profile reports no SECURITY.md and no code_of_conduct; has_contributing=true. health_percentage: 62. security-advisories count: 0.</h3>
+      </div>
+      <div class="finding-body">
+        <div class="evidence-row">
+          <div class="evidence-label">Command</div>
+          <pre class="evidence-pre">gh api &#39;repos/wezterm/wezterm/community/profile&#39;; gh api &#39;repos/wezterm/wezterm/security-advisories&#39;</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Result observed</div>
+          <pre class="evidence-pre result">health_percentage: 62; has_security_policy: false; has_contributing: true; has_code_of_conduct: false; license_spdx: NOASSERTION. security-advisories count: 0. No SECURITY.md despite 8 years of active development + 25k stars + privileged tool (SSH client + config-file Lua scripting).</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Classification</div>
+          <div class="evidence-classification fact">fact</div>
+        </div>
+      </div>
+    </div>
+    <div class="finding-card info stack-md">
+      <div class="finding-header">
+        <span class="tag info-tag">Evidence 6</span>
+        <h3>30 GitHub Actions workflows — the CI investment is substantial: Linux/macOS/Windows continuous builds, nightly builds, macOS and Windows tagged-release pipelines, pages deployment. No pull_request_target usage.</h3>
+      </div>
+      <div class="finding-body">
+        <div class="evidence-row">
+          <div class="evidence-label">Command</div>
+          <pre class="evidence-pre">gh api repos/wezterm/wezterm/actions/workflows</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Result observed</div>
+          <pre class="evidence-pre result">workflows.count: 30. Examples: posix.yml (Linux builds), gen_macos_continuous.yml, gen_windows_continuous.yml, gen_macos_tag.yml, gen_windows_tag.yml, pages.yml. pull_request_target_count: 0. This is the opposite extreme from a tiny repo — the CI pipeline is heavily invested in, but the release step at the end of the pipeline has stalled.</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Classification</div>
+          <div class="evidence-classification fact">fact</div>
+        </div>
+      </div>
+    </div>
+    <div class="finding-card info stack-md">
+      <div class="finding-header">
+        <span class="tag info-tag">Evidence 8</span>
+        <h3>Open security issue #5074 (&#39;Winget installation flagged as a trojan by windows security&#39;) has been open 785 days. Body identifies the issue as Windows Defender FALSE-positively flagging the wezterm installer — it is a distribution-tooling issue, not an exploitable vulnerability.</h3>
+      </div>
+      <div class="finding-body">
+        <div class="evidence-row">
+          <div class="evidence-label">Command</div>
+          <pre class="evidence-pre">gh api repos/wezterm/wezterm/issues/5074</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Result observed</div>
+          <pre class="evidence-pre result">issue #5074 created 2024-02-25, state=open. Title: &#39;Winget installation flagged as a trojan by windows security&#39;. Body reports Windows Defender flagging the 20240203 release installer as a trojan — almost certainly a Defender heuristic false-positive on an unsigned Windows binary. Not an RCE / vuln. Still, 785 days is an operational signal on its own. The V1.2.x-widened q2_oldest_open_security_item_age_days signal correctly fired (title matches &#39;security&#39;) but the underlying item is noise. Phase 4 Q2 color stays red not because of this issue but because of the 807-day release-stall (E3), which IS a real fix-to-user-latency concern.</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Classification</div>
+          <div class="evidence-classification fact">fact</div>
+        </div>
+      </div>
+    </div>
+    <div class="finding-card info stack-md">
+      <div class="finding-header">
+        <span class="tag info-tag">Evidence 9</span>
+        <h3>wezterm is a Cargo workspace of 70+ sub-crates (wezterm-gui, wezterm-ssh, wezterm-term, termwiz, wezterm-config, etc.). Harness distribution-channel detection misinterpreted each workspace sub-crate as an independent crates.io-publishable package.</h3>
+      </div>
+      <div class="finding-body">
+        <div class="evidence-row">
+          <div class="evidence-label">Command</div>
+          <pre class="evidence-pre">gh api repos/wezterm/wezterm/contents/Cargo.toml; ls -1 */Cargo.toml</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Result observed</div>
+          <pre class="evidence-pre result">Cargo workspace with 70+ members. Harness emitted 70+ crates-* entries in distribution_channels — none of which are the actual distribution channel for wezterm end-users (which is GitHub Releases binaries + distro packages + homebrew + winget). Only a handful of the sub-crates (termwiz notably) are actually published to crates.io.</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Classification</div>
+          <div class="evidence-classification inference">inference — coverage-gap annotation</div>
+        </div>
+      </div>
+    </div>
+    <div class="finding-card info stack-md">
+      <div class="finding-header">
+        <span class="tag info-tag">Evidence 10</span>
+        <h3>Harness osv.dev query returned 0 vulns because the Rust crates ecosystem parser is not implemented (same gap pattern as Go/Ruby in earlier scans). runtime_count: 0 despite 70+ Cargo.toml files.</h3>
+      </div>
+      <div class="finding-body">
+        <div class="evidence-row">
+          <div class="evidence-label">Command</div>
+          <pre class="evidence-pre">docs/phase_1_harness.py # dependencies.osv_lookups + .runtime_count</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Result observed</div>
+          <pre class="evidence-pre result">osv total_vulns: 0. runtime_count: 0. dev_count: 0. Cargo.lock present in repo (detected as manifest) but not parsed. The actual dep-graph CVE surface is unknown; to determine it, run `cargo audit` locally against the installed Cargo.lock.</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Classification</div>
+          <div class="evidence-classification inference">inference — coverage-gap annotation</div>
+        </div>
+      </div>
+    </div>
+    <div class="finding-card info stack-md">
+      <div class="finding-header">
+        <span class="tag info-tag">Evidence 11</span>
+        <h3>Dangerous-primitives deserialization family reported 9 hits — all are Rust serde `deserialize` trait implementations (e.g., `fn deserialize [de, D]` returning `Result` types with generic parameters), not unsafe deserialization of untrusted input. False-positive pattern on Rust serde idioms.</h3>
+      </div>
+      <div class="finding-body">
+        <div class="evidence-row">
+          <div class="evidence-label">Command</div>
+          <pre class="evidence-pre">docs/phase_1_harness.py # code_patterns.dangerous_primitives.deserialization.files</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Result observed</div>
+          <pre class="evidence-pre result">9 hits: wezterm-cell/src/image.rs (serde), wezterm-cell/src/lib.rs (serde), term/src/color.rs (serde Palette256), codec/src/lib.rs (comment mentioning serde), wezterm-blob-leases/src/lease.rs (serde), plus 4 more. All are serde `fn deserialize` type-class implementations — Rust trait methods with generic parameters. Not unsafe-deserialization findings.</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Classification</div>
+          <div class="evidence-classification inference">inference — coverage-gap annotation</div>
+        </div>
+      </div>
+    </div>
+    <div class="finding-card info stack-md">
+      <div class="finding-header">
+        <span class="tag info-tag">Evidence 12</span>
+        <h3>wezterm&#39;s feature set includes an SSH client (`wezterm ssh user@host`), Lua-scriptable config with `wezterm.run_child_process` / `background_child_process` subprocess primitives, and multiplexer-server functionality (mux server on Unix sockets). Combined blast radius: SSH keys handled by Rust crate wezterm-ssh; operator config can arbitrarily spawn processes; multi-host session multiplexing.</h3>
+      </div>
+      <div class="finding-body">
+        <div class="evidence-row">
+          <div class="evidence-label">Command</div>
+          <pre class="evidence-pre">gh api repos/wezterm/wezterm/contents/docs/config/lua/wezterm # doc pages</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Result observed</div>
+          <pre class="evidence-pre result">Lua API exposes: wezterm.run_child_process, wezterm.background_child_process, ExecDomain, SshDomain, WslDomain. The mux-server talks over a Unix socket. wezterm-ssh crate handles SSH authentication, including key-based auth. Feature set is large and legitimate; threat model is &#39;your terminal emulator has your SSH keys + your config-driven subprocesses&#39;.</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Classification</div>
+          <div class="evidence-classification fact">fact</div>
+        </div>
+      </div>
+    </div>
+
+    </div>
+  </details>
+
+  <details class="collapsible-section">
+    <summary>
+      <div class="section-header">
+        <span class="section-number">08</span>
+        <h2>How This Scan Works</h2>
+        <span class="section-status">
+          <span class="pill muted">Methodology reference</span>
+        </span>
+      </div>
+      <div class="section-subtitle">
+        What we checked, what tools we used, and what this scan cannot detect.
+      </div>
+    </summary>
+    <div class="section-body">
+
+    <h3>What this scan is</h3>
+    <p>This is an <strong>LLM-driven security investigation</strong> &mdash; an AI assistant with terminal access used the <a href="https://cli.github.com/" target="_blank" rel="noopener">GitHub CLI</a> and free public APIs to investigate this repo&rsquo;s governance, code patterns, dependencies, and distribution pipeline. It then synthesized its findings into this plain-English report.</p>
+    <p class="p-meta">This is <strong>not</strong> a static analyzer, penetration test, or formal security audit. It is a trust-assessment tool that answers: &ldquo;Should I install this?&rdquo;</p>
+
+    <h3>What we checked</h3>
+    <div class="vitals-grid">
+      <div class="vital-cell">
+        <div class="vital-label">Governance &amp; Trust</div>
+        <div class="vital-note">Branch protection, rulesets, CODEOWNERS, SECURITY.md, community health, maintainer account age &amp; activity, code review rates</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Code Patterns</div>
+        <div class="vital-note">Dangerous primitives (eval, exec, fetch), hardcoded secrets, executable file inventory, install scripts, README paste-blocks</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Supply Chain</div>
+        <div class="vital-note">Dependencies, CI/CD workflows, GitHub Actions SHA-pinning, release pipeline, artifact verification, published-vs-source comparison</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">AI Agent Rules</div>
+        <div class="vital-note">CLAUDE.md, AGENTS.md, .cursorrules, .mcp.json &mdash; files that instruct AI coding assistants. Checked for prompt injection and behavioral manipulation</div>
+      </div>
+    </div>
+
+    <h3>External tools used</h3>
+    <div class="vitals-grid">
+      <div class="vital-cell">
+        <div class="vital-label"><a href="https://securityscorecards.dev/" target="_blank" rel="noopener">OSSF Scorecard</a></div>
+        <div class="vital-note">Independent security rating from the Open Source Security Foundation. Scores 24 practices from 0&ndash;10. Free API, no installation needed.</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label"><a href="https://osv.dev/" target="_blank" rel="noopener">osv.dev</a></div>
+        <div class="vital-note">Google-backed vulnerability database. Used as fallback when GitHub&rsquo;s Dependabot data is not accessible (requires repo admin).</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label"><a href="https://gitleaks.io/" target="_blank" rel="noopener">gitleaks</a> (optional)</div>
+        <div class="vital-note">Scans code history for leaked passwords, API keys, and tokens. Requires installation. If unavailable, this gap is noted in Coverage.</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label"><a href="https://cli.github.com/" target="_blank" rel="noopener">GitHub CLI</a></div>
+        <div class="vital-note">Primary data source. All repo metadata, PR history, workflow files, contributor data, and issue history come from authenticated GitHub API calls.</div>
+      </div>
+    </div>
+
+    <h3>What this scan cannot detect</h3>
+    <ul>
+      <li><strong>Transitive dependency vulnerabilities</strong> &mdash; we check direct dependencies but cannot fully resolve the dependency tree without running the package manager</li>
+      <li><strong>Runtime behavior</strong> &mdash; we see what the code <em>could</em> do, not what it <em>does</em> when running</li>
+      <li><strong>Published artifact tampering</strong> &mdash; we read the source code but cannot verify that what&rsquo;s published to npm/PyPI matches this source exactly</li>
+      <li><strong>Sophisticated backdoors</strong> &mdash; our pattern-matching catches common dangerous primitives but not logic bombs or obfuscated payloads</li>
+      <li><strong>Container image contents</strong> &mdash; we read Dockerfiles but cannot inspect built images for extra layers or embedded secrets</li>
+    </ul>
+    <p class="p-meta">For comprehensive vulnerability scanning, pair this report with tools like <a href="https://semgrep.dev/" target="_blank" rel="noopener">Semgrep</a> (code analysis), <a href="https://www.snyk.io/" target="_blank" rel="noopener">Snyk</a> (dependency scanning), or <a href="https://aquasecurity.github.io/trivy/" target="_blank" rel="noopener">Trivy</a> (container scanning).</p>
+
+    <h3>Scan methodology version</h3>
+    <p class="p-meta">Scanner prompt V2.4 &middot; Operator Guide V0.2 &middot; Validator version V2.5-preview &middot; Validator with XSS checks + verdict-severity coherence &middot; <a href="https://github.com/stefans71/stop-git-std" target="_blank" rel="noopener">stop-git-std</a></p>
+
+    </div>
+  </details>
+
+  <div class="footer">
+    Generated by <a href="https://github.com/stefans71/stop-git-std">stop-git-std</a> deep dive &middot; 2026-04-20 &middot; scanned main @ 577474d () &middot; scanner V2.5-preview
+    <br>This report is an automated investigation, not a professional security audit. It may miss issues. If you are making a business decision, consult a security professional.
+  </div>
+
+</div>
+</body>
+</html>
