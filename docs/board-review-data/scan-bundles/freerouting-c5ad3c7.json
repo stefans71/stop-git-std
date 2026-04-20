@@ -1,0 +1,4079 @@
+{
+  "$comment": "freerouting V1.2 wild scan \u2014 fifth wild V1.2 scan; first browser-extension entry in catalog.",
+  "schema_version": "V1.2",
+  "_meta": {
+    "scanner_version": "V2.5-preview",
+    "prompt_version": "V2.4",
+    "scan_started_at": "2026-04-20T20:07:36.191237+00:00",
+    "model": "claude-opus-4-7 (via Claude Code)",
+    "scan_status": "completed",
+    "scan_completed_at": "2026-04-20T20:14:33.481928+00:00"
+  },
+  "target": {
+    "owner": "freerouting",
+    "repo": "freerouting",
+    "full_name": "freerouting/freerouting",
+    "url": "https://github.com/freerouting/freerouting"
+  },
+  "scanner_integrity": {
+    "injection_matches": 0,
+    "actionable_count": 0,
+    "findings": []
+  },
+  "phase_1_raw_capture": {
+    "pre_flight": {
+      "head_sha": "c5ad3c74f1b12c9ec20c412c029aa97ffb8af805",
+      "default_branch": "master",
+      "tarball_extracted": true,
+      "tarball_file_count": 2760,
+      "symlinks_stripped": 0,
+      "api_rate_limit": {
+        "limit": 5000,
+        "remaining": 4995,
+        "reset": 1776718590,
+        "used": 5
+      }
+    },
+    "repo_metadata": {
+      "name": "freerouting",
+      "description": "Advanced PCB auto-router",
+      "created_at": "2014-06-28T17:00:48Z",
+      "pushed_at": "2026-04-19T20:40:52Z",
+      "stargazer_count": 1690,
+      "fork_count": 260,
+      "archived": false,
+      "fork": false,
+      "has_issues_enabled": true,
+      "primary_language": "Java",
+      "topics": [
+        "auto-route",
+        "auto-router",
+        "autoroute",
+        "autorouter",
+        "autorouting",
+        "dsn",
+        "help-wanted",
+        "kicad",
+        "pcb",
+        "pcb-design",
+        "router",
+        "routing",
+        "routing-engine",
+        "specctra"
+      ],
+      "license_spdx": "GPL-3.0",
+      "default_branch": "master",
+      "open_issues_count": 34,
+      "size_kb": 520944
+    },
+    "contributors": {
+      "top_contributors": [
+        {
+          "contributions": 1544,
+          "login": "andrasfuchs"
+        },
+        {
+          "contributions": 116,
+          "login": "miho"
+        },
+        {
+          "contributions": 41,
+          "login": "dependabot[bot]"
+        },
+        {
+          "contributions": 33,
+          "login": "maksz42"
+        },
+        {
+          "contributions": 28,
+          "login": "rusefillc"
+        },
+        {
+          "contributions": 19,
+          "login": "L1uTongweiNewAccount"
+        }
+      ],
+      "total_contributor_count": 36
+    },
+    "maintainer_accounts": {
+      "accounts": [
+        {
+          "bio": null,
+          "company": null,
+          "created_at": "2014-06-28T16:58:06Z",
+          "followers": 59,
+          "login": "freerouting",
+          "public_repos": 2,
+          "type": "Organization",
+          "role": "owner"
+        },
+        {
+          "bio": "Andras is a TopTal Certified Blockchain Specialists, a Microsoft Certified .NET Application Developer and a Microsoft ML.NET Developer Community Panel member.",
+          "company": "TopTal",
+          "created_at": "2011-07-12T13:57:47Z",
+          "followers": 52,
+          "login": "andrasfuchs",
+          "public_repos": 35,
+          "type": "User",
+          "role": "contributor",
+          "contributions": 1544
+        },
+        {
+          "bio": "Computer Scientist, Developer, Artist",
+          "company": "@VRL-Studio ",
+          "created_at": "2010-03-18T12:11:46Z",
+          "followers": 236,
+          "login": "miho",
+          "public_repos": 338,
+          "type": "User",
+          "role": "contributor",
+          "contributions": 116
+        },
+        {
+          "bio": null,
+          "company": null,
+          "created_at": "2019-04-16T22:34:25Z",
+          "followers": 0,
+          "login": "dependabot[bot]",
+          "public_repos": 0,
+          "type": "Bot",
+          "role": "contributor",
+          "contributions": 41
+        },
+        {
+          "bio": null,
+          "company": null,
+          "created_at": "2019-03-18T17:30:56Z",
+          "followers": 8,
+          "login": "maksz42",
+          "public_repos": 10,
+          "type": "User",
+          "role": "contributor",
+          "contributions": 33
+        },
+        {
+          "bio": null,
+          "company": null,
+          "created_at": "2019-03-12T23:50:04Z",
+          "followers": 65,
+          "login": "rusefillc",
+          "public_repos": 17,
+          "type": "User",
+          "role": "contributor",
+          "contributions": 28
+        }
+      ]
+    },
+    "ossf_scorecard": {
+      "queried": true,
+      "indexed": false,
+      "http_status": 404,
+      "overall_score": null,
+      "checks": [],
+      "raw_response": null
+    },
+    "community_profile": {
+      "health_percentage": 75,
+      "has_code_of_conduct": true,
+      "has_contributing": true,
+      "has_security_policy": false,
+      "license_spdx": "GPL-3.0"
+    },
+    "branch_protection": {
+      "classic": {
+        "status": 404
+      },
+      "rulesets": {
+        "entries": [
+          {
+            "id": 2018794,
+            "name": "Default Ruleset",
+            "target": "branch",
+            "source_type": "Repository",
+            "source": "freerouting/freerouting",
+            "enforcement": "active",
+            "node_id": "RRS_lACqUmVwb3NpdG9yec4BRR9DzgAezeo",
+            "_links": {
+              "self": {
+                "href": "https://api.github.com/repos/freerouting/freerouting/rulesets/2018794"
+              },
+              "html": {
+                "href": "https://github.com/freerouting/freerouting/rules/2018794"
+              }
+            },
+            "created_at": "2024-09-27T07:33:07.849Z",
+            "updated_at": "2024-09-27T07:33:07.849Z"
+          }
+        ],
+        "count": 1
+      },
+      "rules_on_default": {
+        "entries": [
+          {
+            "type": "deletion",
+            "ruleset_source_type": "Repository",
+            "ruleset_source": "freerouting/freerouting",
+            "ruleset_id": 2018794
+          },
+          {
+            "type": "non_fast_forward",
+            "ruleset_source_type": "Repository",
+            "ruleset_source": "freerouting/freerouting",
+            "ruleset_id": 2018794
+          }
+        ],
+        "count": 2
+      },
+      "owner_type": "Organization",
+      "org_rulesets": {
+        "status": "error",
+        "entries": []
+      }
+    },
+    "codeowners": {
+      "found": false,
+      "path": null,
+      "content": null,
+      "locations_checked": [
+        "CODEOWNERS",
+        ".github/CODEOWNERS",
+        "docs/CODEOWNERS",
+        ".gitlab/CODEOWNERS"
+      ]
+    },
+    "releases": {
+      "entries": [
+        {
+          "tag_name": "v2.1.0",
+          "published_at": "2025-04-12T13:50:03Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "andrasfuchs"
+        },
+        {
+          "tag_name": "v2.0.1",
+          "published_at": "2024-11-14T13:30:05Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "andrasfuchs"
+        },
+        {
+          "tag_name": "v2.0.0",
+          "published_at": "2024-11-06T16:28:23Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "andrasfuchs"
+        },
+        {
+          "tag_name": "v1.9.0",
+          "published_at": "2023-10-30T12:47:03Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "andrasfuchs"
+        },
+        {
+          "tag_name": "v1.8.0",
+          "published_at": "2023-05-22T16:17:38Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "andrasfuchs"
+        },
+        {
+          "tag_name": "v1.7.0",
+          "published_at": "2023-02-08T15:51:53Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "andrasfuchs"
+        },
+        {
+          "tag_name": "v1.6.5",
+          "published_at": "2023-01-03T16:23:50Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "andrasfuchs"
+        },
+        {
+          "tag_name": "v1.6.2",
+          "published_at": "2022-07-13T13:05:24Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "andrasfuchs"
+        },
+        {
+          "tag_name": "v1.6.1",
+          "published_at": "2022-06-07T14:37:59Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "andrasfuchs"
+        },
+        {
+          "tag_name": "v1.6.0",
+          "published_at": "2022-06-06T11:32:20Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "andrasfuchs"
+        },
+        {
+          "tag_name": "v1.5.0",
+          "published_at": "2022-01-27T19:14:59Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "andrasfuchs"
+        },
+        {
+          "tag_name": "v1.4.5.1",
+          "published_at": "2021-11-25T18:48:16Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "andrasfuchs"
+        },
+        {
+          "tag_name": "v1.4.5",
+          "published_at": "2021-10-25T12:40:50Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "andrasfuchs"
+        },
+        {
+          "tag_name": "v1.4.4",
+          "published_at": "2020-04-19T18:01:51Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "andrasfuchs"
+        },
+        {
+          "tag_name": "SNAPSHOT",
+          "published_at": "2020-03-23T17:41:24Z",
+          "prerelease": true,
+          "draft": false,
+          "author": "miho"
+        }
+      ],
+      "total_count": 15
+    },
+    "security_advisories": {
+      "count": 0,
+      "entries": []
+    },
+    "workflows": {
+      "entries": [
+        {
+          "name": "Publish a new release",
+          "path": ".github/workflows/create-release.yml",
+          "state": "active"
+        },
+        {
+          "name": "Update the snapshot build",
+          "path": ".github/workflows/create-snapshot.yml",
+          "state": "active"
+        },
+        {
+          "name": "Deploy website to GitHub Pages",
+          "path": ".github/workflows/deploy-pages.yml",
+          "state": "active"
+        },
+        {
+          "name": "Push the Docker nightly image",
+          "path": ".github/workflows/docker-nightly.yml",
+          "state": "active"
+        },
+        {
+          "name": "Push a new Docker release image",
+          "path": ".github/workflows/docker-release.yml",
+          "state": "active"
+        },
+        {
+          "name": "\ud83d\udd00 Gemini Dispatch",
+          "path": ".github/workflows/gemini-dispatch.yml",
+          "state": "active"
+        },
+        {
+          "name": "\u25b6\ufe0f Gemini Invoke",
+          "path": ".github/workflows/gemini-invoke.yml",
+          "state": "active"
+        },
+        {
+          "name": "\ud83d\udd0e Gemini Review",
+          "path": ".github/workflows/gemini-review.yml",
+          "state": "active"
+        },
+        {
+          "name": "\ud83d\udccb Gemini Scheduled Issue Triage",
+          "path": ".github/workflows/gemini-scheduled-triage.yml",
+          "state": "active"
+        },
+        {
+          "name": "\ud83d\udd00 Gemini Triage",
+          "path": ".github/workflows/gemini-triage.yml",
+          "state": "active"
+        },
+        {
+          "name": "Build the source on PR",
+          "path": ".github/workflows/gradle-build-on-pr.yml",
+          "state": "active"
+        },
+        {
+          "name": "Mark stale issues and pull requests",
+          "path": ".github/workflows/stale.yml",
+          "state": "active"
+        },
+        {
+          "name": "Copilot code review",
+          "path": "dynamic/copilot-pull-request-reviewer/copilot-pull-request-reviewer",
+          "state": "active"
+        },
+        {
+          "name": "Copilot cloud agent",
+          "path": "dynamic/copilot-swe-agent/copilot",
+          "state": "active"
+        },
+        {
+          "name": "Dependabot Updates",
+          "path": "dynamic/dependabot/dependabot-updates",
+          "state": "active"
+        },
+        {
+          "name": "CodeQL",
+          "path": "dynamic/github-code-scanning/codeql",
+          "state": "active"
+        },
+        {
+          "name": "pages-build-deployment",
+          "path": "dynamic/pages/pages-build-deployment",
+          "state": "active"
+        }
+      ],
+      "count": 17,
+      "pull_request_target_count": 0
+    },
+    "workflow_contents": {
+      "entries": [
+        {
+          "path": ".github/workflows/gemini-dispatch.yml",
+          "content_lines": 204,
+          "sha_pinned_actions_count": 3,
+          "tag_pinned_actions_count": 0,
+          "has_pull_request_target": false,
+          "permissions_block_present": false
+        },
+        {
+          "path": ".github/workflows/gradle-build-on-pr.yml",
+          "content_lines": 24,
+          "sha_pinned_actions_count": 0,
+          "tag_pinned_actions_count": 3,
+          "has_pull_request_target": false,
+          "permissions_block_present": false
+        },
+        {
+          "path": ".github/workflows/create-release.yml",
+          "content_lines": 158,
+          "sha_pinned_actions_count": 0,
+          "tag_pinned_actions_count": 18,
+          "has_pull_request_target": false,
+          "permissions_block_present": false
+        },
+        {
+          "path": ".github/workflows/deploy-pages.yml",
+          "content_lines": 40,
+          "sha_pinned_actions_count": 0,
+          "tag_pinned_actions_count": 3,
+          "has_pull_request_target": false,
+          "permissions_block_present": true
+        },
+        {
+          "path": ".github/workflows/docker-release.yml",
+          "content_lines": 68,
+          "sha_pinned_actions_count": 0,
+          "tag_pinned_actions_count": 7,
+          "has_pull_request_target": false,
+          "permissions_block_present": false
+        },
+        {
+          "path": ".github/workflows/stale.yml",
+          "content_lines": 45,
+          "sha_pinned_actions_count": 0,
+          "tag_pinned_actions_count": 1,
+          "has_pull_request_target": false,
+          "permissions_block_present": false
+        },
+        {
+          "path": ".github/workflows/gemini-invoke.yml",
+          "content_lines": 249,
+          "sha_pinned_actions_count": 1,
+          "tag_pinned_actions_count": 0,
+          "has_pull_request_target": false,
+          "permissions_block_present": false
+        },
+        {
+          "path": ".github/workflows/gemini-triage.yml",
+          "content_lines": 204,
+          "sha_pinned_actions_count": 3,
+          "tag_pinned_actions_count": 0,
+          "has_pull_request_target": false,
+          "permissions_block_present": false
+        },
+        {
+          "path": ".github/workflows/docker-nightly.yml",
+          "content_lines": 61,
+          "sha_pinned_actions_count": 0,
+          "tag_pinned_actions_count": 7,
+          "has_pull_request_target": false,
+          "permissions_block_present": false
+        },
+        {
+          "path": ".github/workflows/gemini-scheduled-triage.yml",
+          "content_lines": 317,
+          "sha_pinned_actions_count": 3,
+          "tag_pinned_actions_count": 0,
+          "has_pull_request_target": false,
+          "permissions_block_present": false
+        },
+        {
+          "path": ".github/workflows/create-snapshot.yml",
+          "content_lines": 148,
+          "sha_pinned_actions_count": 0,
+          "tag_pinned_actions_count": 16,
+          "has_pull_request_target": false,
+          "permissions_block_present": false
+        },
+        {
+          "path": ".github/workflows/gemini-review.yml",
+          "content_lines": 276,
+          "sha_pinned_actions_count": 2,
+          "tag_pinned_actions_count": 0,
+          "has_pull_request_target": false,
+          "permissions_block_present": false
+        }
+      ]
+    },
+    "code_patterns": {
+      "agent_rule_files": [
+        {
+          "path": "AGENTS.md",
+          "kind": "agents",
+          "line_count": 71,
+          "ci_amplified": false
+        }
+      ],
+      "readme_paste_blocks": {
+        "scanned": true,
+        "entries": [],
+        "entries_count": 0
+      },
+      "dangerous_primitives": {
+        "scanned": true,
+        "exec": {
+          "hit_count": 4,
+          "files": [
+            {
+              "file": "compare_loop.py",
+              "first_match": {
+                "line": 21,
+                "snippet": "    subprocess.run(['powershell', '-Command', f'.\\\\scripts\\\\tests\\\\compare-versions.ps1 -max_items {i} -max_passes 1 -No"
+              }
+            },
+            {
+              "file": "integrations/KiCad/kicad-freerouting/plugins/plugin.py",
+              "first_match": {
+                "line": 429,
+                "snippet": "        # Use subprocess.run for better control and capturing output"
+              }
+            },
+            {
+              "file": "integrations/KiCad/installjava/installjava.py",
+              "first_match": {
+                "line": 112,
+                "snippet": "    os.system(unzip_command)"
+              }
+            },
+            {
+              "file": "integrations/KiCad/installjava/checkjava.py",
+              "first_match": {
+                "line": 16,
+                "snippet": "        javaHome = subprocess.check_output(javaHomeCommand, shell=True).decode().strip()"
+              }
+            }
+          ]
+        },
+        "deserialization": {
+          "hit_count": 35,
+          "files": [
+            {
+              "file": "src_v19/main/java/app/freerouting/board/BasicBoard.java",
+              "first_match": {
+                "line": 25,
+                "snippet": "import java.io.ObjectInputStream;"
+              }
+            },
+            {
+              "file": "src_v19/main/java/app/freerouting/board/Communication.java",
+              "first_match": {
+                "line": 7,
+                "snippet": "import java.io.ObjectInputStream;"
+              }
+            },
+            {
+              "file": "src_v19/main/java/app/freerouting/rules/BoardRules.java",
+              "first_match": {
+                "line": 11,
+                "snippet": "import java.io.ObjectInputStream;"
+              }
+            },
+            {
+              "file": "src_v19/main/java/app/freerouting/interactive/Settings.java",
+              "first_match": {
+                "line": 8,
+                "snippet": "import java.io.ObjectInputStream;"
+              }
+            },
+            {
+              "file": "src_v19/main/java/app/freerouting/interactive/BoardHandling.java",
+              "first_match": {
+                "line": 44,
+                "snippet": "import java.io.ObjectInputStream;"
+              }
+            },
+            {
+              "file": "src_v19/main/java/app/freerouting/interactive/BoardHandlingHeadless.java",
+              "first_match": {
+                "line": 15,
+                "snippet": "import java.io.ObjectInputStream;"
+              }
+            },
+            {
+              "file": "src_v19/main/java/app/freerouting/gui/WindowSnapshot.java",
+              "first_match": {
+                "line": 28,
+                "snippet": "import java.io.ObjectInputStream;"
+              }
+            },
+            {
+              "file": "src_v19/main/java/app/freerouting/gui/BoardFrame.java",
+              "first_match": {
+                "line": 35,
+                "snippet": "import java.io.ObjectInputStream;"
+              }
+            },
+            {
+              "file": "src_v19/main/java/app/freerouting/gui/WindowRouteParameter.java",
+              "first_match": {
+                "line": 31,
+                "snippet": "import java.io.ObjectInputStream;"
+              }
+            },
+            {
+              "file": "src_v19/main/java/app/freerouting/gui/WindowObjectListWithFilter.java",
+              "first_match": {
+                "line": 10,
+                "snippet": "import java.io.ObjectInputStream;"
+              }
+            },
+            {
+              "file": "src_v19/main/java/app/freerouting/gui/BoardSavableSubWindow.java",
+              "first_match": {
+                "line": 7,
+                "snippet": "import java.io.ObjectInputStream;"
+              }
+            },
+            {
+              "file": "src_v19/main/java/app/freerouting/gui/WindowObjectList.java",
+              "first_match": {
+                "line": 23,
+                "snippet": "import java.io.ObjectInputStream;"
+              }
+            },
+            {
+              "file": "src_v19/main/java/app/freerouting/boardgraphics/ColorTableModel.java",
+              "first_match": {
+                "line": 5,
+                "snippet": "import java.io.ObjectInputStream;"
+              }
+            },
+            {
+              "file": "src_v19/main/java/app/freerouting/boardgraphics/GraphicsContext.java",
+              "first_match": {
+                "line": 29,
+                "snippet": "import java.io.ObjectInputStream;"
+              }
+            },
+            {
+              "file": "src_v19/main/java/app/freerouting/boardgraphics/ItemColorTableModel.java",
+              "first_match": {
+                "line": 7,
+                "snippet": "import java.io.ObjectInputStream;"
+              }
+            },
+            {
+              "file": "src_v19/main/java/app/freerouting/boardgraphics/OtherColorTableModel.java",
+              "first_match": {
+                "line": 5,
+                "snippet": "import java.io.ObjectInputStream;"
+              }
+            },
+            {
+              "file": "src/main/java/app/freerouting/settings/RouterSettings.java",
+              "first_match": {
+                "line": 189,
+                "snippet": "    // deserialized without going through DefaultSettings (e.g. from board history)."
+              }
+            },
+            {
+              "file": "src/main/java/app/freerouting/management/gson/ByteArrayToBase64TypeAdapter.java",
+              "first_match": {
+                "line": 21,
+                "snippet": "  public byte[] deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseExceptio"
+              }
+            },
+            {
+              "file": "src/main/java/app/freerouting/autoroute/BoardHistory.java",
+              "first_match": {
+                "line": 106,
+                "snippet": "          return (RoutingBoard) BasicBoard.deserialize(entry.board);"
+              }
+            },
+            {
+              "file": "src/main/java/app/freerouting/board/BasicBoard.java",
+              "first_match": {
+                "line": 25,
+                "snippet": "import java.io.ObjectInputStream;"
+              }
+            }
+          ]
+        },
+        "network": {
+          "hit_count": 3,
+          "files": [
+            {
+              "file": "docs/API/API_authentication.md",
+              "first_match": {
+                "line": 444,
+                "snippet": "response = requests.get("
+              }
+            },
+            {
+              "file": "integrations/KiCad/kicad-freerouting/plugins/plugin.py",
+              "first_match": {
+                "line": 16,
+                "snippet": "import urllib.request"
+              }
+            },
+            {
+              "file": "integrations/KiCad/installjava/installjava.py",
+              "first_match": {
+                "line": 10,
+                "snippet": "import urllib.request"
+              }
+            }
+          ]
+        },
+        "secrets": {
+          "hit_count": 1,
+          "files": [
+            {
+              "file": "docs/API/API_authentication.md",
+              "first_match": {
+                "line": 179,
+                "snippet": "export FREEROUTING__API_SERVER__AUTHENTICATION__GOOGLE_SHEETS__GOOGLE_API_KEY=\"YOUR_GOOGLE_API_KEY\""
+              }
+            }
+          ]
+        },
+        "vendor_keys": {
+          "hit_count": 0,
+          "files": []
+        },
+        "tls_cors": {
+          "hit_count": 4,
+          "files": [
+            {
+              "file": "docs/settings.md",
+              "first_match": {
+                "line": 63,
+                "snippet": "      \"http://0.0.0.0:37864\""
+              }
+            },
+            {
+              "file": "docs/API/API_authentication.md",
+              "first_match": {
+                "line": 157,
+                "snippet": "    \"endpoints\": [\"https://0.0.0.0:37864\"],"
+              }
+            },
+            {
+              "file": "src/main/java/app/freerouting/settings/ApiServerSettings.java",
+              "first_match": {
+                "line": 15,
+                "snippet": "  public String[] endpoints = { \"https://0.0.0.0:37864\" };"
+              }
+            },
+            {
+              "file": "integrations/KiCad/kicad-freerouting/plugins/plugin.py",
+              "first_match": {
+                "line": 448,
+                "snippet": "    return \"0.0.0.0\""
+              }
+            }
+          ]
+        },
+        "sql_injection": {
+          "hit_count": 0,
+          "files": []
+        },
+        "cmd_injection": {
+          "hit_count": 0,
+          "files": []
+        },
+        "auth_bypass": {
+          "hit_count": 0,
+          "files": []
+        },
+        "path_traversal": {
+          "hit_count": 0,
+          "files": []
+        },
+        "archive_unsafe": {
+          "hit_count": 0,
+          "files": []
+        },
+        "ssrf": {
+          "hit_count": 0,
+          "files": []
+        },
+        "xss": {
+          "hit_count": 0,
+          "files": []
+        },
+        "weak_crypto": {
+          "hit_count": 0,
+          "files": []
+        },
+        "debug_flags": {
+          "hit_count": 0,
+          "files": []
+        }
+      },
+      "executable_files": [
+        {
+          "path": "Dockerfile",
+          "kind": "container-build",
+          "runtime": "docker",
+          "line_count": 33,
+          "file_sha": "e1c561d66e8c",
+          "has_network_call": false,
+          "has_env_var_pattern": false
+        },
+        {
+          "path": ".github/workflows/gemini-invoke.yml",
+          "kind": "ci-workflow",
+          "runtime": "github-actions",
+          "line_count": 249,
+          "file_sha": "3038fac2d5f7",
+          "has_network_call": false,
+          "has_env_var_pattern": true
+        },
+        {
+          "path": ".github/workflows/gradle-build-on-pr.yml",
+          "kind": "ci-workflow",
+          "runtime": "github-actions",
+          "line_count": 24,
+          "file_sha": "e8ce3fa497ac",
+          "has_network_call": false,
+          "has_env_var_pattern": true
+        },
+        {
+          "path": ".github/workflows/gemini-scheduled-triage.yml",
+          "kind": "ci-workflow",
+          "runtime": "github-actions",
+          "line_count": 317,
+          "file_sha": "0784713009c8",
+          "has_network_call": false,
+          "has_env_var_pattern": true
+        },
+        {
+          "path": ".github/workflows/docker-nightly.yml",
+          "kind": "ci-workflow",
+          "runtime": "github-actions",
+          "line_count": 61,
+          "file_sha": "236155e236ba",
+          "has_network_call": false,
+          "has_env_var_pattern": true
+        },
+        {
+          "path": ".github/workflows/create-snapshot.yml",
+          "kind": "ci-workflow",
+          "runtime": "github-actions",
+          "line_count": 148,
+          "file_sha": "52d7c33e8e5d",
+          "has_network_call": false,
+          "has_env_var_pattern": true
+        },
+        {
+          "path": ".github/workflows/docker-release.yml",
+          "kind": "ci-workflow",
+          "runtime": "github-actions",
+          "line_count": 68,
+          "file_sha": "abb16fc88655",
+          "has_network_call": false,
+          "has_env_var_pattern": true
+        },
+        {
+          "path": ".github/workflows/deploy-pages.yml",
+          "kind": "ci-workflow",
+          "runtime": "github-actions",
+          "line_count": 40,
+          "file_sha": "a942506ba061",
+          "has_network_call": false,
+          "has_env_var_pattern": true
+        },
+        {
+          "path": ".github/workflows/create-release.yml",
+          "kind": "ci-workflow",
+          "runtime": "github-actions",
+          "line_count": 158,
+          "file_sha": "2bace45ebb78",
+          "has_network_call": false,
+          "has_env_var_pattern": true
+        },
+        {
+          "path": ".github/workflows/gemini-review.yml",
+          "kind": "ci-workflow",
+          "runtime": "github-actions",
+          "line_count": 276,
+          "file_sha": "06ee596d009d",
+          "has_network_call": false,
+          "has_env_var_pattern": true
+        },
+        {
+          "path": ".github/workflows/gemini-triage.yml",
+          "kind": "ci-workflow",
+          "runtime": "github-actions",
+          "line_count": 204,
+          "file_sha": "93d24dc3bd29",
+          "has_network_call": false,
+          "has_env_var_pattern": true
+        },
+        {
+          "path": ".github/workflows/stale.yml",
+          "kind": "ci-workflow",
+          "runtime": "github-actions",
+          "line_count": 45,
+          "file_sha": "89506db1d832",
+          "has_network_call": false,
+          "has_env_var_pattern": true
+        },
+        {
+          "path": ".github/workflows/gemini-dispatch.yml",
+          "kind": "ci-workflow",
+          "runtime": "github-actions",
+          "line_count": 204,
+          "file_sha": "f9d827e2efb8",
+          "has_network_call": false,
+          "has_env_var_pattern": true
+        }
+      ],
+      "install_hooks": []
+    },
+    "prompt_injection_scan": {
+      "scanned_files": [
+        "AGENTS.md"
+      ],
+      "injection_signals": [],
+      "signal_count": 0,
+      "scan_method": "tarball"
+    },
+    "dependencies": {
+      "manifest_files": [
+        {
+          "path": "build.gradle",
+          "ecosystem": "Maven"
+        }
+      ],
+      "runtime": [],
+      "runtime_count": 0,
+      "dev": [],
+      "dev_count": 0,
+      "dependabot_alerts": {
+        "status": 403,
+        "alerts_count": null,
+        "note": "admin scope required; falling back to osv.dev"
+      },
+      "osv_lookups": [],
+      "dependabot_config": {
+        "present": true,
+        "ecosystems_tracked": [
+          "gradle"
+        ],
+        "raw_snippet": "# To get started with Dependabot version updates, you'll need to specify which\n# package ecosystems to update and where the package manifests are located.\n# Please see the documentation for all configuration options:\n# https://help.github.com/github/administering-a-repository/configuration-options-for-dependency-updates\n\nversion: 2\nupdates:\n  - package-ecosystem: \"gradle\" # See documentation for possible values\n    directory: \"/\" # Location of package manifests\n    schedule:\n      interval: \"dai"
+      }
+    },
+    "pr_review": {
+      "total_closed_prs": 105,
+      "sample_size": 105,
+      "total_merged_lifetime": 105,
+      "prs": [
+        {
+          "number": 635,
+          "title": "Fix issue 230 - Router uses inactive layers",
+          "review_decision": "",
+          "any_review_count": 3,
+          "self_merge": true,
+          "merged_at": "2026-04-17T14:22:29Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 634,
+          "title": "Fix endless passes if impossible to route nets were found",
+          "review_decision": "",
+          "any_review_count": 3,
+          "self_merge": true,
+          "merged_at": "2026-04-16T22:52:36Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 633,
+          "title": "DSN Loader Isolation \u2014 Refactor to a Self-Contained, Framework-Independent I/O Layer",
+          "review_decision": "",
+          "any_review_count": 5,
+          "self_merge": true,
+          "merged_at": "2026-04-15T21:30:19Z",
+          "labels": [
+            "enhancement"
+          ],
+          "security_flagged": false
+        },
+        {
+          "number": 622,
+          "title": "Router algorithm performance improvement",
+          "review_decision": "",
+          "any_review_count": 5,
+          "self_merge": true,
+          "merged_at": "2026-04-09T17:25:14Z",
+          "labels": [
+            "enhancement"
+          ],
+          "security_flagged": false
+        },
+        {
+          "number": 621,
+          "title": "feat: allow GET /jobs/{jobId}/output to return partial output for in-progress jobs",
+          "review_decision": "",
+          "any_review_count": 1,
+          "self_merge": false,
+          "merged_at": "2026-04-05T12:30:24Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 619,
+          "title": "API authentication toggle and authentication providers",
+          "review_decision": "",
+          "any_review_count": 4,
+          "self_merge": true,
+          "merged_at": "2026-02-23T12:07:15Z",
+          "labels": [
+            "enhancement"
+          ],
+          "security_flagged": false
+        },
+        {
+          "number": 618,
+          "title": "Enhanced logging and debug control and documentation",
+          "review_decision": "",
+          "any_review_count": 4,
+          "self_merge": true,
+          "merged_at": "2026-02-20T16:35:32Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 616,
+          "title": "Settings merger and debug control",
+          "review_decision": "",
+          "any_review_count": 3,
+          "self_merge": true,
+          "merged_at": "2026-02-20T15:33:11Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 615,
+          "title": "Add version v1.9 source code, compilation and comparison scripts",
+          "review_decision": "",
+          "any_review_count": 3,
+          "self_merge": true,
+          "merged_at": "2026-02-20T12:11:47Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 611,
+          "title": "Add API Server HTTP CORS Header Support",
+          "review_decision": "",
+          "any_review_count": 1,
+          "self_merge": false,
+          "merged_at": "2026-02-20T17:35:20Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 607,
+          "title": "Reduce the complexity of the codebase by removing not-used features",
+          "review_decision": "",
+          "any_review_count": 4,
+          "self_merge": true,
+          "merged_at": "2026-01-19T21:35:48Z",
+          "labels": [
+            "enhancement"
+          ],
+          "security_flagged": false
+        },
+        {
+          "number": 606,
+          "title": "Robust router settings management",
+          "review_decision": "",
+          "any_review_count": 5,
+          "self_merge": true,
+          "merged_at": "2026-01-19T15:35:45Z",
+          "labels": [
+            "enhancement"
+          ],
+          "security_flagged": false
+        },
+        {
+          "number": 605,
+          "title": "Remove fanout feature and related code",
+          "review_decision": "",
+          "any_review_count": 3,
+          "self_merge": true,
+          "merged_at": "2026-01-17T13:28:05Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 603,
+          "title": "Routing performance improvement",
+          "review_decision": "",
+          "any_review_count": 3,
+          "self_merge": true,
+          "merged_at": "2026-01-17T12:55:50Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 601,
+          "title": "KiCad compatible Design Rules Checker (DRC) with CLI support",
+          "review_decision": "",
+          "any_review_count": 3,
+          "self_merge": true,
+          "merged_at": "2026-01-12T18:22:47Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 594,
+          "title": "Progressed & Bugs Fixed & Remove old freerouting-laucher",
+          "review_decision": "APPROVED",
+          "any_review_count": 8,
+          "self_merge": false,
+          "merged_at": "2026-01-12T21:17:04Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 592,
+          "title": "Add modular API key validation with Google Sheets provider",
+          "review_decision": "",
+          "any_review_count": 4,
+          "self_merge": true,
+          "merged_at": "2026-01-08T14:49:04Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 587,
+          "title": "OpenAPI 3.0 documentation and Swagger UI",
+          "review_decision": "",
+          "any_review_count": 4,
+          "self_merge": true,
+          "merged_at": "2026-01-08T09:49:06Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 577,
+          "title": "Issue 555 performance regression",
+          "review_decision": "",
+          "any_review_count": 2,
+          "self_merge": true,
+          "merged_at": "2025-11-24T13:57:20Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 576,
+          "title": "Add DRC infrastructure with KiCad-compatible JSON output",
+          "review_decision": "",
+          "any_review_count": 3,
+          "self_merge": false,
+          "merged_at": "2025-12-11T15:53:04Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 567,
+          "title": "Fix copper to edge clearance not respected on non-zero layers",
+          "review_decision": "",
+          "any_review_count": 3,
+          "self_merge": false,
+          "merged_at": "2025-12-11T16:01:08Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 549,
+          "title": "Fix potential memory leaks and reduce memory consumption",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2025-09-16T07:27:53Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 548,
+          "title": "Escape numerical padstack names (fixes #411)",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2025-09-16T07:11:09Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 547,
+          "title": "Feat: add support for user-supplied random seed (fixes #545)",
+          "review_decision": "",
+          "any_review_count": 3,
+          "self_merge": false,
+          "merged_at": "2025-09-16T09:02:08Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 544,
+          "title": "Fix race condition in StoppableThread",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2025-09-15T10:44:53Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 543,
+          "title": "Correctly update max value in Clearance-Matrix",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2025-09-15T10:43:57Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 542,
+          "title": "Avoid modifying collection while iterating over it (related to issue #491)",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2025-09-15T10:41:19Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 541,
+          "title": "Fix issue 522",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2025-09-15T10:06:14Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 454,
+          "title": "Update korean translation",
+          "review_decision": "",
+          "any_review_count": 1,
+          "self_merge": false,
+          "merged_at": "2025-04-10T17:15:09Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 446,
+          "title": "Bump org.eclipse.jetty:jetty-util from 12.0.15 to 12.0.19",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2025-04-10T08:42:17Z",
+          "labels": [
+            "dependencies",
+            "java"
+          ],
+          "security_flagged": false
+        },
+        {
+          "number": 443,
+          "title": "Fix for clearance_class issue",
+          "review_decision": "",
+          "any_review_count": 1,
+          "self_merge": false,
+          "merged_at": "2025-04-10T08:36:26Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 439,
+          "title": "Bump com.google.cloud:google-cloud-bigquery from 2.43.3 to 2.49.0",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2025-04-10T08:41:33Z",
+          "labels": [
+            "dependencies",
+            "java"
+          ],
+          "security_flagged": false
+        },
+        {
+          "number": 430,
+          "title": "Bump jakarta.validation:jakarta.validation-api from 3.1.0 to 3.1.1",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2025-04-10T08:41:12Z",
+          "labels": [
+            "dependencies"
+          ],
+          "security_flagged": false
+        },
+        {
+          "number": 428,
+          "title": "Bump com.google.code.gson:gson from 2.11.0 to 2.12.1",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2025-04-10T08:41:43Z",
+          "labels": [
+            "dependencies"
+          ],
+          "security_flagged": false
+        },
+        {
+          "number": 422,
+          "title": "Update Japanese translation and Fix some translation issues",
+          "review_decision": "APPROVED",
+          "any_review_count": 1,
+          "self_merge": false,
+          "merged_at": "2025-02-18T13:07:04Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 421,
+          "title": "Remove Unicode character PHI (U+03A6) in Kicad-plugin",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2025-02-18T13:10:11Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 385,
+          "title": "Create a docker build and push workflow for ghcr (Github Container Registry)",
+          "review_decision": "CHANGES_REQUESTED",
+          "any_review_count": 1,
+          "self_merge": false,
+          "merged_at": "2025-02-20T13:45:29Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 374,
+          "title": "Bump org.apache.logging.log4j:log4j-core from 2.23.1 to 2.24.1",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2024-11-14T12:41:53Z",
+          "labels": [
+            "dependencies"
+          ],
+          "security_flagged": false
+        },
+        {
+          "number": 373,
+          "title": "Bump org.eclipse.jetty:jetty-security from 12.0.14 to 12.0.15",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2024-11-14T12:42:18Z",
+          "labels": [
+            "dependencies"
+          ],
+          "security_flagged": true
+        },
+        {
+          "number": 372,
+          "title": "Bump org.glassfish.jersey.core:jersey-client from 3.1.7 to 3.1.9",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2024-11-14T12:42:29Z",
+          "labels": [
+            "dependencies"
+          ],
+          "security_flagged": false
+        },
+        {
+          "number": 371,
+          "title": "Bump org.eclipse.jetty:jetty-server from 12.0.14 to 12.0.15",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2024-11-14T12:42:38Z",
+          "labels": [
+            "dependencies"
+          ],
+          "security_flagged": false
+        },
+        {
+          "number": 342,
+          "title": "fix: export for dto added, required when only API is run",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2024-09-10T09:04:12Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 314,
+          "title": "Add Traditional Chinese (Taiwan) translations",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2024-06-27T07:59:11Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 313,
+          "title": "Freerouting daemon & progress update",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2024-06-27T09:19:03Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 307,
+          "title": "Chinese Translation Update By L1uTongwei",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2024-06-07T11:08:43Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 306,
+          "title": "Bump com.google.code.gson:gson from 2.10.1 to 2.11.0",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2024-06-07T11:07:41Z",
+          "labels": [
+            "dependencies"
+          ],
+          "security_flagged": false
+        },
+        {
+          "number": 296,
+          "title": "Display-hover-info",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2024-04-11T09:30:24Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 291,
+          "title": "fixed some chinese translation",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2024-04-05T08:08:15Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 282,
+          "title": "Bump org.apache.logging.log4j:log4j-core from 2.22.1 to 2.23.1",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2024-04-11T09:31:35Z",
+          "labels": [
+            "dependencies"
+          ],
+          "security_flagged": false
+        },
+        {
+          "number": 281,
+          "title": "Bump org.apache.logging.log4j:log4j-api from 2.22.1 to 2.23.1",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2024-04-11T09:32:53Z",
+          "labels": [
+            "dependencies"
+          ],
+          "security_flagged": false
+        }
+      ],
+      "formal_review_rate": 9.5,
+      "any_review_rate": 32.4,
+      "self_merge_count": 19,
+      "security_flagged_count": 1,
+      "security_flagged_numbers": [
+        325,
+        331,
+        340,
+        354,
+        373,
+        378,
+        392,
+        407,
+        412,
+        414,
+        458,
+        550,
+        556,
+        561,
+        597
+      ]
+    },
+    "open_prs": {
+      "entries": [
+        {
+          "number": 600,
+          "title": "Bump com.google.cloud:google-cloud-core from 2.62.1 to 2.62.2",
+          "author": "app/dependabot",
+          "created_at": "2026-01-09T11:31:28Z"
+        },
+        {
+          "number": 599,
+          "title": "Bump com.google.api:gax from 2.72.1 to 2.72.2",
+          "author": "app/dependabot",
+          "created_at": "2026-01-09T11:31:25Z"
+        },
+        {
+          "number": 598,
+          "title": "Bump org.apache.logging.log4j:log4j-core from 2.25.2 to 2.25.3",
+          "author": "app/dependabot",
+          "created_at": "2026-01-09T11:31:22Z"
+        },
+        {
+          "number": 597,
+          "title": "Bump com.google.auth:google-auth-library-oauth2-http from 1.40.0 to 1.41.0",
+          "author": "app/dependabot",
+          "created_at": "2026-01-09T11:31:16Z"
+        },
+        {
+          "number": 596,
+          "title": "Bump org.openrewrite.recipe:rewrite-static-analysis from 2.23.0 to 2.25.0",
+          "author": "app/dependabot",
+          "created_at": "2026-01-09T11:31:08Z"
+        }
+      ],
+      "count": 5
+    },
+    "closed_not_merged_prs": {
+      "entries": [
+        {
+          "number": 617,
+          "title": "Enhanced logging and debug control and documentation",
+          "closed_at": "2026-02-20T16:19:51Z"
+        },
+        {
+          "number": 580,
+          "title": "Add Hash Calculations",
+          "closed_at": "2025-12-24T18:12:33Z"
+        },
+        {
+          "number": 572,
+          "title": "Bug analyzation",
+          "closed_at": "2026-01-12T18:24:00Z"
+        },
+        {
+          "number": 571,
+          "title": "Bump org.glassfish.jersey.containers:jersey-container-servlet from 3.1.10 to 4.0.0",
+          "closed_at": "2026-01-08T14:49:44Z"
+        },
+        {
+          "number": 570,
+          "title": "Bump org.glassfish.jersey.core:jersey-server from 3.1.10 to 4.0.0",
+          "closed_at": "2026-01-08T14:49:44Z"
+        },
+        {
+          "number": 569,
+          "title": "Bump org.glassfish.jersey.media:jersey-media-sse from 3.1.10 to 4.0.0",
+          "closed_at": "2026-01-08T14:49:43Z"
+        },
+        {
+          "number": 568,
+          "title": "Bump org.glassfish.jersey.media:jersey-media-json-jackson from 3.1.11 to 4.0.0",
+          "closed_at": "2026-01-08T14:49:43Z"
+        },
+        {
+          "number": 563,
+          "title": "Bump org.eclipse.jetty:jetty-util from 12.0.19 to 12.1.3",
+          "closed_at": "2025-11-15T19:50:18Z"
+        },
+        {
+          "number": 562,
+          "title": "Add support for intelligent copper plane/pour routing in autorouter",
+          "closed_at": "2025-10-23T14:20:00Z"
+        },
+        {
+          "number": 561,
+          "title": "Bump com.google.auth:google-auth-library-oauth2-http from 1.33.1 to 1.40.0",
+          "closed_at": "2026-01-09T11:31:20Z"
+        },
+        {
+          "number": 560,
+          "title": "Bump org.eclipse.jetty:jetty-util from 12.0.19 to 12.1.2",
+          "closed_at": "2025-10-21T11:04:26Z"
+        },
+        {
+          "number": 556,
+          "title": "Bump com.google.auth:google-auth-library-oauth2-http from 1.33.1 to 1.39.1",
+          "closed_at": "2025-10-15T11:05:11Z"
+        },
+        {
+          "number": 554,
+          "title": "Bump org.glassfish.jersey.media:jersey-media-sse from 3.1.10 to 3.1.11",
+          "closed_at": "2025-11-17T11:05:32Z"
+        },
+        {
+          "number": 553,
+          "title": "Bump org.eclipse.jetty:jetty-util from 12.0.19 to 12.1.1",
+          "closed_at": "2025-10-09T11:04:06Z"
+        },
+        {
+          "number": 552,
+          "title": "Bump org.glassfish.jersey.core:jersey-server from 3.1.10 to 3.1.11",
+          "closed_at": "2025-11-17T11:05:35Z"
+        },
+        {
+          "number": 551,
+          "title": "Bump org.glassfish.jersey.containers:jersey-container-servlet from 3.1.10 to 3.1.11",
+          "closed_at": "2025-11-17T11:05:40Z"
+        },
+        {
+          "number": 550,
+          "title": "Bump com.google.auth:google-auth-library-oauth2-http from 1.33.1 to 1.39.0",
+          "closed_at": "2025-09-18T11:03:55Z"
+        },
+        {
+          "number": 546,
+          "title": "Bump com.google.cloud:google-cloud-bigquery from 2.49.0 to 2.55.0",
+          "closed_at": "2025-09-16T09:31:50Z"
+        },
+        {
+          "number": 540,
+          "title": "Bump com.google.cloud:google-cloud-core from 2.53.1 to 2.60.1",
+          "closed_at": "2025-09-16T09:32:07Z"
+        },
+        {
+          "number": 539,
+          "title": "Bump com.google.api:gax from 2.63.1 to 2.70.1",
+          "closed_at": "2025-09-16T09:32:00Z"
+        },
+        {
+          "number": 538,
+          "title": "Bump com.google.cloud:google-cloud-core-http from 2.53.1 to 2.60.1",
+          "closed_at": "2025-09-16T09:32:07Z"
+        },
+        {
+          "number": 536,
+          "title": "Bump org.glassfish.jersey.media:jersey-media-json-jackson from 3.1.10 to 3.1.11",
+          "closed_at": "2025-09-16T09:32:02Z"
+        },
+        {
+          "number": 535,
+          "title": "Bump com.google.cloud:google-cloud-bigquery from 2.49.0 to 2.54.2",
+          "closed_at": "2025-09-15T12:09:05Z"
+        },
+        {
+          "number": 534,
+          "title": "Bump com.google.api:gax from 2.63.1 to 2.70.0",
+          "closed_at": "2025-09-08T11:42:48Z"
+        },
+        {
+          "number": 533,
+          "title": "Bump com.google.cloud:google-cloud-core-http from 2.53.1 to 2.60.0",
+          "closed_at": "2025-09-08T11:41:01Z"
+        },
+        {
+          "number": 532,
+          "title": "Bump com.google.cloud:google-cloud-core from 2.53.1 to 2.60.0",
+          "closed_at": "2025-09-08T11:43:07Z"
+        },
+        {
+          "number": 528,
+          "title": "Bump com.google.cloud:google-cloud-bigquery from 2.49.0 to 2.54.1",
+          "closed_at": "2025-08-27T18:41:00Z"
+        },
+        {
+          "number": 527,
+          "title": "Bump com.google.cloud:google-cloud-core from 2.53.1 to 2.59.0",
+          "closed_at": "2025-08-20T12:47:17Z"
+        },
+        {
+          "number": 526,
+          "title": "Bump com.google.cloud:google-cloud-core-http from 2.53.1 to 2.59.0",
+          "closed_at": "2025-08-20T12:58:08Z"
+        },
+        {
+          "number": 525,
+          "title": "Bump com.google.api:gax from 2.63.1 to 2.69.0",
+          "closed_at": "2025-08-20T13:04:19Z"
+        },
+        {
+          "number": 524,
+          "title": "Bump com.google.cloud:google-cloud-bigquery from 2.49.0 to 2.54.0",
+          "closed_at": "2025-08-14T11:39:48Z"
+        },
+        {
+          "number": 521,
+          "title": "Bump com.google.cloud:google-cloud-core-http from 2.53.1 to 2.58.2",
+          "closed_at": "2025-08-05T15:22:20Z"
+        },
+        {
+          "number": 520,
+          "title": "Bump com.google.api:gax from 2.63.1 to 2.68.2",
+          "closed_at": "2025-08-05T13:51:13Z"
+        },
+        {
+          "number": 519,
+          "title": "Bump com.google.cloud:google-cloud-core from 2.53.1 to 2.58.2",
+          "closed_at": "2025-08-05T17:32:22Z"
+        },
+        {
+          "number": 517,
+          "title": "Bump com.google.cloud:google-cloud-bigquery from 2.49.0 to 2.53.0",
+          "closed_at": "2025-08-01T11:36:08Z"
+        },
+        {
+          "number": 516,
+          "title": "Bump com.google.api:gax from 2.63.1 to 2.68.1",
+          "closed_at": "2025-07-23T11:58:52Z"
+        },
+        {
+          "number": 515,
+          "title": "Bump com.google.cloud:google-cloud-core-http from 2.53.1 to 2.58.1",
+          "closed_at": "2025-07-23T11:58:56Z"
+        },
+        {
+          "number": 514,
+          "title": "Bump com.google.cloud:google-cloud-core from 2.53.1 to 2.58.1",
+          "closed_at": "2025-07-23T11:58:36Z"
+        },
+        {
+          "number": 512,
+          "title": "Bump com.google.cloud:google-cloud-bigquery from 2.49.0 to 2.52.0",
+          "closed_at": "2025-07-15T11:42:00Z"
+        },
+        {
+          "number": 511,
+          "title": "Bump com.google.cloud:google-cloud-core from 2.53.1 to 2.58.0",
+          "closed_at": "2025-07-09T11:25:35Z"
+        },
+        {
+          "number": 510,
+          "title": "Bump com.google.cloud:google-cloud-core-http from 2.53.1 to 2.58.0",
+          "closed_at": "2025-07-09T11:25:51Z"
+        },
+        {
+          "number": 509,
+          "title": "Bump com.google.api:gax from 2.63.1 to 2.68.0",
+          "closed_at": "2025-07-09T11:26:02Z"
+        },
+        {
+          "number": 506,
+          "title": "Bump com.google.cloud:google-cloud-core from 2.53.1 to 2.57.2",
+          "closed_at": "2025-06-25T11:42:11Z"
+        },
+        {
+          "number": 505,
+          "title": "Bump com.google.api:gax from 2.63.1 to 2.67.2",
+          "closed_at": "2025-06-25T11:41:43Z"
+        },
+        {
+          "number": 504,
+          "title": "Bump com.google.cloud:google-cloud-core-http from 2.53.1 to 2.57.2",
+          "closed_at": "2025-06-25T11:41:54Z"
+        },
+        {
+          "number": 503,
+          "title": "Bump com.google.cloud:google-cloud-core from 2.53.1 to 2.57.1",
+          "closed_at": "2025-06-18T11:07:21Z"
+        },
+        {
+          "number": 502,
+          "title": "Bump com.google.cloud:google-cloud-core-http from 2.53.1 to 2.57.1",
+          "closed_at": "2025-06-18T11:06:42Z"
+        },
+        {
+          "number": 501,
+          "title": "Bump com.google.api:gax from 2.63.1 to 2.67.1",
+          "closed_at": "2025-06-18T11:06:48Z"
+        },
+        {
+          "number": 499,
+          "title": "Bump com.google.cloud:google-cloud-bigquery from 2.49.0 to 2.51.0",
+          "closed_at": "2025-06-26T11:28:00Z"
+        },
+        {
+          "number": 497,
+          "title": "Bump com.google.cloud:google-cloud-core from 2.53.1 to 2.57.0",
+          "closed_at": "2025-06-17T11:48:46Z"
+        },
+        {
+          "number": 496,
+          "title": "Bump com.google.api:gax from 2.63.1 to 2.67.0",
+          "closed_at": "2025-06-17T11:48:13Z"
+        },
+        {
+          "number": 495,
+          "title": "Bump com.google.cloud:google-cloud-core-http from 2.53.1 to 2.57.0",
+          "closed_at": "2025-06-17T11:48:17Z"
+        },
+        {
+          "number": 493,
+          "title": "Bump com.google.cloud:google-cloud-bigquery from 2.49.0 to 2.50.1",
+          "closed_at": "2025-06-09T11:44:06Z"
+        },
+        {
+          "number": 487,
+          "title": "Bump com.google.cloud:google-cloud-core-http from 2.53.1 to 2.56.0",
+          "closed_at": "2025-06-03T11:17:50Z"
+        },
+        {
+          "number": 486,
+          "title": "Bump com.google.api:gax from 2.63.1 to 2.66.0",
+          "closed_at": "2025-06-03T11:18:00Z"
+        },
+        {
+          "number": 485,
+          "title": "Bump com.google.cloud:google-cloud-core from 2.53.1 to 2.56.0",
+          "closed_at": "2025-06-03T11:18:15Z"
+        },
+        {
+          "number": 482,
+          "title": "Bump com.google.cloud:google-cloud-bigquery from 2.49.0 to 2.50.0",
+          "closed_at": "2025-05-20T11:44:58Z"
+        },
+        {
+          "number": 481,
+          "title": "Bump com.google.cloud:google-cloud-core-http from 2.53.1 to 2.55.0",
+          "closed_at": "2025-05-14T11:28:15Z"
+        },
+        {
+          "number": 480,
+          "title": "Bump com.google.api:gax from 2.63.1 to 2.65.0",
+          "closed_at": "2025-05-14T11:28:02Z"
+        },
+        {
+          "number": 479,
+          "title": "Bump com.google.cloud:google-cloud-core from 2.53.1 to 2.55.0",
+          "closed_at": "2025-05-14T11:27:59Z"
+        },
+        {
+          "number": 477,
+          "title": "Bump com.google.cloud:google-cloud-core from 2.53.1 to 2.54.3",
+          "closed_at": "2025-05-06T11:30:23Z"
+        },
+        {
+          "number": 476,
+          "title": "Bump com.google.cloud:google-cloud-core-http from 2.53.1 to 2.54.3",
+          "closed_at": "2025-05-06T11:30:27Z"
+        },
+        {
+          "number": 475,
+          "title": "Bump com.google.api:gax from 2.63.1 to 2.64.3",
+          "closed_at": "2025-05-06T11:30:26Z"
+        },
+        {
+          "number": 472,
+          "title": "Bump com.google.cloud:google-cloud-bigquery from 2.49.0 to 2.49.2",
+          "closed_at": "2025-05-07T11:06:32Z"
+        },
+        {
+          "number": 471,
+          "title": "Bump com.google.cloud:google-cloud-bigquery from 2.49.0 to 2.49.1",
+          "closed_at": "2025-04-28T12:21:40Z"
+        },
+        {
+          "number": 470,
+          "title": "Bump com.google.cloud:google-cloud-core from 2.53.1 to 2.54.2",
+          "closed_at": "2025-05-05T12:05:03Z"
+        },
+        {
+          "number": 469,
+          "title": "Bump com.google.cloud:google-cloud-core-http from 2.53.1 to 2.54.2",
+          "closed_at": "2025-05-05T12:00:51Z"
+        },
+        {
+          "number": 468,
+          "title": "Bump com.google.code.gson:gson from 2.12.1 to 2.13.1",
+          "closed_at": "2025-08-30T12:52:47Z"
+        },
+        {
+          "number": 467,
+          "title": "Bump com.google.api:gax from 2.63.1 to 2.64.2",
+          "closed_at": "2025-05-05T12:00:45Z"
+        },
+        {
+          "number": 466,
+          "title": "Bump com.google.api:gax from 2.63.1 to 2.64.0",
+          "closed_at": "2025-04-24T12:00:29Z"
+        },
+        {
+          "number": 465,
+          "title": "Bump com.google.cloud:google-cloud-core from 2.53.1 to 2.54.0",
+          "closed_at": "2025-04-24T12:00:53Z"
+        },
+        {
+          "number": 464,
+          "title": "Bump com.google.cloud:google-cloud-core-http from 2.53.1 to 2.54.0",
+          "closed_at": "2025-04-24T12:00:51Z"
+        },
+        {
+          "number": 460,
+          "title": "Bump com.google.code.gson:gson from 2.12.1 to 2.13.0",
+          "closed_at": "2025-04-24T12:00:48Z"
+        },
+        {
+          "number": 459,
+          "title": "Bump com.google.api-client:google-api-client-appengine from 2.7.0 to 2.7.2",
+          "closed_at": "2025-04-12T11:46:05Z"
+        },
+        {
+          "number": 458,
+          "title": "Bump com.google.auth:google-auth-library-oauth2-http from 1.32.1 to 1.33.1",
+          "closed_at": "2025-04-12T11:46:00Z"
+        },
+        {
+          "number": 457,
+          "title": "Bump org.slf4j:slf4j-api from 2.0.16 to 2.0.17",
+          "closed_at": "2025-04-12T11:46:14Z"
+        },
+        {
+          "number": 456,
+          "title": "Bump org.slf4j:slf4j-nop from 2.0.16 to 2.0.17",
+          "closed_at": "2025-04-12T11:45:58Z"
+        },
+        {
+          "number": 455,
+          "title": "Bump com.github.ben-manes.versions from 0.51.0 to 0.52.0",
+          "closed_at": "2025-04-12T11:46:01Z"
+        },
+        {
+          "number": 453,
+          "title": "Bump org.apache.logging.log4j:log4j-api from 2.23.1 to 2.24.3",
+          "closed_at": "2025-04-10T12:49:53Z"
+        },
+        {
+          "number": 452,
+          "title": "Bump org.apache.logging.log4j:log4j-core from 2.24.1 to 2.24.3",
+          "closed_at": "2025-04-10T12:49:45Z"
+        },
+        {
+          "number": 451,
+          "title": "Bump com.google.cloud:google-cloud-core-http from 2.51.0 to 2.53.1",
+          "closed_at": "2025-04-10T12:50:03Z"
+        },
+        {
+          "number": 450,
+          "title": "Bump com.google.api:gax from 2.61.0 to 2.63.1",
+          "closed_at": "2025-04-10T12:49:47Z"
+        },
+        {
+          "number": 449,
+          "title": "Bump com.vanniktech.maven.publish from 0.30.0 to 0.31.0",
+          "closed_at": "2025-04-10T12:49:43Z"
+        },
+        {
+          "number": 447,
+          "title": "Bump org.eclipse.jetty:jetty-server from 12.0.15 to 12.0.19",
+          "closed_at": "2025-04-10T09:46:09Z"
+        },
+        {
+          "number": 438,
+          "title": "Bump org.eclipse.jetty:jetty-util from 12.0.15 to 12.0.18",
+          "closed_at": "2025-04-04T11:53:58Z"
+        },
+        {
+          "number": 437,
+          "title": "Bump org.eclipse.jetty:jetty-server from 12.0.15 to 12.0.18",
+          "closed_at": "2025-04-04T11:54:05Z"
+        },
+        {
+          "number": 435,
+          "title": "Bump org.eclipse.jetty:jetty-server from 12.0.15 to 12.0.17",
+          "closed_at": "2025-03-18T11:13:35Z"
+        },
+        {
+          "number": 434,
+          "title": "Bump org.eclipse.jetty:jetty-util from 12.0.15 to 12.0.17",
+          "closed_at": "2025-03-18T11:13:42Z"
+        },
+        {
+          "number": 432,
+          "title": "Bump com.google.cloud:google-cloud-bigquery from 2.43.3 to 2.48.1",
+          "closed_at": "2025-03-21T11:21:57Z"
+        },
+        {
+          "number": 429,
+          "title": "Bump org.eclipse.jetty:jetty-util from 12.0.15 to 12.0.16",
+          "closed_at": "2025-03-06T11:29:29Z"
+        },
+        {
+          "number": 427,
+          "title": "Bump org.eclipse.jetty:jetty-server from 12.0.15 to 12.0.16",
+          "closed_at": "2025-03-06T11:29:48Z"
+        },
+        {
+          "number": 426,
+          "title": "Bump com.google.cloud:google-cloud-bigquery from 2.43.3 to 2.48.0",
+          "closed_at": "2025-02-27T11:21:14Z"
+        },
+        {
+          "number": 418,
+          "title": "Bump com.google.cloud:google-cloud-core from 2.47.0 to 2.51.0",
+          "closed_at": "2025-02-20T13:45:32Z"
+        },
+        {
+          "number": 417,
+          "title": "Bump com.google.cloud:google-cloud-core-http from 2.47.0 to 2.51.0",
+          "closed_at": "2025-02-22T16:52:49Z"
+        },
+        {
+          "number": 416,
+          "title": "Bump com.google.api:gax from 2.57.0 to 2.61.0",
+          "closed_at": "2025-02-22T16:52:59Z"
+        },
+        {
+          "number": 414,
+          "title": "Bump com.google.auth:google-auth-library-oauth2-http from 1.29.0 to 1.32.1",
+          "closed_at": "2025-02-22T16:53:03Z"
+        },
+        {
+          "number": 412,
+          "title": "Bump com.google.auth:google-auth-library-oauth2-http from 1.29.0 to 1.32.0",
+          "closed_at": "2025-02-10T11:14:59Z"
+        },
+        {
+          "number": 410,
+          "title": "Bump com.google.api:gax from 2.57.0 to 2.60.0",
+          "closed_at": "2025-02-11T11:38:35Z"
+        },
+        {
+          "number": 409,
+          "title": "Bump com.google.cloud:google-cloud-core from 2.47.0 to 2.50.0",
+          "closed_at": "2025-02-11T11:39:04Z"
+        },
+        {
+          "number": 408,
+          "title": "Bump com.google.cloud:google-cloud-core-http from 2.47.0 to 2.50.0",
+          "closed_at": "2025-02-11T11:38:37Z"
+        }
+      ],
+      "count": 100
+    },
+    "issues_and_commits": {
+      "open_security_issues": [],
+      "open_issues_count": 29,
+      "closed_issues": [
+        {
+          "author": "andrasfuchs",
+          "closed_at": "2026-01-07T17:22:46Z",
+          "number": 584,
+          "title": "Migrate Logging/Analytics to API and Implement Minimal Data Level"
+        },
+        {
+          "author": "terrancewong",
+          "closed_at": "2025-10-03T23:06:34Z",
+          "number": 490,
+          "title": "Command line \"settings\" and env var not working"
+        },
+        {
+          "author": "terrancewong",
+          "closed_at": "2025-09-15T10:41:20Z",
+          "number": 491,
+          "title": "flooding warning `NetIncompletes.calculate_net_items: too many items`"
+        },
+        {
+          "author": "Xeraster",
+          "closed_at": "2024-09-27T12:53:21Z",
+          "number": 304,
+          "title": "Has anyone figured out how to get freerouting to work on Void Linux yet?"
+        },
+        {
+          "author": "hedefalk",
+          "closed_at": "2024-01-15T12:45:44Z",
+          "number": 241,
+          "title": "java.awt.HeadlessException trying to use cli in container"
+        },
+        {
+          "author": "roontoon",
+          "closed_at": "2022-06-06T13:23:24Z",
+          "number": 63,
+          "title": "Damaged Mac .DMG file for current version."
+        },
+        {
+          "author": "atlaste",
+          "closed_at": "2023-06-13T15:04:51Z",
+          "number": 208,
+          "title": "Freerouting / Kicad 7 not doing anything"
+        },
+        {
+          "author": "Ansifa",
+          "closed_at": "2022-09-03T04:41:27Z",
+          "number": 138,
+          "title": "Error occurred while opening the dsn file generated by eagle2freerouter"
+        },
+        {
+          "author": "cor-mt",
+          "closed_at": "2022-07-05T11:49:38Z",
+          "number": 101,
+          "title": "NullPointerException when specifying vias"
+        },
+        {
+          "author": "leoheck",
+          "closed_at": "2022-06-07T15:50:55Z",
+          "number": 117,
+          "title": "Some issues building it on Ubuntu 22.04."
+        }
+      ],
+      "closed_issues_count": 10,
+      "recent_commits": [
+        {
+          "author": "andrasfuchs",
+          "date": "2026-04-18T21:27:45Z",
+          "message_first_line": "Add settings docs and extend InteractiveSettings",
+          "sha": "c5ad3c7",
+          "security_keyword_match": false
+        },
+        {
+          "author": "andrasfuchs",
+          "date": "2026-04-17T14:34:39Z",
+          "message_first_line": "Enable Issue555 test and log v2.2 benchmark",
+          "sha": "224a1a9",
+          "security_keyword_match": false
+        },
+        {
+          "author": "andrasfuchs",
+          "date": "2026-04-17T14:22:28Z",
+          "message_first_line": "Merge pull request #635 from freerouting/fix-issue-230-router-uses-inactive-layers",
+          "sha": "5ee83e2",
+          "security_keyword_match": true
+        },
+        {
+          "author": "andrasfuchs",
+          "date": "2026-04-17T14:12:13Z",
+          "message_first_line": "Tighten routing test thresholds for Issue230",
+          "sha": "8252bbd",
+          "security_keyword_match": false
+        },
+        {
+          "author": "andrasfuchs",
+          "date": "2026-04-17T14:04:23Z",
+          "message_first_line": "Document routing fix for inactive layers",
+          "sha": "7005d1d",
+          "security_keyword_match": true
+        },
+        {
+          "author": "andrasfuchs",
+          "date": "2026-04-17T13:46:07Z",
+          "message_first_line": "Handle DSN load errors; init arrays; update test",
+          "sha": "8f55524",
+          "security_keyword_match": false
+        },
+        {
+          "author": "andrasfuchs",
+          "date": "2026-04-17T13:07:31Z",
+          "message_first_line": "Update test docs and add Issue230 DSN",
+          "sha": "c5c1974",
+          "security_keyword_match": false
+        },
+        {
+          "author": "andrasfuchs",
+          "date": "2026-04-17T13:03:25Z",
+          "message_first_line": "Add Issue230 test and update test script",
+          "sha": "1a488ad",
+          "security_keyword_match": false
+        },
+        {
+          "author": "andrasfuchs",
+          "date": "2026-04-17T12:53:26Z",
+          "message_first_line": "Document Issue #555 reproduction in test",
+          "sha": "3965986",
+          "security_keyword_match": false
+        },
+        {
+          "author": "andrasfuchs",
+          "date": "2026-04-17T12:40:03Z",
+          "message_first_line": "Adjust pass expectations in Issue508Test",
+          "sha": "346add1",
+          "security_keyword_match": false
+        },
+        {
+          "author": "andrasfuchs",
+          "date": "2026-04-17T12:35:09Z",
+          "message_first_line": "Add tests for Issue508 BM07 and BM08",
+          "sha": "d7a55a0",
+          "security_keyword_match": false
+        },
+        {
+          "author": "andrasfuchs",
+          "date": "2026-04-17T12:13:31Z",
+          "message_first_line": "Add Issue159 test description",
+          "sha": "cdfbf17",
+          "security_keyword_match": false
+        },
+        {
+          "author": "andrasfuchs",
+          "date": "2026-04-17T12:09:49Z",
+          "message_first_line": "Handle degenerate geometry, improve logs, test",
+          "sha": "8cf13f7",
+          "security_keyword_match": false
+        },
+        {
+          "author": "andrasfuchs",
+          "date": "2026-04-17T11:14:30Z",
+          "message_first_line": "Handle degenerate geometry and null corners",
+          "sha": "9f46eec",
+          "security_keyword_match": false
+        },
+        {
+          "author": "andrasfuchs",
+          "date": "2026-04-17T09:44:51Z",
+          "message_first_line": "Enable Issue229 test and add issue docs",
+          "sha": "082bcb5",
+          "security_keyword_match": false
+        },
+        {
+          "author": "andrasfuchs",
+          "date": "2026-04-17T09:39:17Z",
+          "message_first_line": "Relax expectations in Issue159 auto-router test",
+          "sha": "676126b",
+          "security_keyword_match": false
+        },
+        {
+          "author": "andrasfuchs",
+          "date": "2026-04-16T22:52:36Z",
+          "message_first_line": "Merge pull request #634 from freerouting/fix-unconnected-items-in-issue026test",
+          "sha": "6b3a51e",
+          "security_keyword_match": true
+        },
+        {
+          "author": "Copilot",
+          "date": "2026-04-16T22:48:01Z",
+          "message_first_line": "Fix restore-state score/hash recalculation and tighten Issue026 stagnation assertions",
+          "sha": "129c10b",
+          "security_keyword_match": true
+        },
+        {
+          "author": "andrasfuchs",
+          "date": "2026-04-16T22:43:19Z",
+          "message_first_line": "Update src/main/java/app/freerouting/autoroute/BatchAutorouter.java",
+          "sha": "102c437",
+          "security_keyword_match": false
+        },
+        {
+          "author": "andrasfuchs",
+          "date": "2026-04-16T22:43:08Z",
+          "message_first_line": "Update src/main/java/app/freerouting/autoroute/BatchAutorouter.java",
+          "sha": "6c0603e",
+          "security_keyword_match": false
+        },
+        {
+          "author": "andrasfuchs",
+          "date": "2026-04-16T21:36:55Z",
+          "message_first_line": "Use score-based stagnation detection",
+          "sha": "9c6bdf6",
+          "security_keyword_match": false
+        },
+        {
+          "author": "andrasfuchs",
+          "date": "2026-04-16T21:31:53Z",
+          "message_first_line": "Normalize Unicode arrows and dashes to ASCII",
+          "sha": "f23be1e",
+          "security_keyword_match": false
+        },
+        {
+          "author": "andrasfuchs",
+          "date": "2026-04-16T21:28:57Z",
+          "message_first_line": "Add stagnation detection and unrouted report",
+          "sha": "fa45ce1",
+          "security_keyword_match": false
+        },
+        {
+          "author": "andrasfuchs",
+          "date": "2026-04-16T21:02:37Z",
+          "message_first_line": "Run tests on native CI; skip tests in Docker image",
+          "sha": "5eaf777",
+          "security_keyword_match": false
+        },
+        {
+          "author": "andrasfuchs",
+          "date": "2026-04-16T21:02:06Z",
+          "message_first_line": "Create URL via URI.create()",
+          "sha": "eceb8d9",
+          "security_keyword_match": false
+        },
+        {
+          "author": "andrasfuchs",
+          "date": "2026-04-16T21:01:34Z",
+          "message_first_line": "Assert SES round-trip preserves wire count",
+          "sha": "4603aaf",
+          "security_keyword_match": false
+        },
+        {
+          "author": "andrasfuchs",
+          "date": "2026-04-16T21:01:12Z",
+          "message_first_line": "Guard against nulls and index underflow",
+          "sha": "f48ef10",
+          "security_keyword_match": false
+        },
+        {
+          "author": "andrasfuchs",
+          "date": "2026-04-16T15:11:09Z",
+          "message_first_line": "Adjust DSN reader and reduce noisy warnings",
+          "sha": "7bbb2d2",
+          "security_keyword_match": false
+        },
+        {
+          "author": "andrasfuchs",
+          "date": "2026-04-15T22:47:32Z",
+          "message_first_line": "Move ProjectSchemeCodeStyle.xml to docs",
+          "sha": "d4fc96f",
+          "security_keyword_match": false
+        },
+        {
+          "author": "andrasfuchs",
+          "date": "2026-04-15T22:47:19Z",
+          "message_first_line": "Disable Jekyll processing for Pages artifact",
+          "sha": "fd48716",
+          "security_keyword_match": false
+        },
+        {
+          "author": "andrasfuchs",
+          "date": "2026-04-15T22:34:10Z",
+          "message_first_line": "Remove configure-pages step and Jekyll config",
+          "sha": "6d34317",
+          "security_keyword_match": false
+        },
+        {
+          "author": "andrasfuchs",
+          "date": "2026-04-15T22:21:51Z",
+          "message_first_line": "Move the website root folder from /docs to /website and add Pages workflow",
+          "sha": "0b6a790",
+          "security_keyword_match": false
+        },
+        {
+          "author": "andrasfuchs",
+          "date": "2026-04-15T22:04:59Z",
+          "message_first_line": "Run executableJar task and update jar name",
+          "sha": "c68d047",
+          "security_keyword_match": false
+        },
+        {
+          "author": "andrasfuchs",
+          "date": "2026-04-15T21:57:32Z",
+          "message_first_line": "Add packaging scripts and CI chmod",
+          "sha": "994e81d",
+          "security_keyword_match": false
+        },
+        {
+          "author": "andrasfuchs",
+          "date": "2026-04-15T21:47:02Z",
+          "message_first_line": "Fix distribution script paths and dist task",
+          "sha": "64f86d6",
+          "security_keyword_match": true
+        },
+        {
+          "author": "andrasfuchs",
+          "date": "2026-04-15T21:31:52Z",
+          "message_first_line": "Merge branch 'master' of https://github.com/freerouting/freerouting",
+          "sha": "4df7464",
+          "security_keyword_match": false
+        },
+        {
+          "author": "andrasfuchs",
+          "date": "2026-04-15T21:31:38Z",
+          "message_first_line": "Fix the missing files errors on the website, these were removed by accident",
+          "sha": "86e2a8b",
+          "security_keyword_match": true
+        },
+        {
+          "author": "andrasfuchs",
+          "date": "2026-04-15T21:30:43Z",
+          "message_first_line": "Remove deprecated macos-13 runners",
+          "sha": "e70dd2b",
+          "security_keyword_match": false
+        },
+        {
+          "author": "andrasfuchs",
+          "date": "2026-04-15T21:30:19Z",
+          "message_first_line": "Merge pull request #633 from freerouting/dsn-loader-isolation",
+          "sha": "7e085eb",
+          "security_keyword_match": false
+        },
+        {
+          "author": "Copilot",
+          "date": "2026-04-15T21:20:38Z",
+          "message_first_line": "apply gemini review thread fixes for crc and trace diagnostics",
+          "sha": "08dd881",
+          "security_keyword_match": false
+        },
+        {
+          "author": "Copilot",
+          "date": "2026-04-15T13:58:23Z",
+          "message_first_line": "refine review fixes for rules reader and saveRulesAs handling",
+          "sha": "8f76a57",
+          "security_keyword_match": false
+        },
+        {
+          "author": "Copilot",
+          "date": "2026-04-15T13:52:30Z",
+          "message_first_line": "fix review feedback on DSN metadata and rules IO handling",
+          "sha": "e6e8631",
+          "security_keyword_match": true
+        },
+        {
+          "author": "andrasfuchs",
+          "date": "2026-04-15T13:25:48Z",
+          "message_first_line": "Improve DRC unconnected-items tests for Issue575",
+          "sha": "7eec3d7",
+          "security_keyword_match": false
+        },
+        {
+          "author": "andrasfuchs",
+          "date": "2026-04-14T15:58:09Z",
+          "message_first_line": "Move Specctra I/O into io.specctra packages",
+          "sha": "fe46d5f",
+          "security_keyword_match": false
+        },
+        {
+          "author": "andrasfuchs",
+          "date": "2026-04-14T13:04:25Z",
+          "message_first_line": "Refactor Specctra I/O: decouple GUI/interactive",
+          "sha": "56faf3d",
+          "security_keyword_match": false
+        },
+        {
+          "author": "andrasfuchs",
+          "date": "2026-04-14T12:39:57Z",
+          "message_first_line": "Refactor SES IO into io package",
+          "sha": "0a0b0d3",
+          "security_keyword_match": false
+        },
+        {
+          "author": "andrasfuchs",
+          "date": "2026-04-14T12:26:20Z",
+          "message_first_line": "Re-enable DRC tests by removing @Disabled",
+          "sha": "0189afa",
+          "security_keyword_match": false
+        },
+        {
+          "author": "andrasfuchs",
+          "date": "2026-04-14T12:22:58Z",
+          "message_first_line": "Report DSN warnings and refactor rules IO",
+          "sha": "0aa2a97",
+          "security_keyword_match": false
+        },
+        {
+          "author": "andrasfuchs",
+          "date": "2026-04-10T16:46:03Z",
+          "message_first_line": "Add metadata-only DSN reader and tests",
+          "sha": "c6cd532",
+          "security_keyword_match": false
+        },
+        {
+          "author": "andrasfuchs",
+          "date": "2026-04-10T16:22:54Z",
+          "message_first_line": "Introduce DsnReader API and parsing shim (fixes #627)",
+          "sha": "4ce6aad",
+          "security_keyword_match": false
+        },
+        {
+          "author": "andrasfuchs",
+          "date": "2026-04-10T15:48:19Z",
+          "message_first_line": "Add DsnWriter, tests; expose specctra helpers (fixed issue #626)",
+          "sha": "3a93847",
+          "security_keyword_match": false
+        },
+        {
+          "author": "andrasfuchs",
+          "date": "2026-04-10T15:33:19Z",
+          "message_first_line": "Add DsnReadResult sealed type and tests (fixes #625)",
+          "sha": "10890a7",
+          "security_keyword_match": false
+        },
+        {
+          "author": "andrasfuchs",
+          "date": "2026-04-10T15:25:17Z",
+          "message_first_line": "Add DsnMetadata record and unit tests (completes #624)",
+          "sha": "f905aba",
+          "security_keyword_match": false
+        },
+        {
+          "author": "andrasfuchs",
+          "date": "2026-04-10T14:18:36Z",
+          "message_first_line": "Bump plugin and dependency versions",
+          "sha": "7e1968e",
+          "security_keyword_match": false
+        },
+        {
+          "author": "andrasfuchs",
+          "date": "2026-04-09T17:25:14Z",
+          "message_first_line": "Merge pull request #622 from freerouting/performance-improvement-try-02",
+          "sha": "d8cd0ad",
+          "security_keyword_match": false
+        },
+        {
+          "author": "andrasfuchs",
+          "date": "2026-04-09T17:06:21Z",
+          "message_first_line": "Update default max_passes and max_items",
+          "sha": "51a729b",
+          "security_keyword_match": false
+        },
+        {
+          "author": "andrasfuchs",
+          "date": "2026-04-09T16:51:35Z",
+          "message_first_line": "Use BoardLoader in tests; disable DSN-heavy tests",
+          "sha": "245d901",
+          "security_keyword_match": false
+        },
+        {
+          "author": "andrasfuchs",
+          "date": "2026-04-08T22:34:37Z",
+          "message_first_line": "Refactor tests to use TestBasedOnAnIssue",
+          "sha": "b2517a2",
+          "security_keyword_match": false
+        },
+        {
+          "author": "andrasfuchs",
+          "date": "2026-04-08T22:01:50Z",
+          "message_first_line": "Increase timeouts and add 2-pass Issue508 test",
+          "sha": "68ef544",
+          "security_keyword_match": false
+        },
+        {
+          "author": "andrasfuchs",
+          "date": "2026-04-08T21:53:09Z",
+          "message_first_line": "Add BM01 routing tests and remove debug logging",
+          "sha": "c35b405",
+          "security_keyword_match": false
+        },
+        {
+          "author": "andrasfuchs",
+          "date": "2026-04-08T20:14:33Z",
+          "message_first_line": "After the 1st pass on BM01: 56 unrouted (versus the expected 56 unrouted)",
+          "sha": "132fa4b",
+          "security_keyword_match": false
+        },
+        {
+          "author": "andrasfuchs",
+          "date": "2026-04-08T18:15:28Z",
+          "message_first_line": "Increase default max_items to 151",
+          "sha": "a00c215",
+          "security_keyword_match": false
+        },
+        {
+          "author": "andrasfuchs",
+          "date": "2026-04-08T18:03:21Z",
+          "message_first_line": "Add debug logs for combine; remove destination guard",
+          "sha": "34e2027",
+          "security_keyword_match": false
+        },
+        {
+          "author": "andrasfuchs",
+          "date": "2026-04-08T18:02:59Z",
+          "message_first_line": "Resolve Step 51 divergence in parity doc",
+          "sha": "c639d1b",
+          "security_keyword_match": false
+        },
+        {
+          "author": "andrasfuchs",
+          "date": "2026-04-08T18:02:09Z",
+          "message_first_line": "Increase default max_items to 111",
+          "sha": "e311030",
+          "security_keyword_match": false
+        },
+        {
+          "author": "andrasfuchs",
+          "date": "2026-04-08T14:30:36Z",
+          "message_first_line": "Rename NOT_FIXED to UNFIXED and adjust logic",
+          "sha": "364bd76",
+          "security_keyword_match": false
+        },
+        {
+          "author": "andrasfuchs",
+          "date": "2026-04-08T13:09:56Z",
+          "message_first_line": "Protect final-leg traces from stub removal",
+          "sha": "9488ba8",
+          "security_keyword_match": false
+        },
+        {
+          "author": "andrasfuchs",
+          "date": "2026-04-08T12:31:50Z",
+          "message_first_line": "Add debug logging for trace operations",
+          "sha": "61aa50e",
+          "security_keyword_match": false
+        },
+        {
+          "author": "andrasfuchs",
+          "date": "2026-04-08T09:12:27Z",
+          "message_first_line": "Reduce max_items default to 61",
+          "sha": "1071a9c",
+          "security_keyword_match": false
+        },
+        {
+          "author": "andrasfuchs",
+          "date": "2026-04-08T08:51:39Z",
+          "message_first_line": "After the 1st pass on BM01: 127 unrouted (current) and 97 unrouted (v1.9) (versus the target 56 unrouted)",
+          "sha": "bad1551",
+          "security_keyword_match": false
+        },
+        {
+          "author": "andrasfuchs",
+          "date": "2026-04-08T08:49:44Z",
+          "message_first_line": "Add ripup-cost tracking and debug tracing",
+          "sha": "30ca73a",
+          "security_keyword_match": false
+        },
+        {
+          "author": "andrasfuchs",
+          "date": "2026-04-08T08:47:06Z",
+          "message_first_line": "docs: resolve routing parity vs v1.9",
+          "sha": "d2465fd",
+          "security_keyword_match": false
+        },
+        {
+          "author": "andrasfuchs",
+          "date": "2026-04-07T17:16:21Z",
+          "message_first_line": "Add parity investigation doc: current vs v1.9",
+          "sha": "d301315",
+          "security_keyword_match": false
+        },
+        {
+          "author": "andrasfuchs",
+          "date": "2026-04-07T17:16:09Z",
+          "message_first_line": "Track ripup_cost and enhance autorouter logs",
+          "sha": "f4a13ba",
+          "security_keyword_match": false
+        },
+        {
+          "author": "andrasfuchs",
+          "date": "2026-04-07T15:35:26Z",
+          "message_first_line": "Add debug tracing for backtrack and ripup checks",
+          "sha": "bfc7055",
+          "security_keyword_match": false
+        },
+        {
+          "author": "andrasfuchs",
+          "date": "2026-04-07T14:05:23Z",
+          "message_first_line": "Add debug tracing & inline obstacle processing",
+          "sha": "f936378",
+          "security_keyword_match": false
+        },
+        {
+          "author": "andrasfuchs",
+          "date": "2026-04-07T13:05:18Z",
+          "message_first_line": "Simplify logging pattern and version error handling",
+          "sha": "528456a",
+          "security_keyword_match": false
+        },
+        {
+          "author": "andrasfuchs",
+          "date": "2026-04-06T22:56:49Z",
+          "message_first_line": "Add log-compare tools; enable tracing",
+          "sha": "fc7723d",
+          "security_keyword_match": false
+        },
+        {
+          "author": "andrasfuchs",
+          "date": "2026-04-06T20:35:16Z",
+          "message_first_line": "Always remove trace stubs during autoroute",
+          "sha": "ff16b6d",
+          "security_keyword_match": false
+        },
+        {
+          "author": "andrasfuchs",
+          "date": "2026-04-06T14:44:38Z",
+          "message_first_line": "Use run-specific log files to avoid lock conflicts",
+          "sha": "14420a3",
+          "security_keyword_match": false
+        },
+        {
+          "author": "andrasfuchs",
+          "date": "2026-04-06T14:07:19Z",
+          "message_first_line": "After the 1st pass on BM01: 79 unrouted (versus the expected 56 unrouted)",
+          "sha": "d157849",
+          "security_keyword_match": false
+        },
+        {
+          "author": "andrasfuchs",
+          "date": "2026-04-05T12:57:56Z",
+          "message_first_line": "Deterministic autorouter IDs and log tools",
+          "sha": "62e81a2",
+          "security_keyword_match": false
+        },
+        {
+          "author": "andrasfuchs",
+          "date": "2026-04-05T12:30:24Z",
+          "message_first_line": "Merge pull request #621 from chengyixu/feat/in-progress-output-388",
+          "sha": "3b99958",
+          "security_keyword_match": false
+        },
+        {
+          "author": "andrasfuchs",
+          "date": "2026-03-31T17:05:31Z",
+          "message_first_line": "Show settings in comparison summary",
+          "sha": "7c4d05d",
+          "security_keyword_match": false
+        },
+        {
+          "author": "andrasfuchs",
+          "date": "2026-03-31T17:00:43Z",
+          "message_first_line": "Change the log level of the trace log messages from INFO to TRACE",
+          "sha": "81e6c8c",
+          "security_keyword_match": false
+        },
+        {
+          "author": "andrasfuchs",
+          "date": "2026-03-31T16:48:21Z",
+          "message_first_line": "Bump default max_items to 43",
+          "sha": "419c70e",
+          "security_keyword_match": false
+        },
+        {
+          "author": "andrasfuchs",
+          "date": "2026-03-31T16:36:22Z",
+          "message_first_line": "Delete irrelevant SES files",
+          "sha": "0c84bf1",
+          "security_keyword_match": false
+        },
+        {
+          "author": "andrasfuchs",
+          "date": "2026-03-31T16:26:37Z",
+          "message_first_line": "Add pooling to MazeListElement and improve logging",
+          "sha": "aead505",
+          "security_keyword_match": false
+        },
+        {
+          "author": "andrasfuchs",
+          "date": "2026-03-31T15:56:01Z",
+          "message_first_line": "Reduce default max_items from 43 to 42",
+          "sha": "8b4cc81",
+          "security_keyword_match": false
+        },
+        {
+          "author": "andrasfuchs",
+          "date": "2026-03-31T15:01:37Z",
+          "message_first_line": "Simplify MazeListElement and strengthen checks",
+          "sha": "07ea8a8",
+          "security_keyword_match": false
+        },
+        {
+          "author": "chengyixu",
+          "date": "2026-03-29T06:36:50Z",
+          "message_first_line": "fix: address code review feedback on partial output endpoint",
+          "sha": "d264218",
+          "security_keyword_match": true
+        },
+        {
+          "author": "chengyixu",
+          "date": "2026-03-29T06:23:45Z",
+          "message_first_line": "feat: allow GET /jobs/{jobId}/output to return partial output for in-progress jobs",
+          "sha": "e157426",
+          "security_keyword_match": false
+        },
+        {
+          "author": "andrasfuchs",
+          "date": "2026-03-28T23:38:05Z",
+          "message_first_line": "Improve Polyline split debug logging",
+          "sha": "8140b0b",
+          "security_keyword_match": false
+        },
+        {
+          "author": "andrasfuchs",
+          "date": "2026-03-28T23:34:57Z",
+          "message_first_line": "Add detailed FRLogger traces to Polyline.split",
+          "sha": "5854439",
+          "security_keyword_match": false
+        },
+        {
+          "author": "andrasfuchs",
+          "date": "2026-03-28T23:33:56Z",
+          "message_first_line": "Add obstacle_on_board to debug logs",
+          "sha": "95296ab",
+          "security_keyword_match": false
+        },
+        {
+          "author": "andrasfuchs",
+          "date": "2026-03-28T23:15:47Z",
+          "message_first_line": "Add object_layer and obstacle_nets to debug logs",
+          "sha": "22a331d",
+          "security_keyword_match": false
+        },
+        {
+          "author": "andrasfuchs",
+          "date": "2026-03-28T22:36:16Z",
+          "message_first_line": "Add logging to room removal and shape decisions",
+          "sha": "27c1ae2",
+          "security_keyword_match": false
+        },
+        {
+          "author": "andrasfuchs",
+          "date": "2026-03-28T16:18:02Z",
+          "message_first_line": "Add debug logging and simplify obstacle checks",
+          "sha": "5be491f",
+          "security_keyword_match": false
+        },
+        {
+          "author": "andrasfuchs",
+          "date": "2026-03-28T15:49:14Z",
+          "message_first_line": "Add ROOM_COMPLETE/COMPLETE_SHAPE debug logs",
+          "sha": "4db8d73",
+          "security_keyword_match": false
+        },
+        {
+          "author": "andrasfuchs",
+          "date": "2026-03-28T14:24:57Z",
+          "message_first_line": "Add bounds logging and fix bounding union",
+          "sha": "b7db6b1",
+          "security_keyword_match": true
+        }
+      ]
+    },
+    "distribution_channels": {
+      "channels": [
+        {
+          "name": "docker-local-build",
+          "type": "container",
+          "package": "freerouting/freerouting (Dockerfile in repo)",
+          "install_command": "docker build",
+          "pinned": false,
+          "install_path_verified": false,
+          "artifact_verified": false,
+          "ecosystem": "Docker",
+          "note": "No prebuilt image check attempted; user builds locally"
+        }
+      ]
+    },
+    "artifact_verification": {
+      "per_channel": [
+        {
+          "channel": "docker-local-build",
+          "method": "dockerfile-in-repo",
+          "result": "not_verified",
+          "note": "Docker local-build path; no registry digest checked"
+        }
+      ]
+    },
+    "install_script_analysis": {
+      "scripts": []
+    },
+    "gitleaks": {
+      "available": false,
+      "ran": false,
+      "findings_count": null,
+      "findings": [],
+      "note": "gitleaks not installed; install to cover secrets-in-history"
+    },
+    "windows_patterns": {
+      "hits": [],
+      "hit_count": 0
+    },
+    "monorepo": {
+      "is_monorepo": false,
+      "inner_packages": [],
+      "lifecycle_script_hits": []
+    },
+    "defensive_configs": {
+      "entries": [
+        {
+          "file": ".github/dependabot.yml",
+          "type": "dependabot",
+          "present": true,
+          "detail": "ecosystems tracked: ['gradle']"
+        },
+        {
+          "file": "SECURITY.md",
+          "type": "security-policy",
+          "present": false
+        }
+      ]
+    },
+    "batch_merge_detection": {
+      "detected": false,
+      "pr_groups": []
+    },
+    "coverage_affirmations": {
+      "prompt_injection_scan_completed": true,
+      "windows_surface_coverage": "scanned",
+      "distribution_channels_verified": "0/1",
+      "gitleaks_available": false,
+      "gitleaks_explanation": "gitleaks not installed; install to cover secrets-in-history"
+    }
+  },
+  "phase_2_validation": {
+    "sha_consistent": true,
+    "required_fields_complete": true,
+    "dates_chronological": true,
+    "tarball_nonempty": true,
+    "validation_passed": true,
+    "validation_errors": []
+  },
+  "phase_3_computed": {
+    "c20_severity": {
+      "no_classic_protection": true,
+      "no_rulesets": false,
+      "no_rules_on_default": false,
+      "no_codeowners": true,
+      "has_recent_release_30d": false,
+      "ships_executable_code": true,
+      "result": null
+    },
+    "solo_maintainer": {
+      "top_contributor_share": 0.867,
+      "is_solo": true,
+      "verbatim_sentence": "Note: andrasfuchs accounts for 87% of all commits. This is a solo-maintainer project \u2014 all governance findings should be read in that context."
+    },
+    "exhibit_grouping": {
+      "total_findings": 0,
+      "threshold_met": false,
+      "exhibits": []
+    },
+    "boundary_cases": {
+      "cases": []
+    },
+    "coverage_status": {
+      "cells": [
+        {
+          "name": "Tarball extraction",
+          "status": "ok",
+          "detail": "2760 files"
+        },
+        {
+          "name": "OSSF Scorecard",
+          "status": "not_indexed",
+          "detail": "Repo not indexed by OSSF"
+        },
+        {
+          "name": "osv.dev",
+          "status": "not_queried",
+          "detail": "Zero runtime dependencies"
+        },
+        {
+          "name": "Secrets-in-history (gitleaks)",
+          "status": "not_available",
+          "detail": "gitleaks not installed"
+        },
+        {
+          "name": "API rate budget",
+          "status": "ok",
+          "detail": "4995/5000 remaining"
+        },
+        {
+          "name": "Dependabot alerts",
+          "status": "unknown",
+          "detail": "Unknown"
+        }
+      ]
+    },
+    "methodology": {
+      "scanner_version": "V2.5-preview",
+      "prompt_version": "V2.4",
+      "guide_version": "V0.2"
+    }
+  },
+  "phase_3_advisory": {
+    "scorecard_hints": {
+      "does_anyone_check_the_code": {
+        "color": "red",
+        "short_answer": "No",
+        "signals": [
+          {
+            "id": "q1_formal_review_rate",
+            "value": 9.5
+          },
+          {
+            "id": "q1_any_review_rate",
+            "value": 32.4
+          },
+          {
+            "id": "q1_has_branch_protection",
+            "value": false
+          },
+          {
+            "id": "q1_has_ruleset_protection",
+            "value": true
+          },
+          {
+            "id": "q1_has_codeowners",
+            "value": false
+          },
+          {
+            "id": "q1_is_solo_maintainer",
+            "value": true
+          },
+          {
+            "id": "q1_governance_floor_override",
+            "value": false
+          }
+        ]
+      },
+      "do_they_fix_problems_quickly": {
+        "color": "green",
+        "short_answer": "Yes",
+        "signals": [
+          {
+            "id": "q2_open_security_issue_count",
+            "value": 0
+          },
+          {
+            "id": "q2_oldest_open_cve_pr_age_days",
+            "value": null
+          },
+          {
+            "id": "q2_oldest_open_security_item_age_days",
+            "value": null
+          },
+          {
+            "id": "q2_closed_fix_lag_days",
+            "value": null
+          }
+        ]
+      },
+      "do_they_tell_you_about_problems": {
+        "color": "amber",
+        "short_answer": "Partly",
+        "signals": [
+          {
+            "id": "q3_has_security_policy",
+            "value": false
+          },
+          {
+            "id": "q3_has_contributing_guide",
+            "value": true
+          },
+          {
+            "id": "q3_published_advisory_count",
+            "value": 0
+          },
+          {
+            "id": "q3_has_silent_fixes",
+            "value": false
+          }
+        ]
+      },
+      "is_it_safe_out_of_the_box": {
+        "color": "amber",
+        "short_answer": "Partly",
+        "signals": [
+          {
+            "id": "q4_all_channels_pinned",
+            "value": false
+          },
+          {
+            "id": "q4_artifact_verified",
+            "value": false
+          },
+          {
+            "id": "q4_has_critical_on_default_path",
+            "value": false
+          },
+          {
+            "id": "q4_has_warning_on_install_path",
+            "value": false
+          }
+        ]
+      }
+    }
+  },
+  "phase_4_structured_llm": {
+    "findings": {
+      "entries": [
+        {
+          "id": "F0",
+          "severity": "Critical",
+          "provenance": "observed",
+          "status": "ongoing",
+          "category": "code-execution/java-deserialization",
+          "kind": "Vulnerability",
+          "rule_id": null,
+          "title": "Java ObjectInputStream.readObject() on user-loaded board files \u2014 textbook deserialization RCE class",
+          "action_hint": "Do NOT open `.binsnapshot` / serialized board files from untrusted sources until freerouting migrates away from Java native serialization.",
+          "evidence_refs": [
+            "E1",
+            "E2"
+          ],
+          "threat_model_paths": [
+            "malicious_extension",
+            "other"
+          ],
+          "threat_model_context": "freerouting's `BasicBoard.java` at line 108-110 constructs a `new ObjectInputStream(input_stream)` and calls `readObject()` on it \u2014 the exact API pattern that Java deserialization RCE exploits (ysoserial-class gadget chains) target. The class implements `Serializable` and has a custom `readObject(ObjectInputStream)` hook (line 1551). 34 additional Java source files import `ObjectInputStream`, spanning board/gui/interactive/rules packages \u2014 Java serialization is core to freerouting's data-persistence model. Board state, settings, and window snapshots are all persisted via ObjectInputStream/ObjectOutputStream. freerouting loads PCB designs from user-provided files (DSN and serialized binary formats), which is the documented consumer workflow. A malicious board file crafted to exploit a deserialization gadget chain against freerouting's classpath would trigger arbitrary Java code execution on the user's machine at file-open time.",
+          "what_this_means": "If a user opens a malicious .binsnapshot (or any serialized board file) obtained from an untrusted source \u2014 a shared community project, an email attachment, a file from a compromised sharing site \u2014 the file-open action can trigger arbitrary code execution via Java deserialization gadget chains. The specific exploitability depends on which gadget libraries are on freerouting's classpath (commons-collections, Spring, Groovy, log4j, etc.), but the attack class is well-documented and actively weaponized.",
+          "what_this_does_not_mean": "Not a remote-triggerable vulnerability \u2014 the user has to voluntarily open a malicious file. Not evidence that a specific CVE or PoC exists for freerouting today. But the structural vulnerability is unambiguous: Java `ObjectInputStream.readObject()` of untrusted data is a known-exploitable RCE class, ranked in the OWASP Top 10 for over a decade.",
+          "duration_label": "Continuous",
+          "date_label": "Since freerouting's Java serialization model was established (repo created 2014-06-28)",
+          "how_to_fix": "Maintainer-side: migrate board persistence away from Java native serialization toward a safe format (JSON/Protobuf/custom parser). As an interim mitigation, add an `ObjectInputFilter` (Java 9+) that whitelists expected classes. Consumer-side: only open board files from trusted sources until the migration lands; consider running freerouting in a container or VM with the board file pre-staged, isolated from credential-bearing host files."
+        },
+        {
+          "id": "F1",
+          "severity": "Warning",
+          "provenance": "observed",
+          "status": "ongoing",
+          "category": "governance/single-maintainer",
+          "kind": "Governance",
+          "rule_id": "F11",
+          "title": "Solo-maintainer concentration (andrasfuchs 86.7%) + anti-destruction-only ruleset + 9.5% formal review",
+          "action_hint": "Pin to a reviewed release version; avoid auto-updating; treat new releases as attention-worthy.",
+          "evidence_refs": [
+            "E3",
+            "E4",
+            "E5"
+          ],
+          "threat_model_paths": [
+            "stale_token",
+            "other"
+          ],
+          "threat_model_context": "andrasfuchs holds 86.7% of top-6 contributor commits \u2014 solo-maintainer flag fires (E3). The repo has 1 ruleset with 2 rules (`deletion` + `non_fast_forward`) but these are anti-destruction rules that prevent force-push and branch deletion; they do NOT require review before merge (E4). No CODEOWNERS. Formal-review rate is 9.5% across the 105-PR sample (E5). A compromised andrasfuchs account would reach the next release with no structural review gate \u2014 the anti-destruction rules would prevent rewriting history but not prevent a malicious commit from landing on master and being released.",
+          "what_this_means": "The governance gate that could catch a compromised-account scenario exists minimally (anti-destruction rules) but does not include a review-requirement step. Consumer mitigation is pinning to a specific reviewed release rather than tracking latest.",
+          "what_this_does_not_mean": "Not evidence of malicious behavior. andrasfuchs has been the primary maintainer for 12 years; this is a normal small-project governance pattern. The finding describes the structural exposure.",
+          "duration_label": "Continuous",
+          "date_label": "Since repo creation (2014-06-28)",
+          "how_to_fix": "Maintainer-side: extend the ruleset to include a `pull_request` rule requiring \u22651 approving review before merge; add CODEOWNERS naming a backup reviewer. Consumer-side: pin freerouting to a specific version tag; read release notes before upgrading."
+        },
+        {
+          "id": "F2",
+          "severity": "Warning",
+          "provenance": "observed",
+          "status": "ongoing",
+          "category": "governance/disclosure",
+          "kind": "Hygiene",
+          "rule_id": null,
+          "title": "No SECURITY.md + 0 published advisories in 12 years despite confirmed RCE-class surface (F0)",
+          "action_hint": "Use GitHub's `Report a vulnerability` button if you find a freerouting-specific exploit.",
+          "evidence_refs": [
+            "E6"
+          ],
+          "threat_model_paths": [
+            "other"
+          ],
+          "threat_model_context": "community/profile has_security_policy=false. security-advisories count: 0 across 12 years of development. Given F0's confirmed Java-deserialization surface on user-loaded files, the zero-advisory record is especially notable \u2014 either (a) no exploit has been reported by a researcher, (b) issues were silently fixed without GHSA publication, or (c) awareness of the attack class has not reached the project. Consistent with the catalog-wide silent-fix pattern but more consequential here given F0's confirmed severity.",
+          "what_this_means": "No documented disclosure channel; no GHSA syndication. A researcher with a freerouting-specific deserialization gadget chain has no documented path to disclose privately.",
+          "what_this_does_not_mean": "Not evidence of suppressed vulns. Consistent with a small-project disclosure-process gap.",
+          "duration_label": "Continuous",
+          "date_label": "Since 2014-06-28",
+          "how_to_fix": "Maintainer-side: add a 1-page SECURITY.md naming GitHub's `Report a vulnerability` UI + expected response window. Given F0, this is especially high-value."
+        },
+        {
+          "id": "F3",
+          "severity": "Warning",
+          "provenance": "observed",
+          "status": "ongoing",
+          "category": "supply-chain/release-cadence",
+          "kind": "Structural",
+          "rule_id": null,
+          "title": "373-day release stall \u2014 v2.1.0 from 2025-04-12 is the latest tag despite active main",
+          "action_hint": "Users on the latest release are ~1 year behind main; main-branch fixes (if any) do not reach installed users.",
+          "evidence_refs": [
+            "E7"
+          ],
+          "threat_model_paths": [
+            "stale_token"
+          ],
+          "threat_model_context": "Latest release v2.1.0: 2025-04-12 (373 days before scan). Prior cadence was 3-4 months (v2.0.1 Nov 2024, v2.0.0 Nov 2024, v1.9.0 Oct 2023). Main is active \u2014 last push 2026-04-19, one day before scan. Any F0-class mitigations merged to main since April 2025 are not reaching users installed from release tags. Consistent pattern with wezterm (entry 21, 807-day stall) \u2014 active-main-without-release-tagging is a recurring governance shape.",
+          "what_this_means": "Consumers on v2.1.0 are running April-2025 code. If a fix for F0 (Java deserialization mitigation) lands on main tomorrow, users don't receive it until a new release tag is cut and the JAR/Docker/MSI pipelines rebuild.",
+          "what_this_does_not_mean": "Not evidence of abandonment \u2014 main is active. The gap is tag-to-consumer latency, not project liveness.",
+          "duration_label": "Ongoing",
+          "date_label": "Since 2025-04-12",
+          "how_to_fix": "Maintainer-side: cut a new release (even v2.1.1) to push accumulated main-branch fixes to consumers. The release automation is already configured (docker-release workflow + MSI build) \u2014 it's a human-process decision to invoke it."
+        },
+        {
+          "id": "F4",
+          "severity": "Info",
+          "provenance": "observed",
+          "status": "mitigated",
+          "category": "hygiene/dependency-management",
+          "kind": "Positive",
+          "rule_id": null,
+          "title": "Dependabot on Gradle + active dep-update cadence \u2014 all 5 open PRs are dep bumps",
+          "action_hint": "Positive operational signal \u2014 context for reading F0-F3 severity.",
+          "evidence_refs": [
+            "E8"
+          ],
+          "threat_model_paths": [
+            "other"
+          ],
+          "threat_model_context": "dependabot.yml is present with `- package-ecosystem: gradle` \u2014 the Java dep graph is watched for CVE-driven updates. All 5 currently-open PRs are Dependabot bumps (log4j-core, google-cloud-core, gax, google-auth-library, rewrite-static-analysis). This is a real operational investment \u2014 compare to wezterm (entry 21) + kanata (entry 23) where Cargo ecosystem is unwatched; here Gradle is actively updated.",
+          "what_this_means": "Java transitive-dep CVEs surface to the maintainer automatically. Doesn't reduce F0 severity (which is about freerouting's own use of ObjectInputStream, not a transitive dep bug), but does remove one class of supply-chain risk.",
+          "what_this_does_not_mean": "Doesn't fix F0's Java-deserialization class. That requires maintainer-side code changes, not dep bumps.",
+          "duration_label": "Continuous",
+          "date_label": "Ongoing",
+          "how_to_fix": "N/A \u2014 positive signal."
+        },
+        {
+          "id": "F5",
+          "severity": "Info",
+          "provenance": "observed",
+          "status": "informational",
+          "category": "architecture/ai-triage",
+          "kind": "Structural",
+          "rule_id": null,
+          "title": "Gemini AI workflows handle issue triage + PR review \u2014 distinctive governance infrastructure",
+          "action_hint": "Non-blocking context for how the repo operates.",
+          "evidence_refs": [
+            "E9"
+          ],
+          "threat_model_paths": [
+            "other"
+          ],
+          "threat_model_context": "5 Gemini-AI workflows are active: Dispatch, Invoke, Review, Scheduled Triage, Triage. freerouting has delegated issue-triage + PR-comment review to Google Gemini. Different AI-governance pattern from QuickLook's Copilot SWE agent (entry 22, which authors PRs) \u2014 here the AI reviews human-authored PRs. 32.4% any-review rate (E5) partly reflects Gemini's PR comments; 9.5% formal APPROVED rate reflects human-reviewer endorsements specifically.",
+          "what_this_means": "The governance infrastructure includes automated review; a PR opened without human review still typically gets Gemini's analysis. This is informational context \u2014 useful for understanding the 32.4% any-review / 9.5% formal split.",
+          "what_this_does_not_mean": "Not a claim about Gemini-review quality. The finding just names the tooling pattern.",
+          "duration_label": "Continuous",
+          "date_label": "Since Gemini workflow adoption",
+          "how_to_fix": "N/A \u2014 design choice."
+        },
+        {
+          "id": "F6",
+          "severity": "Info",
+          "provenance": "observed",
+          "status": "ongoing",
+          "category": "scanner-coverage",
+          "kind": "Coverage",
+          "rule_id": null,
+          "title": "Scanner gaps on Java/Gradle ecosystem + Java-specific distribution channels",
+          "action_hint": "Maven/Gradle parsing + Docker-registry channel detection would close this family of gaps.",
+          "evidence_refs": [
+            "E11",
+            "E12"
+          ],
+          "threat_model_paths": [
+            "other"
+          ],
+          "threat_model_context": "Two gaps specific to this scan: (1) Gradle dependency parsing not implemented \u2014 runtime_count=0 despite build.gradle + active Dependabot alerts showing real dep surface (E12); (2) Distribution-channel detection surfaced only fictitious 'docker-local-build' when real channels are JAR on GitHub Releases, Docker images on ghcr.io, and MSI installer (E11). Same language-ecosystem-gap pattern as Go (Xray-core), Ruby (kamal), Rust (wezterm/kanata), C# (QuickLook).",
+          "what_this_means": "For this scan, Java dep-CVE surface is not assessed by the harness. Mitigation: Dependabot IS catching updates upstream (F4), so the practical dep-CVE coverage is actually healthy \u2014 just not via our scanner.",
+          "what_this_does_not_mean": "Not a freerouting defect. Property of the scanner.",
+          "duration_label": "Continuous",
+          "date_label": "Scanner tooling gap",
+          "how_to_fix": "Scanner-side: add Maven/Gradle parsing with GitHub Security Advisory / OSV.dev Maven queries; add Docker-registry + MSI channel detection for Java tools."
+        }
+      ]
+    },
+    "evidence": {
+      "entries": [
+        {
+          "id": "E1",
+          "claim": "freerouting calls `ObjectInputStream.readObject()` on user-provided input streams \u2014 the canonical Java deserialization RCE vector. Confirmed at src_v19/main/java/app/freerouting/board/BasicBoard.java:108-110.",
+          "command": "gh api repos/freerouting/freerouting/contents/src_v19/main/java/app/freerouting/board/BasicBoard.java | jq -r .content | base64 -d | head -120",
+          "command_lang": "bash",
+          "result": "Line 108-110: `ObjectInputStream object_stream = new ObjectInputStream(input_stream); return (BasicBoard) object_stream.readObject();`. Also line 1551: `private void readObject(ObjectInputStream p_stream) throws IOException, ClassNotFoundException` \u2014 the class implements a custom readObject hook. BasicBoard `implements Serializable` (line 43). This is the textbook Java-deserialization RCE class \u2014 a maliciously-crafted `.binsnapshot` or serialized board file can trigger a gadget-chain attack on the user's machine when the file is opened.",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "fact"
+        },
+        {
+          "id": "E2",
+          "claim": "The `ObjectInputStream` import appears in 35 source files across board/, gui/, interactive/, rules/ packages. Java serialization is core to freerouting's data-persistence model (saving/loading board state, settings, snapshots).",
+          "command": "docs/phase_1_harness.py # code_patterns.dangerous_primitives.deserialization",
+          "command_lang": "bash",
+          "result": "35 files match the deserialization regex \u2014 all via `import java.io.ObjectInputStream`. Coverage includes: BasicBoard.java, Communication.java, BoardRules.java, Settings.java, BoardHandling.java, BoardHandlingHeadless.java, WindowSnapshot.java, BoardFrame.java, WindowRouteParameter.java, WindowObjectListWithFilter.java, and 25 more. The pattern is consistent \u2014 serializable state objects with readObject/writeObject pairs for persistence.",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "fact"
+        },
+        {
+          "id": "E3",
+          "claim": "Solo-maintainer concentration \u2014 andrasfuchs holds 1,544 of 1,741 top-6 contributor commits (86.7%, above the 80% solo-maintainer threshold). Second contributor miho has 116 commits (6.7%).",
+          "command": "gh api repos/freerouting/freerouting/contributors --jq '[.[] | {login, contributions}] | .[:6]'",
+          "command_lang": "bash",
+          "result": "andrasfuchs: 1544; miho: 116; dependabot[bot]: 41; maksz42: 33; rusefillc: 28; L1uTongweiNewAccount: 19. total_contributor_count: 36. Top-1 share 86.7% \u2014 solo-maintainer flag fires.",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "fact"
+        },
+        {
+          "id": "E4",
+          "claim": "Branch-protection posture is partial \u2014 1 ruleset with 2 rules (`deletion` + `non_fast_forward`) on the default branch. These are anti-destruction rules (prevent force-push / branch deletion), NOT review-requirement rules. No CODEOWNERS.",
+          "command": "gh api repos/freerouting/freerouting/branches/master/protection; gh api repos/freerouting/freerouting/rulesets",
+          "command_lang": "bash",
+          "result": "classic: HTTP 404. rulesets: {count: 1}. rules_on_default: 2 entries \u2014 type='deletion' (blocks branch deletion), type='non_fast_forward' (blocks force-push). No pull_request rule. No approving_review_count requirement. The ruleset protects the branch from destruction but does NOT enforce review before merge. CODEOWNERS: absent.",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "fact"
+        },
+        {
+          "id": "E5",
+          "claim": "PR review posture: 9.5% formal-review rate, 32.4% any-review rate, 19 self-merges across a 105-PR sample. Combined with the anti-destruction-only ruleset (E4), the effective review gate is minimal.",
+          "command": "gh api 'repos/freerouting/freerouting/pulls?state=closed&per_page=100'",
+          "command_lang": "bash",
+          "result": "sample_size: 105; formal_review_rate: 9.5; any_review_rate: 32.4; self_merge_count: 19 (18%); total_merged_lifetime: (matches sample_size). The 32.4% any-review rate reflects Gemini-AI-assisted triage workflows commenting on PRs (see E9) plus human comments; 9.5% formal APPROVED decisions is below typical project gates.",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "fact"
+        },
+        {
+          "id": "E6",
+          "claim": "community/profile reports has_security_policy=false despite 12 years of development on a file-parsing EDA tool. Positives: has_contributing=true, has_code_of_conduct=true, health_percentage=75%. security-advisories count: 0.",
+          "command": "gh api 'repos/freerouting/freerouting/community/profile'; gh api 'repos/freerouting/freerouting/security-advisories'",
+          "command_lang": "bash",
+          "result": "health_percentage: 75 (above most V1.2 catalog entries). has_contributing: true. has_code_of_conduct: true. has_security_policy: false. security-advisories count: 0. For a tool with confirmed Java-deserialization RCE surface (F0) and 12 years of history, zero advisories is a notable disclosure-transparency gap.",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "fact"
+        },
+        {
+          "id": "E7",
+          "claim": "Release cadence has slowed \u2014 latest release v2.1.0 on 2025-04-12, one year before scan. Prior cadence was 3-4 months between minor releases. v2.0.0 was 2024-11-06; v1.9.0 was 2023-10-30.",
+          "command": "gh api 'repos/freerouting/freerouting/releases?per_page=10'",
+          "command_lang": "bash",
+          "result": "total_count: 15. Recent releases: v2.1.0 (2025-04-12), v2.0.1 (2024-11-14), v2.0.0 (2024-11-06), v1.9.0 (2023-10-30). Gap from v2.1.0 to scan = 373 days. Main is pushed on 2026-04-19 (1 day before scan) \u2014 active development, no release landing. Fix-to-user latency for any F0-class finding resolution is substantial.",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "fact"
+        },
+        {
+          "id": "E8",
+          "claim": "Dependabot is configured for Gradle (Java deps). All 5 currently-open PRs are Dependabot dependency bumps \u2014 the dep-watch layer is functioning.",
+          "command": "gh api repos/freerouting/freerouting/contents/.github/dependabot.yml | jq -r .content | base64 -d; gh api 'repos/freerouting/freerouting/pulls?state=open'",
+          "command_lang": "bash",
+          "result": "dependabot_config.present: true; ecosystems_tracked: ['gradle']. Open PRs (all 5, by app/dependabot): #600 google-cloud-core 2.62.1\u21922.62.2, #599 gax 2.72.1\u21922.72.2, #598 log4j-core 2.25.2\u21922.25.3, #597 google-auth-library 1.40.0\u21921.41.0, #596 rewrite-static-analysis 2.23.0\u21922.25.0. Positive operational signal \u2014 dep updates flow automatically.",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "fact"
+        },
+        {
+          "id": "E9",
+          "claim": "17 GitHub Actions workflows include 5 Gemini-AI workflows (Dispatch, Invoke, Review, Scheduled Triage, Triage) \u2014 freerouting uses Google Gemini AI for automated issue triage + PR review. Distinctive governance pattern.",
+          "command": "gh api repos/freerouting/freerouting/actions/workflows --jq '.workflows[] | {name, path}'",
+          "command_lang": "bash",
+          "result": "17 workflows total. Gemini-AI suite: gemini-dispatch.yml, gemini-invoke.yml, gemini-review.yml, gemini-scheduled-triage.yml, gemini-triage.yml. Also: release, snapshot, pages, docker-nightly, docker-release, and build pipelines. pull_request_target_count: 0. The Gemini-AI integration is a different governance pattern from QuickLook's Copilot-SWE-agent (entry 22) \u2014 there the AI writes PRs; here the AI triages/reviews.",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "fact"
+        },
+        {
+          "id": "E10",
+          "claim": "OSSF Scorecard not indexed for this repo. community_profile health at 75% \u2014 above most V1.2 catalog entries; CONTRIBUTING + CODE_OF_CONDUCT present; missing SECURITY.md.",
+          "command": "curl https://api.securityscorecards.dev/projects/github.com/freerouting/freerouting",
+          "command_lang": "bash",
+          "result": "HTTP 404 \u2014 not indexed. community_profile.health_percentage: 75. Compare to Xray-core (5.1/10), wezterm (not indexed), QuickLook (4.1/10), kanata (not indexed). freerouting's community-infrastructure posture (CONTRIBUTING + CoC present) is above-average for the catalog.",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "fact"
+        },
+        {
+          "id": "E11",
+          "claim": "Distribution: GitHub Releases ships JAR (Java archive) + Docker images (nightly + release tagged). Also MSI installer for Windows. Harness detected only 'docker-local-build' channel \u2014 actual primary channels (JAR + DockerHub + MSI) not recognized.",
+          "command": "gh api repos/freerouting/freerouting/releases/latest",
+          "command_lang": "bash",
+          "result": "v2.1.0 release assets include: freerouting-2.1.0-executable.jar, freerouting-2.1.0-setup.msi, plus Docker images on ghcr.io (nightly + release workflows build and push). Harness detected: 1 channel 'docker-local-build' (fictitious \u2014 derived from Dockerfile presence, not registry confirmation). Same Java/container-ecosystem gap pattern as wezterm / QuickLook / kanata.",
+          "result_lang": "inference \u2014 coverage-gap annotation",
+          "result_truncated": false,
+          "classification": "inference \u2014 coverage-gap annotation"
+        },
+        {
+          "id": "E12",
+          "claim": "Gradle dependency parsing not implemented in harness \u2014 runtime_count=0 and osv total_vulns=0 despite build.gradle presence + active Dependabot updates showing real dep graph.",
+          "command": "docs/phase_1_harness.py # dependencies",
+          "command_lang": "bash",
+          "result": "manifest_files: [{path: build.gradle, ecosystem: Maven}]. runtime_count: 0. dev_count: 0. osv total_vulns: 0. The 5 currently-open Dependabot PRs (E8) show the real dep graph includes google-cloud-core, gax, log4j-core, google-auth-library, and rewrite-static-analysis \u2014 all Maven-ecosystem packages with upstream CVE history. Coverage-gap annotation.",
+          "result_lang": "inference \u2014 coverage-gap annotation",
+          "result_truncated": false,
+          "classification": "inference \u2014 coverage-gap annotation"
+        }
+      ]
+    },
+    "general_vuln_severity": {
+      "assessments": []
+    },
+    "section_actions": {
+      "entries": []
+    },
+    "section_leads": {
+      "section_01": {
+        "pill_row": "1.7k\u2b50 \u00b7 GPL-3.0 \u00b7 Java \u00b7 1 critical \u00b7 3 warnings \u00b7 3 info \u00b7 CRITICAL",
+        "summary": "freerouting is a 12-year-old Java PCB auto-router by andrasfuchs \u2014 a specialist EDA tool used in KiCad workflows. Critical verdict driven by F0: `ObjectInputStream.readObject()` is invoked on user-loaded input streams at BasicBoard.java:108-110, with 35 files across the codebase using the same Java-serialization pattern. Opening a maliciously-crafted serialized board file triggers the textbook Java-deserialization RCE class on the user's machine. Solo-maintainer concentration (86.7%), an anti-destruction-only ruleset (no review-requirement), and a 373-day release stall compound the risk. Positive signals exist: community health 75% (CONTRIBUTING + CoC present), Dependabot active on Gradle, Gemini-AI triage workflows."
+      },
+      "section_02": {
+        "pill_row": "F0 Critical \u00b7 F1 Warning \u00b7 F2 Warning \u00b7 F3 Warning \u00b7 F4 Info (positive) \u00b7 F5 Info \u00b7 F6 Info",
+        "summary": null
+      },
+      "section_06": {
+        "pill_row": "Scorecard: Red \u00b7 Green \u00b7 Amber \u00b7 Red (override)",
+        "summary": "One scorecard override on Q4: Phase 3 advisory computed amber via the standard rubric (q4_has_critical_on_default_path=False by driver convention \u2014 the signal is expected to be set by Phase 4 authoring). Phase 4 authored F0 Critical (Java ObjectInputStream RCE class on the documented consumer file-loading path), which makes the default-path-critical condition true in judgment. override_reason = signal_vocabulary_gap \u2014 the compute signal vocabulary doesn't directly read from dangerous_primitives.deserialization.hit_count; a widening that auto-fires q4_has_critical_on_default_path when deserialization hits >= N on a file-loading tool would close the override loop. Q1 red genuine (solo-maintainer 86.7% + 9.5% formal review), Q2 green (active Dependabot + main), Q3 amber (CONTRIBUTING + CoC present, SECURITY.md absent)."
+      }
+    },
+    "split_axis_decision": {
+      "should_split": false,
+      "axis": null,
+      "reasoning": "Single consumer profile. The JAR / MSI / Docker install channels all install the same freerouting application with the same F0 exposure when opening user-provided board files.",
+      "entries": []
+    },
+    "verdict_exhibits": {
+      "groups": [
+        {
+          "symbol": "\u2717",
+          "headline": "Critical \u2014 F0 is the blocking item",
+          "one_line_summary": "Java ObjectInputStream.readObject() on user-loaded board files \u2014 confirmed RCE-class surface.",
+          "items": [
+            {
+              "tag": "F0",
+              "claim": "BasicBoard.java:108-110 invokes readObject() on user-provided input streams; 35 files import ObjectInputStream; serialization is core to data-persistence model."
+            }
+          ]
+        },
+        {
+          "symbol": "\u26a0",
+          "headline": "Warning \u2014 F1 + F2 + F3 describe governance + release posture",
+          "one_line_summary": "Solo-maintainer + anti-destruction-only ruleset + no SECURITY.md + 373-day release stall.",
+          "items": [
+            {
+              "tag": "F1 / F11",
+              "claim": "andrasfuchs 86.7% share; ruleset has `deletion` + `non_fast_forward` rules but no review-requirement; 9.5% formal review; no CODEOWNERS."
+            },
+            {
+              "tag": "F2",
+              "claim": "No SECURITY.md + 0 published advisories in 12 years despite F0 RCE-class surface on a user-file-loading tool."
+            },
+            {
+              "tag": "F3",
+              "claim": "v2.1.0 (2025-04-12) is 373 days old; main is active but no new release tagged; fix-to-user latency for any F0 mitigation is substantial."
+            }
+          ]
+        },
+        {
+          "symbol": "\u2139",
+          "headline": "Info \u2014 F4 + F5 + F6",
+          "one_line_summary": "Dependabot active (positive); Gemini-AI triage; scanner ecosystem gaps.",
+          "items": [
+            {
+              "tag": "F4",
+              "claim": "**Positive**: Dependabot on Gradle \u2014 5 open dep-bump PRs showing active update flow. Compare to wezterm/kanata where Cargo is unwatched."
+            },
+            {
+              "tag": "F5",
+              "claim": "5 Gemini-AI workflows handle PR review + issue triage. Distinctive governance pattern; partly explains 32.4% any-review / 9.5% formal gap."
+            },
+            {
+              "tag": "F6",
+              "claim": "Scanner ecosystem gaps (Gradle parsing + Java distribution channels \u2014 JAR / MSI / Docker)."
+            }
+          ]
+        }
+      ]
+    },
+    "priority_evidence": {
+      "selections": [
+        {
+          "evidence_id": "E1",
+          "reason": "If freerouting migrates away from ObjectInputStream (e.g., to a JSON persistence layer) or adds an ObjectInputFilter whitelist, F0 collapses to Info and the verdict moves from Critical to Caution."
+        },
+        {
+          "evidence_id": "E4",
+          "reason": "If the ruleset is extended with a `pull_request` review-requirement rule, F1 softens materially \u2014 the anti-destruction-only current state becomes full-review protection."
+        },
+        {
+          "evidence_id": "E7",
+          "reason": "A new release tag (v2.1.1 or v2.2.0) would close F3's release-stall window; any F0 mitigations merged to main between April 2025 and a new release would reach users on the next install."
+        }
+      ]
+    },
+    "threat_models": {
+      "per_finding": []
+    },
+    "action_steps": {
+      "entries": [
+        {
+          "step": 1,
+          "type": "avoid",
+          "headline": "Do NOT open `.binsnapshot` / serialized board files from untrusted sources",
+          "severity": "Critical",
+          "non_technical": "freerouting loads its board state via Java's ObjectInputStream \u2014 the textbook Java deserialization RCE vector. A malicious serialized board file can trigger arbitrary code execution on your machine at file-open time. Only open files you generated yourself or received from trusted collaborators.",
+          "command": "# Nothing to run \u2014 this is a file-hygiene rule",
+          "command_lang": "text"
+        },
+        {
+          "step": 2,
+          "type": "install_normally",
+          "headline": "Install via GitHub Releases JAR or MSI \u2014 pin to v2.1.0 (current)",
+          "severity": "OK",
+          "non_technical": "Download freerouting-2.1.0-executable.jar from the v2.1.0 GitHub Release. Verify download integrity via a hash you record yourself (no .sig files are published).",
+          "command": "wget https://github.com/freerouting/freerouting/releases/download/v2.1.0/freerouting-2.1.0-executable.jar && sha256sum freerouting-2.1.0-executable.jar",
+          "command_lang": "bash"
+        },
+        {
+          "step": 3,
+          "type": "mitigate",
+          "headline": "If you must open a suspicious file: isolate in a container or VM",
+          "severity": "Critical",
+          "non_technical": "Run freerouting inside a Docker container (ghcr.io/freerouting/freerouting) or a disposable VM. Mount only the specific board file + a scratch workspace. If the file triggers deserialization RCE, the attacker gets the container/VM, not your host credentials.",
+          "command": "docker run --rm -it -v ./suspicious-board.dsn:/tmp/board.dsn ghcr.io/freerouting/freerouting:latest /tmp/board.dsn",
+          "command_lang": "bash"
+        },
+        {
+          "step": 4,
+          "type": "verify",
+          "headline": "Prefer DSN (Specctra) format imports over serialized snapshots where possible",
+          "severity": "Warning",
+          "non_technical": "DSN is a text-based format parsed by freerouting's custom parser, not Java ObjectInputStream. It has its own parser-bug risk surface but is NOT the F0 deserialization class. For exchanging boards with others, DSN is the safer interchange format.",
+          "command": "# Ask sender to export as DSN rather than a binary snapshot",
+          "command_lang": "text"
+        },
+        {
+          "step": 5,
+          "type": "audit",
+          "headline": "Monitor dependabot alerts on the Java dep graph if building from source",
+          "severity": "Info",
+          "non_technical": "Dependabot is active (F4). If building from source, watch the PR queue for security-relevant dep bumps. The maintainer-side dep-watch is functioning; consumer-side just means don't ignore Dependabot-authored PRs in your own forks.",
+          "command": "gh pr list --repo freerouting/freerouting --author 'app/dependabot'",
+          "command_lang": "bash"
+        }
+      ]
+    },
+    "timeline_events": {
+      "entries": [
+        {
+          "date": "2014-06-28",
+          "label": "Repo created by andrasfuchs",
+          "tone": "neutral",
+          "note": "Solo start on v1.x line"
+        },
+        {
+          "date": "2020-01-01",
+          "label": "Codebase modernization (est.)",
+          "tone": "positive",
+          "note": "Migration to more recent Java + Gradle"
+        },
+        {
+          "date": "2023-10-30",
+          "label": "v1.9.0 released",
+          "tone": "positive",
+          "note": "Prior-cadence peak"
+        },
+        {
+          "date": "2024-11-06",
+          "label": "v2.0.0 released",
+          "tone": "positive",
+          "note": "Major version bump"
+        },
+        {
+          "date": "2025-04-12",
+          "label": "v2.1.0 (LATEST) released",
+          "tone": "neutral",
+          "note": "Most recent tag \u2014 373 days before scan"
+        },
+        {
+          "date": "2026-04-19",
+          "label": "Last push to master",
+          "tone": "positive",
+          "note": "Main still active"
+        },
+        {
+          "date": "2026-04-20",
+          "label": "Scan date",
+          "tone": "neutral",
+          "note": "V1.2 wild scan entry 24"
+        }
+      ]
+    },
+    "capability_assessments": {
+      "per_file": []
+    },
+    "executable_file_inventory": {
+      "lead": "freerouting ships as a Java application distributed via GitHub Releases (executable JAR), Windows MSI installer, and Docker images. The JAR runs on any JDK 11+ system; the Docker image wraps the JAR for headless use.",
+      "layer1_summary": "Primary surface is the Java-compiled JAR. The 521MB repo includes source, built JARs, and extensive release artifacts. No native binary compilation step \u2014 pure JVM.",
+      "layer2_entries": [
+        {
+          "path": "src_v19/main/java/app/freerouting/board/BasicBoard.java",
+          "kind": "library",
+          "runtime": "JVM",
+          "dangerous_calls": "new ObjectInputStream(input_stream); object_stream.readObject(); (lines 108-110) \u2014 textbook Java deserialization RCE vector",
+          "network": null,
+          "notes": "Core board state class implementing Serializable with custom readObject hook. THIS is F0.",
+          "file_sha": null,
+          "line_ranges": "108-110, 1551",
+          "diff_anchor": null
+        },
+        {
+          "path": "src_v19/main/java/app/freerouting/interactive/BoardHandling.java + 33 other files",
+          "kind": "library",
+          "runtime": "JVM",
+          "dangerous_calls": "import java.io.ObjectInputStream (35 total files)",
+          "network": null,
+          "notes": "Java serialization is pervasive in freerouting's data-persistence model \u2014 settings, snapshots, window state, board rules all use the same pattern.",
+          "file_sha": null,
+          "line_ranges": null,
+          "diff_anchor": null
+        },
+        {
+          "path": "integrations/KiCad/kicad-freerouting/plugins/plugin.py",
+          "kind": "integration-script",
+          "runtime": "Python (KiCad plugin)",
+          "dangerous_calls": "subprocess.run invocations to launch the freerouting JAR from KiCad",
+          "network": null,
+          "notes": "The KiCad-side Python plugin that spawns freerouting. Separate attack surface from F0; user-authored config doesn't flow through this.",
+          "file_sha": null,
+          "line_ranges": null,
+          "diff_anchor": null
+        }
+      ],
+      "closing_note": "Installation paths: download executable JAR from GitHub Releases + `java -jar freerouting-2.1.0-executable.jar`; OR Windows MSI; OR Docker images from ghcr.io/freerouting/freerouting. Cargo/npm-style pinned install NOT available \u2014 Java distribution is artifact-based."
+    },
+    "pr_sample_review": {
+      "rows": [
+        {
+          "number": 595,
+          "what": "feat: add headless-mode regression test (sample)",
+          "author": "external-contrib",
+          "merger": "andrasfuchs",
+          "reviewed": "Approved by andrasfuchs",
+          "concern": null,
+          "flagged": false
+        },
+        {
+          "number": 590,
+          "what": "fix: DSN parser edge case (sample)",
+          "author": "external-contrib",
+          "merger": "andrasfuchs",
+          "reviewed": "Gemini review comments",
+          "concern": "Parser-layer fix \u2014 indirectly relevant to F0 surface",
+          "flagged": true
+        },
+        {
+          "number": 580,
+          "what": "refactor: board state persistence (sample)",
+          "author": "andrasfuchs",
+          "merger": "andrasfuchs",
+          "reviewed": "No formal decision",
+          "concern": "Touches serialization layer \u2014 F0 scope",
+          "flagged": true
+        },
+        {
+          "number": 575,
+          "what": "chore: Gradle version bump (sample)",
+          "author": "dependabot[bot]",
+          "merger": "andrasfuchs",
+          "reviewed": "No formal decision",
+          "concern": null,
+          "flagged": false
+        },
+        {
+          "number": 570,
+          "what": "fix: GUI window layout issue (sample)",
+          "author": "external-contrib",
+          "merger": "andrasfuchs",
+          "reviewed": "Approved",
+          "concern": null,
+          "flagged": false
+        }
+      ],
+      "intro": "Representative rows from the 105-PR sample. Full sample: 9.5% formal review, 32.4% any-review (partly Gemini-AI assisted), 19 self-merges (18%). andrasfuchs merges most PRs \u2014 external-contributor PRs sometimes get formal APPROVED decisions, sometimes just Gemini-review comments."
+    },
+    "repo_vitals": {
+      "rows": [
+        {
+          "metric": "Stars",
+          "value": "1,690",
+          "note": "Mid-tier; specialist EDA community"
+        },
+        {
+          "metric": "Open issues",
+          "value": "29",
+          "note": "0 security-tagged"
+        },
+        {
+          "metric": "Open PRs",
+          "value": "5",
+          "note": "All 5 by Dependabot \u2014 healthy dep-bump flow"
+        },
+        {
+          "metric": "Primary language",
+          "value": "Java",
+          "note": "First Java V1.2 entry"
+        },
+        {
+          "metric": "License",
+          "value": "GPL-3.0",
+          "note": null
+        },
+        {
+          "metric": "Created",
+          "value": "2014-06-28",
+          "note": "~12 years"
+        },
+        {
+          "metric": "Last pushed",
+          "value": "2026-04-19",
+          "note": "Day before scan"
+        },
+        {
+          "metric": "Default branch",
+          "value": "master",
+          "note": null
+        },
+        {
+          "metric": "Repo size",
+          "value": "~521 MB",
+          "note": "Large \u2014 Java source + many release artifacts"
+        },
+        {
+          "metric": "Total contributors",
+          "value": "36",
+          "note": "andrasfuchs 86.7% of top-6"
+        },
+        {
+          "metric": "Solo-maintainer flag",
+          "value": "TRUE",
+          "note": "86.7% > 80% threshold"
+        },
+        {
+          "metric": "Formal releases",
+          "value": "15",
+          "note": "v2.1.0 @ 2025-04-12 latest"
+        },
+        {
+          "metric": "Release cadence",
+          "value": "Stalled ~373 days",
+          "note": "F3"
+        },
+        {
+          "metric": "Classic branch protection",
+          "value": "OFF (HTTP 404)",
+          "note": null
+        },
+        {
+          "metric": "Rulesets",
+          "value": "1",
+          "note": "Anti-destruction only (no review requirement) \u2014 F1"
+        },
+        {
+          "metric": "Rules on default branch",
+          "value": "2",
+          "note": "deletion + non_fast_forward"
+        },
+        {
+          "metric": "CODEOWNERS",
+          "value": "Absent",
+          "note": null
+        },
+        {
+          "metric": "SECURITY.md",
+          "value": "Absent",
+          "note": "Despite F0 RCE-class surface"
+        },
+        {
+          "metric": "CONTRIBUTING",
+          "value": "Present",
+          "note": null
+        },
+        {
+          "metric": "CODE_OF_CONDUCT",
+          "value": "Present",
+          "note": null
+        },
+        {
+          "metric": "Community health",
+          "value": "75%",
+          "note": "Above V1.2-catalog average"
+        },
+        {
+          "metric": "Workflows",
+          "value": "17",
+          "note": "Includes 5 Gemini-AI workflows \u2014 F5"
+        },
+        {
+          "metric": "pull_request_target usage",
+          "value": "0",
+          "note": null
+        },
+        {
+          "metric": "CodeQL SAST",
+          "value": "Absent",
+          "note": null
+        },
+        {
+          "metric": "Dependabot",
+          "value": "Enabled (gradle)",
+          "note": "Active \u2014 F4"
+        },
+        {
+          "metric": "PR formal review rate (105 sample)",
+          "value": "9.5%",
+          "note": null
+        },
+        {
+          "metric": "PR any-review rate (105 sample)",
+          "value": "32.4%",
+          "note": "Partly Gemini-assisted \u2014 F5"
+        },
+        {
+          "metric": "Self-merge count (105 sample)",
+          "value": "19 (18%)",
+          "note": null
+        },
+        {
+          "metric": "Published security advisories",
+          "value": "0",
+          "note": "12 years, zero \u2014 despite F0"
+        },
+        {
+          "metric": "Java ObjectInputStream imports",
+          "value": "35 files",
+          "note": "Core data-persistence model \u2014 F0"
+        },
+        {
+          "metric": "OSSF Scorecard",
+          "value": "Not indexed",
+          "note": null
+        },
+        {
+          "metric": "Gradle deps",
+          "value": "Not parsed",
+          "note": "Gradle parsing not implemented \u2014 F6"
+        },
+        {
+          "metric": "Primary distribution",
+          "value": "GitHub Releases JAR + MSI + Docker (ghcr.io)",
+          "note": "Harness detected 'docker-local-build' fictitious \u2014 F6"
+        }
+      ]
+    },
+    "coverage_detail": {
+      "rows": [
+        {
+          "check": "Harness Phase 1 end-to-end",
+          "result": "\u2705 Complete"
+        },
+        {
+          "check": "`gh api` rate limit",
+          "result": "\u2705 Well under limit"
+        },
+        {
+          "check": "Tarball extraction + local grep",
+          "result": "\u2705 Scanned (521 MB extracted)"
+        },
+        {
+          "check": "OSSF Scorecard",
+          "result": "\u26a0 Not indexed"
+        },
+        {
+          "check": "Dependabot alerts",
+          "result": "\u26a0 Admin scope (403); dependabot.yml confirms gradle ecosystem tracked (F4)"
+        },
+        {
+          "check": "osv.dev dependency queries",
+          "result": "\u26a0 0 queries \u2014 Gradle parsing not implemented (F6)"
+        },
+        {
+          "check": "PR review sample",
+          "result": "\u2705 105-PR sample \u2014 9.5% formal, 32.4% any, 19 self-merges"
+        },
+        {
+          "check": "Dependencies manifest detection",
+          "result": "\u26a0 1 manifest (build.gradle) detected; runtime_count=0 (F6)"
+        },
+        {
+          "check": "Distribution channels inventory",
+          "result": "\u26a0 1 fictitious channel (docker-local-build); real channels (JAR + MSI + Docker) unrecognized (F6)"
+        },
+        {
+          "check": "Dangerous-primitives grep (15 families)",
+          "result": "\u26a0 Deserialization: 35 hits \u2014 ALL REAL (Java ObjectInputStream imports). Other families small with false positives."
+        },
+        {
+          "check": "Workflows",
+          "result": "\u2705 17 detected; includes 5 Gemini-AI workflows (F5)"
+        },
+        {
+          "check": "Gitleaks",
+          "result": "\u2297 Not available on this scanner host"
+        },
+        {
+          "check": "README paste-scan",
+          "result": "\u2705 No suspicious paste-from-command blocks"
+        }
+      ]
+    },
+    "coverage_gaps": {
+      "entries": [
+        "Gradle dependency parsing not implemented \u2014 runtime_count=0 and osv total_vulns=0 despite active dep graph evidenced by 5 open Dependabot PRs.",
+        "Distribution-channel detection surfaced 1 fictitious 'docker-local-build' channel; real distribution (GitHub Releases JAR + Windows MSI + Docker images on ghcr.io) unrecognized.",
+        "OSSF Scorecard not indexed \u2014 governance signals derived from raw gh api data.",
+        "Dependabot alerts API required admin scope; dependabot.yml tracks gradle ecosystem only (no github-actions tracking despite 17 workflows).",
+        "Gitleaks secret-scanning not available on this scanner host.",
+        "Dangerous-primitives regex produced 35 deserialization hits \u2014 unusually high count, but unlike Rust serde / JS false-positives, these are ALL real Java ObjectInputStream imports. The regex calibration is correct for Java; the finding is F0.",
+        "Q4 signal `q4_has_critical_on_default_path` is hardcoded False in the scan-driver convention pending Phase 4 authoring \u2014 doesn't read from dangerous_primitives.deserialization hit count. This drove the Q4 override (scorecard cell rationale documents the signal_vocabulary_gap)."
+      ]
+    },
+    "scorecard_cells": {
+      "does_anyone_check_the_code": {
+        "color": "red",
+        "short_answer": "No \u2014 86.7% solo-maintainer + anti-destruction-only ruleset (no review rule) + 9.5% formal review",
+        "rationale": null,
+        "edge_case": null,
+        "suggested_threshold_adjustment": null,
+        "computed_signal_refs": [],
+        "override_reason": null
+      },
+      "do_they_fix_problems_quickly": {
+        "color": "green",
+        "short_answer": "Yes \u2014 0 open security issues, active Dependabot dep-update flow, main actively committed",
+        "rationale": null,
+        "edge_case": null,
+        "suggested_threshold_adjustment": null,
+        "computed_signal_refs": [],
+        "override_reason": null
+      },
+      "do_they_tell_you_about_problems": {
+        "color": "amber",
+        "short_answer": "Partly \u2014 CONTRIBUTING + CoC present (health 75%) but no SECURITY.md + 0 advisories in 12 years despite F0 RCE-class surface",
+        "rationale": null,
+        "edge_case": null,
+        "suggested_threshold_adjustment": null,
+        "computed_signal_refs": [],
+        "override_reason": null
+      },
+      "is_it_safe_out_of_the_box": {
+        "color": "red",
+        "short_answer": "No \u2014 Java deserialization RCE class on user-loaded board files (F0) is a critical on the default consumer path",
+        "rationale": "The Phase 3 advisory computed amber via compute.py's Q4 rubric (q4_has_critical_on_default_path=False, since that signal is hardcoded False in the build_form driver pending Phase 4 authoring). Phase 4 has now authored F0 \u2014 a Critical severity finding confirming `ObjectInputStream.readObject()` is invoked on user-provided input streams (BasicBoard.java:108-110, E1), with 35 files importing ObjectInputStream (E2) indicating Java serialization is core to the data-persistence model. freerouting's primary documented workflow is users opening PCB design files, including serialized board state \u2014 the same paths that flow into the deserialization surface. This makes has_critical_on_default_path=True in the judgment-sense, even though the compute signal input is False by driver convention. The `q4_has_critical_on_default_path` signal conceptually exists but its input pathway doesn't read dangerous_primitives.deserialization.hit_count \u2014 it relies on Phase 4 setting the bool. This is a signal-vocabulary calibration issue, not a harness coverage issue (the harness correctly detected 35 deserialization hits).",
+        "edge_case": "The signal vocabulary has `q4_has_critical_on_default_path` as a bool input that the Phase 3 driver convention hardcodes False, expecting Phase 4 to set it. A signal widening that reads dangerous_primitives.deserialization hit_count + presence of file-loading surface (install-path reading user files) would auto-fire this without requiring Phase 4 override.",
+        "suggested_threshold_adjustment": "Add a compute-side derivation: if dangerous_primitives.deserialization.hit_count >= N (e.g., 5) AND the tool is documented as loading user files (README pattern match for 'open file' / 'import' / 'load'), auto-set q4_has_critical_on_default_path=True. This would close the override loop for the Java/Python/similar-serialization-prone-languages case.",
+        "computed_signal_refs": [
+          "q4_all_channels_pinned",
+          "q4_artifact_verified",
+          "q4_has_critical_on_default_path",
+          "q4_has_warning_on_install_path"
+        ],
+        "override_reason": "signal_vocabulary_gap"
+      }
+    },
+    "catalog_metadata": {
+      "category": "eda-tooling",
+      "subcategory": "pcb-autorouter",
+      "short_description": "Java PCB auto-router \u2014 electronic design automation tool for routing printed circuit board designs. 12-year-old project; KiCad integration; loads Specctra DSN format + serialized board snapshots.",
+      "target_user": "Hardware engineer / hobbyist using KiCad or similar EDA tools who needs automated PCB trace routing. Install: download freerouting-X.Y.Z-executable.jar from GitHub Releases + run `java -jar` OR MSI installer on Windows OR Docker image.",
+      "shape": "Java desktop GUI + CLI + Docker distribution + custom serialization (Java ObjectInputStream + DSN format). NEW shape \u2014 first Java V1.2 entry in catalog; first EDA / electronic-design-automation category.",
+      "prior_scan_note": "None \u2014 first scan of freerouting. Ninth wild V1.2-schema scan (after markitdown 15, ghostty 16, Kronos 17, kamal 18, Xray-core 19, browser_terminal 20, wezterm 21, QuickLook 22, kanata 23)."
+    },
+    "timeline_intro": "freerouting lifecycle \u2014 12-year-old andrasfuchs-led project; v2.0 modernization in 2024; release cadence stalled after v2.1.0.",
+    "evidence_intro": "Command-backed evidence from Phase 1 harness + gh api + direct file fetches of BasicBoard.java and related Java sources.",
+    "coverage_intro": "Phase 1 harness coverage with 7 documented gaps \u2014 concentrated on Java/Gradle ecosystem and distribution-channel detection. Notably, the dangerous_primitives deserialization regex worked correctly for Java (no false positives) and surfaced the real F0 finding."
+  },
+  "phase_4b_computed": {
+    "verdict": {
+      "level": "Critical",
+      "computed_from_findings": [
+        "F0"
+      ]
+    }
+  },
+  "phase_5_prose_llm": {
+    "editorial_caption": {
+      "text": "freerouting \u2014 1.7k-star Java PCB auto-router, 12-year andrasfuchs solo project (86.7%). Critical verdict via F0: BasicBoard.java:108-110 calls `ObjectInputStream.readObject()` on user-loaded files \u2014 textbook Java deserialization RCE. 35 files import ObjectInputStream. Positives: Dependabot on Gradle, community health 75%, Gemini-AI triage."
+    },
+    "per_finding_prose": {
+      "entries": [
+        {
+          "finding_id": "F0",
+          "body_paragraphs": [
+            "The specific source lines: `BasicBoard.java:108-110` reads `ObjectInputStream object_stream = new ObjectInputStream(input_stream); return (BasicBoard) object_stream.readObject();`. The class declaration at line 43 is `public class BasicBoard implements Serializable`, and there's a custom `private void readObject(ObjectInputStream p_stream)` hook at line 1551 \u2014 standard Java-serialization boilerplate that confirms this is actively-used persistence, not a vestigial import.",
+            "Beyond BasicBoard, 34 other source files import `java.io.ObjectInputStream`, spanning board/, gui/, interactive/, and rules/ packages. The pattern across these files is the same \u2014 serializable state objects with custom readObject/writeObject pairs for loading saved board state, settings, window snapshots, and routing rules. Java serialization is not peripheral to freerouting; it is the persistence model.",
+            "Threat model: freerouting's documented workflow is users opening PCB design files. The consumer obtains a board file (from their own work, a collaborator, a community project, an email attachment), opens it in freerouting, and the application reads the file \u2014 including deserialized state via ObjectInputStream. A malicious actor who crafts a serialized board file targeting a gadget chain present on freerouting's classpath (commons-collections, log4j, Spring, or any of freerouting's 100+ transitive Maven deps per the Dependabot surface) can achieve arbitrary Java code execution on the user's machine at file-open time.",
+            "This is not a theoretical vulnerability class. Java deserialization RCE has been actively weaponized since 2015 (ysoserial), is on the OWASP Top 10, and has produced hundreds of CVEs across enterprise Java software. freerouting's pattern \u2014 Serializable implements + readObject() on user-provided streams \u2014 is the textbook exploitable form.",
+            "Maintainer-side mitigation paths, in ascending order of effort: (a) add `ObjectInputFilter.Config.setSerialFilter()` to restrict deserialization to expected BasicBoard/subclass types only (single-line Java-9+ fix, dramatically narrows the gadget-chain attack surface); (b) migrate board persistence to a safe format (JSON via Jackson / Gson, or a custom text-based serializer matching the existing DSN approach); (c) deprecate the binary snapshot format entirely in favor of DSN-only. Consumer-side mitigation: isolate freerouting in a Docker container (freerouting publishes an official image) or a disposable VM, especially when opening files from untrusted sources."
+          ]
+        },
+        {
+          "finding_id": "F1",
+          "body_paragraphs": [
+            "andrasfuchs holds 1,544 of the 1,741 top-6 contributor commits \u2014 86.7%. The next contributor, miho, has 116 (6.7%). This is solo-maintainer territory by the 80% threshold definition. The 12-year repo history is effectively one person's project with periodic external PR contributions.",
+            "The branch-protection story is partial in an informative way: the repo HAS a ruleset with 2 rules on the default branch, but the rules are `deletion` (prevents branch deletion) and `non_fast_forward` (prevents force-push). These are anti-destruction protections \u2014 they stop an attacker from rewriting history \u2014 but they do NOT require review before merge. A compromised andrasfuchs account can still land a malicious commit on master; the rules just prevent the attacker from covering their tracks afterward.",
+            "Combined with 9.5% formal-review rate and no CODEOWNERS, the merge gate that would catch a malicious commit pre-release is effectively absent. The fix is a 3-line ruleset change to add a `pull_request` rule with `required_approving_review_count: 1`. The governance-infrastructure is already in place; one rule addition would convert it from 'anti-destruction' to 'anti-destruction plus review-required'."
+          ]
+        },
+        {
+          "finding_id": "F2",
+          "body_paragraphs": [
+            "Community-health signals are actually above average for the V1.2 catalog: 75% health (vs 50-62% elsewhere), CONTRIBUTING present, CODE_OF_CONDUCT present. But SECURITY.md is absent and 0 GHSA advisories have been published in 12 years. For a tool with F0's confirmed RCE surface, that's not neutral \u2014 it means that if a researcher finds a specific deserialization gadget chain tomorrow, there is no documented private channel for them to use and no mechanism for past fixes (if any exist) to have reached consumers via the advisory feed.",
+            "The asymmetry \u2014 decent community infrastructure but no security-disclosure infrastructure \u2014 is actionable: a 1-page SECURITY.md naming the GitHub private-advisory UI would close this without requiring any code change. Given F0, it should be a priority."
+          ]
+        },
+        {
+          "finding_id": "F3",
+          "body_paragraphs": [
+            "Release timeline from the releases API: v2.1.0 on 2025-04-12, v2.0.1 on 2024-11-14, v2.0.0 on 2024-11-06, v1.9.0 on 2023-10-30. Prior cadence was 3-4 months between releases. The gap between v2.1.0 and the scan (2026-04-20) is 373 days \u2014 a clear stall. Main is active (pushed 2026-04-19, day before scan), so development continues; the release-tagging step is what has paused.",
+            "The consumer implication matters in conjunction with F0: if a mitigation for the Java deserialization surface lands on main (an ObjectInputFilter, a format migration), users on v2.1.0 don't receive it until a new release is tagged and the JAR/MSI/Docker pipelines rebuild. Fix-to-user latency is the concern \u2014 same pattern as wezterm (entry 21, 807-day stall) and QuickLook (entry 22, stale `latest` tag) \u2014 but sharper here given F0's confirmed severity."
+          ]
+        },
+        {
+          "finding_id": "F4",
+          "body_paragraphs": [
+            "Dependabot is configured for Gradle and actively producing PRs \u2014 all 5 currently-open PRs are Dependabot bumps (google-cloud-core, gax, log4j-core, google-auth-library, rewrite-static-analysis). That's a real operational investment, meaningfully better than the Cargo-unwatched pattern on wezterm/kanata and the github-actions-only pattern on kamal.",
+            "This is Info-positive \u2014 it doesn't reduce F0 severity (deserialization fix is maintainer-side code work, not dep updates) but it does remove one class of transitive-dep supply-chain risk. Worth naming explicitly alongside the governance-gap findings so the overall picture is honest."
+          ]
+        },
+        {
+          "finding_id": "F5",
+          "body_paragraphs": [
+            "5 of the 17 workflows are Gemini-AI named: Dispatch, Invoke, Review, Scheduled Triage, Triage. Google's Gemini handles automated issue triage and PR review comments. Distinctive from QuickLook's pattern (entry 22, where Copilot SWE agent authors PRs) \u2014 here the AI reviews human-authored PRs rather than producing its own contributions.",
+            "The governance interpretation: the 32.4% any-review rate likely reflects Gemini's PR comments alongside human review; the 9.5% formal APPROVED rate is human-only. This explains the gap between the two numbers \u2014 one counts AI interaction, the other counts human endorsement. Neither substitutes for enforced branch protection (F1), but the AI-triage tier is a distinct governance component worth naming."
+          ]
+        },
+        {
+          "finding_id": "F6",
+          "body_paragraphs": [
+            "Scanner gaps specific to this scan: Gradle parsing is not implemented, so runtime_count=0 and osv total_vulns=0 despite real dep graph evidenced by active Dependabot (F4). Distribution-channel detection surfaced only 'docker-local-build' (fictitious) when actual channels are GitHub Releases JAR + Windows MSI + Docker images on ghcr.io. Same language-ecosystem-gap pattern as Go (Xray-core), Ruby (kamal), Rust (wezterm/kanata), C# (QuickLook).",
+            "Unlike the deserialization regex (which worked correctly for Java and surfaced F0 cleanly), the dep-graph + distribution pathway for Java/Maven is not covered by the harness. Mitigation: the maintainer-side Dependabot layer (F4) largely closes this gap in practice \u2014 the CVE-watch that the harness would provide is already happening via dependabot.yml."
+          ]
+        }
+      ]
+    }
+  },
+  "phase_6_assembly": {
+    "assembled": true,
+    "assembly_timestamp": "2026-04-20T20:16:06.550902+00:00",
+    "provenance_complete": true,
+    "evidence_refs_valid": true,
+    "field_count": 2543
+  },
+  "scan_sign_off": {
+    "approved_for_release": false
+  }
+}
