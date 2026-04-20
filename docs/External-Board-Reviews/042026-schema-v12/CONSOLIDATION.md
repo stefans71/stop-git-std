@@ -418,6 +418,26 @@ The following are the V1.2 implementation deliverables. Each is within reach of 
 
 **Files changed:** `docs/scan-schema.json` (+2 enum values), `docs/compute.py` (+2 frozenset entries), `tests/test_validator_v12_override.py` (+2 positive tests, enum-size test renamed), 4 scan bundles (override_reason relabeled), 3 rendered reports (rerendered from updated bundles), `docs/scanner-catalog.md` (entries 16/17/18 prose updated).
 
+### 8.2 V13-1 follow-up: signal widening landed (2026-04-20, owner directive)
+
+After the enum split in §8.1 pointed at specific fix surfaces, the V1.2.x signal widening landed in the same session to close the root-cause gaps:
+
+**Compute.py changes (`signal_vocabulary_gap` fix surface):**
+- Added `q1_has_ruleset_protection` signal (bool) — fires when `branch_protection.rulesets.count ≥ 1 AND branch_protection.rules_on_default.count ≥ 1`. Folds into Q1 governance-floor check as `has_any_branch_protection = has_branch_protection OR has_ruleset_protection`. Closes the ghostty / kamal Q1 gap (both had ruleset-based protection invisible to the classic-only signal).
+- Added `q2_oldest_open_security_item_age_days` signal (int | None) — widens Q2 age evidence beyond CVE-labeled PRs to include open issues with security keywords AND security-labeled PRs. Q2 now evaluates `max(oldest_cve_pr_age_days, oldest_open_security_item_age_days)`. Closes the Kronos Q2 gap (95-day-old issue #216 invisible to the PR-scoped signal).
+- Added helper `derive_q1_has_ruleset_protection(branch_protection_dict)` and `derive_q2_oldest_open_security_item_age_days(issues_and_commits, open_prs, scan_date_iso)` — callable by scan drivers to compute the new signals from phase_1_raw_capture.
+
+**Harness changes (`harness_coverage_gap` fix surface):**
+- Extended `STEP_A_PATTERNS["deserialization"]` regex from `pickle\.loads|...` to `pickle\.loads?|...|marshal\.loads?|\bjoblib\.load|\bdill\.loads?`. Closes Kronos Q4 gap (prior regex matched `pickle.loads` but not singular `pickle.load` — the form actually used at finetune/dataset.py:42).
+
+**SIGNAL_IDS frozen at 25** (was 23 + 2 V13-1 additions). Per board Item F: adding signals is V1.2.x; removing any is V1.3. Both additions are additive.
+
+**Tests added:** 13 new tests in `test_compute.py` (TestV13_1_RulesetProtectionHelper × 5, TestV13_1_SecurityItemAgeHelper × 5, TestV13_1_Q1WidenedGovernanceFloor × 2, TestV13_1_Q2WidenedEvidence × 2) + 4 new tests in `test_phase_1_harness.py` (pickle.load singular match, pickle.loads regression, new families marshal/joblib/dill, safe configparser false-positive check) + updated signal-count test to 25. Full suite now 362 passing.
+
+**Forward impact:** Future wild V1.2 scans on repos with ruleset-based protection (no classic protection) will compute Q1 amber/green without needing override. Future scans on repos with disclosed open security issues will compute Q2 red without needing override. Future scans on Python repos with pickle.load will capture the critical on default path without harness coverage gap. Existing catalog entries 16 / 17 / 18 retain their historical override records (now labeled with the fix-surface taxonomy from §8.1); re-scanning the same SHAs with the widened signals would produce different advisory outputs — not performed (historical records are preserved at their commit time).
+
+**Escalation trigger maintained:** If a NEW wild scan in the future reveals an override cause not captured by the 7-value enum or the widened signals, revisit via board review.
+
 ---
 
 ## 9. Agent invocation snapshot

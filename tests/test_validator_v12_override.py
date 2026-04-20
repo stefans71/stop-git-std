@@ -130,11 +130,17 @@ class TestOverrideRationaleGate:
 class TestSignalIDVocabulary:
     """2 tests per §7.8 for compute.SIGNAL_IDS frozen vocabulary."""
 
-    def test_signal_ids_is_frozenset_of_23(self, compute):
+    def test_signal_ids_is_frozenset_of_25(self, compute):
+        """V1.2.x (V13-1 signal widening) 2026-04-20 added 2 signals:
+        q1_has_ruleset_protection + q2_oldest_open_security_item_age_days.
+        Adding signals is V1.2.x per board Item F; removing any is V1.3.
+        """
         assert isinstance(compute.SIGNAL_IDS, frozenset)
-        assert len(compute.SIGNAL_IDS) == 23, (
-            f"V1.2 signal vocabulary is frozen at 23 entries per board review Item F; got {len(compute.SIGNAL_IDS)}"
+        assert len(compute.SIGNAL_IDS) == 25, (
+            f"V1.2.x signal vocabulary expected at 25 entries (23 frozen + 2 V13-1 additions); got {len(compute.SIGNAL_IDS)}"
         )
+        assert "q1_has_ruleset_protection" in compute.SIGNAL_IDS
+        assert "q2_oldest_open_security_item_age_days" in compute.SIGNAL_IDS
 
     def test_signal_ids_question_scoping(self, compute):
         """Every ID must have a question-scoped prefix (q1_/q2_/q3_/q4_) or c20_ supporting prefix."""

@@ -1333,7 +1333,11 @@ def step_a_pre_gitleaks(scan_dir: Path | None) -> dict:
 
 STEP_A_PATTERNS = [
     ("exec", re.compile(r"\beval\s*\(|new\s+Function\s*\(|vm\.runIn|\bexec\s*\(|execSync|spawnSync\s*\(|child_process|subprocess\.(call|Popen|run)|os\.system|shell\s*=\s*True|Runtime\.getRuntime\(\)\.exec")),
-    ("deserialization", re.compile(r"pickle\.loads|yaml\.load\s*\(|unserialize\(|ObjectInputStream|deserialize|Marshal\.load")),
+    # V1.2.x (V13-1 owner directive 2026-04-20): widened per Kronos entry 17 Q4
+    # override. Prior regex matched `pickle.loads` but not `pickle.load`
+    # (singular) — missed the 95-day-old RCE at finetune/dataset.py:42.
+    # Added: pickle.load/loads, marshal.load/loads, joblib.load, dill.load/loads.
+    ("deserialization", re.compile(r"pickle\.loads?|yaml\.load\s*\(|unserialize\(|ObjectInputStream|deserialize|Marshal\.load|\bmarshal\.loads?|\bjoblib\.load|\bdill\.loads?")),
     ("network", re.compile(r"\bfetch\s*\(|XMLHttpRequest|axios\.|got\(|http\.(get|post|request)|requests\.(get|post|put|delete)|urllib\.request|net\.(connect|Socket)|http\.Client|WebSocket|url\.URL\(|RestTemplate")),
     ("secrets", re.compile(r"(api[_-]?key|secret|token|password|passwd|pwd|auth)\s*[:=]\s*[\"'][A-Za-z0-9_\-\.]{16,}", re.IGNORECASE)),
     ("vendor_keys", re.compile(r"sk-[A-Za-z0-9]{32,}|ghp_[A-Za-z0-9]{36}|xox[abpr]-[A-Za-z0-9-]+|AIza[0-9A-Za-z_-]{35}|AKIA[0-9A-Z]{16}")),

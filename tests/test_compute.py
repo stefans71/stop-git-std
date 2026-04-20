@@ -420,6 +420,184 @@ class TestCoverageStatus:
         assert any(c["status"] == "ok" for c in r["cells"] if c["name"] == "Tarball extraction")
 
 
+# ===========================================================================
+# V1.2.x V13-1 signal widening helpers
+# ===========================================================================
+
+class TestV13_1_RulesetProtectionHelper:
+    """derive_q1_has_ruleset_protection — V1.2.x signal widening."""
+
+    def test_no_branch_protection_object_returns_false(self):
+        assert derive_q1_has_ruleset_protection(None) is False
+        assert derive_q1_has_ruleset_protection({}) is False
+
+    def test_classic_only_returns_false(self):
+        bp = {
+            "classic": {"status": 200},
+            "rulesets": {"count": 0, "entries": []},
+            "rules_on_default": {"count": 0, "entries": []},
+        }
+        assert derive_q1_has_ruleset_protection(bp) is False
+
+    def test_ruleset_and_rules_returns_true(self):
+        bp = {
+            "classic": {"status": 404},
+            "rulesets": {"count": 1, "entries": [{"name": "main-protect"}]},
+            "rules_on_default": {"count": 4, "entries": [{"type": "pull_request"}]},
+        }
+        assert derive_q1_has_ruleset_protection(bp) is True
+
+    def test_ruleset_without_rules_on_default_returns_false(self):
+        """Ghost ruleset that doesn't apply to default branch doesn't count."""
+        bp = {
+            "classic": {"status": 404},
+            "rulesets": {"count": 1, "entries": []},
+            "rules_on_default": {"count": 0, "entries": []},
+        }
+        assert derive_q1_has_ruleset_protection(bp) is False
+
+    def test_copilot_only_ruleset_still_counts(self):
+        """kamal entry 18 shape: 1 Copilot-review rule. Weak but ≥1."""
+        bp = {
+            "classic": {"status": 404},
+            "rulesets": {"count": 1},
+            "rules_on_default": {"count": 1, "entries": [{"type": "copilot_code_review"}]},
+        }
+        assert derive_q1_has_ruleset_protection(bp) is True
+
+
+class TestV13_1_SecurityItemAgeHelper:
+    """derive_q2_oldest_open_security_item_age_days — V1.2.x signal widening."""
+
+    def test_nothing_matches_returns_none(self):
+        r = derive_q2_oldest_open_security_item_age_days(
+            {"open_security_issues": []},
+            {"entries": []},
+            scan_date_iso="2026-04-20",
+        )
+        assert r is None
+
+    def test_open_issue_returns_age(self):
+        """Kronos entry 17 shape: issue #216 opened 2026-01-15 → 95 days."""
+        iss = {
+            "open_security_issues": [
+                {"number": 216, "title": "Security Issue: Unsafe deserialization", "created_at": "2026-01-15T00:00:00Z"}
+            ]
+        }
+        r = derive_q2_oldest_open_security_item_age_days(iss, {}, scan_date_iso="2026-04-20")
+        assert r == 95
+
+    def test_security_keyword_pr_returns_age(self):
+        prs = {
+            "entries": [
+                {"number": 249, "title": "fix: replace unsafe pickle.load with restricted unpickler",
+                 "created_at": "2026-04-13T00:00:00Z"},
+                {"number": 250, "title": "chore: routine bump", "created_at": "2026-04-01T00:00:00Z"},
+            ]
+        }
+        r = derive_q2_oldest_open_security_item_age_days({}, prs, scan_date_iso="2026-04-20")
+        # Only PR #249 matches (pickle keyword). #250 is non-security — ignored.
+        assert r == 7
+
+    def test_max_of_issue_and_pr(self):
+        iss = {"open_security_issues": [
+            {"number": 216, "created_at": "2026-01-15T00:00:00Z"},
+        ]}
+        prs = {"entries": [
+            {"number": 249, "title": "fix: security RCE", "created_at": "2026-04-13T00:00:00Z"},
+        ]}
+        r = derive_q2_oldest_open_security_item_age_days(iss, prs, scan_date_iso="2026-04-20")
+        assert r == 95  # max of 95 and 7
+
+    def test_non_security_pr_not_matched(self):
+        prs = {"entries": [
+            {"number": 100, "title": "feat: new CLI flag", "created_at": "2025-01-01T00:00:00Z"},
+        ]}
+        r = derive_q2_oldest_open_security_item_age_days({}, prs, scan_date_iso="2026-04-20")
+        assert r is None  # PR has no security keyword
+
+
+class TestV13_1_Q1WidenedGovernanceFloor:
+    """compute_scorecard_cells Q1 governance floor reads has_any_branch_protection."""
+
+    def test_ruleset_protection_breaks_governance_floor(self):
+        """ghostty entry 16 shape: classic 404 but ruleset present → NOT red via floor."""
+        r = compute_scorecard_cells(
+            formal_review_rate=0, any_review_rate=30,
+            has_branch_protection=False,  # classic 404
+            has_ruleset_protection=True,  # ← V1.2.x widening
+            has_codeowners=False,
+            is_solo_maintainer=False,
+            open_security_issue_count=0, oldest_cve_pr_age_days=None,
+            has_security_policy=False, published_advisory_count=0,
+            has_silent_fixes=False, all_channels_pinned=True,
+            artifact_verified=True, has_critical_on_default_path=False,
+            has_warning_on_install_path=False,
+        )
+        # Without ruleset widening this hits the governance floor (red).
+        # With ruleset widening, has_any_branch_protection=True, floor avoided.
+        q1 = r["does_anyone_check_the_code"]
+        floor_signal = next(s for s in q1["signals"] if s["id"] == "q1_governance_floor_override")
+        assert floor_signal["value"] is False
+        # Color depends on other signals but should NOT be red-via-floor.
+        # any_rev=30 with solo=False means not red, falls to amber via any<50.
+
+    def test_classic_only_same_behavior_as_before(self):
+        """Regression: classic-only protection behaves identically to pre-V13-1."""
+        r = compute_scorecard_cells(
+            formal_review_rate=5, any_review_rate=30,
+            has_branch_protection=True, has_codeowners=False,
+            is_solo_maintainer=False,
+            open_security_issue_count=0, oldest_cve_pr_age_days=None,
+            has_security_policy=False, published_advisory_count=0,
+            has_silent_fixes=False, all_channels_pinned=True,
+            artifact_verified=True, has_critical_on_default_path=False,
+            has_warning_on_install_path=False,
+        )
+        # Floor: formal<10 AND not has_any_bp (True via classic) AND not codeowners → NOT triggered (bp present)
+        q1 = r["does_anyone_check_the_code"]
+        floor_signal = next(s for s in q1["signals"] if s["id"] == "q1_governance_floor_override")
+        assert floor_signal["value"] is False
+
+
+class TestV13_1_Q2WidenedEvidence:
+    """compute_scorecard_cells Q2 uses max(cve_pr_age, security_item_age)."""
+
+    def test_security_item_age_escalates_q2(self):
+        """Kronos entry 17 shape: cve_pr_age=None but issue age=95 days → Q2 red."""
+        r = compute_scorecard_cells(
+            formal_review_rate=0, any_review_rate=5,
+            has_branch_protection=False, has_codeowners=False,
+            is_solo_maintainer=False,
+            open_security_issue_count=1,
+            oldest_cve_pr_age_days=None,
+            oldest_open_security_item_age_days=95,  # ← V1.2.x widening
+            has_security_policy=False, published_advisory_count=0,
+            has_silent_fixes=False, all_channels_pinned=False,
+            artifact_verified=False, has_critical_on_default_path=False,
+            has_warning_on_install_path=False,
+        )
+        # cve_age = max(0, 95) = 95; open_security=1; 95>14 → red via else branch
+        assert r["do_they_fix_problems_quickly"]["color"] == "red"
+        signals = r["do_they_fix_problems_quickly"]["signals"]
+        assert any(s["id"] == "q2_oldest_open_security_item_age_days" and s["value"] == 95 for s in signals)
+
+    def test_security_item_age_absent_falls_back(self):
+        """Default None for security_item_age: Q2 uses old cve_pr_age logic."""
+        r = compute_scorecard_cells(
+            formal_review_rate=0, any_review_rate=5,
+            has_branch_protection=False, has_codeowners=False,
+            is_solo_maintainer=False,
+            open_security_issue_count=0, oldest_cve_pr_age_days=0,
+            has_security_policy=False, published_advisory_count=0,
+            has_silent_fixes=False, all_channels_pinned=False,
+            artifact_verified=False, has_critical_on_default_path=False,
+            has_warning_on_install_path=False,
+        )
+        # 0 open issues, cve_age=max(0,0)=0, closed_fix_lag=None → green
+        assert r["do_they_fix_problems_quickly"]["color"] == "green"
+
+
 if __name__ == "__main__":
     import pytest
     sys.exit(pytest.main([__file__, "-v"]))

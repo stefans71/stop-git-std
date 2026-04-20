@@ -25,6 +25,7 @@ Each function takes raw data from phase_1 and returns computed output.
 All deterministic: same input → same output, no LLM needed.
 """
 
+import re
 from datetime import datetime, timedelta, timezone
 
 
@@ -49,12 +50,14 @@ SIGNAL_IDS: frozenset[str] = frozenset({
     "q1_formal_review_rate",
     "q1_any_review_rate",
     "q1_has_branch_protection",
+    "q1_has_ruleset_protection",  # V1.2.x (V13-1): ruleset-based protection signal
     "q1_has_codeowners",
     "q1_is_solo_maintainer",
     "q1_governance_floor_override",
     # Q2 — Do they fix problems quickly?
     "q2_open_security_issue_count",
     "q2_oldest_open_cve_pr_age_days",
+    "q2_oldest_open_security_item_age_days",  # V1.2.x (V13-1): widened evidence — issues + security-PRs
     "q2_closed_fix_lag_days",
     # Q3 — Do they tell you about problems?
     "q3_has_security_policy",
@@ -177,6 +180,8 @@ def compute_scorecard_cells(
     has_warning_on_install_path: bool,
     has_contributing_guide: bool = False,
     closed_fix_lag_days: int | None = None,
+    has_ruleset_protection: bool = False,
+    oldest_open_security_item_age_days: int | None = None,
 ) -> dict:
     """Compute the 4 scorecard cells using the V2.4 calibration table.
     Returns dict with color (red/amber/green) and short_answer per cell.
@@ -188,6 +193,20 @@ def compute_scorecard_cells(
         warnings elsewhere don't block green).
       - closed_fix_lag_days: Q2 merged security PR age (>3 days → amber).
       - Q1 governance-floor override baked into the branches below.
+
+    V1.2.x signal widening (V13-1 owner directive 2026-04-20):
+      - has_ruleset_protection: True when branch_protection.rulesets.count >= 1
+        AND branch_protection.rules_on_default.count >= 1. Folds into the Q1
+        governance-floor check as `has_any_branch_protection =
+        has_branch_protection OR has_ruleset_protection`. Addresses ghostty
+        entry 16 + kamal entry 18 Q1 overrides where classic-only check
+        missed ruleset-based protection.
+      - oldest_open_security_item_age_days: widens Q2 age evidence beyond
+        CVE-labeled PRs to include open issues with security keywords and
+        security-labeled PRs. Q2 now considers max(oldest_cve_pr_age_days,
+        oldest_open_security_item_age_days). Addresses Kronos entry 17 Q2
+        override where a 95-day-old open issue was invisible to the
+        PR-scoped signal.
     """
 
     # Q1: Does anyone check the code?
@@ -197,12 +216,14 @@ def compute_scorecard_cells(
     # SF1 patch: Q1 governance-floor override — formal<10% AND no branch
     # protection AND no codeowners forces red (Archon-shape: high any-review
     # masking functionally-absent review process).
+    # V1.2.x (V13-1): has_any_branch_protection = classic OR ruleset-based.
     formal = formal_review_rate or 0
     any_rev = any_review_rate or 0
-    if (formal < 10 and not has_branch_protection and not has_codeowners):
+    has_any_branch_protection = has_branch_protection or has_ruleset_protection
+    if (formal < 10 and not has_any_branch_protection and not has_codeowners):
         q1_color = "red"
         q1_answer = "No"
-    elif any_rev >= 60 and formal >= 30 and has_branch_protection:
+    elif any_rev >= 60 and formal >= 30 and has_any_branch_protection:
         q1_color = "green"
         q1_answer = "Yes"
     elif any_rev < 30 or (is_solo_maintainer and any_rev < 40):
@@ -218,7 +239,10 @@ def compute_scorecard_cells(
     # Q2: Do they fix problems quickly?
     # SF1 patch: closed_fix_lag_days — a repo with merged security PR taking
     # >3 days is amber even if no open issues (caveman-shape friction signal).
-    cve_age = oldest_cve_pr_age_days or 0
+    # V1.2.x (V13-1): cve_age = max(oldest_cve_pr_age_days,
+    # oldest_open_security_item_age_days) — widens evidence beyond PRs to
+    # include open security issues + security-labeled PRs.
+    cve_age = max(oldest_cve_pr_age_days or 0, oldest_open_security_item_age_days or 0)
     if open_security_issue_count == 0 and cve_age <= 7:
         if closed_fix_lag_days is not None and closed_fix_lag_days > 3:
             q2_color = "amber"
@@ -270,8 +294,9 @@ def compute_scorecard_cells(
 
     # V1.2: emit advisory shape with signals list (IDs from SIGNAL_IDS
     # frozenset). Feeds phase_3_advisory.scorecard_hints in the form.
+    # V1.2.x (V13-1): governance floor now reads has_any_branch_protection.
     governance_floor_triggered = (
-        formal < 10 and not has_branch_protection and not has_codeowners
+        formal < 10 and not has_any_branch_protection and not has_codeowners
     )
     return {
         "does_anyone_check_the_code": {
@@ -280,6 +305,7 @@ def compute_scorecard_cells(
                 {"id": "q1_formal_review_rate", "value": formal},
                 {"id": "q1_any_review_rate", "value": any_rev},
                 {"id": "q1_has_branch_protection", "value": has_branch_protection},
+                {"id": "q1_has_ruleset_protection", "value": has_ruleset_protection},
                 {"id": "q1_has_codeowners", "value": has_codeowners},
                 {"id": "q1_is_solo_maintainer", "value": is_solo_maintainer},
                 {"id": "q1_governance_floor_override", "value": governance_floor_triggered},
@@ -290,6 +316,7 @@ def compute_scorecard_cells(
             "signals": [
                 {"id": "q2_open_security_issue_count", "value": open_security_issue_count},
                 {"id": "q2_oldest_open_cve_pr_age_days", "value": oldest_cve_pr_age_days},
+                {"id": "q2_oldest_open_security_item_age_days", "value": oldest_open_security_item_age_days},
                 {"id": "q2_closed_fix_lag_days", "value": closed_fix_lag_days},
             ],
         },
@@ -317,6 +344,86 @@ def compute_scorecard_cells(
 # ===========================================================================
 # 3. Solo-Maintainer Flag
 # ===========================================================================
+
+def derive_q1_has_ruleset_protection(branch_protection: dict | None) -> bool:
+    """V1.2.x (V13-1): True when ruleset-based branch protection is active.
+
+    Reads phase_1_raw_capture.branch_protection. Fires when both:
+      - rulesets.count >= 1 (at least one ruleset scoped to default branch)
+      - rules_on_default.count >= 1 (at least one enforced rule)
+
+    This captures GitHub's modern ruleset-based protection which is invisible
+    to the classic-protection API (branches/<ref>/protection returns 404).
+    Fix for ghostty entry 16 + kamal entry 18 Q1 overrides.
+    """
+    if not branch_protection:
+        return False
+    rulesets = (branch_protection.get("rulesets") or {}).get("count") or 0
+    rules_on_default = (branch_protection.get("rules_on_default") or {}).get("count") or 0
+    return rulesets >= 1 and rules_on_default >= 1
+
+
+_SECURITY_KEYWORDS = re.compile(
+    r"\b(security|vuln|vulnerab|cve|ghsa|rce|xxe|xss|csrf|sqli|injection|"
+    r"deserialization|pickle|traversal|ssrf|advisory|exploit|exposure|leak)\b",
+    re.IGNORECASE,
+)
+
+
+def derive_q2_oldest_open_security_item_age_days(
+    issues_and_commits: dict | None,
+    open_prs: dict | None,
+    scan_date_iso: str | None = None,
+) -> int | None:
+    """V1.2.x (V13-1): max age-in-days of any open security item.
+
+    Reads from phase_1_raw_capture:
+      - issues_and_commits.open_security_issues[*].created_at
+      - open_prs.entries[*] filtered by title keyword match (security, vuln,
+        cve, rce, ...) — labels are rarely applied on non-CVE repos.
+
+    Returns None if nothing matches, else int days since max(created_at).
+
+    Addresses Kronos entry 17 Q2 override where a 95-day-old open issue
+    (#216, pickle deserialization RCE) was invisible to the PR-scoped
+    q2_oldest_open_cve_pr_age_days signal.
+    """
+    from datetime import date, datetime, timezone
+
+    if scan_date_iso:
+        scan_date = date.fromisoformat(scan_date_iso)
+    else:
+        scan_date = datetime.now(timezone.utc).date()
+
+    ages: list[int] = []
+
+    if issues_and_commits:
+        for issue in (issues_and_commits.get("open_security_issues") or []):
+            created = issue.get("created_at")
+            if not created:
+                continue
+            try:
+                created_date = datetime.fromisoformat(created.replace("Z", "+00:00")).date()
+                ages.append((scan_date - created_date).days)
+            except (ValueError, AttributeError):
+                continue
+
+    if open_prs:
+        for pr in (open_prs.get("entries") or []):
+            title = pr.get("title") or ""
+            if not _SECURITY_KEYWORDS.search(title):
+                continue
+            created = pr.get("created_at")
+            if not created:
+                continue
+            try:
+                created_date = datetime.fromisoformat(created.replace("Z", "+00:00")).date()
+                ages.append((scan_date - created_date).days)
+            except (ValueError, AttributeError):
+                continue
+
+    return max(ages) if ages else None
+
 
 def compute_solo_maintainer(contributors: list) -> dict:
     """F11: If top contributor has >80% of commits, flag as solo-maintainer.

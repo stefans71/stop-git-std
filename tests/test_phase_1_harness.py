@@ -419,6 +419,62 @@ def test_step_a_dangerous_patterns_returns_empty_when_no_scan_dir():
     assert r["exec"]["hit_count"] == 0
 
 
+def test_v13_1_deserialization_matches_pickle_load_singular(tmp_path):
+    """V1.2.x (V13-1 owner directive 2026-04-20): regex widened to match both
+    pickle.load and pickle.loads. Prior regex matched only pickle.loads —
+    missed the 95-day-old RCE at finetune/dataset.py:42 in Kronos entry 17.
+    """
+    scan = tmp_path / "scan"
+    scan.mkdir()
+    (scan / "dataset.py").write_text(
+        "import pickle\n"
+        "with open('train_data.pkl', 'rb') as f:\n"
+        "    self.data = pickle.load(f)\n"
+    )
+    r = harness.step_a_dangerous_patterns(scan)
+    assert r["deserialization"]["hit_count"] == 1, (
+        "pickle.load (singular) should match the widened deserialization family regex"
+    )
+
+
+def test_v13_1_deserialization_matches_pickle_loads_plural(tmp_path):
+    """Regression — pickle.loads (plural) must still match."""
+    scan = tmp_path / "scan"
+    scan.mkdir()
+    (scan / "decoder.py").write_text("import pickle\nobj = pickle.loads(blob)\n")
+    r = harness.step_a_dangerous_patterns(scan)
+    assert r["deserialization"]["hit_count"] == 1
+
+
+def test_v13_1_deserialization_matches_new_families(tmp_path):
+    """V13-1 widening adds marshal.load/loads, joblib.load, dill.load/loads."""
+    scan = tmp_path / "scan"
+    scan.mkdir()
+    (scan / "a.py").write_text("import marshal\nmarshal.load(fp)\n")
+    (scan / "b.py").write_text("import joblib\nmodel = joblib.load('model.pkl')\n")
+    (scan / "c.py").write_text("import dill\nobj = dill.loads(payload)\n")
+    r = harness.step_a_dangerous_patterns(scan)
+    # 3 files all flagged under deserialization family
+    assert r["deserialization"]["hit_count"] == 3
+    paths = {h["file"] for h in r["deserialization"]["files"]}
+    assert paths == {"a.py", "b.py", "c.py"}
+
+
+def test_v13_1_deserialization_safe_calls_do_not_match(tmp_path):
+    """Negative case: ordinary `.load()` calls on non-pickle/yaml objects
+    should NOT trigger the deserialization regex (no false positives).
+    """
+    scan = tmp_path / "scan"
+    scan.mkdir()
+    (scan / "config.py").write_text(
+        "from configparser import ConfigParser\n"
+        "c = ConfigParser()\n"
+        "c.read('config.ini')  # not a deserialization match\n"
+    )
+    r = harness.step_a_dangerous_patterns(scan)
+    assert r["deserialization"]["hit_count"] == 0
+
+
 def test_step_c_executable_inventory_discovers_files(tmp_path):
     scan = tmp_path / "scan"
     scan.mkdir()
