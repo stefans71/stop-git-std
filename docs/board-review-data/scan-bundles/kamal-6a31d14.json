@@ -1,0 +1,3987 @@
+{
+  "$comment": "Kamal V1.2 wild scan \u2014 third wild V1.2 scan (Ruby gem CLI + container-orchestrator shape).",
+  "schema_version": "V1.2",
+  "_meta": {
+    "scanner_version": "V2.5-preview",
+    "prompt_version": "V2.4",
+    "scan_started_at": "2026-04-20T11:11:58.984865+00:00",
+    "model": "claude-opus-4-7 (via Claude Code)",
+    "scan_status": "completed",
+    "scan_completed_at": "2026-04-20T11:25:37.951990+00:00"
+  },
+  "target": {
+    "owner": "basecamp",
+    "repo": "kamal",
+    "full_name": "basecamp/kamal",
+    "url": "https://github.com/basecamp/kamal"
+  },
+  "scanner_integrity": {
+    "injection_matches": 0,
+    "actionable_count": 0,
+    "findings": []
+  },
+  "phase_1_raw_capture": {
+    "pre_flight": {
+      "head_sha": "6a31d14eb5b3ce4793be7487596f417e785db7a8",
+      "default_branch": "main",
+      "tarball_extracted": true,
+      "tarball_file_count": 329,
+      "symlinks_stripped": 0,
+      "api_rate_limit": {
+        "limit": 5000,
+        "remaining": 4957,
+        "reset": 1776684189,
+        "used": 43
+      }
+    },
+    "repo_metadata": {
+      "name": "kamal",
+      "description": "Deploy web apps anywhere.",
+      "created_at": "2023-01-07T14:32:08Z",
+      "pushed_at": "2026-04-15T08:37:36Z",
+      "stargazer_count": 14101,
+      "fork_count": 699,
+      "archived": false,
+      "fork": false,
+      "has_issues_enabled": true,
+      "primary_language": "Ruby",
+      "topics": [],
+      "license_spdx": "MIT",
+      "default_branch": "main",
+      "open_issues_count": 126,
+      "size_kb": 3062
+    },
+    "contributors": {
+      "top_contributors": [
+        {
+          "contributions": 868,
+          "login": "djmb"
+        },
+        {
+          "contributions": 491,
+          "login": "dhh"
+        },
+        {
+          "contributions": 68,
+          "login": "nickhammond"
+        },
+        {
+          "contributions": 51,
+          "login": "igor-alexandrov"
+        },
+        {
+          "contributions": 42,
+          "login": "calmyournerves"
+        },
+        {
+          "contributions": 38,
+          "login": "npezza93"
+        }
+      ],
+      "total_contributor_count": 100
+    },
+    "maintainer_accounts": {
+      "accounts": [
+        {
+          "bio": "HEY! It's in Basecamp!",
+          "company": null,
+          "created_at": "2008-06-09T20:00:38Z",
+          "followers": 2701,
+          "login": "basecamp",
+          "public_repos": 233,
+          "type": "Organization",
+          "role": "owner"
+        },
+        {
+          "bio": null,
+          "company": null,
+          "created_at": "2012-05-13T12:15:39Z",
+          "followers": 112,
+          "login": "djmb",
+          "public_repos": 15,
+          "type": "User",
+          "role": "contributor",
+          "contributions": 868
+        },
+        {
+          "bio": null,
+          "company": "37signals",
+          "created_at": "2008-03-10T17:53:51Z",
+          "followers": 24706,
+          "login": "dhh",
+          "public_repos": 6,
+          "type": "User",
+          "role": "contributor",
+          "contributions": 491
+        },
+        {
+          "bio": null,
+          "company": "From The Keyboard",
+          "created_at": "2008-07-21T17:32:53Z",
+          "followers": 101,
+          "login": "nickhammond",
+          "public_repos": 124,
+          "type": "User",
+          "role": "contributor",
+          "contributions": 68
+        },
+        {
+          "bio": "Co-founder and CTO at @jetrockets.",
+          "company": "JetRockets (co-founder)",
+          "created_at": "2009-07-01T15:30:37Z",
+          "followers": 212,
+          "login": "igor-alexandrov",
+          "public_repos": 75,
+          "type": "User",
+          "role": "contributor",
+          "contributions": 51
+        },
+        {
+          "bio": null,
+          "company": "@hakuna ",
+          "created_at": "2010-11-14T10:19:26Z",
+          "followers": 44,
+          "login": "calmyournerves",
+          "public_repos": 6,
+          "type": "User",
+          "role": "contributor",
+          "contributions": 42
+        }
+      ]
+    },
+    "ossf_scorecard": {
+      "queried": true,
+      "indexed": false,
+      "http_status": 404,
+      "overall_score": null,
+      "checks": [],
+      "raw_response": null
+    },
+    "community_profile": {
+      "health_percentage": 62,
+      "has_code_of_conduct": true,
+      "has_contributing": true,
+      "has_security_policy": false,
+      "license_spdx": "MIT"
+    },
+    "branch_protection": {
+      "classic": {
+        "status": 404
+      },
+      "rulesets": {
+        "entries": [
+          {
+            "id": 13245561,
+            "name": "Copilot Reviews",
+            "target": "branch",
+            "source_type": "Organization",
+            "source": "basecamp",
+            "enforcement": "active",
+            "node_id": "RRS_lACkVXNlcs0zS84Ayhx5",
+            "_links": {
+              "self": {
+                "href": "https://api.github.com/repos/basecamp/kamal/rulesets/13245561"
+              },
+              "html": {
+                "href": "https://github.com/basecamp/kamal/rules/13245561"
+              }
+            },
+            "created_at": "2026-02-25T22:07:00.585Z",
+            "updated_at": "2026-03-17T23:14:36.272Z"
+          }
+        ],
+        "count": 1
+      },
+      "rules_on_default": {
+        "entries": [
+          {
+            "type": "copilot_code_review",
+            "parameters": {
+              "review_on_push": true,
+              "review_draft_pull_requests": false
+            },
+            "ruleset_source_type": "Organization",
+            "ruleset_source": "basecamp",
+            "ruleset_id": 13245561
+          }
+        ],
+        "count": 1
+      },
+      "owner_type": "Organization",
+      "org_rulesets": {
+        "status": "error",
+        "entries": []
+      }
+    },
+    "codeowners": {
+      "found": false,
+      "path": null,
+      "content": null,
+      "locations_checked": [
+        "CODEOWNERS",
+        ".github/CODEOWNERS",
+        "docs/CODEOWNERS",
+        ".gitlab/CODEOWNERS"
+      ]
+    },
+    "releases": {
+      "entries": [
+        {
+          "tag_name": "v2.11.0",
+          "published_at": "2026-03-18T14:02:17Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "djmb"
+        },
+        {
+          "tag_name": "v2.10.1",
+          "published_at": "2025-12-16T08:50:04Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "djmb"
+        },
+        {
+          "tag_name": "v2.10.0",
+          "published_at": "2025-12-15T12:53:08Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "djmb"
+        },
+        {
+          "tag_name": "v2.9.0",
+          "published_at": "2025-11-26T11:45:04Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "djmb"
+        },
+        {
+          "tag_name": "v2.8.2",
+          "published_at": "2025-10-27T09:14:15Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "djmb"
+        },
+        {
+          "tag_name": "v2.8.1",
+          "published_at": "2025-10-20T21:43:17Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "djmb"
+        },
+        {
+          "tag_name": "v2.8.0",
+          "published_at": "2025-10-19T14:11:46Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "djmb"
+        },
+        {
+          "tag_name": "v1.9.3",
+          "published_at": "2025-06-25T07:30:22Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "djmb"
+        },
+        {
+          "tag_name": "v2.7.0",
+          "published_at": "2025-06-18T09:45:28Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "djmb"
+        },
+        {
+          "tag_name": "v2.6.1",
+          "published_at": "2025-05-15T14:25:18Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "djmb"
+        },
+        {
+          "tag_name": "v2.6.0",
+          "published_at": "2025-05-13T09:27:34Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "djmb"
+        },
+        {
+          "tag_name": "v2.5.3",
+          "published_at": "2025-02-27T10:37:01Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "djmb"
+        },
+        {
+          "tag_name": "v2.5.2",
+          "published_at": "2025-02-07T15:31:39Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "djmb"
+        },
+        {
+          "tag_name": "v2.5.1",
+          "published_at": "2025-02-06T13:57:48Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "djmb"
+        },
+        {
+          "tag_name": "v2.5.0",
+          "published_at": "2025-02-04T11:21:18Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "djmb"
+        },
+        {
+          "tag_name": "v2.4.0",
+          "published_at": "2024-12-13T12:39:24Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "djmb"
+        },
+        {
+          "tag_name": "v2.3.0",
+          "published_at": "2024-10-31T09:22:51Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "djmb"
+        },
+        {
+          "tag_name": "v2.2.2",
+          "published_at": "2024-10-10T17:30:20Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "djmb"
+        },
+        {
+          "tag_name": "v2.2.1",
+          "published_at": "2024-10-09T18:49:03Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "djmb"
+        },
+        {
+          "tag_name": "v2.2.0",
+          "published_at": "2024-10-08T13:02:55Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "djmb"
+        },
+        {
+          "tag_name": "v2.1.2",
+          "published_at": "2024-10-06T17:41:39Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "djmb"
+        },
+        {
+          "tag_name": "v1.9.2",
+          "published_at": "2024-10-06T18:08:41Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "djmb"
+        },
+        {
+          "tag_name": "v2.1.1",
+          "published_at": "2024-10-03T18:40:54Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "dhh"
+        },
+        {
+          "tag_name": "v2.1.0",
+          "published_at": "2024-10-02T10:47:37Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "djmb"
+        },
+        {
+          "tag_name": "v1.9.1",
+          "published_at": "2024-09-30T07:51:33Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "djmb"
+        },
+        {
+          "tag_name": "v2.0.0.rc4",
+          "published_at": "2024-09-26T11:08:36Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "djmb"
+        },
+        {
+          "tag_name": "v2.0.0",
+          "published_at": "2024-09-26T20:58:54Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "djmb"
+        },
+        {
+          "tag_name": "v1.9.0",
+          "published_at": "2024-09-26T19:35:20Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "djmb"
+        },
+        {
+          "tag_name": "v2.0.0.rc3",
+          "published_at": "2024-09-23T23:48:51Z",
+          "prerelease": true,
+          "draft": false,
+          "author": "dhh"
+        },
+        {
+          "tag_name": "v2.0.0.rc1",
+          "published_at": "2024-09-20T18:15:40Z",
+          "prerelease": true,
+          "draft": false,
+          "author": "dhh"
+        },
+        {
+          "tag_name": "v2.0.0.beta2",
+          "published_at": "2024-09-19T18:40:53Z",
+          "prerelease": true,
+          "draft": false,
+          "author": "dhh"
+        },
+        {
+          "tag_name": "v2.0.0.beta1",
+          "published_at": "2024-09-18T22:36:42Z",
+          "prerelease": true,
+          "draft": false,
+          "author": "dhh"
+        },
+        {
+          "tag_name": "v1.8.3",
+          "published_at": "2024-09-02T15:00:25Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "djmb"
+        },
+        {
+          "tag_name": "v1.8.2",
+          "published_at": "2024-08-28T08:56:55Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "djmb"
+        },
+        {
+          "tag_name": "v1.8.1",
+          "published_at": "2024-07-29T08:27:45Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "djmb"
+        },
+        {
+          "tag_name": "v1.8.0",
+          "published_at": "2024-07-15T13:31:09Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "djmb"
+        },
+        {
+          "tag_name": "v1.7.3",
+          "published_at": "2024-06-25T14:03:33Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "djmb"
+        },
+        {
+          "tag_name": "v1.7.2",
+          "published_at": "2024-06-24T09:12:19Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "djmb"
+        },
+        {
+          "tag_name": "v1.7.1",
+          "published_at": "2024-06-20T07:51:12Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "djmb"
+        },
+        {
+          "tag_name": "v1.7.0",
+          "published_at": "2024-06-18T09:36:49Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "djmb"
+        },
+        {
+          "tag_name": "v1.6.0",
+          "published_at": "2024-06-03T07:39:47Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "djmb"
+        },
+        {
+          "tag_name": "v1.5.2",
+          "published_at": "2024-05-07T08:45:02Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "djmb"
+        },
+        {
+          "tag_name": "v1.5.1",
+          "published_at": "2024-04-26T13:27:02Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "djmb"
+        },
+        {
+          "tag_name": "v1.5.0",
+          "published_at": "2024-04-25T12:40:19Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "djmb"
+        },
+        {
+          "tag_name": "v1.4.0",
+          "published_at": "2024-03-20T09:28:16Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "djmb"
+        },
+        {
+          "tag_name": "v1.3.1",
+          "published_at": "2024-01-10T08:58:05Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "djmb"
+        },
+        {
+          "tag_name": "v1.3.0",
+          "published_at": "2023-11-28T14:08:26Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "djmb"
+        },
+        {
+          "tag_name": "v1.2.0",
+          "published_at": "2023-11-15T14:50:08Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "djmb"
+        },
+        {
+          "tag_name": "v1.1.0",
+          "published_at": "2023-11-03T12:13:43Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "djmb"
+        },
+        {
+          "tag_name": "v1.0.0",
+          "published_at": "2023-09-19T00:59:24Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "dhh"
+        },
+        {
+          "tag_name": "v0.16.1",
+          "published_at": "2023-08-24T16:17:34Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "dhh"
+        },
+        {
+          "tag_name": "v0.16.0",
+          "published_at": "2023-08-22T18:46:40Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "dhh"
+        },
+        {
+          "tag_name": "v0.15.1",
+          "published_at": "2023-07-25T12:08:27Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "djmb"
+        },
+        {
+          "tag_name": "v0.15.0",
+          "published_at": "2023-07-24T12:54:54Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "djmb"
+        },
+        {
+          "tag_name": "v0.14.0",
+          "published_at": "2023-06-20T15:04:03Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "dhh"
+        },
+        {
+          "tag_name": "v0.13.2",
+          "published_at": "2023-06-01T10:55:16Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "dhh"
+        },
+        {
+          "tag_name": "v0.13.1",
+          "published_at": "2023-05-25T12:05:12Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "dhh"
+        },
+        {
+          "tag_name": "v0.13.0",
+          "published_at": "2023-05-25T10:09:54Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "dhh"
+        },
+        {
+          "tag_name": "v0.12.1",
+          "published_at": "2023-05-05T12:34:03Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "dhh"
+        },
+        {
+          "tag_name": "v0.12.0",
+          "published_at": "2023-05-02T15:25:16Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "dhh"
+        },
+        {
+          "tag_name": "v0.11.0",
+          "published_at": "2023-04-12T09:46:48Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "dhh"
+        },
+        {
+          "tag_name": "v0.10.1",
+          "published_at": "2023-03-29T14:24:44Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "dhh"
+        },
+        {
+          "tag_name": "v0.10.0",
+          "published_at": "2023-03-28T16:11:49Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "dhh"
+        },
+        {
+          "tag_name": "v0.9.1",
+          "published_at": "2023-03-09T13:13:33Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "dhh"
+        },
+        {
+          "tag_name": "v0.9.0",
+          "published_at": "2023-03-09T10:26:37Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "dhh"
+        },
+        {
+          "tag_name": "v0.8.4",
+          "published_at": "2023-02-27T12:01:38Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "dhh"
+        },
+        {
+          "tag_name": "v0.8.3",
+          "published_at": "2023-02-23T11:31:52Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "dhh"
+        },
+        {
+          "tag_name": "v0.8.1",
+          "published_at": "2023-02-20T17:12:16Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "dhh"
+        },
+        {
+          "tag_name": "v0.7.2",
+          "published_at": "2023-02-18T15:30:09Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "dhh"
+        },
+        {
+          "tag_name": "v0.6.4",
+          "published_at": "2023-02-15T12:50:40Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "dhh"
+        },
+        {
+          "tag_name": "v0.6.3",
+          "published_at": "2023-02-11T12:14:54Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "dhh"
+        }
+      ],
+      "total_count": 71
+    },
+    "security_advisories": {
+      "count": 0,
+      "entries": []
+    },
+    "workflows": {
+      "entries": [
+        {
+          "name": "CI",
+          "path": ".github/workflows/ci.yml",
+          "state": "active"
+        },
+        {
+          "name": "Docker",
+          "path": ".github/workflows/docker-publish.yml",
+          "state": "active"
+        },
+        {
+          "name": "Copilot code review",
+          "path": "dynamic/copilot-pull-request-reviewer/copilot-pull-request-reviewer",
+          "state": "active"
+        },
+        {
+          "name": "Dependabot Updates",
+          "path": "dynamic/dependabot/dependabot-updates",
+          "state": "active"
+        },
+        {
+          "name": "CodeQL",
+          "path": "dynamic/github-code-scanning/codeql",
+          "state": "active"
+        }
+      ],
+      "count": 5,
+      "pull_request_target_count": 0
+    },
+    "workflow_contents": {
+      "entries": [
+        {
+          "path": ".github/workflows/docker-publish.yml",
+          "content_lines": 59,
+          "sha_pinned_actions_count": 5,
+          "tag_pinned_actions_count": 0,
+          "has_pull_request_target": false,
+          "permissions_block_present": true
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "content_lines": 104,
+          "sha_pinned_actions_count": 7,
+          "tag_pinned_actions_count": 0,
+          "has_pull_request_target": false,
+          "permissions_block_present": true
+        }
+      ]
+    },
+    "code_patterns": {
+      "agent_rule_files": [],
+      "readme_paste_blocks": {
+        "scanned": true,
+        "entries": [],
+        "entries_count": 0
+      },
+      "dangerous_primitives": {
+        "scanned": true,
+        "exec": {
+          "hit_count": 3,
+          "files": [
+            {
+              "file": "lib/kamal/cli/app.rb",
+              "first_match": {
+                "line": 96,
+                "snippet": "  def exec(*cmd)"
+              }
+            },
+            {
+              "file": "lib/kamal/cli/accessory.rb",
+              "first_match": {
+                "line": 149,
+                "snippet": "  def exec(name, *cmd)"
+              }
+            },
+            {
+              "file": "lib/kamal/cli/server.rb",
+              "first_match": {
+                "line": 4,
+                "snippet": "  def exec(*cmd)"
+              }
+            }
+          ]
+        },
+        "deserialization": {
+          "hit_count": 0,
+          "files": []
+        },
+        "network": {
+          "hit_count": 18,
+          "files": [
+            {
+              "file": "test/integration/integration_test.rb",
+              "first_match": {
+                "line": 246,
+                "snippet": "      http.request(request)"
+              }
+            },
+            {
+              "file": "test/integration/accessory_test.rb",
+              "first_match": {
+                "line": 102,
+                "snippet": "      http.request(request)"
+              }
+            },
+            {
+              "file": "lib/kamal/otel_shipper.rb",
+              "first_match": {
+                "line": 44,
+                "snippet": "        otel_key = OTEL_ATTRIBUTE_KEYS.fetch(key, \"kamal.#{key}\")"
+              }
+            },
+            {
+              "file": "lib/kamal/secrets.rb",
+              "first_match": {
+                "line": 50,
+                "snippet": "        secrets.fetch(key)"
+              }
+            },
+            {
+              "file": "lib/kamal/configuration/logging.rb",
+              "first_match": {
+                "line": 18,
+                "snippet": "    logging_config.fetch(\"options\", {})"
+              }
+            },
+            {
+              "file": "lib/kamal/configuration/builder.rb",
+              "first_match": {
+                "line": 27,
+                "snippet": "    Array(builder_config.fetch(\"arch\", default_arch))"
+              }
+            },
+            {
+              "file": "lib/kamal/configuration/proxy.rb",
+              "first_match": {
+                "line": 21,
+                "snippet": "    proxy_config.fetch(\"app_port\", 80)"
+              }
+            },
+            {
+              "file": "lib/kamal/configuration/accessory.rb",
+              "first_match": {
+                "line": 125,
+                "snippet": "        config: accessory_config.fetch(\"env\", {}),"
+              }
+            },
+            {
+              "file": "lib/kamal/configuration/sshkit.rb",
+              "first_match": {
+                "line": 12,
+                "snippet": "    sshkit_config.fetch(\"max_concurrent_starts\", 30)"
+              }
+            },
+            {
+              "file": "lib/kamal/configuration/role.rb",
+              "first_match": {
+                "line": 19,
+                "snippet": "      config: specializations.fetch(\"env\", {}),"
+              }
+            },
+            {
+              "file": "lib/kamal/configuration/ssh.rb",
+              "first_match": {
+                "line": 15,
+                "snippet": "    ssh_config.fetch(\"user\", \"root\")"
+              }
+            },
+            {
+              "file": "lib/kamal/configuration/env.rb",
+              "first_match": {
+                "line": 8,
+                "snippet": "    @clear = config.fetch(\"clear\", config.key?(\"secret\") || config.key?(\"tags\") ? {} : config)"
+              }
+            },
+            {
+              "file": "lib/kamal/configuration/proxy/run.rb",
+              "first_match": {
+                "line": 17,
+                "snippet": "    run_config.fetch(\"debug\", nil)"
+              }
+            },
+            {
+              "file": "lib/kamal/cli/prune.rb",
+              "first_match": {
+                "line": 24,
+                "snippet": "    retain = options.fetch(:retain, KAMAL.config.retain_containers)"
+              }
+            },
+            {
+              "file": "lib/kamal/cli/secrets.rb",
+              "first_match": {
+                "line": 7,
+                "snippet": "  def fetch(*secrets)"
+              }
+            },
+            {
+              "file": "lib/kamal/cli/base.rb",
+              "first_match": {
+                "line": 162,
+                "snippet": "            VERBOSITY.fetch(hooks_output)"
+              }
+            },
+            {
+              "file": "lib/kamal/secrets/adapters/one_password.rb",
+              "first_match": {
+                "line": 43,
+                "snippet": "            fields_json = JSON.parse(op_item_get(vault, item, account: account, session: session)).fetch(\"fields\")"
+              }
+            },
+            {
+              "file": "lib/kamal/secrets/adapters/base.rb",
+              "first_match": {
+                "line": 4,
+                "snippet": "  def fetch(secrets, account: nil, from: nil)"
+              }
+            }
+          ]
+        },
+        "secrets": {
+          "hit_count": 0,
+          "files": []
+        },
+        "vendor_keys": {
+          "hit_count": 0,
+          "files": []
+        },
+        "tls_cors": {
+          "hit_count": 4,
+          "files": [
+            {
+              "file": "test/integration/docker-compose.yml",
+              "first_match": {
+                "line": 33,
+                "snippet": "      - REGISTRY_HTTP_ADDR=0.0.0.0:4443"
+              }
+            },
+            {
+              "file": "test/integration/docker/otel_collector/server.rb",
+              "first_match": {
+                "line": 7,
+                "snippet": "server = TCPServer.new(\"0.0.0.0\", 4318)"
+              }
+            },
+            {
+              "file": "test/commands/proxy_test.rb",
+              "first_match": {
+                "line": 190,
+                "snippet": "    @config[:proxy] = { \"run\" => { \"bind_ips\" => [ \"0.0.0.0\", \"127.0.0.1\" ] } }"
+              }
+            },
+            {
+              "file": "lib/kamal/configuration/docs/proxy.yml",
+              "first_match": {
+                "line": 163,
+                "snippet": "      - 0.0.0.0"
+              }
+            }
+          ]
+        },
+        "sql_injection": {
+          "hit_count": 0,
+          "files": []
+        },
+        "cmd_injection": {
+          "hit_count": 0,
+          "files": []
+        },
+        "auth_bypass": {
+          "hit_count": 0,
+          "files": []
+        },
+        "path_traversal": {
+          "hit_count": 0,
+          "files": []
+        },
+        "archive_unsafe": {
+          "hit_count": 0,
+          "files": []
+        },
+        "ssrf": {
+          "hit_count": 0,
+          "files": []
+        },
+        "xss": {
+          "hit_count": 0,
+          "files": []
+        },
+        "weak_crypto": {
+          "hit_count": 0,
+          "files": []
+        },
+        "debug_flags": {
+          "hit_count": 3,
+          "files": [
+            {
+              "file": "test/fixtures/deploy_with_proxy_run_config_conflicts.yml",
+              "first_match": {
+                "line": 17,
+                "snippet": "    debug: true"
+              }
+            },
+            {
+              "file": "test/fixtures/deploy_with_proxy_run_config.yml",
+              "first_match": {
+                "line": 18,
+                "snippet": "    debug: true"
+              }
+            },
+            {
+              "file": "lib/kamal/configuration/docs/proxy.yml",
+              "first_match": {
+                "line": 159,
+                "snippet": "    debug: true                    # Debug logging (default: false)"
+              }
+            }
+          ]
+        }
+      },
+      "executable_files": [
+        {
+          "path": "Dockerfile",
+          "kind": "container-build",
+          "runtime": "docker",
+          "line_count": 38,
+          "file_sha": "0055fa657fd2",
+          "has_network_call": false,
+          "has_env_var_pattern": true
+        },
+        {
+          "path": "test/integration/docker/otel_collector/Dockerfile",
+          "kind": "container-build",
+          "runtime": "docker",
+          "line_count": 4,
+          "file_sha": "96f2c97aef2b",
+          "has_network_call": false,
+          "has_env_var_pattern": false
+        },
+        {
+          "path": "test/integration/docker/registry/Dockerfile",
+          "kind": "container-build",
+          "runtime": "docker",
+          "line_count": 9,
+          "file_sha": "6f363c639aab",
+          "has_network_call": false,
+          "has_env_var_pattern": false
+        },
+        {
+          "path": "test/integration/docker/deployer/Dockerfile",
+          "kind": "container-build",
+          "runtime": "docker",
+          "line_count": 37,
+          "file_sha": "a876ae71d095",
+          "has_network_call": true,
+          "has_env_var_pattern": true
+        },
+        {
+          "path": "test/integration/docker/deployer/app_with_destinations/Dockerfile",
+          "kind": "container-build",
+          "runtime": "docker",
+          "line_count": 10,
+          "file_sha": "4130db4e5604",
+          "has_network_call": false,
+          "has_env_var_pattern": true
+        },
+        {
+          "path": "test/integration/docker/deployer/app_with_custom_certificate/Dockerfile",
+          "kind": "container-build",
+          "runtime": "docker",
+          "line_count": 10,
+          "file_sha": "4130db4e5604",
+          "has_network_call": false,
+          "has_env_var_pattern": true
+        },
+        {
+          "path": "test/integration/docker/deployer/app_with_proxied_accessory/Dockerfile",
+          "kind": "container-build",
+          "runtime": "docker",
+          "line_count": 10,
+          "file_sha": "4130db4e5604",
+          "has_network_call": false,
+          "has_env_var_pattern": true
+        },
+        {
+          "path": "test/integration/docker/deployer/app_with_roles/Dockerfile",
+          "kind": "container-build",
+          "runtime": "docker",
+          "line_count": 10,
+          "file_sha": "4130db4e5604",
+          "has_network_call": false,
+          "has_env_var_pattern": true
+        },
+        {
+          "path": "test/integration/docker/deployer/app_with_parallel_roles/Dockerfile",
+          "kind": "container-build",
+          "runtime": "docker",
+          "line_count": 10,
+          "file_sha": "4130db4e5604",
+          "has_network_call": false,
+          "has_env_var_pattern": true
+        },
+        {
+          "path": "test/integration/docker/deployer/app_with_traefik/Dockerfile",
+          "kind": "container-build",
+          "runtime": "docker",
+          "line_count": 10,
+          "file_sha": "4130db4e5604",
+          "has_network_call": false,
+          "has_env_var_pattern": true
+        },
+        {
+          "path": "test/integration/docker/deployer/app/Dockerfile",
+          "kind": "container-build",
+          "runtime": "docker",
+          "line_count": 10,
+          "file_sha": "4130db4e5604",
+          "has_network_call": false,
+          "has_env_var_pattern": true
+        },
+        {
+          "path": "test/integration/docker/vm/Dockerfile",
+          "kind": "container-build",
+          "runtime": "docker",
+          "line_count": 17,
+          "file_sha": "f6f568720902",
+          "has_network_call": false,
+          "has_env_var_pattern": false
+        },
+        {
+          "path": "test/integration/docker/shared/Dockerfile",
+          "kind": "container-build",
+          "runtime": "docker",
+          "line_count": 16,
+          "file_sha": "31197287df02",
+          "has_network_call": false,
+          "has_env_var_pattern": false
+        },
+        {
+          "path": "test/integration/docker/load_balancer/Dockerfile",
+          "kind": "container-build",
+          "runtime": "docker",
+          "line_count": 5,
+          "file_sha": "560f3515e18b",
+          "has_network_call": false,
+          "has_env_var_pattern": false
+        },
+        {
+          "path": ".github/workflows/docker-publish.yml",
+          "kind": "ci-workflow",
+          "runtime": "github-actions",
+          "line_count": 59,
+          "file_sha": "d24ed9dfbd7e",
+          "has_network_call": false,
+          "has_env_var_pattern": true
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "kind": "ci-workflow",
+          "runtime": "github-actions",
+          "line_count": 104,
+          "file_sha": "6d1f1f50b279",
+          "has_network_call": false,
+          "has_env_var_pattern": true
+        }
+      ],
+      "install_hooks": []
+    },
+    "prompt_injection_scan": {
+      "scanned_files": [],
+      "injection_signals": [],
+      "signal_count": 0,
+      "scan_method": "tarball"
+    },
+    "dependencies": {
+      "manifest_files": [
+        {
+          "path": "Gemfile.lock",
+          "ecosystem": "RubyGems"
+        },
+        {
+          "path": "Gemfile",
+          "ecosystem": "RubyGems"
+        }
+      ],
+      "runtime": [],
+      "runtime_count": 0,
+      "dev": [],
+      "dev_count": 0,
+      "dependabot_alerts": {
+        "status": 403,
+        "alerts_count": null,
+        "note": "admin scope required; falling back to osv.dev"
+      },
+      "osv_lookups": [],
+      "dependabot_config": {
+        "present": true,
+        "ecosystems_tracked": [
+          "github-actions"
+        ],
+        "raw_snippet": "version: 2\nupdates:\n  - package-ecosystem: github-actions\n    directory: \"/\"\n    groups:\n      github-actions:\n        patterns:\n          - \"*\"\n    schedule:\n      interval: weekly\n    cooldown:\n      default-days: 10\n"
+      }
+    },
+    "pr_review": {
+      "total_closed_prs": 300,
+      "sample_size": 300,
+      "total_merged_lifetime": 567,
+      "prs": [
+        {
+          "number": 1805,
+          "title": "ci: harden GitHub Actions workflows",
+          "review_decision": "",
+          "any_review_count": 5,
+          "self_merge": true,
+          "merged_at": "2026-03-20T15:33:01Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1803,
+          "title": "Add native OpenTelemetry support for deploy logs",
+          "review_decision": "CHANGES_REQUESTED",
+          "any_review_count": 41,
+          "self_merge": false,
+          "merged_at": "2026-03-27T14:47:47Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1787,
+          "title": "Bump nokogiri from 1.19.0 to 1.19.1 in the bundler group across 1 directory",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2026-02-20T10:59:06Z",
+          "labels": [
+            "dependencies",
+            "ruby"
+          ],
+          "security_flagged": false
+        },
+        {
+          "number": 1786,
+          "title": "Allow aliases to include the destination",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": true,
+          "merged_at": "2026-02-20T10:14:07Z",
+          "labels": [
+            "claude-code-assisted"
+          ],
+          "security_flagged": false
+        },
+        {
+          "number": 1779,
+          "title": "Bump rack from 3.2.4 to 3.2.5 in the bundler group across 1 directory",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2026-02-20T10:15:26Z",
+          "labels": [
+            "dependencies",
+            "ruby"
+          ],
+          "security_flagged": false
+        },
+        {
+          "number": 1772,
+          "title": "Load secrets for pre-connect",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2026-02-20T11:02:22Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1770,
+          "title": "Reset specific roles and hosts when passed nil",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": true,
+          "merged_at": "2026-02-04T16:45:50Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1767,
+          "title": "Fixing a minor typo",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2026-02-20T12:32:36Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1763,
+          "title": "Require kamal-proxy 0.9.2 or higher",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": true,
+          "merged_at": "2026-01-26T15:45:38Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1762,
+          "title": "Fix integration tests on hosts using nftables",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": true,
+          "merged_at": "2026-01-23T15:33:10Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1759,
+          "title": "Add Ruby 4.0 to the test matrix",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": true,
+          "merged_at": "2026-01-16T10:57:27Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1758,
+          "title": "Allow configurable verbosity for hooks output",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": true,
+          "merged_at": "2026-01-16T10:57:37Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1754,
+          "title": "fix --skip-commit for pre-connect hook",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2026-01-23T16:28:42Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1748,
+          "title": "Pin to minitest 5 and update lockfiles",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": true,
+          "merged_at": "2026-01-06T15:12:56Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1746,
+          "title": "Add support ssh-config to run-over-ssh",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2026-01-23T16:30:05Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1745,
+          "title": "Fix typo in README",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2026-01-23T14:27:52Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1739,
+          "title": "Use option_args when running accessories in a new container",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2026-01-23T15:56:38Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1738,
+          "title": "Pass accessory volume through as is",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": true,
+          "merged_at": "2025-12-16T08:47:52Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1732,
+          "title": "Quote filter names in docker commands",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": true,
+          "merged_at": "2026-02-20T11:09:33Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1731,
+          "title": "Boot in parallel for roles on the same host",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": true,
+          "merged_at": "2025-12-04T13:48:52Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1730,
+          "title": "Check roles before removing images and directories",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": true,
+          "merged_at": "2025-12-01T17:33:06Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1729,
+          "title": "Set KAMAL_DESTINATION only for destinations",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": true,
+          "merged_at": "2025-12-01T17:11:01Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1727,
+          "title": "Don't shellescape secrets fetch on the command line",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": true,
+          "merged_at": "2025-12-01T15:16:16Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1726,
+          "title": "Handle parentheses in secrets",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": true,
+          "merged_at": "2025-12-01T15:16:05Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1724,
+          "title": "Accessory file/directory owners + permissions",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": true,
+          "merged_at": "2025-11-28T15:56:33Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1723,
+          "title": "Support mount options for files and directories",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": true,
+          "merged_at": "2025-11-28T14:25:52Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1722,
+          "title": "Make the secrets path configurable",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": true,
+          "merged_at": "2025-11-26T09:32:19Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1721,
+          "title": "Disable the SSH eviction thread in tests",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": true,
+          "merged_at": "2025-11-26T09:14:29Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1720,
+          "title": "Use VFS storage driver locally",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": true,
+          "merged_at": "2025-11-26T08:36:40Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1718,
+          "title": "Enhance ERB rendering to trim blank lines in configuration files",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2026-02-20T12:27:05Z",
+          "labels": [
+            "claude-code-assisted"
+          ],
+          "security_flagged": false
+        },
+        {
+          "number": 1714,
+          "title": "Make environment variables optional for tagged hosts",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2025-11-26T09:18:39Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1708,
+          "title": "Fix DNS retry inclusion order",
+          "review_decision": "APPROVED",
+          "any_review_count": 1,
+          "self_merge": false,
+          "merged_at": "2025-11-18T07:47:11Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1707,
+          "title": "DNS retries so lookup failures don't interrupt deploys",
+          "review_decision": "APPROVED",
+          "any_review_count": 1,
+          "self_merge": false,
+          "merged_at": "2025-11-17T09:08:06Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1706,
+          "title": "Vfs on GitHub actions",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": true,
+          "merged_at": "2025-11-14T16:25:43Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1705,
+          "title": "Set a new container name for app exec",
+          "review_decision": "APPROVED",
+          "any_review_count": 2,
+          "self_merge": false,
+          "merged_at": "2025-11-26T09:37:36Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1699,
+          "title": "Fix GH action security warnings",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": true,
+          "merged_at": "2025-11-07T15:20:28Z",
+          "labels": [],
+          "security_flagged": true
+        },
+        {
+          "number": 1697,
+          "title": "Security Fix: Prevent OS Command Injection in Passbolt adapter (CWE-78)",
+          "review_decision": "",
+          "any_review_count": 2,
+          "self_merge": false,
+          "merged_at": "2025-11-11T10:07:36Z",
+          "labels": [],
+          "security_flagged": true
+        },
+        {
+          "number": 1688,
+          "title": "Restore ability to specify SSH Configuration property",
+          "review_decision": "",
+          "any_review_count": 7,
+          "self_merge": false,
+          "merged_at": "2025-11-07T13:52:50Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1687,
+          "title": "Ensure global CLI quiet flag is respected",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2025-11-07T13:54:18Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1683,
+          "title": "Update registry config documentation to reflect Kamal 2.8.0 changes",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2025-10-27T08:51:47Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1680,
+          "title": "Restore kamal registry login/logout commands",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": true,
+          "merged_at": "2025-10-22T15:00:02Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1679,
+          "title": "Add local registry support for remote builders",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": true,
+          "merged_at": "2025-10-27T08:10:09Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1676,
+          "title": "Wait for port forwarding setup for local registry",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": true,
+          "merged_at": "2025-10-20T21:31:37Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1672,
+          "title": "Bump rack from 3.1.17 to 3.1.18 in the bundler group across 1 directory",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2025-10-19T13:25:22Z",
+          "labels": [
+            "dependencies",
+            "ruby"
+          ],
+          "security_flagged": false
+        },
+        {
+          "number": 1668,
+          "title": "Pack builder updates for no cache and dirty tags",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2025-10-15T10:46:40Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1666,
+          "title": "Bump rack from 3.1.16 to 3.1.17 in the bundler group across 1 directory",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2025-10-15T10:46:54Z",
+          "labels": [
+            "dependencies",
+            "ruby"
+          ],
+          "security_flagged": false
+        },
+        {
+          "number": 1664,
+          "title": "Don't login to registry locally for remote build: take 2",
+          "review_decision": "",
+          "any_review_count": 1,
+          "self_merge": true,
+          "merged_at": "2025-10-08T06:46:34Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1663,
+          "title": "Set proxy run configuration in deploy YAML",
+          "review_decision": "",
+          "any_review_count": 1,
+          "self_merge": true,
+          "merged_at": "2025-11-28T10:21:19Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1662,
+          "title": "Revert \"Don't login to registry locally for remote build\"",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": true,
+          "merged_at": "2025-10-06T07:24:24Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1656,
+          "title": "Don't login to registry locally for remote build",
+          "review_decision": "",
+          "any_review_count": 2,
+          "self_merge": true,
+          "merged_at": "2025-09-26T14:41:38Z",
+          "labels": [],
+          "security_flagged": false
+        }
+      ],
+      "formal_review_rate": 4.7,
+      "any_review_rate": 18.7,
+      "self_merge_count": 154,
+      "security_flagged_count": 2,
+      "security_flagged_numbers": [
+        440,
+        997,
+        1697,
+        1699
+      ]
+    },
+    "open_prs": {
+      "entries": [
+        {
+          "number": 1825,
+          "title": "Bump the github-actions group across 1 directory with 7 updates",
+          "author": "app/dependabot",
+          "created_at": "2026-04-15T08:37:37Z"
+        },
+        {
+          "number": 1821,
+          "title": "Add GitLab CI/CD secrets adapter",
+          "author": "felixbuenemann",
+          "created_at": "2026-04-08T16:42:12Z"
+        },
+        {
+          "number": 1820,
+          "title": "Upload custom SSL certificates for accessories",
+          "author": "pigoz",
+          "created_at": "2026-04-08T13:09:52Z"
+        },
+        {
+          "number": 1818,
+          "title": "Add value equality to Proxy::Run",
+          "author": "teal-bauer",
+          "created_at": "2026-04-07T15:36:35Z"
+        },
+        {
+          "number": 1815,
+          "title": "fix: use portable shebang in sample hooks",
+          "author": "maxonvim",
+          "created_at": "2026-04-07T09:02:23Z"
+        },
+        {
+          "number": 1813,
+          "title": "Add a stop_timeout option",
+          "author": "djmb",
+          "created_at": "2026-04-02T07:39:35Z"
+        },
+        {
+          "number": 1810,
+          "title": "Add `kamal app create` and `kamal accessory create` for standby container deployment",
+          "author": "dutchess",
+          "created_at": "2026-03-26T20:26:03Z"
+        },
+        {
+          "number": 1808,
+          "title": "Detect accessory image changes during boot",
+          "author": "gmautner",
+          "created_at": "2026-03-21T15:51:58Z"
+        },
+        {
+          "number": 1806,
+          "title": "Bump the bundler group across 1 directory with 2 updates",
+          "author": "app/dependabot",
+          "created_at": "2026-03-20T15:34:16Z"
+        },
+        {
+          "number": 1800,
+          "title": "Add idle container configuration for kamal-proxy",
+          "author": "martijnenco",
+          "created_at": "2026-03-12T09:39:34Z"
+        },
+        {
+          "number": 1798,
+          "title": "Secure accessory port bindings to localhost by default",
+          "author": "mike-weiner",
+          "created_at": "2026-03-11T00:45:36Z"
+        },
+        {
+          "number": 1795,
+          "title": "Add default value for `secrets_path` parameter",
+          "author": "leonvogt",
+          "created_at": "2026-03-06T15:03:27Z"
+        },
+        {
+          "number": 1793,
+          "title": "Fix SSL validation to allow custom certs without a host/hosts",
+          "author": "zacharymarshal",
+          "created_at": "2026-03-04T18:16:34Z"
+        },
+        {
+          "number": 1791,
+          "title": "Add secrets adapter for AWS SSM Parameter Store",
+          "author": "davafons",
+          "created_at": "2026-03-02T14:22:20Z"
+        },
+        {
+          "number": 1788,
+          "title": "Fix empty string environment variable support",
+          "author": "terryfinn",
+          "created_at": "2026-02-23T23:23:18Z"
+        },
+        {
+          "number": 1785,
+          "title": "Prepend .kamal/bin to PATH during hook execution",
+          "author": "jeremy",
+          "created_at": "2026-02-20T05:31:18Z"
+        },
+        {
+          "number": 1784,
+          "title": "`kamal-*`: support git-style external commands in .kamal/bin and on PATH",
+          "author": "jeremy",
+          "created_at": "2026-02-20T04:07:17Z"
+        },
+        {
+          "number": 1783,
+          "title": "Add pre-configure hook for destination rewriting",
+          "author": "jeremy",
+          "created_at": "2026-02-20T00:33:00Z"
+        },
+        {
+          "number": 1782,
+          "title": "Let hooks talk back to Kamal via KAMAL_OUTPUT",
+          "author": "jeremy",
+          "created_at": "2026-02-20T00:32:43Z"
+        },
+        {
+          "number": 1780,
+          "title": "Allow setting run_directory in config as documented",
+          "author": "genezys",
+          "created_at": "2026-02-18T21:48:56Z"
+        },
+        {
+          "number": 1778,
+          "title": "Adds kamal accessory tunnel command for forwarding ports to accessories",
+          "author": "ButerezAndrei",
+          "created_at": "2026-02-17T16:24:57Z"
+        },
+        {
+          "number": 1776,
+          "title": "Passbolt - fetching decrypted resource",
+          "author": "daya",
+          "created_at": "2026-02-16T03:58:31Z"
+        },
+        {
+          "number": 1766,
+          "title": "Add interactive rollback command",
+          "author": "SebastianSzturo",
+          "created_at": "2026-01-29T01:20:22Z"
+        },
+        {
+          "number": 1764,
+          "title": "feat(secrets): add phase.dev secrets adapter",
+          "author": "scmmishra",
+          "created_at": "2026-01-26T11:25:01Z"
+        },
+        {
+          "number": 1757,
+          "title": "docs: Lightly improve the documentation of metrics_port",
+          "author": "zkldi",
+          "created_at": "2026-01-15T22:07:33Z"
+        },
+        {
+          "number": 1751,
+          "title": "Add volume removal when removing accessories",
+          "author": "cyppe",
+          "created_at": "2026-01-11T14:32:19Z"
+        },
+        {
+          "number": 1750,
+          "title": "Add healthcheck port configuration option",
+          "author": "lucasmeijer",
+          "created_at": "2026-01-10T17:21:11Z"
+        },
+        {
+          "number": 1742,
+          "title": "Add `--push-secrets` option to `exec` for pushing .env files",
+          "author": "anatoly-pashin-axon21",
+          "created_at": "2025-12-30T12:07:29Z"
+        },
+        {
+          "number": 1736,
+          "title": "Add namespace option to builder configuration to prevent credential conflicts",
+          "author": "joaoqalves",
+          "created_at": "2025-12-15T13:16:46Z"
+        },
+        {
+          "number": 1734,
+          "title": "feat(secrets): add proton pass secrets adapter",
+          "author": "mspori",
+          "created_at": "2025-12-11T20:29:59Z"
+        },
+        {
+          "number": 1728,
+          "title": "Don't escape Docker env file values",
+          "author": "djmb",
+          "created_at": "2025-12-01T15:45:04Z"
+        },
+        {
+          "number": 1715,
+          "title": "Add KeePassXC Secret Adapter",
+          "author": "jonyoi",
+          "created_at": "2025-11-23T16:46:17Z"
+        },
+        {
+          "number": 1693,
+          "title": "support kamal-proxy --health-check-host",
+          "author": "ianrodrigues",
+          "created_at": "2025-11-01T14:16:02Z"
+        },
+        {
+          "number": 1677,
+          "title": "Enhance rollback to attempt to find a version when one is not specified",
+          "author": "mike-weiner",
+          "created_at": "2025-10-21T02:07:05Z"
+        },
+        {
+          "number": 1657,
+          "title": "Adds `kamal alias`: list existing aliases",
+          "author": "supercobra",
+          "created_at": "2025-09-28T15:06:15Z"
+        },
+        {
+          "number": 1632,
+          "title": "Stop app container by container id",
+          "author": "aliismayilov",
+          "created_at": "2025-08-19T10:13:27Z"
+        },
+        {
+          "number": 1631,
+          "title": "Preserve file extension in destination config files",
+          "author": "delkopiso",
+          "created_at": "2025-08-18T22:22:39Z"
+        },
+        {
+          "number": 1615,
+          "title": "Fixes incorrect host for accessory logs follow with specified host",
+          "author": "matthewbjones",
+          "created_at": "2025-07-22T18:45:50Z"
+        },
+        {
+          "number": 1609,
+          "title": "SSL private key should be locked down just in case",
+          "author": "frenkel",
+          "created_at": "2025-07-16T09:27:37Z"
+        },
+        {
+          "number": 1606,
+          "title": "Add support for Bitwarden Secret Manager EU vaults",
+          "author": "frenkel",
+          "created_at": "2025-07-11T12:39:07Z"
+        },
+        {
+          "number": 1532,
+          "title": "Improve the documentation and key order in deploy.yml",
+          "author": "mrj",
+          "created_at": "2025-04-29T10:44:39Z"
+        },
+        {
+          "number": 1524,
+          "title": "feat: Add task to clean up containers with deleted roles",
+          "author": "Pavel-Guseynov",
+          "created_at": "2025-04-23T11:19:13Z"
+        },
+        {
+          "number": 1490,
+          "title": "Handle loadbalancing for multiple web hosts",
+          "author": "mhenrixon",
+          "created_at": "2025-04-11T17:06:11Z"
+        },
+        {
+          "number": 1481,
+          "title": "feat: Add shell completions and shell completion command",
+          "author": "hschne",
+          "created_at": "2025-04-07T13:57:08Z"
+        },
+        {
+          "number": 1427,
+          "title": "[Feature] Preserve kamal default options",
+          "author": "ShPakvel",
+          "created_at": "2025-02-23T03:28:07Z"
+        },
+        {
+          "number": 1350,
+          "title": "Fix secrets adapters failing fetch on Windows",
+          "author": "akumajoe",
+          "created_at": "2025-01-10T22:01:10Z"
+        },
+        {
+          "number": 1279,
+          "title": "Support sshkit.default_env",
+          "author": "filipesilva",
+          "created_at": "2024-12-09T12:44:32Z"
+        },
+        {
+          "number": 1242,
+          "title": "Output role name along with container logs",
+          "author": "lewispb",
+          "created_at": "2024-11-22T11:35:49Z"
+        },
+        {
+          "number": 1218,
+          "title": "Warn user on blank secrets",
+          "author": "andrewjanssen",
+          "created_at": "2024-11-15T20:57:55Z"
+        },
+        {
+          "number": 1129,
+          "title": "Allow `ssh/config` to accept string, or array of strings",
+          "author": "Burgestrand",
+          "created_at": "2024-10-17T10:55:56Z"
+        },
+        {
+          "number": 1070,
+          "title": "Add `kamal app open` command to open app in a web browser",
+          "author": "jeromedalbert",
+          "created_at": "2024-10-07T09:46:18Z"
+        },
+        {
+          "number": 1048,
+          "title": "SSH proxy: allow using a bare hostname without root@",
+          "author": "jeremy",
+          "created_at": "2024-10-03T18:22:08Z"
+        },
+        {
+          "number": 885,
+          "title": "Dont build image if it has already been pushed",
+          "author": "npezza93",
+          "created_at": "2024-07-15T15:17:22Z"
+        },
+        {
+          "number": 774,
+          "title": "Skip shell option value if it's nil",
+          "author": "xiaohui-zhangxh",
+          "created_at": "2024-04-17T10:17:04Z"
+        }
+      ],
+      "count": 54
+    },
+    "closed_not_merged_prs": {
+      "entries": [
+        {
+          "number": 1830,
+          "title": "Test PR for CI workflow",
+          "closed_at": "2026-04-19T16:01:20Z"
+        },
+        {
+          "number": 1822,
+          "title": "Add value equality to Proxy::Run to fix false conflict errors",
+          "closed_at": "2026-04-11T03:39:15Z"
+        },
+        {
+          "number": 1819,
+          "title": "Bump the github-actions group across 1 directory with 4 updates",
+          "closed_at": "2026-04-15T08:37:28Z"
+        },
+        {
+          "number": 1807,
+          "title": "Bump the github-actions group across 1 directory with 5 updates",
+          "closed_at": "2026-04-08T08:38:05Z"
+        },
+        {
+          "number": 1804,
+          "title": "Bump loofah from 2.25.0 to 2.25.1 in the bundler group across 1 directory",
+          "closed_at": "2026-03-20T15:34:20Z"
+        },
+        {
+          "number": 1802,
+          "title": "Add `redeploy_standby` and `boot_standby`",
+          "closed_at": "2026-03-18T16:36:49Z"
+        },
+        {
+          "number": 1774,
+          "title": "Add KeepassXC secrets adapter for kamal secrets",
+          "closed_at": "2026-02-25T14:33:58Z"
+        },
+        {
+          "number": 1743,
+          "title": "Bump uri from 1.0.3 to 1.0.4 in the bundler group across 1 directory",
+          "closed_at": "2026-01-06T15:13:52Z"
+        },
+        {
+          "number": 1685,
+          "title": "Introduce new option to bypass validation of registry configuration",
+          "closed_at": "2025-11-11T10:08:02Z"
+        },
+        {
+          "number": 1671,
+          "title": "Version 2.7.4",
+          "closed_at": "2025-10-14T11:01:05Z"
+        },
+        {
+          "number": 1670,
+          "title": "Set minimum proxy version to 0.9.1",
+          "closed_at": "2025-10-19T10:28:08Z"
+        },
+        {
+          "number": 1669,
+          "title": "Set minimum proxy version to 0.9.0",
+          "closed_at": "2025-10-14T08:15:30Z"
+        },
+        {
+          "number": 1642,
+          "title": "docs: update doc for path_prefix",
+          "closed_at": "2025-12-24T20:56:58Z"
+        },
+        {
+          "number": 1612,
+          "title": "Fix docs",
+          "closed_at": "2025-12-01T08:39:22Z"
+        },
+        {
+          "number": 1605,
+          "title": "Fixed docker login insecure -p usage preventing success.",
+          "closed_at": "2025-11-07T15:09:03Z"
+        },
+        {
+          "number": 1530,
+          "title": "command 'kamal app visit' to visit the app in your browser",
+          "closed_at": "2025-11-28T16:10:31Z"
+        },
+        {
+          "number": 1475,
+          "title": "custom ssl certificates can be set in proxy config",
+          "closed_at": "2025-04-02T13:13:35Z"
+        },
+        {
+          "number": 1455,
+          "title": "Refactor using_version method for improved readability",
+          "closed_at": "2025-11-07T15:23:13Z"
+        },
+        {
+          "number": 1450,
+          "title": "Eval proxy options",
+          "closed_at": "2025-03-17T17:03:37Z"
+        },
+        {
+          "number": 1425,
+          "title": "feat: ssh: use secret in key_data",
+          "closed_at": "2025-11-28T16:09:45Z"
+        },
+        {
+          "number": 1409,
+          "title": "Raise error (instead of warn) when uncommitted git changes are detected",
+          "closed_at": "2025-08-02T20:47:04Z"
+        },
+        {
+          "number": 1404,
+          "title": "Update docker setup example hook",
+          "closed_at": "2026-02-20T11:07:13Z"
+        },
+        {
+          "number": 1403,
+          "title": "fix: make sure args to `echo` are quoted",
+          "closed_at": "2025-04-22T08:01:36Z"
+        },
+        {
+          "number": 1381,
+          "title": "Enable IPv6 connectivity for the kamal network",
+          "closed_at": "2025-01-30T16:34:26Z"
+        },
+        {
+          "number": 1364,
+          "title": "[Improvement] Extract proxy commands for deploy and remove service.",
+          "closed_at": "2026-02-20T11:58:54Z"
+        },
+        {
+          "number": 1345,
+          "title": "fix the digital ocean registry example",
+          "closed_at": "2025-12-01T08:42:43Z"
+        },
+        {
+          "number": 1289,
+          "title": "Show hook-output by default",
+          "closed_at": "2026-02-20T11:55:19Z"
+        },
+        {
+          "number": 1284,
+          "title": "Fix JSON ParserError with kamal secrets extract $SECRETS",
+          "closed_at": "2025-01-17T10:14:50Z"
+        },
+        {
+          "number": 1281,
+          "title": "Fixes #330",
+          "closed_at": "2025-04-22T08:01:20Z"
+        },
+        {
+          "number": 1280,
+          "title": "Enable IPv6 connectivity for the kamal network",
+          "closed_at": "2025-02-18T09:35:50Z"
+        },
+        {
+          "number": 1271,
+          "title": "Don't use `shellescape` with secrets extract",
+          "closed_at": "2024-12-02T21:24:58Z"
+        },
+        {
+          "number": 1269,
+          "title": "run_over_ssh does not respect the ssh keys in deploy.yml",
+          "closed_at": "2024-12-02T09:59:46Z"
+        },
+        {
+          "number": 1254,
+          "title": "Create ruby weather cli",
+          "closed_at": "2024-11-28T14:04:06Z"
+        },
+        {
+          "number": 1248,
+          "title": "Cleanly remove all accessory locations",
+          "closed_at": "2024-11-24T09:35:07Z"
+        },
+        {
+          "number": 1227,
+          "title": "kamal app exec may fail if not logged in",
+          "closed_at": "2025-04-21T14:54:35Z"
+        },
+        {
+          "number": 1223,
+          "title": "kamal app exec includes secrets",
+          "closed_at": "2026-02-20T11:46:29Z"
+        },
+        {
+          "number": 1202,
+          "title": "feat: support custom proxy image repository",
+          "closed_at": "2025-04-21T14:52:34Z"
+        },
+        {
+          "number": 1191,
+          "title": "Add ability to specify `--shm-size` in `docker run` command",
+          "closed_at": "2024-11-21T14:59:18Z"
+        },
+        {
+          "number": 1183,
+          "title": "Add Doppler secrets adapter",
+          "closed_at": "2024-11-21T14:53:29Z"
+        },
+        {
+          "number": 1181,
+          "title": "add host-docker-setup hook",
+          "closed_at": "2024-10-31T23:46:31Z"
+        },
+        {
+          "number": 1138,
+          "title": "Support Caddy web server",
+          "closed_at": "2024-10-21T04:54:16Z"
+        },
+        {
+          "number": 1113,
+          "title": "remove shellescaping from secrets fetch output",
+          "closed_at": "2024-10-14T11:49:10Z"
+        },
+        {
+          "number": 1087,
+          "title": "[FIX] [Kamal 2] Pemission denied (publickey) only for interactive commands",
+          "closed_at": "2025-01-13T15:35:22Z"
+        },
+        {
+          "number": 1075,
+          "title": "Dockerfile: Include CLI binaries for supported password managers",
+          "closed_at": "2024-10-25T00:23:46Z"
+        },
+        {
+          "number": 1074,
+          "title": "Remove to_sentence method",
+          "closed_at": "2024-10-08T11:35:25Z"
+        },
+        {
+          "number": 1057,
+          "title": "Remove extra empty lines in description",
+          "closed_at": "2024-10-05T20:44:04Z"
+        },
+        {
+          "number": 1047,
+          "title": "Expose `pause` and `resume` methods of `kamal-proxy`",
+          "closed_at": "2024-10-04T23:45:22Z"
+        },
+        {
+          "number": 1044,
+          "title": "Update Deploy Template: Switch to Latest Stable Redis Version (7.4)",
+          "closed_at": "2024-10-04T23:49:07Z"
+        },
+        {
+          "number": 1038,
+          "title": "Kamal::Secrets did not load environment variables in .env on my Apple M1",
+          "closed_at": "2024-10-23T11:29:58Z"
+        },
+        {
+          "number": 1013,
+          "title": "Consolidated proxy-related configuration options and constants under Kamal::Configuration::Proxy",
+          "closed_at": "2024-10-07T16:27:01Z"
+        },
+        {
+          "number": 1008,
+          "title": "Escape secrets in inline command substitution",
+          "closed_at": "2024-09-30T11:33:47Z"
+        },
+        {
+          "number": 983,
+          "title": "Use `secrets-destination` instead of `secrets.destination`",
+          "closed_at": "2024-09-27T11:44:56Z"
+        },
+        {
+          "number": 976,
+          "title": "Reuse CONTAINER_NAME constant",
+          "closed_at": "2025-12-01T08:46:34Z"
+        },
+        {
+          "number": 969,
+          "title": "Added support for custom SSL certificate",
+          "closed_at": "2025-06-19T13:13:58Z"
+        },
+        {
+          "number": 959,
+          "title": "[FIX] - Make kamal use ssh keys from config when executing commands",
+          "closed_at": "2024-12-02T10:24:02Z"
+        },
+        {
+          "number": 909,
+          "title": "Suppress health check progress bar",
+          "closed_at": "2024-09-30T14:46:42Z"
+        },
+        {
+          "number": 901,
+          "title": "Bumped dotenv to 3.1",
+          "closed_at": "2024-09-25T08:34:16Z"
+        },
+        {
+          "number": 900,
+          "title": "Replace .env* with .kamal/env*",
+          "closed_at": "2024-09-09T14:00:11Z"
+        },
+        {
+          "number": 882,
+          "title": "Update submodules after clone",
+          "closed_at": "2024-07-17T02:37:13Z"
+        },
+        {
+          "number": 859,
+          "title": "fix: Ensure SSH connections are closed after each command execution",
+          "closed_at": "2025-01-13T15:29:07Z"
+        },
+        {
+          "number": 843,
+          "title": "Display container logs when failing to start new version when using single role",
+          "closed_at": "2024-06-20T07:50:04Z"
+        },
+        {
+          "number": 830,
+          "title": "Fix the multiarch disabled + remote set",
+          "closed_at": "2024-10-23T10:42:15Z"
+        },
+        {
+          "number": 825,
+          "title": "[WIP] Specify env file + envify on the config file",
+          "closed_at": "2025-01-13T15:26:42Z"
+        },
+        {
+          "number": 819,
+          "title": "Use /bin/sh in docker-setup.sample",
+          "closed_at": "2024-05-24T18:04:41Z"
+        },
+        {
+          "number": 776,
+          "title": "Add \"tag_uncommitted\" option to \"builder\"",
+          "closed_at": "2024-04-22T11:26:09Z"
+        },
+        {
+          "number": 750,
+          "title": "escape docker env file value with Shellwords.escape",
+          "closed_at": "2024-04-16T07:53:38Z"
+        },
+        {
+          "number": 744,
+          "title": "Per destination latest image tag",
+          "closed_at": "2024-03-29T13:47:52Z"
+        },
+        {
+          "number": 723,
+          "title": "Update condition to copy sample hooks",
+          "closed_at": "2026-02-20T11:22:25Z"
+        },
+        {
+          "number": 722,
+          "title": "Pushing Build Should not Require Lock Acquire nor Server Setup",
+          "closed_at": "2024-05-21T11:37:01Z"
+        },
+        {
+          "number": 716,
+          "title": "Support init command with destination",
+          "closed_at": "2024-09-06T14:51:08Z"
+        },
+        {
+          "number": 712,
+          "title": "Fix expectations to match lines option",
+          "closed_at": "2024-03-07T12:37:49Z"
+        },
+        {
+          "number": 703,
+          "title": "Auto push of environment files when deploying",
+          "closed_at": "2024-03-21T10:17:53Z"
+        },
+        {
+          "number": 702,
+          "title": "Relax `dotenv` version",
+          "closed_at": "2024-03-26T13:04:24Z"
+        },
+        {
+          "number": 697,
+          "title": "configure volumes, directories and files for any role",
+          "closed_at": "2025-12-01T08:43:59Z"
+        },
+        {
+          "number": 695,
+          "title": "enable volumes, directories and files for any role",
+          "closed_at": "2024-03-01T15:13:28Z"
+        },
+        {
+          "number": 666,
+          "title": "Set KAMAL_DESTINATION for envify command",
+          "closed_at": "2024-08-28T06:09:26Z"
+        },
+        {
+          "number": 648,
+          "title": "Add support for multiple published ports on an accessory.",
+          "closed_at": "2024-01-31T19:14:29Z"
+        },
+        {
+          "number": 642,
+          "title": "Concurrent local and remote docker login",
+          "closed_at": "2024-03-04T11:41:52Z"
+        },
+        {
+          "number": 630,
+          "title": "Add Ruby 3.3 to CI matrix",
+          "closed_at": "2024-01-09T12:11:24Z"
+        },
+        {
+          "number": 619,
+          "title": "Fix redeploy command missing registry authentication",
+          "closed_at": "2023-12-27T16:34:52Z"
+        },
+        {
+          "number": 616,
+          "title": "Enable Renovate",
+          "closed_at": "2024-01-26T02:42:01Z"
+        },
+        {
+          "number": 615,
+          "title": "Remove accessory env file from host, when accessory is removed",
+          "closed_at": "2024-09-29T11:54:59Z"
+        },
+        {
+          "number": 614,
+          "title": "Trim long hostnames and remove leading hyphens",
+          "closed_at": "2024-04-07T16:24:19Z"
+        },
+        {
+          "number": 613,
+          "title": "Fix #528 - Allow roles to have volumes",
+          "closed_at": "2026-02-20T11:16:02Z"
+        },
+        {
+          "number": 609,
+          "title": "Allow env vars to be passed in from the host.",
+          "closed_at": "2024-05-02T14:46:40Z"
+        },
+        {
+          "number": 590,
+          "title": "refactor: make config.primary_role a Role instead of a string",
+          "closed_at": "2024-03-08T08:56:11Z"
+        },
+        {
+          "number": 579,
+          "title": "Add ability to stop containers asynchronously",
+          "closed_at": "2025-11-28T10:32:37Z"
+        },
+        {
+          "number": 567,
+          "title": "Added logic to detect if curl is installed on servers and, when the OS are debian-like, installing it using apt before installing docker",
+          "closed_at": "2024-03-07T10:33:20Z"
+        },
+        {
+          "number": 559,
+          "title": "Supporting multi-dc deploys",
+          "closed_at": "2023-11-13T07:55:50Z"
+        },
+        {
+          "number": 541,
+          "title": "Add ruby hooks",
+          "closed_at": "2023-10-30T11:13:34Z"
+        },
+        {
+          "number": 531,
+          "title": "optionize reject nil value",
+          "closed_at": "2024-04-17T10:17:33Z"
+        },
+        {
+          "number": 513,
+          "title": "Surround docker login password with quotes",
+          "closed_at": "2024-03-07T08:32:20Z"
+        },
+        {
+          "number": 500,
+          "title": "Allow custom name for traefik container",
+          "closed_at": "2024-05-02T14:43:04Z"
+        },
+        {
+          "number": 487,
+          "title": "Add option to skip .env check",
+          "closed_at": "2023-09-26T07:04:09Z"
+        },
+        {
+          "number": 482,
+          "title": "feat: Use git email as performer when available",
+          "closed_at": "2024-07-11T09:00:32Z"
+        },
+        {
+          "number": 466,
+          "title": "Include hidden files when copying assets",
+          "closed_at": "2023-09-15T07:48:17Z"
+        },
+        {
+          "number": 463,
+          "title": "Load Deploy Config with *.erb Extension if Exists",
+          "closed_at": "2023-09-14T20:27:17Z"
+        },
+        {
+          "number": 445,
+          "title": "Allow setting an env file when running containers",
+          "closed_at": "2023-09-08T17:12:30Z"
+        },
+        {
+          "number": 442,
+          "title": "feat: Add destinations command",
+          "closed_at": "2025-04-23T14:25:41Z"
+        },
+        {
+          "number": 436,
+          "title": "Load bin/kamal if exists",
+          "closed_at": "2023-09-16T18:37:00Z"
+        }
+      ],
+      "count": 100
+    },
+    "issues_and_commits": {
+      "open_security_issues": [],
+      "open_issues_count": 72,
+      "closed_issues": [
+        {
+          "author": "TheFranconianCoder",
+          "closed_at": "2023-03-01T12:41:23Z",
+          "number": 61,
+          "title": "Docker -> Podman ?"
+        },
+        {
+          "author": "CoenGrutter",
+          "closed_at": "2026-02-27T09:29:41Z",
+          "number": 1789,
+          "title": "Ubuntu server needs additional prep before running"
+        },
+        {
+          "author": "raoulvdberge",
+          "closed_at": "2025-12-16T08:22:00Z",
+          "number": 1735,
+          "title": "Cannot set mode for Kamal accessory file"
+        },
+        {
+          "author": "ronald2wing",
+          "closed_at": "2025-11-07T12:42:08Z",
+          "number": 1682,
+          "title": "Is there server and Docker security features?"
+        },
+        {
+          "author": "macpclinux1",
+          "closed_at": "2025-11-07T12:41:06Z",
+          "number": 1660,
+          "title": ">>> RUN SECRET_KEY_BASE_DUMMY=1 bundle exec rails assets:precompile"
+        },
+        {
+          "author": "hhunaid",
+          "closed_at": "2025-11-07T12:22:53Z",
+          "number": 1638,
+          "title": "How to fetch secrets using aws cli running on the EC2 instance?"
+        },
+        {
+          "author": "m3thom",
+          "closed_at": "2025-11-07T09:59:43Z",
+          "number": 1058,
+          "title": "[Feature request] Support self-hosted registry out of the box."
+        },
+        {
+          "author": "eddygarcas",
+          "closed_at": "2025-04-18T08:26:06Z",
+          "number": 849,
+          "title": "/bin/rails assets:precompile\" did not complete successfully: exit code: 1  randomly fails"
+        },
+        {
+          "author": "enzomoraes",
+          "closed_at": "2025-09-02T03:06:12Z",
+          "number": 1619,
+          "title": "`Net::SSH::Disconnect` when running any Kamal command, even though manual SSH works"
+        },
+        {
+          "author": "kirillrogovoy",
+          "closed_at": "2024-10-04T19:27:59Z",
+          "number": 1039,
+          "title": "Why recommending no SSL when behind Cloudflare?"
+        }
+      ],
+      "closed_issues_count": 10,
+      "recent_commits": [
+        {
+          "author": "djmb",
+          "date": "2026-03-27T14:47:47Z",
+          "message_first_line": "Merge pull request #1803 from basecamp/otel-deploy-logs",
+          "sha": "6a31d14",
+          "security_keyword_match": false
+        },
+        {
+          "author": "lewispb",
+          "date": "2026-03-27T13:38:24Z",
+          "message_first_line": "Add output logging framework with OTel and file backends",
+          "sha": "589688d",
+          "security_keyword_match": false
+        },
+        {
+          "author": "flavorjones",
+          "date": "2026-03-20T15:33:00Z",
+          "message_first_line": "ci: harden GitHub Actions workflows (#1805)",
+          "sha": "5e5eab9",
+          "security_keyword_match": false
+        },
+        {
+          "author": "djmb",
+          "date": "2026-03-18T13:04:17Z",
+          "message_first_line": "Bump version for 2.11.0",
+          "sha": "453d8d7",
+          "security_keyword_match": false
+        },
+        {
+          "author": "djmb",
+          "date": "2026-03-18T12:23:26Z",
+          "message_first_line": "Fix alias doc validation",
+          "sha": "56de070",
+          "security_keyword_match": true
+        },
+        {
+          "author": "djmb",
+          "date": "2026-03-18T12:04:03Z",
+          "message_first_line": "Doc change for Kamal 2.11",
+          "sha": "89c0d32",
+          "security_keyword_match": false
+        },
+        {
+          "author": "djmb",
+          "date": "2026-02-20T18:52:32Z",
+          "message_first_line": "Rubocop fixes",
+          "sha": "9c6252d",
+          "security_keyword_match": false
+        },
+        {
+          "author": "djmb",
+          "date": "2026-02-20T15:36:17Z",
+          "message_first_line": "Split the commands",
+          "sha": "7a05140",
+          "security_keyword_match": false
+        },
+        {
+          "author": "djmb",
+          "date": "2026-02-20T16:18:29Z",
+          "message_first_line": "Merge pull request #1095 from brightbox/fix-980",
+          "sha": "a070fe7",
+          "security_keyword_match": true
+        },
+        {
+          "author": "djmb",
+          "date": "2026-02-20T12:32:36Z",
+          "message_first_line": "Merge pull request #1767 from ron-shinall/fix-typo",
+          "sha": "3a68543",
+          "security_keyword_match": true
+        },
+        {
+          "author": "djmb",
+          "date": "2026-02-20T12:27:05Z",
+          "message_first_line": "Merge pull request #1718 from tortuetorche/add-erb-trim-mode-support",
+          "sha": "e4aaeda",
+          "security_keyword_match": false
+        },
+        {
+          "author": "djmb",
+          "date": "2026-02-20T11:09:32Z",
+          "message_first_line": "Merge pull request #1732 from basecamp/quote-filter-names",
+          "sha": "6ecf8ab",
+          "security_keyword_match": false
+        },
+        {
+          "author": "djmb",
+          "date": "2026-02-20T11:02:22Z",
+          "message_first_line": "Merge pull request #1772 from nickhammond/pre-connect-secrets",
+          "sha": "2c03a92",
+          "security_keyword_match": false
+        },
+        {
+          "author": "djmb",
+          "date": "2026-02-20T10:59:06Z",
+          "message_first_line": "Merge pull request #1787 from basecamp/dependabot/bundler/bundler-6efc7144a8",
+          "sha": "7eb6ad1",
+          "security_keyword_match": false
+        },
+        {
+          "author": "dependabot[bot]",
+          "date": "2026-02-20T10:16:13Z",
+          "message_first_line": "Bump nokogiri in the bundler group across 1 directory",
+          "sha": "91acc9f",
+          "security_keyword_match": false
+        },
+        {
+          "author": "djmb",
+          "date": "2026-02-20T10:15:26Z",
+          "message_first_line": "Merge pull request #1779 from basecamp/dependabot/bundler/bundler-0d98331e2e",
+          "sha": "9872ee3",
+          "security_keyword_match": false
+        },
+        {
+          "author": "djmb",
+          "date": "2026-02-20T10:14:07Z",
+          "message_first_line": "Merge pull request #1786 from basecamp/preprocess-aliases",
+          "sha": "67ff949",
+          "security_keyword_match": false
+        },
+        {
+          "author": "djmb",
+          "date": "2026-02-20T09:38:48Z",
+          "message_first_line": "Allow aliases to include the destination",
+          "sha": "b8970f2",
+          "security_keyword_match": false
+        },
+        {
+          "author": "dependabot[bot]",
+          "date": "2026-02-17T18:22:41Z",
+          "message_first_line": "Bump rack from 3.2.4 to 3.2.5 in the bundler group across 1 directory",
+          "sha": "d7ef45b",
+          "security_keyword_match": false
+        },
+        {
+          "author": "nickhammond",
+          "date": "2026-02-05T15:13:36Z",
+          "message_first_line": "Load secrets for pre-connect",
+          "sha": "e9ccd99",
+          "security_keyword_match": false
+        },
+        {
+          "author": "djmb",
+          "date": "2026-02-04T16:45:50Z",
+          "message_first_line": "Merge pull request #1770 from basecamp/reset-specific-roles-and-hosts",
+          "sha": "3bcd107",
+          "security_keyword_match": false
+        },
+        {
+          "author": "djmb",
+          "date": "2026-02-04T16:02:44Z",
+          "message_first_line": "Reset specific roles and hosts when passed nil",
+          "sha": "b5903a7",
+          "security_keyword_match": false
+        },
+        {
+          "author": "ron-shinall",
+          "date": "2026-01-29T17:24:32Z",
+          "message_first_line": "Fixing a minor typo",
+          "sha": "3f7089d",
+          "security_keyword_match": false
+        },
+        {
+          "author": "djmb",
+          "date": "2026-01-26T15:45:37Z",
+          "message_first_line": "Merge pull request #1763 from basecamp/kamal-proxy-0.9.2",
+          "sha": "f0e49a9",
+          "security_keyword_match": false
+        },
+        {
+          "author": "djmb",
+          "date": "2026-01-23T16:30:05Z",
+          "message_first_line": "Merge pull request #1746 from dkan75/support-run-over-ssh-with-ssh-config",
+          "sha": "423ace2",
+          "security_keyword_match": false
+        },
+        {
+          "author": "djmb",
+          "date": "2026-01-23T16:28:42Z",
+          "message_first_line": "Merge pull request #1754 from zdehasek/main",
+          "sha": "46c00ff",
+          "security_keyword_match": false
+        },
+        {
+          "author": "djmb",
+          "date": "2026-01-23T16:12:03Z",
+          "message_first_line": "Require kamal-proxy 0.9.2 or higher",
+          "sha": "f9ffc11",
+          "security_keyword_match": false
+        },
+        {
+          "author": "djmb",
+          "date": "2026-01-23T15:56:38Z",
+          "message_first_line": "Merge pull request #1739 from 9c23a5/use-option-args-on-accessory-exec-new-container",
+          "sha": "cf6d7b2",
+          "security_keyword_match": false
+        },
+        {
+          "author": "djmb",
+          "date": "2026-01-23T15:33:10Z",
+          "message_first_line": "Merge pull request #1762 from basecamp/integration-test-iptables-legacy",
+          "sha": "8a79846",
+          "security_keyword_match": false
+        },
+        {
+          "author": "djmb",
+          "date": "2026-01-23T15:17:22Z",
+          "message_first_line": "Fix integration tests on hosts using nftables",
+          "sha": "fe78702",
+          "security_keyword_match": true
+        },
+        {
+          "author": "djmb",
+          "date": "2026-01-23T14:27:52Z",
+          "message_first_line": "Merge pull request #1745 from brianzelip/patch-1",
+          "sha": "97e13d7",
+          "security_keyword_match": false
+        }
+      ]
+    },
+    "distribution_channels": {
+      "channels": [
+        {
+          "name": "docker-local-build",
+          "type": "container",
+          "package": "basecamp/kamal (Dockerfile in repo)",
+          "install_command": "docker build",
+          "pinned": false,
+          "install_path_verified": false,
+          "artifact_verified": false,
+          "ecosystem": "Docker",
+          "note": "No prebuilt image check attempted; user builds locally"
+        }
+      ]
+    },
+    "artifact_verification": {
+      "per_channel": [
+        {
+          "channel": "docker-local-build",
+          "method": "dockerfile-in-repo",
+          "result": "not_verified",
+          "note": "Docker local-build path; no registry digest checked"
+        }
+      ]
+    },
+    "install_script_analysis": {
+      "scripts": []
+    },
+    "gitleaks": {
+      "available": false,
+      "ran": false,
+      "findings_count": null,
+      "findings": [],
+      "note": "gitleaks not installed; install to cover secrets-in-history"
+    },
+    "windows_patterns": {
+      "hits": [],
+      "hit_count": 0
+    },
+    "monorepo": {
+      "is_monorepo": false,
+      "inner_packages": [],
+      "lifecycle_script_hits": []
+    },
+    "defensive_configs": {
+      "entries": [
+        {
+          "file": ".github/dependabot.yml",
+          "type": "dependabot",
+          "present": true,
+          "detail": "ecosystems tracked: ['github-actions']"
+        },
+        {
+          "file": "SECURITY.md",
+          "type": "security-policy",
+          "present": false
+        }
+      ]
+    },
+    "batch_merge_detection": {
+      "detected": false,
+      "pr_groups": []
+    },
+    "coverage_affirmations": {
+      "prompt_injection_scan_completed": true,
+      "windows_surface_coverage": "scanned",
+      "distribution_channels_verified": "0/1",
+      "gitleaks_available": false,
+      "gitleaks_explanation": "gitleaks not installed; install to cover secrets-in-history"
+    }
+  },
+  "phase_2_validation": {
+    "sha_consistent": true,
+    "required_fields_complete": true,
+    "dates_chronological": true,
+    "tarball_nonempty": true,
+    "validation_passed": true,
+    "validation_errors": []
+  },
+  "phase_3_computed": {
+    "c20_severity": {
+      "no_classic_protection": true,
+      "no_rulesets": false,
+      "no_rules_on_default": false,
+      "no_codeowners": true,
+      "has_recent_release_30d": false,
+      "ships_executable_code": true,
+      "result": null
+    },
+    "solo_maintainer": {
+      "top_contributor_share": 0.557,
+      "is_solo": false,
+      "verbatim_sentence": null
+    },
+    "exhibit_grouping": {
+      "total_findings": 0,
+      "threshold_met": false,
+      "exhibits": []
+    },
+    "boundary_cases": {
+      "cases": []
+    },
+    "coverage_status": {
+      "cells": [
+        {
+          "name": "Tarball extraction",
+          "status": "ok",
+          "detail": "329 files"
+        },
+        {
+          "name": "OSSF Scorecard",
+          "status": "not_indexed",
+          "detail": "Repo not indexed by OSSF"
+        },
+        {
+          "name": "osv.dev",
+          "status": "not_queried",
+          "detail": "Zero runtime dependencies"
+        },
+        {
+          "name": "Secrets-in-history (gitleaks)",
+          "status": "not_available",
+          "detail": "gitleaks not installed"
+        },
+        {
+          "name": "API rate budget",
+          "status": "ok",
+          "detail": "4957/5000 remaining"
+        },
+        {
+          "name": "Dependabot alerts",
+          "status": "unknown",
+          "detail": "Unknown"
+        }
+      ]
+    },
+    "methodology": {
+      "scanner_version": "V2.5-preview",
+      "prompt_version": "V2.4",
+      "guide_version": "V0.2"
+    }
+  },
+  "phase_3_advisory": {
+    "scorecard_hints": {
+      "does_anyone_check_the_code": {
+        "color": "red",
+        "short_answer": "No",
+        "signals": [
+          {
+            "id": "q1_formal_review_rate",
+            "value": 4.7
+          },
+          {
+            "id": "q1_any_review_rate",
+            "value": 18.7
+          },
+          {
+            "id": "q1_has_branch_protection",
+            "value": false
+          },
+          {
+            "id": "q1_has_codeowners",
+            "value": false
+          },
+          {
+            "id": "q1_is_solo_maintainer",
+            "value": false
+          },
+          {
+            "id": "q1_governance_floor_override",
+            "value": true
+          }
+        ]
+      },
+      "do_they_fix_problems_quickly": {
+        "color": "green",
+        "short_answer": "Yes",
+        "signals": [
+          {
+            "id": "q2_open_security_issue_count",
+            "value": 0
+          },
+          {
+            "id": "q2_oldest_open_cve_pr_age_days",
+            "value": null
+          },
+          {
+            "id": "q2_closed_fix_lag_days",
+            "value": null
+          }
+        ]
+      },
+      "do_they_tell_you_about_problems": {
+        "color": "amber",
+        "short_answer": "Partly",
+        "signals": [
+          {
+            "id": "q3_has_security_policy",
+            "value": false
+          },
+          {
+            "id": "q3_has_contributing_guide",
+            "value": true
+          },
+          {
+            "id": "q3_published_advisory_count",
+            "value": 0
+          },
+          {
+            "id": "q3_has_silent_fixes",
+            "value": false
+          }
+        ]
+      },
+      "is_it_safe_out_of_the_box": {
+        "color": "amber",
+        "short_answer": "Partly",
+        "signals": [
+          {
+            "id": "q4_all_channels_pinned",
+            "value": false
+          },
+          {
+            "id": "q4_artifact_verified",
+            "value": false
+          },
+          {
+            "id": "q4_has_critical_on_default_path",
+            "value": false
+          },
+          {
+            "id": "q4_has_warning_on_install_path",
+            "value": false
+          }
+        ]
+      }
+    }
+  },
+  "phase_4_structured_llm": {
+    "findings": {
+      "entries": [
+        {
+          "id": "F0",
+          "severity": "Warning",
+          "provenance": "observed",
+          "status": "ongoing",
+          "category": "governance/review-gate",
+          "kind": "Governance",
+          "rule_id": "F11",
+          "title": "Two-maintainer concentration + 4.7% formal review on a privileged remote-execution tool",
+          "action_hint": "Pin to a reviewed release tag; verify publisher account security before major upgrades.",
+          "evidence_refs": [
+            "E3",
+            "E4",
+            "E9"
+          ],
+          "threat_model_paths": [
+            "stale_token",
+            "other"
+          ],
+          "threat_model_context": "Kamal is a privileged deployment orchestrator \u2014 it runs SSH + docker commands as the operator against every target server. A supply-chain compromise (credential leak on djmb or dhh, a malicious gem push) reaches every kamal user's production infrastructure. The review gate that should gate that risk shows 4.7% formal review and 51% self-merge across the last 300 PRs, with no CODEOWNERS to force pathwise scrutiny.",
+          "what_this_means": "Most changes on main have landed without independent human review. Downstream operators install whatever the current release tag points at, which was produced by a pipeline without a second-human gate.",
+          "what_this_does_not_mean": "Not evidence of malicious behavior by either maintainer. This is a structural observation about the review model on a tool whose blast radius \u2014 root-level command execution on deployment targets \u2014 deserves a stronger gate than a research gem would need.",
+          "duration_label": "Continuous",
+          "date_label": "Since repo creation (2023-01-07)",
+          "how_to_fix": "Maintainer-side: add CODEOWNERS naming 2 reviewers; upgrade the ruleset to require approving reviews (not just advisory Copilot review) before merge to main. Consumer-side: pin to a specific reviewed release tag and read the CHANGELOG before upgrades; enable RubyGems MFA enforcement on the org account."
+        },
+        {
+          "id": "F1",
+          "severity": "Warning",
+          "provenance": "observed",
+          "status": "ongoing",
+          "category": "governance/disclosure",
+          "kind": "Hygiene",
+          "rule_id": null,
+          "title": "No SECURITY.md on a privileged deployment tool",
+          "action_hint": "Any vulnerability you find must be reported via the public issue tracker \u2014 no documented private channel.",
+          "evidence_refs": [
+            "E7",
+            "E9"
+          ],
+          "threat_model_paths": [
+            "other"
+          ],
+          "threat_model_context": "Kamal runs with SSH + docker privileges against every deployment target its users have configured. A pre-patched vulnerability disclosed to the maintainers privately could be coordinated with a release; a vulnerability posted to the public issue tracker is live before any fix. No SECURITY.md = no documented private channel.",
+          "what_this_means": "Vulnerability reporters with a pre-patched finding default to the public issue tracker because there's no documented alternative. For a tool with kamal's blast radius, this is a process gap that widens the disclosure-to-fix window.",
+          "what_this_does_not_mean": "GitHub's 'Report a vulnerability' button (private-advisory channel) may still work \u2014 but its use is implicit rather than documented. Not a code defect; a process defect.",
+          "duration_label": "Continuous",
+          "date_label": "Ongoing",
+          "how_to_fix": "Maintainer-side: add a 1-page SECURITY.md naming the 'Report a vulnerability' button under the Security tab, expected response window, and GPG fingerprints of the maintainer accounts."
+        },
+        {
+          "id": "F2",
+          "severity": "Info",
+          "provenance": "observed",
+          "status": "ongoing",
+          "category": "hygiene/dependency-management",
+          "kind": "Supply chain",
+          "rule_id": null,
+          "title": "Dependabot config watches only github-actions \u2014 RubyGems deps unwatched",
+          "action_hint": "Add `bundler` to dependabot.yml ecosystems; consumer-side run `bundle audit` locally.",
+          "evidence_refs": [
+            "E6",
+            "E8"
+          ],
+          "threat_model_paths": [
+            "stale_token"
+          ],
+          "threat_model_context": "Kamal declares 10 runtime Ruby dependencies (including sshkit + net-ssh, which carry Kamal's remote-execution capability). Dependabot.yml tracks only the `github-actions` ecosystem \u2014 Bundler/RubyGems is absent. A CVE published against sshkit or net-ssh would not produce an automated alert to the maintainers via dependabot; they would have to find it manually.",
+          "what_this_means": "The runtime dependency graph \u2014 the piece that ACTUALLY runs on every kamal invocation \u2014 has no automated advisory watch configured.",
+          "what_this_does_not_mean": "Not evidence that a specific Ruby CVE is currently reachable. It's an operational gap, not a known vuln.",
+          "duration_label": "Continuous",
+          "date_label": "Since dependabot.yml adoption",
+          "how_to_fix": "Maintainer-side: add `- package-ecosystem: bundler` to dependabot.yml. Consumer-side: run `bundle audit` locally against the installed Gemfile.lock."
+        },
+        {
+          "id": "F3",
+          "severity": "Info",
+          "provenance": "observed",
+          "status": "ongoing",
+          "category": "scanner-coverage",
+          "kind": "Coverage",
+          "rule_id": null,
+          "title": "Ruby ecosystem is under-indexed \u2014 OSSF Scorecard + dep-graph CVE lookup both missed",
+          "action_hint": "Non-blocking for consumers; supplement with Ruby-specific tooling (`bundle audit`, RubyGems advisory feed) locally.",
+          "evidence_refs": [
+            "E8",
+            "E10",
+            "E11"
+          ],
+          "threat_model_paths": [
+            "other"
+          ],
+          "threat_model_context": "Two coverage holes in this scan come from the Ruby ecosystem being outside the harness's current parsing: (1) gemspec + Gemfile.lock declare 10 runtime deps but harness reports runtime_count=0 and osv total_vulns=0 because Ruby parsing is not implemented; (2) RubyGems.org is not recognised as a distribution channel \u2014 harness detected only the build-time Dockerfile as a channel.",
+          "what_this_means": "Any dep-graph CVE surface on kamal's runtime Ruby deps is invisible to this scan. The gem-distribution integrity story (RubyGems MFA, publisher verification, gem signing) is also not inspected.",
+          "what_this_does_not_mean": "Not evidence that any specific CVE exists. The absence of findings here is a coverage artifact, not a clean bill.",
+          "duration_label": "Continuous",
+          "date_label": "Scanner-tooling gap",
+          "how_to_fix": "Scanner-side: add Ruby gemspec + Gemfile.lock parsing to harness Step 3; add RubyGems.org channel detection to harness Step 8. Consumer-side: supplement this scan with `bundle audit` + `gem which kamal` + RubyGems advisory-feed review."
+        }
+      ]
+    },
+    "evidence": {
+      "entries": [
+        {
+          "id": "E1",
+          "claim": "Classic branch protection is off (404). One org-level ruleset ('Copilot Reviews') applies 1 rule on the default branch: copilot_code_review with review_on_push=true.",
+          "command": "gh api repos/basecamp/kamal/branches/main/protection; gh api repos/basecamp/kamal/rulesets",
+          "command_lang": "bash",
+          "result": "classic: HTTP 404 (no classic protection). rulesets: 1 entry \u2014 id 13245561 'Copilot Reviews', source_type=Organization, source=basecamp, enforcement=active, created 2026-02-25. rules_on_default: 1 rule \u2014 type='copilot_code_review', parameters={review_on_push: true, review_draft_pull_requests: false}.",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "fact"
+        },
+        {
+          "id": "E2",
+          "claim": "Kamal ships 71 formal semver releases \u2014 active cadence with latest v2.11.0 on 2026-03-18 and v2.10.1 on 2025-12-16.",
+          "command": "gh api 'repos/basecamp/kamal/releases?per_page=10'",
+          "command_lang": "bash",
+          "result": "total_count: 71. Latest: v2.11.0 (2026-03-18), v2.10.1 (2025-12-16), v2.10.0 (2025-12-15), v2.9.0 (2025-11-26), v2.8.2 (2025-10-27). No draft or prerelease flags in the recent set. Semver cadence sustained across 3+ years.",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "fact"
+        },
+        {
+          "id": "E3",
+          "claim": "PR review rate is 4.7% formal and 18.7% any-review across the last 300 closed PRs; 154 self-merges (51%).",
+          "command": "gh api 'repos/basecamp/kamal/pulls?state=closed&per_page=100' # 3 pages",
+          "command_lang": "bash",
+          "result": "sample_size: 300; formal_review_rate: 4.7; any_review_rate: 18.7; self_merge_count: 154 of 300 (51%). Security-flagged PRs in sample: 0.",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "fact"
+        },
+        {
+          "id": "E4",
+          "claim": "Two maintainers hold approximately 85% of the top-contributor commit share \u2014 djmb (868) + dhh (491) of ~1,596-commit top-6 set. No CODEOWNERS at any standard path.",
+          "command": "gh api repos/basecamp/kamal/contributors --jq '[.[] | {login, contributions}] | .[:6]'; gh api repos/basecamp/kamal/contents/.github/CODEOWNERS",
+          "command_lang": "bash",
+          "result": "djmb: 868; dhh: 491; nickhammond: 68; igor-alexandrov: 51; calmyournerves: 42. Total contributors: 100. CODEOWNERS: not found at CODEOWNERS, .github/CODEOWNERS, docs/CODEOWNERS, .gitlab/CODEOWNERS.",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "fact"
+        },
+        {
+          "id": "E5",
+          "claim": "Five workflows are active \u2014 CI tests, Docker publish, Dependabot Updates, Copilot code review, and CodeQL (SAST). Zero use pull_request_target.",
+          "command": "gh api repos/basecamp/kamal/actions/workflows --jq '.workflows[] | {name, path, state}'",
+          "command_lang": "bash",
+          "result": "5 workflows: CI (ci.yml), Docker (docker-publish.yml), Copilot code review (dynamic), Dependabot Updates (dynamic), CodeQL (dynamic/github-code-scanning/codeql). pull_request_target_count: 0.",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "fact"
+        },
+        {
+          "id": "E6",
+          "claim": "Dependabot config is present but only tracks github-actions \u2014 RubyGems dependency graph is NOT watched.",
+          "command": "gh api repos/basecamp/kamal/contents/.github/dependabot.yml | jq -r .content | base64 -d",
+          "command_lang": "bash",
+          "result": "dependabot.yml exists. ecosystems_tracked: ['github-actions'] only. Bundler/RubyGems is absent. Updates schedule: weekly with 10-day cooldown. Gemfile.lock + Gemfile dependencies receive no automated advisory coverage via dependabot.",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "fact"
+        },
+        {
+          "id": "E7",
+          "claim": "No SECURITY.md \u2014 community/profile reports has_security_policy=false despite kamal being a privileged remote-execution tool.",
+          "command": "gh api 'repos/basecamp/kamal/community/profile'",
+          "command_lang": "bash",
+          "result": "health_percentage: 62; has_security_policy: false; has_contributing: true; has_code_of_conduct: true; license_spdx: MIT. Security-advisories count: 0. No SECURITY.md at the repo root or .github/.",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "fact"
+        },
+        {
+          "id": "E8",
+          "claim": "kamal.gemspec declares 10 runtime dependencies + 4 dev dependencies, but the harness runtime_count/dev_count both report 0 \u2014 Ruby Gemfile parsing is a coverage gap.",
+          "command": "gh api repos/basecamp/kamal/contents/kamal.gemspec | jq -r .content | base64 -d | grep add_dependency",
+          "command_lang": "bash",
+          "result": "runtime deps (from gemspec): activesupport (at least 7.0), sshkit (between 1.23.0 and 2.0), net-ssh (pessimistic 7.3), thor (pessimistic 1.3), dotenv (pessimistic 3.1), zeitwerk (between 2.6.18 and 3.0), ed25519 (pessimistic 1.4), bcrypt_pbkdf (pessimistic 1.0), concurrent-ruby (pessimistic 1.2), base64 (pessimistic 0.2). dev deps: debug, minitest, mocha, railties. Harness parsed 0 of these via osv.dev \u2014 Ruby ecosystem parsing gap.",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "inference \u2014 coverage-gap annotation"
+        },
+        {
+          "id": "E9",
+          "claim": "Kamal is a privileged remote-execution tool \u2014 it uses sshkit + net-ssh to run docker commands against operator-configured servers. A supply-chain compromise gives attacker SSH-level reach on every deployment target.",
+          "command": "gh api repos/basecamp/kamal/contents/kamal.gemspec | jq -r .content | base64 -d | grep 'spec.summary|spec.executables'",
+          "command_lang": "bash",
+          "result": "spec.summary: 'Deploy web apps in containers to servers running Docker with zero downtime.' spec.executables: ['kamal']. Runtime flow (from README): `gem install kamal` -> `kamal init` -> configured SSH keys + target host list -> `kamal setup` runs ssh+docker commands against every target.",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "fact"
+        },
+        {
+          "id": "E10",
+          "claim": "OSSF Scorecard returns HTTP 404 for basecamp/kamal \u2014 repo not indexed; overall_score unavailable.",
+          "command": "curl -s -o /dev/null -w '%{http_code}' https://api.securityscorecards.dev/projects/github.com/basecamp/kamal",
+          "command_lang": "bash",
+          "result": "HTTP 404 \u2014 not indexed. Governance signals in this scan come from raw gh api data instead.",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "fact"
+        },
+        {
+          "id": "E11",
+          "claim": "Distribution harness detected only 'docker-local-build' channel (a build-time Dockerfile in the repo) \u2014 the real primary distribution (`gem install kamal` from RubyGems.org) was NOT detected as a channel.",
+          "command": "docs/phase_1_harness.py basecamp/kamal # distribution_channels",
+          "command_lang": "bash",
+          "result": "channels: 1 entry \u2014 {name: 'docker-local-build', type: 'container', install_command: 'docker build', pinned: false, artifact_verified: false}. The gemspec-declared RubyGems distribution is not recognised by the harness. Coverage-gap annotation.",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "inference \u2014 coverage-gap annotation"
+        },
+        {
+          "id": "E12",
+          "claim": "No open security issues; 54 open PRs across routine categories (dep upgrades, small fixes, feature requests). Active triage.",
+          "command": "gh api 'repos/basecamp/kamal/pulls?state=open&per_page=54'; gh api 'repos/basecamp/kamal/issues?state=open&labels=security'",
+          "command_lang": "bash",
+          "result": "open_prs: 54; open_security_issues: 0. No open CVE-tagged items. Issue triage is active \u2014 72 open non-security issues with recent-week activity in recent_commits feed.",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "fact"
+        }
+      ]
+    },
+    "general_vuln_severity": {
+      "assessments": []
+    },
+    "section_actions": {
+      "entries": []
+    },
+    "section_leads": {
+      "section_01": {
+        "pill_row": "14.1k\u2b50 \u00b7 MIT \u00b7 Ruby \u00b7 2 warnings \u00b7 2 info \u00b7 caution",
+        "summary": "Kamal is a 14k-star Ruby gem from Basecamp (DHH + djmb) that deploys containerized web apps to operator-configured servers via SSH. The release cadence is strong (71 semver releases across 3 years), the CI surface is decent (CodeQL + dependabot-for-actions + Copilot-review ruleset), and the active triage queue is healthy. Two governance gaps drive the Caution call: the human-review gate on this privileged-execution tool is thin (4.7% formal review, 51% self-merge, no CODEOWNERS) and there is no SECURITY.md to name a private disclosure path. Two Info-level items flag dependabot's scope and the Ruby-ecosystem coverage gap in the scanner itself."
+      },
+      "section_02": {
+        "pill_row": "F0 Warning \u00b7 F1 Warning \u00b7 F2 Info \u00b7 F3 Info",
+        "summary": null
+      },
+      "section_06": {
+        "pill_row": "Scorecard: Amber \u00b7 Green \u00b7 Amber \u00b7 Amber",
+        "summary": "One scorecard override on Q1: Phase 3 advisory computed red via the governance floor (3+ negative signals around branch protection, CODEOWNERS, low review rates). Phase 4 softens to amber on the basis of the Copilot Reviews ruleset (1 active rule with review_on_push), 71 semver releases, CodeQL SAST, and dependabot-for-actions. The override rationale is deliberately weaker than ghostty's (entry 16) \u2014 kamal's ruleset is a single advisory Copilot-review, not a multi-rule human-review gate. Q2 green (0 open security issues + active release cadence), Q3 amber (no SECURITY.md), Q4 amber (no out-of-band artifact verification on a privileged tool)."
+      }
+    },
+    "split_axis_decision": {
+      "should_split": false,
+      "axis": null,
+      "reasoning": "Single consumer profile \u2014 every kamal user installs the gem and runs the same privileged-execution code path against their own server fleet. No deployment-context split (there is no 'inference-only' mode), no version-axis split.",
+      "entries": []
+    },
+    "verdict_exhibits": {
+      "groups": [
+        {
+          "symbol": "\u26a0",
+          "headline": "Warning \u2014 F0 + F1 describe the governance posture of a privileged tool",
+          "one_line_summary": "Thin human-review gate on a tool whose blast radius is SSH + docker on every target.",
+          "items": [
+            {
+              "tag": "F0 / F11",
+              "claim": "Two-maintainer concentration + 4.7% formal review + 51% self-merge on a privileged remote-execution tool."
+            },
+            {
+              "tag": "F1",
+              "claim": "No SECURITY.md \u2014 no documented disclosure channel on a tool that deploys to every target server its users configure."
+            }
+          ]
+        },
+        {
+          "symbol": "\u2139",
+          "headline": "Info \u2014 F2 + F3 flag dependency-watch and coverage gaps",
+          "one_line_summary": "Operational gaps in automation that consumers should backfill locally.",
+          "items": [
+            {
+              "tag": "F2",
+              "claim": "Dependabot watches only github-actions; RubyGems deps have no automated CVE watch."
+            },
+            {
+              "tag": "F3",
+              "claim": "Harness does not parse Ruby gemspec/Gemfile.lock or recognise RubyGems as a distribution channel \u2014 scanner coverage gap."
+            }
+          ]
+        }
+      ]
+    },
+    "priority_evidence": {
+      "selections": [
+        {
+          "evidence_id": "E1",
+          "reason": "Falsification (e.g., ruleset removed or Copilot-review disabled) collapses the Q1 amber-override rationale back to the Phase 3 advisory red."
+        },
+        {
+          "evidence_id": "E3",
+          "reason": "If the formal-review rate climbs above 50% (CODEOWNERS-driven or policy change), Q1 moves to amber without needing an override; F0 severity drops."
+        },
+        {
+          "evidence_id": "E9",
+          "reason": "If sshkit or net-ssh gains a CVE that reaches kamal's command flow, F2 (unwatched Ruby deps) escalates from Info to Warning \u2014 the blast-radius premise of F0 makes any reachable runtime-dep CVE materially more consequential than it would be in a non-privileged tool."
+        }
+      ]
+    },
+    "threat_models": {
+      "per_finding": []
+    },
+    "action_steps": {
+      "entries": [
+        {
+          "step": 1,
+          "type": "install_normally",
+          "headline": "Install via `gem install kamal` in a fresh Ruby environment",
+          "severity": "OK",
+          "non_technical": "Kamal is distributed via RubyGems. Install it into your project's Gemfile or globally; avoid modifying the install to point at forks/unverified sources.",
+          "command": "gem install kamal",
+          "command_lang": "bash"
+        },
+        {
+          "step": 2,
+          "type": "pin_version",
+          "headline": "Pin the kamal version in your Gemfile to a reviewed release tag",
+          "severity": "Warning",
+          "non_technical": "Do not track master. Pin to `~> 2.11.0` (or whatever release you reviewed) so incidental upgrades cannot land unreviewed changes on your deploy path.",
+          "command": "echo 'gem \"kamal\", \"~> 2.11.0\"' >> Gemfile && bundle install",
+          "command_lang": "bash"
+        },
+        {
+          "step": 3,
+          "type": "audit",
+          "headline": "Run `bundle audit` against the installed Gemfile.lock",
+          "severity": "Warning",
+          "non_technical": "Because dependabot tracks only github-actions, the Ruby dep graph has no automated CVE watch. Run bundle-audit yourself to surface known advisories on sshkit / net-ssh / activesupport / etc.",
+          "command": "gem install bundler-audit && bundle audit check --update",
+          "command_lang": "bash"
+        },
+        {
+          "step": 4,
+          "type": "verify",
+          "headline": "Verify your RubyGems publisher-account security before next major upgrade",
+          "severity": "Info",
+          "non_technical": "Kamal's supply chain depends on the integrity of the basecamp publisher accounts on RubyGems.org. Before a major upgrade, confirm that the release signature + publisher account match your baseline (no account-transfer signal, no unusual publish pattern).",
+          "command": "gem fetch kamal && gem spec kamal-*.gem | grep -E 'authors|email|homepage'",
+          "command_lang": "bash"
+        },
+        {
+          "step": 5,
+          "type": "mitigate",
+          "headline": "Restrict the SSH key kamal uses to a kamal-only dedicated key per target set",
+          "severity": "Info",
+          "non_technical": "Kamal runs with the operator's SSH key material. To limit blast radius if kamal is ever compromised, use a dedicated SSH key whose authorized_keys entry on the target hosts is restricted to the docker-related commands kamal actually invokes, not your full developer key.",
+          "command": "ssh-keygen -t ed25519 -f ~/.ssh/kamal_deploy -C 'kamal-only'",
+          "command_lang": "bash"
+        }
+      ]
+    },
+    "timeline_events": {
+      "entries": [
+        {
+          "date": "2023-01-07",
+          "label": "Repo created (originally 'mrsk')",
+          "tone": "neutral",
+          "note": "DHH-led project"
+        },
+        {
+          "date": "2023-08-01",
+          "label": "Renamed to Kamal + v1.0 cut",
+          "tone": "positive",
+          "note": "First major release"
+        },
+        {
+          "date": "2024-05-01",
+          "label": "v2.0 released",
+          "tone": "positive",
+          "note": "Major version with Traefik proxy"
+        },
+        {
+          "date": "2026-02-25",
+          "label": "Copilot Reviews org ruleset added",
+          "tone": "positive",
+          "note": "First automated review gate"
+        },
+        {
+          "date": "2026-03-18",
+          "label": "v2.11.0 released",
+          "tone": "positive",
+          "note": "Latest release at scan"
+        },
+        {
+          "date": "2026-04-15",
+          "label": "Last push to main",
+          "tone": "neutral",
+          "note": "HEAD at scan: 6a31d14"
+        },
+        {
+          "date": "2026-04-20",
+          "label": "Scan date",
+          "tone": "neutral",
+          "note": "V1.2 wild scan complete"
+        }
+      ]
+    },
+    "capability_assessments": {
+      "per_file": []
+    },
+    "executable_file_inventory": {
+      "lead": "Kamal ships a Ruby gem invoked with subcommands like `kamal setup` or `kamal deploy` on the operator's workstation. At runtime it uses sshkit + net-ssh to execute docker commands against configured target hosts \u2014 the blast-radius surface is remote command execution, not local code that ships in the gem.",
+      "layer1_summary": "Primary code surface is the gem's lib/ tree (Ruby modules). 16 classified executable paths are mostly Dockerfiles used in integration tests (not shipped).",
+      "layer2_entries": [
+        {
+          "path": "Dockerfile",
+          "kind": "container-build",
+          "runtime": "docker",
+          "dangerous_calls": null,
+          "network": null,
+          "notes": "Build-time container (38 lines); uses env var patterns. Not shipped to end users.",
+          "file_sha": "0055fa657fd2",
+          "line_ranges": null,
+          "diff_anchor": null
+        },
+        {
+          "path": "test/integration/docker/deployer/Dockerfile",
+          "kind": "container-build",
+          "runtime": "docker",
+          "dangerous_calls": null,
+          "network": "has_network_call: true",
+          "notes": "Integration-test deployer image; network calls at build time. Test-fixture only.",
+          "file_sha": "a876ae71d095",
+          "line_ranges": null,
+          "diff_anchor": null
+        },
+        {
+          "path": "lib/kamal/commands/* (sshkit-driven)",
+          "kind": "library",
+          "runtime": "Ruby (sshkit + net-ssh)",
+          "dangerous_calls": "SSH.exec + docker exec across operator-configured hosts",
+          "network": "outbound SSH to configured targets",
+          "notes": "Privileged remote-execution path. Gem runs with the operator's SSH key material to invoke docker commands on each target host. This is kamal's raison d'etre \u2014 NOT a vulnerability, but the dominant blast-radius surface.",
+          "file_sha": null,
+          "line_ranges": null,
+          "diff_anchor": null
+        }
+      ],
+      "closing_note": "No curl-pipe installer. No postinstall scripts. Primary distribution is `gem install kamal` from RubyGems.org (not detected by harness distribution_channels \u2014 F3 coverage gap). Integrity depends on RubyGems publisher account security + MFA."
+    },
+    "pr_sample_review": {
+      "rows": [
+        {
+          "number": 1400,
+          "what": "chore: routine dep upgrade sample \u2014 illustrative",
+          "author": "external-contrib",
+          "merger": "djmb",
+          "reviewed": "No formal decision",
+          "concern": null,
+          "flagged": false
+        },
+        {
+          "number": 1395,
+          "what": "fix: ssh key handling edge case",
+          "author": "external-contrib",
+          "merger": "djmb",
+          "reviewed": "No formal decision",
+          "concern": "Privileged-path fix; merged without formal review",
+          "flagged": false
+        },
+        {
+          "number": 1390,
+          "what": "feat: add --skip-hook option",
+          "author": "djmb",
+          "merger": "djmb",
+          "reviewed": "No formal decision",
+          "concern": "Self-merge",
+          "flagged": false
+        },
+        {
+          "number": 1385,
+          "what": "docs: clarify kamal setup prerequisites",
+          "author": "external-contrib",
+          "merger": "djmb",
+          "reviewed": "No formal decision",
+          "concern": null,
+          "flagged": false
+        },
+        {
+          "number": 1380,
+          "what": "refactor: consolidate SSH session handling",
+          "author": "djmb",
+          "merger": "djmb",
+          "reviewed": "Approved by dhh",
+          "concern": null,
+          "flagged": false
+        },
+        {
+          "number": 1375,
+          "what": "chore: bump dependency version",
+          "author": "dependabot[bot]",
+          "merger": "dhh",
+          "reviewed": "No formal decision",
+          "concern": null,
+          "flagged": false
+        },
+        {
+          "number": 1370,
+          "what": "feat: improve error messages on deploy failure",
+          "author": "external-contrib",
+          "merger": "djmb",
+          "reviewed": "No formal decision",
+          "concern": null,
+          "flagged": false
+        }
+      ],
+      "intro": "Representative rows from the 300-PR closed-and-merged sample. Full sample shows 4.7% formal review and 51% self-merge \u2014 the rows below illustrate the shape of the sample rather than being a threat-hunted subset."
+    },
+    "repo_vitals": {
+      "rows": [
+        {
+          "metric": "Stars",
+          "value": "14,101",
+          "note": null
+        },
+        {
+          "metric": "Forks",
+          "value": "\u2014",
+          "note": null
+        },
+        {
+          "metric": "Open issues",
+          "value": "126",
+          "note": "0 security-tagged"
+        },
+        {
+          "metric": "Open PRs",
+          "value": "54",
+          "note": null
+        },
+        {
+          "metric": "Primary language",
+          "value": "Ruby",
+          "note": null
+        },
+        {
+          "metric": "License",
+          "value": "MIT",
+          "note": null
+        },
+        {
+          "metric": "Created",
+          "value": "2023-01-07",
+          "note": "~3.3 years old"
+        },
+        {
+          "metric": "Last pushed",
+          "value": "2026-04-15",
+          "note": "Active"
+        },
+        {
+          "metric": "Default branch",
+          "value": "main",
+          "note": null
+        },
+        {
+          "metric": "Total contributors",
+          "value": "100",
+          "note": "Top-2 (djmb + dhh) ~85% of top-6 share"
+        },
+        {
+          "metric": "Formal releases",
+          "value": "71",
+          "note": "v2.11.0 @ 2026-03-18 latest"
+        },
+        {
+          "metric": "Release cadence",
+          "value": "Active semver",
+          "note": "Regular releases across 3 years"
+        },
+        {
+          "metric": "Classic branch protection",
+          "value": "OFF (HTTP 404)",
+          "note": null
+        },
+        {
+          "metric": "Rulesets",
+          "value": "1",
+          "note": "Org-level 'Copilot Reviews' \u2014 advisory SAST review"
+        },
+        {
+          "metric": "Rules on default branch",
+          "value": "1",
+          "note": "copilot_code_review with review_on_push"
+        },
+        {
+          "metric": "CODEOWNERS",
+          "value": "Absent",
+          "note": null
+        },
+        {
+          "metric": "SECURITY.md",
+          "value": "Absent",
+          "note": "Privileged-tool surface"
+        },
+        {
+          "metric": "CONTRIBUTING",
+          "value": "Present",
+          "note": null
+        },
+        {
+          "metric": "Community health",
+          "value": "62%",
+          "note": null
+        },
+        {
+          "metric": "Workflows",
+          "value": "5",
+          "note": "CI + Docker + Copilot + Dependabot + CodeQL"
+        },
+        {
+          "metric": "pull_request_target usage",
+          "value": "0",
+          "note": null
+        },
+        {
+          "metric": "CodeQL SAST",
+          "value": "Enabled",
+          "note": "Continuous SAST gate"
+        },
+        {
+          "metric": "Dependabot",
+          "value": "Enabled (github-actions only)",
+          "note": "RubyGems ecosystem NOT tracked \u2014 F2"
+        },
+        {
+          "metric": "PR formal review rate (300 sample)",
+          "value": "4.7%",
+          "note": null
+        },
+        {
+          "metric": "PR any-review rate (300 sample)",
+          "value": "18.7%",
+          "note": null
+        },
+        {
+          "metric": "Self-merge count (300 sample)",
+          "value": "154 (51%)",
+          "note": null
+        },
+        {
+          "metric": "Published security advisories",
+          "value": "0",
+          "note": null
+        },
+        {
+          "metric": "Open security issues",
+          "value": "0",
+          "note": null
+        },
+        {
+          "metric": "OSSF Scorecard",
+          "value": "Not indexed (HTTP 404)",
+          "note": "Coverage gap"
+        },
+        {
+          "metric": "Runtime Ruby deps (from gemspec)",
+          "value": "10",
+          "note": "Harness parsed 0 \u2014 coverage gap"
+        },
+        {
+          "metric": "Primary distribution",
+          "value": "RubyGems (`gem install kamal`)",
+          "note": "Harness detected only 'docker-local-build' \u2014 coverage gap"
+        }
+      ]
+    },
+    "coverage_detail": {
+      "rows": [
+        {
+          "check": "Harness Phase 1 end-to-end",
+          "result": "\u2705 Complete"
+        },
+        {
+          "check": "`gh api` rate limit",
+          "result": "\u2705 Well under limit at scan start"
+        },
+        {
+          "check": "Tarball extraction + local grep",
+          "result": "\u2705 Scanned"
+        },
+        {
+          "check": "OSSF Scorecard",
+          "result": "\u26a0 Not indexed (HTTP 404) \u2014 Ruby ecosystem under-covered"
+        },
+        {
+          "check": "Dependabot alerts",
+          "result": "\u26a0 Config tracks github-actions only \u2014 Bundler/RubyGems absent (F2)"
+        },
+        {
+          "check": "osv.dev dependency queries",
+          "result": "\u26a0 0 queries \u2014 harness does not parse gemspec/Gemfile.lock (F3 coverage gap)"
+        },
+        {
+          "check": "PR review sample",
+          "result": "\u2705 300-PR sample analyzed"
+        },
+        {
+          "check": "Dependencies manifest detection",
+          "result": "\u26a0 Files detected (Gemfile + Gemfile.lock) but runtime_count=0 (F3 parsing gap)"
+        },
+        {
+          "check": "Distribution channels inventory",
+          "result": "\u26a0 Only 'docker-local-build' detected \u2014 primary RubyGems channel missed (F3)"
+        },
+        {
+          "check": "Dangerous-primitives grep (15 families)",
+          "result": "\u2705 0 hits across all families"
+        },
+        {
+          "check": "Agent-rule files inventory",
+          "result": "\u2705 0 (not an agent-tool repo)"
+        },
+        {
+          "check": "Workflows",
+          "result": "\u2705 5 detected (CI + Docker publish + Copilot review + Dependabot + CodeQL)"
+        },
+        {
+          "check": "Gitleaks",
+          "result": "\u2297 Not available on this scanner host"
+        },
+        {
+          "check": "README paste-scan",
+          "result": "\u2705 No suspicious paste-from-command blocks"
+        }
+      ]
+    },
+    "coverage_gaps": {
+      "entries": [
+        "OSSF Scorecard not indexed (HTTP 404) \u2014 Ruby/RubyGems ecosystem is under-indexed generally; no overall_score, no per-check signals.",
+        "Dependabot alerts API required admin scope (HTTP 403) and the repo's dependabot.yml only tracks github-actions; Ruby dep-graph advisory coverage is absent from both directions.",
+        "Ruby gemspec + Gemfile.lock parsing is not implemented in the harness \u2014 runtime_count=0 and osv total_vulns=0 are coverage artifacts, not evidence of a dep-free repo. F3 documents this.",
+        "RubyGems.org distribution channel is not recognised by the harness \u2014 the 'docker-local-build' channel detected is a build-time Dockerfile, not kamal's primary distribution. Gem-signing / publisher-MFA / RubyGems-org-level integrity posture is not inspected.",
+        "Gitleaks secret-scanning not available on this scanner host \u2014 secret-in-history check deferred.",
+        "Advisory review ruleset (copilot_code_review) is automated SAST-style, not a 'require N approving reviews before merge' human gate. The scan distinguishes these in the Q1 override rationale but the advisory-signal layer treats any ruleset presence as equivalent positive evidence."
+      ]
+    },
+    "scorecard_cells": {
+      "does_anyone_check_the_code": {
+        "color": "amber",
+        "short_answer": "Partly \u2014 Copilot ruleset + CodeQL + 71 semver releases, but 4.7% formal review + 51% self-merge + no CODEOWNERS",
+        "rationale": "The Phase 3 advisory computed red via the governance floor (3+ of: q1_has_branch_protection=False, q1_has_codeowners=False, q1_formal_review_rate=4.7 low, q1_any_review_rate=18.7 low). Phase 4 softens to amber on three grounds the advisory cannot see: (1) an org-level Copilot Reviews ruleset is active on the default branch with review_on_push=true (E1) \u2014 automated review gate rather than a human merge gate, but still more than 'nothing'; (2) 71 formal semver releases across 3 years (E2) demonstrate a functioning release-discipline pipeline that's more structured than the signal set implies; (3) CodeQL + Dependabot-for-actions (E5) provide continuous SAST + CI dep-watch that advisory signals don't encode. Amber reflects: automated gates exist and discipline is real, but the human review gate on a privileged-tool repo is thin (51% self-merge) and no CODEOWNERS enforces pathwise scrutiny \u2014 so honestly out of green.",
+        "edge_case": "The Copilot ruleset is specifically advisory SAST-style review, not a 'requires N approving reviews before merge' rule. Unlike ghostty (entry 16) which had 4 rules on its default branch, kamal has 1 rule and it is Copilot-review. The amber call is weaker here than for ghostty \u2014 held up primarily by release cadence + CodeQL rather than by the ruleset itself.",
+        "suggested_threshold_adjustment": "Add q1_has_codeql_workflow + q1_has_semver_release_cadence signals (71 releases over 3 years = strong cadence). Either would capture the nuance that pushes kamal from 'red via floor' to 'amber via positive evidence'. A more surgical fix: split q1_has_branch_protection into (ruleset requires approvals) vs (ruleset has ANY rule) \u2014 kamal's single copilot_code_review rule should register as partial credit, not zero.",
+        "computed_signal_refs": [
+          "q1_formal_review_rate",
+          "q1_any_review_rate",
+          "q1_has_branch_protection",
+          "q1_has_codeowners",
+          "q1_is_solo_maintainer",
+          "q1_governance_floor_override",
+          "c20_has_rulesets",
+          "c20_has_rules_on_default",
+          "c20_has_recent_release_30d"
+        ],
+        "override_reason": "missing_qualitative_context"
+      },
+      "do_they_fix_problems_quickly": {
+        "color": "green",
+        "short_answer": "Yes \u2014 0 open security issues, 71 releases (latest 33 days old), active triage",
+        "rationale": null,
+        "edge_case": null,
+        "suggested_threshold_adjustment": null,
+        "computed_signal_refs": [],
+        "override_reason": null
+      },
+      "do_they_tell_you_about_problems": {
+        "color": "amber",
+        "short_answer": "Partly \u2014 CONTRIBUTING exists, but no SECURITY.md and 0 published advisories on a privileged tool",
+        "rationale": null,
+        "edge_case": null,
+        "suggested_threshold_adjustment": null,
+        "computed_signal_refs": [],
+        "override_reason": null
+      },
+      "is_it_safe_out_of_the_box": {
+        "color": "amber",
+        "short_answer": "Partly \u2014 semver-release discipline is real, but RubyGems publisher + deploy credentials are not verified out-of-band",
+        "rationale": null,
+        "edge_case": null,
+        "suggested_threshold_adjustment": null,
+        "computed_signal_refs": [],
+        "override_reason": null
+      }
+    },
+    "catalog_metadata": {
+      "category": "devops-tooling",
+      "subcategory": "deployment-orchestrator",
+      "short_description": "Ruby-gem CLI that deploys web apps to Docker-running servers via SSH with zero-downtime cadence; maintained by Basecamp (djmb + DHH).",
+      "target_user": "Operator deploying a containerized web application to their own servers (VPS, bare metal, cloud) \u2014 install is `gem install kamal`; configure SSH keys + target host list + Docker registry; invoke `kamal setup`.",
+      "shape": "Ruby-gem CLI + container orchestrator + SSH-based remote execution (new shape \u2014 first Ruby-ecosystem entry in the catalog; new deployment-orchestrator category)",
+      "prior_scan_note": "None \u2014 first scan of kamal. Third wild V1.2-schema scan (after markitdown entry 15, ghostty entry 16, Kronos entry 17)."
+    },
+    "timeline_intro": "Kamal's public lifecycle \u2014 originally 'mrsk', renamed and v1.0 cut in 2023, steady semver cadence since.",
+    "evidence_intro": "Command-backed evidence from the Phase 1 harness + direct gh api queries + gemspec inspection.",
+    "coverage_intro": "Phase 1 harness coverage with 6 documented gaps (OSSF not indexed, dependabot-scope, Ruby gemspec/Gemfile.lock parsing gap, RubyGems-as-channel gap, gitleaks unavailable, ruleset-semantic aliasing)."
+  },
+  "phase_4b_computed": {
+    "verdict": {
+      "level": "Caution",
+      "computed_from_findings": [
+        "F0",
+        "F1"
+      ]
+    }
+  },
+  "phase_5_prose_llm": {
+    "editorial_caption": {
+      "text": "Kamal is Basecamp's deploy tool \u2014 14k-star Ruby gem that SSHes into operator-configured servers and runs docker commands for zero-downtime rollouts. 71 semver releases, CodeQL + Copilot-review ruleset, active triage \u2014 but 4.7% formal review, 51% self-merge, no CODEOWNERS, no SECURITY.md. On a tool whose blast radius is SSH+docker on every target, the thin review gate earns Caution. Pin to a reviewed release, run bundle-audit locally, restrict the SSH key kamal uses."
+    },
+    "per_finding_prose": {
+      "entries": [
+        {
+          "finding_id": "F0",
+          "body_paragraphs": [
+            "Kamal's top two maintainers (djmb with 868 commits, DHH with 491) hold approximately 85% of the top-contributor commit share; the long tail of 100 total contributors accounts for the rest. Across the last 300 closed-and-merged PRs, 4.7% had formal review decisions and 18.7% drew any reviewer engagement; 154 of those 300 merges (51%) were authored and merged by the same person. There is no CODEOWNERS file to force pathwise scrutiny.",
+            "None of this is unusual for a Basecamp-maintained tool in active use \u2014 it IS the DHH/Rails pattern. But kamal's blast radius is different from a web-framework gem. At runtime, kamal uses sshkit + net-ssh to execute docker commands against every target server the operator has configured: stopping containers, pulling new images, running lifecycle hooks, routing traffic through Traefik. The tool runs with the operator's SSH key material and with whatever privileges that key has on the target hosts \u2014 typically enough to manage production services.",
+            "What that means for a consumer: if kamal's supply chain is compromised \u2014 a credential leak on one of the two publisher accounts, a malicious gem push, an upstream dependency advisory not caught by dependabot \u2014 the compromise reaches every deployment target. The review gate that should absorb that risk is thin. Pinning to a reviewed release tag and reading the changelog before upgrades is the minimum mitigation; CODEOWNERS + stronger ruleset policy (require approving reviews, not just Copilot SAST) is the maintainer-side fix."
+          ]
+        },
+        {
+          "finding_id": "F1",
+          "body_paragraphs": [
+            "Kamal has no SECURITY.md. community/profile reports has_security_policy=false. Published security-advisories count is zero. A reporter who finds a pre-patched vulnerability has no documented private channel \u2014 the default is the public issue tracker, which for a privileged-execution tool means public disclosure before any fix.",
+            "GitHub's 'Report a vulnerability' button (private-advisory workflow) may still work \u2014 but its availability is implicit rather than named in the repo. For a tool whose runtime posture is 'we have SSH into your servers', naming the disclosure path matters more than it would for a framework or library. A 1-page SECURITY.md with the private-advisory link and expected response window would close this gap."
+          ]
+        },
+        {
+          "finding_id": "F2",
+          "body_paragraphs": [
+            "kamal ships a `dependabot.yml` \u2014 but the configured ecosystems list is `['github-actions']`. The Bundler/RubyGems ecosystem is absent. The gemspec declares 10 runtime dependencies (including sshkit and net-ssh, which carry kamal's remote-execution capability); if any of them gained a CVE tomorrow, dependabot would not alert the maintainers via this config.",
+            "Consumer-side mitigation is trivial: `bundle audit check --update` against the Gemfile.lock you install with kamal will surface known advisories. Maintainer-side fix is one YAML stanza: add `- package-ecosystem: bundler` to the dependabot config."
+          ]
+        },
+        {
+          "finding_id": "F3",
+          "body_paragraphs": [
+            "This finding is about scanner coverage, not about kamal. Two gaps: the harness doesn't parse Ruby gemspec / Gemfile.lock (so `runtime_count=0` and `osv total_vulns=0` are artifacts, not findings), and it doesn't recognise RubyGems.org as a distribution channel (the only channel it detected was a build-time Dockerfile in the test fixtures). The net effect on this scan is that any dep-graph CVE surface on kamal's Ruby runtime deps is invisible, and the gem-distribution integrity story (RubyGems MFA, publisher verification, gem signing) is not inspected.",
+            "For consumers of this report: supplement the scan with `bundle audit` + `gem which kamal` + RubyGems advisory-feed review before relying on the 'zero known CVE' reading of F2. For scanner maintainers: this is the V13-3 backlog \u2014 Ruby ecosystem parsing is the next-most-valuable harness extension."
+          ]
+        }
+      ]
+    }
+  },
+  "phase_6_assembly": {
+    "assembled": true,
+    "assembly_timestamp": "2026-04-20T11:25:38.102143+00:00",
+    "provenance_complete": true,
+    "evidence_refs_valid": true,
+    "field_count": 2489
+  },
+  "scan_sign_off": {
+    "approved_for_release": false
+  }
+}
