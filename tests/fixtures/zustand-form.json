@@ -426,7 +426,7 @@
         "inputs": {
           "all_channels_pinned": true,
           "artifact_verified": true,
-          "has_warning_or_above_finding": true
+          "has_warning_on_install_path": true
         }
       }
     },

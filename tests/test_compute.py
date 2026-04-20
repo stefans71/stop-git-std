@@ -75,7 +75,7 @@ class TestScorecardCells:
             has_security_policy=True, published_advisory_count=2,
             has_silent_fixes=False,
             all_channels_pinned=True, artifact_verified=True,
-            has_critical_on_default_path=False, has_warning_or_above=False,
+            has_critical_on_default_path=False, has_warning_on_install_path=False,
         )
         assert r["does_anyone_check_the_code"]["color"] == "green"
         assert r["do_they_fix_problems_quickly"]["color"] == "green"
@@ -91,7 +91,7 @@ class TestScorecardCells:
             has_security_policy=False, published_advisory_count=0,
             has_silent_fixes=False,
             all_channels_pinned=False, artifact_verified=False,
-            has_critical_on_default_path=False, has_warning_or_above=False,
+            has_critical_on_default_path=False, has_warning_on_install_path=False,
         )
         assert r["does_anyone_check_the_code"]["color"] == "red"
 
@@ -104,7 +104,7 @@ class TestScorecardCells:
             has_security_policy=True, published_advisory_count=2,
             has_silent_fixes=False,
             all_channels_pinned=True, artifact_verified=True,
-            has_critical_on_default_path=False, has_warning_or_above=False,
+            has_critical_on_default_path=False, has_warning_on_install_path=False,
         )
         assert r["do_they_fix_problems_quickly"]["color"] == "red"
 
@@ -118,7 +118,7 @@ class TestScorecardCells:
             has_security_policy=False, published_advisory_count=0,
             has_silent_fixes=False,
             all_channels_pinned=True, artifact_verified=True,
-            has_critical_on_default_path=False, has_warning_or_above=True,
+            has_critical_on_default_path=False, has_warning_on_install_path=True,
         )
         assert r["does_anyone_check_the_code"]["color"] == "amber"
 
@@ -132,7 +132,7 @@ class TestScorecardCells:
             has_security_policy=False, published_advisory_count=0,
             has_silent_fixes=False,
             all_channels_pinned=True, artifact_verified=True,
-            has_critical_on_default_path=False, has_warning_or_above=False,
+            has_critical_on_default_path=False, has_warning_on_install_path=False,
         )
         assert r["does_anyone_check_the_code"]["color"] == "red"
 
@@ -146,7 +146,7 @@ class TestScorecardCells:
             has_security_policy=True, published_advisory_count=2,
             has_silent_fixes=False,
             all_channels_pinned=True, artifact_verified=True,
-            has_critical_on_default_path=True, has_warning_or_above=True,
+            has_critical_on_default_path=True, has_warning_on_install_path=True,
         )
         assert r["is_it_safe_out_of_the_box"]["color"] == "red"
 
@@ -160,8 +160,114 @@ class TestScorecardCells:
             has_security_policy=True, published_advisory_count=2,
             has_silent_fixes=False,
             all_channels_pinned=True, artifact_verified=True,
-            has_critical_on_default_path=False, has_warning_or_above=True,
+            has_critical_on_default_path=False, has_warning_on_install_path=True,
         )
+        assert r["is_it_safe_out_of_the_box"]["color"] == "amber"
+
+
+# ===========================================================================
+# SF1 Board patches (2026-04-20, temporary V1.1 compatibility)
+# ===========================================================================
+
+class TestSF1ScorecardPatches:
+    """Regression tests for the 4 scorecard calibration patches from
+    docs/External-Board-Reviews/042026-sf1-calibration/CONSOLIDATION.md."""
+
+    def _base_kwargs(self):
+        # Reasonable neutral baseline — caller overrides as needed
+        return dict(
+            formal_review_rate=50, any_review_rate=80,
+            has_branch_protection=True, has_codeowners=True,
+            is_solo_maintainer=False,
+            open_security_issue_count=0, oldest_cve_pr_age_days=None,
+            has_security_policy=True, published_advisory_count=2,
+            has_silent_fixes=False,
+            all_channels_pinned=True, artifact_verified=True,
+            has_critical_on_default_path=False, has_warning_on_install_path=False,
+        )
+
+    def test_q1_governance_floor_forces_red(self):
+        """Archon-shape: 8% formal + high any + no protection + no CODEOWNERS → red
+        via governance-floor override, even though any >= 50 would normally be amber."""
+        kw = self._base_kwargs()
+        kw.update(formal_review_rate=8, any_review_rate=58,
+                  has_branch_protection=False, has_codeowners=False)
+        r = compute_scorecard_cells(**kw)
+        assert r["does_anyone_check_the_code"]["color"] == "red"
+        assert r["does_anyone_check_the_code"]["inputs"]["governance_floor_triggered"] is True
+
+    def test_q1_governance_floor_not_triggered_if_formal_at_10(self):
+        """Threshold boundary: formal >= 10 does not trigger the override."""
+        kw = self._base_kwargs()
+        kw.update(formal_review_rate=10, any_review_rate=58,
+                  has_branch_protection=False, has_codeowners=False)
+        r = compute_scorecard_cells(**kw)
+        assert r["does_anyone_check_the_code"]["color"] == "amber"
+        assert r["does_anyone_check_the_code"]["inputs"]["governance_floor_triggered"] is False
+
+    def test_q1_governance_floor_not_triggered_if_branch_protection_present(self):
+        """Override requires ALL three gaps — having branch protection cancels it."""
+        kw = self._base_kwargs()
+        kw.update(formal_review_rate=5, any_review_rate=58,
+                  has_branch_protection=True, has_codeowners=False)
+        r = compute_scorecard_cells(**kw)
+        # With branch protection, governance floor does NOT fire; falls through to standard amber
+        assert r["does_anyone_check_the_code"]["color"] == "amber"
+
+    def test_q2_closed_fix_lag_over_3_days_drops_green_to_amber(self):
+        """Caveman-shape: 0 open, merged security PR took 5 days → amber, not green."""
+        kw = self._base_kwargs()
+        kw.update(open_security_issue_count=0, oldest_cve_pr_age_days=None,
+                  closed_fix_lag_days=5)
+        r = compute_scorecard_cells(**kw)
+        assert r["do_they_fix_problems_quickly"]["color"] == "amber"
+
+    def test_q2_closed_fix_lag_at_3_days_stays_green(self):
+        """Threshold boundary: lag <= 3 days keeps green."""
+        kw = self._base_kwargs()
+        kw.update(open_security_issue_count=0, oldest_cve_pr_age_days=None,
+                  closed_fix_lag_days=3)
+        r = compute_scorecard_cells(**kw)
+        assert r["do_they_fix_problems_quickly"]["color"] == "green"
+
+    def test_q2_closed_fix_lag_none_defaults_to_green_when_no_open(self):
+        """Default behavior preserved: no closed_fix_lag info → green if no open issues."""
+        kw = self._base_kwargs()
+        # closed_fix_lag_days not passed → defaults to None
+        r = compute_scorecard_cells(**kw)
+        assert r["do_they_fix_problems_quickly"]["color"] == "green"
+
+    def test_q3_contributing_guide_alone_is_amber_floor(self):
+        """Zustand-shape: no SECURITY.md BUT has contributing guide → amber, not red."""
+        kw = self._base_kwargs()
+        kw.update(has_security_policy=False, published_advisory_count=0,
+                  has_contributing_guide=True)
+        r = compute_scorecard_cells(**kw)
+        assert r["do_they_tell_you_about_problems"]["color"] == "amber"
+
+    def test_q3_no_policy_no_contributing_guide_is_red(self):
+        """No SECURITY.md AND no contributing guide AND no advisories → red (pre-patch behavior preserved)."""
+        kw = self._base_kwargs()
+        kw.update(has_security_policy=False, published_advisory_count=0,
+                  has_contributing_guide=False)
+        r = compute_scorecard_cells(**kw)
+        assert r["do_they_tell_you_about_problems"]["color"] == "red"
+
+    def test_q4_install_path_scope_separates_governance_from_install(self):
+        """Zustand-shape: governance Warning (F0 no branch protection) does NOT block green
+        because has_warning_on_install_path is False."""
+        kw = self._base_kwargs()
+        kw.update(all_channels_pinned=True, artifact_verified=True,
+                  has_warning_on_install_path=False)  # F0 is governance, not install
+        r = compute_scorecard_cells(**kw)
+        assert r["is_it_safe_out_of_the_box"]["color"] == "green"
+
+    def test_q4_install_path_warning_drops_green_to_amber(self):
+        """An install-path Warning (e.g. lifecycle hook, postinstall) does block green."""
+        kw = self._base_kwargs()
+        kw.update(all_channels_pinned=True, artifact_verified=True,
+                  has_warning_on_install_path=True)
+        r = compute_scorecard_cells(**kw)
         assert r["is_it_safe_out_of_the_box"]["color"] == "amber"
 
 

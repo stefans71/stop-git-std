@@ -89,7 +89,7 @@ class TestZustandEndToEnd:
             all_channels_pinned=True,  # npm OIDC
             artifact_verified=True,
             has_critical_on_default_path=False,
-            has_warning_or_above=True,  # F0 is Warning
+            has_warning_on_install_path=True,  # F0 is Warning
         )
         assert result["does_anyone_check_the_code"]["color"] == "amber"
 

@@ -347,7 +347,7 @@
         "inputs": {
           "all_channels_pinned": null,
           "artifact_verified": null,
-          "has_warning_or_above_finding": null
+          "has_warning_on_install_path": null
         }
       }
     },

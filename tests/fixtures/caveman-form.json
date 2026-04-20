@@ -460,7 +460,7 @@
         "inputs": {
           "all_channels_pinned": false,
           "artifact_verified": false,
-          "has_warning_or_above_finding": true
+          "has_warning_on_install_path": true
         }
       }
     },

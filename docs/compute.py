@@ -74,6 +74,23 @@ def compute_c20_severity(
 # ===========================================================================
 # 2. Scorecard Cell Colors (Calibration Table)
 # ===========================================================================
+#
+# SF1 board review (2026-04-20, docs/External-Board-Reviews/042026-sf1-calibration/):
+# The 4 Q1-Q2-Q3-Q4 calibration functions below carry TEMPORARY COMPATIBILITY
+# PATCHES for V1.1 Step G acceptance. These align compute output with the V2.4
+# comparator-MD judgments for zustand-v3, caveman, and Archon. They are NOT the
+# endorsed steady-state design. Scorecard-cell authority migrates to
+# phase_4_structured_llm in V1.2 per deferred item D-7 (Operator Guide §8.8.7).
+#
+# Patch inventory applied here:
+#   Q1: governance-floor override — formal<10% AND no branch_protection AND
+#       no codeowners forces red regardless of any-review threshold.
+#   Q2: closed_fix_lag_days input — merged security fix >3 days drops green
+#       to amber (visible friction signal).
+#   Q3: has_contributing_guide input — amber floor includes contributing
+#       guide as a disclosure gesture.
+#   Q4: has_warning_on_install_path input (replacing has_warning_or_above)
+#       — governance warnings outside install-path no longer block green.
 
 def compute_scorecard_cells(
     formal_review_rate: float | None,
@@ -89,18 +106,35 @@ def compute_scorecard_cells(
     all_channels_pinned: bool,
     artifact_verified: bool,
     has_critical_on_default_path: bool,
-    has_warning_or_above: bool,
+    has_warning_on_install_path: bool,
+    has_contributing_guide: bool = False,
+    closed_fix_lag_days: int | None = None,
 ) -> dict:
     """Compute the 4 scorecard cells using the V2.4 calibration table.
-    Returns dict with color (red/amber/green) and short_answer per cell."""
+    Returns dict with color (red/amber/green) and short_answer per cell.
+
+    SF1 patches (temporary V1.1 compatibility; migrates to V1.2 D-7):
+      - has_contributing_guide: Q3 amber floor signal (disclosure gesture
+        without formal SECURITY.md).
+      - has_warning_on_install_path: Q4 install-scope warning (governance
+        warnings elsewhere don't block green).
+      - closed_fix_lag_days: Q2 merged security PR age (>3 days → amber).
+      - Q1 governance-floor override baked into the branches below.
+    """
 
     # Q1: Does anyone check the code?
     # V2.4 calibration: Green = any>=60% AND formal>=30% AND branch protection
     # Amber = any>=50% OR formal>=20%
     # Red = any<30% OR (solo-maintainer AND any<40%)
+    # SF1 patch: Q1 governance-floor override — formal<10% AND no branch
+    # protection AND no codeowners forces red (Archon-shape: high any-review
+    # masking functionally-absent review process).
     formal = formal_review_rate or 0
     any_rev = any_review_rate or 0
-    if any_rev >= 60 and formal >= 30 and has_branch_protection:
+    if (formal < 10 and not has_branch_protection and not has_codeowners):
+        q1_color = "red"
+        q1_answer = "No"
+    elif any_rev >= 60 and formal >= 30 and has_branch_protection:
         q1_color = "green"
         q1_answer = "Yes"
     elif any_rev < 30 or (is_solo_maintainer and any_rev < 40):
@@ -114,10 +148,16 @@ def compute_scorecard_cells(
         q1_answer = "No"
 
     # Q2: Do they fix problems quickly?
+    # SF1 patch: closed_fix_lag_days — a repo with merged security PR taking
+    # >3 days is amber even if no open issues (caveman-shape friction signal).
     cve_age = oldest_cve_pr_age_days or 0
     if open_security_issue_count == 0 and cve_age <= 7:
-        q2_color = "green"
-        q2_answer = "Yes"
+        if closed_fix_lag_days is not None and closed_fix_lag_days > 3:
+            q2_color = "amber"
+            q2_answer = "Partly"
+        else:
+            q2_color = "green"
+            q2_answer = "Yes"
     elif open_security_issue_count <= 3 and cve_age <= 14:
         q2_color = "amber"
         q2_answer = "Partly"
@@ -126,10 +166,14 @@ def compute_scorecard_cells(
         q2_answer = "No"
 
     # Q3: Do they tell you about problems?
+    # SF1 patch: has_contributing_guide — a repo with a contributing guide
+    # offers a disclosure gesture (place to report) even without SECURITY.md,
+    # so it reaches the amber floor rather than red (zustand-shape).
     if has_security_policy and published_advisory_count > 0 and not has_silent_fixes:
         q3_color = "green"
         q3_answer = "Yes"
-    elif has_security_policy or (published_advisory_count > 0 and not has_silent_fixes):
+    elif (has_security_policy or has_contributing_guide
+          or (published_advisory_count > 0 and not has_silent_fixes)):
         q3_color = "amber"
         q3_answer = "Partly"
     else:
@@ -137,16 +181,19 @@ def compute_scorecard_cells(
         q3_answer = "No"
 
     # Q4: Is it safe out of the box?
-    # V2.4 calibration: Green = all pinned + verified + no Warning+
+    # V2.4 calibration: Green = all pinned + verified + no Warning+ on install path
     # Red = any Critical on default install path
-    # Amber = any unverified channel OR group-specific finding
-    if all_channels_pinned and artifact_verified and not has_warning_or_above:
+    # Amber = any unverified channel OR install-path Warning OR group-specific finding
+    # SF1 patch: has_warning_on_install_path replaces has_warning_or_above —
+    # governance/upstream warnings outside the install path (zustand F0:
+    # no branch protection) no longer drop Q4 below green.
+    if all_channels_pinned and artifact_verified and not has_warning_on_install_path:
         q4_color = "green"
         q4_answer = "Yes"
     elif has_critical_on_default_path:
         q4_color = "red"
         q4_answer = "No"
-    elif has_warning_or_above or not all_channels_pinned or not artifact_verified:
+    elif has_warning_on_install_path or not all_channels_pinned or not artifact_verified:
         q4_color = "amber"
         q4_answer = "Partly"
     else:
@@ -157,16 +204,21 @@ def compute_scorecard_cells(
         "does_anyone_check_the_code": {
             "color": q1_color, "short_answer": q1_answer,
             "inputs": {"formal_review_rate": formal, "any_review_rate": any_rev,
-                       "has_branch_protection": has_branch_protection, "has_codeowners": has_codeowners}
+                       "has_branch_protection": has_branch_protection,
+                       "has_codeowners": has_codeowners,
+                       "governance_floor_triggered": (
+                           formal < 10 and not has_branch_protection and not has_codeowners)}
         },
         "do_they_fix_problems_quickly": {
             "color": q2_color, "short_answer": q2_answer,
             "inputs": {"open_security_issue_count": open_security_issue_count,
-                       "oldest_open_cve_pr_age_days": oldest_cve_pr_age_days}
+                       "oldest_open_cve_pr_age_days": oldest_cve_pr_age_days,
+                       "closed_fix_lag_days": closed_fix_lag_days}
         },
         "do_they_tell_you_about_problems": {
             "color": q3_color, "short_answer": q3_answer,
             "inputs": {"has_security_policy": has_security_policy,
+                       "has_contributing_guide": has_contributing_guide,
                        "published_advisory_count": published_advisory_count,
                        "has_silent_fixes": has_silent_fixes}
         },
@@ -174,7 +226,7 @@ def compute_scorecard_cells(
             "color": q4_color, "short_answer": q4_answer,
             "inputs": {"all_channels_pinned": all_channels_pinned,
                        "artifact_verified": artifact_verified,
-                       "has_warning_or_above_finding": has_warning_or_above}
+                       "has_warning_on_install_path": has_warning_on_install_path}
         },
     }
 

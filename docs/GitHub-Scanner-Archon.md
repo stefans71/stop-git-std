@@ -74,7 +74,7 @@ Two Critical surfaces stack here: F0 (no governance gate upstream) plus F1 (Code
 |----------|--------|
 | Does anyone check the code? | 🚨 **No upstream gate** — 8% formal / 58% any · no branch protection · no CODEOWNERS |
 | Do they fix problems quickly? | ⚠ Open fixes, not merged yet |
-| Do they tell you about problems? | ✅ Yes — SECURITY.md + public issues |
+| Do they tell you about problems? | ⚠ Partly — SECURITY.md with private channel but 0 published advisories (PR #1169 security fix shipped without GHSA) |
 | Is it safe out of the box? | 🚨 **No** — Critical finding applies to default install path (F0 governance gap) |
 
 ---
