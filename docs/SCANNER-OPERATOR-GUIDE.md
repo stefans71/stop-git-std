@@ -546,7 +546,15 @@ Automation note: Step 3b's compute.py invocation is manual for Step G — the pi
 
 **Post-Step-G commitments (not deferred indefinitely):**
 
-- **D-6 Automated severity distribution comparison script — POST-STEP-G IMMEDIATE FOLLOW-UP.** Manual check in gate 6.2 is sufficient for the 3-target Step G scope. Automation must be built before the first production V2.5-preview scan beyond the 3 validation shapes. The manual check does not scale to broader deployment; the script is the natural next step post-Step-G success and is NOT indefinitely deferred.
+- **D-6 Automated severity distribution comparison script — SHIPPED 2026-04-20.** Lives at `docs/compare-severity-distribution.py`. Reads either a rendered `.md` report or a `form.json` bundle from each side; emits the severity-mapping table and exits 1 on any mismatch. Invocation:
+  ```bash
+  python3 docs/compare-severity-distribution.py \
+    --v24 docs/GitHub-Scanner-<target>.md \
+    --v25 docs/GitHub-Scanner-<target>-v25preview.md \
+    --target <target> \
+    [--out .board-review-temp/step-g-execution/severity-mapping-<target>.md]
+  ```
+  Tests at `tests/test_compare_severity_distribution.py` (23 tests; exit-code contract + 3 integrated Step G pairs pass). Use this tool instead of the manual gate-6.2 check from §8.8 going forward.
 
 - **D-7 Scorecard cell authority migration (V1.1 → V1.2) — COMMITTED, not conditional.** Added by SF1 board review 2026-04-20 (`docs/External-Board-Reviews/042026-sf1-calibration/CONSOLIDATION.md`). Move scorecard cell colors out of `phase_3_computed.scorecard_cells` into `phase_4_structured_llm.scorecard_cells` with structured-constraint fields: `question`, `color` (red|amber|green enum), `short_answer`, `rationale` (must cite E-IDs), `edge_case` (bool), `suggested_threshold_adjustment` (optional — feedback loop), `computed_signal_refs` (list). Demote `compute_scorecard_cells()` to advisory — output surfaces as `phase_3_advisory.scorecard_hints` for Phase 4 LLM to consult. Gate 6.3 changes from "cell-by-cell match" to "cells present + rationale cites evidence + LLM override of advisory hint explained with `edge_case=true`." Step 3b byte-for-byte requirement RETAINED for the other 7 Phase 3 operations.
   - **Trigger** (disjunctive; whichever fires first): (1) first V2.5-preview scan on a repo shape NOT in the current 7 catalog shapes; (2) 3 live V2.5-preview scans post-Step-G with ≥2 different shape categories; (3) 6 months post-Step-G, regardless of scan volume; (4) any cell diverges from V2.4-equivalent-judgment for semantic (not threshold-calibration) reasons — such divergence accelerates urgency.
