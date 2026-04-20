@@ -1,11 +1,11 @@
 {
-  "$comment": "Fixture provenance ledger — distinguishes back-authored fixtures (reconstructed from golden MDs in the catalog) from pipeline-produced fixtures (output of a live Phase 1-6 run). Required before Step G authors form.json from real gh api data. Codex's separate-file approach per board review docs/External-Board-Reviews/041826-step-g-kickoff/CONSOLIDATION.md §U-3/FX-4 (adopted 2-1 over schema-mutation; rationale: scan-schema.json describes live artifacts, not test-harness metadata). Keyed by fixture filename.",
+  "$comment": "Fixture provenance ledger \u2014 distinguishes back-authored fixtures (reconstructed from golden MDs in the catalog) from pipeline-produced fixtures (output of a live Phase 1-6 run). Required before Step G authors form.json from real gh api data. Codex's separate-file approach per board review docs/External-Board-Reviews/041826-step-g-kickoff/CONSOLIDATION.md \u00a7U-3/FX-4 (adopted 2-1 over schema-mutation; rationale: scan-schema.json describes live artifacts, not test-harness metadata). Keyed by fixture filename.",
   "schema_version": "v0.1",
   "last_updated": "2026-04-20",
   "provenance_values": {
     "back-authored-from-golden-md": "Fixture manually reconstructed from an existing catalog MD. Validates schema but does NOT prove what a live Phase 1-6 pipeline would produce. Useful for renderer testing; insufficient for 'pipeline reliable' claims.",
     "authored-from-scan-data": "Fixture authored during active scan work using real gh api output, but NOT the result of a fully automated pipeline run. Between back-authored and pipeline-produced.",
-    "step-g-live-pipeline": "Fixture being authored during an in-progress Step G execution run. Provenance is pre-registered BEFORE authoring begins per §8.8.3 Step -2 (audit trail requirement). Transitions to 'pipeline-produced' on gate acceptance or 'step-g-failed-artifact' on failure. Distinct from template fixtures.",
+    "step-g-live-pipeline": "Fixture being authored during an in-progress Step G execution run. Provenance is pre-registered BEFORE authoring begins per \u00a78.8.3 Step -2 (audit trail requirement). Transitions to 'pipeline-produced' on gate acceptance or 'step-g-failed-artifact' on failure. Distinct from template fixtures.",
     "pipeline-produced": "Fixture output of a live Phase 1-6 scan against a fresh gh api capture. The form.json here was NOT hand-edited post-pipeline. Required provenance for any form.json promoted to the catalog as a V2.5-preview entry.",
     "step-g-failed-artifact": "Fixture produced during Step G that did NOT pass acceptance (validator error, parity mismatch, structural-parity failure vs V2.4 scan of same repo). Kept as test artifact, NOT as operator exemplar. Future operators must not mirror these."
   },
@@ -17,8 +17,16 @@
       "authored_at": "2026-04-18",
       "authored_in_commit": "59224ac",
       "source_golden_md": "docs/GitHub-Scanner-zustand.md",
-      "schema_version": "V1.1",
-      "notes": "Enriched from the V2.4 zustand golden via 10 board-approved fix artifacts. Raw data mostly from the actual scan; enrichments (executable_file_inventory, PR sample, verdict_exhibits, etc.) were structured from the golden MD."
+      "schema_version": "V1.2",
+      "notes": "Enriched from the V2.4 zustand golden via 10 board-approved fix artifacts. Raw data mostly from the actual scan; enrichments (executable_file_inventory, PR sample, verdict_exhibits, etc.) were structured from the golden MD.",
+      "migration_log": [
+        {
+          "from": "V1.1",
+          "to": "V1.2",
+          "migrated_at": "2026-04-20T08:55:00.464585+00:00",
+          "script": "migrate-v1.1-to-v1.2.py"
+        }
+      ]
     },
     "caveman-form.json": {
       "provenance": "back-authored-from-golden-md",
@@ -27,9 +35,17 @@
       "authored_at": "2026-04-18",
       "authored_in_commit": "402f933",
       "source_golden_md": "docs/GitHub-Scanner-caveman.md",
-      "schema_version": "V1.1",
+      "schema_version": "V1.2",
       "subset_scope": null,
-      "notes": "Back-authored reconstruction of the 692-line caveman golden. All 9 findings kept (F0, F5, F11, F14, F16, F-advisory, F-amplify, F-batch, F-deps). No subset scoping. Step F R3 fix commit ce698d4 removed a stale exhibit-tag F-ID reference (Distribution · F1+F2) that did not match the fixture's own finding set."
+      "notes": "Back-authored reconstruction of the 692-line caveman golden. All 9 findings kept (F0, F5, F11, F14, F16, F-advisory, F-amplify, F-batch, F-deps). No subset scoping. Step F R3 fix commit ce698d4 removed a stale exhibit-tag F-ID reference (Distribution \u00b7 F1+F2) that did not match the fixture's own finding set.",
+      "migration_log": [
+        {
+          "from": "V1.1",
+          "to": "V1.2",
+          "migrated_at": "2026-04-20T08:55:00.464621+00:00",
+          "script": "migrate-v1.1-to-v1.2.py"
+        }
+      ]
     },
     "archon-subset-form.json": {
       "provenance": "back-authored-from-golden-md",
@@ -38,13 +54,21 @@
       "authored_at": "2026-04-18",
       "authored_in_commit": "402f933",
       "source_golden_md": "docs/GitHub-Scanner-Archon.md",
-      "schema_version": "V1.1",
-      "subset_scope": "4 findings kept of 11 in golden — F0 (Critical, C20 governance), F1 (Warning, code/agent-rule-injection; triggers V1.1 C3 auto_load_tier constraint), F4 (Warning, governance review rate), F7 (OK, active security work). Dropped F2/F3/F5/F6/F8/F9/F10 as thematic variations of the same cluster. 4 kept cover severity spread across Critical/Warning/OK.",
-      "notes": "First fixture to exercise the V1.1 C3 auto_load_tier constraint path. Monorepo data populated from golden (11 inner packages). Split-verdict by deployment (self-host vs multi-tenant). Step F R3 fix commit ce698d4 removed 2 stale exhibit-tag references (Supply chain · F2, Distribution · F8) pointing to dropped findings."
+      "schema_version": "V1.2",
+      "subset_scope": "4 findings kept of 11 in golden \u2014 F0 (Critical, C20 governance), F1 (Warning, code/agent-rule-injection; triggers V1.1 C3 auto_load_tier constraint), F4 (Warning, governance review rate), F7 (OK, active security work). Dropped F2/F3/F5/F6/F8/F9/F10 as thematic variations of the same cluster. 4 kept cover severity spread across Critical/Warning/OK.",
+      "notes": "First fixture to exercise the V1.1 C3 auto_load_tier constraint path. Monorepo data populated from golden (11 inner packages). Split-verdict by deployment (self-host vs multi-tenant). Step F R3 fix commit ce698d4 removed 2 stale exhibit-tag references (Supply chain \u00b7 F2, Distribution \u00b7 F8) pointing to dropped findings.",
+      "migration_log": [
+        {
+          "from": "V1.1",
+          "to": "V1.2",
+          "migrated_at": "2026-04-20T08:55:00.464625+00:00",
+          "script": "migrate-v1.1-to-v1.2.py"
+        }
+      ]
     },
     "zustand-step-g-form.json": {
       "provenance": "step-g-live-pipeline",
-      "authored_for": "Step G pilot target (JS library shape) — first live V2.5-preview pipeline execution",
+      "authored_for": "Step G pilot target (JS library shape) \u2014 first live V2.5-preview pipeline execution",
       "authored_by": "Claude Opus 4.7 (in-progress)",
       "authored_at": "2026-04-20",
       "authored_in_commit": null,
@@ -54,8 +78,8 @@
       "comparator_sha": "3201328",
       "schema_version": "V1.1",
       "board_approval": "docs/External-Board-Reviews/041926-step-g-execution/CONSOLIDATION.md",
-      "execution_order": "FN-7 pilot-and-checkpoint — target 1 of 3 (zustand → hard checkpoint → caveman + Archon)",
-      "notes": "Pre-registered BEFORE authoring per §8.8.3 Step -2. Tag transitions on acceptance: 'pipeline-produced' (7 gates pass) or 'step-g-failed-artifact' (rollback/fail). Path resolves to .board-review-temp/step-g-execution/zustand-step-g-form.json during execution; promoted to tests/fixtures/ on acceptance."
+      "execution_order": "FN-7 pilot-and-checkpoint \u2014 target 1 of 3 (zustand \u2192 hard checkpoint \u2192 caveman + Archon)",
+      "notes": "Pre-registered BEFORE authoring per \u00a78.8.3 Step -2. Tag transitions on acceptance: 'pipeline-produced' (7 gates pass) or 'step-g-failed-artifact' (rollback/fail). Path resolves to .board-review-temp/step-g-execution/zustand-step-g-form.json during execution; promoted to tests/fixtures/ on acceptance."
     }
   },
   "ordering_constraints": {
@@ -65,6 +89,6 @@
   "references": {
     "board_review": "docs/External-Board-Reviews/041826-step-g-kickoff/CONSOLIDATION.md",
     "step_f_verification": "docs/External-Board-Reviews/041826-renderer-impl-verify/STEP-F-verification.md",
-    "schema": "docs/scan-schema.json (V1.1 — not mutated for provenance per Codex R3 architectural position)"
+    "schema": "docs/scan-schema.json (V1.1 \u2014 not mutated for provenance per Codex R3 architectural position)"
   }
 }

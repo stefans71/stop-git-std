@@ -56,6 +56,7 @@ Extended post Round-3 board review to close the validator-not-a-gate bug
 (board finding C1) and add the untrusted-text escape check (board finding C4).
 """
 
+import json
 import re
 import sys
 from html.parser import HTMLParser
@@ -63,6 +64,145 @@ from pathlib import Path
 
 VOID_TAGS = {"br", "img", "meta", "link", "hr", "input", "col", "area", "base",
              "embed", "source", "track", "wbr"}
+
+
+# ===========================================================================
+# V1.2 form-mode validation helpers
+# ===========================================================================
+
+OVERRIDE_RATIONALE_MIN_CHARS = 50  # per V1.2 board review Item A
+
+_SCORECARD_QUESTION_KEYS = (
+    "does_anyone_check_the_code",
+    "do_they_fix_problems_quickly",
+    "do_they_tell_you_about_problems",
+    "is_it_safe_out_of_the_box",
+)
+
+
+def _load_compute_constants():
+    """Import SIGNAL_IDS + OVERRIDE_REASON_ENUM from docs/compute.py.
+
+    Defers the import so --report / --parity / etc. callers don't pay the
+    compute.py import cost unless they're in --form mode.
+    """
+    import importlib.util
+    here = Path(__file__).resolve().parent
+    spec = importlib.util.spec_from_file_location("_scanner_compute", here / "compute.py")
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod.SIGNAL_IDS, mod.OVERRIDE_REASON_ENUM
+
+
+def validate_override_rationale(cell: dict, advisory_hint: dict,
+                                signal_ids: frozenset, override_enum: frozenset) -> list:
+    """V1.2 gate 6.3 override-explained check.
+
+    Returns list of error strings. Empty list = cell passes.
+    Called per scorecard cell. Only enforces when the Phase 4 color differs
+    from the paired Phase 3 advisory color — matching colors need no
+    rationale.
+    """
+    errors = []
+    phase4_color = (cell or {}).get("color")
+    advisory_color = (advisory_hint or {}).get("color")
+
+    # No override → no enforcement (cell-by-cell match is the trivial pass).
+    if phase4_color == advisory_color:
+        return errors
+
+    # Override detected. Enforce override-explained contract.
+    rationale = (cell.get("rationale") or "") if cell else ""
+    refs = cell.get("computed_signal_refs") or [] if cell else []
+    reason = cell.get("override_reason") if cell else None
+
+    if reason is None:
+        errors.append("override_reason required when Phase 4 color differs from advisory")
+    elif reason not in override_enum:
+        errors.append(f"override_reason must be one of {sorted(override_enum)}; got {reason!r}")
+
+    if len(rationale) < OVERRIDE_RATIONALE_MIN_CHARS:
+        errors.append(f"rationale must be ≥{OVERRIDE_RATIONALE_MIN_CHARS} chars when overriding advisory; got {len(rationale)}")
+
+    if not refs:
+        errors.append("computed_signal_refs must be non-empty when overriding advisory")
+    else:
+        unknown = [r for r in refs if r not in signal_ids]
+        if unknown:
+            errors.append(f"computed_signal_refs contains unknown signal IDs: {unknown}")
+
+    return errors
+
+
+def check_form(path: Path) -> tuple:
+    """V1.2 form.json validator.
+
+    Runs:
+      1. jsonschema validation against docs/scan-schema.json
+      2. Override-rationale gate (gate 6.3) on each scorecard cell pair
+
+    Returns (errors, warnings). 0 errors = form is V1.2-clean.
+    """
+    errors = 0
+    warnings = 0
+    try:
+        form = json.loads(path.read_text())
+    except json.JSONDecodeError as e:
+        print(f"  ✗ form.json parse error: {e}")
+        return (1, 0)
+
+    # 1. jsonschema
+    try:
+        from jsonschema import Draft202012Validator
+    except ImportError:
+        print("  ⚠ jsonschema not installed; skipping schema validation")
+        warnings += 1
+        schema_errors = []
+    else:
+        schema_path = Path(__file__).resolve().parent / "scan-schema.json"
+        schema = json.loads(schema_path.read_text())
+        validator = Draft202012Validator(schema)
+        schema_errors = list(validator.iter_errors(form))
+
+    if schema_errors:
+        errors += len(schema_errors)
+        print(f"  ✗ jsonschema: {len(schema_errors)} error(s)")
+        for e in schema_errors[:8]:
+            loc = "/".join(str(p) for p in e.absolute_path)
+            print(f"    - {loc or '<root>'}: {e.message[:160]}")
+        if len(schema_errors) > 8:
+            print(f"    ... (+{len(schema_errors) - 8} more)")
+    else:
+        print(f"  ✓ jsonschema: CLEAN")
+
+    # 2. Gate 6.3 override-explained
+    signal_ids, override_enum = _load_compute_constants()
+    cells = (((form.get("phase_4_structured_llm") or {}).get("scorecard_cells") or {}))
+    hints = (((form.get("phase_3_advisory") or {}).get("scorecard_hints") or {}))
+    gate_errors = 0
+    gate_overrides = 0
+    for key in _SCORECARD_QUESTION_KEYS:
+        cell = cells.get(key) or {}
+        hint = hints.get(key) or {}
+        cell_errors = validate_override_rationale(cell, hint, signal_ids, override_enum)
+        if cell_errors:
+            gate_errors += len(cell_errors)
+            phase4_c = cell.get("color")
+            advisory_c = hint.get("color")
+            print(f"  ✗ gate 6.3 — {key} ({advisory_c} → {phase4_c}):")
+            for msg in cell_errors:
+                print(f"      - {msg}")
+        elif cell.get("color") != hint.get("color") and cell.get("color") is not None:
+            gate_overrides += 1
+    if gate_errors:
+        errors += gate_errors
+    else:
+        if gate_overrides:
+            print(f"  ✓ gate 6.3: CLEAN — {gate_overrides} override(s) all explained")
+        else:
+            print(f"  ✓ gate 6.3: CLEAN — no overrides")
+
+    return (errors, warnings)
 
 
 class TagBalanceChecker(HTMLParser):
@@ -855,6 +995,9 @@ def main():
     elif argv and argv[0] == "--bundle":
         mode = "bundle"
         argv = argv[1:]
+    elif argv and argv[0] == "--form":
+        mode = "form"
+        argv = argv[1:]
 
     if mode == "parity":
         if len(argv) != 2:
@@ -884,6 +1027,24 @@ def main():
         errors, warnings = check_bundle(bundle_path)
         if errors == 0:
             return 0
+        return 1
+
+    if mode == "form":
+        if len(argv) != 1:
+            print("Usage: python3 validate-scanner-report.py --form <form.json>")
+            return 2
+        form_path = Path(argv[0])
+        if not form_path.exists():
+            print(f"ERROR: form file not found — {form_path}")
+            return 2
+        print(f"Validating {form_path.name} against V1.2 schema + gate 6.3 override-explained...")
+        errors, warnings = check_form(form_path)
+        if errors == 0:
+            print(f"\n✓ {form_path.name} is V1.2-clean"
+                  + (f" ({warnings} warning(s))" if warnings else "."))
+            return 0
+        print(f"\n✗ {form_path.name}: {errors} error(s)"
+              + (f", {warnings} warning(s)" if warnings else ""))
         return 1
 
     if len(argv) != 1:

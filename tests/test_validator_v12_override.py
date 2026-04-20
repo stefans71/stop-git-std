@@ -1,0 +1,155 @@
+"""V1.2 validator tests — gate 6.3 override-explained.
+
+Tests docs/validate-scanner-report.py::validate_override_rationale.
+Pseudocode + contract: docs/External-Board-Reviews/042026-schema-v12/CONSOLIDATION.md §5 Item A.
+"""
+import importlib.util
+from pathlib import Path
+
+import pytest
+
+_HERE = Path(__file__).resolve().parent
+_VALIDATOR = _HERE.parent / "docs" / "validate-scanner-report.py"
+_COMPUTE = _HERE.parent / "docs" / "compute.py"
+
+
+def _load(name, path):
+    spec = importlib.util.spec_from_file_location(name, path)
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
+@pytest.fixture(scope="module")
+def validator():
+    return _load("_v_scanner_report", _VALIDATOR)
+
+
+@pytest.fixture(scope="module")
+def compute():
+    return _load("_v_compute", _COMPUTE)
+
+
+class TestOverrideRationaleGate:
+    """5 tests per §7.8 for validate_override_rationale coverage."""
+
+    def test_no_override_no_enforcement(self, validator, compute):
+        """When Phase 4 color == advisory color, no rationale/refs/reason required."""
+        cell = {"color": "amber"}  # no rationale, refs, reason
+        hint = {"color": "amber"}
+        errors = validator.validate_override_rationale(
+            cell, hint, compute.SIGNAL_IDS, compute.OVERRIDE_REASON_ENUM
+        )
+        assert errors == []
+
+    def test_override_without_refs_fails(self, validator, compute):
+        """Phase 4 amber, advisory red, override_reason + rationale but refs empty → fail."""
+        cell = {
+            "color": "amber",
+            "rationale": "The harness threshold is too strict for this shape; manual review shows the repo handles security responsibly across multiple vectors.",
+            "computed_signal_refs": [],
+            "override_reason": "threshold_too_strict",
+        }
+        hint = {"color": "red"}
+        errors = validator.validate_override_rationale(
+            cell, hint, compute.SIGNAL_IDS, compute.OVERRIDE_REASON_ENUM
+        )
+        assert any("computed_signal_refs must be non-empty" in e for e in errors)
+
+    def test_override_with_short_rationale_fails(self, validator, compute):
+        """Rationale below 50-char floor → fail even when other fields are fine."""
+        cell = {
+            "color": "green",
+            "rationale": "ok",  # < 50 chars
+            "computed_signal_refs": ["q1_has_branch_protection"],
+            "override_reason": "missing_qualitative_context",
+        }
+        hint = {"color": "amber"}
+        errors = validator.validate_override_rationale(
+            cell, hint, compute.SIGNAL_IDS, compute.OVERRIDE_REASON_ENUM
+        )
+        assert any("rationale must be ≥" in e for e in errors)
+
+    def test_override_with_unknown_ref_fails(self, validator, compute):
+        """Ref ID not in compute.SIGNAL_IDS → fail with explicit unknown-IDs error."""
+        cell = {
+            "color": "red",
+            "rationale": "Branch protection is off and the repo has no CODEOWNERS, so the advisory amber color understates actual governance risk.",
+            "computed_signal_refs": ["q1_not_a_real_signal_id"],
+            "override_reason": "threshold_too_lenient",
+        }
+        hint = {"color": "amber"}
+        errors = validator.validate_override_rationale(
+            cell, hint, compute.SIGNAL_IDS, compute.OVERRIDE_REASON_ENUM
+        )
+        assert any("unknown signal IDs" in e for e in errors)
+
+    def test_override_with_unknown_reason_fails(self, validator, compute):
+        """override_reason not in OVERRIDE_REASON_ENUM → fail."""
+        cell = {
+            "color": "green",
+            "rationale": "This repo has exemplary practices that the advisory rubric does not capture adequately for this particular shape.",
+            "computed_signal_refs": ["q1_has_branch_protection"],
+            "override_reason": "made_this_up",
+        }
+        hint = {"color": "amber"}
+        errors = validator.validate_override_rationale(
+            cell, hint, compute.SIGNAL_IDS, compute.OVERRIDE_REASON_ENUM
+        )
+        assert any("override_reason must be one of" in e for e in errors)
+
+    def test_valid_override_passes(self, validator, compute):
+        """All fields correct: refs resolve, rationale ≥ 50, reason in enum → no errors."""
+        cell = {
+            "color": "amber",
+            "rationale": "Formal review rate sits at 8% but the repo has CONTRIBUTING.md and active non-vuln PR responsiveness; amber rather than red is the honest read.",
+            "computed_signal_refs": ["q1_formal_review_rate", "q3_has_contributing_guide"],
+            "override_reason": "missing_qualitative_context",
+        }
+        hint = {"color": "red"}
+        errors = validator.validate_override_rationale(
+            cell, hint, compute.SIGNAL_IDS, compute.OVERRIDE_REASON_ENUM
+        )
+        assert errors == []
+
+    def test_override_missing_reason_fails(self, validator, compute):
+        """override_reason=None on an override → fail with required-when-overriding message."""
+        cell = {
+            "color": "amber",
+            "rationale": "Advisory color feels too strict given the qualitative evidence of active maintenance and documentation.",
+            "computed_signal_refs": ["q1_formal_review_rate"],
+            "override_reason": None,
+        }
+        hint = {"color": "red"}
+        errors = validator.validate_override_rationale(
+            cell, hint, compute.SIGNAL_IDS, compute.OVERRIDE_REASON_ENUM
+        )
+        assert any("override_reason required" in e for e in errors)
+
+
+class TestSignalIDVocabulary:
+    """2 tests per §7.8 for compute.SIGNAL_IDS frozen vocabulary."""
+
+    def test_signal_ids_is_frozenset_of_23(self, compute):
+        assert isinstance(compute.SIGNAL_IDS, frozenset)
+        assert len(compute.SIGNAL_IDS) == 23, (
+            f"V1.2 signal vocabulary is frozen at 23 entries per board review Item F; got {len(compute.SIGNAL_IDS)}"
+        )
+
+    def test_signal_ids_question_scoping(self, compute):
+        """Every ID must have a question-scoped prefix (q1_/q2_/q3_/q4_) or c20_ supporting prefix."""
+        allowed_prefixes = ("q1_", "q2_", "q3_", "q4_", "c20_")
+        for sid in compute.SIGNAL_IDS:
+            assert any(sid.startswith(p) for p in allowed_prefixes), (
+                f"signal ID {sid!r} violates question-scoped naming convention"
+            )
+
+    def test_override_reason_enum_is_5_values(self, compute):
+        assert isinstance(compute.OVERRIDE_REASON_ENUM, frozenset)
+        assert compute.OVERRIDE_REASON_ENUM == frozenset({
+            "threshold_too_strict",
+            "threshold_too_lenient",
+            "missing_qualitative_context",
+            "rubric_literal_vs_intent",
+            "other",
+        })

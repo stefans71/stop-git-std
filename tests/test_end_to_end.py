@@ -41,7 +41,7 @@ class TestZustandEndToEnd:
 
     def test_fixture_loads(self):
         form = load_fixture()
-        assert form["schema_version"] in ("1.0", "1.1")
+        assert form["schema_version"] in ("1.0", "1.1", "V1.2")
         assert form["target"]["repo"] == "zustand"
 
     def test_c20_severity_is_warning(self):

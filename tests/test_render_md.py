@@ -116,7 +116,8 @@ class TestFacts:
     def test_scorecard_colors_match_computed(self):
         form = load_form()
         out = rendered()
-        cells = form["phase_3_computed"]["scorecard_cells"]
+        # V1.2 D2: scorecard authority moved to phase_4_structured_llm
+        cells = form["phase_4_structured_llm"]["scorecard_cells"]
         # Q1 is amber → ⚠ icon
         # Q2, Q3, Q4 are green → ✅ icon
         assert cells["does_anyone_check_the_code"]["color"] == "amber"
@@ -124,6 +125,22 @@ class TestFacts:
         assert "| Is it safe out of the box? | ✅" in out
         assert "| Do they fix problems quickly? | ✅" in out
         assert "| Do they tell you about problems? | ✅" in out
+
+    def test_scorecard_cells_live_in_phase_4_not_phase_3(self):
+        """V1.2 D2 invariant: scorecard authority is phase_4_structured_llm.
+        phase_3_computed must no longer carry scorecard_cells."""
+        form = load_form()
+        assert "scorecard_cells" in form["phase_4_structured_llm"]
+        assert "scorecard_cells" not in form.get("phase_3_computed", {})
+
+    def test_phase_3_advisory_present_on_v12_fixture(self):
+        """V1.2 fixtures must have phase_3_advisory.scorecard_hints populated."""
+        form = load_form()
+        assert "phase_3_advisory" in form
+        hints = form["phase_3_advisory"]["scorecard_hints"]
+        for q in ("does_anyone_check_the_code", "do_they_fix_problems_quickly",
+                  "do_they_tell_you_about_problems", "is_it_safe_out_of_the_box"):
+            assert q in hints, f"missing advisory hint for {q}"
 
     def test_action_step_count(self):
         form = load_form()

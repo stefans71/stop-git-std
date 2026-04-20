@@ -2,9 +2,18 @@
 """
 compute.py — Phase 3 computation functions for the GitHub repo scanner.
 
-8 fully automatable operations (board-approved classification):
+V1.2 scope (post-2026-04-20 board review, docs/External-Board-Reviews/042026-schema-v12/):
+  - 7 byte-for-byte deterministic operations remain in phase_3_computed.
+  - compute_scorecard_cells() is DEMOTED TO ADVISORY — output feeds
+    phase_3_advisory.scorecard_hints (non-authoritative). Phase 4 LLM
+    is the scorecard cell authority and may override with rationale +
+    computed_signal_refs citing the 23 frozen SIGNAL_IDs below.
+  - SIGNAL_IDS exported as a frozenset — validator resolves Phase 4's
+    computed_signal_refs against this set (gate 6.3 override-explained).
+
+Fully automatable operations (board-approved 8/8/4 classification):
 1. C20 severity formula
-2. Scorecard cell colors (calibration table)
+2. Scorecard cell ADVISORY hints (was authoritative pre-V1.2)
 3. Solo-maintainer flag (>80% threshold)
 4. Exhibit grouping (7+ threshold)
 5. Boundary-case detection
@@ -17,6 +26,63 @@ All deterministic: same input → same output, no LLM needed.
 """
 
 from datetime import datetime, timedelta, timezone
+
+
+# ===========================================================================
+# V1.2 Signal ID vocabulary (frozen per 2026-04-20 board review Item F)
+# ===========================================================================
+#
+# Phase 4 LLM cites these IDs in scorecard_cells[key].computed_signal_refs
+# when overriding phase_3_advisory.scorecard_hints[key].color. Validator
+# (docs/validate-scanner-report.py) resolves every ref against this set.
+#
+# Naming convention (frozen V1.2):
+#   q1_ / q2_ / q3_ / q4_  — scorecard-input signals (scoped to the 4 cells)
+#   c20_                   — supporting signals for C20 governance SPOF
+#
+# V1.2.x patches may ADD signals without a schema bump; removing any signal
+# requires a V1.3 bump. Post-V1.2 telemetry (override-pattern log) drives
+# the "add more" decision — see CONSOLIDATION §8 V12x-3, V12x-4 triggers.
+
+SIGNAL_IDS: frozenset[str] = frozenset({
+    # Q1 — Does anyone check the code?
+    "q1_formal_review_rate",
+    "q1_any_review_rate",
+    "q1_has_branch_protection",
+    "q1_has_codeowners",
+    "q1_is_solo_maintainer",
+    "q1_governance_floor_override",
+    # Q2 — Do they fix problems quickly?
+    "q2_open_security_issue_count",
+    "q2_oldest_open_cve_pr_age_days",
+    "q2_closed_fix_lag_days",
+    # Q3 — Do they tell you about problems?
+    "q3_has_security_policy",
+    "q3_has_contributing_guide",
+    "q3_published_advisory_count",
+    "q3_has_silent_fixes",
+    "q3_has_reported_fixed_vulns",
+    # Q4 — Is it safe out of the box?
+    "q4_all_channels_pinned",
+    "q4_artifact_verified",
+    "q4_has_critical_on_default_path",
+    "q4_has_warning_on_install_path",
+    # C20 supporting signals
+    "c20_has_classic_protection",
+    "c20_has_rulesets",
+    "c20_has_rules_on_default",
+    "c20_has_recent_release_30d",
+    "c20_ships_executable_code",
+})
+
+
+OVERRIDE_REASON_ENUM: frozenset[str] = frozenset({
+    "threshold_too_strict",
+    "threshold_too_lenient",
+    "missing_qualitative_context",
+    "rubric_literal_vs_intent",
+    "other",
+})
 
 
 # ===========================================================================
@@ -200,33 +266,48 @@ def compute_scorecard_cells(
         q4_color = "amber"
         q4_answer = "Partly"
 
+    # V1.2: emit advisory shape with signals list (IDs from SIGNAL_IDS
+    # frozenset). Feeds phase_3_advisory.scorecard_hints in the form.
+    governance_floor_triggered = (
+        formal < 10 and not has_branch_protection and not has_codeowners
+    )
     return {
         "does_anyone_check_the_code": {
             "color": q1_color, "short_answer": q1_answer,
-            "inputs": {"formal_review_rate": formal, "any_review_rate": any_rev,
-                       "has_branch_protection": has_branch_protection,
-                       "has_codeowners": has_codeowners,
-                       "governance_floor_triggered": (
-                           formal < 10 and not has_branch_protection and not has_codeowners)}
+            "signals": [
+                {"id": "q1_formal_review_rate", "value": formal},
+                {"id": "q1_any_review_rate", "value": any_rev},
+                {"id": "q1_has_branch_protection", "value": has_branch_protection},
+                {"id": "q1_has_codeowners", "value": has_codeowners},
+                {"id": "q1_is_solo_maintainer", "value": is_solo_maintainer},
+                {"id": "q1_governance_floor_override", "value": governance_floor_triggered},
+            ],
         },
         "do_they_fix_problems_quickly": {
             "color": q2_color, "short_answer": q2_answer,
-            "inputs": {"open_security_issue_count": open_security_issue_count,
-                       "oldest_open_cve_pr_age_days": oldest_cve_pr_age_days,
-                       "closed_fix_lag_days": closed_fix_lag_days}
+            "signals": [
+                {"id": "q2_open_security_issue_count", "value": open_security_issue_count},
+                {"id": "q2_oldest_open_cve_pr_age_days", "value": oldest_cve_pr_age_days},
+                {"id": "q2_closed_fix_lag_days", "value": closed_fix_lag_days},
+            ],
         },
         "do_they_tell_you_about_problems": {
             "color": q3_color, "short_answer": q3_answer,
-            "inputs": {"has_security_policy": has_security_policy,
-                       "has_contributing_guide": has_contributing_guide,
-                       "published_advisory_count": published_advisory_count,
-                       "has_silent_fixes": has_silent_fixes}
+            "signals": [
+                {"id": "q3_has_security_policy", "value": has_security_policy},
+                {"id": "q3_has_contributing_guide", "value": has_contributing_guide},
+                {"id": "q3_published_advisory_count", "value": published_advisory_count},
+                {"id": "q3_has_silent_fixes", "value": has_silent_fixes},
+            ],
         },
         "is_it_safe_out_of_the_box": {
             "color": q4_color, "short_answer": q4_answer,
-            "inputs": {"all_channels_pinned": all_channels_pinned,
-                       "artifact_verified": artifact_verified,
-                       "has_warning_on_install_path": has_warning_on_install_path}
+            "signals": [
+                {"id": "q4_all_channels_pinned", "value": all_channels_pinned},
+                {"id": "q4_artifact_verified", "value": artifact_verified},
+                {"id": "q4_has_critical_on_default_path", "value": has_critical_on_default_path},
+                {"id": "q4_has_warning_on_install_path", "value": has_warning_on_install_path},
+            ],
         },
     }
 

@@ -1,4 +1,5 @@
-{% set cells = form.get('phase_3_computed', {}).get('scorecard_cells', {}) or {} %}
+{# V1.2 D2: scorecard authority moved to phase_4_structured_llm #}
+{% set cells = form.get('phase_4_structured_llm', {}).get('scorecard_cells', {}) or {} %}
 {% set questions = [
   ('does_anyone_check_the_code', 'Does anyone check the code?'),
   ('is_it_safe_out_of_the_box', 'Is it safe out of the box?'),

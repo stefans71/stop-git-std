@@ -186,6 +186,13 @@ class TestSF1ScorecardPatches:
             has_critical_on_default_path=False, has_warning_on_install_path=False,
         )
 
+    def _signal_value(self, cell, signal_id):
+        """V1.2: scorecard cells emit signals: [{id, value}] (was inputs dict in V1.1)."""
+        for sig in cell.get("signals", []):
+            if sig.get("id") == signal_id:
+                return sig.get("value")
+        return None
+
     def test_q1_governance_floor_forces_red(self):
         """Archon-shape: 8% formal + high any + no protection + no CODEOWNERS → red
         via governance-floor override, even though any >= 50 would normally be amber."""
@@ -194,7 +201,7 @@ class TestSF1ScorecardPatches:
                   has_branch_protection=False, has_codeowners=False)
         r = compute_scorecard_cells(**kw)
         assert r["does_anyone_check_the_code"]["color"] == "red"
-        assert r["does_anyone_check_the_code"]["inputs"]["governance_floor_triggered"] is True
+        assert self._signal_value(r["does_anyone_check_the_code"], "q1_governance_floor_override") is True
 
     def test_q1_governance_floor_not_triggered_if_formal_at_10(self):
         """Threshold boundary: formal >= 10 does not trigger the override."""
@@ -203,7 +210,7 @@ class TestSF1ScorecardPatches:
                   has_branch_protection=False, has_codeowners=False)
         r = compute_scorecard_cells(**kw)
         assert r["does_anyone_check_the_code"]["color"] == "amber"
-        assert r["does_anyone_check_the_code"]["inputs"]["governance_floor_triggered"] is False
+        assert self._signal_value(r["does_anyone_check_the_code"], "q1_governance_floor_override") is False
 
     def test_q1_governance_floor_not_triggered_if_branch_protection_present(self):
         """Override requires ALL three gaps — having branch protection cancels it."""

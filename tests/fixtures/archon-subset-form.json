@@ -1,9 +1,14 @@
 {
   "$comment": "Archon subset fixture: agentic platform shape with split-verdict (deployment axis). Extracted from docs/GitHub-Scanner-Archon.md (scanned 2026-04-16 against dev@3dedc22, v0.3.6). Used by the Phase 7 HTML renderer stress-test for split-verdict + CLAUDE.md agent-rule-file + monorepo coverage_detail.",
-  "schema_version": "1.1",
-
+  "schema_version": "V1.2",
   "_meta": {
-    "phases_completed": ["phase_1_raw_capture", "phase_2_validation", "phase_3_computed", "phase_4_structured_llm", "phase_5_prose_llm"],
+    "phases_completed": [
+      "phase_1_raw_capture",
+      "phase_2_validation",
+      "phase_3_computed",
+      "phase_4_structured_llm",
+      "phase_5_prose_llm"
+    ],
     "scan_status": "completed",
     "scanner_version": "V2.3-post-R3",
     "prompt_version": "V2.3",
@@ -11,63 +16,70 @@
     "scan_started_at": "2026-04-16T00:00:00Z",
     "scan_completed_at": "2026-04-16T00:00:00Z",
     "assumptions": [
-      "Monorepo inner-package dep surface not fully enumerated — root + root-lock inspected as primary surface.",
-      "Dependabot alerts API 403 (admin scope required) — alert state unknown beyond no config file in repo.",
-      "OSSF Scorecard API 404 — repo not yet indexed by securityscorecards.dev."
+      "Monorepo inner-package dep surface not fully enumerated \u2014 root + root-lock inspected as primary surface.",
+      "Dependabot alerts API 403 (admin scope required) \u2014 alert state unknown beyond no config file in repo.",
+      "OSSF Scorecard API 404 \u2014 repo not yet indexed by securityscorecards.dev."
     ]
   },
-
   "target": {
     "owner": "coleam00",
     "repo": "Archon",
     "full_name": "coleam00/Archon",
     "url": "https://github.com/coleam00/Archon"
   },
-
   "scanner_integrity": {
     "injection_matches": 0,
     "actionable_count": 0,
     "findings": []
   },
-
   "phase_1_raw_capture": {
     "pre_flight": {
       "head_sha": "3dedc22",
       "default_branch": "dev",
       "tarball_extracted": true,
       "tarball_file_count": 769,
-      "symlinks_stripped": true,
+      "symlinks_stripped": 1,
       "api_rate_limit": {
         "remaining": 5000,
         "limit": 5000,
-        "reset_at": null
+        "reset": null
       }
     },
-
     "repo_metadata": {
       "name": "Archon",
-      "description": "Remote agentic coding platform — a harness that lets you drive Claude Code and Codex through Slack, Telegram, GitHub, or a web UI, with its own DAG workflow engine.",
+      "description": "Remote agentic coding platform \u2014 a harness that lets you drive Claude Code and Codex through Slack, Telegram, GitHub, or a web UI, with its own DAG workflow engine.",
       "created_at": "2025-02-07",
       "pushed_at": "2026-04-16",
       "stargazer_count": 18300,
       "fork_count": null,
       "license_spdx": "MIT",
-      "default_branch_ref": "dev",
-      "is_archived": false,
       "has_issues_enabled": true,
-      "is_fork": false,
       "primary_language": "TypeScript",
-      "topics": ["ai", "claude", "codex", "agentic", "workflow", "bun"]
+      "topics": [
+        "ai",
+        "claude",
+        "codex",
+        "agentic",
+        "workflow",
+        "bun"
+      ],
+      "archived": false,
+      "fork": false,
+      "default_branch": "dev"
     },
-
     "contributors": {
       "top_contributors": [
-        {"login": "Wirasm", "contributions": 791},
-        {"login": "coleam00", "contributions": 343}
+        {
+          "login": "Wirasm",
+          "contributions": 791
+        },
+        {
+          "login": "coleam00",
+          "contributions": 343
+        }
       ],
       "total_contributor_count": 2
     },
-
     "maintainer_accounts": {
       "accounts": [
         {
@@ -79,17 +91,35 @@
         }
       ]
     },
-
     "releases": {
       "entries": [
-        {"tag": "v0.3.6", "date": "2026-04-12", "name": "v0.3.6", "is_prerelease": false},
-        {"tag": "v0.3.5", "date": "2026-04-11", "name": "v0.3.5", "is_prerelease": false},
-        {"tag": "v0.3.4", "date": "2026-04-10", "name": "v0.3.4", "is_prerelease": false},
-        {"tag": "v0.3.0", "date": "2026-04-08", "name": "v0.3.0", "is_prerelease": false}
+        {
+          "tag": "v0.3.6",
+          "date": "2026-04-12",
+          "name": "v0.3.6",
+          "is_prerelease": false
+        },
+        {
+          "tag": "v0.3.5",
+          "date": "2026-04-11",
+          "name": "v0.3.5",
+          "is_prerelease": false
+        },
+        {
+          "tag": "v0.3.4",
+          "date": "2026-04-10",
+          "name": "v0.3.4",
+          "is_prerelease": false
+        },
+        {
+          "tag": "v0.3.0",
+          "date": "2026-04-08",
+          "name": "v0.3.0",
+          "is_prerelease": false
+        }
       ],
       "total_count": 10
     },
-
     "community_profile": {
       "health_percentage": null,
       "has_code_of_conduct": false,
@@ -97,30 +127,44 @@
       "has_security_policy": true,
       "license_spdx": "MIT"
     },
-
     "security_advisories": {
       "count": 0,
       "entries": []
     },
-
     "workflows": {
       "entries": [
-        {"name": "Test Suite", "path": ".github/workflows/test.yml"},
-        {"name": "publish", "path": ".github/workflows/publish.yml"},
-        {"name": "release", "path": ".github/workflows/release.yml"},
-        {"name": "deploy-docs", "path": ".github/workflows/deploy-docs.yml"}
+        {
+          "name": "Test Suite",
+          "path": ".github/workflows/test.yml"
+        },
+        {
+          "name": "publish",
+          "path": ".github/workflows/publish.yml"
+        },
+        {
+          "name": "release",
+          "path": ".github/workflows/release.yml"
+        },
+        {
+          "name": "deploy-docs",
+          "path": ".github/workflows/deploy-docs.yml"
+        }
       ],
       "count": 4,
       "pull_request_target_count": 0
     },
-
     "workflow_contents": {
       "entries": [
         {
           "path": ".github/workflows/release.yml",
           "has_explicit_permissions": true,
-          "permissions": {"contents": "write"},
-          "triggers": ["push: tags: v*", "workflow_dispatch"],
+          "permissions": {
+            "contents": "write"
+          },
+          "triggers": [
+            "push: tags: v*",
+            "workflow_dispatch"
+          ],
           "uses_oidc": false,
           "sha_pinned_actions": false,
           "note": "update-homebrew job runs update-homebrew.sh then commits directly to dev via GITHUB_TOKEN"
@@ -143,7 +187,6 @@
         }
       ]
     },
-
     "branch_protection": {
       "classic": {
         "status": 404,
@@ -163,106 +206,198 @@
         "raw_response": "[]"
       }
     },
-
     "codeowners": {
       "found": false,
       "path": null,
       "content": null,
-      "locations_checked": ["CODEOWNERS", ".github/CODEOWNERS", "docs/CODEOWNERS", ".gitlab/CODEOWNERS"]
+      "locations_checked": [
+        "CODEOWNERS",
+        ".github/CODEOWNERS",
+        "docs/CODEOWNERS",
+        ".gitlab/CODEOWNERS"
+      ]
     },
-
     "dependencies": {
-      "manifest_files": ["package.json"],
-      "runtime": ["claude-agent-sdk"],
+      "manifest_files": [
+        {
+          "path": "package.json",
+          "format": null
+        }
+      ],
+      "runtime": [
+        "claude-agent-sdk"
+      ],
       "runtime_count": 1,
       "dev": [],
       "dev_count": null,
       "peer": [],
-      "dependabot": {
+      "dependabot_alerts": {
         "status": "unknown",
-        "error_message": "403 — token lacks admin scope; alert state unknown. No .github/dependabot.yml config file found.",
+        "error_message": "403 \u2014 token lacks admin scope; alert state unknown. No .github/dependabot.yml config file found.",
         "alerts": []
       },
-      "osv_dev": {
+      "osv_lookups": {
         "queried": false,
         "packages_queried": null,
         "total_vulns": null,
         "per_package": []
       }
     },
-
     "code_patterns": {
       "dangerous_primitives": {
-        "hits": [],
-        "hit_count": 0
+        "scanned": true
       },
-      "executable_files": {
-        "entries": [
-          "packages/providers/src/codex/binary-resolver.ts",
-          ".github/workflows/release.yml",
-          "scripts/install.sh",
-          "scripts/install.ps1",
-          "Dockerfile",
-          "docker-entrypoint.sh",
-          "CLAUDE.md",
-          "scripts/build-binaries.sh"
-        ]
-      },
-      "install_hooks": {
-        "found": false,
-        "hooks": []
-      },
+      "executable_files": [
+        {
+          "path": "packages/providers/src/codex/binary-resolver.ts"
+        },
+        {
+          "path": ".github/workflows/release.yml"
+        },
+        {
+          "path": "scripts/install.sh"
+        },
+        {
+          "path": "scripts/install.ps1"
+        },
+        {
+          "path": "Dockerfile"
+        },
+        {
+          "path": "docker-entrypoint.sh"
+        },
+        {
+          "path": "CLAUDE.md"
+        },
+        {
+          "path": "scripts/build-binaries.sh"
+        }
+      ],
+      "install_hooks": [],
       "readme_paste_blocks": {
-        "found": false,
-        "blocks": []
+        "entries_count": 0,
+        "entries": []
       },
-      "agent_rule_files": {
-        "entries": ["CLAUDE.md"],
-        "count": 1,
-        "total_bytes": 813
-      }
+      "agent_rule_files": [
+        {
+          "path": "CLAUDE.md"
+        }
+      ]
     },
-
     "pr_review": {
       "sample_size": 160,
       "total_closed_prs": 461,
       "prs": [
-        {"number": 1250, "author": "shaun0927", "merger": null, "formal_review": null, "any_review": false, "self_merge": false},
-        {"number": 1217, "author": "Wirasm", "merger": "Wirasm", "formal_review": null, "any_review": false, "self_merge": true},
-        {"number": 1169, "author": "Wirasm", "merger": "Wirasm", "formal_review": null, "any_review": false, "self_merge": true},
-        {"number": 1153, "author": "external_contributor", "merger": null, "formal_review": null, "any_review": false, "self_merge": false},
-        {"number": 1137, "author": "Wirasm", "merger": "Wirasm", "formal_review": null, "any_review": false, "self_merge": true}
+        {
+          "number": 1250,
+          "author": "shaun0927",
+          "merger": null,
+          "formal_review": null,
+          "any_review": false,
+          "self_merge": false
+        },
+        {
+          "number": 1217,
+          "author": "Wirasm",
+          "merger": "Wirasm",
+          "formal_review": null,
+          "any_review": false,
+          "self_merge": true
+        },
+        {
+          "number": 1169,
+          "author": "Wirasm",
+          "merger": "Wirasm",
+          "formal_review": null,
+          "any_review": false,
+          "self_merge": true
+        },
+        {
+          "number": 1153,
+          "author": "external_contributor",
+          "merger": null,
+          "formal_review": null,
+          "any_review": false,
+          "self_merge": false
+        },
+        {
+          "number": 1137,
+          "author": "Wirasm",
+          "merger": "Wirasm",
+          "formal_review": null,
+          "any_review": false,
+          "self_merge": true
+        }
       ],
       "formal_review_rate": 8,
       "any_review_rate": 58,
       "self_merge_rate": null,
       "security_relevant_prs": [
-        {"number": 1250, "title": "Pin Codex vendor binary sha256 on first use (fixes #1245)", "author": "shaun0927", "merger": null},
-        {"number": 1217, "title": "Replace Claude SDK embed with explicit binary-path resolver", "author": "Wirasm", "merger": "Wirasm"},
-        {"number": 1169, "title": "Prevent target repo .env from leaking into subprocesses (#1135)", "author": "Wirasm", "merger": "Wirasm"},
-        {"number": 1153, "title": "fix: override axios to ^1.15.0 for CVE-2025-62718", "author": "external_contributor", "merger": null},
-        {"number": 1137, "title": "Extract providers from @archon/core into @archon/providers", "author": "Wirasm", "merger": "Wirasm"}
+        {
+          "number": 1250,
+          "title": "Pin Codex vendor binary sha256 on first use (fixes #1245)",
+          "author": "shaun0927",
+          "merger": null
+        },
+        {
+          "number": 1217,
+          "title": "Replace Claude SDK embed with explicit binary-path resolver",
+          "author": "Wirasm",
+          "merger": "Wirasm"
+        },
+        {
+          "number": 1169,
+          "title": "Prevent target repo .env from leaking into subprocesses (#1135)",
+          "author": "Wirasm",
+          "merger": "Wirasm"
+        },
+        {
+          "number": 1153,
+          "title": "fix: override axios to ^1.15.0 for CVE-2025-62718",
+          "author": "external_contributor",
+          "merger": null
+        },
+        {
+          "number": 1137,
+          "title": "Extract providers from @archon/core into @archon/providers",
+          "author": "Wirasm",
+          "merger": "Wirasm"
+        }
       ]
     },
-
     "open_prs": {
       "entries": [
-        {"number": 1250, "title": "Pin Codex vendor binary sha256 on first use", "author": "shaun0927"},
-        {"number": 1153, "title": "fix: override axios to ^1.15.0 for CVE-2025-62718", "author": "external_contributor"}
+        {
+          "number": 1250,
+          "title": "Pin Codex vendor binary sha256 on first use",
+          "author": "shaun0927"
+        },
+        {
+          "number": 1153,
+          "title": "fix: override axios to ^1.15.0 for CVE-2025-62718",
+          "author": "external_contributor"
+        }
       ],
       "count": 20
     },
-
     "closed_not_merged_prs": {
       "entries": [],
       "count": null
     },
-
     "issues_and_commits": {
       "open_security_issues": [
-        {"number": 1245, "title": "security(providers): codex vendor binary resolver lacks hash/signature pinning — LPE via writable vendor dir"},
-        {"number": 1246, "title": "archon serve web-dist integrity reduces to trusting one GitHub Releases URL"},
-        {"number": 1053, "title": "axios CVE-2025-62718 NO_PROXY bypass"}
+        {
+          "number": 1245,
+          "title": "security(providers): codex vendor binary resolver lacks hash/signature pinning \u2014 LPE via writable vendor dir"
+        },
+        {
+          "number": 1246,
+          "title": "archon serve web-dist integrity reduces to trusting one GitHub Releases URL"
+        },
+        {
+          "number": 1053,
+          "title": "axios CVE-2025-62718 NO_PROXY bypass"
+        }
       ],
       "open_issues_count": null,
       "closed_issues": [],
@@ -270,7 +405,6 @@
       "recent_commits": [],
       "commit_signing_rate": null
     },
-
     "monorepo": {
       "is_monorepo": true,
       "inner_packages": [
@@ -288,7 +422,6 @@
       ],
       "lifecycle_script_hits": []
     },
-
     "distribution_channels": {
       "channels": [
         {
@@ -316,11 +449,10 @@
           "install_path_verified": true,
           "artifact_verified": false,
           "pinned": false,
-          "note": ":latest rolling tag available — prefer explicit semver tag"
+          "note": ":latest rolling tag available \u2014 prefer explicit semver tag"
         }
       ]
     },
-
     "install_script_analysis": {
       "scripts": [
         {
@@ -341,14 +473,13 @@
         }
       ]
     },
-
     "artifact_verification": {
       "per_channel": [
         {
           "channel": "curl-pipe-verified",
           "method": "sha256",
           "result": "install_path_verified_only",
-          "note": "Binary sha256-verified against checksums.txt from same GitHub Releases URL — both from same origin; independent attestation not established."
+          "note": "Binary sha256-verified against checksums.txt from same GitHub Releases URL \u2014 both from same origin; independent attestation not established."
         },
         {
           "channel": "homebrew",
@@ -364,14 +495,17 @@
         }
       ]
     },
-
     "batch_merge_detection": {
       "detected": true,
       "pr_groups": [
-        {"label": "PR #1114 — Release 0.3.6 batch merge to dev", "pr_numbers": [1114]}
+        {
+          "label": "PR #1114 \u2014 Release 0.3.6 batch merge to dev",
+          "pr_numbers": [
+            1114
+          ]
+        }
       ]
     },
-
     "defensive_configs": {
       "entries": [
         {
@@ -388,7 +522,6 @@
         }
       ]
     },
-
     "ossf_scorecard": {
       "queried": true,
       "indexed": false,
@@ -396,25 +529,23 @@
       "checks": [],
       "raw_response": "{\"code\":404}"
     },
-
     "gitleaks": {
       "available": false,
       "ran": false,
       "findings_count": null,
       "findings": []
     },
-
     "windows_patterns": {
       "hits": [],
       "hit_count": 0
     },
-
     "prompt_injection_scan": {
-      "scanned_files": ["CLAUDE.md"],
+      "scanned_files": [
+        "CLAUDE.md"
+      ],
       "injection_signals": [],
       "signal_count": 0
     },
-
     "coverage_affirmations": {
       "prompt_injection_scan_completed": true,
       "windows_surface_coverage": true,
@@ -423,7 +554,6 @@
       "gitleaks_explanation": "gitleaks not available in scan environment; secrets-in-history not scanned"
     }
   },
-
   "phase_2_validation": {
     "sha_consistent": true,
     "required_fields_complete": true,
@@ -432,7 +562,6 @@
     "validation_passed": true,
     "validation_errors": []
   },
-
   "phase_3_computed": {
     "c20_severity": {
       "no_classic_protection": true,
@@ -443,81 +572,64 @@
       "ships_executable_code": true,
       "result": "Critical"
     },
-
-    "scorecard_cells": {
-      "does_anyone_check_the_code": {
-        "color": "red",
-        "short_answer": "No upstream gate — 8% formal / 58% any · no branch protection · no CODEOWNERS",
-        "inputs": {
-          "formal_review_rate": 8,
-          "any_review_rate": 58,
-          "has_branch_protection": false,
-          "has_codeowners": false
-        }
-      },
-      "do_they_fix_problems_quickly": {
-        "color": "amber",
-        "short_answer": "Open fixes not merged yet — 3 open security issues; team is actively working but PRs #1250 and #1153 are unmerged",
-        "inputs": {
-          "open_security_issue_count": 3,
-          "oldest_open_cve_pr_age_days": 3
-        }
-      },
-      "do_they_tell_you_about_problems": {
-        "color": "green",
-        "short_answer": "Yes — SECURITY.md with real private disclosure (cole@dynamous.ai + GHSA), public issues filed with evidence",
-        "inputs": {
-          "has_security_policy": true,
-          "published_advisory_count": 0,
-          "has_silent_fixes": false
-        }
-      },
-      "is_it_safe_out_of_the_box": {
-        "color": "red",
-        "short_answer": "No — Critical finding applies to default install (F0 governance gap); Codex shared-host LPE open (F1)",
-        "inputs": {
-          "all_channels_pinned": false,
-          "artifact_verified": false,
-          "has_warning_on_install_path": true
-        }
-      }
-    },
-
     "solo_maintainer": {
       "top_contributor_share": null,
       "is_solo": false,
-      "verbatim_sentence": "Wirasm (Rasmus Widing, 791 commits) is the de facto dev lead; coleam00 is owner with 343 commits — owner-merges-contributor-work arrangement."
+      "verbatim_sentence": "Wirasm (Rasmus Widing, 791 commits) is the de facto dev lead; coleam00 is owner with 343 commits \u2014 owner-merges-contributor-work arrangement."
     },
-
     "exhibit_grouping": {
       "total_findings": 4,
       "threshold_met": false,
       "exhibits": []
     },
-
     "boundary_cases": {
       "cases": []
     },
-
     "coverage_status": {
       "cells": [
-        { "name": "Tarball extraction", "status": "ok", "detail": "769 files, pinned to 3dedc22" },
-        { "name": "OSSF Scorecard", "status": "not_indexed", "detail": "API returned 404 — not yet indexed" },
-        { "name": "osv.dev", "status": "not_queried", "detail": "Transitive surface covered by CVE watch (F3)" },
-        { "name": "Secrets-in-history (gitleaks)", "status": "not_available", "detail": "gitleaks not installed" },
-        { "name": "API rate budget", "status": "ok", "detail": "5000/5000 remaining" },
-        { "name": "Dependabot alerts", "status": "blocked", "detail": "403 — admin scope required; no dependabot.yml in repo" },
-        { "name": "Monorepo inner packages", "status": "partial", "detail": "Root + root-lock inspected; 11 inner packages not fully enumerated" }
+        {
+          "name": "Tarball extraction",
+          "status": "ok",
+          "detail": "769 files, pinned to 3dedc22"
+        },
+        {
+          "name": "OSSF Scorecard",
+          "status": "not_indexed",
+          "detail": "API returned 404 \u2014 not yet indexed"
+        },
+        {
+          "name": "osv.dev",
+          "status": "not_queried",
+          "detail": "Transitive surface covered by CVE watch (F3)"
+        },
+        {
+          "name": "Secrets-in-history (gitleaks)",
+          "status": "not_available",
+          "detail": "gitleaks not installed"
+        },
+        {
+          "name": "API rate budget",
+          "status": "ok",
+          "detail": "5000/5000 remaining"
+        },
+        {
+          "name": "Dependabot alerts",
+          "status": "blocked",
+          "detail": "403 \u2014 admin scope required; no dependabot.yml in repo"
+        },
+        {
+          "name": "Monorepo inner packages",
+          "status": "partial",
+          "detail": "Root + root-lock inspected; 11 inner packages not fully enumerated"
+        }
       ]
     },
-
     "methodology": {
       "scanner_version": "V2.3-post-R3",
       "prompt_version": "V2.3",
       "guide_version": "V0.1"
     }
   },
-
   "phase_4_structured_llm": {
     "findings": {
       "entries": [
@@ -529,22 +641,49 @@
           "status": "active",
           "provenance": "rule-applied",
           "rule_id": "C20",
-          "evidence_refs": ["E5"],
+          "evidence_refs": [
+            "E5"
+          ],
           "action_hint": "Enable branch protection on dev (require PR review + status checks) and add .github/CODEOWNERS covering packages/providers/ + .github/workflows/ + install scripts.",
           "kind": "Structural",
           "duration_label": "Continuous",
           "date_label": "Since repo creation",
-          "how_to_fix": "GitHub *Settings → Branches → Add branch protection rule*. For `dev`: require pull request reviews (1 approver minimum), require status checks (the existing `Test Suite` workflow), require branches to be up to date before merging, do not allow bypassing. Also add `.github/CODEOWNERS` with at minimum: `packages/providers/ @coleam00`, `.github/workflows/ @coleam00`, `scripts/install* @coleam00`.",
+          "how_to_fix": "GitHub *Settings \u2192 Branches \u2192 Add branch protection rule*. For `dev`: require pull request reviews (1 approver minimum), require status checks (the existing `Test Suite` workflow), require branches to be up to date before merging, do not allow bypassing. Also add `.github/CODEOWNERS` with at minimum: `packages/providers/ @coleam00`, `.github/workflows/ @coleam00`, `scripts/install* @coleam00`.",
           "meta_table": [
-            { "label": "Classic branch protection", "value": "❌ 404 on `dev` and `main`" },
-            { "label": "Rulesets", "value": "❌ `[]` — zero rulesets" },
-            { "label": "CODEOWNERS", "value": "❌ Absent (4 locations checked)" },
-            { "label": "Stars (blast radius)", "value": "18,300" },
-            { "label": "Releases in last 30 days", "value": "⚠ 8 (v0.3.0 → v0.3.6)" },
-            { "label": "Active executable surface", "value": "CLI binaries + server + web UI" }
+            {
+              "label": "Classic branch protection",
+              "value": "\u274c 404 on `dev` and `main`"
+            },
+            {
+              "label": "Rulesets",
+              "value": "\u274c `[]` \u2014 zero rulesets"
+            },
+            {
+              "label": "CODEOWNERS",
+              "value": "\u274c Absent (4 locations checked)"
+            },
+            {
+              "label": "Stars (blast radius)",
+              "value": "18,300"
+            },
+            {
+              "label": "Releases in last 30 days",
+              "value": "\u26a0 8 (v0.3.0 \u2192 v0.3.6)"
+            },
+            {
+              "label": "Active executable surface",
+              "value": "CLI binaries + server + web UI"
+            }
           ],
-          "threat_model_paths": ["phishing", "stale_token", "session_compromise", "malicious_extension", "sloppy_review", "runner_compromise"],
-          "threat_model_context": "Does NOT require xz-utils-level sophistication. Concrete paths: (1) credential phishing against coleam00 or Wirasm; (2) stale OAuth token reuse from a developer machine or old CI system; (3) compromised browser session cookie via malicious extension; (4) malicious IDE extension running as the maintainer; (5) sloppy review of an attacker-submitted PR — 5 of 6 flagged security-adjacent PRs were Wirasm-self-submitted-and-merged; (6) compromised self-hosted runner.",
+          "threat_model_paths": [
+            "phishing",
+            "stale_token",
+            "session_compromise",
+            "malicious_extension",
+            "sloppy_review",
+            "runner_compromise"
+          ],
+          "threat_model_context": "Does NOT require xz-utils-level sophistication. Concrete paths: (1) credential phishing against coleam00 or Wirasm; (2) stale OAuth token reuse from a developer machine or old CI system; (3) compromised browser session cookie via malicious extension; (4) malicious IDE extension running as the maintainer; (5) sloppy review of an attacker-submitted PR \u2014 5 of 6 flagged security-adjacent PRs were Wirasm-self-submitted-and-merged; (6) compromised self-hosted runner.",
           "what_this_means": "When you install Archon, you are trusting the maintainer's account security as tightly as you'd trust your own laptop's password. There is no automated gate that would catch a bad push before it reaches your next install.",
           "what_this_does_not_mean": "This finding is about the upstream process gap, not current code shipping something harmful. The install script sha256-verifies the binary; the Codex LPE (F1) requires local write access to your home directory."
         },
@@ -552,25 +691,45 @@
           "id": "F1",
           "severity": "Warning",
           "category": "code/agent-rule-injection",
-          "title": "Codex vendor binary resolver has no hash pinning — local privilege escalation via writable vendor dir (#1245)",
+          "title": "Codex vendor binary resolver has no hash pinning \u2014 local privilege escalation via writable vendor dir (#1245)",
           "status": "active",
           "provenance": "observed",
           "auto_load_tier": "tier_1_always",
-          "evidence_refs": ["E1"],
+          "evidence_refs": [
+            "E1"
+          ],
           "action_hint": "Don't run Codex workflows on shared hosts until PR #1250 merges. Single-user laptops: low risk.",
           "kind": "Vulnerability",
           "duration_label": "Live now",
           "date_label": "Filed 2026-04-16",
-          "how_to_fix": "Wait for PR #1250 to merge. Or manually verify `~/.archon/vendor/codex/` permissions — if running on a shared host, disable the Codex provider until the fix lands.",
+          "how_to_fix": "Wait for PR #1250 to merge. Or manually verify `~/.archon/vendor/codex/` permissions \u2014 if running on a shared host, disable the Codex provider until the fix lands.",
           "meta_table": [
-            { "label": "Reported by", "value": "shaun0927 — issue #1245" },
-            { "label": "Fix proposed in", "value": "PR #1250 (open 2026-04-16)" },
-            { "label": "Attack surface", "value": "⚠ Shared hosts only" },
-            { "label": "Privilege gained", "value": "❌ Your user, full" },
-            { "label": "Disclosure channel", "value": "✅ Public issue (SECURITY.md compliant)" }
+            {
+              "label": "Reported by",
+              "value": "shaun0927 \u2014 issue #1245"
+            },
+            {
+              "label": "Fix proposed in",
+              "value": "PR #1250 (open 2026-04-16)"
+            },
+            {
+              "label": "Attack surface",
+              "value": "\u26a0 Shared hosts only"
+            },
+            {
+              "label": "Privilege gained",
+              "value": "\u274c Your user, full"
+            },
+            {
+              "label": "Disclosure channel",
+              "value": "\u2705 Public issue (SECURITY.md compliant)"
+            }
           ],
-          "threat_model_paths": ["runner_compromise", "other"],
-          "threat_model_context": "Attacker must already have some local write access — dev container sharing a home mount, misconfigured Docker volume, prior malware, admin user on shared workstation. Not a remote-unauth attack.",
+          "threat_model_paths": [
+            "runner_compromise",
+            "other"
+          ],
+          "threat_model_context": "Attacker must already have some local write access \u2014 dev container sharing a home mount, misconfigured Docker volume, prior malware, admin user on shared workstation. Not a remote-unauth attack.",
           "what_this_means": "On a multi-user machine, another user who can write to ~/.archon/vendor/codex/ can drop a rigged binary that runs as you on your next Codex workflow, with your full environment and credentials.",
           "what_this_does_not_mean": "This is not a remote code execution vulnerability. Single-user personal laptops are low risk because nobody else has write access to your home directory."
         },
@@ -578,73 +737,108 @@
           "id": "F4",
           "severity": "Warning",
           "category": "governance/review-rate",
-          "title": "8% formal review rate, no branch protection, no CODEOWNERS — governance process gaps persist",
+          "title": "8% formal review rate, no branch protection, no CODEOWNERS \u2014 governance process gaps persist",
           "status": "active",
           "provenance": "synthesized",
-          "evidence_refs": ["E3", "E5"],
+          "evidence_refs": [
+            "E3",
+            "E5"
+          ],
           "action_hint": "Practical reviewer density is higher than it looks (Wirasm is an active second pair of eyes), but the formal gates are all missing.",
           "kind": "Structural",
           "duration_label": "Since repo creation",
           "date_label": "Ongoing",
           "how_to_fix": "Enable branch protection on dev. Add CODEOWNERS. Consider enabling a dependabot.yml for automated CVE PR opening.",
           "meta_table": [
-            { "label": "Merged PRs (last 300)", "value": "160" },
-            { "label": "Formal review rate", "value": "❌ 8% (13/160)" },
-            { "label": "Any-review rate", "value": "⚠ 58% (93/160)" },
-            { "label": "Branch protection", "value": "❌ None (dev, main)" },
-            { "label": "CODEOWNERS", "value": "❌ None anywhere" },
-            { "label": "Practical reviewer", "value": "✅ Wirasm (lead) + coleam00 (owner)" }
+            {
+              "label": "Merged PRs (last 300)",
+              "value": "160"
+            },
+            {
+              "label": "Formal review rate",
+              "value": "\u274c 8% (13/160)"
+            },
+            {
+              "label": "Any-review rate",
+              "value": "\u26a0 58% (93/160)"
+            },
+            {
+              "label": "Branch protection",
+              "value": "\u274c None (dev, main)"
+            },
+            {
+              "label": "CODEOWNERS",
+              "value": "\u274c None anywhere"
+            },
+            {
+              "label": "Practical reviewer",
+              "value": "\u2705 Wirasm (lead) + coleam00 (owner)"
+            }
           ],
-          "threat_model_paths": ["sloppy_review", "phishing"],
+          "threat_model_paths": [
+            "sloppy_review",
+            "phishing"
+          ],
           "threat_model_context": "The 8% formal gate means 92% of merges could land without a recorded second-pair-of-eyes decision. Combined with no branch protection and no CODEOWNERS, a credential-compromised PR to a critical path (providers, install scripts, workflows) would not be blocked by any automated gate."
         },
         {
           "id": "F7",
           "severity": "OK",
           "category": "maintainer/active-security-work",
-          "title": "Active security work pattern — recent PRs show real engineering care",
+          "title": "Active security work pattern \u2014 recent PRs show real engineering care",
           "status": "informational",
           "provenance": "synthesized",
           "evidence_refs": [],
           "action_hint": "No action needed. Positive signal: the team treats security PRs as first-class and merges them.",
           "kind": "Hygiene",
-          "duration_label": "2025–2026",
+          "duration_label": "2025\u20132026",
           "date_label": "Ongoing",
           "meta_table": [
-            { "label": "PR #1169", "value": "✅ Merged — prevents .env leaks into subprocesses (closes #1135)" },
-            { "label": "PR #1217", "value": "✅ Merged — explicit CLAUDE_BIN_PATH allowlist replaces SDK auto-resolution" },
-            { "label": "SECURITY.md", "value": "✅ Real private disclosure policy (email + GHSA)" },
-            { "label": "exec.ts pattern", "value": "✅ Uses execFile (not shell exec) — avoids interpolation injection" },
-            { "label": "Docker privilege drop", "value": "✅ gosu drops root to appuser" }
+            {
+              "label": "PR #1169",
+              "value": "\u2705 Merged \u2014 prevents .env leaks into subprocesses (closes #1135)"
+            },
+            {
+              "label": "PR #1217",
+              "value": "\u2705 Merged \u2014 explicit CLAUDE_BIN_PATH allowlist replaces SDK auto-resolution"
+            },
+            {
+              "label": "SECURITY.md",
+              "value": "\u2705 Real private disclosure policy (email + GHSA)"
+            },
+            {
+              "label": "exec.ts pattern",
+              "value": "\u2705 Uses execFile (not shell exec) \u2014 avoids interpolation injection"
+            },
+            {
+              "label": "Docker privilege drop",
+              "value": "\u2705 gosu drops root to appuser"
+            }
           ]
         }
       ]
     },
-
     "general_vuln_severity": {
       "assessments": []
     },
-
     "section_actions": {
       "entries": [
         {
           "section": "01",
-          "action": "Shared-host Codex users: hold until PR #1250 merges (F1 LPE). Single-user installs: safe today — pin to a tagged release. Step 3: nudge maintainers to merge axios CVE patch and enable branch protection."
+          "action": "Shared-host Codex users: hold until PR #1250 merges (F1 LPE). Single-user installs: safe today \u2014 pin to a tagged release. Step 3: nudge maintainers to merge axios CVE patch and enable branch protection."
         }
       ]
     },
-
     "section_leads": {
       "section_01": {
-        "pill_row": "🚨 Hold if using Codex on shared hosts · ⚠ 1 consumer mitigation · 3 steps",
+        "pill_row": "\ud83d\udea8 Hold if using Codex on shared hosts \u00b7 \u26a0 1 consumer mitigation \u00b7 3 steps",
         "summary": "**Most urgent:** if you run Archon with the Codex provider on any machine another user can log into, wait for PR #1250 before trusting Codex runs (Step 1). For single-user laptops (Step 2) you're fine to install today via the pinned install script. Step 3 is the dependency patch to watch."
       },
       "section_02": {
-        "pill_row": "🚨 1 Critical · ⚠ 2 Warning · ✓ 1 OK",
-        "summary": "9 findings total in the full scan (4 kept in this subset). **The Critical finding (F0) is structural:** no branch protection on `dev`, no rulesets, no CODEOWNERS — a single maintainer-credential compromise ships arbitrary code to every install on the next release. Start with F0 (Critical) and F1 (Codex LPE) if time-pressed."
+        "pill_row": "\ud83d\udea8 1 Critical \u00b7 \u26a0 2 Warning \u00b7 \u2713 1 OK",
+        "summary": "9 findings total in the full scan (4 kept in this subset). **The Critical finding (F0) is structural:** no branch protection on `dev`, no rulesets, no CODEOWNERS \u2014 a single maintainer-credential compromise ships arbitrary code to every install on the next release. Start with F0 (Critical) and F1 (Codex LPE) if time-pressed."
       }
     },
-
     "split_axis_decision": {
       "should_split": true,
       "axis": "deployment",
@@ -654,22 +848,21 @@
           "audience": "Installing today on a personal machine",
           "verdict_level": "Critical",
           "headline": "Install pinned to a tagged release, and know the trust chain terminates at the maintainer's credentials",
-          "summary": "Install scripts sha256-verify the binary against checksums.txt — but both come from the same GitHub Releases URL. No branch protection on `dev`, no rulesets, no CODEOWNERS (F0 Critical). A single compromised maintainer credential ships code to every install on the next release with no gate. If you install anyway, pin to a specific tag (not `main`/`dev`) and subscribe to repo releases."
+          "summary": "Install scripts sha256-verify the binary against checksums.txt \u2014 but both come from the same GitHub Releases URL. No branch protection on `dev`, no rulesets, no CODEOWNERS (F0 Critical). A single compromised maintainer credential ships code to every install on the next release with no gate. If you install anyway, pin to a specific tag (not `main`/`dev`) and subscribe to repo releases."
         },
         {
           "audience": "Shared host / multi-tenant / using Codex provider",
           "verdict_level": "Critical",
           "headline": "Do not run in production until PR #1250 merges",
-          "summary": "Two Critical surfaces stack here: F0 (no governance gate upstream) plus F1 (Codex vendor binary resolver has no hash/signature pinning — local attacker with write access to ~/.archon/vendor/codex/ gets arbitrary-code execution under your user). Also watch PR #1153 (axios CVE-2025-62718)."
+          "summary": "Two Critical surfaces stack here: F0 (no governance gate upstream) plus F1 (Codex vendor binary resolver has no hash/signature pinning \u2014 local attacker with write access to ~/.archon/vendor/codex/ gets arbitrary-code execution under your user). Also watch PR #1153 (axios CVE-2025-62718)."
         }
       ]
     },
-
     "priority_evidence": {
       "selections": [
         {
           "evidence_id": "E1",
-          "reason": "Falsification: if the Codex binary resolver added sha256 pinning (which PR #1250 proposes), F1 would close. This is the single most actionable open item — it has a specific fix in review."
+          "reason": "Falsification: if the Codex binary resolver added sha256 pinning (which PR #1250 proposes), F1 would close. This is the single most actionable open item \u2014 it has a specific fix in review."
         },
         {
           "evidence_id": "E5",
@@ -681,7 +874,6 @@
         }
       ]
     },
-
     "threat_models": {
       "per_finding": [
         {
@@ -706,7 +898,6 @@
         }
       ]
     },
-
     "action_steps": {
       "entries": [
         {
@@ -721,7 +912,7 @@
         {
           "step": 2,
           "type": "install",
-          "headline": "Install Archon on your own machine — the install script verifies checksums",
+          "headline": "Install Archon on your own machine \u2014 the install script verifies checksums",
           "severity": "OK",
           "non_technical": "Installing now is fine on a personal laptop. The install script sha256-verifies the binary before running it.",
           "command": "curl -fsSL https://archon.diy/install | bash\narchon version",
@@ -738,45 +929,81 @@
         }
       ]
     },
-
     "timeline_events": {
       "entries": [
-        {"date": "2025-02-07", "label": "CREATED", "tone": "neutral", "note": "Repo created by coleam00 (Cole Medin at Dynamous). Initial architecture: Bun + TypeScript monorepo with workspace packages."},
-        {"date": "2026-03-01", "label": "SECURITY.MD ADDED", "tone": "positive", "note": "Repo adds SECURITY.md at root with real private disclosure policy (email + GHSA). The difference between caveman no-advisory culture and real vulnerability management."},
-        {"date": "2026-04-04", "label": "ENV LEAK FIXED", "tone": "positive", "note": "PR #1169 merges — prevents target-repo .env files from leaking into Archon-spawned subprocesses. Real security refactor. Closes #1135."},
-        {"date": "2026-04-08", "label": "RAPID RELEASES", "tone": "neutral", "note": "v0.3.0 → v0.3.6 in 4 days. All tagged. Homebrew formula auto-updated per release. Docker images published with semver tags to GHCR."},
-        {"date": "2026-04-12", "label": "RESOLVER HARDENED", "tone": "positive", "note": "PR #1217 merges — explicit CLAUDE_BIN_PATH allowlist replaces SDK auto-resolution. Includes positive and negative CI smoke tests."},
-        {"date": "2026-04-13", "label": "AXIOS CVE OPEN", "tone": "negative", "note": "External contributor files PR #1153 for CVE-2025-62718. Still open at scan time — 3 days with no merge. No dependabot config to have auto-opened it."},
-        {"date": "2026-04-16", "label": "CODEX LPE FILED", "tone": "negative", "note": "Reporter shaun0927 files #1245 (Codex vendor binary LPE) and #1246 (web-dist attestation). Fix for #1245 proposed as PR #1250 the same day. Both open at scan time."}
+        {
+          "date": "2025-02-07",
+          "label": "CREATED",
+          "tone": "neutral",
+          "note": "Repo created by coleam00 (Cole Medin at Dynamous). Initial architecture: Bun + TypeScript monorepo with workspace packages."
+        },
+        {
+          "date": "2026-03-01",
+          "label": "SECURITY.MD ADDED",
+          "tone": "positive",
+          "note": "Repo adds SECURITY.md at root with real private disclosure policy (email + GHSA). The difference between caveman no-advisory culture and real vulnerability management."
+        },
+        {
+          "date": "2026-04-04",
+          "label": "ENV LEAK FIXED",
+          "tone": "positive",
+          "note": "PR #1169 merges \u2014 prevents target-repo .env files from leaking into Archon-spawned subprocesses. Real security refactor. Closes #1135."
+        },
+        {
+          "date": "2026-04-08",
+          "label": "RAPID RELEASES",
+          "tone": "neutral",
+          "note": "v0.3.0 \u2192 v0.3.6 in 4 days. All tagged. Homebrew formula auto-updated per release. Docker images published with semver tags to GHCR."
+        },
+        {
+          "date": "2026-04-12",
+          "label": "RESOLVER HARDENED",
+          "tone": "positive",
+          "note": "PR #1217 merges \u2014 explicit CLAUDE_BIN_PATH allowlist replaces SDK auto-resolution. Includes positive and negative CI smoke tests."
+        },
+        {
+          "date": "2026-04-13",
+          "label": "AXIOS CVE OPEN",
+          "tone": "negative",
+          "note": "External contributor files PR #1153 for CVE-2025-62718. Still open at scan time \u2014 3 days with no merge. No dependabot config to have auto-opened it."
+        },
+        {
+          "date": "2026-04-16",
+          "label": "CODEX LPE FILED",
+          "tone": "negative",
+          "note": "Reporter shaun0927 files #1245 (Codex vendor binary LPE) and #1246 (web-dist attestation). Fix for #1245 proposed as PR #1250 the same day. Both open at scan time."
+        }
       ]
     },
-
-    "timeline_intro": "7 events from repo creation to scan day. **Peak concern 2026-04-13 → 2026-04-16** (axios CVE open 3 days, Codex LPE filed the scan day). The team shipped real security hardening in #1169 + #1217 during the same window, so the signal is actively-working not stuck.",
-
+    "timeline_intro": "7 events from repo creation to scan day. **Peak concern 2026-04-13 \u2192 2026-04-16** (axios CVE open 3 days, Codex LPE filed the scan day). The team shipped real security hardening in #1169 + #1217 during the same window, so the signal is actively-working not stuck.",
     "capability_assessments": {
       "per_file": [
         {
           "path": "packages/providers/src/codex/binary-resolver.ts",
-          "capabilities": ["arbitrary_code_exec", "credential_access"],
+          "capabilities": [
+            "arbitrary_code_exec",
+            "credential_access"
+          ],
           "notes": "Resolves Codex CLI path and hands to SDK without hash verification. On shared hosts with writable vendor dir, arbitrary code execution as current user."
         },
         {
           "path": "CLAUDE.md",
-          "capabilities": ["prompt_injection_channel"],
+          "capabilities": [
+            "prompt_injection_channel"
+          ],
           "notes": "Tier 1 auto-loaded agent-rule file. Content is benign development conventions today; leverage is 1:every-contributor."
         }
       ]
     },
-
     "executable_file_inventory": {
-      "lead": "⚠ 2 Warning · ℹ 2 Info · ✓ 4 OK — 8 executable surfaces cataloged (7 scripts + 1 Tier-1 auto-loaded rule file). 2 need attention: the Codex binary resolver (F1 target) and the release.yml homebrew-update job that commits to dev without a review gate.",
-      "layer1_summary": "**8 executable surfaces inventoried.** The 2 Warning items are maintainer-side: merge PR #1250 (Codex binary pinning) and optionally gate the Homebrew auto-commit path in release.yml. The 4 OK items (install.sh, install.ps1, Dockerfile, docker-entrypoint.sh) are clean and sha256-verified where applicable. CLAUDE.md is a Tier-1 auto-loaded agent rule file — content benign today, leverage is every contributor session.",
+      "lead": "\u26a0 2 Warning \u00b7 \u2139 2 Info \u00b7 \u2713 4 OK \u2014 8 executable surfaces cataloged (7 scripts + 1 Tier-1 auto-loaded rule file). 2 need attention: the Codex binary resolver (F1 target) and the release.yml homebrew-update job that commits to dev without a review gate.",
+      "layer1_summary": "**8 executable surfaces inventoried.** The 2 Warning items are maintainer-side: merge PR #1250 (Codex binary pinning) and optionally gate the Homebrew auto-commit path in release.yml. The 4 OK items (install.sh, install.ps1, Dockerfile, docker-entrypoint.sh) are clean and sha256-verified where applicable. CLAUDE.md is a Tier-1 auto-loaded agent rule file \u2014 content benign today, leverage is every contributor session.",
       "layer2_entries": [
         {
           "path": "packages/providers/src/codex/binary-resolver.ts",
           "kind": "Vendor binary resolver",
           "runtime": "Node/Bun",
-          "dangerous_calls": "fileExists() — no sha256 or signature check on resolved binary path",
+          "dangerous_calls": "fileExists() \u2014 no sha256 or signature check on resolved binary path",
           "network": "None directly",
           "notes": "Warning: resolves Codex CLI from env/config/~/.archon/vendor/codex/ and passes to SDK codexPathOverride without hash pinning. Fix open in PR #1250.",
           "file_sha": "3dedc22",
@@ -798,9 +1025,9 @@
           "path": "scripts/install.sh",
           "kind": "Install script",
           "runtime": "shell",
-          "dangerous_calls": "None — set -euo pipefail, sha256sum verification",
+          "dangerous_calls": "None \u2014 set -euo pipefail, sha256sum verification",
           "network": "HTTPS to github.com / objects.githubusercontent.com only",
-          "notes": "OK — downloads versioned binary from tagged release, sha256-verifies before install. SKIP_CHECKSUM defaults to false.",
+          "notes": "OK \u2014 downloads versioned binary from tagged release, sha256-verifies before install. SKIP_CHECKSUM defaults to false.",
           "file_sha": "3dedc22",
           "line_ranges": null,
           "diff_anchor": "scripts/install.sh"
@@ -809,9 +1036,9 @@
           "path": "scripts/install.ps1",
           "kind": "Install script (Windows)",
           "runtime": "PowerShell",
-          "dangerous_calls": "None — Set-StrictMode -Version Latest, same sha256 verification logic",
+          "dangerous_calls": "None \u2014 Set-StrictMode -Version Latest, same sha256 verification logic",
           "network": "HTTPS to github.com only",
-          "notes": "OK — PS1 parity with install.sh. F16 Windows surface covered.",
+          "notes": "OK \u2014 PS1 parity with install.sh. F16 Windows surface covered.",
           "file_sha": "3dedc22",
           "line_ranges": null,
           "diff_anchor": "scripts/install.ps1"
@@ -820,9 +1047,9 @@
           "path": "Dockerfile",
           "kind": "Container definition",
           "runtime": "Docker",
-          "dangerous_calls": "None — multi-stage, gosu privilege drop",
+          "dangerous_calls": "None \u2014 multi-stage, gosu privilege drop",
           "network": "None at runtime (build-time only)",
-          "notes": "OK — multi-stage build, drops root to appuser via gosu, no untrusted tarball fetches.",
+          "notes": "OK \u2014 multi-stage build, drops root to appuser via gosu, no untrusted tarball fetches.",
           "file_sha": "3dedc22",
           "line_ranges": null,
           "diff_anchor": "Dockerfile"
@@ -831,9 +1058,9 @@
           "path": "docker-entrypoint.sh",
           "kind": "Container entrypoint",
           "runtime": "shell",
-          "dangerous_calls": "None — exec $RUNNER bun run start",
+          "dangerous_calls": "None \u2014 exec $RUNNER bun run start",
           "network": "None",
-          "notes": "OK — fixes volume perms, configures GH_TOKEN via credential helper (not ~/.gitconfig), execs as appuser.",
+          "notes": "OK \u2014 fixes volume perms, configures GH_TOKEN via credential helper (not ~/.gitconfig), execs as appuser.",
           "file_sha": "3dedc22",
           "line_ranges": null,
           "diff_anchor": "docker-entrypoint.sh"
@@ -842,9 +1069,9 @@
           "path": "CLAUDE.md",
           "kind": "Agent rule file (Tier 1 auto-loaded)",
           "runtime": "Claude Code agent context",
-          "dangerous_calls": "None — static markdown, development conventions only",
+          "dangerous_calls": "None \u2014 static markdown, development conventions only",
           "network": "None",
-          "notes": "Info — auto-loaded for every contributor session in this repo. 813 lines of TypeScript/Zod/Bun contributor conventions. Imperative-verb grep found no prompt injection patterns. Leverage: 1:every contributor. Content benign today.",
+          "notes": "Info \u2014 auto-loaded for every contributor session in this repo. 813 lines of TypeScript/Zod/Bun contributor conventions. Imperative-verb grep found no prompt injection patterns. Leverage: 1:every contributor. Content benign today.",
           "file_sha": "3dedc22",
           "line_ranges": null,
           "diff_anchor": "CLAUDE.md"
@@ -853,9 +1080,9 @@
           "path": "scripts/build-binaries.sh",
           "kind": "Build pipeline script",
           "runtime": "shell",
-          "dangerous_calls": "None — EXIT trap pattern for safe rollback",
+          "dangerous_calls": "None \u2014 EXIT trap pattern for safe rollback",
           "network": "None",
-          "notes": "Info — CI-only build pipeline. Uses bash EXIT trap to restore bundled-build.ts after bun build --compile. Not end-user facing.",
+          "notes": "Info \u2014 CI-only build pipeline. Uses bash EXIT trap to restore bundled-build.ts after bun build --compile. Not end-user facing.",
           "file_sha": "3dedc22",
           "line_ranges": null,
           "diff_anchor": "scripts/build-binaries.sh"
@@ -863,7 +1090,6 @@
       ],
       "closing_note": "**Note on CLAUDE.md auto-load leverage.** A future PR swapping the benign development-convention content for attacker instructions would take effect on every contributor's next Claude Code session. Combined with the governance gaps in F0/F4 (no branch protection on dev, no CODEOWNERS, 8% formal review rate), a PR modifying CLAUDE.md could land without a gate. Current content is benign; the structural risk is the leverage ratio."
     },
-
     "pr_sample_review": {
       "intro": "**6 security-adjacent PRs reviewed.** All 6 touch security-critical files (providers, installer, CI workflows). None had a formal `reviewDecision`. All were merged by Wirasm (the lead contributor), so practical review happened without the `reviewDecision` field being set.",
       "rows": [
@@ -872,7 +1098,7 @@
           "url": "https://github.com/coleam00/Archon/pull/1250",
           "what": "Pin Codex vendor binary sha256 on first use (fixes #1245 LPE)",
           "author": "shaun0927 (EXTERNAL REPORTER)",
-          "merger": "— (open)",
+          "merger": "\u2014 (open)",
           "reviewed": "No formal decision",
           "concern": "Security fix for #1245 LPE, filed 2026-04-16. Still open at scan time.",
           "flagged": true
@@ -902,7 +1128,7 @@
           "url": "https://github.com/coleam00/Archon/pull/1153",
           "what": "Override axios to ^1.15.0 for CVE-2025-62718",
           "author": "external_contributor (EXTERNAL)",
-          "merger": "— (open)",
+          "merger": "\u2014 (open)",
           "reviewed": "No formal decision",
           "concern": "Dep CVE fix sitting open 3 days; no dependabot auto-open.",
           "flagged": true
@@ -919,48 +1145,156 @@
         }
       ]
     },
-
     "repo_vitals": {
       "rows": [
-        { "metric": "Repo age", "value": "14 months", "note": "Created 2025-02-07, scanned 2026-04-16" },
-        { "metric": "Stars", "value": "18,300", "note": "Very high visibility — scrutiny should match scale" },
-        { "metric": "Owner account age", "value": "✅ 7 years", "note": "coleam00 created 2019-02-03, 51 public repos, 6,641 followers, Dynamous company" },
-        { "metric": "Lead contributor", "value": "✅ Wirasm (791 commits)", "note": "More than owner's 343 — a second active maintainer" },
-        { "metric": "Merged PRs (review rate)", "value": "⚠ 13 formal / 93 any / 160 total", "note": "8% formal, 58% any-review" },
-        { "metric": "Branch protection", "value": "❌ None (dev, main)", "note": "API returns 404 on both — definitive" },
-        { "metric": "CODEOWNERS", "value": "❌ None", "note": "No file in any standard location" },
-        { "metric": "SECURITY.md", "value": "✅ Yes (root)", "note": "Real private disclosure policy — cole@dynamous.ai or GitHub private advisory" },
-        { "metric": "Security advisories", "value": "⚠ 0 published", "note": "3 open issues being tracked publicly" },
-        { "metric": "OSSF Scorecard", "value": "⚠ Not indexed", "note": "API returned 404 — repo not yet indexed by securityscorecards.dev" },
-        { "metric": "Dependabot", "value": "⚠ Unknown (403 without admin)", "note": "No .github/dependabot.yml config either way" },
-        { "metric": "Runtime dependencies (root)", "value": "✅ 1 (claude-agent-sdk)", "note": "Transitive surface via Slack SDK, React, Vite" },
-        { "metric": "CI workflows", "value": "4 (test, publish, release, deploy-docs)", "note": "Real matrix test (ubuntu + windows), Docker smoke test" },
-        { "metric": "Releases", "value": "10+ (v0.2.13 → v0.3.6)", "note": "Rapid iteration, checksums.txt + multi-platform binaries + Docker published per release" },
-        { "metric": "Total PR count", "value": "~461 closed, 20 open", "note": "Active community" }
+        {
+          "metric": "Repo age",
+          "value": "14 months",
+          "note": "Created 2025-02-07, scanned 2026-04-16"
+        },
+        {
+          "metric": "Stars",
+          "value": "18,300",
+          "note": "Very high visibility \u2014 scrutiny should match scale"
+        },
+        {
+          "metric": "Owner account age",
+          "value": "\u2705 7 years",
+          "note": "coleam00 created 2019-02-03, 51 public repos, 6,641 followers, Dynamous company"
+        },
+        {
+          "metric": "Lead contributor",
+          "value": "\u2705 Wirasm (791 commits)",
+          "note": "More than owner's 343 \u2014 a second active maintainer"
+        },
+        {
+          "metric": "Merged PRs (review rate)",
+          "value": "\u26a0 13 formal / 93 any / 160 total",
+          "note": "8% formal, 58% any-review"
+        },
+        {
+          "metric": "Branch protection",
+          "value": "\u274c None (dev, main)",
+          "note": "API returns 404 on both \u2014 definitive"
+        },
+        {
+          "metric": "CODEOWNERS",
+          "value": "\u274c None",
+          "note": "No file in any standard location"
+        },
+        {
+          "metric": "SECURITY.md",
+          "value": "\u2705 Yes (root)",
+          "note": "Real private disclosure policy \u2014 cole@dynamous.ai or GitHub private advisory"
+        },
+        {
+          "metric": "Security advisories",
+          "value": "\u26a0 0 published",
+          "note": "3 open issues being tracked publicly"
+        },
+        {
+          "metric": "OSSF Scorecard",
+          "value": "\u26a0 Not indexed",
+          "note": "API returned 404 \u2014 repo not yet indexed by securityscorecards.dev"
+        },
+        {
+          "metric": "Dependabot",
+          "value": "\u26a0 Unknown (403 without admin)",
+          "note": "No .github/dependabot.yml config either way"
+        },
+        {
+          "metric": "Runtime dependencies (root)",
+          "value": "\u2705 1 (claude-agent-sdk)",
+          "note": "Transitive surface via Slack SDK, React, Vite"
+        },
+        {
+          "metric": "CI workflows",
+          "value": "4 (test, publish, release, deploy-docs)",
+          "note": "Real matrix test (ubuntu + windows), Docker smoke test"
+        },
+        {
+          "metric": "Releases",
+          "value": "10+ (v0.2.13 \u2192 v0.3.6)",
+          "note": "Rapid iteration, checksums.txt + multi-platform binaries + Docker published per release"
+        },
+        {
+          "metric": "Total PR count",
+          "value": "~461 closed, 20 open",
+          "note": "Active community"
+        }
       ]
     },
-
-    "coverage_intro": "**160/300 PRs sampled, 7/7 execs inspected, 3 gaps noted.** Only 160 of ~461 closed PRs reviewed (300-PR API-limit window; older PRs not inspected). All executable files inspected. Windows PS1 surface covered. Monorepo has 11 inner packages — only root + root-lock inspected as the primary surface.",
-
+    "coverage_intro": "**160/300 PRs sampled, 7/7 execs inspected, 3 gaps noted.** Only 160 of ~461 closed PRs reviewed (300-PR API-limit window; older PRs not inspected). All executable files inspected. Windows PS1 surface covered. Monorepo has 11 inner packages \u2014 only root + root-lock inspected as the primary surface.",
     "coverage_detail": {
       "rows": [
-        { "check": "Tarball extraction", "result": "✅ OK — 769 files — pinned to `3dedc22` at scan start" },
-        { "check": "Workflow files read", "result": "✅ 4 of 4 — deploy-docs, publish, release, test" },
-        { "check": "Merged PRs reviewed", "result": "⚠ 160 of ~461 (sampled) — under the 300-window cap" },
-        { "check": "Suspicious PR diffs read", "result": "6 of the 300-keyword hits — the flagged 6 in §03 read in full" },
-        { "check": "Dependency scan", "result": "⚠ Metadata only — Dependabot API 403 (admin scope); full lockfile audit not performed" },
-        { "check": "Executable files inspected", "result": "⚠ 7 of 7 (2 Warning, 4 OK, 1 Info)" },
-        { "check": "`pull_request_target` scan", "result": "✅ Verified — 0 occurrences across 4 workflows" },
-        { "check": "README paste-scan", "result": "✅ 0 paste-blocks" },
-        { "check": "Agent-rule files", "result": "✅ 1 found — CLAUDE.md at root (Tier 1 auto-loaded). Not CI-amplified." },
-        { "check": "Prompt-injection scan", "result": "✅ 0 matches / 0 actionable" },
-        { "check": "Distribution channels verified", "result": "⚠ Install path verified, installed artifact NOT verified — trust chain terminates at GitHub Releases (see F2 issue #1246)" },
-        { "check": "Windows surface coverage", "result": "✅ install.ps1 inspected; CI test matrix covers windows-latest" },
-        { "check": "OSSF Scorecard", "result": "⚠ Not indexed (API 404)" },
-        { "check": "osv.dev", "result": "ℹ Not queried — transitive surface covered by CVE watch (F3)" },
-        { "check": "Secrets-in-history", "result": "⚠ Not scanned (gitleaks not available)" },
-        { "check": "API rate budget", "result": "✅ 5000/5000 remaining" },
-        { "check": "Tarball SHA", "result": "`3dedc22` — if your tree differs, re-run the scan" }
+        {
+          "check": "Tarball extraction",
+          "result": "\u2705 OK \u2014 769 files \u2014 pinned to `3dedc22` at scan start"
+        },
+        {
+          "check": "Workflow files read",
+          "result": "\u2705 4 of 4 \u2014 deploy-docs, publish, release, test"
+        },
+        {
+          "check": "Merged PRs reviewed",
+          "result": "\u26a0 160 of ~461 (sampled) \u2014 under the 300-window cap"
+        },
+        {
+          "check": "Suspicious PR diffs read",
+          "result": "6 of the 300-keyword hits \u2014 the flagged 6 in \u00a703 read in full"
+        },
+        {
+          "check": "Dependency scan",
+          "result": "\u26a0 Metadata only \u2014 Dependabot API 403 (admin scope); full lockfile audit not performed"
+        },
+        {
+          "check": "Executable files inspected",
+          "result": "\u26a0 7 of 7 (2 Warning, 4 OK, 1 Info)"
+        },
+        {
+          "check": "`pull_request_target` scan",
+          "result": "\u2705 Verified \u2014 0 occurrences across 4 workflows"
+        },
+        {
+          "check": "README paste-scan",
+          "result": "\u2705 0 paste-blocks"
+        },
+        {
+          "check": "Agent-rule files",
+          "result": "\u2705 1 found \u2014 CLAUDE.md at root (Tier 1 auto-loaded). Not CI-amplified."
+        },
+        {
+          "check": "Prompt-injection scan",
+          "result": "\u2705 0 matches / 0 actionable"
+        },
+        {
+          "check": "Distribution channels verified",
+          "result": "\u26a0 Install path verified, installed artifact NOT verified \u2014 trust chain terminates at GitHub Releases (see F2 issue #1246)"
+        },
+        {
+          "check": "Windows surface coverage",
+          "result": "\u2705 install.ps1 inspected; CI test matrix covers windows-latest"
+        },
+        {
+          "check": "OSSF Scorecard",
+          "result": "\u26a0 Not indexed (API 404)"
+        },
+        {
+          "check": "osv.dev",
+          "result": "\u2139 Not queried \u2014 transitive surface covered by CVE watch (F3)"
+        },
+        {
+          "check": "Secrets-in-history",
+          "result": "\u26a0 Not scanned (gitleaks not available)"
+        },
+        {
+          "check": "API rate budget",
+          "result": "\u2705 5000/5000 remaining"
+        },
+        {
+          "check": "Tarball SHA",
+          "result": "`3dedc22` \u2014 if your tree differs, re-run the scan"
+        }
       ],
       "monorepo": {
         "is_monorepo": true,
@@ -983,27 +1317,25 @@
       "pr_target_usage": {
         "usage_count": 0,
         "workflows_checked": 4,
-        "note": "Zero `pull_request_target` usage across 4 workflows — rules out that class of attack"
+        "note": "Zero `pull_request_target` usage across 4 workflows \u2014 rules out that class of attack"
       }
     },
-
     "coverage_gaps": {
       "entries": [
-        "Older PRs (pre-2026-03) not inspected — sampling window stops at 300 PRs deep.",
-        "Dependabot alerts API requires admin:repo_hook — token used here lacks it; alert state unknown beyond 'no config file'.",
-        "Monorepo has 11 inner packages with their own package.json — per-package dep surface not enumerated here; root + root-lock inspected as the primary surface."
+        "Older PRs (pre-2026-03) not inspected \u2014 sampling window stops at 300 PRs deep.",
+        "Dependabot alerts API requires admin:repo_hook \u2014 token used here lacks it; alert state unknown beyond 'no config file'.",
+        "Monorepo has 11 inner packages with their own package.json \u2014 per-package dep surface not enumerated here; root + root-lock inspected as the primary surface."
       ]
     },
-
     "verdict_exhibits": {
       "groups": [
         {
-          "symbol": "⚠",
-          "headline": "Open security issues filed by an external researcher — actively being fixed (3 findings)",
-          "one_line_summary": "Codex LPE + web-dist attestation gap + axios CVE override — none merged yet, all tracked publicly",
+          "symbol": "\u26a0",
+          "headline": "Open security issues filed by an external researcher \u2014 actively being fixed (3 findings)",
+          "one_line_summary": "Codex LPE + web-dist attestation gap + axios CVE override \u2014 none merged yet, all tracked publicly",
           "items": [
             {
-              "tag": "Vulnerability · F1",
+              "tag": "Vulnerability \u00b7 F1",
               "claim": "Codex vendor binary resolver lacks hash/signature pinning (issue #1245). On multi-user hosts, another user who can write to ~/.archon/vendor/codex/ gets arbitrary code execution as you on the next Codex workflow. Fix open in PR #1250."
             },
             {
@@ -1011,27 +1343,27 @@
               "claim": "`archon serve` downloads web-dist tarball AND its sha256 checksums from the same GitHub Releases URL (issue #1246). A release-manager token compromise defeats the verification. Reporter asks for independent attestation / sigstore."
             },
             {
-              "tag": "Dependency · CVE",
-              "claim": "Axios CVE-2025-62718 (NO_PROXY bypass via hostname normalization) override pending in PR #1153, open since 2026-04-13 — 3 days before scan. Reaches via @slack/bolt and @slack/web-api."
+              "tag": "Dependency \u00b7 CVE",
+              "claim": "Axios CVE-2025-62718 (NO_PROXY bypass via hostname normalization) override pending in PR #1153, open since 2026-04-13 \u2014 3 days before scan. Reaches via @slack/bolt and @slack/web-api."
             }
           ]
         },
         {
-          "symbol": "⚠",
-          "headline": "Governance gaps — low formal review rate, no branch protection (4 findings)",
+          "symbol": "\u26a0",
+          "headline": "Governance gaps \u2014 low formal review rate, no branch protection (4 findings)",
           "one_line_summary": "8% formal review, no branch protection on dev, no CODEOWNERS, CI bot commits direct to dev",
           "items": [
             {
-              "tag": "Review rate · F4",
-              "claim": "13 of 160 merged PRs have formal reviewDecision set (8%). Any-review rate is 58% (93/160) — a second pair of eyes exists in practice but formal gates are absent."
+              "tag": "Review rate \u00b7 F4",
+              "claim": "13 of 160 merged PRs have formal reviewDecision set (8%). Any-review rate is 58% (93/160) \u2014 a second pair of eyes exists in practice but formal gates are absent."
             },
             {
-              "tag": "Branch protection · F0",
-              "claim": "No branch protection rule on `dev` (the default branch) or `main`. Direct pushes possible, no required status checks at the branch level. API returns 404 — authoritative."
+              "tag": "Branch protection \u00b7 F0",
+              "claim": "No branch protection rule on `dev` (the default branch) or `main`. Direct pushes possible, no required status checks at the branch level. API returns 404 \u2014 authoritative."
             },
             {
-              "tag": "CODEOWNERS · F0",
-              "claim": "No CODEOWNERS file anywhere in the repo — no path-scoped review gate on hooks, workflows, or install scripts."
+              "tag": "CODEOWNERS \u00b7 F0",
+              "claim": "No CODEOWNERS file anywhere in the repo \u2014 no path-scoped review gate on hooks, workflows, or install scripts."
             },
             {
               "tag": "CI-bot merge",
@@ -1040,8 +1372,8 @@
           ]
         },
         {
-          "symbol": "✓",
-          "headline": "Strong positive signals — real disclosure, pinned distribution, established maintainers",
+          "symbol": "\u2713",
+          "headline": "Strong positive signals \u2014 real disclosure, pinned distribution, established maintainers",
           "one_line_summary": "SECURITY.md with private reporting, sha256-verified installs, 7-year-old owner, active second maintainer",
           "items": [
             {
@@ -1054,7 +1386,7 @@
             },
             {
               "tag": "Maintainer",
-              "claim": "coleam00 (Cole Medin): 7-year GitHub account, 6,641 followers, Dynamous company. Wirasm (791 commits) is the de facto dev lead — owner-merges-contributor-work is healthier than solo-maintainer for review."
+              "claim": "coleam00 (Cole Medin): 7-year GitHub account, 6,641 followers, Dynamous company. Wirasm (791 commits) is the de facto dev lead \u2014 owner-merges-contributor-work is healthier than solo-maintainer for review."
             },
             {
               "tag": "Code quality",
@@ -1062,15 +1394,13 @@
             },
             {
               "tag": "CLAUDE.md content",
-              "claim": "813-line CLAUDE.md is Tier-1 auto-loaded by Claude Code for every contributor session. Imperative-verb grep found only project-convention statements (TypeScript/Zod/Bun discipline) — no prompt injection patterns."
+              "claim": "813-line CLAUDE.md is Tier-1 auto-loaded by Claude Code for every contributor session. Imperative-verb grep found only project-convention statements (TypeScript/Zod/Bun discipline) \u2014 no prompt injection patterns."
             }
           ]
         }
       ]
     },
-
-    "evidence_intro": "6 command-backed claims. **Skip ahead to items marked ★ START HERE** — the Codex LPE issue body, the install-script byte-match against archon.diy, and the review-rate dual metric. Those three are the falsification criteria for the split verdict.",
-
+    "evidence_intro": "6 command-backed claims. **Skip ahead to items marked \u2605 START HERE** \u2014 the Codex LPE issue body, the install-script byte-match against archon.diy, and the review-rate dual metric. Those three are the falsification criteria for the split verdict.",
     "evidence": {
       "entries": [
         {
@@ -1078,10 +1408,10 @@
           "claim": "Codex vendor binary resolver has no sha256 pinning (F1 / issue #1245)",
           "command": "gh issue view 1245 -R coleam00/Archon --json title,body -q '.title'",
           "command_lang": "bash",
-          "result": "security(providers): codex vendor binary resolver lacks hash/signature pinning — LPE via writable vendor dir",
+          "result": "security(providers): codex vendor binary resolver lacks hash/signature pinning \u2014 LPE via writable vendor dir",
           "result_lang": null,
           "result_truncated": false,
-          "classification": "Confirmed fact — issue body explains the resolver flow and the attack pre-condition (writable ~/.archon/vendor/codex/). Fix open in PR #1250."
+          "classification": "Confirmed fact \u2014 issue body explains the resolver flow and the attack pre-condition (writable ~/.archon/vendor/codex/). Fix open in PR #1250."
         },
         {
           "id": "E2",
@@ -1091,17 +1421,17 @@
           "result": "#!/usr/bin/env bash\n# scripts/install.sh\n# Install Archon CLI from GitHub releases",
           "result_lang": null,
           "result_truncated": false,
-          "classification": "Confirmed fact — archon.diy acts as a CDN/redirect for the repo's install script, not a separately-controlled distribution endpoint."
+          "classification": "Confirmed fact \u2014 archon.diy acts as a CDN/redirect for the repo's install script, not a separately-controlled distribution endpoint."
         },
         {
           "id": "E3",
-          "claim": "Dual review-rate metric (F4) — 8% formal, 58% any-review",
+          "claim": "Dual review-rate metric (F4) \u2014 8% formal, 58% any-review",
           "command": "gh pr list -R coleam00/Archon --state merged --limit 300 --json reviewDecision,reviews \\\n  | jq '{ total: length,\n          formal_review: [.[] | select(.reviewDecision != null and .reviewDecision != \"\")] | length,\n          any_review:    [.[] | select(.reviews != null and (.reviews | length) > 0)]    | length }'",
           "command_lang": "bash",
           "result": "{ \"total\": 160, \"formal_review\": 13, \"any_review\": 93 }",
           "result_lang": "json",
           "result_truncated": false,
-          "classification": "Confirmed fact — 13/160 formal decisions = 8%; 93/160 any-review = 58%. The gap is the practical-vs-formal reviewer pattern Archon runs on."
+          "classification": "Confirmed fact \u2014 13/160 formal decisions = 8%; 93/160 any-review = 58%. The gap is the practical-vs-formal reviewer pattern Archon runs on."
         },
         {
           "id": "E4",
@@ -1111,7 +1441,7 @@
           "result": "{\"createdAt\":\"2026-04-13T01:31:22Z\",\"state\":\"OPEN\",\"title\":\"fix: override axios to ^1.15.0 for CVE-2025-62718\"}",
           "result_lang": "json",
           "result_truncated": false,
-          "classification": "Confirmed fact — PR #1153 open since 2026-04-13, scan date 2026-04-16."
+          "classification": "Confirmed fact \u2014 PR #1153 open since 2026-04-13, scan date 2026-04-16."
         },
         {
           "id": "E5",
@@ -1121,7 +1451,7 @@
           "result": "{\"message\":\"Not Found\",\"status\":\"404\"}\n{\"message\":\"Not Found\",\"status\":\"404\"}\n[]\n{\"message\":\"Not Found\",\"status\":\"404\"}\n{\"message\":\"Not Found\",\"status\":\"404\"}\n{\"message\":\"Not Found\",\"status\":\"404\"}\n{\"message\":\"Not Found\",\"status\":\"404\"}",
           "result_lang": null,
           "result_truncated": false,
-          "classification": "Confirmed fact — 404 is authoritative (token has repo scope, permission-denied would be 403). Empty rulesets. CODEOWNERS absent in all 4 standard locations. C20 escalates to Critical: active code flow (8 releases in 30 days) + ships executable binaries to user machines."
+          "classification": "Confirmed fact \u2014 404 is authoritative (token has repo scope, permission-denied would be 403). Empty rulesets. CODEOWNERS absent in all 4 standard locations. C20 escalates to Critical: active code flow (8 releases in 30 days) + ships executable binaries to user machines."
         },
         {
           "id": "E7",
@@ -1131,57 +1461,94 @@
           "result": "# Security Policy\n\n## Reporting a Vulnerability\n\nIf you discover a security vulnerability in Archon, please report it responsibly.\n\n**Do NOT open a public issue for security vulnerabilities.**\n\nInstead, email **cole@dynamous.ai** or use [GitHub's private vulnerability reporting](https://github.com/coleam00/Archon/security/advisories/new).",
           "result_lang": "markdown",
           "result_truncated": false,
-          "classification": "Confirmed fact — real private channel + GHSA link. Confirms the disclosure culture is real, not performative."
+          "classification": "Confirmed fact \u2014 real private channel + GHSA link. Confirms the disclosure culture is real, not performative."
         }
       ]
     },
-
     "catalog_metadata": {
       "category": "AI/LLM tooling",
       "subcategory": "Remote agent orchestrator / workflow engine",
-      "short_description": "Remote agentic coding platform — a harness that lets you drive Claude Code and Codex through Slack, Telegram, GitHub, or a web UI, with its own DAG workflow engine. Ships as a Bun-compiled CLI binary plus a server + web UI.",
+      "short_description": "Remote agentic coding platform \u2014 a harness that lets you drive Claude Code and Codex through Slack, Telegram, GitHub, or a web UI, with its own DAG workflow engine. Ships as a Bun-compiled CLI binary plus a server + web UI.",
       "target_user": "Developers who want to run Claude Code or Codex remotely from Slack/Telegram/GitHub/web",
       "shape": "agentic-platform",
-      "prior_scan_note": "None — first scan; rename this file on re-run with date suffix."
+      "prior_scan_note": "None \u2014 first scan; rename this file on re-run with date suffix."
+    },
+    "scorecard_cells": {
+      "does_anyone_check_the_code": {
+        "color": "red",
+        "short_answer": "No upstream gate \u2014 8% formal / 58% any \u00b7 no branch protection \u00b7 no CODEOWNERS",
+        "rationale": null,
+        "edge_case": null,
+        "suggested_threshold_adjustment": null,
+        "computed_signal_refs": [],
+        "override_reason": null
+      },
+      "do_they_fix_problems_quickly": {
+        "color": "amber",
+        "short_answer": "Open fixes not merged yet \u2014 3 open security issues; team is actively working but PRs #1250 and #1153 are unmerged",
+        "rationale": null,
+        "edge_case": null,
+        "suggested_threshold_adjustment": null,
+        "computed_signal_refs": [],
+        "override_reason": null
+      },
+      "do_they_tell_you_about_problems": {
+        "color": "green",
+        "short_answer": "Yes \u2014 SECURITY.md with real private disclosure (cole@dynamous.ai + GHSA), public issues filed with evidence",
+        "rationale": null,
+        "edge_case": null,
+        "suggested_threshold_adjustment": null,
+        "computed_signal_refs": [],
+        "override_reason": null
+      },
+      "is_it_safe_out_of_the_box": {
+        "color": "red",
+        "short_answer": "No \u2014 Critical finding applies to default install (F0 governance gap); Codex shared-host LPE open (F1)",
+        "rationale": null,
+        "edge_case": null,
+        "suggested_threshold_adjustment": null,
+        "computed_signal_refs": [],
+        "override_reason": null
+      }
     }
   },
-
   "phase_4b_computed": {
     "verdict": {
       "level": "Critical",
-      "computed_from_findings": ["F0", "F1", "F4"]
+      "computed_from_findings": [
+        "F0",
+        "F1",
+        "F4"
+      ]
     }
   },
-
   "phase_5_prose_llm": {
     "editorial_caption": {
-      "text": "An 18,000-star remote agentic coding platform with a serious SECURITY.md discipline, pinned-and-checksummed distribution, and three open security issues that its maintainer is actively fixing in public — and no branch protection or CODEOWNERS on the branch that ships executable binaries to every install."
+      "text": "An 18,000-star remote agentic coding platform with a serious SECURITY.md discipline, pinned-and-checksummed distribution, and three open security issues that its maintainer is actively fixing in public \u2014 and no branch protection or CODEOWNERS on the branch that ships executable binaries to every install."
     },
-
     "per_finding_prose": {
       "entries": [
         {
           "finding_id": "F0",
           "what_we_observed": "Classic branch protection on dev and main returns 404. Rulesets: []. CODEOWNERS absent in all four standard locations (API + local tarball). 8 releases shipped in the last 30 days. CLI binaries distributed via Homebrew, archon.diy/install, and GHCR.",
           "what_this_means": "When you install Archon, you are trusting the maintainer's account security as tightly as you'd trust your own laptop's password. There is no automated gate that would catch a compromised-credential push before it reaches your next install. On an 18k-star repo that ships Bun-compiled binaries, the blast radius of a single credential compromise is every current and future user.",
-          "what_this_does_not_mean": "This finding is about the upstream process gap, not current code shipping something harmful. The install script sha256-verifies the binary against checksums.txt. The Codex LPE (F1) requires local write access to your home directory — it is not a remote code execution vulnerability."
+          "what_this_does_not_mean": "This finding is about the upstream process gap, not current code shipping something harmful. The install script sha256-verifies the binary against checksums.txt. The Codex LPE (F1) requires local write access to your home directory \u2014 it is not a remote code execution vulnerability."
         },
         {
           "finding_id": "F1",
           "what_we_observed": "packages/providers/src/codex/binary-resolver.ts resolves the Codex CLI binary from env var, config, and ~/.archon/vendor/codex/ and passes it to the SDK's codexPathOverride. The only gate is fileExists(). No sha256, no signature, no permission check on the directory. Fix open in PR #1250.",
-          "what_this_means": "On a shared workstation or dev container, another user who can write to ~/.archon/vendor/codex/ can drop a rigged binary. Your next Codex workflow runs it with your full environment — your API keys, your file access, your user credentials.",
+          "what_this_means": "On a shared workstation or dev container, another user who can write to ~/.archon/vendor/codex/ can drop a rigged binary. Your next Codex workflow runs it with your full environment \u2014 your API keys, your file access, your user credentials.",
           "what_this_does_not_mean": "This is not a remote code execution vulnerability. Single-user personal laptops are low risk because nobody else has write access to your home directory. The 99% case (personal development machine) is not affected."
         },
         {
           "finding_id": "F4",
-          "what_we_observed": "13 of 160 merged PRs in the last 300-window have reviewDecision set (8% formal). The any-review rate is 58% (93/160) — a human comment or approval happened on more than half of merges. Branch protection API returns 404 on dev and main. No CODEOWNERS file anywhere.",
+          "what_we_observed": "13 of 160 merged PRs in the last 300-window have reviewDecision set (8% formal). The any-review rate is 58% (93/160) \u2014 a human comment or approval happened on more than half of merges. Branch protection API returns 404 on dev and main. No CODEOWNERS file anywhere.",
           "what_this_means": "The formal gate is missing: 92% of merges land without a recorded second-pair-of-eyes decision. Practically, Wirasm (791 commits) and coleam00 (343 commits) form a functioning owner+lead pair, but this arrangement is not encoded in GitHub settings.",
           "what_this_does_not_mean": "It does not mean the repo is unreviewed. The 58% any-review rate and the active security PRs (#1169, #1217) show the team is engaged with security as a development practice. The gap is process formalization, not intent."
         }
       ]
     }
   },
-
   "phase_6_assembly": {
     "assembled": true,
     "assembly_timestamp": "2026-04-18T00:00:00Z",
@@ -1189,11 +1556,34 @@
     "evidence_refs_valid": true,
     "field_count": null
   },
-
   "scan_sign_off": {
     "approved_for_release": false,
     "approved_by": null,
     "approved_at": null,
-    "notes": "Subset fixture for Phase 7 HTML renderer stress-test. Not a complete scan artifact — trimmed to 4 findings (F0 Critical, F1 Warning, F4 Warning, F7 OK) and 6 evidence entries. Full golden at docs/GitHub-Scanner-Archon.md."
+    "notes": "Subset fixture for Phase 7 HTML renderer stress-test. Not a complete scan artifact \u2014 trimmed to 4 findings (F0 Critical, F1 Warning, F4 Warning, F7 OK) and 6 evidence entries. Full golden at docs/GitHub-Scanner-Archon.md."
+  },
+  "phase_3_advisory": {
+    "scorecard_hints": {
+      "does_anyone_check_the_code": {
+        "color": "red",
+        "short_answer": "No upstream gate \u2014 8% formal / 58% any \u00b7 no branch protection \u00b7 no CODEOWNERS",
+        "signals": []
+      },
+      "do_they_fix_problems_quickly": {
+        "color": "amber",
+        "short_answer": "Open fixes not merged yet \u2014 3 open security issues; team is actively working but PRs #1250 and #1153 are unmerged",
+        "signals": []
+      },
+      "do_they_tell_you_about_problems": {
+        "color": "green",
+        "short_answer": "Yes \u2014 SECURITY.md with real private disclosure (cole@dynamous.ai + GHSA), public issues filed with evidence",
+        "signals": []
+      },
+      "is_it_safe_out_of_the_box": {
+        "color": "red",
+        "short_answer": "No \u2014 Critical finding applies to default install (F0 governance gap); Codex shared-host LPE open (F1)",
+        "signals": []
+      }
+    }
   }
 }

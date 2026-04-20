@@ -238,6 +238,17 @@ class TestScorecard:
         out, _ = _render(name)
         assert "scorecard" in out.lower()
 
+    @pytest.mark.parametrize("name", list(FIXTURES))
+    def test_scorecard_cells_in_phase_4_not_phase_3(self, name):
+        """V1.2 D2 invariant: fixture has scorecard_cells under phase_4_structured_llm;
+        phase_3_computed no longer carries scorecard_cells."""
+        out, form = _render(name)
+        assert "scorecard_cells" in form["phase_4_structured_llm"]
+        assert "scorecard_cells" not in form.get("phase_3_computed", {})
+        # And phase_3_advisory is populated
+        assert "phase_3_advisory" in form
+        assert "scorecard_hints" in form["phase_3_advisory"]
+
 
 # ---------------------------------------------------------------------------
 # Section numbering — H2 headings for sections 01-08 + 02A

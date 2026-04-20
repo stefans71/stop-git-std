@@ -2,8 +2,8 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://stop-git-std.local/scan-schema.json",
   "title": "GitHub Repo Security Scanner — Investigation Form",
-  "description": "Validates a completed investigation form (V1.1). LLM fills phases 1-5 incrementally; Python computes phase 3; renderer consumes the complete form.",
-  "$comment": "V1.1 — schema freeze per 2026-04-18 board review (docs/External-Board-Reviews/041826-renderer-alignment/CONSOLIDATION.md). Adds renderer-driven structures (verdict_exhibits, executable_file_inventory, pr_sample_review, coverage_detail, evidence.entries, repo_vitals, section_leads). Reconciles stale shapes (timeline_event, action_step, meta_table_row). Enforces C2 (F12 fields on security-relevant executable entries) and C3 (auto_load_tier on agent-rule-file findings). V1.2 will re-bind C3 trigger to domain==agent per SD2 deferred roadmap.",
+  "description": "Validates a completed investigation form (V1.2). Harness fills phase_1; Python computes phase_3 (7 deterministic ops) + phase_3_advisory (scorecard hints, advisory only); LLM fills phases 4-5; renderer consumes the complete form.",
+  "$comment": "V1.2 — D-7 + D-8 co-scheduled schema bump per 2026-04-20 board review (docs/External-Board-Reviews/042026-schema-v12/CONSOLIDATION.md). D1: harness-canonical shapes/names (archived/fork/default_branch; nested per-family dangerous_primitives; {verified,total} for distribution_channels_verified; bare lists for install_hooks/executable_files/agent_rule_files; dependabot_alerts/osv_lookups; transformer deleted). D2: new top-level phase_3_advisory.scorecard_hints (keyed by question ID); phase_4_structured_llm.scorecard_cells authoritative with {rationale, edge_case, suggested_threshold_adjustment, computed_signal_refs, override_reason}; phase_3_computed.scorecard_cells deleted. Items A/C/E/F: override_reason 5-value enum frozen; agent_rule_files.total_bytes dropped; 23-row signal ID vocabulary.",
   "type": "object",
   "required": [
     "schema_version",
@@ -12,6 +12,7 @@
     "phase_1_raw_capture",
     "phase_2_validation",
     "phase_3_computed",
+    "phase_3_advisory",
     "phase_4_structured_llm",
     "phase_4b_computed",
     "phase_5_prose_llm",
@@ -29,6 +30,7 @@
     "phase_1_raw_capture": { "$ref": "#/$defs/phase_1_raw_capture" },
     "phase_2_validation": { "$ref": "#/$defs/phase_2_validation" },
     "phase_3_computed": { "$ref": "#/$defs/phase_3_computed" },
+    "phase_3_advisory": { "$ref": "#/$defs/phase_3_advisory" },
     "phase_4_structured_llm": { "$ref": "#/$defs/phase_4_structured_llm" },
     "phase_4b_computed": { "$ref": "#/$defs/phase_4b_computed" },
     "phase_5_prose_llm": { "$ref": "#/$defs/phase_5_prose_llm" },
@@ -543,8 +545,32 @@
       "additionalProperties": false
     },
 
-    "scorecard_cell": {
+    "override_reason_enum": {
+      "type": "string",
+      "description": "Frozen 5-value enum per V1.2 board review Item C. Categorizes why Phase 4 color diverges from Phase 3 advisory color.",
+      "enum": [
+        "threshold_too_strict",
+        "threshold_too_lenient",
+        "missing_qualitative_context",
+        "rubric_literal_vs_intent",
+        "other"
+      ]
+    },
+
+    "advisory_signal_ref": {
       "type": "object",
+      "description": "A single compute.py advisory signal with stable ID + value. IDs must resolve against compute.SIGNAL_IDS (23 frozen IDs per V1.2 board review Item F).",
+      "required": ["id"],
+      "properties": {
+        "id": { "type": "string", "description": "snake_case stable ID, question-scoped prefix (q1_ / q2_ / q3_ / q4_ / c20_)" },
+        "value": { "description": "Raw signal value (bool / number / enum / object depending on signal)" }
+      },
+      "additionalProperties": false
+    },
+
+    "scorecard_hint": {
+      "type": "object",
+      "description": "Phase 3 advisory scorecard hint — non-authoritative. compute.py populates this; Phase 4 may override with rationale + computed_signal_refs citing these signals by ID.",
       "properties": {
         "color": {
           "oneOf": [
@@ -553,7 +579,51 @@
           ]
         },
         "short_answer": { "type": ["string", "null"] },
-        "inputs": { "type": "object" }
+        "signals": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/advisory_signal_ref" }
+        },
+        "$comment": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+
+    "scorecard_cell": {
+      "type": "object",
+      "description": "Phase 4 authoritative scorecard cell. LLM-authored. If color differs from the paired phase_3_advisory.scorecard_hints[key].color, validator requires override_reason + computed_signal_refs non-empty + rationale ≥ 50 chars (gate 6.3 override-explained per V1.2 Item A).",
+      "required": ["color"],
+      "properties": {
+        "color": {
+          "oneOf": [
+            { "$ref": "#/$defs/scorecard_color" },
+            { "type": "null" }
+          ]
+        },
+        "short_answer": { "type": ["string", "null"] },
+        "rationale": {
+          "type": ["string", "null"],
+          "description": "Prose explanation of the Phase 4 color. Required non-null when overriding advisory; validator enforces ≥50 chars."
+        },
+        "edge_case": {
+          "type": ["string", "null"],
+          "description": "Optional note flagging boundary/edge-case reasoning that informed the color."
+        },
+        "suggested_threshold_adjustment": {
+          "type": ["string", "null"],
+          "description": "Optional note back-channel to compute.py calibration: what rubric threshold change would align Phase 3 with this Phase 4 color."
+        },
+        "computed_signal_refs": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "List of compute.SIGNAL_IDS entries (23 frozen IDs per V1.2 Item F) the Phase 4 judgment considered. Required non-empty when overriding advisory color."
+        },
+        "override_reason": {
+          "oneOf": [
+            { "$ref": "#/$defs/override_reason_enum" },
+            { "type": "null" }
+          ],
+          "description": "Categorical override reason. Required non-null when Phase 4 color differs from Phase 3 advisory color."
+        }
       },
       "additionalProperties": false
     },
@@ -582,13 +652,20 @@
             "default_branch": { "type": ["string", "null"] },
             "tarball_extracted": { "type": "boolean" },
             "tarball_file_count": { "type": ["integer", "null"] },
-            "symlinks_stripped": { "type": "boolean" },
+            "symlinks_stripped": {
+              "type": ["integer", "null"],
+              "description": "V1.2 D1: integer count of symlinks stripped during extraction (not boolean). 0 = none stripped."
+            },
             "api_rate_limit": {
               "type": "object",
               "properties": {
                 "remaining": { "type": ["integer", "null"] },
                 "limit": { "type": ["integer", "null"] },
-                "reset_at": { "type": ["string", "null"] }
+                "used": { "type": ["integer", "null"] },
+                "reset": {
+                  "type": ["integer", "null"],
+                  "description": "V1.2 D1: epoch integer (harness-native). V1.1 used reset_at ISO string."
+                }
               },
               "additionalProperties": false
             }
@@ -608,14 +685,31 @@
             "stargazer_count": { "type": ["integer", "null"] },
             "fork_count": { "type": ["integer", "null"] },
             "license_spdx": { "type": ["string", "null"] },
-            "default_branch_ref": { "type": ["string", "null"] },
-            "is_archived": { "type": ["boolean", "null"] },
+            "default_branch": {
+              "type": ["string", "null"],
+              "description": "V1.2 D1: harness-canonical name (was default_branch_ref in V1.1)."
+            },
+            "archived": {
+              "type": ["boolean", "null"],
+              "description": "V1.2 D1: harness-canonical name (was is_archived in V1.1)."
+            },
             "has_issues_enabled": { "type": ["boolean", "null"] },
-            "is_fork": { "type": ["boolean", "null"] },
+            "fork": {
+              "type": ["boolean", "null"],
+              "description": "V1.2 D1: harness-canonical name (was is_fork in V1.1)."
+            },
             "primary_language": { "type": ["string", "null"] },
             "topics": {
               "type": "array",
               "items": { "type": "string" }
+            },
+            "open_issues_count": {
+              "type": ["integer", "null"],
+              "description": "V1.2 D1: harness already emits this; schema now accepts."
+            },
+            "size_kb": {
+              "type": ["integer", "null"],
+              "description": "V1.2 D1: harness already emits this; schema now accepts."
             }
           },
           "additionalProperties": false
@@ -695,6 +789,7 @@
 
         "branch_protection": {
           "type": "object",
+          "description": "V1.2 D1: inner sub-objects (classic/rulesets/rules_on_default/org_rulesets) accept harness-native fields (body, count, etc.) in addition to the named properties. Transformer's strip-to-{entries, raw_response} shape deleted.",
           "properties": {
             "$comment": { "type": "string" },
             "classic": {
@@ -704,34 +799,38 @@
                   "type": ["integer", "string", "null"],
                   "description": "HTTP status code from branch protection API. 404 = no protection; 200 = configured; 403 = token lacks scope."
                 },
+                "body": {},
                 "raw_response": {}
               },
-              "additionalProperties": false
+              "additionalProperties": true
             },
             "rulesets": {
               "type": "object",
               "properties": {
                 "entries": { "type": "array" },
+                "count": { "type": ["integer", "null"] },
                 "raw_response": {}
               },
-              "additionalProperties": false
+              "additionalProperties": true
             },
             "rules_on_default": {
               "type": "object",
               "properties": {
                 "entries": { "type": "array" },
+                "count": { "type": ["integer", "null"] },
                 "raw_response": {}
               },
-              "additionalProperties": false
+              "additionalProperties": true
             },
             "owner_type": { "type": ["string", "null"] },
             "org_rulesets": {
               "type": "object",
               "properties": {
                 "entries": { "type": "array" },
+                "count": { "type": ["integer", "null"] },
                 "raw_response": {}
               },
-              "additionalProperties": false
+              "additionalProperties": true
             }
           },
           "additionalProperties": false
@@ -759,31 +858,41 @@
             "$comment": { "type": "string" },
             "manifest_files": {
               "type": "array",
-              "items": { "type": "string" }
+              "description": "V1.2 D1: harness-native shape — array of {path, format} objects (was array of strings in V1.1).",
+              "items": {
+                "type": "object",
+                "required": ["path"],
+                "properties": {
+                  "path": { "type": "string" },
+                  "format": { "type": ["string", "null"] }
+                },
+                "additionalProperties": true
+              }
             },
             "runtime": { "type": "array" },
             "runtime_count": { "type": ["integer", "null"] },
             "dev": { "type": "array" },
             "dev_count": { "type": ["integer", "null"] },
             "peer": { "type": "array" },
-            "dependabot": {
+            "dependabot_alerts": {
               "type": "object",
+              "description": "V1.2 D1: renamed from dependabot in V1.1; harness-canonical.",
               "properties": {
-                "status": { "type": ["string", "null"] },
+                "status": { "type": ["string", "integer", "null"] },
+                "note": { "type": ["string", "null"] },
                 "error_message": { "type": ["string", "null"] },
                 "alerts": { "type": "array" }
               },
-              "additionalProperties": false
+              "additionalProperties": true
             },
-            "osv_dev": {
-              "type": "object",
-              "properties": {
-                "queried": { "type": "boolean" },
-                "packages_queried": { "type": ["integer", "null"] },
-                "total_vulns": { "type": ["integer", "null"] },
-                "per_package": { "type": "array" }
-              },
-              "additionalProperties": false
+            "osv_lookups": {
+              "type": ["array", "object", "null"],
+              "description": "V1.2 D1: renamed from osv_dev in V1.1; harness emits per-package array directly."
+            },
+            "dependabot_config": {
+              "type": ["object", "null"],
+              "description": "V1.2 D1: parsed .github/dependabot.yml contents (schedule, open-pr-limit, etc.). New in V1.2 — harness already gathers.",
+              "additionalProperties": true
             }
           },
           "additionalProperties": false
@@ -795,48 +904,47 @@
             "$comment": { "type": "string" },
             "dangerous_primitives": {
               "type": "object",
+              "description": "V1.2 D1: harness-native nested per-family shape. 15 pattern families (exec/deserialization/network/secrets/vendor_keys/tls_cors/sql_injection/cmd_injection/auth_bypass/path_traversal/archive_unsafe/ssrf/xss/weak_crypto/debug_flags). Each family has {scanned: bool, files: [{file, line_count, first_match: {line, snippet}}]}. $comment retained for noting unscanned reasons. NOTE: no renderer consumer as of V1.2; renderer V1.3 should consume nested shape directly, not re-flatten (Item D).",
               "properties": {
                 "$comment": { "type": "string" },
-                "hits": { "type": "array" },
-                "hit_count": { "type": ["integer", "null"] }
+                "scanned": { "type": ["boolean", "null"] }
               },
-              "additionalProperties": false
+              "additionalProperties": true
             },
             "executable_files": {
+              "type": "array",
+              "description": "V1.2 D1: bare list (was {entries: []} wrapper in V1.1). Harness-native.",
+              "items": { "type": "object", "additionalProperties": true }
+            },
+            "install_hooks": {
+              "type": "array",
+              "description": "V1.2 D1: bare list (was {found, hooks} wrapper in V1.1). Empty list = no hooks detected.",
+              "items": { "type": "object", "additionalProperties": true }
+            },
+            "readme_paste_blocks": {
               "type": "object",
+              "description": "V1.2 D1: harness-native shape with entries_count + entries (was {found, blocks} wrapper in V1.1).",
               "properties": {
                 "$comment": { "type": "string" },
+                "entries_count": { "type": ["integer", "null"] },
                 "entries": { "type": "array" }
               },
               "additionalProperties": false
             },
-            "install_hooks": {
-              "type": "object",
-              "properties": {
-                "$comment": { "type": "string" },
-                "found": { "type": "boolean" },
-                "hooks": { "type": "array" }
-              },
-              "additionalProperties": false
-            },
-            "readme_paste_blocks": {
-              "type": "object",
-              "properties": {
-                "$comment": { "type": "string" },
-                "found": { "type": "boolean" },
-                "blocks": { "type": "array" }
-              },
-              "additionalProperties": false
-            },
             "agent_rule_files": {
-              "type": "object",
-              "properties": {
-                "$comment": { "type": "string" },
-                "entries": { "type": "array" },
-                "count": { "type": ["integer", "null"] },
-                "total_bytes": { "type": ["integer", "null"] }
-              },
-              "additionalProperties": false
+              "type": "array",
+              "description": "V1.2 D1 + Item E: bare list (was wrapper in V1.1). total_bytes DROPPED. Each entry has {path, kind, line_count, ci_amplified, ...} per-entry shape.",
+              "items": {
+                "type": "object",
+                "required": ["path"],
+                "properties": {
+                  "path": { "type": "string" },
+                  "kind": { "type": ["string", "null"] },
+                  "line_count": { "type": ["integer", "null"] },
+                  "ci_amplified": { "type": ["boolean", "null"] }
+                },
+                "additionalProperties": true
+              }
             }
           },
           "additionalProperties": false
@@ -848,10 +956,22 @@
             "$comment": { "type": "string" },
             "sample_size": { "type": ["integer", "null"] },
             "total_closed_prs": { "type": ["integer", "null"] },
+            "total_merged_lifetime": {
+              "type": ["integer", "null"],
+              "description": "V1.2 D1: harness-emitted; total merged PRs across repo lifetime (denominator for rate-over-time)."
+            },
             "prs": { "type": "array" },
             "formal_review_rate": { "type": ["number", "null"] },
             "any_review_rate": { "type": ["number", "null"] },
             "self_merge_rate": { "type": ["number", "null"] },
+            "self_merge_count": {
+              "type": ["integer", "null"],
+              "description": "V1.2 D1: harness-emitted absolute count of self-merged PRs."
+            },
+            "security_flagged_count": {
+              "type": ["integer", "null"],
+              "description": "V1.2 D1: harness-emitted count of security-flagged PRs in the sample."
+            },
             "security_relevant_prs": { "type": "array" }
           },
           "additionalProperties": false
@@ -954,6 +1074,10 @@
             "$comment": { "type": "string" },
             "queried": { "type": "boolean" },
             "indexed": { "type": "boolean" },
+            "http_status": {
+              "type": ["integer", "null"],
+              "description": "V1.2 D1: transport-level HTTP status from api.securityscorecards.dev. Useful for diagnosing API failures (404 = not indexed, 503 = transient). Preserved per DeepSeek R1 I-2."
+            },
             "overall_score": { "type": ["number", "null"] },
             "checks": { "type": "array" },
             "raw_response": {}
@@ -999,8 +1123,27 @@
           "properties": {
             "$comment": { "type": "string" },
             "prompt_injection_scan_completed": { "type": ["boolean", "null"] },
-            "windows_surface_coverage": { "type": ["boolean", "null"] },
-            "distribution_channels_verified": { "type": ["boolean", "null"] },
+            "windows_surface_coverage": {
+              "type": ["string", "boolean", "null"],
+              "description": "V1.2 D1: harness emits status string (\"scanned\" / \"skipped\" / etc.). V1.1 accepted only bool; V1.2 accepts both during transition."
+            },
+            "distribution_channels_verified": {
+              "description": "V1.2 D1 + P2-LOSSY-CAST fix: richer than V1.1's bool-only cast. Harness can emit {verified, total} object or fraction string; bool retained for backwards-compat.",
+              "oneOf": [
+                { "type": "null" },
+                { "type": "boolean" },
+                { "type": "string" },
+                {
+                  "type": "object",
+                  "required": ["verified", "total"],
+                  "properties": {
+                    "verified": { "type": "integer", "minimum": 0 },
+                    "total": { "type": "integer", "minimum": 0 }
+                  },
+                  "additionalProperties": false
+                }
+              ]
+            },
             "gitleaks_available": { "type": ["boolean", "null"] },
             "gitleaks_explanation": { "type": ["string", "null"] }
           },
@@ -1047,18 +1190,6 @@
               "type": ["string", "null"],
               "enum": ["Critical", "Warning", null]
             }
-          },
-          "additionalProperties": false
-        },
-
-        "scorecard_cells": {
-          "type": "object",
-          "properties": {
-            "$comment": { "type": "string" },
-            "does_anyone_check_the_code": { "$ref": "#/$defs/scorecard_cell" },
-            "do_they_fix_problems_quickly": { "$ref": "#/$defs/scorecard_cell" },
-            "do_they_tell_you_about_problems": { "$ref": "#/$defs/scorecard_cell" },
-            "is_it_safe_out_of_the_box": { "$ref": "#/$defs/scorecard_cell" }
           },
           "additionalProperties": false
         },
@@ -1120,10 +1251,44 @@
       "additionalProperties": false
     },
 
+    "phase_3_advisory": {
+      "$comment": "V1.2 D2: new top-level phase for advisory-only Python output. compute.compute_scorecard_advisory() populates scorecard_hints; these are NON-authoritative. Phase 4 is the authoritative scorecard source. When Phase 4 color differs from the paired Phase 3 advisory color, validator (gate 6.3) enforces override-explained: rationale + computed_signal_refs + override_reason enum.",
+      "type": "object",
+      "properties": {
+        "$comment": { "type": "string" },
+        "scorecard_hints": {
+          "type": "object",
+          "description": "Keyed object by canonical question ID (OQ-4 unanimous: keyed not array).",
+          "properties": {
+            "$comment": { "type": "string" },
+            "does_anyone_check_the_code": { "$ref": "#/$defs/scorecard_hint" },
+            "do_they_fix_problems_quickly": { "$ref": "#/$defs/scorecard_hint" },
+            "do_they_tell_you_about_problems": { "$ref": "#/$defs/scorecard_hint" },
+            "is_it_safe_out_of_the_box": { "$ref": "#/$defs/scorecard_hint" }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+
     "phase_4_structured_llm": {
       "type": "object",
       "properties": {
         "$comment": { "type": "string" },
+
+        "scorecard_cells": {
+          "$comment": "V1.2 D2: authoritative scorecard cells — LLM-authored. Keyed object by canonical question ID (OQ-4 unanimous). Moved from phase_3_computed per D-7 board decision. When Phase 4 color diverges from phase_3_advisory.scorecard_hints[key].color, gate 6.3 override-explained requires: rationale ≥50 chars, computed_signal_refs non-empty with all IDs resolving against compute.SIGNAL_IDS, override_reason in 5-value enum.",
+          "type": "object",
+          "properties": {
+            "$comment": { "type": "string" },
+            "does_anyone_check_the_code": { "$ref": "#/$defs/scorecard_cell" },
+            "do_they_fix_problems_quickly": { "$ref": "#/$defs/scorecard_cell" },
+            "do_they_tell_you_about_problems": { "$ref": "#/$defs/scorecard_cell" },
+            "is_it_safe_out_of_the_box": { "$ref": "#/$defs/scorecard_cell" }
+          },
+          "additionalProperties": false
+        },
 
         "findings": {
           "type": "object",

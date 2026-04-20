@@ -1,9 +1,14 @@
 {
   "$comment": "End-to-end test fixture: real zustand scan data, extracted from docs/GitHub-Scanner-zustand.md (scanned 2026-04-16 against commit 32013285). Used by tests/test_end_to_end.py.",
-  "schema_version": "1.1",
-
+  "schema_version": "V1.2",
   "_meta": {
-    "phases_completed": ["phase_1_raw_capture", "phase_2_validation", "phase_3_computed", "phase_4_structured_llm", "phase_5_prose_llm"],
+    "phases_completed": [
+      "phase_1_raw_capture",
+      "phase_2_validation",
+      "phase_3_computed",
+      "phase_4_structured_llm",
+      "phase_5_prose_llm"
+    ],
     "scan_status": "completed",
     "scanner_version": "V2.3-post-R3",
     "prompt_version": "V2.3-post-R3",
@@ -12,34 +17,30 @@
     "scan_completed_at": "2026-04-16T00:00:00Z",
     "assumptions": []
   },
-
   "target": {
     "owner": "pmndrs",
     "repo": "zustand",
     "full_name": "pmndrs/zustand",
     "url": "https://github.com/pmndrs/zustand"
   },
-
   "scanner_integrity": {
     "injection_matches": 0,
     "actionable_count": 0,
     "findings": []
   },
-
   "phase_1_raw_capture": {
     "pre_flight": {
       "head_sha": "32013285083648e8d58ba1f76d73b9bdc02fef50",
       "default_branch": "main",
       "tarball_extracted": true,
       "tarball_file_count": 143,
-      "symlinks_stripped": true,
+      "symlinks_stripped": 1,
       "api_rate_limit": {
         "remaining": 5000,
         "limit": 5000,
-        "reset_at": null
+        "reset": null
       }
     },
-
     "repo_metadata": {
       "name": "zustand",
       "description": "Small, fast, unopinionated state-management library for React.",
@@ -48,25 +49,46 @@
       "stargazer_count": 57754,
       "fork_count": 2033,
       "license_spdx": "MIT",
-      "default_branch_ref": "main",
-      "is_archived": false,
       "has_issues_enabled": true,
-      "is_fork": false,
       "primary_language": "TypeScript",
-      "topics": ["hooks", "react", "redux", "state-management", "hacktoberfest", "react-context", "reactjs"]
+      "topics": [
+        "hooks",
+        "react",
+        "redux",
+        "state-management",
+        "hacktoberfest",
+        "react-context",
+        "reactjs"
+      ],
+      "archived": false,
+      "fork": false,
+      "default_branch": "main"
     },
-
     "contributors": {
       "top_contributors": [
-        {"login": "dai-shi", "contributions": 411},
-        {"login": "drcmda", "contributions": 232},
-        {"login": "dbritto-dev", "contributions": 59},
-        {"login": "sukvvon", "contributions": 50},
-        {"login": "dependabot[bot]", "contributions": 18}
+        {
+          "login": "dai-shi",
+          "contributions": 411
+        },
+        {
+          "login": "drcmda",
+          "contributions": 232
+        },
+        {
+          "login": "dbritto-dev",
+          "contributions": 59
+        },
+        {
+          "login": "sukvvon",
+          "contributions": 50
+        },
+        {
+          "login": "dependabot[bot]",
+          "contributions": 18
+        }
       ],
       "total_contributor_count": 5
     },
-
     "maintainer_accounts": {
       "accounts": [
         {
@@ -85,17 +107,35 @@
         }
       ]
     },
-
     "releases": {
       "entries": [
-        {"tag": "v5.0.12", "date": "2026-03-16", "name": "v5.0.12", "is_prerelease": false},
-        {"tag": "v5.0.11", "date": "2026-02-01", "name": "v5.0.11", "is_prerelease": false},
-        {"tag": "v5.0.10", "date": "2026-01-12", "name": "v5.0.10", "is_prerelease": false},
-        {"tag": "v5.0.9", "date": "2025-11-30", "name": "v5.0.9", "is_prerelease": false}
+        {
+          "tag": "v5.0.12",
+          "date": "2026-03-16",
+          "name": "v5.0.12",
+          "is_prerelease": false
+        },
+        {
+          "tag": "v5.0.11",
+          "date": "2026-02-01",
+          "name": "v5.0.11",
+          "is_prerelease": false
+        },
+        {
+          "tag": "v5.0.10",
+          "date": "2026-01-12",
+          "name": "v5.0.10",
+          "is_prerelease": false
+        },
+        {
+          "tag": "v5.0.9",
+          "date": "2025-11-30",
+          "name": "v5.0.9",
+          "is_prerelease": false
+        }
       ],
       "total_count": 100
     },
-
     "community_profile": {
       "health_percentage": 71,
       "has_code_of_conduct": true,
@@ -103,34 +143,60 @@
       "has_security_policy": false,
       "license_spdx": "MIT"
     },
-
     "security_advisories": {
       "count": 0,
       "entries": []
     },
-
     "workflows": {
       "entries": [
-        {"name": "test", "path": ".github/workflows/test.yml"},
-        {"name": "publish", "path": ".github/workflows/publish.yml"},
-        {"name": "preview-release", "path": ".github/workflows/preview-release.yml"},
-        {"name": "compressed-size", "path": ".github/workflows/compressed-size.yml"},
-        {"name": "docs", "path": ".github/workflows/docs.yml"},
-        {"name": "test-multiple-builds", "path": ".github/workflows/test-multiple-builds.yml"},
-        {"name": "test-multiple-versions", "path": ".github/workflows/test-multiple-versions.yml"},
-        {"name": "test-old-typescript", "path": ".github/workflows/test-old-typescript.yml"}
+        {
+          "name": "test",
+          "path": ".github/workflows/test.yml"
+        },
+        {
+          "name": "publish",
+          "path": ".github/workflows/publish.yml"
+        },
+        {
+          "name": "preview-release",
+          "path": ".github/workflows/preview-release.yml"
+        },
+        {
+          "name": "compressed-size",
+          "path": ".github/workflows/compressed-size.yml"
+        },
+        {
+          "name": "docs",
+          "path": ".github/workflows/docs.yml"
+        },
+        {
+          "name": "test-multiple-builds",
+          "path": ".github/workflows/test-multiple-builds.yml"
+        },
+        {
+          "name": "test-multiple-versions",
+          "path": ".github/workflows/test-multiple-versions.yml"
+        },
+        {
+          "name": "test-old-typescript",
+          "path": ".github/workflows/test-old-typescript.yml"
+        }
       ],
       "count": 8,
       "pull_request_target_count": 0
     },
-
     "workflow_contents": {
       "entries": [
         {
           "path": ".github/workflows/publish.yml",
           "has_explicit_permissions": true,
-          "permissions": {"id-token": "write", "contents": "read"},
-          "triggers": ["release: published"],
+          "permissions": {
+            "id-token": "write",
+            "contents": "read"
+          },
+          "triggers": [
+            "release: published"
+          ],
           "uses_oidc": true,
           "sha_pinned_actions": true
         },
@@ -153,11 +219,10 @@
           "path": ".github/workflows/docs.yml",
           "has_explicit_permissions": false,
           "sha_pinned_actions": false,
-          "note": "Uses pmndrs/docs/.github/workflows/build.yml@v3 — same-org reusable workflow"
+          "note": "Uses pmndrs/docs/.github/workflows/build.yml@v3 \u2014 same-org reusable workflow"
         }
       ]
     },
-
     "branch_protection": {
       "classic": {
         "status": 404,
@@ -177,95 +242,151 @@
         "raw_response": "[]"
       }
     },
-
     "codeowners": {
       "found": false,
       "path": null,
       "content": null,
-      "locations_checked": ["CODEOWNERS", ".github/CODEOWNERS", "docs/CODEOWNERS", ".gitlab/CODEOWNERS"]
+      "locations_checked": [
+        "CODEOWNERS",
+        ".github/CODEOWNERS",
+        "docs/CODEOWNERS",
+        ".gitlab/CODEOWNERS"
+      ]
     },
-
     "dependencies": {
-      "manifest_files": ["package.json"],
+      "manifest_files": [
+        {
+          "path": "package.json",
+          "format": null
+        }
+      ],
       "runtime": [],
       "runtime_count": 0,
       "dev": [],
       "dev_count": 39,
-      "peer": ["react", "@types/react", "immer", "use-sync-external-store"],
-      "dependabot": {
+      "peer": [
+        "react",
+        "@types/react",
+        "immer",
+        "use-sync-external-store"
+      ],
+      "dependabot_alerts": {
         "status": "disabled",
         "error_message": "Dependabot alerts are disabled for this repository.",
         "alerts": []
       },
-      "osv_dev": {
+      "osv_lookups": {
         "queried": false,
         "packages_queried": 0,
         "total_vulns": 0,
         "per_package": []
       }
     },
-
     "code_patterns": {
       "dangerous_primitives": {
-        "hits": [
-          {
-            "path": "src/middleware/devtools.ts",
-            "line": 177,
-            "pattern": ".exec(",
-            "context": "RegExp.prototype.exec — regex match, not process exec",
-            "actionable": false
-          }
-        ],
-        "hit_count": 0
+        "scanned": true,
+        "exec": {
+          "scanned": true,
+          "files": [
+            {
+              "file": null,
+              "first_match": {
+                "line": 177,
+                "snippet": null
+              }
+            }
+          ]
+        }
       },
-      "executable_files": {
+      "executable_files": [],
+      "install_hooks": [],
+      "readme_paste_blocks": {
+        "entries_count": 0,
         "entries": []
       },
-      "install_hooks": {
-        "found": false,
-        "hooks": []
-      },
-      "readme_paste_blocks": {
-        "found": false,
-        "blocks": []
-      },
-      "agent_rule_files": {
-        "entries": [],
-        "count": 0,
-        "total_bytes": 0
-      }
+      "agent_rule_files": []
     },
-
     "pr_review": {
       "sample_size": 7,
       "total_closed_prs": 64,
       "prs": [
-        {"number": 3466, "author": "FelixEckl", "merger": "dai-shi", "formal_review": null, "any_review": false, "self_merge": false},
-        {"number": 3447, "author": "dependabot[bot]", "merger": "dbritto-dev", "formal_review": null, "any_review": false, "self_merge": false},
-        {"number": 3443, "author": "mahmoodhamdi", "merger": "dbritto-dev", "formal_review": null, "any_review": false, "self_merge": false},
-        {"number": 3442, "author": "mahmoodhamdi", "merger": "dbritto-dev", "formal_review": null, "any_review": false, "self_merge": false},
-        {"number": 3427, "author": "dai-shi", "merger": "dai-shi", "formal_review": null, "any_review": false, "self_merge": true},
-        {"number": 3423, "author": "pavan-sh", "merger": "dai-shi", "formal_review": "APPROVED", "any_review": true, "self_merge": false},
-        {"number": 3414, "author": "grigoriy-reshetniak", "merger": "dai-shi", "formal_review": "APPROVED", "any_review": true, "self_merge": false}
+        {
+          "number": 3466,
+          "author": "FelixEckl",
+          "merger": "dai-shi",
+          "formal_review": null,
+          "any_review": false,
+          "self_merge": false
+        },
+        {
+          "number": 3447,
+          "author": "dependabot[bot]",
+          "merger": "dbritto-dev",
+          "formal_review": null,
+          "any_review": false,
+          "self_merge": false
+        },
+        {
+          "number": 3443,
+          "author": "mahmoodhamdi",
+          "merger": "dbritto-dev",
+          "formal_review": null,
+          "any_review": false,
+          "self_merge": false
+        },
+        {
+          "number": 3442,
+          "author": "mahmoodhamdi",
+          "merger": "dbritto-dev",
+          "formal_review": null,
+          "any_review": false,
+          "self_merge": false
+        },
+        {
+          "number": 3427,
+          "author": "dai-shi",
+          "merger": "dai-shi",
+          "formal_review": null,
+          "any_review": false,
+          "self_merge": true
+        },
+        {
+          "number": 3423,
+          "author": "pavan-sh",
+          "merger": "dai-shi",
+          "formal_review": "APPROVED",
+          "any_review": true,
+          "self_merge": false
+        },
+        {
+          "number": 3414,
+          "author": "grigoriy-reshetniak",
+          "merger": "dai-shi",
+          "formal_review": "APPROVED",
+          "any_review": true,
+          "self_merge": false
+        }
       ],
       "formal_review_rate": 29,
       "any_review_rate": 71,
       "self_merge_rate": 14,
       "security_relevant_prs": [
-        {"number": 3395, "title": "Pin actions/deploy-pages to commit SHA for supply-chain security", "author": "Copilot", "merger": "dai-shi"}
+        {
+          "number": 3395,
+          "title": "Pin actions/deploy-pages to commit SHA for supply-chain security",
+          "author": "Copilot",
+          "merger": "dai-shi"
+        }
       ]
     },
-
     "open_prs": {
       "entries": [],
       "count": 0
     },
-
     "closed_not_merged_prs": {
       "entries": [],
       "count": null
     },
-
     "issues_and_commits": {
       "open_security_issues": [],
       "open_issues_count": 6,
@@ -274,13 +395,11 @@
       "recent_commits": [],
       "commit_signing_rate": null
     },
-
     "monorepo": {
       "is_monorepo": false,
       "inner_packages": [],
       "lifecycle_script_hits": []
     },
-
     "distribution_channels": {
       "channels": [
         {
@@ -294,27 +413,23 @@
         }
       ]
     },
-
     "install_script_analysis": {
       "scripts": []
     },
-
     "artifact_verification": {
       "per_channel": [
         {
           "channel": "npm",
           "method": "none",
           "result": "not_verified",
-          "note": "Artifact reproducibility not verified — would require running pipeline end-to-end and sha256-matching published tarball"
+          "note": "Artifact reproducibility not verified \u2014 would require running pipeline end-to-end and sha256-matching published tarball"
         }
       ]
     },
-
     "batch_merge_detection": {
       "detected": false,
       "pr_groups": []
     },
-
     "defensive_configs": {
       "entries": [
         {
@@ -331,38 +446,48 @@
         }
       ]
     },
-
     "ossf_scorecard": {
       "queried": true,
       "indexed": true,
       "overall_score": 5.9,
       "checks": [
-        {"name": "Branch-Protection", "score": -1, "reason": "Token lacks scope"},
-        {"name": "Token-Permissions", "score": 0, "reason": "4 of 8 workflows missing explicit permissions block"},
-        {"name": "Code-Review", "score": 6},
-        {"name": "Security-Policy", "score": 0, "reason": "No SECURITY.md"}
+        {
+          "name": "Branch-Protection",
+          "score": -1,
+          "reason": "Token lacks scope"
+        },
+        {
+          "name": "Token-Permissions",
+          "score": 0,
+          "reason": "4 of 8 workflows missing explicit permissions block"
+        },
+        {
+          "name": "Code-Review",
+          "score": 6
+        },
+        {
+          "name": "Security-Policy",
+          "score": 0,
+          "reason": "No SECURITY.md"
+        }
       ],
       "raw_response": null
     },
-
     "gitleaks": {
       "available": false,
       "ran": false,
       "findings_count": null,
       "findings": []
     },
-
     "windows_patterns": {
       "hits": [],
       "hit_count": 0
     },
-
     "prompt_injection_scan": {
       "scanned_files": [],
       "injection_signals": [],
       "signal_count": 0
     },
-
     "coverage_affirmations": {
       "prompt_injection_scan_completed": true,
       "windows_surface_coverage": true,
@@ -371,7 +496,6 @@
       "gitleaks_explanation": "gitleaks not available in scan environment; secrets-in-history not scanned"
     }
   },
-
   "phase_2_validation": {
     "sha_consistent": true,
     "required_fields_complete": true,
@@ -380,7 +504,6 @@
     "validation_passed": true,
     "validation_errors": []
   },
-
   "phase_3_computed": {
     "c20_severity": {
       "no_classic_protection": true,
@@ -391,58 +514,16 @@
       "ships_executable_code": true,
       "result": "Warning"
     },
-
-    "scorecard_cells": {
-      "does_anyone_check_the_code": {
-        "color": "amber",
-        "short_answer": "Review happens but isn't required — ~29% formal review rate in sample, no branch protection, no CODEOWNERS",
-        "inputs": {
-          "formal_review_rate": 29,
-          "any_review_rate": 71,
-          "has_branch_protection": false,
-          "has_codeowners": false
-        }
-      },
-      "do_they_fix_problems_quickly": {
-        "color": "green",
-        "short_answer": "Yes — long-tenured multi-maintainer pmndrs collective; issues triaged promptly",
-        "inputs": {
-          "open_security_issue_count": 0,
-          "oldest_open_cve_pr_age_days": null
-        }
-      },
-      "do_they_tell_you_about_problems": {
-        "color": "green",
-        "short_answer": "Yes — monthly releases, active Copilot-bot hygiene PRs, CHANGELOG maintained",
-        "inputs": {
-          "has_security_policy": false,
-          "published_advisory_count": 0,
-          "has_silent_fixes": false
-        }
-      },
-      "is_it_safe_out_of_the_box": {
-        "color": "green",
-        "short_answer": "Yes — clean code-path, no install hooks, no network calls, zero runtime deps",
-        "inputs": {
-          "all_channels_pinned": true,
-          "artifact_verified": true,
-          "has_warning_on_install_path": true
-        }
-      }
-    },
-
     "solo_maintainer": {
       "top_contributor_share": 0.532,
       "is_solo": false,
       "verbatim_sentence": null
     },
-
     "exhibit_grouping": {
       "total_findings": 6,
       "threshold_met": false,
       "exhibits": []
     },
-
     "boundary_cases": {
       "cases": [
         {
@@ -454,25 +535,46 @@
         }
       ]
     },
-
     "coverage_status": {
       "cells": [
-        { "name": "Tarball extraction", "status": "ok", "detail": "143 files" },
-        { "name": "OSSF Scorecard", "status": "ok", "detail": "5.9/10" },
-        { "name": "osv.dev", "status": "not_queried", "detail": "Zero runtime dependencies" },
-        { "name": "Secrets-in-history (gitleaks)", "status": "not_available", "detail": "gitleaks not installed" },
-        { "name": "API rate budget", "status": "ok", "detail": "5000/5000 remaining" },
-        { "name": "Dependabot alerts", "status": "blocked", "detail": "Disabled for this repository" }
+        {
+          "name": "Tarball extraction",
+          "status": "ok",
+          "detail": "143 files"
+        },
+        {
+          "name": "OSSF Scorecard",
+          "status": "ok",
+          "detail": "5.9/10"
+        },
+        {
+          "name": "osv.dev",
+          "status": "not_queried",
+          "detail": "Zero runtime dependencies"
+        },
+        {
+          "name": "Secrets-in-history (gitleaks)",
+          "status": "not_available",
+          "detail": "gitleaks not installed"
+        },
+        {
+          "name": "API rate budget",
+          "status": "ok",
+          "detail": "5000/5000 remaining"
+        },
+        {
+          "name": "Dependabot alerts",
+          "status": "blocked",
+          "detail": "Disabled for this repository"
+        }
       ]
     },
-
     "methodology": {
       "scanner_version": "V2.3-post-R3",
       "prompt_version": "V2.3-post-R3",
       "guide_version": "V0.1"
     }
   },
-
   "phase_4_structured_llm": {
     "findings": {
       "entries": [
@@ -484,23 +586,50 @@
           "status": "active",
           "provenance": "rule-applied",
           "rule_id": "C20",
-          "evidence_refs": ["E1", "E2"],
+          "evidence_refs": [
+            "E1",
+            "E2"
+          ],
           "action_hint": "Enable branch protection on main (require PR review + status checks) and add .github/CODEOWNERS covering .github/workflows and src/.",
           "kind": "Structural",
           "boundary_case": true,
-          "boundary_note": "31 days since latest release v5.0.12 — 1 day outside the 30-day Critical window",
+          "boundary_note": "31 days since latest release v5.0.12 \u2014 1 day outside the 30-day Critical window",
           "duration_label": "Continuous",
           "date_label": "Since repo creation",
-          "how_to_fix": "GitHub *Settings → Branches → Add branch protection rule* ([direct link](https://github.com/pmndrs/zustand/settings/branch_protection_rules/new)). For `main`: require pull request reviews (1 approver minimum), require status checks (the existing `test.yml` matrix), require branches to be up to date before merging, do not allow bypassing. Also add `.github/CODEOWNERS` covering at minimum `.github/workflows/ @dai-shi @drcmda` and `src/ @dai-shi @drcmda`.",
+          "how_to_fix": "GitHub *Settings \u2192 Branches \u2192 Add branch protection rule* ([direct link](https://github.com/pmndrs/zustand/settings/branch_protection_rules/new)). For `main`: require pull request reviews (1 approver minimum), require status checks (the existing `test.yml` matrix), require branches to be up to date before merging, do not allow bypassing. Also add `.github/CODEOWNERS` covering at minimum `.github/workflows/ @dai-shi @drcmda` and `src/ @dai-shi @drcmda`.",
           "meta_table": [
-            { "label": "Classic branch protection", "value": "❌ 404 on `main`" },
-            { "label": "Rulesets", "value": "❌ `[]` — zero rulesets" },
-            { "label": "Rules on main", "value": "❌ `[]` — authoritative" },
-            { "label": "CODEOWNERS", "value": "❌ Absent (4 locations checked)" },
-            { "label": "Stars (blast radius)", "value": "57,754" },
-            { "label": "Forks (blast radius)", "value": "2,033" },
-            { "label": "Latest release age", "value": "⚠ 31 days (boundary; 1 day from Critical)" },
-            { "label": "Executable surface", "value": "✅ Pure library (no install hooks)" }
+            {
+              "label": "Classic branch protection",
+              "value": "\u274c 404 on `main`"
+            },
+            {
+              "label": "Rulesets",
+              "value": "\u274c `[]` \u2014 zero rulesets"
+            },
+            {
+              "label": "Rules on main",
+              "value": "\u274c `[]` \u2014 authoritative"
+            },
+            {
+              "label": "CODEOWNERS",
+              "value": "\u274c Absent (4 locations checked)"
+            },
+            {
+              "label": "Stars (blast radius)",
+              "value": "57,754"
+            },
+            {
+              "label": "Forks (blast radius)",
+              "value": "2,033"
+            },
+            {
+              "label": "Latest release age",
+              "value": "\u26a0 31 days (boundary; 1 day from Critical)"
+            },
+            {
+              "label": "Executable surface",
+              "value": "\u2705 Pure library (no install hooks)"
+            }
           ]
         },
         {
@@ -510,25 +639,42 @@
           "title": "Dependabot vulnerability alerts are disabled on a 57k-star public repo (version updates still flow)",
           "status": "active",
           "provenance": "synthesized",
-          "evidence_refs": ["E3"],
-          "action_hint": "Flip Dependabot alerts on in Settings → Code security (version updates are already running; this just re-enables the alert surface).",
+          "evidence_refs": [
+            "E3"
+          ],
+          "action_hint": "Flip Dependabot alerts on in Settings \u2192 Code security (version updates are already running; this just re-enables the alert surface).",
           "kind": "Hygiene",
           "duration_label": "Current",
           "date_label": "Setting-level",
-          "how_to_fix": "[github.com/pmndrs/zustand/settings/security_analysis](https://github.com/pmndrs/zustand/settings/security_analysis) → toggle *Dependabot alerts* to on. Takes five seconds and does not change any workflow or commit behaviour — it just turns the alert surface back on.",
+          "how_to_fix": "[github.com/pmndrs/zustand/settings/security_analysis](https://github.com/pmndrs/zustand/settings/security_analysis) \u2192 toggle *Dependabot alerts* to on. Takes five seconds and does not change any workflow or commit behaviour \u2014 it just turns the alert surface back on.",
           "meta_table": [
-            { "label": "Alerts API", "value": "❌ 403 — \"disabled for this repository\"" },
-            { "label": "Version updates", "value": "✅ Active (dependabot[bot], 18 commits)" },
-            { "label": "Runtime deps", "value": "✅ Zero — blast radius limited to devDeps" },
-            { "label": "DevDeps", "value": "39 (affects CI + contributor machines)" },
-            { "label": "Published advisories", "value": "✅ 0 (never filed)" }
+            {
+              "label": "Alerts API",
+              "value": "\u274c 403 \u2014 \"disabled for this repository\""
+            },
+            {
+              "label": "Version updates",
+              "value": "\u2705 Active (dependabot[bot], 18 commits)"
+            },
+            {
+              "label": "Runtime deps",
+              "value": "\u2705 Zero \u2014 blast radius limited to devDeps"
+            },
+            {
+              "label": "DevDeps",
+              "value": "39 (affects CI + contributor machines)"
+            },
+            {
+              "label": "Published advisories",
+              "value": "\u2705 0 (never filed)"
+            }
           ]
         },
         {
           "id": "F2",
           "severity": "OK",
           "category": "code/clean-path",
-          "title": "Clean code-path — zero runtime deps, zero install hooks, zero dangerous primitives",
+          "title": "Clean code-path \u2014 zero runtime deps, zero install hooks, zero dangerous primitives",
           "status": "informational",
           "provenance": "synthesized",
           "evidence_refs": [],
@@ -536,12 +682,30 @@
           "duration_label": "Current",
           "date_label": null,
           "meta_table": [
-            { "label": "Runtime deps", "value": "✅ 0" },
-            { "label": "Install hooks", "value": "✅ None (no pre/post/prepare)" },
-            { "label": "Network calls in src/", "value": "✅ None" },
-            { "label": "Shell-exec in src/", "value": "✅ None" },
-            { "label": "`eval`/`Function`/`innerHTML`", "value": "✅ None in src/" },
-            { "label": "Accidental-publish guard", "value": "✅ `\"private\": true`" }
+            {
+              "label": "Runtime deps",
+              "value": "\u2705 0"
+            },
+            {
+              "label": "Install hooks",
+              "value": "\u2705 None (no pre/post/prepare)"
+            },
+            {
+              "label": "Network calls in src/",
+              "value": "\u2705 None"
+            },
+            {
+              "label": "Shell-exec in src/",
+              "value": "\u2705 None"
+            },
+            {
+              "label": "`eval`/`Function`/`innerHTML`",
+              "value": "\u2705 None in src/"
+            },
+            {
+              "label": "Accidental-publish guard",
+              "value": "\u2705 `\"private\": true`"
+            }
           ]
         },
         {
@@ -556,10 +720,22 @@
           "duration_label": "Current",
           "date_label": null,
           "meta_table": [
-            { "label": "Auth to npm", "value": "✅ OIDC short-lived token" },
-            { "label": "Long-lived NPM_TOKEN", "value": "✅ Not present" },
-            { "label": "`minimumReleaseAge`", "value": "✅ 1440 minutes (24 hours)" },
-            { "label": "Publish trigger", "value": "✅ `release: published` event only" }
+            {
+              "label": "Auth to npm",
+              "value": "\u2705 OIDC short-lived token"
+            },
+            {
+              "label": "Long-lived NPM_TOKEN",
+              "value": "\u2705 Not present"
+            },
+            {
+              "label": "`minimumReleaseAge`",
+              "value": "\u2705 1440 minutes (24 hours)"
+            },
+            {
+              "label": "Publish trigger",
+              "value": "\u2705 `release: published` event only"
+            }
           ]
         },
         {
@@ -571,15 +747,33 @@
           "provenance": "synthesized",
           "evidence_refs": [],
           "action_hint": "No action needed. Positive signal: the people who have the credentials are the kind you want to have them.",
-          "duration_label": "2010–2026",
+          "duration_label": "2010\u20132026",
           "date_label": "Long-tenured",
           "meta_table": [
-            { "label": "Primary maintainer", "value": "✅ dai-shi (15-yr account, 411 commits, 8,088 followers)" },
-            { "label": "Org founder", "value": "✅ drcmda (13-yr account, 232 commits)" },
-            { "label": "SHA-pinned actions", "value": "✅ 7/8 external (1 same-org reusable)" },
-            { "label": "`pull_request_target`", "value": "✅ 0 occurrences" },
-            { "label": "Sockpuppet signals", "value": "✅ None" },
-            { "label": "pmndrs org", "value": "✅ 7 years, 91 repos, 9,652 followers" }
+            {
+              "label": "Primary maintainer",
+              "value": "\u2705 dai-shi (15-yr account, 411 commits, 8,088 followers)"
+            },
+            {
+              "label": "Org founder",
+              "value": "\u2705 drcmda (13-yr account, 232 commits)"
+            },
+            {
+              "label": "SHA-pinned actions",
+              "value": "\u2705 7/8 external (1 same-org reusable)"
+            },
+            {
+              "label": "`pull_request_target`",
+              "value": "\u2705 0 occurrences"
+            },
+            {
+              "label": "Sockpuppet signals",
+              "value": "\u2705 None"
+            },
+            {
+              "label": "pmndrs org",
+              "value": "\u2705 7 years, 91 repos, 9,652 followers"
+            }
           ]
         },
         {
@@ -589,26 +783,38 @@
           "title": "OSSF Token-Permissions scored 0/10: 4 of 8 CI workflows lack explicit `permissions:` blocks",
           "status": "active",
           "provenance": "synthesized",
-          "evidence_refs": ["E4"],
+          "evidence_refs": [
+            "E4"
+          ],
           "action_hint": "Add a top-level permissions: {} (deny all) to each of the 4 workflows, then grant only the scopes each job needs.",
           "kind": "Hygiene gap",
           "duration_label": "Current",
           "date_label": "CI-level",
-          "how_to_fix": "Add a top-level `permissions: {}` (empty — deny all) to each of the 4 workflows, then grant only the specific scopes each job needs. For test-only workflows, `permissions: { contents: read }` is usually sufficient. See [GitHub docs on workflow permissions](https://docs.github.com/en/actions/using-jobs/assigning-permissions-to-jobs).",
+          "how_to_fix": "Add a top-level `permissions: {}` (empty \u2014 deny all) to each of the 4 workflows, then grant only the specific scopes each job needs. For test-only workflows, `permissions: { contents: read }` is usually sufficient. See [GitHub docs on workflow permissions](https://docs.github.com/en/actions/using-jobs/assigning-permissions-to-jobs).",
           "meta_table": [
-            { "label": "OSSF Token-Permissions score", "value": "❌ 0/10" },
-            { "label": "Workflows missing explicit `permissions:`", "value": "4 of 8" },
-            { "label": "`publish.yml` permissions", "value": "✅ Correct (`id-token: write`, `contents: read`)" },
-            { "label": "Practical risk", "value": "ℹ Low (public repo, default scope is minimal)" }
+            {
+              "label": "OSSF Token-Permissions score",
+              "value": "\u274c 0/10"
+            },
+            {
+              "label": "Workflows missing explicit `permissions:`",
+              "value": "4 of 8"
+            },
+            {
+              "label": "`publish.yml` permissions",
+              "value": "\u2705 Correct (`id-token: write`, `contents: read`)"
+            },
+            {
+              "label": "Practical risk",
+              "value": "\u2139 Low (public repo, default scope is minimal)"
+            }
           ]
         }
       ]
     },
-
     "general_vuln_severity": {
       "assessments": []
     },
-
     "section_actions": {
       "entries": [
         {
@@ -621,7 +827,6 @@
         }
       ]
     },
-
     "split_axis_decision": {
       "should_split": true,
       "axis": "deployment",
@@ -630,7 +835,7 @@
         {
           "audience": "Solo-dev",
           "verdict_level": "Good with caveats",
-          "headline": "Install and use — the library itself is clean",
+          "headline": "Install and use \u2014 the library itself is clean",
           "summary": "Pure library, zero runtime deps, zero install-time hooks. Caveat: upstream governance gaps (no branch protection, no CODEOWNERS, Dependabot alerts off). Install today is safe; residual risk is supply-chain credential compromise affecting future releases."
         },
         {
@@ -641,7 +846,6 @@
         }
       ]
     },
-
     "priority_evidence": {
       "selections": [
         {
@@ -654,7 +858,6 @@
         }
       ]
     },
-
     "threat_models": {
       "per_finding": [
         {
@@ -669,13 +872,12 @@
         }
       ]
     },
-
     "action_steps": {
       "entries": [
         {
           "step": 1,
           "type": "install",
-          "headline": "Install zustand normally — the library is clean",
+          "headline": "Install zustand normally \u2014 the library is clean",
           "severity": "OK",
           "command": "npm install zustand"
         },
@@ -695,22 +897,49 @@
         }
       ]
     },
-
     "timeline_events": {
       "entries": [
-        {"date": "2019-04-09", "label": "CREATED", "tone": "neutral", "note": "Repo created by drcmda under pmndrs organisation"},
-        {"date": "2020-01-01", "label": "STEADY SHIP", "tone": "positive", "note": "100+ releases over 5 years; no yanked versions, no security advisories"},
-        {"date": "2025-11-30", "label": "v5.0.9", "tone": "positive", "note": "Typical release: bugfixes, type corrections, middleware tweaks"},
-        {"date": "2026-02-23", "label": "PINNING UPGRADE", "tone": "positive", "note": "Copilot bot PR #3395 pins actions/deploy-pages to commit SHA; dai-shi merges"},
-        {"date": "2026-03-16", "label": "v5.0.12", "tone": "positive", "note": "Current latest release. 31 days before scan — 1 day over the 30-day Critical window"},
-        {"date": "2026-04-16", "label": "BOUNDARY CASE", "tone": "neutral", "note": "This scan runs. F0 fires as Warning; next release flips to Critical absent branch protection"}
+        {
+          "date": "2019-04-09",
+          "label": "CREATED",
+          "tone": "neutral",
+          "note": "Repo created by drcmda under pmndrs organisation"
+        },
+        {
+          "date": "2020-01-01",
+          "label": "STEADY SHIP",
+          "tone": "positive",
+          "note": "100+ releases over 5 years; no yanked versions, no security advisories"
+        },
+        {
+          "date": "2025-11-30",
+          "label": "v5.0.9",
+          "tone": "positive",
+          "note": "Typical release: bugfixes, type corrections, middleware tweaks"
+        },
+        {
+          "date": "2026-02-23",
+          "label": "PINNING UPGRADE",
+          "tone": "positive",
+          "note": "Copilot bot PR #3395 pins actions/deploy-pages to commit SHA; dai-shi merges"
+        },
+        {
+          "date": "2026-03-16",
+          "label": "v5.0.12",
+          "tone": "positive",
+          "note": "Current latest release. 31 days before scan \u2014 1 day over the 30-day Critical window"
+        },
+        {
+          "date": "2026-04-16",
+          "label": "BOUNDARY CASE",
+          "tone": "neutral",
+          "note": "This scan runs. F0 fires as Warning; next release flips to Critical absent branch protection"
+        }
       ]
     },
-
     "capability_assessments": {
       "per_file": []
     },
-
     "catalog_metadata": {
       "category": "developer-tooling",
       "subcategory": "state-management-library",
@@ -718,130 +947,463 @@
       "target_user": "React application developers",
       "shape": "js-library-npm"
     },
-
     "section_leads": {
       "section_01": {
-        "pill_row": "✓ Safe to install today · ⚠ 1 consumer-side mitigation · 3 steps",
-        "summary": "**Install is safe** — the library itself is clean (Step 1). If you ship to production, pair zustand with `minimumReleaseAge` in your own pnpm config to buy time against an upstream credential-compromise scenario (Step 2). Step 3 is a maintainer-side ask you can pass along."
+        "pill_row": "\u2713 Safe to install today \u00b7 \u26a0 1 consumer-side mitigation \u00b7 3 steps",
+        "summary": "**Install is safe** \u2014 the library itself is clean (Step 1). If you ship to production, pair zustand with `minimumReleaseAge` in your own pnpm config to buy time against an upstream credential-compromise scenario (Step 2). Step 3 is a maintainer-side ask you can pass along."
       }
     },
-
     "verdict_exhibits": {
       "groups": [
         {
-          "symbol": "⚠",
-          "headline": "Governance gaps — no branch protection, no CODEOWNERS, Dependabot alerts off",
+          "symbol": "\u26a0",
+          "headline": "Governance gaps \u2014 no branch protection, no CODEOWNERS, Dependabot alerts off",
           "one_line_summary": "C20 single-point-of-failure fires as Warning (release age 31 days, 1 day outside Critical window); alert surface disabled while version-update PRs still flow",
           "items": [
             {
-              "tag": "Governance · F0 / C20",
-              "claim": "No branch protection on `main` (API returns 404), zero rulesets (`/rulesets` returns `[]`, `/rules/branches/main` returns `[]`), no CODEOWNERS in any of 4 standard locations. On a 57k-star library imported by millions, this is a supply-chain single-point-of-failure. Warning (not Critical) because the latest release v5.0.12 is 31 days old — 1 day outside the 30-day active-flow window that would escalate it."
+              "tag": "Governance \u00b7 F0 / C20",
+              "claim": "No branch protection on `main` (API returns 404), zero rulesets (`/rulesets` returns `[]`, `/rules/branches/main` returns `[]`), no CODEOWNERS in any of 4 standard locations. On a 57k-star library imported by millions, this is a supply-chain single-point-of-failure. Warning (not Critical) because the latest release v5.0.12 is 31 days old \u2014 1 day outside the 30-day active-flow window that would escalate it."
             },
             {
-              "tag": "Dependabot alerts · F1",
-              "claim": "The Dependabot alerts API returns 403 with the explicit \"disabled for this repository\" message — vulnerability alerts are turned off. Dependabot VERSION updates ARE still active (`dependabot[bot]` is the #6 contributor with 18 commits), so this is specifically the alert surface being disabled rather than a totally broken integration."
+              "tag": "Dependabot alerts \u00b7 F1",
+              "claim": "The Dependabot alerts API returns 403 with the explicit \"disabled for this repository\" message \u2014 vulnerability alerts are turned off. Dependabot VERSION updates ARE still active (`dependabot[bot]` is the #6 contributor with 18 commits), so this is specifically the alert surface being disabled rather than a totally broken integration."
             }
           ]
         },
         {
-          "symbol": "✓",
-          "headline": "Strong positive signals — clean code-path, defensive supply chain, long-tenured maintainers",
+          "symbol": "\u2713",
+          "headline": "Strong positive signals \u2014 clean code-path, defensive supply chain, long-tenured maintainers",
           "one_line_summary": "Zero runtime deps, zero install hooks, OIDC npm publish, pnpm `minimumReleaseAge`, SHA-pinned actions, no `pull_request_target`, active Copilot-bot hygiene PRs, pmndrs collective",
           "items": [
-            { "tag": "Code surface", "claim": "Zero runtime dependencies. Peer deps only (`react`, `@types/react`, `immer`, `use-sync-external-store`). The inbound supply chain at install time is effectively \"zustand itself\" — minimal attack surface for transitive CVEs." },
-            { "tag": "Install hooks", "claim": "No `preinstall`, `postinstall`, `prepare`, `prepublish`, `prepack`, or `postpack` scripts in `package.json`. `\"private\": true` guards against accidental `npm publish`; release is gated through CI only." },
-            { "tag": "Publish pipeline", "claim": "`publish.yml` uses OIDC `id-token: write` to authenticate to npm — no long-lived npm token stored in GitHub Secrets. Published from `dist/` on `release: published` event only." },
-            { "tag": "Defensive consumer config", "claim": "`pnpm-workspace.yaml` contains `minimumReleaseAge: 1440` — blocks installs of dep versions less than 24 hours old. Zustand uses it on itself." },
-            { "tag": "CI hygiene", "claim": "7 of 8 external actions across the 8 workflows are SHA-pinned to commit hashes. Zero `pull_request_target` usage." },
-            { "tag": "Active hygiene work", "claim": "Recent Copilot-bot PR #3395: \"Pin `actions/deploy-pages` to commit SHA for supply-chain security\" — ongoing pinning improvement landed in the last scan window." },
-            { "tag": "Code-path clean", "claim": "Grep scan of `src/` found zero `eval(`, zero `new Function(`, zero `child_process`/`execSync`/`spawnSync`, zero `fetch(`/`axios`/`http.get`. The single `.exec()` hit in `src/middleware/devtools.ts:177` is a regex-match, not a process-exec." },
-            { "tag": "Maintainers", "claim": "dai-shi (15-year GitHub account, 8,088 followers, 411 commits) and drcmda (pmndrs founder, 13-year account, 4,215 followers, 232 commits). All top contributors are real people with long tenure — no sockpuppet signals." }
+            {
+              "tag": "Code surface",
+              "claim": "Zero runtime dependencies. Peer deps only (`react`, `@types/react`, `immer`, `use-sync-external-store`). The inbound supply chain at install time is effectively \"zustand itself\" \u2014 minimal attack surface for transitive CVEs."
+            },
+            {
+              "tag": "Install hooks",
+              "claim": "No `preinstall`, `postinstall`, `prepare`, `prepublish`, `prepack`, or `postpack` scripts in `package.json`. `\"private\": true` guards against accidental `npm publish`; release is gated through CI only."
+            },
+            {
+              "tag": "Publish pipeline",
+              "claim": "`publish.yml` uses OIDC `id-token: write` to authenticate to npm \u2014 no long-lived npm token stored in GitHub Secrets. Published from `dist/` on `release: published` event only."
+            },
+            {
+              "tag": "Defensive consumer config",
+              "claim": "`pnpm-workspace.yaml` contains `minimumReleaseAge: 1440` \u2014 blocks installs of dep versions less than 24 hours old. Zustand uses it on itself."
+            },
+            {
+              "tag": "CI hygiene",
+              "claim": "7 of 8 external actions across the 8 workflows are SHA-pinned to commit hashes. Zero `pull_request_target` usage."
+            },
+            {
+              "tag": "Active hygiene work",
+              "claim": "Recent Copilot-bot PR #3395: \"Pin `actions/deploy-pages` to commit SHA for supply-chain security\" \u2014 ongoing pinning improvement landed in the last scan window."
+            },
+            {
+              "tag": "Code-path clean",
+              "claim": "Grep scan of `src/` found zero `eval(`, zero `new Function(`, zero `child_process`/`execSync`/`spawnSync`, zero `fetch(`/`axios`/`http.get`. The single `.exec()` hit in `src/middleware/devtools.ts:177` is a regex-match, not a process-exec."
+            },
+            {
+              "tag": "Maintainers",
+              "claim": "dai-shi (15-year GitHub account, 8,088 followers, 411 commits) and drcmda (pmndrs founder, 13-year account, 4,215 followers, 232 commits). All top contributors are real people with long tenure \u2014 no sockpuppet signals."
+            }
           ]
         }
       ]
     },
-
     "executable_file_inventory": {
-      "lead": "✓ 0 install-time executables · ℹ 13 runtime files inventoried. **Zustand ships zero install-time executables** — it's a pure library with no CLIs, no binaries, no lifecycle scripts. No file in this inventory has an actionable dangerous-primitive hit; a single regex `.exec()` call in `devtools.ts:177` is not a process-exec.",
-      "layer1_summary": "✓ **Zustand ships 0 install-time executables — pure library.** No CLIs, no binaries, no `pre/post/prepare` hooks. Runtime code is 16 TypeScript source files (7 top-level modules + 7 middleware + shallow helpers + types) compiled to `dist/` and published as the `zustand` npm package.",
+      "lead": "\u2713 0 install-time executables \u00b7 \u2139 13 runtime files inventoried. **Zustand ships zero install-time executables** \u2014 it's a pure library with no CLIs, no binaries, no lifecycle scripts. No file in this inventory has an actionable dangerous-primitive hit; a single regex `.exec()` call in `devtools.ts:177` is not a process-exec.",
+      "layer1_summary": "\u2713 **Zustand ships 0 install-time executables \u2014 pure library.** No CLIs, no binaries, no `pre/post/prepare` hooks. Runtime code is 16 TypeScript source files (7 top-level modules + 7 middleware + shallow helpers + types) compiled to `dist/` and published as the `zustand` npm package.",
       "layer2_entries": [
-        { "path": "src/index.ts", "kind": "Barrel re-export", "runtime": "Bundler", "dangerous_calls": "None", "network": "None", "notes": "Entrypoint (`main` in `package.json`)", "file_sha": "32013285083648e8d58ba1f76d73b9bdc02fef50", "line_ranges": null, "diff_anchor": null },
-        { "path": "src/vanilla.ts", "kind": "Core store primitives", "runtime": "Bundler", "dangerous_calls": "None", "network": "None", "notes": "`createStore` primitive", "file_sha": "32013285083648e8d58ba1f76d73b9bdc02fef50", "line_ranges": null, "diff_anchor": null },
-        { "path": "src/react.ts", "kind": "React hook wrapper", "runtime": "Bundler", "dangerous_calls": "None", "network": "None", "notes": "Uses `React.useSyncExternalStore`, `React.useDebugValue`", "file_sha": "32013285083648e8d58ba1f76d73b9bdc02fef50", "line_ranges": null, "diff_anchor": null },
-        { "path": "src/traditional.ts", "kind": "Legacy store variant", "runtime": "Bundler", "dangerous_calls": "None", "network": "None", "notes": "Uses `useSyncExternalStoreExports` shim for older React", "file_sha": "32013285083648e8d58ba1f76d73b9bdc02fef50", "line_ranges": null, "diff_anchor": null },
-        { "path": "src/middleware/persist.ts", "kind": "Storage middleware", "runtime": "Bundler", "dangerous_calls": "None", "network": "None (direct)", "notes": "May touch `localStorage`/`sessionStorage` via user-provided storage adapter", "file_sha": "32013285083648e8d58ba1f76d73b9bdc02fef50", "line_ranges": null, "diff_anchor": null },
-        { "path": "src/middleware/devtools.ts", "kind": "Redux DevTools bridge", "runtime": "Bundler", "dangerous_calls": "1 `.exec()` — **regex match, not process exec**", "network": "None", "notes": "Posts messages to `window.__REDUX_DEVTOOLS_EXTENSION__`. The `.exec()` at line 177 is `RegExp.prototype.exec`", "file_sha": "32013285083648e8d58ba1f76d73b9bdc02fef50", "line_ranges": "177", "diff_anchor": "src/middleware/devtools.ts#L177" },
-        { "path": "src/middleware/immer.ts", "kind": "Immer adapter", "runtime": "Bundler", "dangerous_calls": "None", "network": "None", "notes": "Peer-dep (immer), opt-in middleware", "file_sha": "32013285083648e8d58ba1f76d73b9bdc02fef50", "line_ranges": null, "diff_anchor": null },
-        { "path": "src/middleware/redux.ts", "kind": "Redux-style API adapter", "runtime": "Bundler", "dangerous_calls": "None", "network": "None", "notes": "Shims dispatch/reducer onto a zustand store", "file_sha": "32013285083648e8d58ba1f76d73b9bdc02fef50", "line_ranges": null, "diff_anchor": null },
-        { "path": "src/middleware/combine.ts", "kind": "Store composition helper", "runtime": "Bundler", "dangerous_calls": "None", "network": "None", "notes": "Pure function composition", "file_sha": "32013285083648e8d58ba1f76d73b9bdc02fef50", "line_ranges": null, "diff_anchor": null },
-        { "path": "src/middleware/subscribeWithSelector.ts", "kind": "Selector subscription helper", "runtime": "Bundler", "dangerous_calls": "None", "network": "None", "notes": "Pure function", "file_sha": "32013285083648e8d58ba1f76d73b9bdc02fef50", "line_ranges": null, "diff_anchor": null },
-        { "path": "src/middleware/ssrSafe.ts", "kind": "SSR hydration helper", "runtime": "Bundler", "dangerous_calls": "None", "network": "None", "notes": "Guards `window` access", "file_sha": "32013285083648e8d58ba1f76d73b9bdc02fef50", "line_ranges": null, "diff_anchor": null },
-        { "path": "src/*/shallow.ts (3 files)", "kind": "Shallow-equality helpers", "runtime": "Bundler", "dangerous_calls": "None", "network": "None", "notes": "Comparison helpers", "file_sha": "32013285083648e8d58ba1f76d73b9bdc02fef50", "line_ranges": null, "diff_anchor": null },
-        { "path": "src/types.d.ts", "kind": "Type declarations", "runtime": "Compile-time only", "dangerous_calls": "None", "network": "None", "notes": "Not executable at runtime", "file_sha": "32013285083648e8d58ba1f76d73b9bdc02fef50", "line_ranges": null, "diff_anchor": null }
+        {
+          "path": "src/index.ts",
+          "kind": "Barrel re-export",
+          "runtime": "Bundler",
+          "dangerous_calls": "None",
+          "network": "None",
+          "notes": "Entrypoint (`main` in `package.json`)",
+          "file_sha": "32013285083648e8d58ba1f76d73b9bdc02fef50",
+          "line_ranges": null,
+          "diff_anchor": null
+        },
+        {
+          "path": "src/vanilla.ts",
+          "kind": "Core store primitives",
+          "runtime": "Bundler",
+          "dangerous_calls": "None",
+          "network": "None",
+          "notes": "`createStore` primitive",
+          "file_sha": "32013285083648e8d58ba1f76d73b9bdc02fef50",
+          "line_ranges": null,
+          "diff_anchor": null
+        },
+        {
+          "path": "src/react.ts",
+          "kind": "React hook wrapper",
+          "runtime": "Bundler",
+          "dangerous_calls": "None",
+          "network": "None",
+          "notes": "Uses `React.useSyncExternalStore`, `React.useDebugValue`",
+          "file_sha": "32013285083648e8d58ba1f76d73b9bdc02fef50",
+          "line_ranges": null,
+          "diff_anchor": null
+        },
+        {
+          "path": "src/traditional.ts",
+          "kind": "Legacy store variant",
+          "runtime": "Bundler",
+          "dangerous_calls": "None",
+          "network": "None",
+          "notes": "Uses `useSyncExternalStoreExports` shim for older React",
+          "file_sha": "32013285083648e8d58ba1f76d73b9bdc02fef50",
+          "line_ranges": null,
+          "diff_anchor": null
+        },
+        {
+          "path": "src/middleware/persist.ts",
+          "kind": "Storage middleware",
+          "runtime": "Bundler",
+          "dangerous_calls": "None",
+          "network": "None (direct)",
+          "notes": "May touch `localStorage`/`sessionStorage` via user-provided storage adapter",
+          "file_sha": "32013285083648e8d58ba1f76d73b9bdc02fef50",
+          "line_ranges": null,
+          "diff_anchor": null
+        },
+        {
+          "path": "src/middleware/devtools.ts",
+          "kind": "Redux DevTools bridge",
+          "runtime": "Bundler",
+          "dangerous_calls": "1 `.exec()` \u2014 **regex match, not process exec**",
+          "network": "None",
+          "notes": "Posts messages to `window.__REDUX_DEVTOOLS_EXTENSION__`. The `.exec()` at line 177 is `RegExp.prototype.exec`",
+          "file_sha": "32013285083648e8d58ba1f76d73b9bdc02fef50",
+          "line_ranges": "177",
+          "diff_anchor": "src/middleware/devtools.ts#L177"
+        },
+        {
+          "path": "src/middleware/immer.ts",
+          "kind": "Immer adapter",
+          "runtime": "Bundler",
+          "dangerous_calls": "None",
+          "network": "None",
+          "notes": "Peer-dep (immer), opt-in middleware",
+          "file_sha": "32013285083648e8d58ba1f76d73b9bdc02fef50",
+          "line_ranges": null,
+          "diff_anchor": null
+        },
+        {
+          "path": "src/middleware/redux.ts",
+          "kind": "Redux-style API adapter",
+          "runtime": "Bundler",
+          "dangerous_calls": "None",
+          "network": "None",
+          "notes": "Shims dispatch/reducer onto a zustand store",
+          "file_sha": "32013285083648e8d58ba1f76d73b9bdc02fef50",
+          "line_ranges": null,
+          "diff_anchor": null
+        },
+        {
+          "path": "src/middleware/combine.ts",
+          "kind": "Store composition helper",
+          "runtime": "Bundler",
+          "dangerous_calls": "None",
+          "network": "None",
+          "notes": "Pure function composition",
+          "file_sha": "32013285083648e8d58ba1f76d73b9bdc02fef50",
+          "line_ranges": null,
+          "diff_anchor": null
+        },
+        {
+          "path": "src/middleware/subscribeWithSelector.ts",
+          "kind": "Selector subscription helper",
+          "runtime": "Bundler",
+          "dangerous_calls": "None",
+          "network": "None",
+          "notes": "Pure function",
+          "file_sha": "32013285083648e8d58ba1f76d73b9bdc02fef50",
+          "line_ranges": null,
+          "diff_anchor": null
+        },
+        {
+          "path": "src/middleware/ssrSafe.ts",
+          "kind": "SSR hydration helper",
+          "runtime": "Bundler",
+          "dangerous_calls": "None",
+          "network": "None",
+          "notes": "Guards `window` access",
+          "file_sha": "32013285083648e8d58ba1f76d73b9bdc02fef50",
+          "line_ranges": null,
+          "diff_anchor": null
+        },
+        {
+          "path": "src/*/shallow.ts (3 files)",
+          "kind": "Shallow-equality helpers",
+          "runtime": "Bundler",
+          "dangerous_calls": "None",
+          "network": "None",
+          "notes": "Comparison helpers",
+          "file_sha": "32013285083648e8d58ba1f76d73b9bdc02fef50",
+          "line_ranges": null,
+          "diff_anchor": null
+        },
+        {
+          "path": "src/types.d.ts",
+          "kind": "Type declarations",
+          "runtime": "Compile-time only",
+          "dangerous_calls": "None",
+          "network": "None",
+          "notes": "Not executable at runtime",
+          "file_sha": "32013285083648e8d58ba1f76d73b9bdc02fef50",
+          "line_ranges": null,
+          "diff_anchor": null
+        }
       ],
       "closing_note": "**Note on the one `.exec()` hit.** The Step A dangerous-primitive grep surfaced exactly one `.exec()` call across `src/`: `src/middleware/devtools.ts:177`. This is not a process-exec. It's `RegExp.prototype.exec()` called on the caller-line string that DevTools uses to label the action in its timeline UI. No `child_process`, no `spawn`, no `execFile`, no shell."
     },
-
     "pr_sample_review": {
-      "intro": "**Recent PR activity is routine.** Sample of 7 most recent merges shows README fixes, Dependabot devDep bumps, docs-link updates, and a persist-hydration bugfix. One self-merge in the sample (dai-shi merged his own devDep bump) — common for a maintainer-owned library, low risk because the PR was a routine dep version bump.",
+      "intro": "**Recent PR activity is routine.** Sample of 7 most recent merges shows README fixes, Dependabot devDep bumps, docs-link updates, and a persist-hydration bugfix. One self-merge in the sample (dai-shi merged his own devDep bump) \u2014 common for a maintainer-owned library, low risk because the PR was a routine dep version bump.",
       "rows": [
-        { "number": 3466, "what": "Update TypeScript guide links in README", "author": "FelixEckl (CONTRIBUTOR)", "merger": "dai-shi", "reviewed": "No formal decision", "concern": "Docs only. Different author/merger — practical pair-of-eyes.", "flagged": false },
-        { "number": 3447, "what": "DevDep bump via dependabot", "author": "dependabot[bot]", "merger": "dbritto-dev", "reviewed": "No formal decision", "concern": "Routine bot bump. Different merger.", "flagged": false },
-        { "number": 3443, "what": "Test coverage expansion", "author": "mahmoodhamdi", "merger": "dbritto-dev", "reviewed": "No formal decision", "concern": "Tests only.", "flagged": false },
-        { "number": 3442, "what": "Test coverage expansion (follow-up)", "author": "mahmoodhamdi", "merger": "dbritto-dev", "reviewed": "No formal decision", "concern": "Tests only.", "flagged": false },
-        { "number": 3427, "what": "DevDep bump (rollup/typescript)", "author": "dai-shi (MEMBER)", "merger": "dai-shi", "reviewed": "No formal decision", "concern": "**Self-merge** — routine devDep bump. Low risk.", "flagged": false },
-        { "number": 3423, "what": "Devtools type correction", "author": "pavan-sh", "merger": "dai-shi", "reviewed": "Formal review", "concern": "Type-level fix.", "flagged": false },
-        { "number": 3414, "what": "Persist-middleware hydration bugfix", "author": "grigoriy-reshetniak", "merger": "dai-shi", "reviewed": "Formal review", "concern": "Reviewed + merged by different people.", "flagged": false },
-        { "number": 3395, "what": "**[Security-keyword hit]** Pin `actions/deploy-pages` to commit SHA", "author": "Copilot (bot)", "merger": "dai-shi", "reviewed": "No formal decision", "concern": "**Positive signal** — bot proposed pinning, maintainer merged.", "flagged": true }
+        {
+          "number": 3466,
+          "what": "Update TypeScript guide links in README",
+          "author": "FelixEckl (CONTRIBUTOR)",
+          "merger": "dai-shi",
+          "reviewed": "No formal decision",
+          "concern": "Docs only. Different author/merger \u2014 practical pair-of-eyes.",
+          "flagged": false
+        },
+        {
+          "number": 3447,
+          "what": "DevDep bump via dependabot",
+          "author": "dependabot[bot]",
+          "merger": "dbritto-dev",
+          "reviewed": "No formal decision",
+          "concern": "Routine bot bump. Different merger.",
+          "flagged": false
+        },
+        {
+          "number": 3443,
+          "what": "Test coverage expansion",
+          "author": "mahmoodhamdi",
+          "merger": "dbritto-dev",
+          "reviewed": "No formal decision",
+          "concern": "Tests only.",
+          "flagged": false
+        },
+        {
+          "number": 3442,
+          "what": "Test coverage expansion (follow-up)",
+          "author": "mahmoodhamdi",
+          "merger": "dbritto-dev",
+          "reviewed": "No formal decision",
+          "concern": "Tests only.",
+          "flagged": false
+        },
+        {
+          "number": 3427,
+          "what": "DevDep bump (rollup/typescript)",
+          "author": "dai-shi (MEMBER)",
+          "merger": "dai-shi",
+          "reviewed": "No formal decision",
+          "concern": "**Self-merge** \u2014 routine devDep bump. Low risk.",
+          "flagged": false
+        },
+        {
+          "number": 3423,
+          "what": "Devtools type correction",
+          "author": "pavan-sh",
+          "merger": "dai-shi",
+          "reviewed": "Formal review",
+          "concern": "Type-level fix.",
+          "flagged": false
+        },
+        {
+          "number": 3414,
+          "what": "Persist-middleware hydration bugfix",
+          "author": "grigoriy-reshetniak",
+          "merger": "dai-shi",
+          "reviewed": "Formal review",
+          "concern": "Reviewed + merged by different people.",
+          "flagged": false
+        },
+        {
+          "number": 3395,
+          "what": "**[Security-keyword hit]** Pin `actions/deploy-pages` to commit SHA",
+          "author": "Copilot (bot)",
+          "merger": "dai-shi",
+          "reviewed": "No formal decision",
+          "concern": "**Positive signal** \u2014 bot proposed pinning, maintainer merged.",
+          "flagged": true
+        }
       ]
     },
-
-    "timeline_intro": "Six beats across the library's history. **The story is steady ship-and-fix** — 100+ releases over 7 years, monthly cadence in recent months, ongoing hygiene work, no security incidents, no yanked versions. One process note: the latest release shipped 31 days ago, which puts the C20 governance finding on the Warning side of the boundary but would flip it to Critical on the next scan unless governance is added first.",
-
+    "timeline_intro": "Six beats across the library's history. **The story is steady ship-and-fix** \u2014 100+ releases over 7 years, monthly cadence in recent months, ongoing hygiene work, no security incidents, no yanked versions. One process note: the latest release shipped 31 days ago, which puts the C20 governance finding on the Warning side of the boundary but would flip it to Critical on the next scan unless governance is added first.",
     "repo_vitals": {
       "rows": [
-        { "metric": "Repo age", "value": "7 years", "note": "Created 2019-04-09 — mature library with established patterns" },
-        { "metric": "Stars / Forks", "value": "57,754 / 2,033", "note": "Top-tier visibility. 178 watchers, 6 open issues." },
-        { "metric": "Primary maintainer", "value": "✅ dai-shi (411 commits)", "note": "15-year GitHub account, 127 public repos, 8,088 followers — no sockpuppet signals" },
-        { "metric": "Org founder", "value": "✅ drcmda (232 commits)", "note": "pmndrs founder, 13-year account, 95 public repos, 4,215 followers" },
-        { "metric": "Review rate (sample of 7)", "value": "⚠ 2 formal / 7 any-review", "note": "~29% formal review. Cross-merging provides practical second-pair-of-eyes. OSSF Code-Review: 6/10." },
-        { "metric": "Branch protection", "value": "❌ None on main", "note": "API 404 + empty rulesets + empty rules/branches/main — authoritative" },
-        { "metric": "CODEOWNERS", "value": "❌ None", "note": "Checked 4 standard locations — no file in any" },
-        { "metric": "Dependabot alerts", "value": "❌ Disabled", "note": "Alerts API 403 with \"disabled for this repository\" message. Version updates still active." },
-        { "metric": "Security advisories", "value": "✅ 0 filed, 0 needed", "note": "Never an advisory-class incident in 7 years. OSSF Security-Policy: 0/10 (no SECURITY.md)." },
-        { "metric": "Runtime dependencies", "value": "✅ 0", "note": "Peer deps only. 39 devDeps." },
-        { "metric": "Install-time hooks", "value": "✅ None", "note": "No pre/post/prepare/prepublish/prepack/postpack" },
-        { "metric": "Publish auth", "value": "✅ OIDC (id-token: write)", "note": "No long-lived NPM_TOKEN stored in GitHub Secrets" },
-        { "metric": "`minimumReleaseAge`", "value": "✅ 1440 (24 hours)", "note": "pnpm defensive config set in repo's own `pnpm-workspace.yaml`" },
-        { "metric": "CI workflows", "value": "8", "note": "7/8 external actions SHA-pinned; zero `pull_request_target`" },
-        { "metric": "Releases", "value": "100+ (monthly cadence)", "note": "v5.0.12 latest (31 days old at scan); v5.0.11 2026-02-01, v5.0.10 2026-01-12, v5.0.9 2025-11-30" },
-        { "metric": "Repo size", "value": "8,120 KB", "note": "Small library; tarball extraction surfaced 143 files / 2.2M uncompressed" },
-        { "metric": "Topics", "value": "hooks, react, redux, state-management", "note": "Also: hacktoberfest, react-context, reactjs" },
-        { "metric": "OSSF Scorecard", "value": "5.9/10 (14 checks returned)", "note": "Independent security rating from the [Open Source Security Foundation](https://securityscorecards.dev/). Scores 24 practices 0-10; most repos 3-5, above 6 is strong." }
+        {
+          "metric": "Repo age",
+          "value": "7 years",
+          "note": "Created 2019-04-09 \u2014 mature library with established patterns"
+        },
+        {
+          "metric": "Stars / Forks",
+          "value": "57,754 / 2,033",
+          "note": "Top-tier visibility. 178 watchers, 6 open issues."
+        },
+        {
+          "metric": "Primary maintainer",
+          "value": "\u2705 dai-shi (411 commits)",
+          "note": "15-year GitHub account, 127 public repos, 8,088 followers \u2014 no sockpuppet signals"
+        },
+        {
+          "metric": "Org founder",
+          "value": "\u2705 drcmda (232 commits)",
+          "note": "pmndrs founder, 13-year account, 95 public repos, 4,215 followers"
+        },
+        {
+          "metric": "Review rate (sample of 7)",
+          "value": "\u26a0 2 formal / 7 any-review",
+          "note": "~29% formal review. Cross-merging provides practical second-pair-of-eyes. OSSF Code-Review: 6/10."
+        },
+        {
+          "metric": "Branch protection",
+          "value": "\u274c None on main",
+          "note": "API 404 + empty rulesets + empty rules/branches/main \u2014 authoritative"
+        },
+        {
+          "metric": "CODEOWNERS",
+          "value": "\u274c None",
+          "note": "Checked 4 standard locations \u2014 no file in any"
+        },
+        {
+          "metric": "Dependabot alerts",
+          "value": "\u274c Disabled",
+          "note": "Alerts API 403 with \"disabled for this repository\" message. Version updates still active."
+        },
+        {
+          "metric": "Security advisories",
+          "value": "\u2705 0 filed, 0 needed",
+          "note": "Never an advisory-class incident in 7 years. OSSF Security-Policy: 0/10 (no SECURITY.md)."
+        },
+        {
+          "metric": "Runtime dependencies",
+          "value": "\u2705 0",
+          "note": "Peer deps only. 39 devDeps."
+        },
+        {
+          "metric": "Install-time hooks",
+          "value": "\u2705 None",
+          "note": "No pre/post/prepare/prepublish/prepack/postpack"
+        },
+        {
+          "metric": "Publish auth",
+          "value": "\u2705 OIDC (id-token: write)",
+          "note": "No long-lived NPM_TOKEN stored in GitHub Secrets"
+        },
+        {
+          "metric": "`minimumReleaseAge`",
+          "value": "\u2705 1440 (24 hours)",
+          "note": "pnpm defensive config set in repo's own `pnpm-workspace.yaml`"
+        },
+        {
+          "metric": "CI workflows",
+          "value": "8",
+          "note": "7/8 external actions SHA-pinned; zero `pull_request_target`"
+        },
+        {
+          "metric": "Releases",
+          "value": "100+ (monthly cadence)",
+          "note": "v5.0.12 latest (31 days old at scan); v5.0.11 2026-02-01, v5.0.10 2026-01-12, v5.0.9 2025-11-30"
+        },
+        {
+          "metric": "Repo size",
+          "value": "8,120 KB",
+          "note": "Small library; tarball extraction surfaced 143 files / 2.2M uncompressed"
+        },
+        {
+          "metric": "Topics",
+          "value": "hooks, react, redux, state-management",
+          "note": "Also: hacktoberfest, react-context, reactjs"
+        },
+        {
+          "metric": "OSSF Scorecard",
+          "value": "5.9/10 (14 checks returned)",
+          "note": "Independent security rating from the [Open Source Security Foundation](https://securityscorecards.dev/). Scores 24 practices 0-10; most repos 3-5, above 6 is strong."
+        }
       ]
     },
-
     "coverage_intro": "**All 12 C11 coverage cells verified.** 8/8 workflow files read, full tarball extracted (143 files, 2.2M), 0 `pull_request_target`, 0 agent-rule files, 0 prompt-injection hits, 0 README paste-blocks, no Windows surface, not a true monorepo. One caveat: 7 of 8 external actions are SHA-pinned; the one remaining reference (`pmndrs/docs/.github/workflows/build.yml@v3`) is a same-org reusable workflow rather than a third-party action.",
-
     "coverage_detail": {
       "rows": [
-        { "check": "Tarball extraction", "result": "✅ OK — 143 files, 2.2M — pinned to `32013285083648e8d58ba1f76d73b9bdc02fef50` at scan start" },
-        { "check": "Workflow files read", "result": "✅ 8 of 8 — test, publish, preview-release, compressed-size, docs, test-multiple-builds, test-multiple-versions, test-old-typescript" },
-        { "check": "SHA-pinning coverage", "result": "✅ 7/8 external actions pinned (caveat: 1 same-org reusable = `pmndrs/docs/.github/workflows/build.yml@v3`)" },
-        { "check": "`pull_request_target` scan", "result": "✅ Verified — 0 occurrences across 8 workflows" },
-        { "check": "Monorepo scope", "result": "✅ Verified — `pnpm-workspace.yaml` lists `packages: [- .]`, not a true monorepo" },
-        { "check": "README paste-scan (7.5)", "result": "✅ Verified — 0 paste-blocks. Single fenced code block is `npm install zustand`" },
-        { "check": "Agent-rule files", "result": "✅ Verified — none (checked CLAUDE.md, AGENTS.md, .cursorrules, .claude/, .github/copilot-instructions.md, .mcp.json, .goosehints, agent.md)" },
-        { "check": "Prompt-injection scan (F8)", "result": "✅ Verified — 0 matches / 0 actionable. Scanner Integrity section NOT emitted" },
-        { "check": "Distribution channels (F1)", "result": "⚠ Install path: 1/1 · Artifact: 0/1. Single npm channel. README matches CI. Artifact verification would require running the pipeline end-to-end and sha256-matching the published tarball." },
-        { "check": "Windows surface coverage (F16)", "result": "✅ Verified — no Windows surface (no .ps1/.bat/.cmd anywhere). Pure library." },
-        { "check": "Dangerous-primitive grep", "result": "✅ Verified — 0 actionable hits. Single `.exec()` is regex-match. Positive control: 22 `import` statements found." },
-        { "check": "Review-rate sample", "result": "⚠ 7 of 64 recent merges sampled — 2/7 formal (29%), 6/7 cross-merger (86%), 1/7 self-merge (14%)" },
-        { "check": "Commit pinned", "result": "`32013285083648e8d58ba1f76d73b9bdc02fef50`" },
-        { "check": "OSSF Scorecard", "result": "✅ 5.9/10 (14 checks returned)" },
-        { "check": "osv.dev", "result": "✅ Not queried (zero runtime dependencies)" },
-        { "check": "Secrets-in-history", "result": "⚠ Not scanned (gitleaks not available)" },
-        { "check": "API rate budget", "result": "✅ 5000/5000 remaining. PR sample: full." }
+        {
+          "check": "Tarball extraction",
+          "result": "\u2705 OK \u2014 143 files, 2.2M \u2014 pinned to `32013285083648e8d58ba1f76d73b9bdc02fef50` at scan start"
+        },
+        {
+          "check": "Workflow files read",
+          "result": "\u2705 8 of 8 \u2014 test, publish, preview-release, compressed-size, docs, test-multiple-builds, test-multiple-versions, test-old-typescript"
+        },
+        {
+          "check": "SHA-pinning coverage",
+          "result": "\u2705 7/8 external actions pinned (caveat: 1 same-org reusable = `pmndrs/docs/.github/workflows/build.yml@v3`)"
+        },
+        {
+          "check": "`pull_request_target` scan",
+          "result": "\u2705 Verified \u2014 0 occurrences across 8 workflows"
+        },
+        {
+          "check": "Monorepo scope",
+          "result": "\u2705 Verified \u2014 `pnpm-workspace.yaml` lists `packages: [- .]`, not a true monorepo"
+        },
+        {
+          "check": "README paste-scan (7.5)",
+          "result": "\u2705 Verified \u2014 0 paste-blocks. Single fenced code block is `npm install zustand`"
+        },
+        {
+          "check": "Agent-rule files",
+          "result": "\u2705 Verified \u2014 none (checked CLAUDE.md, AGENTS.md, .cursorrules, .claude/, .github/copilot-instructions.md, .mcp.json, .goosehints, agent.md)"
+        },
+        {
+          "check": "Prompt-injection scan (F8)",
+          "result": "\u2705 Verified \u2014 0 matches / 0 actionable. Scanner Integrity section NOT emitted"
+        },
+        {
+          "check": "Distribution channels (F1)",
+          "result": "\u26a0 Install path: 1/1 \u00b7 Artifact: 0/1. Single npm channel. README matches CI. Artifact verification would require running the pipeline end-to-end and sha256-matching the published tarball."
+        },
+        {
+          "check": "Windows surface coverage (F16)",
+          "result": "\u2705 Verified \u2014 no Windows surface (no .ps1/.bat/.cmd anywhere). Pure library."
+        },
+        {
+          "check": "Dangerous-primitive grep",
+          "result": "\u2705 Verified \u2014 0 actionable hits. Single `.exec()` is regex-match. Positive control: 22 `import` statements found."
+        },
+        {
+          "check": "Review-rate sample",
+          "result": "\u26a0 7 of 64 recent merges sampled \u2014 2/7 formal (29%), 6/7 cross-merger (86%), 1/7 self-merge (14%)"
+        },
+        {
+          "check": "Commit pinned",
+          "result": "`32013285083648e8d58ba1f76d73b9bdc02fef50`"
+        },
+        {
+          "check": "OSSF Scorecard",
+          "result": "\u2705 5.9/10 (14 checks returned)"
+        },
+        {
+          "check": "osv.dev",
+          "result": "\u2705 Not queried (zero runtime dependencies)"
+        },
+        {
+          "check": "Secrets-in-history",
+          "result": "\u26a0 Not scanned (gitleaks not available)"
+        },
+        {
+          "check": "API rate budget",
+          "result": "\u2705 5000/5000 remaining. PR sample: full."
+        }
       ],
       "monorepo": {
         "is_monorepo": false,
@@ -852,20 +1414,17 @@
       "pr_target_usage": {
         "usage_count": 0,
         "workflows_checked": 8,
-        "note": "Zero `pull_request_target` usage — rules out that class of attack"
+        "note": "Zero `pull_request_target` usage \u2014 rules out that class of attack"
       }
     },
-
     "coverage_gaps": {
       "entries": [
-        "Artifact reproducibility not verified — end-artifact was not independently rebuilt from source and sha-diffed against the published npm tarball.",
-        "Dependabot ALERTS are disabled (confirmed via explicit 403 message) — but Dependabot VERSION UPDATES are active. So we know the alert surface is off, but we did not separately enumerate the current dep-graph for unpatched CVEs.",
+        "Artifact reproducibility not verified \u2014 end-artifact was not independently rebuilt from source and sha-diffed against the published npm tarball.",
+        "Dependabot ALERTS are disabled (confirmed via explicit 403 message) \u2014 but Dependabot VERSION UPDATES are active. So we know the alert surface is off, but we did not separately enumerate the current dep-graph for unpatched CVEs.",
         "Review-rate metric is based on a 7-PR sample, not the full 300-PR window. The pattern (formal review ~29%, practical cross-merge ~100%) is consistent across the sample but a larger enumeration would tighten the estimate."
       ]
     },
-
-    "evidence_intro": "9 command-backed claims. **Skip ahead to items marked ★ START HERE** — the branch-protection-missing API check and the Dependabot-alerts-disabled diagnostic. Those two are the falsification criteria for the Warning verdict: if either reversed, the verdict would move to Clean.",
-
+    "evidence_intro": "9 command-backed claims. **Skip ahead to items marked \u2605 START HERE** \u2014 the branch-protection-missing API check and the Dependabot-alerts-disabled diagnostic. Those two are the falsification criteria for the Warning verdict: if either reversed, the verdict would move to Clean.",
     "evidence": {
       "entries": [
         {
@@ -876,7 +1435,7 @@
           "result": "{\"message\":\"Not Found\",\"status\":\"404\"}\n[]\n[]\n{\"message\":\"Not Found\",\"status\":\"404\"}\n{\"message\":\"Not Found\",\"status\":\"404\"}\n{\"message\":\"Not Found\",\"status\":\"404\"}\n{\"message\":\"Not Found\",\"status\":\"404\"}",
           "result_lang": null,
           "result_truncated": false,
-          "classification": "Confirmed fact — all four governance signals are negative. 404 on branch protection is authoritative (scan token has `repo` scope; permission-denied would be 403). Empty rulesets and rules/branches/main together capture both repo-level and org-level rulesets. CODEOWNERS absent in all four standard locations. Warning-level because release age (31 days) is 1 day outside the 30-day Critical window."
+          "classification": "Confirmed fact \u2014 all four governance signals are negative. 404 on branch protection is authoritative (scan token has `repo` scope; permission-denied would be 403). Empty rulesets and rules/branches/main together capture both repo-level and org-level rulesets. CODEOWNERS absent in all four standard locations. Warning-level because release age (31 days) is 1 day outside the 30-day Critical window."
         },
         {
           "id": "E2",
@@ -886,17 +1445,17 @@
           "result": "{\"message\":\"Dependabot alerts are disabled for this repository.\",\"documentation_url\":\"https://docs.github.com/rest/dependabot/alerts#list-dependabot-alerts-for-a-repository\",\"status\":\"403\"}\n{\"login\":\"dependabot[bot]\",\"id\":49699333,\"type\":\"Bot\",\"contributions\":18}",
           "result_lang": "json",
           "result_truncated": false,
-          "classification": "Confirmed fact — the 403 message is diagnostic (\"disabled for this repository\"), distinguishing a setting-level disable from a scan-token-scope issue. Separately, `dependabot[bot]` appears as the #6 contributor with 18 commits, so Dependabot VERSION UPDATES are active."
+          "classification": "Confirmed fact \u2014 the 403 message is diagnostic (\"disabled for this repository\"), distinguishing a setting-level disable from a scan-token-scope issue. Separately, `dependabot[bot]` appears as the #6 contributor with 18 commits, so Dependabot VERSION UPDATES are active."
         },
         {
           "id": "E3",
-          "claim": "Review-rate sample on 7 recent merges — 2 formal, 7 any-contact",
+          "claim": "Review-rate sample on 7 recent merges \u2014 2 formal, 7 any-contact",
           "command": "gh pr list -R pmndrs/zustand --state merged --limit 7 \\\n  --json number,title,author,mergedBy,reviewDecision,reviews \\\n  | jq '.[] | {pr: .number, author: .author.login, merger: .mergedBy.login,\n               formal: .reviewDecision, any_review: ((.reviews|length) > 0)}'",
           "command_lang": "bash",
           "result": "PR#3466: author=FelixEckl, merger=dai-shi, formal=null, any=false\nPR#3447: author=dependabot[bot], merger=dbritto-dev, formal=null, any=false\nPR#3443: author=mahmoodhamdi, merger=dbritto-dev, formal=null, any=false\nPR#3442: author=mahmoodhamdi, merger=dbritto-dev, formal=null, any=false\nPR#3427: author=dai-shi, merger=dai-shi, formal=null, any=false  [SELF-MERGE]\nPR#3423: author=pavan-sh, merger=dai-shi, formal=APPROVED, any=true\nPR#3414: author=grigoriy-reshetniak, merger=dai-shi, formal=APPROVED, any=true\nTotals: 2/7 formal (29%), 6/7 cross-merger (86%), 1/7 self-merge (14%)",
           "result_lang": null,
           "result_truncated": false,
-          "classification": "Confirmed fact — 2 of 7 have `reviewDecision = APPROVED`. 6 of 7 have different author/merger. The one self-merge is a dai-shi dev-deps bump (MEMBER association)."
+          "classification": "Confirmed fact \u2014 2 of 7 have `reviewDecision = APPROVED`. 6 of 7 have different author/merger. The one self-merge is a dai-shi dev-deps bump (MEMBER association)."
         },
         {
           "id": "E4",
@@ -906,7 +1465,7 @@
           "result": "[]",
           "result_lang": "json",
           "result_truncated": false,
-          "classification": "Confirmed fact — empty array. None of the six lifecycle-hook script names are present in `package.json`. Combined with `\"private\": true`, release is gated through CI only."
+          "classification": "Confirmed fact \u2014 empty array. None of the six lifecycle-hook script names are present in `package.json`. Combined with `\"private\": true`, release is gated through CI only."
         },
         {
           "id": "E5",
@@ -916,27 +1475,27 @@
           "result": "permissions:\n  id-token: write\n  contents: read\n# (triggered on release: published only; publishes from ./dist)",
           "result_lang": "yaml",
           "result_truncated": false,
-          "classification": "Confirmed fact — `id-token: write` grants the workflow an OIDC token that npm exchanges for a short-lived publish credential. No long-lived `NPM_TOKEN` is stored in GitHub Secrets."
+          "classification": "Confirmed fact \u2014 `id-token: write` grants the workflow an OIDC token that npm exchanges for a short-lived publish credential. No long-lived `NPM_TOKEN` is stored in GitHub Secrets."
         },
         {
           "id": "E6",
-          "claim": "Dangerous-primitive grep — single `.exec()` is a regex match, not process-exec",
+          "claim": "Dangerous-primitive grep \u2014 single `.exec()` is a regex match, not process-exec",
           "command": "grep -rnE '\\beval\\(|\\bnew Function\\(|child_process|execSync|spawnSync' \\\n  /tmp/scan-zustand/zustand-src/src/\ngrep -rn '\\.exec(' /tmp/scan-zustand/zustand-src/src/\ngrep -rn '^import ' /tmp/scan-zustand/zustand-src/src/ | wc -l   # positive control",
           "command_lang": "bash",
-          "result": "(no matches for eval/new Function/child_process/execSync/spawnSync)\nsrc/middleware/devtools.ts:177:  const match = callerLineRegex.exec(callerLine)\n22   # positive control — grep tool working",
+          "result": "(no matches for eval/new Function/child_process/execSync/spawnSync)\nsrc/middleware/devtools.ts:177:  const match = callerLineRegex.exec(callerLine)\n22   # positive control \u2014 grep tool working",
           "result_lang": null,
           "result_truncated": false,
-          "classification": "Confirmed fact — the only `.exec()` hit is `RegExp.prototype.exec()` against a caller-line string, used for DevTools action-name labelling. Not a process-exec. The 22-import positive control confirms the grep infrastructure was working."
+          "classification": "Confirmed fact \u2014 the only `.exec()` hit is `RegExp.prototype.exec()` against a caller-line string, used for DevTools action-name labelling. Not a process-exec. The 22-import positive control confirms the grep infrastructure was working."
         },
         {
           "id": "E7",
-          "claim": "Maintainer is long-tenured (dai-shi — 15 years, 8,088 followers)",
+          "claim": "Maintainer is long-tenured (dai-shi \u2014 15 years, 8,088 followers)",
           "command": "gh api \"users/dai-shi\" -q '{login,created_at,public_repos,followers}'\ngh api \"users/drcmda\" -q '{login,created_at,public_repos,followers}'",
           "command_lang": "bash",
           "result": "{\"login\":\"dai-shi\",\"created_at\":\"2010-11-21T12:52:33Z\",\"public_repos\":127,\"followers\":8088}\n{\"login\":\"drcmda\",\"created_at\":\"2012-08-26T18:35:17Z\",\"public_repos\":95,\"followers\":4215}",
           "result_lang": "json",
           "result_truncated": false,
-          "classification": "Confirmed fact — 15-year and 13-year GitHub accounts, large followings, substantial public repo counts. No sockpuppet signals."
+          "classification": "Confirmed fact \u2014 15-year and 13-year GitHub accounts, large followings, substantial public repo counts. No sockpuppet signals."
         },
         {
           "id": "E8",
@@ -946,7 +1505,7 @@
           "result": "minimumReleaseAge: 1440",
           "result_lang": "yaml",
           "result_truncated": false,
-          "classification": "Confirmed fact — 1440 minutes = 24 hours. pnpm will refuse to install a dep version younger than 24 hours. The same defensive config the Step 2 action-card recommends to consumers."
+          "classification": "Confirmed fact \u2014 1440 minutes = 24 hours. pnpm will refuse to install a dep version younger than 24 hours. The same defensive config the Step 2 action-card recommends to consumers."
         },
         {
           "id": "E9",
@@ -956,31 +1515,69 @@
           "result": "(no matches)\n8",
           "result_lang": null,
           "result_truncated": false,
-          "classification": "Confirmed fact — 8 workflow files, zero `pull_request_target` occurrences. That event type is the vector in most GitHub Actions PwnRequest supply-chain incidents; its absence here rules out that class of attack."
+          "classification": "Confirmed fact \u2014 8 workflow files, zero `pull_request_target` occurrences. That event type is the vector in most GitHub Actions PwnRequest supply-chain incidents; its absence here rules out that class of attack."
         }
       ]
+    },
+    "scorecard_cells": {
+      "does_anyone_check_the_code": {
+        "color": "amber",
+        "short_answer": "Review happens but isn't required \u2014 ~29% formal review rate in sample, no branch protection, no CODEOWNERS",
+        "rationale": null,
+        "edge_case": null,
+        "suggested_threshold_adjustment": null,
+        "computed_signal_refs": [],
+        "override_reason": null
+      },
+      "do_they_fix_problems_quickly": {
+        "color": "green",
+        "short_answer": "Yes \u2014 long-tenured multi-maintainer pmndrs collective; issues triaged promptly",
+        "rationale": null,
+        "edge_case": null,
+        "suggested_threshold_adjustment": null,
+        "computed_signal_refs": [],
+        "override_reason": null
+      },
+      "do_they_tell_you_about_problems": {
+        "color": "green",
+        "short_answer": "Yes \u2014 monthly releases, active Copilot-bot hygiene PRs, CHANGELOG maintained",
+        "rationale": null,
+        "edge_case": null,
+        "suggested_threshold_adjustment": null,
+        "computed_signal_refs": [],
+        "override_reason": null
+      },
+      "is_it_safe_out_of_the_box": {
+        "color": "green",
+        "short_answer": "Yes \u2014 clean code-path, no install hooks, no network calls, zero runtime deps",
+        "rationale": null,
+        "edge_case": null,
+        "suggested_threshold_adjustment": null,
+        "computed_signal_refs": [],
+        "override_reason": null
+      }
     }
   },
-
   "phase_4b_computed": {
     "verdict": {
       "level": "Caution",
-      "computed_from_findings": ["F0", "F1"]
+      "computed_from_findings": [
+        "F0",
+        "F1"
+      ]
     }
   },
-
   "phase_5_prose_llm": {
     "editorial_caption": {
-      "text": "A 57,000-star React state library with zero runtime dependencies, no install-time hooks, and a clean code surface — but no branch protection, no CODEOWNERS, and Dependabot alerts disabled on one of the most-imported libraries on npm."
+      "text": "A 57,000-star React state library with zero runtime dependencies, no install-time hooks, and a clean code surface \u2014 but no branch protection, no CODEOWNERS, and Dependabot alerts disabled on one of the most-imported libraries on npm."
     },
-
     "per_finding_prose": {
       "entries": [
         {
           "finding_id": "F0",
           "what_we_observed": "Classic branch protection on main returns 404. Rulesets: []. Rules on main: []. CODEOWNERS absent in all four standard locations.",
           "what_this_means": "When you install zustand, you are trusting the maintainers' account security for a package imported by millions of projects. There is no automated gate that would catch a phished-credential push before it reached your next install.",
-          "what_this_does_not_mean": "The library itself is clean — zero runtime deps, zero install hooks, no network, no dangerous primitives. This finding is purely about the upstream process gap, not about current code shipping something harmful."
+          "what_this_does_not_mean": "The library itself is clean \u2014 zero runtime deps, zero install hooks, no network, no dangerous primitives. This finding is purely about the upstream process gap, not about current code shipping something harmful."
         },
         {
           "finding_id": "F1",
@@ -997,7 +1594,6 @@
       ]
     }
   },
-
   "phase_6_assembly": {
     "assembled": true,
     "assembly_timestamp": "2026-04-16T00:00:00Z",
@@ -1005,11 +1601,34 @@
     "evidence_refs_valid": true,
     "field_count": null
   },
-
   "scan_sign_off": {
     "approved_for_release": false,
     "approved_by": null,
     "approved_at": null,
     "notes": null
+  },
+  "phase_3_advisory": {
+    "scorecard_hints": {
+      "does_anyone_check_the_code": {
+        "color": "amber",
+        "short_answer": "Review happens but isn't required \u2014 ~29% formal review rate in sample, no branch protection, no CODEOWNERS",
+        "signals": []
+      },
+      "do_they_fix_problems_quickly": {
+        "color": "green",
+        "short_answer": "Yes \u2014 long-tenured multi-maintainer pmndrs collective; issues triaged promptly",
+        "signals": []
+      },
+      "do_they_tell_you_about_problems": {
+        "color": "green",
+        "short_answer": "Yes \u2014 monthly releases, active Copilot-bot hygiene PRs, CHANGELOG maintained",
+        "signals": []
+      },
+      "is_it_safe_out_of_the_box": {
+        "color": "green",
+        "short_answer": "Yes \u2014 clean code-path, no install hooks, no network calls, zero runtime deps",
+        "signals": []
+      }
+    }
   }
 }

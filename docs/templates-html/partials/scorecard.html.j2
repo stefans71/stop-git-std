@@ -3,17 +3,19 @@
   MD analogue: docs/templates/partials/scorecard.md.j2
   Source scaffold: EXAMPLE-START: scorecard (lines ~1070-1095)
 
-  Data paths:
-    form.phase_3_computed.scorecard_cells.{
+  Data paths (V1.2 D2 — authority moved to phase_4):
+    form.phase_4_structured_llm.scorecard_cells.{
       does_anyone_check_the_code,
       do_they_fix_problems_quickly,
       do_they_tell_you_about_problems,
       is_it_safe_out_of_the_box
     }
-    each cell: {color, short_answer}
+    each cell (V1.2): {color, short_answer, rationale, edge_case,
+                       suggested_threshold_adjustment,
+                       computed_signal_refs: [...], override_reason}
   Canonical question order (source template): check / fix / tell / safe
 #}
-{% set cells = form.get('phase_3_computed', {}).get('scorecard_cells', {}) or {} %}
+{% set cells = form.get('phase_4_structured_llm', {}).get('scorecard_cells', {}) or {} %}
 {% set questions = [
   ('does_anyone_check_the_code',       'Does anyone check the code?'),
   ('do_they_fix_problems_quickly',     'Do they fix problems quickly?'),
