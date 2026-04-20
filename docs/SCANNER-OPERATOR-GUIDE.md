@@ -377,14 +377,14 @@ The CSS includes the single-pass scan-line animation (a thin cyan line that swee
 - Does not require Phase 4b.
 - Example in the current catalog: `GitHub-Scanner-Archon-rerun-record.md` (2026-04-16 re-run confirming the Archon scan's verdict held across a dev→dev SHA bump).
 
-### 8.8 Phase 4 — Workflow V2.5-preview (JSON-first, Step G validation only)
+### 8.8 Phase 4 — Workflow V2.5-preview (JSON-first, post-Step-G validated on 3 shapes)
 
-> **V2.5-preview — Step G acceptance runs only. Not for production scans.**
-> - Use only for Step G acceptance runs (see `docs/External-Board-Reviews/041826-renderer-alignment/CONSOLIDATION.md` §"Step G — C7 acceptance matrix"). Most operators should use Workflow V2.4 (§8.5–8.6).
-> - Do NOT use for catalog scans or user-facing production scans. Use Workflow V2.4 (§8.5–8.6).
-> - Preview pipeline; output not yet considered catalog-grade until Step G passes.
-> - Only validated against 3 shapes: JS library (`tests/fixtures/zustand-form.json`), curl-pipe installer (`tests/fixtures/caveman-form.json`), agentic platform monorepo (`tests/fixtures/archon-subset-form.json`). CLI-binary (fd), Claude-Code-skills (gstack), web-app (postiz-app), and Python-platform (hermes-agent) shapes are NOT yet fixtured.
-> - **Last reviewed: 2026-04-19.** Step G execution approach unanimously approved by board review `docs/External-Board-Reviews/041926-step-g-execution/CONSOLIDATION.md` (HEAD `e297161`). Prior gates: `041826-step-f-alignment-validation/` + `041826-step-g-kickoff/`.
+> **V2.5-preview — Step G passed on 3 validation shapes (zustand, caveman, Archon). First unfixtured production scan pending before full production clearance.**
+> - Step G acceptance matrix: 3/3 targets cleared all 7 gates (schema, --report, --parity, evidence refs, determinism, structural parity 6.1-6.6, phase-boundary contamination). See catalog entries 12-14 and `.board-review-temp/step-g-execution/` working tree.
+> - Continue to use Workflow V2.4 (§8.5–8.6) as the default production path until a wild scan on an unfixtured repo proves the pipeline works beyond the 3 known shapes.
+> - Validated shapes so far: JS library (zustand-v3 at `3201328`), curl-pipe installer (caveman at `c2ed24b`), agentic platform monorepo (Archon at `3dedc22`). CLI-binary (fd), Claude-Code-skills (gstack), web-app (postiz-app), and Python-platform (hermes-agent) shapes are NOT yet exercised by the V2.5-preview pipeline.
+> - **Production-clearance trigger** (post-Step-G, committed): a successful wild scan — live `gh api` capture on a repo outside the 3 validation shapes, rendering through the V2.5-preview pipeline with all 7 gates clean — promotes V2.5-preview from "Step-G-validated on 3 shapes" to "production-cleared." Until that trigger fires, V2.5-preview remains in preview status.
+> - **Last reviewed: 2026-04-20.** Step G acceptance confirmed by commits `2c13324` (zustand), `ed68fae` (caveman), `be56935` (Archon). SF1 scorecard-calibration board (`docs/External-Board-Reviews/042026-sf1-calibration/CONSOLIDATION.md`) resolved the compute.py↔V2.4-comparator drift that surfaced pre-pilot. Step G execution approach board: `041926-step-g-execution/`. Prior gates: `041826-step-f-alignment-validation/` + `041826-step-g-kickoff/`.
 
 #### 8.8.1 Status
 

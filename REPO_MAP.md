@@ -80,14 +80,14 @@ Older flat-file board records (pre-`External-Board-Reviews/` layout, kept for hi
 
 ### 2.2 Current state
 
-- **HEAD:** Session 3 in progress (2026-04-20) — SF1 board review complete (4 rounds, archived); Phase 1 execution starting.
-- **Tests:** 279/279 passing (`python3 -m pytest tests/ -q`)
-- **Validator on all 3 V1.1 fixtures:** `--report` clean, `--parity` zero errors + zero `WARNING:` lines (INFO notes only, non-gating)
-- **Parity sweep:** 13/13 MD+HTML pairs clean
-- **Repo↔package validator:** byte-identical
-- **CSS:** 824 lines
-- **Catalog:** 11 V2.4 scans (unchanged)
-- **Step G status:** **UNBLOCKING — SF1 resolved.** 4-round board review (R1 Blind → R2 Consolidation on hybrid → R3 Confirmation → R4 narrow Tension-1 tiebreaker) returned 3/3 CONFIRM on the frozen hybrid + 3/3 UNION-ACCEPT on D-7 trigger + 2-1 G-C-ACCEPT on Archon Q3 disposition. Archived at `docs/External-Board-Reviews/042026-sf1-calibration/`. Phase 1 in progress: Gate A (schema) PASS; Gate B (zustand F0 type) pending; Gate C (Archon Q3 audit per Pragmatist R4 5-step criteria) pending. 5 temporary compatibility patches queued for `docs/compute.py`. D-7 committed as post-Step-G architecture work (scorecard authority migration to V1.2).
+- **HEAD:** `be56935` (2026-04-20 session 3, pending session-close commit) — Step G 3/3 targets through the acceptance matrix.
+- **Tests:** 289/289 passing (`python3 -m pytest tests/ -q`) — includes 10 new SF1 compute.py patch tests under `TestSF1ScorecardPatches`.
+- **Validator on all 3 V2.5-preview outputs:** `--report` clean on every MD + HTML, `--parity` zero errors + zero `WARNING:` lines on all 3 pairs.
+- **Parity sweep:** 16/16 MD+HTML pairs clean (13 V2.4 catalog + 3 new v2.5-preview).
+- **Repo↔package validator:** byte-identical (no package change this session).
+- **CSS:** 824 lines (unchanged).
+- **Catalog:** 14 entries — 11 `v2.4` + 3 new `v2.5-preview` (entries 12-14: zustand-v3, caveman, Archon) from Step G acceptance runs.
+- **Step G status:** **PASSED on 3 validation shapes.** All 3 targets cleared all 7 acceptance gates including gate 6.1-6.6 (finding inventory, severity, cells, verdict, split, evidence-linkage) and gate 7 (phase-boundary contamination). 12/12 scorecard cells match V2.4 comparator cell-by-cell. 19/19 finding cards match V2.4 inventory + severity. SF1 scorecard-calibration resolved via 4-round board (`docs/External-Board-Reviews/042026-sf1-calibration/`); 4 compute.py temporary compatibility patches + U-11 Archon Q3 catalog correction applied; D-7 (scorecard authority migration V1.1 → V1.2) committed as post-Step-G architecture work. **V2.5-preview is NOT yet production-cleared** — first unfixtured wild scan on a shape outside {zustand, caveman, Archon} is the remaining trigger. Until then V2.4 remains default production path.
 - **Cross-repo FrontierBoard SOP update** (pushed to stefans71/FrontierBoard main as `e01303a`): pre-archive dissent audit gate mandatory SOP requirement. Canonical at `/root/.frontierboard/FrontierBoard/docs/REVIEW-SOP.md` and `/root/tinkering/FrontierBoard/Git-030126/docs/REVIEW-SOP.md`.
 
 ### 2.3 Board runbook — how to run the 3-model governance board
@@ -162,21 +162,44 @@ Then update `docs/External-Board-Reviews/README.md` master index.
 - 3-round with 2-1 owner-directive resolutions: `docs/External-Board-Reviews/041826-step-g-kickoff/`
 - Fix-artifact-first governance: R3 brief has owner-authored BEFORE/AFTER, board votes SECOND/ADJUST/REJECT
 
-### 2.4 Step G — SF1 RESOLVED; Phase 1 execution in progress
+### 2.4 Step G — PASSED 3/3, production-clearance pending
 
-**SF1 board outcome** (archived `docs/External-Board-Reviews/042026-sf1-calibration/CONSOLIDATION.md`, 4 rounds, 2026-04-20):
+**Acceptance matrix** (commits `2c13324`, `ed68fae`, `be56935`):
 
-- **R1 (Blind):** Pragmatist A / Codex new-D / DeepSeek C+
-- **R2 (Consolidation on hybrid):** 1 ACCEPT + 2 ACCEPT-WITH-MODS — hybrid: "A-now + C-for-V1.2 + edge_case"
-- **R3 (Confirmation on frozen hybrid):** 3/3 CONFIRM · 3/3 UNION-ACCEPT on D-7 trigger · 1-1-1 on Tension 1 (Archon Q3)
-- **R4 (narrow tiebreaker):** 2-1 G-C-ACCEPT (Pragmatist moved A → G-C-ACCEPT after live `gh api` verification); DeepSeek dissent (D-CANONICAL) preserved in CONSOLIDATION §9
-- **Dissent audit:** clean, zero silent drops
+| # | Target | SHA | Cells (Q1/Q2/Q3/Q4) | Verdict | Split axis | Findings | Commit |
+|---|---|---|---|---|---|---|---|
+| 1 | pmndrs/zustand v3 | `3201328` | amber/green/amber/green | Caution | none | F0-F3 (4) | `2c13324` |
+| 2 | JuliusBrussee/caveman | `c2ed24b` | red/amber/red/red | Critical | Version | F0/F5/F11/F14/F16 (5) | `ed68fae` |
+| 3 | coleam00/Archon | `3dedc22` | red/amber/amber/red | Critical | Deployment | F0-F8 (9) | `be56935` |
 
-**Resolution (§6 of CONSOLIDATION):**
+- 12/12 scorecard cells match V2.4 comparator cell-by-cell.
+- 18/18 finding cards (4 + 5 + 9) match V2.4 inventory + severity.
+- All 3 targets clear all 7 gates. Deterministic renders (byte-identical MD5 on double-render).
 
-- **Phase 1 (V1.1, this session):** Gates A/B/C → apply 5 compute.py temporary compatibility patches → update 3 fixture forms → re-run dry-run → resume Step G
-- **Phase 2 (post-Step-G, D-7):** schema split V1.1 → V1.2, move scorecard cells from `phase_3_computed` to `phase_4_structured_llm`, `compute_scorecard_cells()` demoted to advisory. 4-trigger disjunctive union (scope expansion / 3 scans ≥2 shapes / 6-month fallback / semantic drift).
-- **Option B (catalog harmonization) explicitly rejected.**
+**SF1 board outcome** (`docs/External-Board-Reviews/042026-sf1-calibration/CONSOLIDATION.md`, 4 rounds, 2026-04-20):
+
+- R1 Blind: Pragmatist A / Codex new-D / DeepSeek C+
+- R2 Consolidation on hybrid "A-now + C-for-V1.2 + edge_case": 1 ACCEPT + 2 ACCEPT-WITH-MODS
+- R3 Confirmation on frozen hybrid: 3/3 CONFIRM + 3/3 UNION-ACCEPT on D-7 trigger + 1-1-1 on Tension-1
+- R4 narrow tiebreaker: 2-1 G-C-ACCEPT (Pragmatist moved from A-CANONICAL to G-C-ACCEPT after the live `gh api` Archon-evidence brief). DeepSeek dissent (D-CANONICAL) preserved
+- Dissent audit: clean across all 4 rounds
+
+**Phase 1 delivered** (commits `7f90a1b`, `7d300a8`):
+
+- 4 `docs/compute.py` temporary compatibility patches annotated as V1.1 compatibility-only (Q1 governance-floor override; Q2 `closed_fix_lag_days`; Q3 `has_contributing_guide`; Q4 `has_warning_on_install_path`). Gate C audit (Archon PR #1169 = undisclosed security fix → `has_reported_fixed_vulns=TRUE`) drove D-CANONICAL outcome on Q3 Archon, applied as U-11 single-cell catalog correction (green → amber).
+- 10 new tests under `TestSF1ScorecardPatches` (289/289 passing).
+
+**Phase 2 committed** (D-7):
+
+Schema split V1.1 → V1.2: move scorecard cells from `phase_3_computed` to `phase_4_structured_llm.scorecard_cells` with `edge_case` + `suggested_threshold_adjustment` + `computed_signal_refs` structured fields. `compute_scorecard_cells()` demoted to advisory. Gate 6.3 changes from "cell-by-cell match" to "override-explained." Step 3b byte-for-byte retained for the other 7 Phase 3 ops.
+
+D-7 trigger (disjunctive, first-to-fire): first scan on shape outside current 7 catalog shapes / 3 live scans post-Step-G with ≥2 shape categories / 6 months post-Step-G / any semantic-not-threshold drift.
+
+**Production-clearance trigger (NOT YET FIRED):**
+
+V2.5-preview is Step-G-validated on the 3 pinned-SHA validation shapes but is NOT yet production-cleared. The remaining trigger: a successful wild scan — live `gh api` capture on a repo outside {zustand, caveman, Archon}, rendering clean through the V2.5-preview pipeline with all 7 gates passing. Until then, V2.4 stays the default production path. See Operator Guide §8.8 opening callout.
+
+**Option B (catalog harmonization) explicitly rejected** by the SF1 board.
 
 **Pre-flight state (clean, preserved across the halt):**
 - Step -2 (provenance): `zustand-step-g-form.json` pre-registered with `step-g-live-pipeline` tag in `tests/fixtures/provenance.json`

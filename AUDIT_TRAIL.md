@@ -17,6 +17,53 @@ Canonical log of milestone commits with the verification state captured at commi
 
 ---
 
+## Checkpoint — 2026-04-20 (session 3 close) — Step G PASSED 3/3; V2.5-preview Step-G-validated; production-clearance pending first wild scan
+
+**HEAD:** (pending session-close commit on top of `be56935`)
+
+**Session 3 commit chain (from `e267805` → session-close):**
+
+```
+<session-close>  Session 3 close: Step G 3/3 PASSED — catalog + guide + REPO_MAP + CLAUDE.md updates
+be56935          Step G Archon — ALL 7 GATES PASS, Step G 3/3 complete
+ed68fae          Step G caveman (proper redo) — ALL 7 GATES PASS with fresh authoring from bundle
+8a23ee8          Revert "Step G caveman — ALL 7 GATES PASS (2nd V2.5-preview scan)"
+e24e695          Step G caveman — ALL 7 GATES PASS (2nd V2.5-preview scan) [REVERTED]
+2c13324          Step G zustand pilot — ALL 7 GATES PASS (first V2.5-preview scan)
+7d300a8          SF1 Phase 1: compute.py scorecard patches + U-11 Archon Q3 correction
+7f90a1b          Archive SF1 board review: 4-round resolution, D-7 committed
+```
+
+**Final state:**
+
+- Tests: 289/289 passing (10 new SF1 patch tests in `TestSF1ScorecardPatches`)
+- Step G acceptance matrix: 3/3 targets, 7 gates each, 12/12 scorecard cells match V2.4, 18/18 finding cards match V2.4 inventory + severity
+- Catalog: 14 entries (11 `v2.4` + 3 new `v2.5-preview` at positions 12-14)
+- Parity sweep: 16/16 MD+HTML pairs clean (13 V2.4 + 3 V2.5-preview)
+- 3 new bundle files at `docs/board-review-data/scan-bundles/`: `zustand-v3-3201328.md` (reconciled), `caveman-c2ed24b.md` (fresh-authored), `Archon-3dedc22.md` (fresh-authored)
+- D-7 committed as post-Step-G architecture work (scorecard authority migration V1.1 → V1.2)
+
+**What got done this session:**
+
+1. **SF1 board review** (4 rounds, archived at `docs/External-Board-Reviews/042026-sf1-calibration/`) — resolved the scorecard calibration drift that halted Step G pre-pilot in session 2. Final: hybrid "A-now + C-for-V1.2 + edge_case" with 2-1 G-C-ACCEPT on Archon Q3 Tension-1. DeepSeek D-CANONICAL dissent preserved in CONSOLIDATION §9.
+2. **SF1 Phase 1** (commit `7d300a8`) — 4 `docs/compute.py` temporary-compatibility patches (Q1 governance-floor / Q2 closed_fix_lag_days / Q3 has_contributing_guide / Q4 has_warning_on_install_path split) + U-11 single-cell catalog correction (Archon Q3 green → amber). 10 new regression tests.
+3. **Step G zustand pilot** (`2c13324`) — first V2.5-preview pass. All 7 gates clear.
+4. **Step G caveman attempt + revert + redo** (`e24e695` → `8a23ee8` → `ed68fae`) — first attempt reverted for fixture content reuse on Phase 4 findings; proper redo authored fresh from a new bundle with full discipline.
+5. **Step G Archon** (`be56935`) — third and final Step G target. Schema pre-read before Phase 4 authoring avoided the 45-error ping-pong caveman's first attempt hit (Archon: 1 schema error, 1 reshape).
+6. **Session-close commit** — scanner-catalog + Operator Guide + REPO_MAP + CLAUDE.md + AUDIT_TRAIL updates. V2.5-preview tagged as Step-G-validated but NOT yet production-cleared (first unfixtured wild scan is the remaining trigger).
+
+**Production-clearance trigger (not yet fired):**
+
+A successful wild scan — live `gh api` capture on a repo outside the 3 validation shapes {zustand, caveman, Archon}, rendering clean through the V2.5-preview pipeline with all 7 gates passing — promotes V2.5-preview from "Step-G-validated on 3 shapes" to "production-cleared." Until then V2.4 stays the default production path. Operator Guide §8.8 opening callout and CLAUDE.md Rendering pipeline note both flag this gap.
+
+**Revert paths:**
+
+- Revert session-close commit → state back at `be56935` (Step G 3/3 complete but catalog/guide/maps not yet updated).
+- Revert `be56935` → Archon Step G output removed; 2/3 targets state (zustand + caveman passing).
+- Revert `ed68fae` + `be56935` → back to post-SF1-Phase-1 state (`7d300a8`), 0 Step G targets but SF1 patches + U-11 retained.
+- Revert `7d300a8` → pre-SF1-Phase-1 state (`7f90a1b`), SF1 archive exists but no compute.py patches applied.
+- Revert `7f90a1b` → `e267805`, session 2 state with SF1 HALTED.
+
 ## Checkpoint — 2026-04-20 (session 3) — SF1 board resolved (4-round); Phase 1 archival landed
 
 **HEAD:** archival commit (session 3 in progress at time of checkpoint)
