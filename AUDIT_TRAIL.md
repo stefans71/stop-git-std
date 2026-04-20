@@ -17,6 +17,36 @@ Canonical log of milestone commits with the verification state captured at commi
 
 ---
 
+## Checkpoint — 2026-04-20 (session 3) — SF1 board resolved (4-round); Phase 1 archival landed
+
+**HEAD:** archival commit (session 3 in progress at time of checkpoint)
+
+**Board outcome:** `docs/External-Board-Reviews/042026-sf1-calibration/CONSOLIDATION.md`
+- R1 Blind: Pragmatist A / Codex new-D / DeepSeek C+
+- R2 Consolidation on hybrid "A-now + C-for-V1.2 + edge_case": 1 ACCEPT + 2 ACCEPT-WITH-MODS
+- R3 Confirmation on frozen hybrid: 3/3 CONFIRM · 3/3 UNION-ACCEPT on Tension 2 · 1-1-1 on Tension 1
+- R4 narrow tiebreaker (Tension 1 only with live `gh api` Archon evidence): 2-1 G-C-ACCEPT (Pragmatist moved from A-CANONICAL). DeepSeek D-CANONICAL dissent preserved.
+- Dissent audit: clean across all 4 rounds (zero silent drops, SOP §4 attested)
+
+**What the archival commit contains:**
+1. `docs/External-Board-Reviews/042026-sf1-calibration/` — full archive (R1-R4 briefs + 12 agent responses + FINDING-SF1 + CONSOLIDATION)
+2. `docs/SCANNER-OPERATOR-GUIDE.md` — D-7 added to post-Step-G ledger (§8.8.7); §8.8.3 Step 3b annotated re: temporary compatibility patches
+3. `REPO_MAP.md` — §2.2 state + §2.4 Step G status + §2.5 deferred ledger all updated
+4. `CLAUDE.md` — Current state summary + "most recent board decision" pointer updated
+
+**Phase 1 execution state at checkpoint:**
+- Gate A (schema): PASS — no schema change needed; `scorecard_cell.inputs` is open object per `python3 -c "import json; print(json.load(open('docs/scan-schema.json'))['\$defs']['scorecard_cell']['properties']['inputs'])"` → `{'type': 'object'}` (no additionalProperties constraint)
+- Gate B (zustand F0 type): pending
+- Gate C (Archon Q3 ground-truth audit): pending — Pragmatist R4 5-step criteria as audit procedure (read PR #1169/#1217 diffs; check vuln-remediation language; A-CANONICAL outcome if FALSE, D-CANONICAL outcome if TRUE, amber-default if ambiguous)
+- 5 compute.py temporary-compatibility patches: not yet applied
+- Fixture form updates: not yet applied
+- Compute-driver dry-run re-verification: not yet done
+
+**Revert paths:**
+- Revert archival commit → previous state, Step G still "HALTED at SF1" per session 2 checkpoint
+- Step G Operator Guide §8.8 is NOT in rollback — remains canonical
+- `.board-review-temp/step-g-execution/` contents (briefs, R1-R4 responses, finding, gate log, compute driver) retained locally; archive is a copy
+
 ## Checkpoint — 2026-04-20 (session 2) — Step G pre-flight passed; HALTED at Finding SF1 (scorecard calibration drift)
 
 **HEAD:** `9840cdf`

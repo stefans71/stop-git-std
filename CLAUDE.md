@@ -96,7 +96,7 @@ Wait for the user's choice. If they pick option 2, read the `.md` file and give 
 
 ## Current state (summary)
 
-As of HEAD `9840cdf` (2026-04-20 session 2): Scanner prompt V2.4, Operator Guide V0.2 (§8.8 implements Step G execution spec with FN-1..FN-9 + D-4/D-6), 279/279 tests passing, 11 V2.4 catalog scans, Phase 7 renderer Steps A-F complete. **Step G HALTED at Finding SF1 (scorecard calibration drift) before zustand pilot authoring began.** Pre-flight Steps -2, -1, 0 all passed. Compute driver dry-run surfaced systemic cell-color divergence between `compute.py` and V2.4 comparator MD across all 3 targets (5 cell mismatches). §8.8.3 Step 3b byte-for-byte rule and §8.8.5 gate 6.3 cell-match rule are mutually exclusive under current state. Board review on SF1 required before Step G can resume — this is a DESIGN decision (A/B/C options), not a code fix. Finding doc: `.board-review-temp/step-g-execution/step-g-finding-SF1-scorecard-calibration.md`. 13/13 MD+HTML parity pairs clean after FN-5 grep pattern fix + warning/info reclassification.
+As of 2026-04-20 session 3: Scanner prompt V2.4, Operator Guide V0.2 (§8.8 implements Step G execution spec with FN-1..FN-9 + D-4/D-6 + **D-7 new**), 279/279 tests passing, 11 V2.4 catalog scans, Phase 7 renderer Steps A-F complete. **Step G SF1 RESOLVED** via 4-round board review (`docs/External-Board-Reviews/042026-sf1-calibration/CONSOLIDATION.md`): R3 3/3 CONFIRM on frozen hybrid + 3/3 UNION-ACCEPT on D-7 trigger + R4 2-1 G-C-ACCEPT on Archon Q3 disposition; dissent audit clean; DeepSeek D-CANONICAL minority dissent preserved in CONSOLIDATION §9. Phase 1 in progress: Gate A (schema) PASS (no schema change — `scorecard_cell.inputs` is open object); Gate B (zustand F0 type) + Gate C (Archon Q3 ground-truth audit per Pragmatist R4 5-step criteria) pending. 5 `docs/compute.py` temporary-compatibility patches queued; annotated explicitly as V1.1 compatibility-only, NOT steady-state design. D-7 (scorecard authority migration V1.1 → V1.2) committed as post-Step-G architecture work with 4-trigger disjunctive union. 13/13 MD+HTML parity pairs clean.
 
 **For everything else — look in `REPO_MAP.md`:**
 
@@ -105,7 +105,7 @@ As of HEAD `9840cdf` (2026-04-20 session 2): Scanner prompt V2.4, Operator Guide
 - **If you need to run the board** (agent invocation commands, failure modes, file staging, recent examples) → `REPO_MAP.md` §2.3 (Board runbook)
 - **If you need to revert / recover from a regression** → `AUDIT_TRAIL.md` (checkpoint log with HEAD SHAs, verification state, revert recipes)
 - **If you need the board review SOP** → `/root/.frontierboard/FrontierBoard/docs/REVIEW-SOP.md`
-- **If you need the most recent board decision** → `docs/External-Board-Reviews/041826-step-g-kickoff/CONSOLIDATION.md`
+- **If you need the most recent board decision** → `docs/External-Board-Reviews/042026-sf1-calibration/CONSOLIDATION.md` (SF1 scorecard calibration, 4 rounds, 2026-04-20)
 - **If you need the canonical architecture record** (8/8/4, 9-phase pipeline) → `docs/board-review-pipeline-methodology.md`
 - **If you need what to investigate during a scan** → `docs/repo-deep-dive-prompt.md` (V2.4, investigation half lines 1-1090 + output-format spec lines 1106-1490)
 - **If you need the end-to-end process document** → `docs/SCANNER-OPERATOR-GUIDE.md` (V0.2; §8.8 is the V2.5-preview pipeline)

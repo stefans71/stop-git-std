@@ -80,15 +80,14 @@ Older flat-file board records (pre-`External-Board-Reviews/` layout, kept for hi
 
 ### 2.2 Current state
 
-- **HEAD:** `9840cdf` (2026-04-20 session 2) — Step G pre-flight infrastructure: validator warning/info reclassification + FN-5 grep pattern fix (owner directive B, U-10 alignment)
+- **HEAD:** Session 3 in progress (2026-04-20) — SF1 board review complete (4 rounds, archived); Phase 1 execution starting.
 - **Tests:** 279/279 passing (`python3 -m pytest tests/ -q`)
-- **Validator on all 3 V1.1 fixtures:** `--report` clean, `--parity` zero errors + zero `WARNING:` lines (INFO notes only, non-gating per new classification)
-- **Parity sweep:** 13/13 MD+HTML pairs clean; 2 pre-existing verdict-extraction warnings on fd + archon-board-review (not Step G targets, non-blocking, logged as POST-STEP-G IMMEDIATE follow-up)
-- **Repo↔package validator:** byte-identical (0 diff lines; no change this session)
+- **Validator on all 3 V1.1 fixtures:** `--report` clean, `--parity` zero errors + zero `WARNING:` lines (INFO notes only, non-gating)
+- **Parity sweep:** 13/13 MD+HTML pairs clean
+- **Repo↔package validator:** byte-identical
 - **CSS:** 824 lines
 - **Catalog:** 11 V2.4 scans (unchanged)
-- **Step G status:** **HALTED at Finding SF1 (scorecard calibration drift)** before zustand pilot authoring began. Pre-flight Steps -2, -1, 0 all passed clean. Compute driver dry-run surfaced systemic cell-color divergence between `compute.py` and V2.4 comparator MD across all 3 targets (5 cell mismatches total). §8.8.3 Step 3b + §8.8.5 gate 6.3 mutually exclusive under current state. Board review on SF1 required before authoring resumes. Finding doc at `.board-review-temp/step-g-execution/step-g-finding-SF1-scorecard-calibration.md`.
-- **Commits ahead of origin:** 2 (`9840cdf` + pending session-close)
+- **Step G status:** **UNBLOCKING — SF1 resolved.** 4-round board review (R1 Blind → R2 Consolidation on hybrid → R3 Confirmation → R4 narrow Tension-1 tiebreaker) returned 3/3 CONFIRM on the frozen hybrid + 3/3 UNION-ACCEPT on D-7 trigger + 2-1 G-C-ACCEPT on Archon Q3 disposition. Archived at `docs/External-Board-Reviews/042026-sf1-calibration/`. Phase 1 in progress: Gate A (schema) PASS; Gate B (zustand F0 type) pending; Gate C (Archon Q3 audit per Pragmatist R4 5-step criteria) pending. 5 temporary compatibility patches queued for `docs/compute.py`. D-7 committed as post-Step-G architecture work (scorecard authority migration to V1.2).
 - **Cross-repo FrontierBoard SOP update** (pushed to stefans71/FrontierBoard main as `e01303a`): pre-archive dissent audit gate mandatory SOP requirement. Canonical at `/root/.frontierboard/FrontierBoard/docs/REVIEW-SOP.md` and `/root/tinkering/FrontierBoard/Git-030126/docs/REVIEW-SOP.md`.
 
 ### 2.3 Board runbook — how to run the 3-model governance board
@@ -163,9 +162,21 @@ Then update `docs/External-Board-Reviews/README.md` master index.
 - 3-round with 2-1 owner-directive resolutions: `docs/External-Board-Reviews/041826-step-g-kickoff/`
 - Fix-artifact-first governance: R3 brief has owner-authored BEFORE/AFTER, board votes SECOND/ADJUST/REJECT
 
-### 2.4 Step G — HALTED at Finding SF1 (pre-flight passed; authoring blocked)
+### 2.4 Step G — SF1 RESOLVED; Phase 1 execution in progress
 
-**Current blocker:** Scorecard cell color calibration drift between `docs/compute.py` and V2.4 comparator MD adjudication. Systemic across all 3 targets (5 cell mismatches total). Per §8.8.3 Step 3b, compute.py output is byte-for-byte authoritative for Phase 3. Per §8.8.5 gate 6.3, scorecard cells must match V2.4 comparator cell-by-cell. These are mutually exclusive without design resolution. See `.board-review-temp/step-g-execution/step-g-finding-SF1-scorecard-calibration.md` for the full finding + 3 resolution options (A/B/C). Board review required before Step G authoring can resume on any target.
+**SF1 board outcome** (archived `docs/External-Board-Reviews/042026-sf1-calibration/CONSOLIDATION.md`, 4 rounds, 2026-04-20):
+
+- **R1 (Blind):** Pragmatist A / Codex new-D / DeepSeek C+
+- **R2 (Consolidation on hybrid):** 1 ACCEPT + 2 ACCEPT-WITH-MODS — hybrid: "A-now + C-for-V1.2 + edge_case"
+- **R3 (Confirmation on frozen hybrid):** 3/3 CONFIRM · 3/3 UNION-ACCEPT on D-7 trigger · 1-1-1 on Tension 1 (Archon Q3)
+- **R4 (narrow tiebreaker):** 2-1 G-C-ACCEPT (Pragmatist moved A → G-C-ACCEPT after live `gh api` verification); DeepSeek dissent (D-CANONICAL) preserved in CONSOLIDATION §9
+- **Dissent audit:** clean, zero silent drops
+
+**Resolution (§6 of CONSOLIDATION):**
+
+- **Phase 1 (V1.1, this session):** Gates A/B/C → apply 5 compute.py temporary compatibility patches → update 3 fixture forms → re-run dry-run → resume Step G
+- **Phase 2 (post-Step-G, D-7):** schema split V1.1 → V1.2, move scorecard cells from `phase_3_computed` to `phase_4_structured_llm`, `compute_scorecard_cells()` demoted to advisory. 4-trigger disjunctive union (scope expansion / 3 scans ≥2 shapes / 6-month fallback / semantic drift).
+- **Option B (catalog harmonization) explicitly rejected.**
 
 **Pre-flight state (clean, preserved across the halt):**
 - Step -2 (provenance): `zustand-step-g-form.json` pre-registered with `step-g-live-pipeline` tag in `tests/fixtures/provenance.json`
@@ -205,22 +216,23 @@ Then update `docs/External-Board-Reviews/README.md` master index.
 
 **Cross-repo SOP invariant:** pre-archive dissent audit is mandatory per FrontierBoard SOP §4 (commit `e01303a` on stefans71/FrontierBoard main). Applies to the Step G post-execution archive.
 
-**SF1 scorecard calibration drift — evidence summary** (for next-session board brief):
+**SF1 evidence summary** (for reference):
 
-| Target | Cell | V2.4 comparator MD | compute.py output | Root cause |
+| Target | Cell | V2.4 comparator MD | compute.py output | Phase 1 patch |
 |---|---|---|---|---|
-| zustand-v3 | Q3 Do they tell you about problems? | Amber (contributing guide softens) | red (no-policy + 0 advisories) | LLM weights secondary signals |
-| zustand-v3 | Q4 Is it safe out of the box? | Green (install/runtime clean) | amber (any warning drops it) | Interpretation scope differs |
-| caveman | Q2 Do they fix problems quickly? | Amber (5-day lag visible friction) | green (≤7 threshold met) | Threshold vs friction |
-| Archon | Q1 Does anyone check the code? | Red (8% formal, no gate) | amber (any≥50 branch) | LLM treats formal ≪ any as red |
-| Archon | Q3 Do they tell you about problems? | Green (SECURITY.md + public issues) | amber (no advisories published) | Presence vs publication count |
+| zustand-v3 | Q3 | Amber (contributing guide softens) | red | `has_contributing_guide` |
+| zustand-v3 | Q4 | Green (install/runtime clean) | amber | `has_warning_on_install_path` (Gate B dependent) |
+| caveman | Q2 | Amber (5-day lag) | green | `closed_fix_lag_days` |
+| Archon | Q1 | Red (8% formal, no gate) | amber | governance-floor override |
+| Archon | Q3 | Green (SECURITY.md + public issues) | amber | `has_reported_fixed_vulns` (Gate C dependent) |
 
-**The design question for SF1 board review:** where does scorecard cell-color authority live? Options A (adjust compute.py), B (re-harmonize V2.4 catalog MDs), C (schema split to move cells into `phase_4_structured_llm`, V1.1 → V1.2). **Not** a code bug; a calibration philosophy choice with downstream consequences for Step G acceptance and catalog stability.
+Phase 1 gate log: `.board-review-temp/step-g-execution/phase-1-gate-log.md`
 
 ### 2.5 Deferred ledger
 
 Non-active items tracked for future trigger:
 
+- **D-7 — Scorecard cell authority migration V1.1 → V1.2** (SF1 board 2026-04-20, committed not conditional). Move scorecard cells from `phase_3_computed` to `phase_4_structured_llm.scorecard_cells` with structured fields (`question`, `color`, `short_answer`, `rationale` citing E-IDs, `edge_case`, `suggested_threshold_adjustment`, `computed_signal_refs`). Demote `compute_scorecard_cells()` to advisory. Gate 6.3 changes from "cell-by-cell match" to "override-explained." Step 3b byte-for-byte retained for other 7 Phase 3 ops. Trigger (disjunctive, first-to-fire): (1) first scan on shape outside current 7 catalog shapes; (2) 3 live scans post-Step-G with ≥2 shape categories; (3) 6 months post-Step-G; (4) any semantic-not-threshold drift. Rider: rubric literal-vs-intent doc for Q3; Q1 Archon governance-floor revisit (Phase 3 vs Phase 4); 11-scan comparator analysis; override-pattern telemetry. See `docs/External-Board-Reviews/042026-sf1-calibration/CONSOLIDATION.md` §6 Phase 2 + §7.
 - **Schema hardening** (Codex R2 defer-ledger) — `scan-schema.json` V1.1 doesn't fully formalize the prompt output spec. Gaps: Scanner Integrity section 00 hit-level structure; Section 08 methodology fields beyond version marker. Trigger: after Step G surfaces concrete schema pain.
 - **`github-scan-package-V2/` V2.5 refresh** — full docs + renderer sync to package. Trigger: after Step G passes acceptance.
 - **V1.1+ roadmap items** (from `docs/board-review-pipeline-methodology.md`): RD1 (automate structured LLM), SD2 (kind+domain typing), RD4 (assumptions field), ~~PD3 (bundle validator)~~ **shipped 2026-04-19 as U-5/PD3** (`885bdcf`), SD3/SD4/SD7/SD8 (V1.2 schema items), SD9/SD10/RD5/PD1/PD4/PD6/PD7 (V2.0+). All triggers documented in the methodology record; none other than PD3 yet fired.
