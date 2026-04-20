@@ -1,0 +1,2210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Security Investigation Report: wled/WLED @ 01328a6 | Generated 2026-04-20 | Prompt V2.4 (V1.1 schema) -->
+<title>Security Investigation: wled/WLED</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Unbounded:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; script-src 'unsafe-inline';">
+<style>
+  /* ═══════════════════════════════════════════════
+     DESIGN SYSTEM — DO NOT MODIFY
+     Dark theme, security monitoring aesthetic
+     ═══════════════════════════════════════════════ */
+  :root {
+    --bg-void: #0a0a0c;
+    --bg-surface: #131316;
+    --bg-elevated: #1a1a1f;
+    --bg-hover: #222228;
+    --border: #32323c;
+    --border-subtle: #26262e;
+    --text-primary: #f0f0f4;
+    --text-secondary: #b0b0bc;
+    --text-muted: #7e7e8e;
+    --red-glow: #ff4545;
+    --red-dim: #ff454520;
+    --red-bg: #1a0f0f;
+    --amber-glow: #ffaa2a;
+    --amber-dim: #ffaa2a20;
+    --amber-bg: #1a150e;
+    --green-glow: #22c55e;
+    --green-dim: #22c55e20;
+    --green-bg: #0e1a12;
+    --cyan-glow: #06b6d4;
+    --cyan-dim: #06b6d420;
+    --font-mono: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace;
+    --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-display: 'Unbounded', 'Inter', sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--font-sans);
+    background: var(--bg-void);
+    color: var(--text-primary);
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Noise texture + horizontal scanlines — forensic console feel */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      repeating-linear-gradient(
+        to bottom,
+        rgba(255,255,255,0.008) 0px,
+        rgba(255,255,255,0.008) 1px,
+        transparent 1px,
+        transparent 3px
+      ),
+      url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+  }
+  /* Single-pass scan line — thin cyan line sweeps once then disappears */
+  body::after {
+    content: ''; position: fixed; left: 0; right: 0; height: 2px;
+    background: linear-gradient(to right, transparent 5%, var(--cyan-glow) 30%, var(--cyan-glow) 70%, transparent 95%);
+    box-shadow: 0 0 12px var(--cyan-glow), 0 0 4px var(--cyan-glow);
+    pointer-events: none; z-index: 9998; opacity: 0.7;
+    animation: scan-sweep 3s ease-in-out 1s 1 forwards;
+  }
+  @keyframes scan-sweep {
+    0% { top: -2px; opacity: 0.7; }
+    90% { opacity: 0.5; }
+    100% { top: 100vh; opacity: 0; }
+  }
+
+  /* Scan strip — the data ribbon above the hero */
+  .scan-strip {
+    display: flex; flex-wrap: wrap; gap: 1.25rem; align-items: center;
+    padding: 0.625rem 0 0.75rem; margin-bottom: 1.5rem;
+    border-top: 1px solid var(--border-subtle);
+    border-bottom: 1px solid var(--border-subtle);
+    font-family: var(--font-mono); font-size: 0.65rem;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--text-secondary);
+  }
+  .scan-strip-item { display: inline-flex; align-items: center; gap: 0.4rem; }
+  .scan-strip-item .dot {
+    display: inline-block; width: 6px; height: 6px; border-radius: 50%;
+    box-shadow: 0 0 6px currentColor;
+  }
+  .scan-strip-item.amber, .scan-strip-item .dot.amber { color: var(--amber-glow); background: var(--amber-glow); }
+  .scan-strip-item .dot.amber { background: var(--amber-glow); box-shadow: 0 0 8px var(--amber-glow); animation: pulse 3s ease-in-out infinite; }
+  .scan-strip-item.flash {
+    color: var(--red-glow); animation: flash-blink 1.4s ease-in-out infinite;
+  }
+  @keyframes flash-blink {
+    0%, 80%, 100% { opacity: 1; }
+    85%, 95% { opacity: 0.25; }
+  }
+
+  /* Hero caption — the editorial line under the H1.
+     Readable sans-serif, slightly larger than body, no italic (readability > flavor). */
+  .hero-caption {
+    font-family: var(--font-sans); font-size: 1.0625rem; line-height: 1.55;
+    color: var(--text-primary); font-weight: 400;
+    max-width: 68ch; margin: 0.75rem 0 1.75rem;
+    letter-spacing: -0.005em;
+  }
+
+  /* ─────────────── Utility classes (replaces inline style="" attributes) ─────────────── */
+  /* Semantic value colors — use on chip-value, vital-value, td.val, etc. */
+  .val-good  { color: var(--green-glow) !important; }
+  .val-bad   { color: var(--red-glow)   !important; }
+  .val-warn  { color: var(--amber-glow) !important; }
+  .val-info  { color: var(--cyan-glow)  !important; }
+  .fw-semi   { font-weight: 600; }
+  /* Card vertical rhythm — replaces margin-bottom:12px inline on cards */
+  .stack-md  { margin-bottom: 0.75rem; }
+  .stack-sm  { margin-top: 0.75rem; }
+  /* Subdued paragraph — replaces the meta-text inline patterns */
+  .p-meta {
+    color: var(--text-secondary); margin-bottom: 1rem;
+    font-size: 0.875rem; line-height: 1.55;
+  }
+  .p-meta-tight {
+    color: var(--text-secondary); margin: 0.75rem 0 1rem;
+    font-size: 0.8125rem; line-height: 1.55;
+  }
+  /* Priority-evidence visual uplift — replaces inline border-left hack */
+  .finding-card.evidence-priority {
+    border-left: 4px solid var(--amber-glow);
+  }
+  /* Inline-flag variant — when priority-flag appears mid-sentence, not block */
+  .priority-flag.inline { display: inline-block; }
+
+  a { color: var(--cyan-glow); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* Font size controls */
+  .font-controls {
+    position: fixed; top: 16px; right: 16px; z-index: 1000;
+    display: flex; align-items: center; gap: 2px;
+    background: var(--bg-elevated); border: 1px solid var(--border);
+    border-radius: 8px; padding: 4px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5); backdrop-filter: blur(12px);
+  }
+  .font-controls button {
+    font-family: var(--font-mono); font-size: 0.875rem; font-weight: 700;
+    width: 34px; height: 34px; border: none; border-radius: 6px;
+    background: transparent; color: var(--text-secondary); cursor: pointer;
+    display: flex; align-items: center; justify-content: center; transition: all 0.15s;
+  }
+  .font-controls button:hover { background: var(--bg-hover); color: var(--text-primary); }
+  .font-controls button:active { transform: scale(0.92); }
+  .font-controls .font-size-display {
+    font-family: var(--font-mono); font-size: 0.6875rem; color: var(--text-muted);
+    min-width: 38px; text-align: center; letter-spacing: 0.05em; user-select: none;
+  }
+
+  .page { max-width: 960px; margin: 0 auto; padding: 0 20px; }
+
+  /* Hero */
+  .hero { padding: 64px 0 48px; border-bottom: 1px solid var(--border); position: relative; }
+  .hero::after {
+    content: ''; position: absolute; bottom: -1px; left: 0; right: 0; height: 120px;
+    background: linear-gradient(to top, var(--bg-void), transparent); pointer-events: none;
+  }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-family: var(--font-mono); font-size: 0.6875rem; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--text-muted); margin-bottom: 20px;
+    padding: 6px 12px; border: 1px solid var(--border); border-radius: 6px; background: var(--bg-surface);
+  }
+  .hero-badge .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--text-muted); /* Neutral default — LLM must set .red, .green, or .amber */
+  }
+  .hero-badge .dot.red { background: var(--red-glow); box-shadow: 0 0 8px var(--red-glow); animation: pulse 2s ease-in-out infinite; }
+  .hero-badge .dot.green { background: var(--green-glow); box-shadow: 0 0 8px var(--green-glow); }
+  .hero-badge .dot.amber { background: var(--amber-glow); box-shadow: 0 0 8px var(--amber-glow); animation: pulse 3s ease-in-out infinite; }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+  .hero h1 {
+    font-family: var(--font-display); font-size: clamp(1.8rem, 4vw, 3.4rem);
+    font-weight: 800; letter-spacing: -0.04em; line-height: 1.05; margin-bottom: 16px;
+  }
+  .hero h1 .slash {
+    color: var(--text-muted); font-weight: 300;
+    margin: 0 0.1em; font-size: 0.85em;
+  }
+  .hero h1 span { color: var(--red-glow); }
+  .hero h1 span.green { color: var(--green-glow); }
+  .hero h1 span.amber { color: var(--amber-glow); }
+  .hero .meta { font-size: 0.875rem; color: var(--text-primary); display: flex; flex-wrap: wrap; gap: 16px; }
+  .hero .meta-item { display: flex; align-items: center; gap: 6px; }
+  .hero .meta-item .label { color: var(--text-secondary); font-size: 0.75rem; }
+
+  /* Verdict */
+  .verdict-section { padding: 48px 0 40px; }
+  .verdict-banner {
+    border-radius: 0; padding: 2.25rem 2.75rem 2rem 4.5rem;
+    position: relative; overflow: hidden;
+    border-left-width: 6px; border-left-style: solid;
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%);
+  }
+  .verdict-banner.critical { background: linear-gradient(135deg, #1f0a0a 0%, #0a0a0c 100%); border: 1px solid #ff454540; border-left-color: var(--red-glow); }
+  .verdict-banner.caution { background: linear-gradient(135deg, #1f1810 0%, #0a0a0c 100%); border: 1px solid #ffaa2a40; border-left-color: var(--amber-glow); }
+  .verdict-banner.clean { background: linear-gradient(135deg, #0a1f14 0%, #0a0a0c 100%); border: 1px solid #22c55e40; border-left-color: var(--green-glow); }
+  /* Radial wash */
+  .verdict-banner::before {
+    content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+    pointer-events: none;
+  }
+  .verdict-banner.critical::before { background: radial-gradient(circle at 20% 30%, #ff454510, transparent 55%); }
+  .verdict-banner.caution::before { background: radial-gradient(circle at 20% 30%, #ffaa2a12, transparent 55%); }
+  .verdict-banner.clean::before { background: radial-gradient(circle at 20% 30%, #22c55e10, transparent 55%); }
+  /* Vertical scan-ID bar on the left */
+  .verdict-banner::after {
+    content: attr(data-dossier); position: absolute;
+    left: 1.4rem; top: 2.1rem; bottom: 2rem;
+    writing-mode: vertical-rl; transform: rotate(180deg);
+    font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.25em;
+    color: var(--text-muted); text-transform: uppercase;
+    display: flex; align-items: center;
+    opacity: 0.55;
+  }
+  .verdict-banner .verdict-label {
+    font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.22em;
+    text-transform: uppercase; margin-bottom: 1rem; position: relative;
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    padding: 0.25rem 0.625rem; border-radius: 0.125rem;
+    background: rgba(255,170,42,0.08); border: 1px solid rgba(255,170,42,0.25);
+  }
+  .verdict-banner.critical .verdict-label { color: var(--red-glow); background: rgba(255,69,69,0.08); border-color: rgba(255,69,69,0.25); }
+  .verdict-banner.caution .verdict-label { color: var(--amber-glow); }
+  .verdict-banner.clean .verdict-label { color: var(--green-glow); background: rgba(34,197,94,0.08); border-color: rgba(34,197,94,0.25); }
+  .verdict-banner h2 {
+    font-family: var(--font-display);
+    font-size: clamp(1.5rem, 3.2vw, 2.2rem); font-weight: 600; line-height: 1.18;
+    letter-spacing: -0.025em; margin-bottom: 1rem; position: relative; color: #ff8c00;
+    max-width: 56ch;
+  }
+  .verdict-banner.clean h2 { color: var(--green-glow); }
+  .verdict-banner.critical h2 { color: var(--red-glow); }
+
+  /* Split-verdict layout — two audience blocks separated by a divider */
+  .verdict-split {
+    display: grid; grid-template-columns: 1fr auto 1fr; gap: 1.75rem;
+    margin-bottom: 1.25rem; align-items: stretch;
+  }
+  @media (max-width: 820px) {
+    .verdict-split { grid-template-columns: 1fr; gap: 1rem; }
+  }
+  .verdict-entry { display: flex; flex-direction: column; gap: 0.5rem; }
+  .verdict-entry-scope {
+    font-family: var(--font-mono); font-size: 0.65rem; letter-spacing: 0.2em;
+    text-transform: uppercase; color: var(--text-muted);
+    padding-bottom: 0.375rem; border-bottom: 1px solid var(--border-subtle);
+  }
+  .verdict-entry-headline {
+    font-family: var(--font-display); font-weight: 600;
+    font-size: clamp(1.35rem, 2.5vw, 1.85rem); line-height: 1.15;
+    letter-spacing: -0.02em; margin: 0;
+  }
+  .verdict-entry-headline.good { color: #8dd492; }
+  .verdict-entry-headline.warn { color: var(--amber-glow); }
+  .verdict-entry-headline.bad  { color: var(--red-glow); }
+  .verdict-entry-detail {
+    font-family: var(--font-sans); font-size: 0.8125rem; line-height: 1.55;
+    color: var(--text-secondary); margin-top: 0.25rem;
+  }
+  .verdict-split-divider {
+    width: 1px; background: linear-gradient(to bottom, transparent, var(--border), transparent);
+  }
+  @media (max-width: 820px) {
+    .verdict-split-divider { width: 100%; height: 1px; background: var(--border-subtle); }
+  }
+
+  /* Rolled verdict exhibits — 3 themed panels that replace the 10-bullet glaze list */
+  .verdict-exhibits { display: grid; gap: 0.875rem; margin-top: 0.5rem; }
+  .exhibit {
+    position: relative; overflow: hidden; border-radius: 10px;
+    border: 1px solid var(--border-subtle);
+  }
+  .exhibit.vuln    { background: linear-gradient(135deg, #1a1008 0%, #0f0a0a 100%); border-color: #ffaa2a30; }
+  .exhibit.govern  { background: linear-gradient(135deg, #100c1a 0%, #0a0a0f 100%); border-color: #ff808040; }
+  .exhibit.signals { background: linear-gradient(135deg, #0a1812 0%, #0a0f0a 100%); border-color: #22c55e30; }
+  /* Left accent bar */
+  .exhibit::before {
+    content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
+  }
+  .exhibit.vuln::before    { background: var(--amber-glow); }
+  .exhibit.govern::before  { background: var(--red-glow); }
+  .exhibit.signals::before { background: var(--green-glow); }
+  /* Summary row (collapsed state) */
+  .exhibit > summary {
+    list-style: none; cursor: pointer;
+    padding: 0.875rem 1rem 0.875rem 1.5rem;
+    display: flex; align-items: center; gap: 0.75rem;
+    position: relative;
+  }
+  .exhibit > summary::-webkit-details-marker { display: none; }
+  .exhibit > summary::after {
+    content: '\25B6'; margin-left: auto; font-size: 0.7rem;
+    color: var(--text-muted); transition: transform 0.2s;
+  }
+  .exhibit[open] > summary::after { transform: rotate(90deg); }
+  .exhibit-glyph {
+    width: 1.75rem; height: 1.75rem; border-radius: 50%;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 0.85rem; font-weight: 700; flex-shrink: 0;
+  }
+  .exhibit.vuln .exhibit-glyph    { background: rgba(255,170,42,0.18); color: var(--amber-glow); }
+  .exhibit.govern .exhibit-glyph  { background: rgba(255,69,69,0.18);  color: var(--red-glow); }
+  .exhibit.signals .exhibit-glyph { background: rgba(34,197,94,0.18);  color: var(--green-glow); }
+  .exhibit-title {
+    font-family: var(--font-display); font-size: 1.05rem; font-weight: 600;
+    letter-spacing: -0.01em; line-height: 1.25;
+  }
+  .exhibit-count {
+    margin-left: 0.5rem; font-family: var(--font-mono); font-size: 0.7rem;
+    letter-spacing: 0.12em; color: var(--text-muted); text-transform: uppercase;
+  }
+  .exhibit-summary-line {
+    font-family: var(--font-sans); font-size: 0.82rem; color: var(--text-secondary);
+    margin-left: 0.5rem; line-height: 1.45; font-weight: 400;
+  }
+  @media (max-width: 720px) {
+    .exhibit-summary-line { display: block; margin-left: 2.5rem; margin-top: 0.25rem; }
+  }
+  /* Expanded content — zebra-striped items */
+  .exhibit-body {
+    border-top: 1px solid var(--border-subtle);
+    padding: 0; background: rgba(0,0,0,0.15);
+  }
+  .exhibit-item {
+    display: grid; grid-template-columns: 1.5rem 1fr; gap: 0.75rem;
+    padding: 0.75rem 1rem 0.75rem 1.5rem;
+    font-size: 0.88rem; line-height: 1.55; color: var(--text-primary);
+    border-bottom: 1px solid var(--border-subtle);
+  }
+  .exhibit-item:last-child { border-bottom: none; }
+  /* Zebra striping — every other row gets a subtle background shift */
+  .exhibit-item:nth-child(even) { background: rgba(255,255,255,0.015); }
+  .exhibit-item-glyph {
+    font-family: var(--font-mono); font-weight: 700; font-size: 0.8rem;
+    text-align: center; padding-top: 0.15rem;
+  }
+  .exhibit.vuln .exhibit-item-glyph    { color: var(--amber-glow); }
+  .exhibit.govern .exhibit-item-glyph  { color: var(--red-glow); }
+  .exhibit.signals .exhibit-item-glyph { color: var(--green-glow); }
+  .exhibit-item-tag {
+    font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--text-muted); display: block;
+    margin-bottom: 0.15rem;
+  }
+
+  /* Verdict bullet list */
+  .verdict-bullets { list-style: none; padding: 0; margin: 0; position: relative; }
+  .verdict-bullets li {
+    display: flex; align-items: flex-start; gap: 12px; font-size: 0.9375rem;
+    color: var(--text-primary); line-height: 1.6; padding: 8px 0; border-bottom: 1px solid #ffffff08;
+  }
+  .verdict-bullets li:last-child { border-bottom: none; }
+  .verdict-bullets .bullet-icon {
+    flex-shrink: 0; width: 22px; height: 22px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center; font-size: 0.6875rem; margin-top: 2px;
+  }
+  .verdict-bullets .bullet-icon.red { background: var(--red-dim); color: var(--red-glow); box-shadow: 0 0 6px var(--red-dim); }
+  .verdict-bullets .bullet-icon.amber { background: var(--amber-dim); color: var(--amber-glow); box-shadow: 0 0 6px var(--amber-dim); }
+  .verdict-bullets .bullet-icon.green { background: var(--green-dim); color: var(--green-glow); box-shadow: 0 0 6px var(--green-dim); }
+
+  /* Scorecard */
+  .scorecard-section { padding: 0 0 48px; }
+  .scorecard-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px;
+    background: var(--border); border-radius: 12px; overflow: hidden;
+  }
+  .score-cell { background: var(--bg-surface); padding: 24px 20px; text-align: center; transition: background 0.2s; }
+  .score-cell:hover { background: var(--bg-elevated); }
+  .score-cell .score-icon {
+    width: 32px; height: 32px; margin: 0 auto 12px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center; font-size: 1rem;
+  }
+  .score-cell .score-icon.red { background: var(--red-dim); color: var(--red-glow); }
+  .score-cell .score-icon.amber { background: var(--amber-dim); color: var(--amber-glow); }
+  .score-cell .score-icon.green { background: var(--green-dim); color: var(--green-glow); }
+  .score-cell .score-label {
+    font-family: var(--font-mono); font-size: 0.625rem; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--text-muted); margin-bottom: 6px;
+  }
+  .score-cell .score-value { font-size: 1.125rem; font-weight: 700; line-height: 1.2; }
+  .score-cell .score-value.red { color: var(--red-glow); }
+  .score-cell .score-value.amber { color: var(--amber-glow); }
+  .score-cell .score-value.green { color: var(--green-glow); }
+
+  /* Collapsible sections */
+  details summary { cursor: pointer; list-style: none; }
+  details summary::-webkit-details-marker { display: none; }
+  .collapsible-section > summary { padding: 48px 0 0; border-top: 1px solid var(--border-subtle); }
+  .collapsible-section > summary .section-header { margin-bottom: 0; display: flex; align-items: center; gap: 12px; }
+  .collapsible-section[open] > summary .section-header { margin-bottom: 28px; }
+  .collapsible-section .section-body { padding-bottom: 0; }
+  .collapsible-section > summary .section-header::after {
+    content: '\25B6'; font-size: 0.625rem; color: var(--text-muted); transition: transform 0.2s; margin-left: auto;
+  }
+  .collapsible-section[open] > summary .section-header::after { transform: rotate(90deg); }
+  .section-header .section-number {
+    font-family: var(--font-mono); font-size: 0.6875rem; letter-spacing: 0.1em; color: var(--text-muted);
+    width: 28px; height: 28px; border-radius: 6px; border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .section-header h2 {
+    font-family: var(--font-display); font-size: 1.4rem; font-weight: 600;
+    letter-spacing: -0.02em; line-height: 1.15;
+    color: var(--cyan-glow);
+  }
+  /* Slightly emphasize the section number too so the landmark row reads as a unit */
+  .section-header .section-number {
+    color: var(--cyan-glow); opacity: 0.75;
+  }
+
+  /* Finding cards */
+  .finding-card {
+    background: var(--bg-surface); border: 1px solid var(--border); border-radius: 10px;
+    margin-bottom: 12px; overflow: hidden; transition: border-color 0.2s;
+  }
+  .finding-card:hover { border-color: #3a3a44; }
+  .finding-card.critical { border-left: 3px solid var(--red-glow); }
+  .finding-card.warning { border-left: 3px solid var(--amber-glow); }
+  .finding-card.info { border-left: 3px solid var(--cyan-glow); }
+  .finding-card.ok { border-left: 3px solid var(--green-glow); }
+  @keyframes border-pulse {
+    0%, 100% { border-left-color: var(--red-glow); box-shadow: -2px 0 8px var(--red-dim); }
+    50% { border-left-color: #ff454580; box-shadow: -2px 0 4px transparent; }
+  }
+  .finding-card.critical { animation: border-pulse 3s ease-in-out infinite; }
+
+  .finding-header {
+    padding: 16px 20px 12px; display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 16px;
+  }
+  .finding-header .tag {
+    font-family: var(--font-mono); font-size: 0.625rem; letter-spacing: 0.08em;
+    text-transform: uppercase; padding: 3px 8px; border-radius: 4px; font-weight: 600; flex-shrink: 0;
+  }
+  .tag.critical-tag { background: var(--red-dim); color: var(--red-glow); }
+  .tag.warning-tag { background: var(--amber-dim); color: var(--amber-glow); }
+  .tag.info-tag { background: var(--cyan-dim); color: var(--cyan-glow); }
+  .tag.ok-tag { background: var(--green-dim); color: var(--green-glow); }
+  .finding-header .finding-date { font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-secondary); }
+  .finding-header .finding-duration {
+    font-family: var(--font-mono); font-size: 0.6875rem; font-weight: 600;
+    color: var(--amber-glow); background: var(--amber-dim); border: 1px solid #ffaa2a30;
+    padding: 3px 10px; border-radius: 4px;
+  }
+  .finding-header h3 {
+    width: 100%; font-family: var(--font-display); font-size: 1.125rem;
+    font-weight: 600; line-height: 1.3; letter-spacing: -0.015em; margin-top: 4px;
+  }
+
+  /* Finding collapsible */
+  .finding-card summary { list-style: none; cursor: pointer; }
+  .finding-card summary::-webkit-details-marker { display: none; }
+  .finding-card summary .finding-header { position: relative; padding-right: 40px; }
+  .finding-card summary .finding-header::after {
+    content: '\25B6'; font-size: 0.625rem; color: var(--text-muted);
+    transition: transform 0.2s; position: absolute; right: 20px; top: 20px;
+  }
+  .finding-card details[open] > summary .finding-header::after { transform: rotate(90deg); }
+
+  .finding-body { padding: 0 20px 16px; }
+  .finding-body p { font-size: 0.875rem; color: var(--text-primary); line-height: 1.7; margin-bottom: 12px; }
+  .finding-meta {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 8px; margin-top: 12px;
+  }
+  .meta-chip {
+    font-size: 0.75rem; padding: 8px 12px; border-radius: 6px;
+    background: var(--bg-elevated); border: 1px solid var(--border-subtle);
+    display: flex; flex-direction: column; gap: 2px;
+  }
+  .meta-chip .chip-label {
+    font-family: var(--font-mono); font-size: 0.625rem; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--text-secondary);
+  }
+  .meta-chip .chip-value { color: var(--text-primary); font-weight: 500; }
+
+  /* Sub-finding (nested under parent finding) */
+  .sub-finding {
+    margin: 16px 0 8px; padding: 16px; border-left: 2px solid var(--amber-glow);
+    background: var(--bg-elevated); border-radius: 0 8px 8px 0;
+  }
+  .sub-finding .sub-finding-label {
+    font-family: var(--font-mono); font-size: 0.625rem; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--amber-glow); margin-bottom: 8px;
+  }
+  .sub-finding h4 { font-size: 1rem; font-weight: 700; line-height: 1.4; margin-bottom: 10px; }
+  .sub-finding p { font-size: 0.875rem; color: var(--text-primary); line-height: 1.7; margin-bottom: 12px; }
+
+  /* PR Table */
+  .pr-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.8125rem; }
+  th {
+    font-family: var(--font-mono); font-size: 0.625rem; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--text-secondary); text-align: left;
+    padding: 12px 16px; background: var(--bg-surface); border-bottom: 1px solid var(--border);
+    position: sticky; top: 0; white-space: nowrap;
+  }
+  td { padding: 14px 16px; border-bottom: 1px solid var(--border-subtle); color: var(--text-primary); vertical-align: top; }
+  tr:hover td { background: var(--bg-surface); }
+  td:first-child { font-family: var(--font-mono); font-weight: 600; color: var(--cyan-glow); white-space: nowrap; }
+  .td-concern { color: var(--amber-glow); font-weight: 500; }
+  .td-reviewed-no { color: var(--red-glow); font-family: var(--font-mono); font-weight: 600; }
+  .td-reviewed-yes { color: var(--green-glow); font-family: var(--font-mono); font-weight: 600; }
+  .td-reviewed-rejected { color: var(--amber-glow); font-family: var(--font-mono); font-weight: 600; }
+  .td-merge-fast { font-family: var(--font-mono); color: var(--red-glow); font-weight: 600; }
+  .td-person { font-weight: 500; color: var(--text-primary); }
+
+  /* Timeline */
+  .timeline { position: relative; padding-left: 28px; }
+  .timeline::before {
+    content: ''; position: absolute; left: 7px; top: 8px; bottom: 8px; width: 1px;
+    background: linear-gradient(to bottom, var(--border), var(--red-glow), var(--border));
+  }
+  .tl-item { position: relative; margin-bottom: 20px; padding-left: 8px; }
+  .tl-item::before {
+    content: ''; position: absolute; left: -24px; top: 7px; width: 9px; height: 9px;
+    border-radius: 50%; background: var(--text-muted); border: 2px solid var(--bg-void);
+  }
+  .tl-item.bad::before { background: var(--red-glow); box-shadow: 0 0 6px var(--red-dim); }
+  .tl-item.good::before { background: var(--green-glow); }
+  .tl-item.neutral::before { background: var(--amber-glow); }
+  .tl-date { font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-secondary); font-weight: 600; }
+  .tl-desc { font-size: 0.875rem; color: var(--text-primary); margin-top: 2px; line-height: 1.6; }
+
+  /* Vitals */
+  .vitals-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1px; background: var(--border); border-radius: 10px; overflow: hidden;
+  }
+  .vital-cell { background: var(--bg-surface); padding: 18px 20px; }
+  .vital-cell .vital-label {
+    font-family: var(--font-mono); font-size: 0.625rem; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--text-muted); margin-bottom: 4px;
+  }
+  .vital-cell .vital-value { font-size: 1rem; font-weight: 700; margin-bottom: 4px; }
+  .vital-cell .vital-note { font-size: 0.75rem; color: var(--text-secondary); line-height: 1.5; }
+  .vital-cell .vital-explainer {
+    font-size: 0.7rem; color: var(--text-muted); line-height: 1.5;
+    margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--border-subtle);
+  }
+  .vital-cell .vital-explainer a {
+    color: var(--cyan-glow); text-decoration: none;
+  }
+  .vital-cell .vital-explainer a:hover { text-decoration: underline; }
+
+  /* Action cards */
+  .action-card { padding: 24px; border-radius: 10px; margin-bottom: 12px; }
+  .action-card.stop { background: var(--red-bg); border: 1px solid #ff454530; }
+  .action-card.wait { background: var(--amber-bg); border: 1px solid #ffaa2a30; }
+  .action-card.info-action { background: var(--bg-surface); border: 1px solid var(--border); }
+  .action-card.ok-action { background: var(--green-bg); border: 1px solid #22c55e30; }
+  .action-card h3 { font-size: 0.9375rem; font-weight: 700; margin-bottom: 8px; }
+  .action-card p { font-size: 0.875rem; color: var(--text-primary); line-height: 1.7; }
+
+  /* Code blocks inside action cards */
+  .action-card pre {
+    background: var(--bg-void); border: 1px solid var(--border); border-radius: 8px;
+    padding: 16px; margin: 12px 0; overflow-x: auto;
+    font-family: var(--font-mono); font-size: 0.8125rem; color: var(--cyan-glow); line-height: 1.6;
+  }
+
+  /* Catalog metadata block — sits between hero and verdict
+     Font sizes use rem so the font +/- controls (which mutate root font-size) scale them. */
+  .catalog-meta {
+    background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: 10px;
+    padding: 1.125rem 1.375rem; margin-bottom: 1rem;
+  }
+  .catalog-meta .catalog-label {
+    font-family: var(--font-mono); font-size: 0.65rem; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--text-secondary); margin-bottom: 0.625rem;
+  }
+  .catalog-meta table { width: 100%; }
+  .catalog-meta td { padding: 0.375rem 0.75rem 0.375rem 0; border: none; font-size: 0.82rem; vertical-align: top; }
+  .catalog-meta td.key {
+    font-family: var(--font-mono); color: var(--text-secondary);
+    white-space: nowrap; width: 1%; font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.06em;
+  }
+  .catalog-meta td.val { color: var(--text-primary); }
+  .catalog-meta td.val a { color: var(--cyan-glow); text-decoration: none; }
+  .catalog-meta td.val a:hover { text-decoration: underline; }
+
+  /* ─────────────── UX-FIX CSS (section status pills, finding status chips,
+     timeline glyphs, evidence priority markers) ─────────────── */
+
+  /* Section status pills — shown on the collapsed <summary> row so readers know
+     at a glance whether a section needs attention. */
+  .section-status {
+    display: inline-flex; gap: 0.5rem; margin-left: auto; padding-right: 2.5rem;
+    font-size: 0.72rem; font-family: var(--font-mono); align-items: center;
+    flex-wrap: wrap;
+  }
+  .section-status .pill {
+    display: inline-flex; align-items: center; gap: 0.25rem;
+    padding: 0.1875rem 0.5rem; border-radius: 0.625rem; border: 1px solid;
+    letter-spacing: 0.04em; white-space: nowrap;
+  }
+  .section-status .pill.red {
+    color: var(--red-glow); border-color: var(--red-dim);
+    background: rgba(255, 69, 69, 0.1);
+  }
+  .section-status .pill.amber {
+    color: var(--amber-glow); border-color: var(--amber-dim);
+    background: rgba(255, 170, 42, 0.1);
+  }
+  .section-status .pill.green {
+    color: var(--green-glow); border-color: var(--green-dim);
+    background: rgba(34, 197, 94, 0.1);
+  }
+  .section-status .pill.info {
+    color: var(--cyan-glow); border-color: var(--cyan-dim);
+    background: rgba(6, 182, 212, 0.1);
+  }
+  .section-status .pill.muted {
+    color: var(--text-secondary); border-color: var(--border-subtle);
+    background: var(--bg-elevated);
+  }
+  .section-status .pill.urgent {
+    animation: urgent-pulse 1.8s ease-in-out infinite;
+  }
+  @keyframes urgent-pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(255, 69, 69, 0.4); }
+    50% { box-shadow: 0 0 0 0.5rem rgba(255, 69, 69, 0); }
+  }
+  /* Hide status pills when section is open — they're redundant with the content */
+  .collapsible-section[open] > summary .section-status { opacity: 0.5; }
+
+  /* Section subtitle — a one-line orientation under the H2, visible both open
+     and collapsed. Gives readers the "why should I look at this" answer. */
+  .section-subtitle {
+    font-family: var(--font-sans); font-size: 0.9375rem; color: var(--text-secondary);
+    font-weight: 400; margin-top: 0.5rem; line-height: 1.55;
+    max-width: 68ch; letter-spacing: -0.003em;
+  }
+  .section-subtitle .emph { color: var(--text-primary); font-weight: 600; }
+  .section-subtitle .hot { color: var(--amber-glow); font-weight: 600; }
+  .section-subtitle .cold { color: var(--green-glow); font-weight: 600; }
+
+  /* Section-level "Your action" line — every section that flags concerns
+     must answer "what do I do about this?" for the reader. */
+  .section-action {
+    display: block; margin-top: 0.5rem; padding: 0.5rem 0.75rem;
+    background: var(--bg-elevated); border-radius: 0.375rem;
+    border-left: 3px solid var(--amber-glow);
+    font-size: 0.85rem; color: var(--text-primary); line-height: 1.55;
+  }
+  .section-action.ok { border-left-color: var(--green-glow); }
+  .section-action.info { border-left-color: var(--cyan-glow); }
+  .section-action .lbl {
+    font-family: var(--font-mono); font-weight: 700;
+    font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--amber-glow); margin-right: 0.5rem;
+  }
+  .section-action.ok .lbl { color: var(--green-glow); }
+  .section-action.info .lbl { color: var(--cyan-glow); }
+
+  /* Finding-card status chip — distinguishes Active vs Resolved vs Ongoing.
+     Shown on every finding and evidence card next to the severity tag. */
+  .status-chip {
+    display: inline-flex; align-items: center; gap: 0.25rem;
+    padding: 0.1875rem 0.5rem; border-radius: 0.625rem; border: 1px solid;
+    font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.04em;
+    white-space: nowrap; margin-left: 0.375rem;
+  }
+  .status-chip.resolved {
+    color: var(--green-glow); border-color: var(--green-dim);
+    background: rgba(34, 197, 94, 0.12);
+  }
+  .status-chip.active {
+    color: var(--red-glow); border-color: var(--red-dim);
+    background: rgba(255, 69, 69, 0.12);
+  }
+  .status-chip.ongoing {
+    color: var(--amber-glow); border-color: var(--amber-dim);
+    background: rgba(255, 170, 42, 0.12);
+  }
+  .status-chip.mitigated {
+    color: var(--cyan-glow); border-color: var(--cyan-dim);
+    background: rgba(6, 182, 212, 0.12);
+  }
+  .status-chip.informational {
+    color: var(--text-secondary); border-color: var(--border-subtle);
+    background: var(--bg-elevated);
+  }
+
+  /* Action-needed hint on finding cards — one sentence that says "what the reader should do" */
+  .action-hint {
+    margin-top: 0.5rem; font-size: 0.78rem; color: var(--text-secondary);
+    line-height: 1.55;
+  }
+  .action-hint::before {
+    content: "→ "; color: var(--amber-glow); font-style: normal; font-weight: 600;
+  }
+  .action-hint.ok::before { color: var(--green-glow); }
+  .action-hint.warn::before { color: var(--amber-glow); }
+
+  /* Executable File Inventory — differentiate verdict on the tag clearly.
+     The card border already carries severity via .finding-card.warning/.ok/.info;
+     this makes the header tag match so the reader doesn't have to decode borders. */
+  .inv-verdict {
+    display: inline-flex; align-items: center; gap: 0.25rem;
+    padding: 0.1875rem 0.5rem; border-radius: 0.625rem; margin-left: 0.375rem;
+    font-family: var(--font-mono); font-size: 0.65rem; letter-spacing: 0.04em;
+    text-transform: uppercase; border: 1px solid;
+  }
+  .inv-verdict.warn {
+    color: var(--amber-glow); border-color: var(--amber-dim);
+    background: rgba(255, 170, 42, 0.12);
+  }
+  .inv-verdict.ok {
+    color: var(--green-glow); border-color: var(--green-dim);
+    background: rgba(34, 197, 94, 0.12);
+  }
+  .inv-verdict.info {
+    color: var(--cyan-glow); border-color: var(--cyan-dim);
+    background: rgba(6, 182, 212, 0.12);
+  }
+
+  /* Inventory one-line summary block — V2.2 F12 format */
+  .inventory-summary {
+    margin-bottom: 1.25rem; padding: 0.875rem 1rem;
+    background: var(--bg-elevated); border-radius: 0.5rem;
+    border-left: 3px solid var(--cyan-glow); font-size: 0.85rem;
+  }
+  .inventory-summary-title {
+    font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--text-secondary); margin-bottom: 0.5rem;
+  }
+  .inventory-summary ul { list-style: none; padding: 0; margin: 0; }
+  .inventory-summary li {
+    padding: 0.25rem 0; line-height: 1.55; display: flex; gap: 0.5rem; align-items: flex-start;
+  }
+  .inventory-summary li .glyph {
+    flex: 0 0 1.125rem; font-family: var(--font-mono); font-weight: 700;
+    text-align: center;
+  }
+  .inventory-summary li.warn .glyph { color: var(--amber-glow); }
+  .inventory-summary li.ok .glyph { color: var(--green-glow); }
+  .inventory-summary li.info .glyph { color: var(--cyan-glow); }
+
+  /* Timeline severity glyphs — per-item worry indicator beyond just dot color */
+  .tl-item .tl-severity-label {
+    display: inline-block; font-family: var(--font-mono); font-weight: 700;
+    font-size: 0.68rem; letter-spacing: 0.05em; margin-right: 0.375rem;
+    padding: 0.125rem 0.375rem; border-radius: 0.25rem;
+  }
+  .tl-item.bad .tl-severity-label {
+    color: var(--red-glow); background: rgba(255, 69, 69, 0.12);
+  }
+  .tl-item.good .tl-severity-label {
+    color: var(--green-glow); background: rgba(34, 197, 94, 0.12);
+  }
+  .tl-item.neutral .tl-severity-label {
+    color: var(--amber-glow); background: rgba(255, 170, 42, 0.12);
+  }
+
+  /* Evidence priority banner — "read this first" marker on the most important evidence */
+  .evidence-priority {
+    position: relative; border-left-width: 4px !important;
+  }
+  .evidence-priority .priority-flag {
+    display: inline-block; margin-left: 0.5rem; padding: 0.1875rem 0.5rem;
+    background: var(--amber-glow); color: var(--bg-void);
+    border-radius: 0.25rem; font-family: var(--font-mono);
+    font-size: 0.62rem; font-weight: 700; letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .evidence-group-label {
+    margin: 1.5rem 0 0.75rem; font-family: var(--font-mono);
+    font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--text-secondary); padding: 0.5rem 0.75rem;
+    background: var(--bg-elevated); border-radius: 0.375rem;
+    border-left: 3px solid var(--border);
+  }
+  .evidence-group-label.warns { border-left-color: var(--amber-glow); color: var(--amber-glow); }
+  .evidence-group-label.positives { border-left-color: var(--green-glow); color: var(--green-glow); }
+  .evidence-group-label.context { border-left-color: var(--cyan-glow); color: var(--cyan-glow); }
+
+  /* Evidence Appendix — <pre> blocks for command and multi-line result */
+  .evidence-row { margin-bottom: 10px; }
+  .evidence-row .evidence-label {
+    font-family: var(--font-mono); font-size: 0.625rem; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--text-secondary); margin-bottom: 4px;
+  }
+  .evidence-pre {
+    background: var(--bg-void); border: 1px solid var(--border); border-radius: 6px;
+    padding: 12px 14px; margin: 0; overflow-x: auto; white-space: pre-wrap; word-break: break-word;
+    font-family: var(--font-mono); font-size: 0.75rem; color: var(--cyan-glow); line-height: 1.55;
+    max-height: 320px; overflow-y: auto;
+  }
+  .evidence-pre.result { color: var(--text-primary); }
+  .evidence-classification {
+    font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-primary);
+    padding: 8px 12px; background: var(--bg-elevated);
+    border: 1px solid var(--border-subtle); border-radius: 6px;
+  }
+  .evidence-classification.inference { color: var(--amber-glow); }
+  .evidence-classification.fact { color: var(--green-glow); }
+
+  /* Footer */
+  .footer {
+    padding: 40px 0; border-top: 1px solid var(--border-subtle);
+    text-align: center; font-size: 0.75rem; color: var(--text-muted);
+  }
+  .footer a { color: var(--text-secondary); }
+
+  /* Responsive */
+  @media (max-width: 700px) {
+    .scorecard-grid { grid-template-columns: repeat(2, 1fr); }
+    .finding-meta { grid-template-columns: 1fr; }
+    .hero { padding: 40px 0 32px; }
+    .collapsible-section > summary { padding-top: 32px; }
+    table { font-size: 0.75rem; }
+    th, td { padding: 10px 12px; }
+    .vitals-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 420px) {
+    .scorecard-grid { grid-template-columns: 1fr; }
+  }
+
+</style>
+</head>
+<body>
+
+<div class="font-controls">
+  <button onclick="adjustFont(-1)" title="Decrease font size" aria-label="Decrease font size">A&minus;</button>
+  <span class="font-size-display" id="fontDisplay">100%</span>
+  <button onclick="adjustFont(1)" title="Increase font size" aria-label="Increase font size">A+</button>
+</div>
+<script>
+  let fontScale = 100;
+  function adjustFont(dir) {
+    fontScale = Math.min(150, Math.max(75, fontScale + dir * 10));
+    document.documentElement.style.fontSize = fontScale + '%';
+    document.getElementById('fontDisplay').textContent = fontScale + '%';
+  }
+</script>
+
+<div class="page">
+
+  <div class="hero">
+    <div class="scan-strip">
+      <span class="scan-strip-item"><span class="dot red"></span>Security Investigation</span>
+      <span class="scan-strip-item">Dossier &middot; WLED</span>
+      <span class="scan-strip-item">Rev &middot; 01328a6</span>
+      <span class="scan-strip-item">V2.4 &middot; 2026-04-20T21:21:59.855622+00:00</span>
+      <span class="scan-strip-item flash">&bull; Live</span>
+    </div>
+    <h1>wled<span class="slash">/</span><span class="red">WLED</span></h1>
+    <div class="hero-caption">WLED — 17.8k-star ESP32 LED firmware, wled-org-owned, 100 contributors. Critical via F0: unresolved private GHSA-2xwq-cxqw-wfv8, 74 days silent after researcher&#39;s public complaint on issue #5340; 0.15.x backport unverified. F1 Warning: default-install has no auth, CORS wildcard, unauthenticated /reset — any same-LAN page can control the device. Positives: 38%/86% review rate, CodeQL + Copilot active.</div>
+    <div class="meta">
+      <div class="meta-item"><span class="label">Investigated</span> 2026-04-20</div>
+      <div class="meta-item"><span class="label">Applies to</span> main @ 01328a6</div>
+      <div class="meta-item"><span class="label">Repo age</span> 9 years</div>
+      <div class="meta-item"><span class="label">Stars</span> 17,837</div>
+      <div class="meta-item"><span class="label">License</span> EUPL-1.2</div>
+    </div>
+  </div>
+
+  <div class="catalog-meta">
+    <div class="catalog-label">Catalog metadata</div>
+    <table>
+      <tr><td class="key">Report file</td><td class="val"><code>GitHub-Scanner-WLED.html</code> (+ <code>.md</code> companion)</td></tr>
+      <tr><td class="key">Repo</td><td class="val"><a href="https://github.com/wled/WLED">github.com/wled/WLED</a></td></tr>
+      <tr><td class="key">Short description</td><td class="val">ESP32/ESP8266 firmware for WS2812B and other WiFi-controlled digital LED strips. On-device webserver + JSON API + MQTT + Art-Net + E1.31 + UDP realtime. 9-year project with 100 contributors.</td></tr>
+      <tr><td class="key">Category</td><td class="val">embedded-iot-firmware</td></tr>
+      <tr><td class="key">Subcategory</td><td class="val">esp32-led-controller</td></tr>
+      <tr><td class="key">Verdict</td><td class="val val-bad fw-semi">Critical</td></tr>
+      <tr><td class="key">Scanned revision</td><td class="val">main @ 01328a6 ()</td></tr>
+      <tr><td class="key">Prompt version</td><td class="val">V2.4</td></tr>
+      <tr><td class="key">Prior scan</td><td class="val">None — first scan of WLED. Tenth wild V1.2-schema scan (after markitdown 15, ghostty 16, Kronos 17, kamal 18, Xray-core 19, browser_terminal 20, wezterm 21, QuickLook 22, kanata 23, freerouting 24).</td></tr>
+    </table>
+  </div>
+
+  <div class="verdict-section">
+    <div class="verdict-banner critical" data-dossier="DOSSIER · WLED · 01328A6 · 2026-04-20 · V2.4">
+      <div class="verdict-label">&#x25CF; Critical</div>
+
+      <div class="verdict-split">
+        <div class="verdict-entry">
+          <div class="verdict-entry-scope">WLED &middot; 2026-04-20</div>
+          <h2 class="verdict-entry-headline bad">Critical</h2>
+          <div class="verdict-entry-detail">See findings below for details.</div>
+        </div>
+      </div>
+
+      <div class="verdict-exhibits">
+        <details class="exhibit vuln">
+          <summary>
+            <span class="exhibit-glyph">✗</span>
+            <span>
+              <span class="exhibit-title">Critical — F0 is the blocking item</span>
+              <span class="exhibit-count">&middot; 1 findings</span>
+              <span class="exhibit-summary-line">Unresolved private GHSA-2xwq-cxqw-wfv8; 74-day maintainer silence after public complaint; backport status unknown.</span>
+            </span>
+          </summary>
+          <div class="exhibit-body">
+            <div class="exhibit-item">
+              <span class="exhibit-item-glyph">01</span>
+              <span>
+                <span class="exhibit-item-tag">F0</span>
+                Issue #5340 remains open 74 days after last maintainer comment. Researcher escalated publicly because private channel didn&#39;t get ack in 10+ days. netmindz acknowledged &#39;critical&#39; was fixed before but 0.15.x backport unverified publicly.
+              </span>
+            </div>
+          </div>
+        </details>
+        <details class="exhibit vuln">
+          <summary>
+            <span class="exhibit-glyph">⚠</span>
+            <span>
+              <span class="exhibit-title">Warning — F1–F4 describe default-posture and governance</span>
+              <span class="exhibit-count">&middot; 4 findings</span>
+              <span class="exhibit-summary-line">Default-no-auth webserver + CORS wildcard + /reset unauthenticated, anti-destruction-only ruleset, missing SECURITY.md, nightly-release@main mutable supply-chain ref.</span>
+            </span>
+          </summary>
+          <div class="exhibit-body">
+            <div class="exhibit-item">
+              <span class="exhibit-item-glyph">01</span>
+              <span>
+                <span class="exhibit-item-tag">F1</span>
+                Factory-default WLED: empty PIN → correctPIN=true (wled_server.cpp:848); CORS wildcard on all endpoints (line 342); /reset unauthenticated (line 396). Any same-LAN webpage can control the device.
+              </span>
+            </div>
+            <div class="exhibit-item">
+              <span class="exhibit-item-glyph">02</span>
+              <span>
+                <span class="exhibit-item-tag">F2</span>
+                nightly.yml uses `andelf/nightly-release@main` (mutable branch ref). Triggers WLED-WebInstaller via PAT_PUBLIC. PR #5386 proposes fix, unmerged 60 days. 0 SHA-pinned actions across 8 workflows.
+              </span>
+            </div>
+            <div class="exhibit-item">
+              <span class="exhibit-item-glyph">03</span>
+              <span>
+                <span class="exhibit-item-tag">F3</span>
+                Ruleset has `deletion` + `non_fast_forward` only — no review-requirement rule. No CODEOWNERS. Despite strong social review (38% formal / 86% any), no structural enforcement.
+              </span>
+            </div>
+            <div class="exhibit-item">
+              <span class="exhibit-item-glyph">04</span>
+              <span>
+                <span class="exhibit-item-tag">F4</span>
+                No SECURITY.md in 9 years. Private-advisory permissions misconfigured per issue #5340 thread (softhack007 got 404 on own project&#39;s advisory). 0 published advisories.
+              </span>
+            </div>
+          </div>
+        </details>
+        <details class="exhibit vuln">
+          <summary>
+            <span class="exhibit-glyph">ℹ</span>
+            <span>
+              <span class="exhibit-title">Info — F5 + F6</span>
+              <span class="exhibit-count">&middot; 2 findings</span>
+              <span class="exhibit-summary-line">Build-time Python CVE surface (not runtime); scanner coverage gaps.</span>
+            </span>
+          </summary>
+          <div class="exhibit-body">
+            <div class="exhibit-item">
+              <span class="exhibit-item-glyph">01</span>
+              <span>
+                <span class="exhibit-item-tag">F5</span>
+                Python build deps: urllib3 (28 vulns), requests (13), starlette (7), bottle (8), certifi (6), uvicorn (4) = 73 CVE records. Build-time only; firmware ships pure C++. No .github/dependabot.yml.
+              </span>
+            </div>
+            <div class="exhibit-item">
+              <span class="exhibit-item-glyph">02</span>
+              <span>
+                <span class="exhibit-item-tag">F6</span>
+                Scanner gaps: deserialization regex FP on ArduinoJson (19 hits); ghostly npm-wled channel; q2 security-keyword FP on PR #4942.
+              </span>
+            </div>
+          </div>
+        </details>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="scorecard-section">
+    <div class="scorecard-grid">
+      <div class="score-cell">
+        <div class="score-icon red">❌</div>
+        <div class="score-label">Does anyone check the code?</div>
+        <div class="score-value red">No — anti-destruction-only ruleset (no review rule) + no CODEOWNERS, despite strong 38% formal / 86% any-review culture</div>
+      </div>
+      <div class="score-cell">
+        <div class="score-icon red">❌</div>
+        <div class="score-label">Do they fix problems quickly?</div>
+        <div class="score-value red">No — unresolved GHSA-2xwq-cxqw-wfv8 with 74-day maintainer silence after public complaint (issue #5340); backport status unknown</div>
+      </div>
+      <div class="score-cell">
+        <div class="score-icon amber">⚠</div>
+        <div class="score-label">Do they tell you about problems?</div>
+        <div class="score-value amber">Partly — CONTRIBUTING + CoC present (health 75%); no SECURITY.md; private-advisory permissions misconfigured per #5340 thread; 0 advisories in 9 years</div>
+      </div>
+      <div class="score-cell">
+        <div class="score-icon red">❌</div>
+        <div class="score-label">Is it safe out of the box?</div>
+        <div class="score-value red">No — default-install has no authentication; CORS wildcard on all origins/methods/headers; unauthenticated /reset (F1)</div>
+      </div>
+    </div>
+  </div>
+
+  <details class="collapsible-section" open>
+    <summary>
+      <div class="section-header">
+        <span class="section-number">01</span>
+        <h2>What Should I Do?</h2>
+        <span class="section-status">
+          <span class="pill amber">17.8k⭐ · EUPL-1.2 · C++ · 1 critical · 4 warnings · 2 info · CRITICAL</span>
+        </span>
+      </div>
+      <div class="section-subtitle">WLED is a 9-year-old ESP32/ESP8266 firmware for controlling addressable LED strips over WiFi — 17.8k stars, 100 contributors, wled-org-owned since Jan 2025. Critical verdict driven by F0: an unresolved private GHSA-2xwq-cxqw-wfv8 where researcher breakingsystems publicly complained on 2026-02-02 about maintainer non-response after 10+ days; last maintainer comment 2026-02-06 (74 days before scan) said the &#39;critical had been fixed&#39; but 0.15.x backport status is publicly unconfirmed. On top of that, the factory-default firmware has no authentication, a CORS wildcard on all endpoints, and an unauthenticated /reset — making a default-install WLED on a LAN controllable by any same-network webpage (F1). Governance: an anti-destruction-only ruleset (no review requirement), missing SECURITY.md despite 9 years of history, and a mutable `andelf/nightly-release@main` supply-chain reference. Positive signals exist: unusually strong review culture (38% formal / 86% any, second-highest in the V1.2 catalog), CodeQL + Copilot AI-governance workflows active, Dependabot running, 100-contributor community.</div>
+    </summary>
+    <div class="section-body">
+      <div class="action-card stop">
+        <h3>Step 1: Do NOT expose WLED devices to the internet or to untrusted networks</h3>
+        <p><strong>Non-technical:</strong> Default WLED has no authentication. Never port-forward WLED to the internet. Never attach WLED to a network you don&#39;t control. If you want remote access, use a VPN into your home network, not direct exposure.</p>
+        <pre># Check your router config — no port-forward rules for port 80 to your WLED device&#39;s IP</pre>
+      </div>
+      <div class="action-card stop">
+        <h3>Step 2: Set a PIN on first boot (Settings &gt; Security &amp; Update &gt; PIN)</h3>
+        <p><strong>Non-technical:</strong> After flashing WLED and connecting it to WiFi, open the web UI, go to Settings &gt; Security &amp; Update, set a PIN. This locks the settings/OTA endpoints against casual LAN-peer access. Empty PIN = no authentication (the factory default).</p>
+        <pre># Via web UI: http://wled.local/settings → Security &amp; Update → enter PIN → Save</pre>
+      </div>
+      <div class="action-card wait">
+        <h3>Step 3: Enable `otaSameSubnet` + use a dedicated IoT VLAN</h3>
+        <p><strong>Non-technical:</strong> Even with a PIN, treat WLED as an untrusted device on your network. Put it on a separate VLAN (most consumer routers call this a &#39;Guest&#39; or &#39;IoT&#39; network). Enable otaSameSubnet so OTA uploads only accept from the same subnet.</p>
+        <pre># Router-specific — consult your router&#39;s VLAN or guest-network setup docs</pre>
+      </div>
+      <div class="action-card wait">
+        <h3>Step 4: Install the STABLE channel, not nightly — pin to v0.15.4 for now</h3>
+        <p><strong>Non-technical:</strong> install.wled.me has a channel selector — choose &#39;Stable&#39; (currently v0.15.4), not &#39;Nightly&#39;. The stable channel doesn&#39;t ride the @main-pinned nightly-release supply chain (F2). Watch for v0.15.5 or later before assuming GHSA-2xwq-cxqw-wfv8 (F0) is resolved.</p>
+        <pre># Visit https://install.wled.me and select the Stable channel</pre>
+      </div>
+      <div class="action-card stop">
+        <h3>Step 5: Check release notes for GHSA-2xwq-cxqw-wfv8 resolution before assuming fixed</h3>
+        <p><strong>Non-technical:</strong> Follow WLED release notes (github.com/wled/WLED/releases) and watch issue #5340 for resolution status. If you&#39;re on v0.15.x, the researcher noted the &#39;critical&#39; was previously fixed but backport status is publicly unconfirmed. Err on the side of assuming not-yet-fixed until WLED publishes confirmation.</p>
+        <pre>gh api repos/wled/WLED/issues/5340 --jq &#39;.state&#39;</pre>
+      </div>
+      <div class="action-card info-action">
+        <h3>Step 6: If building from source: use an isolated build VM + pin Python deps</h3>
+        <p><strong>Non-technical:</strong> If you don&#39;t use pre-built .bin from install.wled.me or GitHub Releases and instead run `pip install platformio &amp;&amp; platformio run`, the Python build environment pulls 29 packages with 73 known CVEs (F5). Use a disposable VM or Docker container for the build, not your daily workstation. Binary-install users can ignore this.</p>
+        <pre>docker run --rm -v $(pwd):/w -w /w python:3.11-slim bash -c &#39;pip install -r requirements.txt &amp;&amp; platformio run&#39;</pre>
+      </div>
+    </div>
+  </details>
+
+  <details class="collapsible-section">
+    <summary>
+      <div class="section-header">
+        <span class="section-number">02</span>
+        <h2>What We Found</h2>
+        <span class="section-status">
+<span class="pill red">&#x1F6A8; 1 Critical</span><span class="pill amber">&#x26A0; 4 Warning</span><span class="pill info">&#x2139; 2 Info</span>        </span>
+      </div>
+      <div class="section-subtitle">
+        7 findings total.      </div>
+    </summary>
+    <div class="section-body">
+      <div class="finding-card critical">
+        <details>
+          <summary>
+            <div class="finding-header">
+              <span class="tag critical-tag">Critical</span>
+              <span class="status-chip informational">Ongoing</span>
+<span class="finding-date">Since 2026-02-02 (public issue opened); 74 days silent since 2026-02-06</span><span class="finding-duration">Ongoing</span>              <h3>F0 &mdash; Unresolved private GHSA-2xwq-cxqw-wfv8 — researcher publicly reports maintainer non-response; 74 days silent since last comment; backport to 0.15.x publicly unconfirmed</h3>
+              <div class="action-hint warn">Pin to a specific WLED version only after reviewing the GHSA-2xwq-cxqw-wfv8 resolution in WLED&#39;s public changelog; do not expose an unupdated WLED device to untrusted networks.</div>
+            </div>
+          </summary>
+          <div class="finding-body">
+            <p>The timeline, reconstructed from public issue #5340 comments: researcher breakingsystems filed a private GitHub Security Advisory (GHSA-2xwq-cxqw-wfv8) on wled/WLED circa 2026-01-23 via the standard &#39;Report a vulnerability&#39; UI. After 10+ days with no maintainer acknowledgement on the private thread, they opened public issue #5340 on 2026-02-02 — explicitly calling out the unresponsiveness and asking a maintainer to &#39;please have a look … and leave a comment there.&#39;</p>
+            <p>Maintainer softhack007 (the #3 contributor at 9.5% of commits) replied within two hours. But his response was revealing: &#39;I get a 404 page not found on your URL.&#39; breakingsystems confirmed the expected collaborator scoping should grant softhack007 access, pointing to a permissions gap inside wled-org&#39;s advisory-team configuration. softhack007 then pinged netmindz (the project&#39;s self-described release manager). netmindz replied 2026-02-04: &#39;I have given an initial response, more details to follow. TLDR: the critical has already been reported once before and had been fixed. I just need to double check that it did get back ported to 0.15.x. Other issues reported are very fairly basic rather than significant discoveries.&#39;</p>
+            <p>That was the last substantive maintainer comment. Scan date is 2026-04-20, putting the silence at 74 days. Issue #5340 remains open. v0.15.4 shipped 2026-03-14 (36 days before scan, 37 days after netmindz&#39;s &#39;fixing backport&#39; comment) — but no public release notes mention GHSA-2xwq-cxqw-wfv8. A user running v0.15.4 cannot tell, from public information, whether they&#39;re running the fixed version.</p>
+            <p>The severity framing matters here. The vulnerability itself is private — this finding doesn&#39;t reconstruct the specific attack class. What the finding DOES document is a disclosure-handling failure on a &#39;critical&#39;-tier vulnerability by the maintainers&#39; own characterization, on a project with 17.8k stars and widespread IoT deployment. Combined with the catalog-wide silent-fix pattern (10 of 10 V1.2 scans with 0 published GHSA), the practical consumer consequence is: you can&#39;t rely on GHSA syndication to know when to update. You have to watch the issue tracker and release notes, and even then, WLED release notes rarely call out security fixes explicitly.</p>
+            <p>Related context: the same researcher filed issue #3233 in 2023 (&#39;WiFi Scanning vulnerable to XSS&#39;) with a clear PoC demonstrating stored-XSS via SSID name. That issue was closed within 5 days without publishing a GHSA. netmindz&#39;s reference to &#39;the critical has been reported before&#39; is consistent with GHSA-2xwq-cxqw-wfv8 being a new instance of the same XSS class or a related one — but again, publicly unconfirmed.</p>
+            <p><strong>How to fix.</strong> Maintainer-side: close issue #5340 with a public summary of which WLED versions fix GHSA-2xwq-cxqw-wfv8 and which other issues were resolved. Publish GHSA-2xwq-cxqw-wfv8 once resolution is confirmed — syndicates to the GHSA feed and lets users running older versions know they need to update. Consumer-side: watch for v0.15.5 or later release notes before assuming the current 0.15.x install is up-to-date.</p>
+          </div>
+        </details>
+      </div>
+      <div class="finding-card warning">
+        <details>
+          <summary>
+            <div class="finding-header">
+              <span class="tag warning-tag">Warning</span>
+              <span class="status-chip informational">Ongoing</span>
+<span class="finding-date">Since WLED&#39;s webserver-with-optional-auth design was established</span><span class="finding-duration">Continuous</span>              <h3>F1 &mdash; Default-install WLED has NO authentication — CORS wildcard on all endpoints + unauthenticated `/reset` + optional-PIN OTA make any same-LAN webpage a control surface</h3>
+              <div class="action-hint warn">Set a PIN in the Security &amp; Update page immediately after first boot. Do NOT expose WLED devices to untrusted networks or to the internet. Consider isolating WLED on a separate IoT VLAN.</div>
+            </div>
+          </summary>
+          <div class="finding-body">
+            <p>The specific source lines in wled00/wled_server.cpp tell the story. Line 342 initializes CORS: `DefaultHeaders::Instance().addHeader(F(&#34;Access-Control-Allow-Origin&#34;), &#34;*&#34;);` followed immediately by Access-Control-Allow-Methods: * and Access-Control-Allow-Headers: * on lines 343-344. There is no user-configurable option for tighter CORS. Any origin may issue cross-origin requests and read responses.</p>
+            <p>Line 848 establishes the authentication model: `correctPIN = !strlen(settingsPIN);`. This is the first thing initServer does on the PIN state — if the PIN is empty (the factory default), correctPIN is immediately set to true, marking the device as already-authenticated. A user who doesn&#39;t know to set a PIN effectively opts out of all subsequent auth checks for the session.</p>
+            <p>The /reset endpoint at line 396-399 bypasses even the PIN system: `server.on(F(&#34;/reset&#34;), HTTP_GET, [](AsyncWebServerRequest *request){ serveMessage(request, 200, ...); doReboot = true; });`. No auth. Any GET /reset reboots the device. This is a denial-of-service primitive — a malicious webpage on the same LAN can reboot the WLED device indefinitely.</p>
+            <p>The OTA flash endpoint (`/update`, lines 507-548) does check auth. The logic is: `if (((otaSameSubnet &amp;&amp; !inSameSubnet(client)) &amp;&amp; !strlen(settingsPIN)) || (!otaSameSubnet &amp;&amp; !inLocalSubnet(client))) { reject }` followed by `if (!correctPIN) { reject }`. Both otaSameSubnet and the PIN are OPTIONAL user settings. Default install: otaSameSubnet is off; PIN is empty → `inLocalSubnet(client)` (client IP must match 10/8, 192.168/16, or 172.16/12) is the only gate. Any LAN peer who can reach WLED can upload firmware.</p>
+            <p>The design rationale is clear enough from WLED&#39;s documentation: the project assumes the LAN is a trusted zone. That&#39;s a defensible stance for a hobbyist LED controller. The finding documents what happens in the cases where that assumption fails: ISP-provided routers with no client isolation, guest networks bridged to main, IoT VLANs misconfigured, a family member&#39;s phone running a compromised app. In those cases, a default-config WLED is a control-plane of the home network.</p>
+            <p>A specific mitigation is already present in the codebase but must be user-activated: setting a PIN closes the unauthenticated-settings surface, enabling otaSameSubnet closes the remote-OTA surface, and putting WLED on a separate VLAN closes the LAN-peer surface entirely. The finding&#39;s severity reflects that most users don&#39;t do any of these. Firmware maintainers could change that by making PIN setup mandatory in the first-boot captive portal — a ~20-line change to the AP-mode setup flow.</p>
+            <p><strong>How to fix.</strong> Maintainer-side: make PIN setting part of the first-boot AP-mode configuration flow (currently optional); add a warning banner to the web UI when no PIN is set; tighten CORS defaults (restrict to same-origin by default with user-opt-in for web-app-integration use cases); add basic auth check on `/reset`. Consumer-side: set a PIN in Settings &gt; Security &amp; Update on first boot; enable `otaSameSubnet`; ideally isolate WLED on an IoT VLAN with no routing to main LAN devices.</p>
+          </div>
+        </details>
+      </div>
+      <div class="finding-card warning">
+        <details>
+          <summary>
+            <div class="finding-header">
+              <span class="tag warning-tag">Warning</span>
+              <span class="status-chip informational">Ongoing</span>
+<span class="finding-date">Since the nightly workflow adopted andelf/nightly-release; PR #5386 unmerged since 2026-02-20</span><span class="finding-duration">Continuous</span>              <h3>F2 &mdash; Nightly deployment uses `andelf/nightly-release@main` (mutable ref); 0 SHA-pinned actions across 8 workflows; PR #5386 proposes fix but unmerged 60 days</h3>
+              <div class="action-hint warn">If building firmware from WLED source or consuming nightly builds from install.wled.me/nightly, note the upstream supply-chain exposure. Production use should pin to a tagged stable release (v0.15.4) rather than nightly.</div>
+            </div>
+          </summary>
+          <div class="finding-body">
+            <p>The specific line in .github/workflows/nightly.yml: step &#39;Update Nightly Release&#39; at line 25 reads `uses: andelf/nightly-release@main`. That @main ref is a pointer to the live main branch of an individual developer&#39;s GitHub action. Tag-pinning would constrain the ref to a specific released version; SHA-pinning would constrain to a specific commit. @main pins to whatever andelf pushes next.</p>
+            <p>The blast radius is specific. The nightly workflow builds .bin firmware variants (using the wled_build reusable workflow) and then, via andelf/nightly-release@main, creates a GitHub Release tagged &#39;nightly&#39; with the .bin files as assets. A subsequent step (peter-evans/repository-dispatch@v3 — tag-pinned, safer) uses `secrets.PAT_PUBLIC` to dispatch a release-nightly event to wled/WLED-WebInstaller. That downstream repo publishes the new nightly to install.wled.me/nightly — the WebSerial flasher consumed by end users.</p>
+            <p>If andelf/nightly-release&#39;s main branch is altered — account takeover, developer social-engineered, or andelf themselves turning malicious — the next nightly WLED build consumes the modified action with GITHUB_TOKEN in scope. Malicious action code could embed payloads in the .bin before it&#39;s published, or redirect artifacts, or exfiltrate the PAT. The compromise window is &#39;from andelf&#39;s next push to the next nightly build&#39; — which runs at 2 AM UTC daily per the cron schedule.</p>
+            <p>Open PR #5386 (&#39;Pin andelf/nightly-release to version tag instead of @main branch&#39;) was filed on 2026-02-20. It proposes the one-line fix: `uses: andelf/nightly-release@v1.0.0` (or whatever stable tag exists). The PR has been open 60 days, unmerged. This is the kind of fix that&#39;s faster to merge than to document reasons not to merge.</p>
+            <p>Broader hygiene: across the 8 WLED workflow files, 0 actions are SHA-pinned and 25 are tag-pinned. Tag-pinning is the industry-common pattern but still vulnerable to tag-hijacking (action owner force-pushes a tag to point at malicious code). SHA-pinning is the stricter form that pins to an immutable commit. A consolidated hardening pass would swap all 25 tag-pins to SHAs; Dependabot has a setting to manage SHA-pinned action updates automatically.</p>
+            <p><strong>How to fix.</strong> Maintainer-side: merge PR #5386 (pin to a tag); further harden by pinning all 25 tag-pinned actions to commit SHAs (the standard Dependabot-manageable pattern); add a permissions block to pr-merge.yaml. Consumer-side: for production deployments, use tagged releases (v0.15.4) not nightly; if using install.wled.me, prefer the &#39;Stable&#39; channel over &#39;Nightly&#39;.</p>
+          </div>
+        </details>
+      </div>
+      <div class="finding-card warning">
+        <details>
+          <summary>
+            <div class="finding-header">
+              <span class="tag warning-tag">Warning</span>
+              <span class="status-chip informational">Ongoing</span>
+<span class="finding-date">Since ruleset creation 2025-02-09 (anti-destruction from day 1)</span><span class="finding-duration">Continuous</span>              <h3>F3 &mdash; Ruleset has `deletion` + `non_fast_forward` only — no required-review rule; no CODEOWNERS; despite 38% formal review + 86% any-review culture</h3>
+              <div class="action-hint warn">Pin to reviewed release tags; treat unreleased (nightly / main-tip) code as unreviewed-by-gate even though 86% of PRs receive SOME review.</div>
+            </div>
+          </summary>
+          <div class="finding-body">
+            <p>The ruleset was created 2025-02-09 — shortly after the ownership transfer from Aircoookie to the wled org on 2025-01-31. It has exactly 2 rules on the default branch: `deletion` (blocks branch deletion) and `non_fast_forward` (blocks force-push). Both are anti-destruction rules — they prevent an attacker from rewriting history after a malicious merge, but they do not prevent the merge itself.</p>
+            <p>No `pull_request` rule. No `required_approving_review_count`. No `required_status_checks`. No CODEOWNERS. No classic branch protection (HTTP 404 on that API). A compromised maintainer account with write access can push directly to main (history-preserving, so fast-forward-safe) and the commit lands. The anti-destruction rules would prevent covering tracks afterward but not the initial merge.</p>
+            <p>The unusual aspect of WLED&#39;s posture is the review culture coexisting with absent enforcement. 38% of the 50-PR closed-merged sample had formal APPROVED review decisions — second-highest in the V1.2 catalog after kanata&#39;s 44%. 86% had at least one review interaction (comments, requested changes, or approvals) — the HIGHEST any-review rate we&#39;ve seen across V1.2 scans. Self-merges were 64%, but the 86% any-review rate implies these are typically post-review author-merges, not unreviewed ones.</p>
+            <p>The gap is structural: a well-meaning community of 100 contributors, 6-person top-contributor tier (blazoncek 46%, Aircoookie 24.6%, softhack007 9.5%, netmindz 8.7%, DedeHai 5.8%, willmmiles 5.3%), with strong review hygiene, but no ruleset forcing it. The fix is a 3-line ruleset addition — add a `pull_request` rule requiring ≥1 approving review. That would convert the structural review from &#39;social norm&#39; to &#39;cannot merge without it.&#39;</p>
+            <p><strong>How to fix.</strong> Maintainer-side: extend the &#39;Main&#39; ruleset to include a `pull_request` rule with `required_approving_review_count: 1` (or 2); add CODEOWNERS naming primary reviewers per subsystem (Aircoookie + netmindz for core; blazoncek for FX; softhack007 for audio). Consumer-side: pin to tagged release (v0.15.4), not main.</p>
+          </div>
+        </details>
+      </div>
+      <div class="finding-card warning">
+        <details>
+          <summary>
+            <div class="finding-header">
+              <span class="tag warning-tag">Warning</span>
+              <span class="status-chip informational">Ongoing</span>
+<span class="finding-date">Since 2016-12-20</span><span class="finding-duration">Continuous</span>              <h3>F4 &mdash; No SECURITY.md in 9 years; private-advisory permissions misconfigured (per issue #5340 comment thread)</h3>
+              <div class="action-hint warn">Researchers finding WLED vulns should use the GitHub &#39;Report a vulnerability&#39; button AND simultaneously mention the report in the public discussions/Discord to route around the maintainer-side permissions gap documented in issue #5340.</div>
+            </div>
+          </summary>
+          <div class="finding-body">
+            <p>The documented permissions gap from issue #5340 is specific. softhack007&#39;s first comment on the public issue was &#39;I get a 404 page not found on your URL&#39; — the URL being https://github.com/wled/WLED/security/advisories/GHSA-2xwq-cxqw-wfv8. breakingsystems responded with screenshot evidence that the advisory&#39;s collaborator list included &#39;@wled wled owners&#39; as a team with access. softhack007, as a member of wled-owners, should have seen the advisory. He didn&#39;t.</p>
+            <p>That points to a GitHub permissions misconfiguration inside wled-org — either the wled-owners team&#39;s advisory-read scope didn&#39;t propagate, or the advisory&#39;s team-level collaborator field wasn&#39;t set up correctly. Either way, the effect is that the private disclosure channel has a documented failure mode. A researcher filing a private advisory cannot assume all maintainers see it; they have to publicly ping individual accounts to route around the gap.</p>
+            <p>Beyond that specific incident, the disclosure-policy absence is catalog-wide: no SECURITY.md at root, .github/, or docs/ despite 9 years of project history. Community health is 75% (CONTRIBUTING and CODE_OF_CONDUCT present — above the V1.2 catalog median) but the security-disclosure piece specifically is missing. 0 GHSA advisories have been published over 9 years. The earlier 2023 XSS disclosure (issue #3233) was closed within 5 days but not syndicated as an advisory.</p>
+            <p>The practical fix is cheap: a 1-page SECURITY.md naming GitHub&#39;s &#39;Report a vulnerability&#39; UI, Discord as backup, and an expected response SLA. Plus an audit of the wled-owners team advisory-permissions to make sure the private channel actually works. Both are hours of work, not days.</p>
+            <p><strong>How to fix.</strong> Maintainer-side: add a 1-page SECURITY.md naming GitHub&#39;s &#39;Report a vulnerability&#39; UI + Discord as backup + expected response SLA. Audit the wled-owners team scope against the private advisory UI (fix the permissions issue that surfaced in #5340 comment thread). Publish GHSA-2xwq-cxqw-wfv8 once resolved to close the feedback loop.</p>
+          </div>
+        </details>
+      </div>
+      <div class="finding-card info">
+        <details>
+          <summary>
+            <div class="finding-header">
+              <span class="tag info-tag">Info</span>
+              <span class="status-chip informational">Informational</span>
+<span class="finding-date">Since platformio toolchain adopted</span><span class="finding-duration">Continuous</span>              <h3>F5 &mdash; Build-time Python deps (platformio + transitives) carry 73+ CVEs across 9 packages — attack surface for build-from-source users only; firmware itself ships pure C++</h3>
+              <div class="action-hint warn">If you `git clone` WLED and build from source, pin your Python environment with `pip install -r requirements.txt --require-hashes` or use a reproducible build VM. Binary-install users (install.wled.me or downloaded .bin) are not directly affected.</div>
+            </div>
+          </summary>
+          <div class="finding-body">
+            <p>The Python requirements.txt pins 23 packages at specific versions. osv.dev lookups across those pins reveal the CVE surface: urllib3 (28 records), requests (13), starlette (7), bottle (8), certifi (6), uvicorn (4), marshmallow (3), idna (2), h11 (1). That&#39;s 72 Python records plus 1 npm record (clean-css). Most are historical — the pinned versions are reasonably current (urllib3==2.5.0, requests==2.33.0, starlette==0.45.3) and many OSV records apply to older versions. But the pinned-version-has-some-CVE-record shape is real.</p>
+            <p>The scope is crucial for severity framing. These are PLATFORMIO BUILD-TIME dependencies. The firmware itself is pure C++ compiled for ESP32 — there is no Python runtime, no Node runtime, no FastAPI server on the device. The Python environment exists only for the build pipeline: platformio reads platformio.ini, resolves board configurations, invokes the C++ toolchain, and produces the .bin files. starlette/uvicorn/bottle are part of platformio&#39;s own web UI for package management — WLED&#39;s build process doesn&#39;t actually use them, but pip pulls them anyway as platformio transitives.</p>
+            <p>The consumer impact breakdown: (a) install.wled.me user or downloaded-.bin user — zero exposure (you never run any Python); (b) `git clone &amp;&amp; platformio run` user — the build environment is exposed; (c) build server integrator — the attack surface is the pip install step. For category (b) and (c), a malicious PyPI package hijack (typosquat, account takeover) during build could inject code into the pio-scripts/ layer and thus into the .bin metadata. The scenario requires a specific PyPI-side compromise window; it&#39;s not a today-risk but a lurking-risk.</p>
+            <p>The maintainer-side fix is to add .github/dependabot.yml explicitly tracking pip and npm (currently only the github-actions ecosystem gets the default Dependabot coverage). That would route the 73 OSV records into automated PR updates and close most of them by version bumps. The consumer-side fix for build-from-source users is `pip install -r requirements.txt --require-hashes` in a disposable VM.</p>
+            <p><strong>How to fix.</strong> Maintainer-side: add a `.github/dependabot.yml` explicitly tracking pip + npm (and github-actions while we&#39;re at it); consider bumping requirements.txt to current versions of urllib3 / requests (latest patches close most of the OSV records). Consumer-side (build-from-source only): use a disposable build VM; pin with `--require-hashes`; don&#39;t copy the build environment into production.</p>
+          </div>
+        </details>
+      </div>
+      <div class="finding-card info">
+        <details>
+          <summary>
+            <div class="finding-header">
+              <span class="tag info-tag">Info</span>
+              <span class="status-chip informational">Ongoing</span>
+<span class="finding-date">Scanner tooling gap</span><span class="finding-duration">Continuous</span>              <h3>F6 &mdash; Scanner coverage gaps: false-positive deserialization regex (ArduinoJson), ghost npm-wled channel, q2 security-keyword FP on PR #4942</h3>
+              <div class="action-hint warn">Calibration note — three scanner gaps documented for V1.2.x backlog.</div>
+            </div>
+          </summary>
+          <div class="finding-body">
+            <p>Three specific scanner coverage gaps documented for this scan, in order of surprise:</p>
+            <p>(1) The V1.2.x-widened deserialization regex (`pickle\.loads?|yaml\.load\s*\(|ObjectInputStream|deserialize|Marshal\.load|\bmarshal\.loads?|\bjoblib\.load|\bdill\.loads?`) matched 19 hits in WLED&#39;s C++ codebase. Every one is a call to ArduinoJson&#39;s `deserializeJson(*pDoc, STREAM)` — safe JSON parsing, not an RCE-class primitive. The regex has no language qualifier, so it collides with any C/C++/Rust/Go project using JSON libraries that happen to expose function names containing &#39;deserialize&#39;. Contrasts sharply with freerouting (entry 24) where every deserialization hit was a real Java ObjectInputStream call. The calibration fix is a language-qualifier: restrict pickle-family patterns to Python files, Java-family to .java, and gate ArduinoJson-style deserializeJson via a known-safe-function allowlist.</p>
+            <p>(2) Distribution-channel detection surfaced exactly one channel: &#39;npm-wled&#39; (verified present on npm registry at version 1.1.0). But WLED doesn&#39;t ship firmware via npm. The package.json `name: &#34;wled&#34;` is for build-tooling use (HTML minification pipeline). The real distribution channels are install.wled.me (a WebSerial browser flasher that downloads .bin and pushes to an ESP32 over USB), GitHub Releases (12 .bin variants per target board: ESP32-WROOM.bin, ESP32-WROVER.bin, ESP8266_debug.bin, ESP32-S3.bin, etc.), and the WLED iOS/Android apps for on-LAN discovery + control. The harness&#39;s channel-detection heuristic needs (a) an exclusion for package.json entries that aren&#39;t actually published as the primary artifact, (b) recognition of ESP firmware release-asset patterns (.bin/.bin.gz), and (c) a WebSerial-flasher-site detection pattern.</p>
+            <p>(3) The q2_oldest_open_security_item_age_days signal returned 214 days, driving Q2 red. The 214-day match is PR #4942 &#39;Add internal user backup functionality to Security &amp; Update page&#39; — a feature PR that extends the settings page named &#39;Security &amp; Update.&#39; The security-keyword regex matches on the substring &#39;Security&#39; in the title. The real security item is issue #5340 at 76 days. Phase 4&#39;s Q2 red is still correct (the 74-day silence on an unresolved GHSA is a genuine red condition), but for a different substantive reason than the signal driver. A filter that checks PR labels and body text alongside title would disambiguate feature-page PRs from actual vulnerability-handling PRs.</p>
+            <p>None of these gaps changed the verdict; Phase 4 authored around each and documented the calibration issues for V1.2.x backlog consideration.</p>
+            <p><strong>How to fix.</strong> Scanner-side: (a) add language-qualifier to deserialization regex so C/C++ `deserializeJson` / `deserialize` matches don&#39;t escalate; (b) add ESP32/.bin release-asset detection for GitHub Releases; (c) add q2 PR-title false-positive filter (exclude titles with &#39;feature&#39;, &#39;add&#39;, &#39;improve&#39;, &#39;update&#39; plus Security-substring — check body + labels for actual vulnerability topic).</p>
+          </div>
+        </details>
+      </div>
+    </div>
+  </details>
+
+  <details class="collapsible-section">
+    <summary>
+      <div class="section-header">
+        <span class="section-number">02A</span>
+        <h2>Executable File Inventory</h2>
+        <span class="section-status">
+          <span class="pill info">&#x2139; 4 files inventoried</span>
+        </span>
+      </div>
+      <div class="section-subtitle">WLED ships as ESP32/ESP8266 firmware. Primary on-device binary is ~1.5MB of compiled C++ (built via platformio). Distribution channel: .bin files per target board on GitHub Releases + install.wled.me WebSerial flasher. No native desktop binary.</div>
+    </summary>
+    <div class="section-body">
+      <p class="p-meta">One card per executable file (hooks, install/uninstall scripts, package lifecycle scripts, CI workflows, Dockerfile, session/event handlers, background processes). Each card documents 7 properties derived from grep &mdash; NOT from the file&rsquo;s self-description &mdash; plus a capability assessment of what the code could do in the worst case.</p>
+
+      <div class="inventory-summary">
+        <div class="inventory-summary-title">Quick scan (4 executables)</div>
+        <ul>
+          <li class="warn"><span class="glyph">⚠</span><span><code>wled00/wled_server.cpp</code> &mdash; firmware-webserver. THIS is F1. The webserver initializes CORS wildcard, exposes /reset unauthenticated, and gates OTA behind optional-PIN + optional-same-subnet checks.</span></li>
+          <li class="warn"><span class="glyph">⚠</span><span><code>.github/workflows/nightly.yml</code> &mdash; ci-workflow. Ships firmware to install.wled.me/nightly. PR #5386 proposes pinning fix.</span></li>
+          <li class="warn"><span class="glyph">⚠</span><span><code>.github/workflows/pr-merge.yaml</code> &mdash; ci-workflow. Safer form of pull_request_target (closed/merged only, permission-gated) but tag-pinned third-party action + no permissions block weakens the gate.</span></li>
+          <li class="warn"><span class="glyph">⚠</span><span><code>platformio.ini + pio-scripts/</code> &mdash; build-pipeline. Build-time Python environment — 73 CVEs across 9 pinned packages (F5). Firmware runtime is unaffected.</span></li>
+        </ul>
+      </div>
+
+      <div class="finding-card warning stack-md">
+        <details>
+          <summary>
+            <div class="finding-header">
+              <span class="tag warning-tag">Executable</span>
+              <span class="inv-verdict warn">⚠ `DefaultHeaders::Instance().addHeader(&#34;Access-Control-Allow-Origin&#34;, &#34;*&#34;)` (line 342); `/reset` handler with no auth (line 396-399); `correctPIN = !strlen(settingsPIN)` (line 848) — F1 core surface</span>
+              <h3><code>wled00/wled_server.cpp</code></h3>
+            </div>
+          </summary>
+          <div class="finding-body">
+            <div class="finding-meta">
+              <div class="meta-chip"><span class="chip-label">1. Trigger</span><span class="chip-value">ESP32 (C++)</span></div>
+              <div class="meta-chip"><span class="chip-label">2. Reads</span><span class="chip-value">THIS is F1. The webserver initializes CORS wildcard, exposes /reset unauthenticated, and gates OTA behind optional-PIN + optional-same-subnet checks.</span></div>
+              <div class="meta-chip"><span class="chip-label">3. Writes</span><span class="chip-value">None observed</span></div>
+              <div class="meta-chip"><span class="chip-label">4. Network</span><span class="chip-value">HTTP server on port 80 (default); WebSocket handler; OTA endpoint</span></div>
+              <div class="meta-chip"><span class="chip-label">5. Injection channel</span><span class="chip-value val-warn">Possible via `DefaultHeaders::Instance().addHeader(&#34;Access-Control-Allow-Origin&#34;, &#34;*&#34;)` (line 342); `/reset` handler with no auth (line 396-399); `correctPIN = !strlen(settingsPIN)` (line 848) — F1 core surface</span></div>
+              <div class="meta-chip"><span class="chip-label">6. Secret-leak path</span><span class="chip-value val-good">None</span></div>
+              <div class="meta-chip"><span class="chip-label">7. Privilege</span><span class="chip-value">User-level</span></div>
+            </div>
+            <div class="finding-meta stack-sm">
+              <div class="meta-chip"><span class="chip-label">Relevant lines</span><span class="chip-value">342-345, 396-399, 489-548, 848</span></div>
+            </div>
+            <div class="sub-finding">
+              <div class="sub-finding-label">Capability assessment</div>
+              <p>firmware-webserver. THIS is F1. The webserver initializes CORS wildcard, exposes /reset unauthenticated, and gates OTA behind optional-PIN + optional-same-subnet checks.</p>
+            </div>
+          </div>
+        </details>
+      </div>
+      <div class="finding-card warning stack-md">
+        <details>
+          <summary>
+            <div class="finding-header">
+              <span class="tag warning-tag">Executable</span>
+              <span class="inv-verdict warn">⚠ `uses: andelf/nightly-release@main` (line 25, mutable ref) — F2</span>
+              <h3><code>.github/workflows/nightly.yml</code></h3>
+            </div>
+          </summary>
+          <div class="finding-body">
+            <div class="finding-meta">
+              <div class="meta-chip"><span class="chip-label">1. Trigger</span><span class="chip-value">GitHub Actions</span></div>
+              <div class="meta-chip"><span class="chip-label">2. Reads</span><span class="chip-value">Ships firmware to install.wled.me/nightly. PR #5386 proposes pinning fix.</span></div>
+              <div class="meta-chip"><span class="chip-label">3. Writes</span><span class="chip-value">None observed</span></div>
+              <div class="meta-chip"><span class="chip-label">4. Network</span><span class="chip-value">Uses PAT_PUBLIC to dispatch to wled/WLED-WebInstaller</span></div>
+              <div class="meta-chip"><span class="chip-label">5. Injection channel</span><span class="chip-value val-warn">Possible via `uses: andelf/nightly-release@main` (line 25, mutable ref) — F2</span></div>
+              <div class="meta-chip"><span class="chip-label">6. Secret-leak path</span><span class="chip-value val-good">None</span></div>
+              <div class="meta-chip"><span class="chip-label">7. Privilege</span><span class="chip-value">User-level</span></div>
+            </div>
+            <div class="finding-meta stack-sm">
+              <div class="meta-chip"><span class="chip-label">File SHA @ scanned rev</span><span class="chip-value"><code>17447bb17833&hellip;</code></span></div>
+              <div class="meta-chip"><span class="chip-label">Relevant lines</span><span class="chip-value">25, 35</span></div>
+            </div>
+            <div class="sub-finding">
+              <div class="sub-finding-label">Capability assessment</div>
+              <p>ci-workflow. Ships firmware to install.wled.me/nightly. PR #5386 proposes pinning fix.</p>
+            </div>
+          </div>
+        </details>
+      </div>
+      <div class="finding-card warning stack-md">
+        <details>
+          <summary>
+            <div class="finding-header">
+              <span class="tag warning-tag">Executable</span>
+              <span class="inv-verdict warn">⚠ `pull_request_target` on closed events + `actions-cool/check-user-permission@v2` (tag-pinned, third-party); no permissions block</span>
+              <h3><code>.github/workflows/pr-merge.yaml</code></h3>
+            </div>
+          </summary>
+          <div class="finding-body">
+            <div class="finding-meta">
+              <div class="meta-chip"><span class="chip-label">1. Trigger</span><span class="chip-value">GitHub Actions</span></div>
+              <div class="meta-chip"><span class="chip-label">2. Reads</span><span class="chip-value">Safer form of pull_request_target (closed/merged only, permission-gated) but tag-pinned third-party action + no permissions block weakens the gate.</span></div>
+              <div class="meta-chip"><span class="chip-label">3. Writes</span><span class="chip-value">None observed</span></div>
+              <div class="meta-chip"><span class="chip-label">4. Network</span><span class="chip-value">Discord webhook notification</span></div>
+              <div class="meta-chip"><span class="chip-label">5. Injection channel</span><span class="chip-value val-warn">Possible via `pull_request_target` on closed events + `actions-cool/check-user-permission@v2` (tag-pinned, third-party); no permissions block</span></div>
+              <div class="meta-chip"><span class="chip-label">6. Secret-leak path</span><span class="chip-value val-good">None</span></div>
+              <div class="meta-chip"><span class="chip-label">7. Privilege</span><span class="chip-value">User-level</span></div>
+            </div>
+            <div class="finding-meta stack-sm">
+              <div class="meta-chip"><span class="chip-label">Relevant lines</span><span class="chip-value">1-38</span></div>
+            </div>
+            <div class="sub-finding">
+              <div class="sub-finding-label">Capability assessment</div>
+              <p>ci-workflow. Safer form of pull_request_target (closed/merged only, permission-gated) but tag-pinned third-party action + no permissions block weakens the gate.</p>
+            </div>
+          </div>
+        </details>
+      </div>
+      <div class="finding-card warning stack-md">
+        <details>
+          <summary>
+            <div class="finding-header">
+              <span class="tag warning-tag">Executable</span>
+              <span class="inv-verdict warn">⚠ 4 subprocess calls in pio-scripts/ for git metadata + module validation; tools/cdata-test.js uses child_process</span>
+              <h3><code>platformio.ini + pio-scripts/</code></h3>
+            </div>
+          </summary>
+          <div class="finding-body">
+            <div class="finding-meta">
+              <div class="meta-chip"><span class="chip-label">1. Trigger</span><span class="chip-value">Python (platformio)</span></div>
+              <div class="meta-chip"><span class="chip-label">2. Reads</span><span class="chip-value">Build-time Python environment — 73 CVEs across 9 pinned packages (F5). Firmware runtime is unaffected.</span></div>
+              <div class="meta-chip"><span class="chip-label">3. Writes</span><span class="chip-value">None observed</span></div>
+              <div class="meta-chip"><span class="chip-label">4. Network</span><span class="chip-value">None</span></div>
+              <div class="meta-chip"><span class="chip-label">5. Injection channel</span><span class="chip-value val-warn">Possible via 4 subprocess calls in pio-scripts/ for git metadata + module validation; tools/cdata-test.js uses child_process</span></div>
+              <div class="meta-chip"><span class="chip-label">6. Secret-leak path</span><span class="chip-value val-good">None</span></div>
+              <div class="meta-chip"><span class="chip-label">7. Privilege</span><span class="chip-value">User-level</span></div>
+            </div>
+            <div class="sub-finding">
+              <div class="sub-finding-label">Capability assessment</div>
+              <p>build-pipeline. Build-time Python environment — 73 CVEs across 9 pinned packages (F5). Firmware runtime is unaffected.</p>
+            </div>
+          </div>
+        </details>
+      </div>
+
+      <p class="p-meta">Install paths: (1) `install.wled.me` — visit in Chrome/Edge, click Install, browser-side WebSerial pushes the .bin directly to a USB-connected ESP32. (2) Download .bin from GitHub Releases + `esptool.py --port /dev/ttyUSB0 write_flash 0x0 WLED.bin`. (3) For existing WLED devices: upload new .bin via Settings &gt; Security &amp; Update (requires PIN if set; same-subnet check if enabled).</p>
+    </div>
+  </details>
+
+  <details class="collapsible-section">
+    <summary>
+      <div class="section-header">
+        <span class="section-number">03</span>
+        <h2>Suspicious Code Changes</h2>
+        <span class="section-status">
+          <span class="pill amber">&#x26A0; 3 PRs flagged</span>
+          <span class="pill muted">6 sampled</span>
+        </span>
+      </div>
+      <div class="section-subtitle">Representative rows from the 50-PR closed-merged sample plus 2 currently-open security-relevant PRs. Full sample: 38% formal APPROVED, 86% any-review (HIGHEST in V1.2 catalog), 64% self-merge (mostly post-review author-merges). 2 open PRs are specifically security-relevant: #5482 prevents /upload overwriting wsec.json (secrets file — implies current releases have this issue), #5386 pins nightly-release@main to a tag (F2 fix, unmerged 60 days).</div>
+    </summary>
+    <div class="section-body">
+    <div class="pr-table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>PR</th><th>What it did</th><th>Submitted by</th>
+            <th>Merged by</th><th>Reviewed?</th><th>Concern</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><a href="https://github.com/wled/WLED/pull/5516">#5516</a></td>
+            <td>Add identifier string for DMX realtime mode</td>
+            <td class="td-person">external-contrib</td>
+            <td class="td-person">DedeHai</td>
+            <td class="td-reviewed-yes">Approved by DedeHai</td>
+            <td class="td-concern">None</td>
+          </tr>
+          <tr>
+            <td><a href="https://github.com/wled/WLED/pull/5515">#5515</a></td>
+            <td>better packet queuing &amp; pacing for custom palette live preview</td>
+            <td class="td-person">blazoncek</td>
+            <td class="td-person">blazoncek</td>
+            <td class="td-reviewed-no">2 any-reviews, self-merged</td>
+            <td class="td-concern">Self-merge by top contributor; review culture present but not enforced</td>
+          </tr>
+          <tr>
+            <td><a href="https://github.com/wled/WLED/pull/5482">#5482</a></td>
+            <td>prevent /upload from overwriting wsec.json</td>
+            <td class="td-person">external-contrib</td>
+            <td class="td-person">[OPEN]</td>
+            <td class="td-reviewed-no">N/A — open</td>
+            <td class="td-concern">SECURITY-RELEVANT: currently-open PR implies /upload CAN overwrite wsec.json (secrets file) in current releases</td>
+          </tr>
+          <tr>
+            <td><a href="https://github.com/wled/WLED/pull/5386">#5386</a></td>
+            <td>Pin andelf/nightly-release to version tag instead of @main branch</td>
+            <td class="td-person">external-contrib</td>
+            <td class="td-person">[OPEN]</td>
+            <td class="td-reviewed-no">N/A — open 60 days</td>
+            <td class="td-concern">SECURITY-RELEVANT: fixes F2 supply-chain; unmerged</td>
+          </tr>
+          <tr>
+            <td><a href="https://github.com/wled/WLED/pull/5497">#5497</a></td>
+            <td>0.16 - Backport dynarray fixes from V5 WIP</td>
+            <td class="td-person">willmmiles</td>
+            <td class="td-person">willmmiles</td>
+            <td class="td-reviewed-yes">APPROVED + self-merged</td>
+            <td class="td-concern">None</td>
+          </tr>
+          <tr>
+            <td><a href="https://github.com/wled/WLED/pull/5493">#5493</a></td>
+            <td>Refactor wled-tools discover_devices for deduplication and clarity</td>
+            <td class="td-person">external-contrib</td>
+            <td class="td-person">netmindz</td>
+            <td class="td-reviewed-yes">Approved by netmindz</td>
+            <td class="td-concern">None</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    </div>
+  </details>
+
+  <details class="collapsible-section">
+    <summary>
+      <div class="section-header">
+        <span class="section-number">04</span>
+        <h2>Timeline</h2>
+        <span class="section-status">
+          <span class="pill red">2 concerning</span>
+          <span class="pill amber">8 neutral</span>
+          <span class="pill green">1 good</span>
+        </span>
+      </div>
+      <div class="section-subtitle">WLED lifecycle — 9-year Aircoookie-originated project; ownership transferred to wled org Jan 2025; two disclosure events from breakingsystems (2023 XSS #3233 closed silently; 2026 GHSA-2xwq-cxqw-wfv8 unresolved).</div>
+    </summary>
+    <div class="section-body">
+    <div class="timeline">
+      <div class="tl-item neutral">
+        <div class="tl-date">2016-12-20 <span class="tl-severity-label">Repo created (Aircoookie)</span></div>
+        <div class="tl-desc">Original Aircoookie/WLED</div>
+      </div>
+      <div class="tl-item bad">
+        <div class="tl-date">2023-06-06 <span class="tl-severity-label">Issue #3233 (XSS) filed</span></div>
+        <div class="tl-desc">Closed in 5 days — no GHSA</div>
+      </div>
+      <div class="tl-item good">
+        <div class="tl-date">2025-01-31 <span class="tl-severity-label">wled org created</span></div>
+        <div class="tl-desc">Ownership transfer from Aircoookie</div>
+      </div>
+      <div class="tl-item neutral">
+        <div class="tl-date">2025-02-09 <span class="tl-severity-label">Ruleset &#39;Main&#39; created</span></div>
+        <div class="tl-desc">Anti-destruction only</div>
+      </div>
+      <div class="tl-item neutral">
+        <div class="tl-date">2026-01-23 <span class="tl-severity-label">Private GHSA-2xwq filed</span></div>
+        <div class="tl-desc">Inferred from public issue</div>
+      </div>
+      <div class="tl-item bad">
+        <div class="tl-date">2026-02-02 <span class="tl-severity-label">Public issue #5340 opens</span></div>
+        <div class="tl-desc">After ~10 days silence</div>
+      </div>
+      <div class="tl-item neutral">
+        <div class="tl-date">2026-02-04 <span class="tl-severity-label">netmindz partial response</span></div>
+        <div class="tl-desc">Last substantive comment</div>
+      </div>
+      <div class="tl-item neutral">
+        <div class="tl-date">2026-02-20 <span class="tl-severity-label">PR #5386 opens (F2 fix)</span></div>
+        <div class="tl-desc">Unmerged 60 days</div>
+      </div>
+      <div class="tl-item neutral">
+        <div class="tl-date">2026-03-14 <span class="tl-severity-label">v0.15.4 released</span></div>
+        <div class="tl-desc">No GHSA acknowledgement</div>
+      </div>
+      <div class="tl-item neutral">
+        <div class="tl-date">2026-04-11 <span class="tl-severity-label">v16.0.0-beta released</span></div>
+        <div class="tl-desc">Next major track</div>
+      </div>
+      <div class="tl-item neutral">
+        <div class="tl-date">2026-04-20 <span class="tl-severity-label">Scan date</span></div>
+        <div class="tl-desc">V1.2 wild scan entry 25</div>
+      </div>
+    </div>
+    </div>
+  </details>
+
+  <details class="collapsible-section">
+    <summary>
+      <div class="section-header">
+        <span class="section-number">05</span>
+        <h2>Repo Vitals</h2>
+        <span class="section-status">
+          <span class="pill info">38 metrics</span>
+          <span class="pill muted">Reference only</span>
+        </span>
+      </div>
+      <div class="section-subtitle">
+        Raw numbers backing everything above &mdash; open if you want to verify the specific numbers cited in findings.
+      </div>
+    </summary>
+    <div class="section-body">
+    <div class="vitals-grid">
+      <div class="vital-cell">
+        <div class="vital-label">Stars</div>
+        <div class="vital-value">17,837</div>
+        <div class="vital-note">Largest in V1.2 catalog</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Open issues</div>
+        <div class="vital-value">350</div>
+        <div class="vital-note">1 security-tagged (#5340) — F0</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Open PRs</div>
+        <div class="vital-value">113</div>
+        <div class="vital-note">5 security-keyword-matching; 1 real security PR (#5482)</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Primary language</div>
+        <div class="vital-value">C++</div>
+        <div class="vital-note">ESP32 firmware</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">License</div>
+        <div class="vital-value">EUPL-1.2</div>
+        <div class="vital-note">European Union Public Licence</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Created</div>
+        <div class="vital-value">2016-12-20</div>
+        <div class="vital-note">~9 years</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Last pushed</div>
+        <div class="vital-value">2026-04-20</div>
+        <div class="vital-note">Day of scan</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Default branch</div>
+        <div class="vital-value">main</div>
+        <div class="vital-note">None</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Repo size</div>
+        <div class="vital-value">~70 MB</div>
+        <div class="vital-note">None</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Total contributors</div>
+        <div class="vital-value">100</div>
+        <div class="vital-note">None</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Top contributor</div>
+        <div class="vital-value">blazoncek 46.0%</div>
+        <div class="vital-note">Not solo; dispersed</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Org owner</div>
+        <div class="vital-value">wled (org)</div>
+        <div class="vital-note">Transferred from Aircoookie 2025-01-31</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Solo-maintainer flag</div>
+        <div class="vital-value">FALSE</div>
+        <div class="vital-note">46.0% &lt; 80% threshold</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Formal releases</div>
+        <div class="vital-value">68</div>
+        <div class="vital-note">Stable v0.15.4 + v16.0.0-beta + nightly</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Latest stable release</div>
+        <div class="vital-value">v0.15.4 (2026-03-14)</div>
+        <div class="vital-note">36 days before scan</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Latest prerelease</div>
+        <div class="vital-value">v16.0.0-beta (2026-04-11)</div>
+        <div class="vital-note">9 days before scan</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Classic branch protection</div>
+        <div class="vital-value">OFF (HTTP 404)</div>
+        <div class="vital-note">None</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Rulesets</div>
+        <div class="vital-value">1</div>
+        <div class="vital-note">Anti-destruction only — F3</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Rules on default branch</div>
+        <div class="vital-value">2</div>
+        <div class="vital-note">deletion + non_fast_forward</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">CODEOWNERS</div>
+        <div class="vital-value">Absent</div>
+        <div class="vital-note">None</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">SECURITY.md</div>
+        <div class="vital-value">Absent</div>
+        <div class="vital-note">9 years; F4</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">CONTRIBUTING</div>
+        <div class="vital-value">Present</div>
+        <div class="vital-note">None</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">CODE_OF_CONDUCT</div>
+        <div class="vital-value">Present</div>
+        <div class="vital-note">None</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Community health</div>
+        <div class="vital-value">75%</div>
+        <div class="vital-note">None</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Workflows</div>
+        <div class="vital-value">12</div>
+        <div class="vital-note">Includes CodeQL + Copilot SWE agent + Copilot review + Dependabot</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">pull_request_target usage</div>
+        <div class="vital-value">1</div>
+        <div class="vital-note">pr-merge.yaml (on closed events) — F2</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">SHA-pinned actions</div>
+        <div class="vital-value">0</div>
+        <div class="vital-note">All 8 workflows tag-pinned only</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Tag-pinned actions</div>
+        <div class="vital-value">25</div>
+        <div class="vital-note">None</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Dependabot config (.yml)</div>
+        <div class="vital-value">Absent</div>
+        <div class="vital-note">But Dependabot workflow active (default behavior)</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">PR formal review rate (50 sample)</div>
+        <div class="vital-value">38%</div>
+        <div class="vital-note">Second-highest in V1.2 catalog (after kanata 44%)</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">PR any-review rate (50 sample)</div>
+        <div class="vital-value">86%</div>
+        <div class="vital-note">HIGHEST in V1.2 catalog</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Self-merge count (50 sample)</div>
+        <div class="vital-value">32 (64%)</div>
+        <div class="vital-note">Mostly post-review author-merges</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Published security advisories</div>
+        <div class="vital-value">0</div>
+        <div class="vital-note">9 years; 10/10 V1.2 silent-fix pattern</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Open security issues</div>
+        <div class="vital-value">1</div>
+        <div class="vital-note">#5340 — 76 days old (F0)</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Open private GHSA</div>
+        <div class="vital-value">GHSA-2xwq-cxqw-wfv8 (referenced in #5340)</div>
+        <div class="vital-note">Status unknown — F0</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Python build-time deps</div>
+        <div class="vital-value">29</div>
+        <div class="vital-note">73 OSV vulns across 9 packages — F5</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">OSSF Scorecard</div>
+        <div class="vital-value">Not indexed</div>
+        <div class="vital-note">None</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Primary distribution</div>
+        <div class="vital-value">install.wled.me (WebSerial) + GitHub Releases .bin + WLED iOS/Android apps</div>
+        <div class="vital-note">Harness detected ghostly &#39;npm-wled&#39; — F6</div>
+      </div>
+    </div>
+    </div>
+  </details>
+
+  <details class="collapsible-section">
+    <summary>
+      <div class="section-header">
+        <span class="section-number">06</span>
+        <h2>Investigation Coverage</h2>
+        <span class="section-status">
+          <span class="pill amber">8 gaps noted</span>
+        </span>
+      </div>
+      <div class="section-subtitle">Phase 1 harness coverage with 8 documented gaps — concentrated on (a) deserialization regex false-positives in C/C++ with JSON libraries, (b) embedded-firmware distribution channels (install.wled.me WebSerial + GitHub Releases .bin), and (c) q2 PR-title security-keyword FPs on feature-page PRs.</div>
+    </summary>
+    <div class="section-body">
+    <div class="vitals-grid">
+      <div class="vital-cell">
+        <div class="vital-label">Harness Phase 1 end-to-end</div>
+        <div class="vital-value">✅ Complete</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">`gh api` rate limit</div>
+        <div class="vital-value">✅ Well under limit (4994/5000 remaining)</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Tarball extraction + local grep</div>
+        <div class="vital-value">✅ Scanned (580 files)</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">OSSF Scorecard</div>
+        <div class="vital-value">⚠ Not indexed</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Dependabot alerts</div>
+        <div class="vital-value">⚠ Admin scope (403); no .github/dependabot.yml; Dependabot workflow shows active (default behavior)</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">osv.dev dependency queries</div>
+        <div class="vital-value">✅ 29 Python/npm queries — 73 vulns surfaced across 9 packages (F5)</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">PR review sample</div>
+        <div class="vital-value">✅ 50-PR sample — 38% formal, 86% any, 64% self-merge</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Dependencies manifest detection</div>
+        <div class="vital-value">✅ 4 manifests (requirements.txt x2, package.json, package-lock.json) — ALL build-time</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Distribution channels inventory</div>
+        <div class="vital-value">⚠ 1 ghostly channel (npm-wled); real channels (install.wled.me + GitHub Releases .bin + WLED apps) unrecognized — F6</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Dangerous-primitives grep (15 families)</div>
+        <div class="vital-value">⚠ 19 deserialization hits (ALL false-positive — ArduinoJson&#39;s safe deserializeJson); 7 tls_cors hits (real: Access-Control-Allow-Origin: * — F1); 7 xss (innerHTML in minified UI); 4 exec (build-tooling); 2 weak_crypto (sha1 in util.cpp)</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Workflows</div>
+        <div class="vital-value">✅ 12 detected (8 with content); pull_request_target in pr-merge.yaml (on closed) — F2</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">CodeQL SAST</div>
+        <div class="vital-value">✅ Active workflow</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">AI-governance tooling</div>
+        <div class="vital-value">✅ Copilot SWE agent + Copilot PR review workflows active (same pattern as QuickLook entry 22)</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Gitleaks</div>
+        <div class="vital-value">⊗ Not available on this scanner host</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">README paste-scan</div>
+        <div class="vital-value">✅ No suspicious paste-from-command blocks</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Prompt-injection scan on agent files</div>
+        <div class="vital-value">✅ 0 signals on AGENTS.md + .github/copilot-instructions.md</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Tarball extraction</div>
+        <div class="vital-value">✅ 580 files</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">osv.dev</div>
+        <div class="vital-value">ℹ </div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Secrets-in-history (gitleaks)</div>
+        <div class="vital-value">⚠ gitleaks not installed</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">API rate budget</div>
+        <div class="vital-value">✅ 4994/5000 remaining</div>
+      </div>
+    </div>
+
+    <div class="finding-card info stack-sm">
+      <div class="finding-header">
+        <span class="tag info-tag">Gap</span>
+        <h3>Dangerous-primitives deserialization regex produces false-positives on C/C++ codebases using JSON libraries — 19 ArduinoJson `deserializeJson` matches here are SAFE JSON parsing, not pickle/ObjectInputStream RCE class. Regex needs language qualifier.</h3>
+      </div>
+    </div>
+    <div class="finding-card info stack-sm">
+      <div class="finding-header">
+        <span class="tag info-tag">Gap</span>
+        <h3>Distribution-channel detection surfaced ghostly &#39;npm-wled&#39; (build-tooling package name) — real channels are install.wled.me (WebSerial browser flasher) + GitHub Releases .bin (12 target boards per release) + iOS/Android apps for discovery.</h3>
+      </div>
+    </div>
+    <div class="finding-card info stack-sm">
+      <div class="finding-header">
+        <span class="tag info-tag">Gap</span>
+        <h3>q2_oldest_open_security_item_age_days FP: PR #4942 title contains &#39;Security &amp; Update page&#39; (feature PR) → 214-day signal driving Q2 red. Real security item is issue #5340 at 76 days. Cell color still correct but for a different reason.</h3>
+      </div>
+    </div>
+    <div class="finding-card info stack-sm">
+      <div class="finding-header">
+        <span class="tag info-tag">Gap</span>
+        <h3>OSSF Scorecard not indexed — governance signals derived from raw gh api data.</h3>
+      </div>
+    </div>
+    <div class="finding-card info stack-sm">
+      <div class="finding-header">
+        <span class="tag info-tag">Gap</span>
+        <h3>Dependabot alerts API required admin scope; no .github/dependabot.yml present to inspect ecosystems tracked.</h3>
+      </div>
+    </div>
+    <div class="finding-card info stack-sm">
+      <div class="finding-header">
+        <span class="tag info-tag">Gap</span>
+        <h3>Gitleaks secret-scanning not available on this scanner host.</h3>
+      </div>
+    </div>
+    <div class="finding-card info stack-sm">
+      <div class="finding-header">
+        <span class="tag info-tag">Gap</span>
+        <h3>Q4 signal `q4_has_critical_on_default_path` doesn&#39;t auto-fire from tls_cors + default-no-auth combo — Phase 4 authored the override (scorecard cell rationale documents the signal_vocabulary_gap).</h3>
+      </div>
+    </div>
+    <div class="finding-card info stack-sm">
+      <div class="finding-header">
+        <span class="tag info-tag">Gap</span>
+        <h3>Prior XSS disclosure (#3233 from 2023) was closed without publishing a GHSA — confirms silent-fix pattern. Scanner has no way to count &#39;issues with security keywords that were closed without GHSA&#39; across the issue archive as a signal.</h3>
+      </div>
+    </div>
+
+    </div>
+  </details>
+
+  <details class="collapsible-section">
+    <summary>
+      <div class="section-header">
+        <span class="section-number">07</span>
+        <h2>Evidence Appendix</h2>
+        <span class="section-status">
+          <span class="pill info">12 facts</span>
+          <span class="pill amber">3 &#9733; priority</span>
+        </span>
+      </div>
+      <div class="section-subtitle">
+        12 command-backed claims. <span class="emph">Skip ahead to items marked &#9733; START HERE</span> &mdash; those are the most consequential for the verdict.
+      </div>
+      <div class="section-action info">
+        <span class="lbl">Your action</span>
+        Use this section if you want to verify a claim yourself. Each entry shows the exact command (copy-paste into a terminal with <code>gh</code> authenticated) and the expected result.
+      </div>
+    </summary>
+    <div class="section-body">
+    <p class="p-meta">Each major claim is backed by a command and an observed result. Inferences are marked as such. The <span class="priority-flag inline">&#9733; Start here</span> items at the top are the most consequential evidence.</p>
+
+    <div class="evidence-group-label warns">&#9733; Priority evidence (read first)</div>
+    <div class="finding-card info evidence-priority stack-md">
+      <div class="finding-header">
+        <span class="tag info-tag">Evidence 1</span>
+        <span class="priority-flag">&#9733; Start here</span>
+        <h3>Unresolved private GHSA-2xwq-cxqw-wfv8 — researcher breakingsystems reported multiple vulnerabilities via GitHub&#39;s private advisory UI circa 2026-01-23; received no maintainer acknowledgement for ~10 days; opened public issue #5340 on 2026-02-02.</h3>
+      </div>
+      <div class="finding-body">
+        <div class="evidence-row">
+          <div class="evidence-label">Command</div>
+          <pre class="evidence-pre">gh api repos/wled/WLED/issues/5340</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Result observed</div>
+          <pre class="evidence-pre result">Issue #5340 body: &#39;I reported a number of vulnerabilities privately via the Github Report a vulnerability feature. It has been over one week now without a response/acknowledgement. Could one of the WLED maintainers please have a look at GHSA-2xwq-cxqw-wfv8 and leave a comment there?&#39; Comments: softhack007 (maintainer #3, 9.5% commits) replied same day saying he gets 404 on the advisory URL — permissions issue with wled-owners group. breakingsystems confirmed softhack007 should have access. softhack007 then tagged netmindz (release manager). netmindz replied 2026-02-04: &#39;I have given an initial response, more details to follow. TLDR: the critical has already been reported once before and had been fixed. I just need to double check that it did get back ported to 0.15.x. Other issues reported are very fairly basic rather than significant discoveries.&#39; Last update: 2026-02-06. Scan date: 2026-04-20. 74 days silent. Issue STILL OPEN. Status of 0.15.x backport PUBLICLY UNCONFIRMED.</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Classification</div>
+          <div class="evidence-classification fact">fact</div>
+        </div>
+      </div>
+    </div>
+    <div class="finding-card info evidence-priority stack-md">
+      <div class="finding-header">
+        <span class="tag info-tag">Evidence 2</span>
+        <span class="priority-flag">&#9733; Start here</span>
+        <h3>Default-install WLED webserver exposes all endpoints without authentication when PIN is unset. `correctPIN = !strlen(settingsPIN)` at wled00/wled_server.cpp:848 — empty PIN marks the device unlocked. CORS wildcard on all origins/methods/headers makes cross-origin requests from any webpage possible.</h3>
+      </div>
+      <div class="finding-body">
+        <div class="evidence-row">
+          <div class="evidence-label">Command</div>
+          <pre class="evidence-pre">gh api repos/wled/WLED/contents/wled00/wled_server.cpp | jq -r .content | base64 -d | grep -nE &#39;(correctPIN|Access-Control-Allow)&#39;</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Result observed</div>
+          <pre class="evidence-pre result">wled_server.cpp:342: `DefaultHeaders::Instance().addHeader(F(&#34;Access-Control-Allow-Origin&#34;), &#34;*&#34;);` followed by `Methods: *` and `Headers: *` (lines 343-344). wled_server.cpp:848: `correctPIN = !strlen(settingsPIN);` — when PIN is empty (DEFAULT OUT-OF-BOX STATE), correctPIN=true and subpage gates pass. wled_server.cpp:396-399: `server.on(F(&#34;/reset&#34;), HTTP_GET, [](AsyncWebServerRequest *request){ serveMessage(...); doReboot = true; });` — ZERO authentication check on reboot endpoint. For OTA (`/update`, lines 507-548), the auth chain checks `otaSameSubnet` + `correctPIN` + `otaLock` — all three are OPTIONAL user-settings; defaults leave OTA open within the LAN.</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Classification</div>
+          <div class="evidence-classification fact">fact</div>
+        </div>
+      </div>
+    </div>
+    <div class="finding-card info evidence-priority stack-md">
+      <div class="finding-header">
+        <span class="tag info-tag">Evidence 3</span>
+        <span class="priority-flag">&#9733; Start here</span>
+        <h3>Nightly deployment workflow uses `andelf/nightly-release@main` — a mutable branch reference to a third-party action. Open PR #5386 proposes pinning to a version tag; unmerged after 60 days. The workflow carries PAT_PUBLIC to trigger wled/WLED-WebInstaller release events.</h3>
+      </div>
+      <div class="finding-body">
+        <div class="evidence-row">
+          <div class="evidence-label">Command</div>
+          <pre class="evidence-pre">gh api repos/wled/WLED/contents/.github/workflows/nightly.yml | jq -r .content | base64 -d</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Result observed</div>
+          <pre class="evidence-pre result">nightly.yml line 25: `uses: andelf/nightly-release@main` — references the `main` branch (mutable) rather than a tagged version. The step carries GITHUB_TOKEN. Line 35: separate step uses `peter-evans/repository-dispatch@v3` (tag-pinned) with `secrets.PAT_PUBLIC` to dispatch release-nightly events to wled/WLED-WebInstaller (which publishes to install.wled.me/nightly). PR #5386 &#39;Pin andelf/nightly-release to version tag instead of @main branch&#39; opened 2026-02-20, unmerged 60 days later. Across all 8 workflows: 0 SHA-pinned actions, 25 tag-pinned actions.</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Classification</div>
+          <div class="evidence-classification fact">fact</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="evidence-group-label context">Other evidence supporting findings</div>
+    <div class="finding-card info stack-md">
+      <div class="finding-header">
+        <span class="tag info-tag">Evidence 4</span>
+        <h3>Branch-protection posture — 1 ruleset with 2 rules (`deletion` + `non_fast_forward`) on default branch. No CODEOWNERS. No classic branch protection. Anti-destruction only; no review-requirement.</h3>
+      </div>
+      <div class="finding-body">
+        <div class="evidence-row">
+          <div class="evidence-label">Command</div>
+          <pre class="evidence-pre">gh api repos/wled/WLED/rulesets; gh api repos/wled/WLED/rules/branches/main</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Result observed</div>
+          <pre class="evidence-pre result">classic: HTTP 404. rulesets.count: 1 (ruleset &#39;Main&#39;, id 3622502, created 2025-02-09 — right after org transfer from Aircoookie to wled-org). rules_on_default.count: 2, types: [&#39;deletion&#39;, &#39;non_fast_forward&#39;]. No `pull_request` rule. No `required_approving_review_count`. CODEOWNERS: absent (checked root, .github/, docs/, .gitlab/).</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Classification</div>
+          <div class="evidence-classification fact">fact</div>
+        </div>
+      </div>
+    </div>
+    <div class="finding-card info stack-md">
+      <div class="finding-header">
+        <span class="tag info-tag">Evidence 5</span>
+        <h3>Strong review culture despite missing enforcement: 38% formal APPROVED review rate (second-highest in V1.2 catalog after kanata 44%), 86% any-review rate, 64% self-merge across 50-PR closed-merged sample. `pr-merge.yaml` uses `pull_request_target` but on closed/merged events with a third-party tag-pinned `actions-cool/check-user-permission@v2` gate.</h3>
+      </div>
+      <div class="finding-body">
+        <div class="evidence-row">
+          <div class="evidence-label">Command</div>
+          <pre class="evidence-pre">gh api &#39;repos/wled/WLED/pulls?state=closed&amp;per_page=100&#39;</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Result observed</div>
+          <pre class="evidence-pre result">sample_size: 50 closed-merged PRs. formal (APPROVED): 19 (38%). any_review_count&gt;0: 43 (86%). self_merge: 32 (64%). 0 security_flagged. Self-merges are typically authors merging their own PRs AFTER receiving a review from someone else (not unreviewed self-merges — the 86% any-review rate confirms this). Context: 113 open PRs, 1167 merged lifetime. pull_request_target_count across 8 workflows: 1 (pr-merge.yaml, on closed events, calls actions-cool/check-user-permission@v2 with GITHUB_TOKEN — tag-pinned third-party action).</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Classification</div>
+          <div class="evidence-classification fact">fact</div>
+        </div>
+      </div>
+    </div>
+    <div class="finding-card info stack-md">
+      <div class="finding-header">
+        <span class="tag info-tag">Evidence 6</span>
+        <h3>community/profile reports has_security_policy=false. No SECURITY.md at root, .github/, or docs/. health_percentage: 75% (CONTRIBUTING + CODE_OF_CONDUCT present).</h3>
+      </div>
+      <div class="finding-body">
+        <div class="evidence-row">
+          <div class="evidence-label">Command</div>
+          <pre class="evidence-pre">gh api &#39;repos/wled/WLED/community/profile&#39;; gh api repos/wled/WLED/contents/SECURITY.md</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Result observed</div>
+          <pre class="evidence-pre result">health_percentage: 75. has_contributing: true. has_code_of_conduct: true. has_security_policy: false. SECURITY.md: 404 at all checked paths. Published GHSA advisories count: 0 across 9 years (repo created 2016-12-20). Earlier public XSS disclosure: issue #3233 (breakingsystems, 2023-06-06, title: &#39;WiFi Scanning (and other features) vulnerable to Cross-Site Scripting (XSS)&#39;) — closed within 5 days without a published advisory. That earlier pattern (silent-fix rather than GHSA publication) matches the catalog-wide pattern (10/10 V1.2 scans now with 0 GHSA).</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Classification</div>
+          <div class="evidence-classification fact">fact</div>
+        </div>
+      </div>
+    </div>
+    <div class="finding-card info stack-md">
+      <div class="finding-header">
+        <span class="tag info-tag">Evidence 7</span>
+        <h3>Contributor concentration — blazoncek 46.0% + Aircoookie 24.6% of top-6 contributions. Top-1 share 46% is BELOW 80% solo-maintainer threshold. 100 total contributors. wled org owns repo (transferred from Aircoookie Feb 2025).</h3>
+      </div>
+      <div class="finding-body">
+        <div class="evidence-row">
+          <div class="evidence-label">Command</div>
+          <pre class="evidence-pre">gh api repos/wled/WLED/contributors?per_page=6</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Result observed</div>
+          <pre class="evidence-pre result">top_contributors: blazoncek (2314, 46.0%); Aircoookie (1236, 24.6%); softhack007 (479, 9.5%); netmindz (439, 8.7%); DedeHai (292, 5.8%); willmmiles (268, 5.3%). total_top6: 5028. total_contributor_count: 100. Dispersed pattern — no single contributor above 50%. wled org created 2025-01-31, now owns the repo; Aircoookie remains the &#39;WLED creator&#39; account. netmindz explicitly self-describes as &#39;Release manager for @wled&#39;. This is a small-org governance pattern, not solo-maintainer.</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Classification</div>
+          <div class="evidence-classification fact">fact</div>
+        </div>
+      </div>
+    </div>
+    <div class="finding-card info stack-md">
+      <div class="finding-header">
+        <span class="tag info-tag">Evidence 8</span>
+        <h3>Distribution channel: firmware is NOT shipped via npm (harness misidentified npm-wled as primary). Actual channels are GitHub Releases .bin/.bin.gz files + install.wled.me web-flasher (wled/WLED-WebInstaller downstream repo) + WLED iOS/Android apps for discovery.</h3>
+      </div>
+      <div class="finding-body">
+        <div class="evidence-row">
+          <div class="evidence-label">Command</div>
+          <pre class="evidence-pre">gh api repos/wled/WLED/releases/latest --jq &#39;.assets[].name&#39;; gh api repos/wled/WLED-WebInstaller</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Result observed</div>
+          <pre class="evidence-pre result">v0.15.4 assets: ESP32-WROOM.bin, ESP32-WROVER.bin, ESP8266_debug.bin, etc. (12 .bin/.bin.gz firmware variants per target board). Distribution is via download-bin → flash-over-USB or download-bin → OTA-upload to existing WLED. install.wled.me is a WebSerial-based flasher that downloads the .bin and uses WebUSB/WebSerial to flash the ESP32 directly from the browser. The npm-wled package (package.json name=&#39;wled&#39;) is BUILD TOOLING for the web UI (Python + npm consume it for HTML minification) — it doesn&#39;t distribute firmware. Harness-detected channel &#39;npm-wled&#39; is a ghostly channel; real channels are artifact-based.</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Classification</div>
+          <div class="evidence-classification inference">inference — coverage-gap annotation</div>
+        </div>
+      </div>
+    </div>
+    <div class="finding-card info stack-md">
+      <div class="finding-header">
+        <span class="tag info-tag">Evidence 9</span>
+        <h3>Release cadence — stable v0.15.4 on 2026-03-14 (36 days before scan), v0.15.3 on 2025-12-04, v0.15.2 on 2025-11-29. v16.0.0-beta on 2026-04-11 (9 days before scan). Nightlies daily.</h3>
+      </div>
+      <div class="finding-body">
+        <div class="evidence-row">
+          <div class="evidence-label">Command</div>
+          <pre class="evidence-pre">gh api &#39;repos/wled/WLED/releases?per_page=10&#39;</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Result observed</div>
+          <pre class="evidence-pre result">68 total releases. Latest stable: v0.15.4 (2026-03-14). Beta for next major: v16.0.0-beta (2026-04-11). Prereleases: nightly (daily), v16.0.0-beta (9d), v0.15.2-beta1 (6m old). Active cadence — 2 releases in last 30 days. Stable lag: 36 days from v0.15.4 to scan. The GHSA-2xwq-cxqw-wfv8 critical (E1) — if netmindz&#39;s &#39;already fixed&#39; assessment is correct — may be fixed in v0.15.4 (released 6 weeks after the public issue opened) or may still be pending backport. Publicly UNCONFIRMED.</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Classification</div>
+          <div class="evidence-classification fact">fact</div>
+        </div>
+      </div>
+    </div>
+    <div class="finding-card info stack-md">
+      <div class="finding-header">
+        <span class="tag info-tag">Evidence 10</span>
+        <h3>Python build-tooling deps (via platformio) carry 73+ CVEs across 9 packages: urllib3 (28 vulns), requests (13), starlette (7), bottle (8), certifi (6), uvicorn (4), marshmallow (3), idna (2), h11 (1). These are BUILD-TIME deps, not firmware runtime deps — firmware ships pure C++ for ESP32. No .github/dependabot.yml present despite Dependabot Updates workflow showing active.</h3>
+      </div>
+      <div class="finding-body">
+        <div class="evidence-row">
+          <div class="evidence-label">Command</div>
+          <pre class="evidence-pre">cat requirements.txt; for pkg in $(cat requirements.txt | awk -F&#39;==&#39; &#39;{print $1}&#39;); do curl -s https://api.osv.dev/v1/query -d &#39;{&#34;package&#34;:{&#34;name&#34;:&#34;&#39;$pkg&#39;&#34;,&#34;ecosystem&#34;:&#34;PyPI&#34;}}&#39;; done</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Result observed</div>
+          <pre class="evidence-pre result">runtime_count: 29 PyPI deps (platformio + transitives). osv.dev totals: urllib3 28, requests 13, starlette 7, bottle 8, certifi 6, uvicorn 4, marshmallow 3, idna 2, h11 1, clean-css (npm) 1 = 73 CVE records. Relevance: these are build-time deps consumed by platformio during .bin firmware compilation. The firmware itself ships as C++ compiled for ESP32 — no Python or Node runtime on device. Attack surface: only during build-from-source workflow, and only if PyPI is compromised OR a developer pulls a malicious transitive dep. Not a direct consumer risk for binary-install users.</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Classification</div>
+          <div class="evidence-classification inference">inference — threat-scope annotation</div>
+        </div>
+      </div>
+    </div>
+    <div class="finding-card info stack-md">
+      <div class="finding-header">
+        <span class="tag info-tag">Evidence 11</span>
+        <h3>Dangerous-primitive grep produced 19 hits for deserialization family — ALL are `deserializeJson` / `deserializeSegment` / `deserializeState` calls on the ArduinoJson library, which is SAFE JSON deserialization (not Java-ObjectInputStream-style RCE class). The V1.2.x pickle.load-widening regex introduced in session 6 produces a false-positive here.</h3>
+      </div>
+      <div class="finding-body">
+        <div class="evidence-row">
+          <div class="evidence-label">Command</div>
+          <pre class="evidence-pre">docs/phase_1_harness.py # code_patterns.dangerous_primitives.deserialization</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Result observed</div>
+          <pre class="evidence-pre result">19 hits across: wled00/json.cpp, wled_server.cpp, wled_serial.cpp, FX_fcn.cpp, udp.cpp, ws.cpp, set.cpp, wled.cpp, remote.cpp, presets.cpp, etc. All are `deserializeJson(*pDoc, STREAM)` or `deserializeMap()` / `deserializeState()` / `deserializeSegment()` — the ArduinoJson library&#39;s safe JSON parsing API, NOT Java ObjectInputStream or Python pickle. Regex false-positive on the widened deserialization pattern. Contrasts with freerouting (entry 24) where every deserialization hit was a real ObjectInputStream call. Calibration note: the widened regex captures both safe (deserializeJson) and unsafe (pickle, ObjectInputStream) deserialization families; Phase 4 or compute-side disambiguation by language+library is needed to prevent FP escalation.</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Classification</div>
+          <div class="evidence-classification inference">inference — scanner-coverage-gap annotation</div>
+        </div>
+      </div>
+    </div>
+    <div class="finding-card info stack-md">
+      <div class="finding-header">
+        <span class="tag info-tag">Evidence 12</span>
+        <h3>Q2 signal `q2_oldest_open_security_item_age_days` fires 214 days but the 214-day match is a FALSE POSITIVE — PR #4942 &#39;Add internal user backup functionality to Security &amp; Update page&#39; matches on the word &#39;Security&#39; in the title but is a feature addition, not a vulnerability fix.</h3>
+      </div>
+      <div class="finding-body">
+        <div class="evidence-row">
+          <div class="evidence-label">Command</div>
+          <pre class="evidence-pre">gh api &#39;repos/wled/WLED/pulls?state=open&#39; --jq &#39;.[] | select(.title | test(&#34;Security|vuln|cve|xss|csrf|rce|injection|auth|deserializ|disclosure|advisory&#34;; &#34;i&#34;)) | {number, title, created_at}&#39;</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Result observed</div>
+          <pre class="evidence-pre result">PR #4942 &#39;Add internal user backup functionality to Security &amp; Update page&#39; — 213 days old (created 2025-09-19), a feature PR that extends the settings &gt; Security &amp; Update page (nothing to do with vulnerability remediation). PR #5340 (issue) is the actual security item at 76 days. Phase 4 accepts the Q2 signal firing red because the real driver (unresolved GHSA + 74-day silent public issue) IS red-worthy — the compute signal happens to fire red for a different reason, but the cell color is correct. Scanner-side note: the security-keyword regex over PR titles produces FPs on &#39;Security &amp; Update page&#39; substring matches; disambiguation could check PR labels + body for actual security-topic vs feature-page-topic.</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Classification</div>
+          <div class="evidence-classification inference">inference — scanner-coverage-gap annotation</div>
+        </div>
+      </div>
+    </div>
+
+    </div>
+  </details>
+
+  <details class="collapsible-section">
+    <summary>
+      <div class="section-header">
+        <span class="section-number">08</span>
+        <h2>How This Scan Works</h2>
+        <span class="section-status">
+          <span class="pill muted">Methodology reference</span>
+        </span>
+      </div>
+      <div class="section-subtitle">
+        What we checked, what tools we used, and what this scan cannot detect.
+      </div>
+    </summary>
+    <div class="section-body">
+
+    <h3>What this scan is</h3>
+    <p>This is an <strong>LLM-driven security investigation</strong> &mdash; an AI assistant with terminal access used the <a href="https://cli.github.com/" target="_blank" rel="noopener">GitHub CLI</a> and free public APIs to investigate this repo&rsquo;s governance, code patterns, dependencies, and distribution pipeline. It then synthesized its findings into this plain-English report.</p>
+    <p class="p-meta">This is <strong>not</strong> a static analyzer, penetration test, or formal security audit. It is a trust-assessment tool that answers: &ldquo;Should I install this?&rdquo;</p>
+
+    <h3>What we checked</h3>
+    <div class="vitals-grid">
+      <div class="vital-cell">
+        <div class="vital-label">Governance &amp; Trust</div>
+        <div class="vital-note">Branch protection, rulesets, CODEOWNERS, SECURITY.md, community health, maintainer account age &amp; activity, code review rates</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Code Patterns</div>
+        <div class="vital-note">Dangerous primitives (eval, exec, fetch), hardcoded secrets, executable file inventory, install scripts, README paste-blocks</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Supply Chain</div>
+        <div class="vital-note">Dependencies, CI/CD workflows, GitHub Actions SHA-pinning, release pipeline, artifact verification, published-vs-source comparison</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">AI Agent Rules</div>
+        <div class="vital-note">CLAUDE.md, AGENTS.md, .cursorrules, .mcp.json &mdash; files that instruct AI coding assistants. Checked for prompt injection and behavioral manipulation</div>
+      </div>
+    </div>
+
+    <h3>External tools used</h3>
+    <div class="vitals-grid">
+      <div class="vital-cell">
+        <div class="vital-label"><a href="https://securityscorecards.dev/" target="_blank" rel="noopener">OSSF Scorecard</a></div>
+        <div class="vital-note">Independent security rating from the Open Source Security Foundation. Scores 24 practices from 0&ndash;10. Free API, no installation needed.</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label"><a href="https://osv.dev/" target="_blank" rel="noopener">osv.dev</a></div>
+        <div class="vital-note">Google-backed vulnerability database. Used as fallback when GitHub&rsquo;s Dependabot data is not accessible (requires repo admin).</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label"><a href="https://gitleaks.io/" target="_blank" rel="noopener">gitleaks</a> (optional)</div>
+        <div class="vital-note">Scans code history for leaked passwords, API keys, and tokens. Requires installation. If unavailable, this gap is noted in Coverage.</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label"><a href="https://cli.github.com/" target="_blank" rel="noopener">GitHub CLI</a></div>
+        <div class="vital-note">Primary data source. All repo metadata, PR history, workflow files, contributor data, and issue history come from authenticated GitHub API calls.</div>
+      </div>
+    </div>
+
+    <h3>What this scan cannot detect</h3>
+    <ul>
+      <li><strong>Transitive dependency vulnerabilities</strong> &mdash; we check direct dependencies but cannot fully resolve the dependency tree without running the package manager</li>
+      <li><strong>Runtime behavior</strong> &mdash; we see what the code <em>could</em> do, not what it <em>does</em> when running</li>
+      <li><strong>Published artifact tampering</strong> &mdash; we read the source code but cannot verify that what&rsquo;s published to npm/PyPI matches this source exactly</li>
+      <li><strong>Sophisticated backdoors</strong> &mdash; our pattern-matching catches common dangerous primitives but not logic bombs or obfuscated payloads</li>
+      <li><strong>Container image contents</strong> &mdash; we read Dockerfiles but cannot inspect built images for extra layers or embedded secrets</li>
+    </ul>
+    <p class="p-meta">For comprehensive vulnerability scanning, pair this report with tools like <a href="https://semgrep.dev/" target="_blank" rel="noopener">Semgrep</a> (code analysis), <a href="https://www.snyk.io/" target="_blank" rel="noopener">Snyk</a> (dependency scanning), or <a href="https://aquasecurity.github.io/trivy/" target="_blank" rel="noopener">Trivy</a> (container scanning).</p>
+
+    <h3>Scan methodology version</h3>
+    <p class="p-meta">Scanner prompt V2.4 &middot; Operator Guide V0.2 &middot; Validator version V2.5-preview &middot; Validator with XSS checks + verdict-severity coherence &middot; <a href="https://github.com/stefans71/stop-git-std" target="_blank" rel="noopener">stop-git-std</a></p>
+
+    </div>
+  </details>
+
+  <div class="footer">
+    Generated by <a href="https://github.com/stefans71/stop-git-std">stop-git-std</a> deep dive &middot; 2026-04-20 &middot; scanned main @ 01328a6 () &middot; scanner V2.5-preview
+    <br>This report is an automated investigation, not a professional security audit. It may miss issues. If you are making a business decision, consult a security professional.
+  </div>
+
+</div>
+</body>
+</html>

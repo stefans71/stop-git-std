@@ -1,6 +1,6 @@
 # V1.2 Wild-Scan Telemetry — Cross-Scan Analysis
 
-**Scope:** Catalog entries 16–24 (9 V1.2-schema wild scans).
+**Scope:** Catalog entries 16–25 (10 V1.2-schema wild scans).
 **Date:** 2026-04-20.
 **Status:** Living document — update after each new V1.2 wild scan.
 **Related:** [V13-1 override-telemetry analysis](v13-1-override-telemetry-analysis.md) (covered the first 3 scans and drove the V1.2.x signal widening).
@@ -9,7 +9,7 @@ This document persists cross-scan patterns that accumulate value over many scans
 
 ---
 
-## §1 · Scan roster (entries 16–24)
+## §1 · Scan roster (entries 16–25)
 
 | # | Repo | Shape | Verdict | Overrides | Override detail |
 |---|---|---|---|---|---|
@@ -22,20 +22,21 @@ This document persists cross-scan patterns that accumulate value over many scans
 | 22 | QL-Win/QuickLook | C# Windows shell extender | Caution | **0** | — |
 | 23 | jtroo/kanata | Rust keyboard daemon | Critical | **0** | — |
 | 24 | freerouting/freerouting | Java PCB auto-router | Critical | 1 | Q4 signal_vocabulary_gap (Java deserialization) |
+| 25 | wled/WLED | ESP32 IoT firmware | Critical | 1 | Q4 signal_vocabulary_gap (firmware default-no-auth + CORS wildcard) |
 
-**Totals**: 9 scans, 7 overrides, 3 zero-override.
+**Totals**: 10 scans, 8 overrides, 3 zero-override.
 
 ---
 
 ## §2 · Override-enum distribution
 
-**7 overrides across 9 scans (78% override-rate at scan level).**
+**8 overrides across 10 scans (80% override-rate at scan level).**
 
 | `override_reason` | Count | % | Scans |
 |---|---|---|---|
-| `signal_vocabulary_gap` | **4** | **57%** | ghostty Q1, kamal Q1, Kronos Q2, freerouting Q4 |
-| `harness_coverage_gap` | 2 | 29% | Kronos Q4, browser_terminal Q4 |
-| `threshold_too_strict` | 1 | 14% | Xray-core Q2 |
+| `signal_vocabulary_gap` | **5** | **62%** | ghostty Q1, kamal Q1, Kronos Q2, freerouting Q4, **WLED Q4** |
+| `harness_coverage_gap` | 2 | 25% | Kronos Q4, browser_terminal Q4 |
+| `threshold_too_strict` | 1 | 13% | Xray-core Q2 |
 | `missing_qualitative_context` | 0 | 0% | — |
 | `threshold_too_lenient` | 0 | 0% | — |
 | `rubric_literal_vs_intent` | 0 | 0% | — |
@@ -43,24 +44,26 @@ This document persists cross-scan patterns that accumulate value over many scans
 
 **Observations:**
 
-- **`signal_vocabulary_gap` is the modal label** at 57% of overrides. This matches the V13-1 analysis hypothesis that the majority of Phase 4 corrections are compute-side (the signal-vocabulary exists in principle but doesn't cover the needed concept).
-- **4 of 7 enum values unexercised** after 9 scans. `missing_qualitative_context` (the pre-V13-1 catchall) hasn't fired once since V13-1 relabeled existing entries — strong signal that the V13-1 split was correct.
-- **Override fires on Q1, Q2, Q4 but not Q3** across the 9 scans. Q3 (disclosure) has been uniformly red/amber from compute and Phase 4 hasn't needed to correct it.
+- **`signal_vocabulary_gap` is the modal label** at 62% of overrides (up from 57% at n=9). Each new Q4 override has been signal_vocabulary_gap rather than harness_coverage_gap — the harness is correctly detecting the fact-surface (35 ObjectInputStream imports on freerouting; CORS wildcard + no-auth on WLED) but the compute signal vocabulary doesn't roll those facts up to a cell-level judgment.
+- **4 of 7 enum values unexercised** after 10 scans. `missing_qualitative_context` (the pre-V13-1 catchall) hasn't fired once since V13-1 relabeled existing entries — strong signal that the V13-1 split was correct.
+- **Override fires on Q1, Q2, Q4 but not Q3** across the 10 scans. Q3 (disclosure) has been uniformly red/amber from compute and Phase 4 hasn't needed to correct it. Notably, WLED entry 25 had a strong case for Q3 override (documented disclosure-handling failure with 74-day silence on GHSA-2xwq-cxqw-wfv8) but Phase 4 kept Q3 at amber — amber already reflects "unclear/partly" which captures the WLED disclosure pattern adequately.
 
 ---
 
 ## §3 · Zero-override streak
 
-**3 consecutive zero-override scans**: wezterm (21) → QuickLook (22) → kanata (23). Streak broken by freerouting (24).
+**3 consecutive zero-override scans**: wezterm (21) → QuickLook (22) → kanata (23). Streak broken by freerouting (24), continued-broken by WLED (25).
 
-What these shapes had in common:
+What the zero-override scans had in common:
 - **wezterm**: Rust terminal emulator, stalled 807-day release cadence, pure-tool threat model
 - **QuickLook**: C# shell extender, 21-plugin parser surface but no new confirmed RCE
 - **kanata**: Rust keyboard daemon, 44% formal review (exceptional), ruleset-but-anti-destruction
 
-**What freerouting added that broke the streak**: a **confirmed, specific, file-reachable RCE class** (Java ObjectInputStream on user-loaded files) that's invisible to `q4_has_critical_on_default_path` (which is set by Phase 4 authoring, not read from `dangerous_primitives.deserialization.hit_count`).
+**What freerouting (24) added that broke the streak**: a **confirmed, specific, file-reachable RCE class** (Java ObjectInputStream on user-loaded files) that's invisible to `q4_has_critical_on_default_path` (which is set by Phase 4 authoring, not read from `dangerous_primitives.deserialization.hit_count`).
 
-**Inference**: zero-override scans are possible when compute-signal judgment aligns with Phase 4 judgment; the break happens when Phase 4 finds a specific critical-on-default-path condition that compute-signal inputs don't automatically surface.
+**What WLED (25) added (2nd break)**: a **confirmed, specific, remote-exploitable surface** (factory-default webserver has no auth + CORS wildcard + unauthenticated `/reset`) that's invisible to compute because the pattern lives in C++ control-flow (correctPIN gating logic tied to settingsPIN string length), not in a grep-able primitive family. `dangerous_primitives.tls_cors` DID surface the `Access-Control-Allow-Origin: *` hit, but there's no compute derivation that combines `tls_cors_hit + no_auth_primitive_detected + firmware_shape → q4_has_critical_on_default_path=True`.
+
+**Inference (refined at n=10)**: zero-override scans remain possible when compute-signal judgment aligns with Phase 4 judgment; the break happens every time Phase 4 finds a specific critical-on-default-path condition whose identification requires either (a) language-semantic analysis beyond regex (freerouting) or (b) multi-primitive composition + shape context (WLED). Both are V12x-class harness-patch candidates.
 
 ---
 
@@ -70,9 +73,19 @@ What these shapes had in common:
 
 **Signal added**: compute derives `q4_has_critical_on_default_path = True` when `dangerous_primitives.deserialization.hit_count >= N` AND the tool is documented as loading user files.
 
-**Scans it would auto-resolve**: Kronos Q4 (pickle.load in finetune/dataset.py), **freerouting Q4** (Java ObjectInputStream in BasicBoard.java). Two of the seven overrides collapse with this single change.
+**Scans it would auto-resolve**: Kronos Q4 (pickle.load in finetune/dataset.py), **freerouting Q4** (Java ObjectInputStream in BasicBoard.java). Two of the eight overrides collapse with this single change.
 
 **Open question**: threshold N. Kronos had 0 harness hits (regex miss — now fixed in V1.2.x); freerouting had 35. After the V1.2.x pickle-regex extension, Kronos would hit. A reasonable threshold is `>= 3` plus README-pattern-match for "open file"/"load"/"import" keywords.
+
+**New subtlety surfaced by WLED (25)**: the V1.2.x-widened deserialization regex produced 19 **false-positive** hits in WLED's C++ codebase — all `deserializeJson` calls (ArduinoJson, safe). Any auto-fire threshold on raw deserialization hit-count will mis-fire on C/C++/Rust projects using JSON libraries with `deserialize` in the function name. The auto-fire derivation needs a **language qualifier** (pickle→Python, ObjectInputStream→Java, Marshal.load→Ruby) rather than a language-agnostic regex. V12x-9 item now promoted to the Priority 1 scope.
+
+### Priority 1b: Firmware default-no-auth + CORS-wildcard compound signal for Q4
+
+**New class observed on WLED (25)**: the combination of (a) `dangerous_primitives.tls_cors` hit on `Access-Control-Allow-Origin: *` + (b) no auth-enforcement primitive detected on a web-server-shipping tool + (c) install-path terminus being a networked end-user device (firmware, IoT, home-LAN server) = critical-on-default-path.
+
+**Scans it would auto-resolve**: WLED Q4.
+
+**Signal-widening proposal**: compute derives `q4_has_critical_on_default_path = True` when `tls_cors.hit_count >= 1` (wildcard Origin/Methods/Headers pattern) AND `auth_bypass.hit_count == 0` (no auth-gate pattern detected) AND shape is `firmware | iot | on-device-webserver`. Shape classification would be a new compute-side input — bootstrappable from README keywords (ESP32, ESP8266, firmware, on-device, LAN webserver) + install-path signals (.bin releases, browser-WebSerial flasher).
 
 ### Priority 2: Multi-ecosystem Maven/Gradle/Cargo/Gomod parsing
 
@@ -134,7 +147,7 @@ Firing pattern observed:
 
 ### 5.2 · Silent-fix / zero-advisories consistency
 
-**9 of 9 V1.2 wild scans have 0 published GHSA advisories** despite histories ranging from 3 years (kanata) to 12 years (freerouting) on privileged tools:
+**10 of 10 V1.2 wild scans have 0 published GHSA advisories** despite histories ranging from 10 months (Kronos) to 12 years (freerouting) on privileged tools:
 
 | Scan | Years active | Advisories | Threat surface |
 |---|---|---|---|
@@ -147,10 +160,13 @@ Firing pattern observed:
 | QuickLook (22) | 9 | 0 | 21-plugin parser surface |
 | kanata (23) | 4 | 0 | Keyboard interceptor |
 | freerouting (24) | 12 | 0 | Java deserialization surface |
+| WLED (25) | 9 | 0 | ESP32 firmware + on-device webserver |
 
-**Pattern**: even active, widely-used privileged tools uniformly skip GHSA publication. Readings are (a) no security-relevant issues discovered (implausible for this sample), (b) silent-fix-via-release cadence, (c) disclosure stops at maintainer.
+**Pattern (n=10)**: even active, widely-used privileged tools uniformly skip GHSA publication. Readings are (a) no security-relevant issues discovered (implausible for this sample), (b) silent-fix-via-release cadence, (c) disclosure stops at maintainer.
 
-**Implication for V1.3**: the `community_norms_differ` enum value that DeepSeek preserved as a V1.3 expansion trigger (CONSOLIDATION §5 R3 Item C) hasn't fired — but the silent-fix pattern is NOW the documented community norm for this catalog's shape. Worth revisiting whether Q3's red/amber rubric should adjust.
+**WLED strengthens reading (c)**: WLED (25) has a **publicly-documented disclosure-handling failure** — issue #5340 shows a researcher had to escalate publicly after 10+ days of maintainer silence on a private GHSA, and once a maintainer responded he said the critical had been 'reported before and fixed' without publishing a GHSA for either the old fix or the new report. That's a specific instance of the silent-fix pattern where the maintainer's framing confirms the pattern is deliberate ('other issues reported are very fairly basic rather than significant discoveries') rather than accidental.
+
+**Implication for V1.3**: the `community_norms_differ` enum value that DeepSeek preserved as a V1.3 expansion trigger (CONSOLIDATION §5 R3 Item C) hasn't fired — but the silent-fix pattern is NOW the documented community norm for this catalog's shape. WLED's documented process failure (private-advisory permissions misconfigured, maintainer couldn't view own project's advisory) is a sharper version of the pattern worth revisiting whether Q3's red/amber rubric should adjust. Specifically: when a researcher publicly documents disclosure-handling failure on a repo with 0 published advisories, should Q3 escalate from amber to red?
 
 ### 5.3 · Maintainer concentration taxonomy
 
@@ -189,6 +205,7 @@ Languages catalogued (post-V1.2):
 - **Rust**: wezterm (21), kanata (23)
 - **C#**: QuickLook (22)
 - **Java**: freerouting (24)
+- **C++**: WLED (25) — first C++ entry; ESP32 embedded firmware
 - **JS/TS**: browser_terminal extension frontend (part of 20)
 
 Category diversity:
@@ -201,6 +218,7 @@ Category diversity:
 - ML foundation model: Kronos
 - EDA / PCB autorouter: freerouting
 - Document conversion: markitdown
+- Embedded IoT firmware: WLED (new — first networked-device-on-home-LAN threat model)
 
 ---
 
@@ -208,7 +226,7 @@ Category diversity:
 
 **V13-3 trigger**: 11 V1.2 wild scans (per CONSOLIDATION §8 deferred ledger).
 
-**Status**: **9 of 11** complete (entries 16–24). **2 more wild scans** will trigger the 11-scan comparator-calibration analysis.
+**Status**: **10 of 11** complete (entries 16–25). **1 more wild scan** will trigger the 11-scan comparator-calibration analysis.
 
 V13-3 analysis scope (from CONSOLIDATION §8): compare all V1.2 scan outputs against equivalent-SHA V2.4 outputs where comparator exists (the Step G pinned entries 12–14), plus look for cross-shape calibration patterns now that the wild-scan sample is large enough to generalize from.
 
@@ -247,3 +265,4 @@ The V13-1 split (`missing_qualitative_context` → `signal_vocabulary_gap` + `ha
 ## §10 · Changelog
 
 - **2026-04-20** — Document created after 9 V1.2 wild scans. Consolidates observations from catalog entries 16–24 + the V13-1 analysis document.
+- **2026-04-20 (entry 25 update)** — Added WLED (25) to roster. signal_vocabulary_gap now modal at 62% (5/8 overrides); 10/10 silent-fix pattern confirmed with a **publicly-documented disclosure-handling failure** (issue #5340 — GHSA-2xwq-cxqw-wfv8). New Priority 1b harness-patch: firmware default-no-auth + CORS-wildcard compound signal. Zero-override streak broken continues (freerouting 24 + WLED 25 both fire signal_vocabulary_gap). V13-3 progress: 10 of 11.
