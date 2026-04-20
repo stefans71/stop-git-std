@@ -17,6 +17,72 @@ Canonical log of milestone commits with the verification state captured at commi
 
 ---
 
+## Checkpoint — 2026-04-20 (session 6) — V13-1 resolution + V1.2.x signal widening + D-6 automation + 6 wild scans
+
+**HEAD:** `edf8f57` on `origin/main` (clean push; tree clean).
+
+**Session 6 commits from `be9a1c0` (session 5 close) →:**
+
+```
+edf8f57  Catalog entry 24: freerouting/freerouting — first Java scan, Java deserialization RCE
+b8be939  Catalog entry 23: jtroo/kanata — second Rust scan, 44% formal review
+a52ba7b  Catalog entry 22: QL-Win/QuickLook — first C# scan, Windows-shell integration
+5587560  Catalog entry 21: wezterm/wezterm — first Rust V1.2 scan, zero overrides
+02be2ef  Catalog entry 20: BatteredBunny/browser_terminal — first browser-extension scan
+6f98fb2  Catalog entry 19: XTLS/Xray-core — fourth V1.2 wild scan
+baf5dc9  D-6: automated severity-distribution gate 6.2 (Operator Guide §8.8.7)
+d803faf  V1.2.x signal widening: V13-1 fix surfaces (owner directive)
+5f3984d  V13-1 resolution: expand override_reason enum to 7 values (owner directive)
+9f8023f  Catalog entry 17: shiyu-coder/Kronos — second V1.2-schema wild scan
+06ef4b7  Catalog entry 18: basecamp/kamal — third V1.2 wild scan, V13-1 telemetry trigger fired
+be9a1c0  [session 5 close base — Schema V1.2 LANDED + ghostty entry 16]
+```
+
+**Final state:**
+
+- Tests: **385/385 passing** (342 session-5 baseline + 2 V13-1 override tests + 13 V13-1 helper tests + 4 harness pickle-regex tests + 23 D-6 severity-comparator tests + 1 signal-count update)
+- Catalog: **24 entries** (11 v2.4 + 13 v2.5-preview; 9 V1.2-schema wild scans = entries 16–24)
+- Schema: **V1.2** (unchanged from session 5) + `override_reason_enum` expanded 5→7 values (+`signal_vocabulary_gap`, +`harness_coverage_gap`)
+- Compute: `SIGNAL_IDS` expanded 23→25 (+`q1_has_ruleset_protection`, +`q2_oldest_open_security_item_age_days`); new helpers `derive_q1_has_ruleset_protection` + `derive_q2_oldest_open_security_item_age_days`
+- Harness: deserialization regex widened (pickle.load, marshal.load, joblib.load, dill.load)
+- New tooling: `docs/compare-severity-distribution.py` (D-6 gate-6.2 automation; 23 tests)
+- New docs: `docs/v13-1-override-telemetry-analysis.md` (V13-1 analysis) + `docs/v12-wild-scan-telemetry.md` (9-scan cross-analysis)
+- Override telemetry: **7 overrides across 9 V1.2 wild scans**; `signal_vocabulary_gap` modal (57%); 3 zero-override scans (wezterm/QuickLook/kanata)
+
+**V13-1 resolution:**
+- Analysis at `docs/v13-1-override-telemetry-analysis.md` (§1-7) concluded with owner directive (not board review) to split `missing_qualitative_context` into `signal_vocabulary_gap` (compute.py fix surface) + `harness_coverage_gap` (phase_1_harness.py fix surface).
+- 4 existing overrides relabeled (ghostty Q1, Kronos Q2, kamal Q1 → `signal_vocabulary_gap`; Kronos Q4 → `harness_coverage_gap`).
+- CONSOLIDATION.md §8 V13-1 marked RESOLVED with §8.1 resolution record; §8.2 records the follow-up V1.2.x signal-widening patch.
+- V1.3 escalation triggers preserved.
+
+**V1.2.x signal widening (same session):**
+- Added `q1_has_ruleset_protection` signal — closes ghostty Q1 + kamal Q1 override path on future scans.
+- Added `q2_oldest_open_security_item_age_days` signal — closes Kronos Q2 override path on future scans. (But also fired red on wezterm entry 21 and Xray-core entry 19 from noisy security-keyword matches — threshold_too_strict override authored in Xray-core; wezterm kept red on release-stall grounds.)
+- Harness `dangerous_primitives.deserialization` regex widened — closes Kronos Q4 override path; caught ZERO new issues on subsequent scans (regex no false-negatives either way).
+
+**6 V1.2 wild scans shipped this session (entries 19–24):**
+
+| Entry | Repo | Shape | Verdict | Overrides |
+|---|---|---|---|---|
+| 19 | XTLS/Xray-core | Go network proxy | Critical | 1 (threshold_too_strict) |
+| 20 | BatteredBunny/browser_terminal | Browser ext + Go host | Critical (split) | 1 (harness_coverage_gap) |
+| 21 | wezterm/wezterm | Rust terminal | Caution | 0 |
+| 22 | QL-Win/QuickLook | C# Windows shell | Caution | 0 |
+| 23 | jtroo/kanata | Rust keyboard daemon | Critical | 0 |
+| 24 | freerouting/freerouting | Java PCB autorouter | Critical | 1 (signal_vocabulary_gap) |
+
+**Revert paths:**
+- Revert entire session 6: `git reset --hard be9a1c0` (session 5 close)
+- Revert just the 6 V1.2 wild scans (keep V13-1 resolution + V1.2.x + D-6): `git revert edf8f57 b8be939 a52ba7b 5587560 02be2ef 6f98fb2`
+- Revert just V1.2.x signal widening (keep enum split + D-6): `git revert d803faf`
+- Revert just V13-1 resolution: `git revert 5f3984d` (would break the 6 wild-scan commits that use relabeled enum values)
+
+**V13-3 progress:** 9 of 11 V1.2 wild scans accumulated (2 more needed for comparator-calibration trigger).
+
+**Harness-patch backlog documented** in `docs/v12-wild-scan-telemetry.md` §4 + §8 — deserialization auto-fire + multi-ecosystem manifest parsing + install-doc URL TLD-deviation are the priority candidates.
+
+---
+
 ## Checkpoint — 2026-04-20 (session 5) — Schema V1.2 LANDED + ghostty wild scan (override-explained proven)
 
 **HEAD:** `5f5d1cd` on `origin/main` (clean push; tree clean).

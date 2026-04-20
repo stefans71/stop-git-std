@@ -96,7 +96,15 @@ Wait for the user's choice. If they pick option 2, read the `.md` file and give 
 
 ## Current state (summary)
 
-As of 2026-04-20 session 5: Scanner prompt V2.4, Operator Guide V0.2, **scan-schema.json LIVE at V1.2**, 342/342 tests passing, **16 catalog entries** (11 V2.4 + 5 v2.5-preview: 3 Step G validation + 2 wild — markitdown entry 15, ghostty entry 16). **V2.5-preview PRODUCTION-CLEARED 2026-04-20** via markitdown; **V1.2 schema LIVE + override-explained proven end-to-end** via ghostty entry 16 Q1 override (advisory red → Phase 4 amber, `override_reason = missing_qualitative_context`, 7 `computed_signal_refs`). Phase 1 is **harness-driven** (`docs/phase_1_harness.py` — Steps 1-8 + A/B/C; V1.2 schema accepts harness output natively; no transformer, no sidecar bridge). D-7 + D-8 CLOSED via co-scheduled board review (`docs/External-Board-Reviews/042026-schema-v12/CONSOLIDATION.md`, 3 rounds + owner directives, 31-item dissent audit zero silent drops). Gate 6.3 semantics: **"override-explained"** (validator `--form` mode enforces rationale ≥50 chars + non-empty `computed_signal_refs` resolving against `compute.SIGNAL_IDS` + `override_reason` in 5-value enum, *only when* Phase 4 color differs from phase_3_advisory color). Session 5 commits on top of `4512084`: `a0e370e` (V1.2 design) → `2c5aca0` (V1.2 implementation) → `5f5d1cd` (ghostty entry 16). Next V1.3 watchpoints + un-wild-scanned shapes (fd, gstack, postiz-app, hermes-agent) in REPO_MAP §2.5.
+As of 2026-04-20 session 6: Scanner prompt V2.4, Operator Guide V0.2, **scan-schema.json LIVE at V1.2** (with V13-1 enum expansion + V1.2.x signal widening), **385/385 tests passing**, **24 catalog entries** (11 V2.4 + 13 v2.5-preview: 3 Step G validation + **9 V1.2-schema wild scans** — entries 16–24). **9 V1.2 wild scans** cover an increasingly diverse shape space: terminal emulators (ghostty Zig + wezterm Rust), Python ML (Kronos), Python monorepo (markitdown), Ruby deploy orchestrator (kamal), Go network proxy (Xray-core), browser extension + Go native host (browser_terminal), C# Windows shell extender (QuickLook), Rust keyboard daemon (kanata), Java PCB autorouter (freerouting).
+
+**V13-1 RESOLVED 2026-04-20 by owner directive** (see `docs/v13-1-override-telemetry-analysis.md`): `override_reason_enum` expanded 5→7 values (+`signal_vocabulary_gap`, +`harness_coverage_gap`). **V1.2.x signal widening landed same day** (commit `d803faf`): `SIGNAL_IDS` 23→25 (+`q1_has_ruleset_protection`, +`q2_oldest_open_security_item_age_days`); harness `dangerous_primitives.deserialization` regex widened. **D-6 severity-distribution comparator SHIPPED** at `docs/compare-severity-distribution.py` (Operator Guide §8.8.7; 23 tests; all 3 Step G pairs pass).
+
+**Override telemetry across 9 V1.2 wild scans**: 7 total overrides; `signal_vocabulary_gap` modal at 57% (4 of 7); 3 zero-override scans (wezterm + QuickLook + kanata). Full cross-scan analysis at **`docs/v12-wild-scan-telemetry.md`** (MUST READ for any V1.2-era decision).
+
+**V13-3 progress: 9 of 11 V1.2 wild scans** — 2 more trigger comparator-calibration analysis.
+
+Phase 1 is **harness-driven**; V1.2 schema accepts harness output natively. Session 6 commits on top of `be9a1c0`: `9f8023f` → `06ef4b7` → `5f3984d` → `d803faf` → `baf5dc9` → `6f98fb2` → `02be2ef` → `5587560` → `a52ba7b` → `b8be939` → `edf8f57`. Next: 2 more V1.2 wild scans to trigger V13-3; V1.2.x harness-patch backlog (deserialization auto-fire + multi-ecosystem manifest parsing + URL TLD detection) in `v12-wild-scan-telemetry.md` §4+§8.
 
 **For everything else — look in `REPO_MAP.md`:**
 
@@ -106,6 +114,8 @@ As of 2026-04-20 session 5: Scanner prompt V2.4, Operator Guide V0.2, **scan-sch
 - **If you need to revert / recover from a regression** → `AUDIT_TRAIL.md` (checkpoint log with HEAD SHAs, verification state, revert recipes)
 - **If you need the board review SOP** → `/root/.frontierboard/FrontierBoard/docs/REVIEW-SOP.md`
 - **If you need the most recent board decision** → `docs/External-Board-Reviews/042026-schema-v12/CONSOLIDATION.md` (Schema V1.2 design — D-7 + D-8 co-scheduled, 3 rounds + owner directives, 2026-04-20)
+- **If you need the cross-scan V1.2 telemetry analysis** → `docs/v12-wild-scan-telemetry.md` (9-scan override-enum distribution + harness-patch candidates + V13-3 progress)
+- **If you need the V13-1 owner-directive rationale** → `docs/v13-1-override-telemetry-analysis.md` (enum split from 5→7 values)
 - **If you need the canonical architecture record** (8/8/4, 9-phase pipeline) → `docs/board-review-pipeline-methodology.md`
 - **If you need what to investigate during a scan** → `docs/repo-deep-dive-prompt.md` (V2.4, investigation half lines 1-1090 + output-format spec lines 1106-1490)
 - **If you need the end-to-end process document** → `docs/SCANNER-OPERATOR-GUIDE.md` (V0.2; §8.8 is the V2.5-preview pipeline)
