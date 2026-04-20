@@ -1,0 +1,2239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Security Investigation Report: WhiskeySockets/Baileys @ 8e5093c | Generated 2026-04-20 | Prompt V2.4 (V1.1 schema) -->
+<title>Security Investigation: WhiskeySockets/Baileys</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Unbounded:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; script-src 'unsafe-inline';">
+<style>
+  /* ═══════════════════════════════════════════════
+     DESIGN SYSTEM — DO NOT MODIFY
+     Dark theme, security monitoring aesthetic
+     ═══════════════════════════════════════════════ */
+  :root {
+    --bg-void: #0a0a0c;
+    --bg-surface: #131316;
+    --bg-elevated: #1a1a1f;
+    --bg-hover: #222228;
+    --border: #32323c;
+    --border-subtle: #26262e;
+    --text-primary: #f0f0f4;
+    --text-secondary: #b0b0bc;
+    --text-muted: #7e7e8e;
+    --red-glow: #ff4545;
+    --red-dim: #ff454520;
+    --red-bg: #1a0f0f;
+    --amber-glow: #ffaa2a;
+    --amber-dim: #ffaa2a20;
+    --amber-bg: #1a150e;
+    --green-glow: #22c55e;
+    --green-dim: #22c55e20;
+    --green-bg: #0e1a12;
+    --cyan-glow: #06b6d4;
+    --cyan-dim: #06b6d420;
+    --font-mono: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace;
+    --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-display: 'Unbounded', 'Inter', sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--font-sans);
+    background: var(--bg-void);
+    color: var(--text-primary);
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Noise texture + horizontal scanlines — forensic console feel */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      repeating-linear-gradient(
+        to bottom,
+        rgba(255,255,255,0.008) 0px,
+        rgba(255,255,255,0.008) 1px,
+        transparent 1px,
+        transparent 3px
+      ),
+      url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+  }
+  /* Single-pass scan line — thin cyan line sweeps once then disappears */
+  body::after {
+    content: ''; position: fixed; left: 0; right: 0; height: 2px;
+    background: linear-gradient(to right, transparent 5%, var(--cyan-glow) 30%, var(--cyan-glow) 70%, transparent 95%);
+    box-shadow: 0 0 12px var(--cyan-glow), 0 0 4px var(--cyan-glow);
+    pointer-events: none; z-index: 9998; opacity: 0.7;
+    animation: scan-sweep 3s ease-in-out 1s 1 forwards;
+  }
+  @keyframes scan-sweep {
+    0% { top: -2px; opacity: 0.7; }
+    90% { opacity: 0.5; }
+    100% { top: 100vh; opacity: 0; }
+  }
+
+  /* Scan strip — the data ribbon above the hero */
+  .scan-strip {
+    display: flex; flex-wrap: wrap; gap: 1.25rem; align-items: center;
+    padding: 0.625rem 0 0.75rem; margin-bottom: 1.5rem;
+    border-top: 1px solid var(--border-subtle);
+    border-bottom: 1px solid var(--border-subtle);
+    font-family: var(--font-mono); font-size: 0.65rem;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--text-secondary);
+  }
+  .scan-strip-item { display: inline-flex; align-items: center; gap: 0.4rem; }
+  .scan-strip-item .dot {
+    display: inline-block; width: 6px; height: 6px; border-radius: 50%;
+    box-shadow: 0 0 6px currentColor;
+  }
+  .scan-strip-item.amber, .scan-strip-item .dot.amber { color: var(--amber-glow); background: var(--amber-glow); }
+  .scan-strip-item .dot.amber { background: var(--amber-glow); box-shadow: 0 0 8px var(--amber-glow); animation: pulse 3s ease-in-out infinite; }
+  .scan-strip-item.flash {
+    color: var(--red-glow); animation: flash-blink 1.4s ease-in-out infinite;
+  }
+  @keyframes flash-blink {
+    0%, 80%, 100% { opacity: 1; }
+    85%, 95% { opacity: 0.25; }
+  }
+
+  /* Hero caption — the editorial line under the H1.
+     Readable sans-serif, slightly larger than body, no italic (readability > flavor). */
+  .hero-caption {
+    font-family: var(--font-sans); font-size: 1.0625rem; line-height: 1.55;
+    color: var(--text-primary); font-weight: 400;
+    max-width: 68ch; margin: 0.75rem 0 1.75rem;
+    letter-spacing: -0.005em;
+  }
+
+  /* ─────────────── Utility classes (replaces inline style="" attributes) ─────────────── */
+  /* Semantic value colors — use on chip-value, vital-value, td.val, etc. */
+  .val-good  { color: var(--green-glow) !important; }
+  .val-bad   { color: var(--red-glow)   !important; }
+  .val-warn  { color: var(--amber-glow) !important; }
+  .val-info  { color: var(--cyan-glow)  !important; }
+  .fw-semi   { font-weight: 600; }
+  /* Card vertical rhythm — replaces margin-bottom:12px inline on cards */
+  .stack-md  { margin-bottom: 0.75rem; }
+  .stack-sm  { margin-top: 0.75rem; }
+  /* Subdued paragraph — replaces the meta-text inline patterns */
+  .p-meta {
+    color: var(--text-secondary); margin-bottom: 1rem;
+    font-size: 0.875rem; line-height: 1.55;
+  }
+  .p-meta-tight {
+    color: var(--text-secondary); margin: 0.75rem 0 1rem;
+    font-size: 0.8125rem; line-height: 1.55;
+  }
+  /* Priority-evidence visual uplift — replaces inline border-left hack */
+  .finding-card.evidence-priority {
+    border-left: 4px solid var(--amber-glow);
+  }
+  /* Inline-flag variant — when priority-flag appears mid-sentence, not block */
+  .priority-flag.inline { display: inline-block; }
+
+  a { color: var(--cyan-glow); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* Font size controls */
+  .font-controls {
+    position: fixed; top: 16px; right: 16px; z-index: 1000;
+    display: flex; align-items: center; gap: 2px;
+    background: var(--bg-elevated); border: 1px solid var(--border);
+    border-radius: 8px; padding: 4px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5); backdrop-filter: blur(12px);
+  }
+  .font-controls button {
+    font-family: var(--font-mono); font-size: 0.875rem; font-weight: 700;
+    width: 34px; height: 34px; border: none; border-radius: 6px;
+    background: transparent; color: var(--text-secondary); cursor: pointer;
+    display: flex; align-items: center; justify-content: center; transition: all 0.15s;
+  }
+  .font-controls button:hover { background: var(--bg-hover); color: var(--text-primary); }
+  .font-controls button:active { transform: scale(0.92); }
+  .font-controls .font-size-display {
+    font-family: var(--font-mono); font-size: 0.6875rem; color: var(--text-muted);
+    min-width: 38px; text-align: center; letter-spacing: 0.05em; user-select: none;
+  }
+
+  .page { max-width: 960px; margin: 0 auto; padding: 0 20px; }
+
+  /* Hero */
+  .hero { padding: 64px 0 48px; border-bottom: 1px solid var(--border); position: relative; }
+  .hero::after {
+    content: ''; position: absolute; bottom: -1px; left: 0; right: 0; height: 120px;
+    background: linear-gradient(to top, var(--bg-void), transparent); pointer-events: none;
+  }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-family: var(--font-mono); font-size: 0.6875rem; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--text-muted); margin-bottom: 20px;
+    padding: 6px 12px; border: 1px solid var(--border); border-radius: 6px; background: var(--bg-surface);
+  }
+  .hero-badge .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--text-muted); /* Neutral default — LLM must set .red, .green, or .amber */
+  }
+  .hero-badge .dot.red { background: var(--red-glow); box-shadow: 0 0 8px var(--red-glow); animation: pulse 2s ease-in-out infinite; }
+  .hero-badge .dot.green { background: var(--green-glow); box-shadow: 0 0 8px var(--green-glow); }
+  .hero-badge .dot.amber { background: var(--amber-glow); box-shadow: 0 0 8px var(--amber-glow); animation: pulse 3s ease-in-out infinite; }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+  .hero h1 {
+    font-family: var(--font-display); font-size: clamp(1.8rem, 4vw, 3.4rem);
+    font-weight: 800; letter-spacing: -0.04em; line-height: 1.05; margin-bottom: 16px;
+  }
+  .hero h1 .slash {
+    color: var(--text-muted); font-weight: 300;
+    margin: 0 0.1em; font-size: 0.85em;
+  }
+  .hero h1 span { color: var(--red-glow); }
+  .hero h1 span.green { color: var(--green-glow); }
+  .hero h1 span.amber { color: var(--amber-glow); }
+  .hero .meta { font-size: 0.875rem; color: var(--text-primary); display: flex; flex-wrap: wrap; gap: 16px; }
+  .hero .meta-item { display: flex; align-items: center; gap: 6px; }
+  .hero .meta-item .label { color: var(--text-secondary); font-size: 0.75rem; }
+
+  /* Verdict */
+  .verdict-section { padding: 48px 0 40px; }
+  .verdict-banner {
+    border-radius: 0; padding: 2.25rem 2.75rem 2rem 4.5rem;
+    position: relative; overflow: hidden;
+    border-left-width: 6px; border-left-style: solid;
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%);
+  }
+  .verdict-banner.critical { background: linear-gradient(135deg, #1f0a0a 0%, #0a0a0c 100%); border: 1px solid #ff454540; border-left-color: var(--red-glow); }
+  .verdict-banner.caution { background: linear-gradient(135deg, #1f1810 0%, #0a0a0c 100%); border: 1px solid #ffaa2a40; border-left-color: var(--amber-glow); }
+  .verdict-banner.clean { background: linear-gradient(135deg, #0a1f14 0%, #0a0a0c 100%); border: 1px solid #22c55e40; border-left-color: var(--green-glow); }
+  /* Radial wash */
+  .verdict-banner::before {
+    content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+    pointer-events: none;
+  }
+  .verdict-banner.critical::before { background: radial-gradient(circle at 20% 30%, #ff454510, transparent 55%); }
+  .verdict-banner.caution::before { background: radial-gradient(circle at 20% 30%, #ffaa2a12, transparent 55%); }
+  .verdict-banner.clean::before { background: radial-gradient(circle at 20% 30%, #22c55e10, transparent 55%); }
+  /* Vertical scan-ID bar on the left */
+  .verdict-banner::after {
+    content: attr(data-dossier); position: absolute;
+    left: 1.4rem; top: 2.1rem; bottom: 2rem;
+    writing-mode: vertical-rl; transform: rotate(180deg);
+    font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.25em;
+    color: var(--text-muted); text-transform: uppercase;
+    display: flex; align-items: center;
+    opacity: 0.55;
+  }
+  .verdict-banner .verdict-label {
+    font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.22em;
+    text-transform: uppercase; margin-bottom: 1rem; position: relative;
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    padding: 0.25rem 0.625rem; border-radius: 0.125rem;
+    background: rgba(255,170,42,0.08); border: 1px solid rgba(255,170,42,0.25);
+  }
+  .verdict-banner.critical .verdict-label { color: var(--red-glow); background: rgba(255,69,69,0.08); border-color: rgba(255,69,69,0.25); }
+  .verdict-banner.caution .verdict-label { color: var(--amber-glow); }
+  .verdict-banner.clean .verdict-label { color: var(--green-glow); background: rgba(34,197,94,0.08); border-color: rgba(34,197,94,0.25); }
+  .verdict-banner h2 {
+    font-family: var(--font-display);
+    font-size: clamp(1.5rem, 3.2vw, 2.2rem); font-weight: 600; line-height: 1.18;
+    letter-spacing: -0.025em; margin-bottom: 1rem; position: relative; color: #ff8c00;
+    max-width: 56ch;
+  }
+  .verdict-banner.clean h2 { color: var(--green-glow); }
+  .verdict-banner.critical h2 { color: var(--red-glow); }
+
+  /* Split-verdict layout — two audience blocks separated by a divider */
+  .verdict-split {
+    display: grid; grid-template-columns: 1fr auto 1fr; gap: 1.75rem;
+    margin-bottom: 1.25rem; align-items: stretch;
+  }
+  @media (max-width: 820px) {
+    .verdict-split { grid-template-columns: 1fr; gap: 1rem; }
+  }
+  .verdict-entry { display: flex; flex-direction: column; gap: 0.5rem; }
+  .verdict-entry-scope {
+    font-family: var(--font-mono); font-size: 0.65rem; letter-spacing: 0.2em;
+    text-transform: uppercase; color: var(--text-muted);
+    padding-bottom: 0.375rem; border-bottom: 1px solid var(--border-subtle);
+  }
+  .verdict-entry-headline {
+    font-family: var(--font-display); font-weight: 600;
+    font-size: clamp(1.35rem, 2.5vw, 1.85rem); line-height: 1.15;
+    letter-spacing: -0.02em; margin: 0;
+  }
+  .verdict-entry-headline.good { color: #8dd492; }
+  .verdict-entry-headline.warn { color: var(--amber-glow); }
+  .verdict-entry-headline.bad  { color: var(--red-glow); }
+  .verdict-entry-detail {
+    font-family: var(--font-sans); font-size: 0.8125rem; line-height: 1.55;
+    color: var(--text-secondary); margin-top: 0.25rem;
+  }
+  .verdict-split-divider {
+    width: 1px; background: linear-gradient(to bottom, transparent, var(--border), transparent);
+  }
+  @media (max-width: 820px) {
+    .verdict-split-divider { width: 100%; height: 1px; background: var(--border-subtle); }
+  }
+
+  /* Rolled verdict exhibits — 3 themed panels that replace the 10-bullet glaze list */
+  .verdict-exhibits { display: grid; gap: 0.875rem; margin-top: 0.5rem; }
+  .exhibit {
+    position: relative; overflow: hidden; border-radius: 10px;
+    border: 1px solid var(--border-subtle);
+  }
+  .exhibit.vuln    { background: linear-gradient(135deg, #1a1008 0%, #0f0a0a 100%); border-color: #ffaa2a30; }
+  .exhibit.govern  { background: linear-gradient(135deg, #100c1a 0%, #0a0a0f 100%); border-color: #ff808040; }
+  .exhibit.signals { background: linear-gradient(135deg, #0a1812 0%, #0a0f0a 100%); border-color: #22c55e30; }
+  /* Left accent bar */
+  .exhibit::before {
+    content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
+  }
+  .exhibit.vuln::before    { background: var(--amber-glow); }
+  .exhibit.govern::before  { background: var(--red-glow); }
+  .exhibit.signals::before { background: var(--green-glow); }
+  /* Summary row (collapsed state) */
+  .exhibit > summary {
+    list-style: none; cursor: pointer;
+    padding: 0.875rem 1rem 0.875rem 1.5rem;
+    display: flex; align-items: center; gap: 0.75rem;
+    position: relative;
+  }
+  .exhibit > summary::-webkit-details-marker { display: none; }
+  .exhibit > summary::after {
+    content: '\25B6'; margin-left: auto; font-size: 0.7rem;
+    color: var(--text-muted); transition: transform 0.2s;
+  }
+  .exhibit[open] > summary::after { transform: rotate(90deg); }
+  .exhibit-glyph {
+    width: 1.75rem; height: 1.75rem; border-radius: 50%;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 0.85rem; font-weight: 700; flex-shrink: 0;
+  }
+  .exhibit.vuln .exhibit-glyph    { background: rgba(255,170,42,0.18); color: var(--amber-glow); }
+  .exhibit.govern .exhibit-glyph  { background: rgba(255,69,69,0.18);  color: var(--red-glow); }
+  .exhibit.signals .exhibit-glyph { background: rgba(34,197,94,0.18);  color: var(--green-glow); }
+  .exhibit-title {
+    font-family: var(--font-display); font-size: 1.05rem; font-weight: 600;
+    letter-spacing: -0.01em; line-height: 1.25;
+  }
+  .exhibit-count {
+    margin-left: 0.5rem; font-family: var(--font-mono); font-size: 0.7rem;
+    letter-spacing: 0.12em; color: var(--text-muted); text-transform: uppercase;
+  }
+  .exhibit-summary-line {
+    font-family: var(--font-sans); font-size: 0.82rem; color: var(--text-secondary);
+    margin-left: 0.5rem; line-height: 1.45; font-weight: 400;
+  }
+  @media (max-width: 720px) {
+    .exhibit-summary-line { display: block; margin-left: 2.5rem; margin-top: 0.25rem; }
+  }
+  /* Expanded content — zebra-striped items */
+  .exhibit-body {
+    border-top: 1px solid var(--border-subtle);
+    padding: 0; background: rgba(0,0,0,0.15);
+  }
+  .exhibit-item {
+    display: grid; grid-template-columns: 1.5rem 1fr; gap: 0.75rem;
+    padding: 0.75rem 1rem 0.75rem 1.5rem;
+    font-size: 0.88rem; line-height: 1.55; color: var(--text-primary);
+    border-bottom: 1px solid var(--border-subtle);
+  }
+  .exhibit-item:last-child { border-bottom: none; }
+  /* Zebra striping — every other row gets a subtle background shift */
+  .exhibit-item:nth-child(even) { background: rgba(255,255,255,0.015); }
+  .exhibit-item-glyph {
+    font-family: var(--font-mono); font-weight: 700; font-size: 0.8rem;
+    text-align: center; padding-top: 0.15rem;
+  }
+  .exhibit.vuln .exhibit-item-glyph    { color: var(--amber-glow); }
+  .exhibit.govern .exhibit-item-glyph  { color: var(--red-glow); }
+  .exhibit.signals .exhibit-item-glyph { color: var(--green-glow); }
+  .exhibit-item-tag {
+    font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--text-muted); display: block;
+    margin-bottom: 0.15rem;
+  }
+
+  /* Verdict bullet list */
+  .verdict-bullets { list-style: none; padding: 0; margin: 0; position: relative; }
+  .verdict-bullets li {
+    display: flex; align-items: flex-start; gap: 12px; font-size: 0.9375rem;
+    color: var(--text-primary); line-height: 1.6; padding: 8px 0; border-bottom: 1px solid #ffffff08;
+  }
+  .verdict-bullets li:last-child { border-bottom: none; }
+  .verdict-bullets .bullet-icon {
+    flex-shrink: 0; width: 22px; height: 22px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center; font-size: 0.6875rem; margin-top: 2px;
+  }
+  .verdict-bullets .bullet-icon.red { background: var(--red-dim); color: var(--red-glow); box-shadow: 0 0 6px var(--red-dim); }
+  .verdict-bullets .bullet-icon.amber { background: var(--amber-dim); color: var(--amber-glow); box-shadow: 0 0 6px var(--amber-dim); }
+  .verdict-bullets .bullet-icon.green { background: var(--green-dim); color: var(--green-glow); box-shadow: 0 0 6px var(--green-dim); }
+
+  /* Scorecard */
+  .scorecard-section { padding: 0 0 48px; }
+  .scorecard-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px;
+    background: var(--border); border-radius: 12px; overflow: hidden;
+  }
+  .score-cell { background: var(--bg-surface); padding: 24px 20px; text-align: center; transition: background 0.2s; }
+  .score-cell:hover { background: var(--bg-elevated); }
+  .score-cell .score-icon {
+    width: 32px; height: 32px; margin: 0 auto 12px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center; font-size: 1rem;
+  }
+  .score-cell .score-icon.red { background: var(--red-dim); color: var(--red-glow); }
+  .score-cell .score-icon.amber { background: var(--amber-dim); color: var(--amber-glow); }
+  .score-cell .score-icon.green { background: var(--green-dim); color: var(--green-glow); }
+  .score-cell .score-label {
+    font-family: var(--font-mono); font-size: 0.625rem; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--text-muted); margin-bottom: 6px;
+  }
+  .score-cell .score-value { font-size: 1.125rem; font-weight: 700; line-height: 1.2; }
+  .score-cell .score-value.red { color: var(--red-glow); }
+  .score-cell .score-value.amber { color: var(--amber-glow); }
+  .score-cell .score-value.green { color: var(--green-glow); }
+
+  /* Collapsible sections */
+  details summary { cursor: pointer; list-style: none; }
+  details summary::-webkit-details-marker { display: none; }
+  .collapsible-section > summary { padding: 48px 0 0; border-top: 1px solid var(--border-subtle); }
+  .collapsible-section > summary .section-header { margin-bottom: 0; display: flex; align-items: center; gap: 12px; }
+  .collapsible-section[open] > summary .section-header { margin-bottom: 28px; }
+  .collapsible-section .section-body { padding-bottom: 0; }
+  .collapsible-section > summary .section-header::after {
+    content: '\25B6'; font-size: 0.625rem; color: var(--text-muted); transition: transform 0.2s; margin-left: auto;
+  }
+  .collapsible-section[open] > summary .section-header::after { transform: rotate(90deg); }
+  .section-header .section-number {
+    font-family: var(--font-mono); font-size: 0.6875rem; letter-spacing: 0.1em; color: var(--text-muted);
+    width: 28px; height: 28px; border-radius: 6px; border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .section-header h2 {
+    font-family: var(--font-display); font-size: 1.4rem; font-weight: 600;
+    letter-spacing: -0.02em; line-height: 1.15;
+    color: var(--cyan-glow);
+  }
+  /* Slightly emphasize the section number too so the landmark row reads as a unit */
+  .section-header .section-number {
+    color: var(--cyan-glow); opacity: 0.75;
+  }
+
+  /* Finding cards */
+  .finding-card {
+    background: var(--bg-surface); border: 1px solid var(--border); border-radius: 10px;
+    margin-bottom: 12px; overflow: hidden; transition: border-color 0.2s;
+  }
+  .finding-card:hover { border-color: #3a3a44; }
+  .finding-card.critical { border-left: 3px solid var(--red-glow); }
+  .finding-card.warning { border-left: 3px solid var(--amber-glow); }
+  .finding-card.info { border-left: 3px solid var(--cyan-glow); }
+  .finding-card.ok { border-left: 3px solid var(--green-glow); }
+  @keyframes border-pulse {
+    0%, 100% { border-left-color: var(--red-glow); box-shadow: -2px 0 8px var(--red-dim); }
+    50% { border-left-color: #ff454580; box-shadow: -2px 0 4px transparent; }
+  }
+  .finding-card.critical { animation: border-pulse 3s ease-in-out infinite; }
+
+  .finding-header {
+    padding: 16px 20px 12px; display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 16px;
+  }
+  .finding-header .tag {
+    font-family: var(--font-mono); font-size: 0.625rem; letter-spacing: 0.08em;
+    text-transform: uppercase; padding: 3px 8px; border-radius: 4px; font-weight: 600; flex-shrink: 0;
+  }
+  .tag.critical-tag { background: var(--red-dim); color: var(--red-glow); }
+  .tag.warning-tag { background: var(--amber-dim); color: var(--amber-glow); }
+  .tag.info-tag { background: var(--cyan-dim); color: var(--cyan-glow); }
+  .tag.ok-tag { background: var(--green-dim); color: var(--green-glow); }
+  .finding-header .finding-date { font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-secondary); }
+  .finding-header .finding-duration {
+    font-family: var(--font-mono); font-size: 0.6875rem; font-weight: 600;
+    color: var(--amber-glow); background: var(--amber-dim); border: 1px solid #ffaa2a30;
+    padding: 3px 10px; border-radius: 4px;
+  }
+  .finding-header h3 {
+    width: 100%; font-family: var(--font-display); font-size: 1.125rem;
+    font-weight: 600; line-height: 1.3; letter-spacing: -0.015em; margin-top: 4px;
+  }
+
+  /* Finding collapsible */
+  .finding-card summary { list-style: none; cursor: pointer; }
+  .finding-card summary::-webkit-details-marker { display: none; }
+  .finding-card summary .finding-header { position: relative; padding-right: 40px; }
+  .finding-card summary .finding-header::after {
+    content: '\25B6'; font-size: 0.625rem; color: var(--text-muted);
+    transition: transform 0.2s; position: absolute; right: 20px; top: 20px;
+  }
+  .finding-card details[open] > summary .finding-header::after { transform: rotate(90deg); }
+
+  .finding-body { padding: 0 20px 16px; }
+  .finding-body p { font-size: 0.875rem; color: var(--text-primary); line-height: 1.7; margin-bottom: 12px; }
+  .finding-meta {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 8px; margin-top: 12px;
+  }
+  .meta-chip {
+    font-size: 0.75rem; padding: 8px 12px; border-radius: 6px;
+    background: var(--bg-elevated); border: 1px solid var(--border-subtle);
+    display: flex; flex-direction: column; gap: 2px;
+  }
+  .meta-chip .chip-label {
+    font-family: var(--font-mono); font-size: 0.625rem; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--text-secondary);
+  }
+  .meta-chip .chip-value { color: var(--text-primary); font-weight: 500; }
+
+  /* Sub-finding (nested under parent finding) */
+  .sub-finding {
+    margin: 16px 0 8px; padding: 16px; border-left: 2px solid var(--amber-glow);
+    background: var(--bg-elevated); border-radius: 0 8px 8px 0;
+  }
+  .sub-finding .sub-finding-label {
+    font-family: var(--font-mono); font-size: 0.625rem; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--amber-glow); margin-bottom: 8px;
+  }
+  .sub-finding h4 { font-size: 1rem; font-weight: 700; line-height: 1.4; margin-bottom: 10px; }
+  .sub-finding p { font-size: 0.875rem; color: var(--text-primary); line-height: 1.7; margin-bottom: 12px; }
+
+  /* PR Table */
+  .pr-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.8125rem; }
+  th {
+    font-family: var(--font-mono); font-size: 0.625rem; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--text-secondary); text-align: left;
+    padding: 12px 16px; background: var(--bg-surface); border-bottom: 1px solid var(--border);
+    position: sticky; top: 0; white-space: nowrap;
+  }
+  td { padding: 14px 16px; border-bottom: 1px solid var(--border-subtle); color: var(--text-primary); vertical-align: top; }
+  tr:hover td { background: var(--bg-surface); }
+  td:first-child { font-family: var(--font-mono); font-weight: 600; color: var(--cyan-glow); white-space: nowrap; }
+  .td-concern { color: var(--amber-glow); font-weight: 500; }
+  .td-reviewed-no { color: var(--red-glow); font-family: var(--font-mono); font-weight: 600; }
+  .td-reviewed-yes { color: var(--green-glow); font-family: var(--font-mono); font-weight: 600; }
+  .td-reviewed-rejected { color: var(--amber-glow); font-family: var(--font-mono); font-weight: 600; }
+  .td-merge-fast { font-family: var(--font-mono); color: var(--red-glow); font-weight: 600; }
+  .td-person { font-weight: 500; color: var(--text-primary); }
+
+  /* Timeline */
+  .timeline { position: relative; padding-left: 28px; }
+  .timeline::before {
+    content: ''; position: absolute; left: 7px; top: 8px; bottom: 8px; width: 1px;
+    background: linear-gradient(to bottom, var(--border), var(--red-glow), var(--border));
+  }
+  .tl-item { position: relative; margin-bottom: 20px; padding-left: 8px; }
+  .tl-item::before {
+    content: ''; position: absolute; left: -24px; top: 7px; width: 9px; height: 9px;
+    border-radius: 50%; background: var(--text-muted); border: 2px solid var(--bg-void);
+  }
+  .tl-item.bad::before { background: var(--red-glow); box-shadow: 0 0 6px var(--red-dim); }
+  .tl-item.good::before { background: var(--green-glow); }
+  .tl-item.neutral::before { background: var(--amber-glow); }
+  .tl-date { font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-secondary); font-weight: 600; }
+  .tl-desc { font-size: 0.875rem; color: var(--text-primary); margin-top: 2px; line-height: 1.6; }
+
+  /* Vitals */
+  .vitals-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1px; background: var(--border); border-radius: 10px; overflow: hidden;
+  }
+  .vital-cell { background: var(--bg-surface); padding: 18px 20px; }
+  .vital-cell .vital-label {
+    font-family: var(--font-mono); font-size: 0.625rem; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--text-muted); margin-bottom: 4px;
+  }
+  .vital-cell .vital-value { font-size: 1rem; font-weight: 700; margin-bottom: 4px; }
+  .vital-cell .vital-note { font-size: 0.75rem; color: var(--text-secondary); line-height: 1.5; }
+  .vital-cell .vital-explainer {
+    font-size: 0.7rem; color: var(--text-muted); line-height: 1.5;
+    margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--border-subtle);
+  }
+  .vital-cell .vital-explainer a {
+    color: var(--cyan-glow); text-decoration: none;
+  }
+  .vital-cell .vital-explainer a:hover { text-decoration: underline; }
+
+  /* Action cards */
+  .action-card { padding: 24px; border-radius: 10px; margin-bottom: 12px; }
+  .action-card.stop { background: var(--red-bg); border: 1px solid #ff454530; }
+  .action-card.wait { background: var(--amber-bg); border: 1px solid #ffaa2a30; }
+  .action-card.info-action { background: var(--bg-surface); border: 1px solid var(--border); }
+  .action-card.ok-action { background: var(--green-bg); border: 1px solid #22c55e30; }
+  .action-card h3 { font-size: 0.9375rem; font-weight: 700; margin-bottom: 8px; }
+  .action-card p { font-size: 0.875rem; color: var(--text-primary); line-height: 1.7; }
+
+  /* Code blocks inside action cards */
+  .action-card pre {
+    background: var(--bg-void); border: 1px solid var(--border); border-radius: 8px;
+    padding: 16px; margin: 12px 0; overflow-x: auto;
+    font-family: var(--font-mono); font-size: 0.8125rem; color: var(--cyan-glow); line-height: 1.6;
+  }
+
+  /* Catalog metadata block — sits between hero and verdict
+     Font sizes use rem so the font +/- controls (which mutate root font-size) scale them. */
+  .catalog-meta {
+    background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: 10px;
+    padding: 1.125rem 1.375rem; margin-bottom: 1rem;
+  }
+  .catalog-meta .catalog-label {
+    font-family: var(--font-mono); font-size: 0.65rem; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--text-secondary); margin-bottom: 0.625rem;
+  }
+  .catalog-meta table { width: 100%; }
+  .catalog-meta td { padding: 0.375rem 0.75rem 0.375rem 0; border: none; font-size: 0.82rem; vertical-align: top; }
+  .catalog-meta td.key {
+    font-family: var(--font-mono); color: var(--text-secondary);
+    white-space: nowrap; width: 1%; font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.06em;
+  }
+  .catalog-meta td.val { color: var(--text-primary); }
+  .catalog-meta td.val a { color: var(--cyan-glow); text-decoration: none; }
+  .catalog-meta td.val a:hover { text-decoration: underline; }
+
+  /* ─────────────── UX-FIX CSS (section status pills, finding status chips,
+     timeline glyphs, evidence priority markers) ─────────────── */
+
+  /* Section status pills — shown on the collapsed <summary> row so readers know
+     at a glance whether a section needs attention. */
+  .section-status {
+    display: inline-flex; gap: 0.5rem; margin-left: auto; padding-right: 2.5rem;
+    font-size: 0.72rem; font-family: var(--font-mono); align-items: center;
+    flex-wrap: wrap;
+  }
+  .section-status .pill {
+    display: inline-flex; align-items: center; gap: 0.25rem;
+    padding: 0.1875rem 0.5rem; border-radius: 0.625rem; border: 1px solid;
+    letter-spacing: 0.04em; white-space: nowrap;
+  }
+  .section-status .pill.red {
+    color: var(--red-glow); border-color: var(--red-dim);
+    background: rgba(255, 69, 69, 0.1);
+  }
+  .section-status .pill.amber {
+    color: var(--amber-glow); border-color: var(--amber-dim);
+    background: rgba(255, 170, 42, 0.1);
+  }
+  .section-status .pill.green {
+    color: var(--green-glow); border-color: var(--green-dim);
+    background: rgba(34, 197, 94, 0.1);
+  }
+  .section-status .pill.info {
+    color: var(--cyan-glow); border-color: var(--cyan-dim);
+    background: rgba(6, 182, 212, 0.1);
+  }
+  .section-status .pill.muted {
+    color: var(--text-secondary); border-color: var(--border-subtle);
+    background: var(--bg-elevated);
+  }
+  .section-status .pill.urgent {
+    animation: urgent-pulse 1.8s ease-in-out infinite;
+  }
+  @keyframes urgent-pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(255, 69, 69, 0.4); }
+    50% { box-shadow: 0 0 0 0.5rem rgba(255, 69, 69, 0); }
+  }
+  /* Hide status pills when section is open — they're redundant with the content */
+  .collapsible-section[open] > summary .section-status { opacity: 0.5; }
+
+  /* Section subtitle — a one-line orientation under the H2, visible both open
+     and collapsed. Gives readers the "why should I look at this" answer. */
+  .section-subtitle {
+    font-family: var(--font-sans); font-size: 0.9375rem; color: var(--text-secondary);
+    font-weight: 400; margin-top: 0.5rem; line-height: 1.55;
+    max-width: 68ch; letter-spacing: -0.003em;
+  }
+  .section-subtitle .emph { color: var(--text-primary); font-weight: 600; }
+  .section-subtitle .hot { color: var(--amber-glow); font-weight: 600; }
+  .section-subtitle .cold { color: var(--green-glow); font-weight: 600; }
+
+  /* Section-level "Your action" line — every section that flags concerns
+     must answer "what do I do about this?" for the reader. */
+  .section-action {
+    display: block; margin-top: 0.5rem; padding: 0.5rem 0.75rem;
+    background: var(--bg-elevated); border-radius: 0.375rem;
+    border-left: 3px solid var(--amber-glow);
+    font-size: 0.85rem; color: var(--text-primary); line-height: 1.55;
+  }
+  .section-action.ok { border-left-color: var(--green-glow); }
+  .section-action.info { border-left-color: var(--cyan-glow); }
+  .section-action .lbl {
+    font-family: var(--font-mono); font-weight: 700;
+    font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--amber-glow); margin-right: 0.5rem;
+  }
+  .section-action.ok .lbl { color: var(--green-glow); }
+  .section-action.info .lbl { color: var(--cyan-glow); }
+
+  /* Finding-card status chip — distinguishes Active vs Resolved vs Ongoing.
+     Shown on every finding and evidence card next to the severity tag. */
+  .status-chip {
+    display: inline-flex; align-items: center; gap: 0.25rem;
+    padding: 0.1875rem 0.5rem; border-radius: 0.625rem; border: 1px solid;
+    font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.04em;
+    white-space: nowrap; margin-left: 0.375rem;
+  }
+  .status-chip.resolved {
+    color: var(--green-glow); border-color: var(--green-dim);
+    background: rgba(34, 197, 94, 0.12);
+  }
+  .status-chip.active {
+    color: var(--red-glow); border-color: var(--red-dim);
+    background: rgba(255, 69, 69, 0.12);
+  }
+  .status-chip.ongoing {
+    color: var(--amber-glow); border-color: var(--amber-dim);
+    background: rgba(255, 170, 42, 0.12);
+  }
+  .status-chip.mitigated {
+    color: var(--cyan-glow); border-color: var(--cyan-dim);
+    background: rgba(6, 182, 212, 0.12);
+  }
+  .status-chip.informational {
+    color: var(--text-secondary); border-color: var(--border-subtle);
+    background: var(--bg-elevated);
+  }
+
+  /* Action-needed hint on finding cards — one sentence that says "what the reader should do" */
+  .action-hint {
+    margin-top: 0.5rem; font-size: 0.78rem; color: var(--text-secondary);
+    line-height: 1.55;
+  }
+  .action-hint::before {
+    content: "→ "; color: var(--amber-glow); font-style: normal; font-weight: 600;
+  }
+  .action-hint.ok::before { color: var(--green-glow); }
+  .action-hint.warn::before { color: var(--amber-glow); }
+
+  /* Executable File Inventory — differentiate verdict on the tag clearly.
+     The card border already carries severity via .finding-card.warning/.ok/.info;
+     this makes the header tag match so the reader doesn't have to decode borders. */
+  .inv-verdict {
+    display: inline-flex; align-items: center; gap: 0.25rem;
+    padding: 0.1875rem 0.5rem; border-radius: 0.625rem; margin-left: 0.375rem;
+    font-family: var(--font-mono); font-size: 0.65rem; letter-spacing: 0.04em;
+    text-transform: uppercase; border: 1px solid;
+  }
+  .inv-verdict.warn {
+    color: var(--amber-glow); border-color: var(--amber-dim);
+    background: rgba(255, 170, 42, 0.12);
+  }
+  .inv-verdict.ok {
+    color: var(--green-glow); border-color: var(--green-dim);
+    background: rgba(34, 197, 94, 0.12);
+  }
+  .inv-verdict.info {
+    color: var(--cyan-glow); border-color: var(--cyan-dim);
+    background: rgba(6, 182, 212, 0.12);
+  }
+
+  /* Inventory one-line summary block — V2.2 F12 format */
+  .inventory-summary {
+    margin-bottom: 1.25rem; padding: 0.875rem 1rem;
+    background: var(--bg-elevated); border-radius: 0.5rem;
+    border-left: 3px solid var(--cyan-glow); font-size: 0.85rem;
+  }
+  .inventory-summary-title {
+    font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--text-secondary); margin-bottom: 0.5rem;
+  }
+  .inventory-summary ul { list-style: none; padding: 0; margin: 0; }
+  .inventory-summary li {
+    padding: 0.25rem 0; line-height: 1.55; display: flex; gap: 0.5rem; align-items: flex-start;
+  }
+  .inventory-summary li .glyph {
+    flex: 0 0 1.125rem; font-family: var(--font-mono); font-weight: 700;
+    text-align: center;
+  }
+  .inventory-summary li.warn .glyph { color: var(--amber-glow); }
+  .inventory-summary li.ok .glyph { color: var(--green-glow); }
+  .inventory-summary li.info .glyph { color: var(--cyan-glow); }
+
+  /* Timeline severity glyphs — per-item worry indicator beyond just dot color */
+  .tl-item .tl-severity-label {
+    display: inline-block; font-family: var(--font-mono); font-weight: 700;
+    font-size: 0.68rem; letter-spacing: 0.05em; margin-right: 0.375rem;
+    padding: 0.125rem 0.375rem; border-radius: 0.25rem;
+  }
+  .tl-item.bad .tl-severity-label {
+    color: var(--red-glow); background: rgba(255, 69, 69, 0.12);
+  }
+  .tl-item.good .tl-severity-label {
+    color: var(--green-glow); background: rgba(34, 197, 94, 0.12);
+  }
+  .tl-item.neutral .tl-severity-label {
+    color: var(--amber-glow); background: rgba(255, 170, 42, 0.12);
+  }
+
+  /* Evidence priority banner — "read this first" marker on the most important evidence */
+  .evidence-priority {
+    position: relative; border-left-width: 4px !important;
+  }
+  .evidence-priority .priority-flag {
+    display: inline-block; margin-left: 0.5rem; padding: 0.1875rem 0.5rem;
+    background: var(--amber-glow); color: var(--bg-void);
+    border-radius: 0.25rem; font-family: var(--font-mono);
+    font-size: 0.62rem; font-weight: 700; letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .evidence-group-label {
+    margin: 1.5rem 0 0.75rem; font-family: var(--font-mono);
+    font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--text-secondary); padding: 0.5rem 0.75rem;
+    background: var(--bg-elevated); border-radius: 0.375rem;
+    border-left: 3px solid var(--border);
+  }
+  .evidence-group-label.warns { border-left-color: var(--amber-glow); color: var(--amber-glow); }
+  .evidence-group-label.positives { border-left-color: var(--green-glow); color: var(--green-glow); }
+  .evidence-group-label.context { border-left-color: var(--cyan-glow); color: var(--cyan-glow); }
+
+  /* Evidence Appendix — <pre> blocks for command and multi-line result */
+  .evidence-row { margin-bottom: 10px; }
+  .evidence-row .evidence-label {
+    font-family: var(--font-mono); font-size: 0.625rem; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--text-secondary); margin-bottom: 4px;
+  }
+  .evidence-pre {
+    background: var(--bg-void); border: 1px solid var(--border); border-radius: 6px;
+    padding: 12px 14px; margin: 0; overflow-x: auto; white-space: pre-wrap; word-break: break-word;
+    font-family: var(--font-mono); font-size: 0.75rem; color: var(--cyan-glow); line-height: 1.55;
+    max-height: 320px; overflow-y: auto;
+  }
+  .evidence-pre.result { color: var(--text-primary); }
+  .evidence-classification {
+    font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-primary);
+    padding: 8px 12px; background: var(--bg-elevated);
+    border: 1px solid var(--border-subtle); border-radius: 6px;
+  }
+  .evidence-classification.inference { color: var(--amber-glow); }
+  .evidence-classification.fact { color: var(--green-glow); }
+
+  /* Footer */
+  .footer {
+    padding: 40px 0; border-top: 1px solid var(--border-subtle);
+    text-align: center; font-size: 0.75rem; color: var(--text-muted);
+  }
+  .footer a { color: var(--text-secondary); }
+
+  /* Responsive */
+  @media (max-width: 700px) {
+    .scorecard-grid { grid-template-columns: repeat(2, 1fr); }
+    .finding-meta { grid-template-columns: 1fr; }
+    .hero { padding: 40px 0 32px; }
+    .collapsible-section > summary { padding-top: 32px; }
+    table { font-size: 0.75rem; }
+    th, td { padding: 10px 12px; }
+    .vitals-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 420px) {
+    .scorecard-grid { grid-template-columns: 1fr; }
+  }
+
+</style>
+</head>
+<body>
+
+<div class="font-controls">
+  <button onclick="adjustFont(-1)" title="Decrease font size" aria-label="Decrease font size">A&minus;</button>
+  <span class="font-size-display" id="fontDisplay">100%</span>
+  <button onclick="adjustFont(1)" title="Increase font size" aria-label="Increase font size">A+</button>
+</div>
+<script>
+  let fontScale = 100;
+  function adjustFont(dir) {
+    fontScale = Math.min(150, Math.max(75, fontScale + dir * 10));
+    document.documentElement.style.fontSize = fontScale + '%';
+    document.getElementById('fontDisplay').textContent = fontScale + '%';
+  }
+</script>
+
+<div class="page">
+
+  <div class="hero">
+    <div class="scan-strip">
+      <span class="scan-strip-item"><span class="dot red"></span>Security Investigation</span>
+      <span class="scan-strip-item">Dossier &middot; Baileys</span>
+      <span class="scan-strip-item">Rev &middot; 8e5093c</span>
+      <span class="scan-strip-item">V2.4 &middot; 2026-04-20T22:10:12.987593+00:00</span>
+      <span class="scan-strip-item flash">&bull; Live</span>
+    </div>
+    <h1>WhiskeySockets<span class="slash">/</span><span class="red">Baileys</span></h1>
+    <div class="hero-caption">Baileys — 9k-star reverse-engineered WhatsApp Web client. Critical via F0: using Baileys attaches your WhatsApp account to an unofficial client, violating WhatsApp&#39;s ToS + risking account suspension. PR #1996 vulnerability fix stale-closed 148 days, maintainer-promised replacement never shipped. 14 runtime CVEs (ws × 5). Zero governance. 150-day release stall. V13-3 trigger fires.</div>
+    <div class="meta">
+      <div class="meta-item"><span class="label">Investigated</span> 2026-04-20</div>
+      <div class="meta-item"><span class="label">Applies to</span> main @ 8e5093c</div>
+      <div class="meta-item"><span class="label">Repo age</span> 4 years</div>
+      <div class="meta-item"><span class="label">Stars</span> 9,034</div>
+      <div class="meta-item"><span class="label">License</span> MIT</div>
+    </div>
+  </div>
+
+  <div class="catalog-meta">
+    <div class="catalog-label">Catalog metadata</div>
+    <table>
+      <tr><td class="key">Report file</td><td class="val"><code>GitHub-Scanner-Baileys.html</code> (+ <code>.md</code> companion)</td></tr>
+      <tr><td class="key">Repo</td><td class="val"><a href="https://github.com/WhiskeySockets/Baileys">github.com/WhiskeySockets/Baileys</a></td></tr>
+      <tr><td class="key">Short description</td><td class="val">Socket-based TypeScript library for interacting with WhatsApp Web API. Reverse-engineered from WhatsApp&#39;s official web client. Published as npm package `baileys`. Consumed by bot authors building WhatsApp automation.</td></tr>
+      <tr><td class="key">Category</td><td class="val">reverse-engineered-api-library</td></tr>
+      <tr><td class="key">Subcategory</td><td class="val">whatsapp-web-client</td></tr>
+      <tr><td class="key">Verdict</td><td class="val val-bad fw-semi">Critical</td></tr>
+      <tr><td class="key">Scanned revision</td><td class="val">main @ 8e5093c ()</td></tr>
+      <tr><td class="key">Prompt version</td><td class="val">V2.4</td></tr>
+      <tr><td class="key">Prior scan</td><td class="val">None — first scan of Baileys. Eleventh wild V1.2-schema scan (after markitdown 15, ghostty 16, Kronos 17, kamal 18, Xray-core 19, browser_terminal 20, wezterm 21, QuickLook 22, kanata 23, freerouting 24, WLED 25). FIRES V13-3 COMPARATOR-CALIBRATION TRIGGER at 11 wild V1.2 scans.</td></tr>
+    </table>
+  </div>
+
+  <div class="verdict-section">
+    <div class="verdict-banner critical" data-dossier="DOSSIER · BAILEYS · 8E5093C · 2026-04-20 · V2.4">
+      <div class="verdict-label">&#x25CF; Critical</div>
+
+      <div class="verdict-split">
+        <div class="verdict-entry">
+          <div class="verdict-entry-scope">Baileys &middot; 2026-04-20</div>
+          <h2 class="verdict-entry-headline bad">Critical</h2>
+          <div class="verdict-entry-detail">See findings below for details.</div>
+        </div>
+      </div>
+
+      <div class="verdict-exhibits">
+        <details class="exhibit vuln">
+          <summary>
+            <span class="exhibit-glyph">✗</span>
+            <span>
+              <span class="exhibit-title">Critical — F0 is the blocking item for default consumers</span>
+              <span class="exhibit-count">&middot; 1 findings</span>
+              <span class="exhibit-summary-line">Reverse-engineered unofficial WhatsApp client — ToS violation + account-ban risk is inherent to use.</span>
+            </span>
+          </summary>
+          <div class="exhibit-body">
+            <div class="exhibit-item">
+              <span class="exhibit-item-glyph">01</span>
+              <span>
+                <span class="exhibit-item-tag">F0</span>
+                Library&#39;s function is to attach consumer&#39;s WhatsApp account to an unofficial client. README&#39;s own disclaimer acknowledges the exposure. WhatsApp actively detects + suspends accounts for third-party-client behavior. Not a code vulnerability — a category risk.
+              </span>
+            </div>
+          </div>
+        </details>
+        <details class="exhibit vuln">
+          <summary>
+            <span class="exhibit-glyph">⚠</span>
+            <span>
+              <span class="exhibit-title">Warning — F1–F6 describe code, supply-chain, and governance posture</span>
+              <span class="exhibit-count">&middot; 6 findings</span>
+              <span class="exhibit-summary-line">Latent exec pattern; unresolved community security-fix PR; 14 runtime-dep CVEs; zero governance; 150-day release stall; missing disclosure policy.</span>
+            </span>
+          </summary>
+          <div class="exhibit-body">
+            <div class="exhibit-item">
+              <span class="exhibit-item-glyph">01</span>
+              <span>
+                <span class="exhibit-item-tag">F1</span>
+                extractVideoThumb uses child_process.exec with shell-interpolated template string. Currently callers pass tmpdir paths (safe). Latent command-injection if anyone threads external paths through.
+              </span>
+            </div>
+            <div class="exhibit-item">
+              <span class="exhibit-item-glyph">02</span>
+              <span>
+                <span class="exhibit-item-tag">F2</span>
+                PR #1996 &#39;Vulnerability Fixes&#39; stale-closed after 148 days. purpshell&#39;s promised &#39;own version&#39; never materialized. Library still ships deprecated `request` chain with 2 CVEs.
+              </span>
+            </div>
+            <div class="exhibit-item">
+              <span class="exhibit-item-glyph">03</span>
+              <span>
+                <span class="exhibit-item-tag">F3</span>
+                14 known CVEs across 6 runtime deps: `ws` × 5 (core WebSocket), protobufjs × 4, request × 2, acorn, music-metadata, @hapi/boom (EOL).
+              </span>
+            </div>
+            <div class="exhibit-item">
+              <span class="exhibit-item-glyph">04</span>
+              <span>
+                <span class="exhibit-item-tag">F4</span>
+                Zero branch protection + 0 rulesets + no CODEOWNERS + no SECURITY.md/CONTRIBUTING/CoC + 89.5% top-2 maintainer concentration.
+              </span>
+            </div>
+            <div class="exhibit-item">
+              <span class="exhibit-item-glyph">05</span>
+              <span>
+                <span class="exhibit-item-tag">F5</span>
+                150-day release stall: v7.0.0-rc.9 (2025-11-21) is npm @latest; v6.7.21 stable (2025-11-06) is 165 days old; master 5 months ahead.
+              </span>
+            </div>
+            <div class="exhibit-item">
+              <span class="exhibit-item-glyph">06</span>
+              <span>
+                <span class="exhibit-item-tag">F6</span>
+                No SECURITY.md in 4 years + 0 published GHSA + documented stale-out of vulnerability-fix PR → structural silent-fix posture.
+              </span>
+            </div>
+          </div>
+        </details>
+        <details class="exhibit vuln">
+          <summary>
+            <span class="exhibit-glyph">ℹ</span>
+            <span>
+              <span class="exhibit-title">Info — F7</span>
+              <span class="exhibit-count">&middot; 1 findings</span>
+              <span class="exhibit-summary-line">Scanner coverage gaps (PR sample empty, vendor_keys FP on WhatsApp dictionary, install-snippet noise).</span>
+            </span>
+          </summary>
+          <div class="exhibit-body">
+            <div class="exhibit-item">
+              <span class="exhibit-item-glyph">01</span>
+              <span>
+                <span class="exhibit-item-tag">F7</span>
+                Harness PR sample returned 0 despite 352 merged lifetime; direct gh api queried as fallback. vendor_keys FP on `AIza...` WhatsApp protocol dictionary entry. install_script_analysis flagged stale README content.
+              </span>
+            </div>
+          </div>
+        </details>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="scorecard-section">
+    <div class="scorecard-grid">
+      <div class="score-cell">
+        <div class="score-icon red">❌</div>
+        <div class="score-label">Does anyone check the code?</div>
+        <div class="score-value red">No — 0 branch protection + 0 rulesets + no CODEOWNERS + 89.5% top-2 maintainer concentration; PR sample empty (harness gap E8)</div>
+      </div>
+      <div class="score-cell">
+        <div class="score-icon red">❌</div>
+        <div class="score-label">Do they fix problems quickly?</div>
+        <div class="score-value red">No — PR #1996 vulnerability-fix stale-closed after 148 days; 14 runtime-dep CVEs (ws × 5, protobufjs × 4); 150-day release stall on v7.0.0-rc.9</div>
+      </div>
+      <div class="score-cell">
+        <div class="score-icon red">❌</div>
+        <div class="score-label">Do they tell you about problems?</div>
+        <div class="score-value red">No — no SECURITY.md + no CONTRIBUTING + 0 advisories in 4 years + documented vulnerability-fix PR stale-out (F2, F6)</div>
+      </div>
+      <div class="score-cell">
+        <div class="score-icon red">❌</div>
+        <div class="score-label">Is it safe out of the box?</div>
+        <div class="score-value red">No — using Baileys attaches consumer&#39;s WhatsApp account to a reverse-engineered unofficial client; ToS-violation + account-ban risk on default path (F0)</div>
+      </div>
+    </div>
+  </div>
+
+  <details class="collapsible-section" open>
+    <summary>
+      <div class="section-header">
+        <span class="section-number">01</span>
+        <h2>What Should I Do?</h2>
+        <span class="section-status">
+          <span class="pill amber">9.0k⭐ · MIT · TypeScript · 1 critical · 5 warnings · 1 info · CRITICAL</span>
+        </span>
+      </div>
+      <div class="section-subtitle">Baileys is a 4-year-old reverse-engineered TypeScript library for WhatsApp Web — 9k stars, 100 contributors, maintained by purpshell after original author adiwajshing went inactive. Critical verdict is category-driven: using Baileys attaches the consumer&#39;s WhatsApp account to an unofficial client, and WhatsApp&#39;s Terms of Service prohibit non-official clients + actively detect and suspend accounts showing third-party-client behavior. The README itself carries a CAUTION-flagged disclaimer acknowledging this exposure (F0). Beyond the category risk, the library has a latent command-injection pattern in ffmpeg-based video-thumbnail extraction (F1), a documented unresolved vulnerability-fix PR #1996 stale-closed after 148 days with the maintainer&#39;s promised &#39;own version&#39; never delivered (F2), 14 known CVEs across 6 runtime deps including 5 on `ws` (the core WebSocket library, F3), zero branch protection + zero rulesets + no CODEOWNERS/SECURITY.md/CONTRIBUTING (F4), a 150-day release stall (F5), and a structural silent-fix disclosure posture (F6). Positive signals: 100 contributors, Copilot PR review workflow active, npm-registry-verified primary distribution channel, explicit maintainer disclaimer of ToS-endorsement.</div>
+    </summary>
+    <div class="section-body">
+      <div class="action-card stop">
+        <h3>Step 1: Do NOT attach a primary WhatsApp account to any Baileys-based bot</h3>
+        <p><strong>Non-technical:</strong> Baileys is a reverse-engineered client. WhatsApp bans accounts it detects using third-party clients. If you care about keeping your WhatsApp number, do not link it to Baileys. Use a burner number that you&#39;re prepared to lose. Do not use Baileys for mass-messaging, stalkerware, or any pattern the README explicitly discourages.</p>
+        <pre># Nothing to run — this is a use-model rule</pre>
+      </div>
+      <div class="action-card wait">
+        <h3>Step 2: Install the stable npm package with a pinned version</h3>
+        <p><strong>Non-technical:</strong> Use `npm install baileys@6.7.21` (the last non-RC stable) or `npm install baileys@7.0.0-rc.9` (current RC). Avoid `npm install baileys` without a version — the `@latest` tag resolves to the RC, which has had 150 days of accumulated bug reports against it.</p>
+        <pre>npm install baileys@6.7.21 --save-exact</pre>
+      </div>
+      <div class="action-card wait">
+        <h3>Step 3: Override deprecated `request` dep via npm overrides</h3>
+        <p><strong>Non-technical:</strong> The `request` package is deprecated since 2020 and has 2 known CVEs. PR #1996 offered to remove it; the PR stalled. You can override it in your own package.json to avoid pulling it into your install graph. (Note: `request` is only pulled via proto-extract/ — if you don&#39;t run proto-extract, you won&#39;t have it in your runtime.)</p>
+        <pre># package.json: { &#34;overrides&#34;: { &#34;request&#34;: &#34;npm:no-op@1.0.0&#34; } }</pre>
+      </div>
+      <div class="action-card wait">
+        <h3>Step 4: Run `npm audit` and track the `ws` library specifically</h3>
+        <p><strong>Non-technical:</strong> `ws` is the core WebSocket library — Baileys uses it for every connection to WhatsApp. It has 5 known CVEs at the current pin. Check upstream `ws` release notes and override to the latest patch release when you install.</p>
+        <pre>npm audit &amp;&amp; npm view ws versions --json | tail -5</pre>
+      </div>
+      <div class="action-card wait">
+        <h3>Step 5: Isolate your Baileys bot in a container with no other credentials</h3>
+        <p><strong>Non-technical:</strong> Because Baileys holds your WhatsApp session, any vulnerability in Baileys or its deps could leak the session. Run your bot in a minimal Docker container, persist ONLY the Baileys auth state (no other secrets), and rotate the session if you suspect exposure. Don&#39;t run it on your daily-driver workstation.</p>
+        <pre>docker run --rm -v ./auth_info:/app/auth_info -w /app node:20-alpine sh -c &#39;npm install baileys@7.0.0-rc.9 &amp;&amp; node your-bot.js&#39;</pre>
+      </div>
+      <div class="action-card info-action">
+        <h3>Step 6: Evaluate the official WhatsApp Business Platform API for production use</h3>
+        <p><strong>Non-technical:</strong> If you&#39;re using Baileys for business automation, the official WhatsApp Business Platform API (https://business.whatsapp.com/) is the ToS-compliant path. It costs money and has friction that Baileys doesn&#39;t, but it doesn&#39;t risk account bans and has documented SLAs.</p>
+        <pre># https://business.whatsapp.com/ for enrollment</pre>
+      </div>
+    </div>
+  </details>
+
+  <details class="collapsible-section">
+    <summary>
+      <div class="section-header">
+        <span class="section-number">02</span>
+        <h2>What We Found</h2>
+        <span class="section-status">
+<span class="pill red">&#x1F6A8; 1 Critical</span><span class="pill amber">&#x26A0; 6 Warning</span><span class="pill info">&#x2139; 1 Info</span>        </span>
+      </div>
+      <div class="section-subtitle">
+        8 findings total.      </div>
+    </summary>
+    <div class="section-body">
+      <div class="finding-card critical">
+        <details>
+          <summary>
+            <div class="finding-header">
+              <span class="tag critical-tag">Critical</span>
+              <span class="status-chip informational">Ongoing</span>
+<span class="finding-date">Since Baileys was created 2022-01-12</span><span class="finding-duration">Continuous</span>              <h3>F0 &mdash; Reverse-engineered, unofficial WhatsApp client — ToS violation + account-ban risk is inherent to use; maintainers explicitly disclaim endorsement</h3>
+              <div class="action-hint warn">Do NOT attach a personal WhatsApp account you rely on to a Baileys-based bot. Use a burner number; understand that account suspension is a documented outcome of third-party client use.</div>
+            </div>
+          </summary>
+          <div class="finding-body">
+            <p>The category matters here more than any specific line of code. Baileys is a reverse-engineered TypeScript library that speaks WhatsApp&#39;s Web protocol on behalf of a consuming user&#39;s own WhatsApp account. The GitHub topic list includes `reverse-engineering` — the maintainers classify the project this way themselves. The npm page for `baileys` lists purpshell as the current maintainer; the README names &#39;Rajeh Taher/WhiskeySockets&#39; as the copyright holder (Rajeh is purpshell).</p>
+            <p>The README also contains a CAUTION-flagged disclaimer that would be unusual for most libraries: &#39;This project is not affiliated, associated, authorized, endorsed by, or in any way officially connected with WhatsApp or any of its subsidiaries or its affiliates… The maintainers of Baileys do not in any way condone the use of this application in practices that violate the Terms of Service of WhatsApp. The maintainers of this application call upon the personal responsibility of its users to use this application in a fair way, as it is intended to be used.&#39; The disclaimer&#39;s existence is itself evidence: the authors know the category carries platform-operator risk.</p>
+            <p>WhatsApp&#39;s actual Terms of Service prohibit non-official clients — any third-party automation accessing user accounts is already out-of-ToS from WhatsApp&#39;s perspective, regardless of how &#39;fair&#39; the usage is. WhatsApp has a documented history of detecting and suspending accounts that exhibit third-party-client behavior: unusual connection-fingerprints, missing official-client protocol signals, rate/timing patterns diverging from the official client, message-content patterns suggesting automation. Suspension is typically permanent and unappealable for accounts flagged this way.</p>
+            <p>The consumer impact is specific. A hobbyist running a Baileys bot on a burner number is at low-cost risk (lose the burner, get another). A business that integrates Baileys with their customer-service number faces catastrophic risk: a single detection event can suspend the number and disconnect the business from a channel their customers expect. The official alternative — the WhatsApp Business Platform API — is authorized but has friction and cost that Baileys&#39; zero-price + direct-API-access doesn&#39;t. That trade-off is why the library has 9k stars: it works well, at the cost of standing on a platform whose owner can drop you at any time.</p>
+            <p>This is why the verdict is Critical on the default consumer path. Most users who install Baileys intend to connect their primary (or business) account — not a burner. The disclaimer is in the README but disclaimers don&#39;t change WhatsApp&#39;s detection behavior. A user who reads the README carefully, understands the risk, and sets up a burner-number pipeline is at a different severity profile (Warning) than the default consumer. The verdict tracks the default consumer, not the careful one.</p>
+            <p><strong>How to fix.</strong> Maintainer-side: no fix exists — the tool&#39;s function is inherently ToS-violating. Ongoing maintainer effort (mimicking newer WhatsApp-client fingerprints, update-WhatsApp-version workflow) partially offsets detection pressure but can&#39;t resolve the underlying posture. Consumer-side: (1) use burner phone numbers, never primary accounts; (2) don&#39;t use Baileys for ToS-prohibited patterns (stalkerware, mass messaging, bulk automation — the README explicitly discourages these); (3) understand that account suspension can happen without notice; (4) if operating a business, evaluate the official WhatsApp Business Platform API as an alternative that&#39;s authorized by WhatsApp.</p>
+          </div>
+        </details>
+      </div>
+      <div class="finding-card warning">
+        <details>
+          <summary>
+            <div class="finding-header">
+              <span class="tag warning-tag">Warning</span>
+              <span class="status-chip informational">Ongoing</span>
+<span class="finding-date">Since messages-media.ts adopted this pattern (early commits 2022-ish)</span><span class="finding-duration">Continuous</span>              <h3>F1 &mdash; child_process.exec with shell string-interpolation in extractVideoThumb — latent command-injection pattern</h3>
+              <div class="action-hint warn">If you fork Baileys or extend it with custom media handling, DO NOT pass external file paths to the exported generateThumbnail API. Future maintainers should migrate this call to spawn(argv) form.</div>
+            </div>
+          </summary>
+          <div class="finding-body">
+            <p>The specific lines are src/Utils/messages-media.ts:125-126: `const cmd = \`ffmpeg -ss ${time} -i ${path} -y -vf scale=${size.width}:-1 -vframes 1 -f image2 ${destPath}\`` immediately followed by `exec(cmd, err =&gt; { ... })`. The `exec` import is from `child_process` at line 2 of the same file. `child_process.exec` invokes a shell (`/bin/sh` on Linux); a command string with metacharacters in any interpolated position becomes the shell&#39;s problem.</p>
+            <p>Tracing the current callers: `extractVideoThumb` is invoked from `generateThumbnail` at line 349 with `file` and `imgFilename` parameters. The `file` argument comes from `originalFilePath` (set by `encryptedStream` to `join(tmpdir(), mediaType + generateMessageIDV2() + &#39;-original&#39;)`). `imgFilename` is `join(tmpdir(), generateMessageIDV2() + &#39;.jpg&#39;)`. `generateMessageIDV2` is defined in src/Utils/generics.ts:182 and returns `&#39;3EB0&#39; + sha256-hex-substring(0, 18)` — no shell metacharacters.</p>
+            <p>So the library&#39;s own callers are safe today. The reason this is still a finding is: (a) the pattern itself is the unsafe form — `spawn(&#39;ffmpeg&#39;, [...args])` would accomplish the same task with zero shell-injection surface; (b) `generateThumbnail` is an EXPORTED API, meaning library consumers who write their own media flows may pass any string as the `file` argument; (c) any future internal refactor that threads a filename from an incoming WhatsApp message attachment (sender-controlled) into this code path would expose the entire Baileys user base to shell-injection via crafted filenames.</p>
+            <p>The mitigation is small. `spawn(&#39;ffmpeg&#39;, [&#39;-ss&#39;, time, &#39;-i&#39;, path, &#39;-y&#39;, &#39;-vf&#39;, `scale=${size.width}:-1`, &#39;-vframes&#39;, &#39;1&#39;, &#39;-f&#39;, &#39;image2&#39;, destPath])` has identical semantics, doesn&#39;t spawn a shell, and eliminates the category entirely. A code-review checklist item for this file would close it out and prevent regression.</p>
+            <p><strong>How to fix.</strong> Maintainer-side: replace `exec(cmd)` with `spawn(&#39;ffmpeg&#39;, [&#39;-ss&#39;, time, &#39;-i&#39;, path, &#39;-y&#39;, &#39;-vf&#39;, `scale=${size.width}:-1`, &#39;-vframes&#39;, &#39;1&#39;, &#39;-f&#39;, &#39;image2&#39;, destPath])` — identical semantics, no shell, no injection surface. Code-review checklist item for future maintenance. Consumer-side: treat generateThumbnail as INTERNAL until this is fixed; don&#39;t call with external paths.</p>
+          </div>
+        </details>
+      </div>
+      <div class="finding-card warning">
+        <details>
+          <summary>
+            <div class="finding-header">
+              <span class="tag warning-tag">Warning</span>
+              <span class="status-chip informational">Ongoing</span>
+<span class="finding-date">PR #1996 opened 2025-10-30; stale-closed 2026-03-26; &#39;own version&#39; not merged in 148 days since purpshell&#39;s promise</span><span class="finding-duration">Ongoing</span>              <h3>F2 &mdash; Community-submitted vulnerability-fix PR #1996 closed unmerged via stale-bot after 148 days; maintainer-promised replacement never materialized; library still ships deprecated `request` dep</h3>
+              <div class="action-hint warn">If you maintain a downstream fork, apply the PR #1996 changes locally; if you need the deprecated `request` removed from your production chain, patch your node_modules or pin an override.</div>
+            </div>
+          </summary>
+          <div class="finding-body">
+            <p>The PR #1996 story is worth telling in full because it&#39;s the clearest data point about how vulnerability reports get handled in this project. On 2025-10-30, community contributor KaivalyaGauns filed a PR titled &#39;Vulnerability Fixes&#39; that did one specific thing: replaced the deprecated-since-2020 `request` / `request-promise-core` / `request-promise-native` trio with a modern `node-fetch` + `form-data` pair. The changes were scoped to proto-extract/ (the maintainer build-tool) and were tested against the existing proto-extraction flow.</p>
+            <p>`request` and its companion packages have 2 known CVEs at Baileys&#39; pinned version: GHSA-p8p7-x288-28g6 (SSRF via redirect) and GHSA-7xfp-9c55-5vqj (TLS certificate validation bypass). The `request` package has been marked deprecated by its own maintainers since 2020 with the recommendation to migrate to alternatives. The PR was the migration.</p>
+            <p>The whiskeysockets-bot posted its standard welcome comment within seconds: &#39;Thanks for opening this pull request and contributing to the project! The next step is for the maintainers to review your changes.&#39; Then silence. The first stale-bot warning fired 2025-12-06, 37 days later. Community member vinikjkkj asked &#39;any updates?&#39; on 2025-12-12. Another stale-bot warning 2025-12-27. Then, on 2026-01-08 — 70 days after the PR was filed — maintainer purpshell commented: &#39;We should make our own version of this PR. Opening an issue in its stead.&#39;</p>
+            <p>That comment is the pivot point. The maintainer explicitly acknowledged the fix was needed and took ownership. But no issue was opened in a form the scanner can find; no replacement PR materialized; the original PR drifted toward stale-bot closure through two more warnings and was finally closed 2026-03-26 — 148 days after it was filed, and 77 days after purpshell&#39;s commitment.</p>
+            <p>As of scan date (2026-04-20), master&#39;s proto-extract/package.json still contains `request`, `request-promise-core`, and `request-promise-native` — confirmed by the Phase 1 harness dependency inventory. The &#39;own version&#39; did not happen in 102 days since purpshell&#39;s comment.</p>
+            <p>This matters for two reasons. First, the SSRF and TLS-cert CVEs remain in the deployed dep graph; users who run proto-extract/ (typically maintainers refreshing WAProto definitions, but also anyone forking for the same purpose) pull the vulnerable code. Second, as a datapoint about how disclosure-and-fix works here, this is the kind of signal that motivates Q3&#39;s red. The stale-bot-closes-a-working-fix pattern is distinguishable from &#39;busy maintainer, fix in progress.&#39; The former is the observed pattern.</p>
+            <p><strong>How to fix.</strong> Maintainer-side: revive PR #1996 (cherry-pick from its diff) or author the promised &#39;own version&#39;. Consumer-side: override `request` via npm overrides or use a fork that applies the fix.</p>
+          </div>
+        </details>
+      </div>
+      <div class="finding-card warning">
+        <details>
+          <summary>
+            <div class="finding-header">
+              <span class="tag warning-tag">Warning</span>
+              <span class="status-chip informational">Ongoing</span>
+<span class="finding-date">Ongoing — dep pins in package.json at HEAD 8e5093c</span><span class="finding-duration">Continuous</span>              <h3>F3 &mdash; 14 known CVEs across 6 direct runtime deps — `ws` (5 CVEs) is the core WebSocket library for a WebSocket-based client</h3>
+              <div class="action-hint warn">If running Baileys in production, pin dep versions with `npm audit fix` or overrides; check upstream `ws` release notes for the 5 GHSAs; consider blocking `@hapi/boom` 9.x upgrade path since that major is EOL.</div>
+            </div>
+          </summary>
+          <div class="finding-body">
+            <p>Running Baileys&#39; package.json through osv.dev produces 14 CVE records across 6 runtime dependencies at their pinned versions. The distribution: `ws` (^8.13.0) has 5 vulns, `protobufjs` (^7.2.4) has 4, `request` (^2.88.0 via proto-extract) has 2, `acorn` (^8.15.0 via proto-extract) has 1, `music-metadata` has 1, `@hapi/boom` (^9.1.3, on EOL 9.x major) has 1.</p>
+            <p>The `ws` count matters most. `ws` is the WebSocket library Baileys uses for every connection to WhatsApp Web — it&#39;s the central transport. The 5 GHSAs on `ws` at Baileys&#39; pin include DoS-via-header-size classes and memory-issue classes. Whether any are reachable depends on Baileys&#39; usage patterns, but the cumulative surface is nontrivial on the single library that carries all of Baileys&#39; traffic.</p>
+            <p>The maintainer-side signal is that there&#39;s no `.github/dependabot.yml` present. The GitHub Actions &#39;Dependabot Updates&#39; workflow IS listed as active, which likely means GitHub&#39;s default security-update-only behavior — Dependabot will open PRs for security advisories affecting the current pins but won&#39;t track general dep updates. Compare to freerouting (entry 24) where an explicit dependabot.yml on `gradle` surfaced 5 open dep-bump PRs at scan time. Baileys has 0 open Dependabot-authored PRs at scan — consistent with the no-explicit-config state.</p>
+            <p>Consumer mitigation is straightforward: pin exact versions via `npm install --save-exact`, run `npm audit` regularly, use npm `overrides` to force specific `ws` and `protobufjs` versions. The structural fix is on the maintainer side: add `.github/dependabot.yml` explicitly tracking npm, bump `ws` to a version clearing the 5 GHSAs, replace `@hapi/boom` 9.x with 10.x (actively maintained), and close out F2 to drop the `request` chain.</p>
+            <p><strong>How to fix.</strong> Maintainer-side: add .github/dependabot.yml scoping npm ecosystem to trigger automated dep-bump PRs; prioritize `ws` upgrade to a version clearing the 5 GHSAs; replace `@hapi/boom` 9.x with 10.x; close out F2 (PR #1996) to drop `request`. Consumer-side: npm overrides + audit fix.</p>
+          </div>
+        </details>
+      </div>
+      <div class="finding-card warning">
+        <details>
+          <summary>
+            <div class="finding-header">
+              <span class="tag warning-tag">Warning</span>
+              <span class="status-chip informational">Ongoing</span>
+<span class="finding-date">Since repo creation 2022-01-12</span><span class="finding-duration">Continuous</span>              <h3>F4 &mdash; Zero branch protection + zero rulesets + no CODEOWNERS + 89.5% top-2 maintainer concentration</h3>
+              <div class="action-hint warn">Pin to a specific released version (v7.0.0-rc.9 or v6.7.21); never install from master or github:-form without a SHA pin.</div>
+            </div>
+          </summary>
+          <div class="finding-body">
+            <p>The governance state is straightforward: nothing is configured. `gh api repos/WhiskeySockets/Baileys/branches/master/protection` returns HTTP 404 (no classic branch protection). `gh api repos/WhiskeySockets/Baileys/rulesets` returns zero entries. No CODEOWNERS file at any of the standard locations (root, .github/, docs/, .gitlab/). Community health sits at 50% because CONTRIBUTING, CODE_OF_CONDUCT, and SECURITY.md are all absent.</p>
+            <p>Contributor concentration is high: adiwajshing 71.1% + purpshell 18.4% = 89.5% of top-6 commits. adiwajshing is the original author (the repo&#39;s early commits and `inspired from whatsmeow` references in generics.ts trace back to adiwajshing&#39;s early work); they appear inactive in the recent timeline. purpshell is the named active maintainer — the README explicitly calls him the &#39;current maintainer,&#39; the paid-support channel at purpshell.dev/book routes to him, and the copyright attribution names him. jlucaso1 is a distant-third contributor (45 commits) who appears in recent merge activity. Effectively, the project is single-active-maintainer with one secondary contributor occasionally in the merge pipeline.</p>
+            <p>The attack surface from this combination is: a compromised purpshell account (phishing, credential theft, session hijack) has direct push access to master with no ruleset requiring peer review, and — via the publish-release.yml workflow — can publish to npm under the `baileys` name. The time from malicious push to npm-registry-available is whatever the release workflow takes, typically minutes. Downstream consumers who installed `baileys@latest` or `baileys@^7.0.0-rc.9` would begin pulling the compromised version on their next install or rebuild.</p>
+            <p>The structural fix is a 3-line ruleset edit: add a `pull_request` rule requiring at least 1 approving reviewer, add a CODEOWNERS file naming purpshell + jlucaso1 for core paths, enable classic branch protection as backup. For context on how achievable this is: kamal (entry 18) added Copilot Reviews as a ruleset-enforced review gate; ghostty (entry 16) has a 4-rule ruleset; kanata (entry 23) has a ruleset requiring PR review. Baileys doesn&#39;t — this is a category-wide choice, not a technical limitation.</p>
+            <p><strong>How to fix.</strong> Maintainer-side: add a ruleset on master requiring `pull_request` review with ≥1 approving reviewer; add CODEOWNERS naming purpshell + jlucaso1 for core; enable classic BP as backup; add SECURITY.md naming GitHub&#39;s Report-a-vulnerability UI. Consumer-side: pin `baileys` to a specific semver (not ^range), use npm lockfiles, rebuild downstream containers on known-safe dep graphs.</p>
+          </div>
+        </details>
+      </div>
+      <div class="finding-card warning">
+        <details>
+          <summary>
+            <div class="finding-header">
+              <span class="tag warning-tag">Warning</span>
+              <span class="status-chip informational">Ongoing</span>
+<span class="finding-date">Since 2025-11-21 (last tag) — 150 days</span><span class="finding-duration">Ongoing</span>              <h3>F5 &mdash; 150-day release stall — v7.0.0-rc.9 from 2025-11-21 is `@latest` on npm while master is 5 months ahead</h3>
+              <div class="action-hint warn">If you want master-branch fixes, pin to a commit SHA via `yarn add github:WhiskeySockets/Baileys#SHA`; if you want semver stability, v6.7.21 is the last non-RC stable.</div>
+            </div>
+          </summary>
+          <div class="finding-body">
+            <p>The latest release on any channel is v7.0.0-rc.9 on 2025-11-21 — 150 days before the scan. npm serves this as `@latest` for `npm install baileys`. The last non-RC stable release is v6.7.21 on 2025-11-06, 165 days before scan. Master has been continuously pushed through 2026-04-19 (one day before scan), so the project is clearly active; the gap is in the release-tagging step.</p>
+            <p>v7.0.0 has been in RC for 5 months. The RC cycle moved fast initially (rc.3 → rc.9 in 2.5 months, September through November 2025) and then stopped. There&#39;s no public explanation for the stop. Meanwhile master has accumulated ~5 months of work that doesn&#39;t reach any npm consumer.</p>
+            <p>The practical impact: consumers on `baileys@latest` are using a 5-month-old snapshot. Any fixes merged to master since 2025-11-21 (including a hypothetical PR #1996 replacement, if purpshell&#39;s &#39;own version&#39; ever materializes) aren&#39;t available until a new RC or stable is cut. For a library where one of the scan findings is &#39;community security-fix PR stale-closed&#39; (F2), the fix-to-user latency is compounded: even if a fix DID merge to master, consumers don&#39;t see it until the release cadence resumes.</p>
+            <p>The publish-release.yml workflow appears automated — it&#39;s not a technical blocker. The decision to cut v7.0.0 (or a v7.0.0-rc.10, or a v6.7.22 backport) is a human-process bottleneck on the maintainer. Same structural pattern as wezterm (entry 21, 807-day stall on a single author) and freerouting (entry 24, 373 days with a functioning automated release workflow).</p>
+            <p><strong>How to fix.</strong> Maintainer-side: cut v7.0.0 (or v6.7.22) to push accumulated main-branch work to consumers; the publish-release.yml workflow appears automated — it&#39;s a human-decision bottleneck. Consumer-side: pin to a specific master SHA via `yarn add github:WhiskeySockets/Baileys#SHA` if you need master-branch state.</p>
+          </div>
+        </details>
+      </div>
+      <div class="finding-card warning">
+        <details>
+          <summary>
+            <div class="finding-header">
+              <span class="tag warning-tag">Warning</span>
+              <span class="status-chip informational">Ongoing</span>
+<span class="finding-date">Since 2022-01-12</span><span class="finding-duration">Continuous</span>              <h3>F6 &mdash; No SECURITY.md + 0 advisories in 4 years + documented stale-out of a vulnerability-fix PR (F2) = structural silent-fix posture</h3>
+              <div class="action-hint warn">Researchers finding Baileys-specific vulnerabilities: use GitHub&#39;s Report-a-vulnerability UI, but don&#39;t rely on rapid response — PR #1996&#39;s pattern suggests a 4-5 month cycle to resolution if any.</div>
+            </div>
+          </summary>
+          <div class="finding-body">
+            <p>No SECURITY.md exists in any of the standard locations (root, .github/, docs/). 0 GHSA security advisories have been published against Baileys across its 4-year history. For context, 11 of 11 V1.2 wild-scan catalog entries share this silent-fix pattern — it&#39;s now the dominant community norm for this catalog&#39;s shape — but Baileys provides the clearest single data point about WHY this happens in practice.</p>
+            <p>PR #1996 (covered in F2) is the specific mechanism observable here. An external security researcher identified a real vulnerability class (deprecated-dep CVEs) and offered a tested fix. The maintainer engaged (eventually) with a plan to do it themselves. The PR stale-out-closed. The plan didn&#39;t materialize. Had this PR been merged, it would have been a natural moment to file a GHSA against the fixed-version-range of `request`. That didn&#39;t happen because the fix didn&#39;t happen.</p>
+            <p>The longer-run consequence: researchers who come to the same conclusion in the future have a specific data point about how their contribution is likely to be received. The lowest-friction action for a future researcher is to publicly disclose without filing a PR (since the PR route doesn&#39;t seem to land fixes). That&#39;s a significant upstream shift and it&#39;s the opposite of what a healthy disclosure process looks like.</p>
+            <p>The fix is cheap: a 1-page SECURITY.md naming GitHub&#39;s built-in &#39;Report a vulnerability&#39; UI + expected response window + the commercial-support escalation path (purpshell.dev/book). Plus a follow-through on PR #1996 (merge it, or actually author the replacement). Both are hours of work.</p>
+            <p><strong>How to fix.</strong> Maintainer-side: 1-page SECURITY.md naming the GitHub advisory UI + expected response window + the commercial-support path (purpshell.dev/book) as escalation option. Publish GHSAs when vulns are confirmed. Close out PR #1996-class threads either by merging the community PR or by publishing the &#39;own version&#39; with clear attribution to the researcher.</p>
+          </div>
+        </details>
+      </div>
+      <div class="finding-card info">
+        <details>
+          <summary>
+            <div class="finding-header">
+              <span class="tag info-tag">Info</span>
+              <span class="status-chip informational">Ongoing</span>
+<span class="finding-date">Scanner tooling gap</span><span class="finding-duration">Continuous</span>              <h3>F7 &mdash; Scanner gaps: vendor-keys false-positive on WhatsApp protocol dictionary; harness PR sample returned empty despite 352 merged; README install-pathway detection noise</h3>
+              <div class="action-hint warn">Scanner-calibration notes for V1.2.x backlog.</div>
+            </div>
+          </summary>
+          <div class="finding-body">
+            <p>Three scanner coverage gaps documented for this scan, in order of relevance:</p>
+            <p>(1) Harness PR review sample returned 0 captures despite 352 lifetime merged PRs. The fallback was direct `gh api` queries against the pulls endpoint. The root cause is likely the sampler&#39;s filtering heuristic when the closed-PR stream is dominated by closed-without-merge (observed: ~88% of 50 most-recent closed PRs are closed without merging). The sampler presumably filters for `merged_at != null` on a fixed window; if the window is dominated by unmerged closes, the merged-PR count falls to zero.</p>
+            <p>(2) vendor_keys regex false-positive on `AIzaSyDR5yfaG7OG8sMTUj8kfQEb8T9pN8BM6Lk` at src/WABinary/constants.ts:601. The context is a WhatsApp Web protocol compression dictionary — a JavaScript array of pre-shared short tokens used by the binary format. The Google-API-key regex matches the string by coincidence. Fix: require proximity context (assignment to a variable matching `*_KEY|apiKey|GOOGLE_*`; `process.env.*` reference; URL embedding) rather than string-in-array-literal.</p>
+            <p>(3) install_script_analysis flagged `yarn add github:WhiskeySockets/Baileys` as a master-tracking install pattern; the current root README doesn&#39;t contain that snippet. The harness is likely extracting from a historical README version in tarball metadata or from a separate doc file. Fix: version-check install-snippet inputs against the current README SHA.</p>
+            <p>None of these gaps changed the verdict — Phase 4 used direct gh api fallback for PR analysis, dismissed the vendor_keys FP, and noted the install-snippet FP. All three are V1.2.x calibration items for the scanner, not Baileys defects.</p>
+            <p><strong>How to fix.</strong> Scanner-side: (a) vendor_keys regex should require proximity signal (assignment context, `API_KEY` variable name, URL embedding) rather than array-literal context; (b) PR sampler needs a failure-mode handler when closed-without-merge dominates the stream; (c) install_script_analysis should version-check its inputs against the current README SHA.</p>
+          </div>
+        </details>
+      </div>
+    </div>
+  </details>
+
+  <details class="collapsible-section">
+    <summary>
+      <div class="section-header">
+        <span class="section-number">02A</span>
+        <h2>Executable File Inventory</h2>
+        <span class="section-status">
+          <span class="pill info">&#x2139; 5 files inventoried</span>
+        </span>
+      </div>
+      <div class="section-subtitle">Baileys ships as an npm library — no standalone executable. Consumers install via `npm install baileys` and import TypeScript/JavaScript modules. A secondary npm package `whatsapp-web-protobuf-extractor` is the build-tool used internally to extract WhatsApp Web&#39;s protobuf definitions; most library consumers don&#39;t use it directly.</div>
+    </summary>
+    <div class="section-body">
+      <p class="p-meta">One card per executable file (hooks, install/uninstall scripts, package lifecycle scripts, CI workflows, Dockerfile, session/event handlers, background processes). Each card documents 7 properties derived from grep &mdash; NOT from the file&rsquo;s self-description &mdash; plus a capability assessment of what the code could do in the worst case.</p>
+
+      <div class="inventory-summary">
+        <div class="inventory-summary-title">Quick scan (5 executables)</div>
+        <ul>
+          <li class="warn"><span class="glyph">⚠</span><span><code>src/Utils/messages-media.ts</code> &mdash; library-module. `extractVideoThumb` spawns ffmpeg via shell; exported `generateThumbnail` is the public API that routes to this.</span></li>
+          <li class="warn"><span class="glyph">⚠</span><span><code>src/Socket/messages-recv.ts</code> &mdash; library-module. Core message-receive handler. The `exec` match is a false-positive on the grep; real call is internal dispatcher.</span></li>
+          <li class="warn"><span class="glyph">⚠</span><span><code>src/WABinary/constants.ts</code> &mdash; library-module. Dictionary of pre-shared binary-protocol tokens.</span></li>
+          <li class="warn"><span class="glyph">⚠</span><span><code>proto-extract/index.js</code> &mdash; build-tool. Build-tool used to refresh WAProto/ from WhatsApp Web&#39;s JavaScript. Only used by maintainers; consumers of the `baileys` package don&#39;t run this.</span></li>
+          <li class="warn"><span class="glyph">⚠</span><span><code>.github/workflows/pr-comment.yml</code> &mdash; ci-workflow. Adds standard welcome/CLA comment on PRs. pull_request_target + no-permissions + tag-pinned 3rd-party combo is known-risky pattern (E9).</span></li>
+        </ul>
+      </div>
+
+      <div class="finding-card warning stack-md">
+        <details>
+          <summary>
+            <div class="finding-header">
+              <span class="tag warning-tag">Executable</span>
+              <span class="inv-verdict warn">⚠ `child_process.exec(cmd)` where cmd is a shell-interpolated template string referencing filesystem paths (lines 125-126). Currently callers use tmpdir-safe paths; pattern is latent risk. — F1</span>
+              <h3><code>src/Utils/messages-media.ts</code></h3>
+            </div>
+          </summary>
+          <div class="finding-body">
+            <div class="finding-meta">
+              <div class="meta-chip"><span class="chip-label">1. Trigger</span><span class="chip-value">Node.js / Bun / Deno</span></div>
+              <div class="meta-chip"><span class="chip-label">2. Reads</span><span class="chip-value">`extractVideoThumb` spawns ffmpeg via shell; exported `generateThumbnail` is the public API that routes to this.</span></div>
+              <div class="meta-chip"><span class="chip-label">3. Writes</span><span class="chip-value">None observed</span></div>
+              <div class="meta-chip"><span class="chip-label">4. Network</span><span class="chip-value">None</span></div>
+              <div class="meta-chip"><span class="chip-label">5. Injection channel</span><span class="chip-value val-warn">Possible via `child_process.exec(cmd)` where cmd is a shell-interpolated template string referencing filesystem paths (lines 125-126). Currently callers use tmpdir-safe paths; pattern is latent risk. — F1</span></div>
+              <div class="meta-chip"><span class="chip-label">6. Secret-leak path</span><span class="chip-value val-good">None</span></div>
+              <div class="meta-chip"><span class="chip-label">7. Privilege</span><span class="chip-value">User-level</span></div>
+            </div>
+            <div class="finding-meta stack-sm">
+              <div class="meta-chip"><span class="chip-label">Relevant lines</span><span class="chip-value">118-135, 125-126</span></div>
+            </div>
+            <div class="sub-finding">
+              <div class="sub-finding-label">Capability assessment</div>
+              <p>library-module. `extractVideoThumb` spawns ffmpeg via shell; exported `generateThumbnail` is the public API that routes to this.</p>
+            </div>
+          </div>
+        </details>
+      </div>
+      <div class="finding-card warning stack-md">
+        <details>
+          <summary>
+            <div class="finding-header">
+              <span class="tag warning-tag">Executable</span>
+              <span class="inv-verdict warn">⚠ `exec(node, false)` at line 1497 — note this is a LOCAL function named exec, NOT child_process.exec (grep FP). Actually processes a WhatsApp binary protocol node.</span>
+              <h3><code>src/Socket/messages-recv.ts</code></h3>
+            </div>
+          </summary>
+          <div class="finding-body">
+            <div class="finding-meta">
+              <div class="meta-chip"><span class="chip-label">1. Trigger</span><span class="chip-value">Node.js / Bun / Deno</span></div>
+              <div class="meta-chip"><span class="chip-label">2. Reads</span><span class="chip-value">Core message-receive handler. The `exec` match is a false-positive on the grep; real call is internal dispatcher.</span></div>
+              <div class="meta-chip"><span class="chip-label">3. Writes</span><span class="chip-value">None observed</span></div>
+              <div class="meta-chip"><span class="chip-label">4. Network</span><span class="chip-value">WhatsApp Web WebSocket</span></div>
+              <div class="meta-chip"><span class="chip-label">5. Injection channel</span><span class="chip-value val-warn">Possible via `exec(node, false)` at line 1497 — note this is a LOCAL function named exec, NOT child_process.exec (grep FP). Actually processes a WhatsApp binary protocol node.</span></div>
+              <div class="meta-chip"><span class="chip-label">6. Secret-leak path</span><span class="chip-value val-good">None</span></div>
+              <div class="meta-chip"><span class="chip-label">7. Privilege</span><span class="chip-value">User-level</span></div>
+            </div>
+            <div class="finding-meta stack-sm">
+              <div class="meta-chip"><span class="chip-label">Relevant lines</span><span class="chip-value">1497</span></div>
+            </div>
+            <div class="sub-finding">
+              <div class="sub-finding-label">Capability assessment</div>
+              <p>library-module. Core message-receive handler. The `exec` match is a false-positive on the grep; real call is internal dispatcher.</p>
+            </div>
+          </div>
+        </details>
+      </div>
+      <div class="finding-card warning stack-md">
+        <details>
+          <summary>
+            <div class="finding-header">
+              <span class="tag warning-tag">Executable</span>
+              <span class="inv-verdict warn">⚠ None actually. Contains WhatsApp protocol compression dictionary that includes an `AIza...` lookalike string — a Google-API-key regex FP — F7/E11.</span>
+              <h3><code>src/WABinary/constants.ts</code></h3>
+            </div>
+          </summary>
+          <div class="finding-body">
+            <div class="finding-meta">
+              <div class="meta-chip"><span class="chip-label">1. Trigger</span><span class="chip-value">Node.js / Bun / Deno</span></div>
+              <div class="meta-chip"><span class="chip-label">2. Reads</span><span class="chip-value">Dictionary of pre-shared binary-protocol tokens.</span></div>
+              <div class="meta-chip"><span class="chip-label">3. Writes</span><span class="chip-value">None observed</span></div>
+              <div class="meta-chip"><span class="chip-label">4. Network</span><span class="chip-value">None</span></div>
+              <div class="meta-chip"><span class="chip-label">5. Injection channel</span><span class="chip-value val-warn">Possible via None actually. Contains WhatsApp protocol compression dictionary that includes an `AIza...` lookalike string — a Google-API-key regex FP — F7/E11.</span></div>
+              <div class="meta-chip"><span class="chip-label">6. Secret-leak path</span><span class="chip-value val-good">None</span></div>
+              <div class="meta-chip"><span class="chip-label">7. Privilege</span><span class="chip-value">User-level</span></div>
+            </div>
+            <div class="finding-meta stack-sm">
+              <div class="meta-chip"><span class="chip-label">Relevant lines</span><span class="chip-value">601</span></div>
+            </div>
+            <div class="sub-finding">
+              <div class="sub-finding-label">Capability assessment</div>
+              <p>library-module. Dictionary of pre-shared binary-protocol tokens.</p>
+            </div>
+          </div>
+        </details>
+      </div>
+      <div class="finding-card warning stack-md">
+        <details>
+          <summary>
+            <div class="finding-header">
+              <span class="tag warning-tag">Executable</span>
+              <span class="inv-verdict warn">⚠ Uses deprecated `request-promise-native` to fetch WhatsApp Web assets; PR #1996 proposed migration to node-fetch — stale-closed (F2).</span>
+              <h3><code>proto-extract/index.js</code></h3>
+            </div>
+          </summary>
+          <div class="finding-body">
+            <div class="finding-meta">
+              <div class="meta-chip"><span class="chip-label">1. Trigger</span><span class="chip-value">Node.js (dev-time)</span></div>
+              <div class="meta-chip"><span class="chip-label">2. Reads</span><span class="chip-value">Build-tool used to refresh WAProto/ from WhatsApp Web&#39;s JavaScript. Only used by maintainers; consumers of the `baileys` package don&#39;t run this.</span></div>
+              <div class="meta-chip"><span class="chip-label">3. Writes</span><span class="chip-value">None observed</span></div>
+              <div class="meta-chip"><span class="chip-label">4. Network</span><span class="chip-value">HTTP to web.whatsapp.com to extract latest protobuf definitions</span></div>
+              <div class="meta-chip"><span class="chip-label">5. Injection channel</span><span class="chip-value val-warn">Possible via Uses deprecated `request-promise-native` to fetch WhatsApp Web assets; PR #1996 proposed migration to node-fetch — stale-closed (F2).</span></div>
+              <div class="meta-chip"><span class="chip-label">6. Secret-leak path</span><span class="chip-value val-good">None</span></div>
+              <div class="meta-chip"><span class="chip-label">7. Privilege</span><span class="chip-value">User-level</span></div>
+            </div>
+            <div class="sub-finding">
+              <div class="sub-finding-label">Capability assessment</div>
+              <p>build-tool. Build-tool used to refresh WAProto/ from WhatsApp Web&#39;s JavaScript. Only used by maintainers; consumers of the `baileys` package don&#39;t run this.</p>
+            </div>
+          </div>
+        </details>
+      </div>
+      <div class="finding-card warning stack-md">
+        <details>
+          <summary>
+            <div class="finding-header">
+              <span class="tag warning-tag">Executable</span>
+              <span class="inv-verdict warn">⚠ `pull_request_target` trigger + no permissions block + 2 tag-pinned actions (not SHA-pinned)</span>
+              <h3><code>.github/workflows/pr-comment.yml</code></h3>
+            </div>
+          </summary>
+          <div class="finding-body">
+            <div class="finding-meta">
+              <div class="meta-chip"><span class="chip-label">1. Trigger</span><span class="chip-value">GitHub Actions</span></div>
+              <div class="meta-chip"><span class="chip-label">2. Reads</span><span class="chip-value">Adds standard welcome/CLA comment on PRs. pull_request_target + no-permissions + tag-pinned 3rd-party combo is known-risky pattern (E9).</span></div>
+              <div class="meta-chip"><span class="chip-label">3. Writes</span><span class="chip-value">None observed</span></div>
+              <div class="meta-chip"><span class="chip-label">4. Network</span><span class="chip-value">Posts PR comments</span></div>
+              <div class="meta-chip"><span class="chip-label">5. Injection channel</span><span class="chip-value val-warn">Possible via `pull_request_target` trigger + no permissions block + 2 tag-pinned actions (not SHA-pinned)</span></div>
+              <div class="meta-chip"><span class="chip-label">6. Secret-leak path</span><span class="chip-value val-good">None</span></div>
+              <div class="meta-chip"><span class="chip-label">7. Privilege</span><span class="chip-value">User-level</span></div>
+            </div>
+            <div class="finding-meta stack-sm">
+              <div class="meta-chip"><span class="chip-label">Relevant lines</span><span class="chip-value">1-53</span></div>
+            </div>
+            <div class="sub-finding">
+              <div class="sub-finding-label">Capability assessment</div>
+              <p>ci-workflow. Adds standard welcome/CLA comment on PRs. pull_request_target + no-permissions + tag-pinned 3rd-party combo is known-risky pattern (E9).</p>
+            </div>
+          </div>
+        </details>
+      </div>
+
+      <p class="p-meta">Install path: `npm install baileys` (primary). Baileys pulls its own dep graph including `ws` (5 CVEs, F3) as the core WebSocket library. Consumer imports: `import makeWASocket from &#39;baileys&#39;` → `makeWASocket({auth, logger})` → connects to WhatsApp Web with consumer&#39;s account state. See F0 for ToS-violation + account-ban risk inherent to this flow.</p>
+    </div>
+  </details>
+
+  <details class="collapsible-section">
+    <summary>
+      <div class="section-header">
+        <span class="section-number">03</span>
+        <h2>Suspicious Code Changes</h2>
+        <span class="section-status">
+          <span class="pill amber">&#x26A0; 4 PRs flagged</span>
+          <span class="pill muted">6 sampled</span>
+        </span>
+      </div>
+      <div class="section-subtitle">Baileys PR review analysis: harness auto-sample returned 0 despite 352 lifetime merges (F7/E8 harness gap). Phase 4 fell back to direct gh api queries. Pattern on 50 most-recent closed PRs: ~12% merge rate, ~88% closed-without-merge — most community PRs are either closed by maintainer review or by stale-bot after 28+ days inactivity. Few PRs carry APPROVED formal-review decisions (review_decision is frequently null on even merged PRs). 6 security-keyword-flagged PRs were identified: #873 (axios), #874 (sharp), #902 (auth-utils), #1996 (Vulnerability Fixes — F2), #2153 (auth-utils memory leak), #2429 (docs auth, open-stale).</div>
+    </summary>
+    <div class="section-body">
+    <div class="pr-table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>PR</th><th>What it did</th><th>Submitted by</th>
+            <th>Merged by</th><th>Reviewed?</th><th>Concern</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><a href="https://github.com/WhiskeySockets/Baileys/pull/1996">#1996</a></td>
+            <td>Vulnerability Fixes — replace deprecated `request`/`request-promise-*` with `node-fetch`+`form-data` (KaivalyaGauns)</td>
+            <td class="td-person">KaivalyaGauns</td>
+            <td class="td-person">[STALE-CLOSED]</td>
+            <td class="td-reviewed-no">purpshell comment 2026-01-08: &#39;We should make our own version of this PR. Opening an issue in its stead.&#39;</td>
+            <td class="td-concern">Vulnerability-fix PR stale-closed after 148 days; &#39;own version&#39; never merged; `request` still in master — F2</td>
+          </tr>
+          <tr>
+            <td><a href="https://github.com/WhiskeySockets/Baileys/pull/2443">#2443</a></td>
+            <td>fix: respect caller-provided waveform for PTT audio messages (AshishKumarD)</td>
+            <td class="td-person">AshishKumarD</td>
+            <td class="td-person">(auto-merge null merger)</td>
+            <td class="td-reviewed-no">review_decision: null</td>
+            <td class="td-concern">Sample merged PR — no APPROVED decision visible</td>
+          </tr>
+          <tr>
+            <td><a href="https://github.com/WhiskeySockets/Baileys/pull/2373">#2373</a></td>
+            <td>Fix ack handling (jlucaso1)</td>
+            <td class="td-person">jlucaso1</td>
+            <td class="td-person">(auto-merge null merger)</td>
+            <td class="td-reviewed-no">review_decision: null</td>
+            <td class="td-concern">Core-contributor self-merge without formal review</td>
+          </tr>
+          <tr>
+            <td><a href="https://github.com/WhiskeySockets/Baileys/pull/873">#873</a></td>
+            <td>Fix: axios vulnerability (analyzing, don&#39;t merge) — external researcher</td>
+            <td class="td-person">external-contrib</td>
+            <td class="td-person">[CLOSED-UNMERGED]</td>
+            <td class="td-reviewed-no">Maintainer closed — &#39;analyzing, don&#39;t merge&#39;</td>
+            <td class="td-concern">Security-flagged closed-unmerged</td>
+          </tr>
+          <tr>
+            <td><a href="https://github.com/WhiskeySockets/Baileys/pull/874">#874</a></td>
+            <td>Fix: sharp vulnerability in libwebp dependency (analyzing, don&#39;t merge)</td>
+            <td class="td-person">external-contrib</td>
+            <td class="td-person">[CLOSED-UNMERGED]</td>
+            <td class="td-reviewed-no">Same pattern as #873</td>
+            <td class="td-concern">Security-flagged closed-unmerged</td>
+          </tr>
+          <tr>
+            <td><a href="https://github.com/WhiskeySockets/Baileys/pull/2429">#2429</a></td>
+            <td>docs(auth): document custom auth state requirements</td>
+            <td class="td-person">external-contrib</td>
+            <td class="td-person">[OPEN-STALE]</td>
+            <td class="td-reviewed-no">Stale-labeled</td>
+            <td class="td-concern">Security-keyword PR drifting toward stale-bot closure (auth = keyword match)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    </div>
+  </details>
+
+  <details class="collapsible-section">
+    <summary>
+      <div class="section-header">
+        <span class="section-number">04</span>
+        <h2>Timeline</h2>
+        <span class="section-status">
+          <span class="pill red">4 concerning</span>
+          <span class="pill amber">6 neutral</span>
+          <span class="pill green">1 good</span>
+        </span>
+      </div>
+      <div class="section-subtitle">Baileys lifecycle — 4-year project with adiwajshing handoff to purpshell; recent timeline dominated by v7.0.0 RC cycle + community security-fix PRs being closed-unmerged or stale-closed.</div>
+    </summary>
+    <div class="section-body">
+    <div class="timeline">
+      <div class="tl-item neutral">
+        <div class="tl-date">2022-01-12 <span class="tl-severity-label">Repo created (adiwajshing)</span></div>
+        <div class="tl-desc">Original creator</div>
+      </div>
+      <div class="tl-item bad">
+        <div class="tl-date">2024-06-14 <span class="tl-severity-label">PR #873 (axios vuln) closed</span></div>
+        <div class="tl-desc">External sec-fix closed</div>
+      </div>
+      <div class="tl-item bad">
+        <div class="tl-date">2024-06-14 <span class="tl-severity-label">PR #874 (sharp vuln) closed</span></div>
+        <div class="tl-desc">External sec-fix closed</div>
+      </div>
+      <div class="tl-item neutral">
+        <div class="tl-date">2025-09-14 <span class="tl-severity-label">v7.0.0-rc.3 released</span></div>
+        <div class="tl-desc">v7 RC cycle begins</div>
+      </div>
+      <div class="tl-item neutral">
+        <div class="tl-date">2025-10-30 <span class="tl-severity-label">PR #1996 (Vuln Fixes) filed</span></div>
+        <div class="tl-desc">KaivalyaGauns remove `request`</div>
+      </div>
+      <div class="tl-item neutral">
+        <div class="tl-date">2025-11-06 <span class="tl-severity-label">v6.7.21 stable released</span></div>
+        <div class="tl-desc">Last non-RC release</div>
+      </div>
+      <div class="tl-item neutral">
+        <div class="tl-date">2025-11-21 <span class="tl-severity-label">v7.0.0-rc.9 released</span></div>
+        <div class="tl-desc">Latest; 150d before scan</div>
+      </div>
+      <div class="tl-item bad">
+        <div class="tl-date">2026-01-08 <span class="tl-severity-label">purpshell: &#39;our own version&#39;</span></div>
+        <div class="tl-desc">Not fulfilled in 102 days</div>
+      </div>
+      <div class="tl-item bad">
+        <div class="tl-date">2026-03-26 <span class="tl-severity-label">PR #1996 stale-closed</span></div>
+        <div class="tl-desc">148 days; no replacement</div>
+      </div>
+      <div class="tl-item good">
+        <div class="tl-date">2026-04-19 <span class="tl-severity-label">Last push to master</span></div>
+        <div class="tl-desc">Main still active</div>
+      </div>
+      <div class="tl-item neutral">
+        <div class="tl-date">2026-04-20 <span class="tl-severity-label">Scan date</span></div>
+        <div class="tl-desc">V1.2 wild scan entry 26</div>
+      </div>
+    </div>
+    </div>
+  </details>
+
+  <details class="collapsible-section">
+    <summary>
+      <div class="section-header">
+        <span class="section-number">05</span>
+        <h2>Repo Vitals</h2>
+        <span class="section-status">
+          <span class="pill info">39 metrics</span>
+          <span class="pill muted">Reference only</span>
+        </span>
+      </div>
+      <div class="section-subtitle">
+        Raw numbers backing everything above &mdash; open if you want to verify the specific numbers cited in findings.
+      </div>
+    </summary>
+    <div class="section-body">
+    <div class="vitals-grid">
+      <div class="vital-cell">
+        <div class="vital-label">Stars</div>
+        <div class="vital-value">9,034</div>
+        <div class="vital-note">None</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Open issues</div>
+        <div class="vital-value">313</div>
+        <div class="vital-note">0 security-tagged</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Open PRs</div>
+        <div class="vital-value">100+</div>
+        <div class="vital-note">1 `Stale`-labeled (#2429 docs auth); many community PRs stale out</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Primary language</div>
+        <div class="vital-value">JavaScript/TypeScript</div>
+        <div class="vital-note">None</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">License</div>
+        <div class="vital-value">MIT</div>
+        <div class="vital-note">Code license; ToS-violation risk is separate from license</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Created</div>
+        <div class="vital-value">2022-01-12</div>
+        <div class="vital-note">~4 years</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Last pushed</div>
+        <div class="vital-value">2026-04-19</div>
+        <div class="vital-note">Day before scan</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Default branch</div>
+        <div class="vital-value">master</div>
+        <div class="vital-note">None</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Repo size</div>
+        <div class="vital-value">~231 MB</div>
+        <div class="vital-note">None</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Total contributors</div>
+        <div class="vital-value">100</div>
+        <div class="vital-note">None</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Top contributor</div>
+        <div class="vital-value">adiwajshing 71.1%</div>
+        <div class="vital-note">Original author, now inactive</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Active maintainer</div>
+        <div class="vital-value">purpshell (18.4%)</div>
+        <div class="vital-note">Named in README; paid-support flow</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Top-2 concentration</div>
+        <div class="vital-value">89.5%</div>
+        <div class="vital-note">None</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Solo-maintainer flag</div>
+        <div class="vital-value">FALSE</div>
+        <div class="vital-note">71.1% &lt; 80% threshold</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Formal releases</div>
+        <div class="vital-value">42</div>
+        <div class="vital-note">Mix of stable + rc</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Latest release</div>
+        <div class="vital-value">v7.0.0-rc.9 (2025-11-21)</div>
+        <div class="vital-note">150 days before scan — F5</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Latest stable</div>
+        <div class="vital-value">v6.7.21 (2025-11-06)</div>
+        <div class="vital-note">165 days before scan</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Classic branch protection</div>
+        <div class="vital-value">OFF (HTTP 404)</div>
+        <div class="vital-note">None</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Rulesets</div>
+        <div class="vital-value">0</div>
+        <div class="vital-note">No rulesets — F4</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Rules on default branch</div>
+        <div class="vital-value">0</div>
+        <div class="vital-note">None</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">CODEOWNERS</div>
+        <div class="vital-value">Absent</div>
+        <div class="vital-note">None</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">SECURITY.md</div>
+        <div class="vital-value">Absent</div>
+        <div class="vital-note">4 years; F6</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">CONTRIBUTING</div>
+        <div class="vital-value">Absent</div>
+        <div class="vital-note">None</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">CODE_OF_CONDUCT</div>
+        <div class="vital-value">Absent</div>
+        <div class="vital-note">None</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Community health</div>
+        <div class="vital-value">50%</div>
+        <div class="vital-note">Median V1.2 catalog</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Workflows</div>
+        <div class="vital-value">12</div>
+        <div class="vital-note">Incl. Copilot code review + pr-comment.yml (pull_request_target)</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">pull_request_target usage</div>
+        <div class="vital-value">1</div>
+        <div class="vital-note">pr-comment.yml — E9</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">SHA-pinned actions</div>
+        <div class="vital-value">0</div>
+        <div class="vital-note">Across 9 workflow files</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Tag-pinned actions</div>
+        <div class="vital-value">25</div>
+        <div class="vital-note">None</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Dependabot config (.yml)</div>
+        <div class="vital-value">Absent</div>
+        <div class="vital-note">Workflow active in default mode</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Runtime dep CVEs</div>
+        <div class="vital-value">14 (across 6 packages)</div>
+        <div class="vital-note">F3 (ws × 5, protobufjs × 4, request × 2)</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">PR review rate (harness sample)</div>
+        <div class="vital-value">N/A (sample empty)</div>
+        <div class="vital-note">Harness gap — E8</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">PR merge rate (direct query, ~50 recent)</div>
+        <div class="vital-value">~12%</div>
+        <div class="vital-note">Most closed PRs are closed-WITHOUT-merge</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Total merged PRs lifetime</div>
+        <div class="vital-value">352</div>
+        <div class="vital-note">None</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Published security advisories</div>
+        <div class="vital-value">0</div>
+        <div class="vital-note">4 years; 11/11 V1.2 silent-fix pattern</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Flagged security PRs (closed)</div>
+        <div class="vital-value">6</div>
+        <div class="vital-note">Incl. #1996 Vulnerability Fixes stale-closed — F2</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Documented disclaimer</div>
+        <div class="vital-value">README lines 32-38</div>
+        <div class="vital-note">Explicit ToS-risk acknowledgement — F0</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">OSSF Scorecard</div>
+        <div class="vital-value">Not indexed</div>
+        <div class="vital-note">None</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Primary distribution</div>
+        <div class="vital-value">npm: `baileys` v7.0.0-rc.9 + `whatsapp-web-protobuf-extractor` v1.0.0</div>
+        <div class="vital-note">Both verified on npm registry</div>
+      </div>
+    </div>
+    </div>
+  </details>
+
+  <details class="collapsible-section">
+    <summary>
+      <div class="section-header">
+        <span class="section-number">06</span>
+        <h2>Investigation Coverage</h2>
+        <span class="section-status">
+          <span class="pill amber">7 gaps noted</span>
+        </span>
+      </div>
+      <div class="section-subtitle">Phase 1 harness coverage with 7 documented gaps. Most significant: empty PR review sample despite 352 lifetime merges (F7/E8), worked around via direct gh api queries.</div>
+    </summary>
+    <div class="section-body">
+    <div class="vitals-grid">
+      <div class="vital-cell">
+        <div class="vital-label">Harness Phase 1 end-to-end</div>
+        <div class="vital-value">✅ Complete</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">`gh api` rate limit</div>
+        <div class="vital-value">✅ Well under limit</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Tarball extraction + local grep</div>
+        <div class="vital-value">✅ Scanned</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">OSSF Scorecard</div>
+        <div class="vital-value">⚠ Not indexed</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Dependabot alerts</div>
+        <div class="vital-value">⚠ Admin scope (403); no .github/dependabot.yml</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">osv.dev dependency queries</div>
+        <div class="vital-value">✅ 28 queries across runtime+dev — 14 CVEs surfaced on runtime deps (F3)</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">PR review sample</div>
+        <div class="vital-value">✗ **Empty sample** (0 of 352 merged lifetime captured) — harness gap (F7 / E8). Direct gh api analysis: ~12% merge rate on recent closed.</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Dependencies manifest detection</div>
+        <div class="vital-value">✅ 5 manifests (package.json x2, yarn.lock x2, package-lock.json) — includes proto-extract/ inner package</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Distribution channels inventory</div>
+        <div class="vital-value">✅ 2 channels both verified on npm registry (baileys + whatsapp-web-protobuf-extractor)</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Dangerous-primitives grep (15 families)</div>
+        <div class="vital-value">⚠ 2 exec hits (1 latent — F1 ffmpeg interpolation), 2 deserialization (libsignal safe), 14 network (self-documentation), 1 secrets (WAProto token constant — benign), 1 vendor_keys (WhatsApp dictionary entry — FP, F7/E11), 1 weak_crypto (md5 for version hash — non-crypto use)</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Workflows</div>
+        <div class="vital-value">✅ 12 detected (9 with content); 1 pull_request_target (pr-comment.yml); 0 SHA-pinned of 25 tag-pinned</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">AI-governance tooling</div>
+        <div class="vital-value">✅ Copilot code review workflow active (dynamic; GitHub AI review of PRs)</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Gitleaks</div>
+        <div class="vital-value">⊗ Not available on this scanner host</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">README paste-scan</div>
+        <div class="vital-value">✅ No suspicious paste-from-command blocks</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Prompt-injection scan on agent files</div>
+        <div class="vital-value">⊘ N/A — no AGENTS.md or copilot-instructions.md found</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Tarball extraction</div>
+        <div class="vital-value">✅ 170 files</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">osv.dev</div>
+        <div class="vital-value">ℹ </div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Secrets-in-history (gitleaks)</div>
+        <div class="vital-value">⚠ gitleaks not installed</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">API rate budget</div>
+        <div class="vital-value">✅ 4946/5000 remaining</div>
+      </div>
+    </div>
+
+    <div class="finding-card info stack-sm">
+      <div class="finding-header">
+        <span class="tag info-tag">Gap</span>
+        <h3>Harness PR review sample returned 0 captures despite 352 merged PRs lifetime — likely a filtering or paging issue when closed-without-merge dominates the closed-PR stream (88% of recent 50). Phase 4 fell back to direct gh api PR analysis.</h3>
+      </div>
+    </div>
+    <div class="finding-card info stack-sm">
+      <div class="finding-header">
+        <span class="tag info-tag">Gap</span>
+        <h3>vendor_keys regex matched `AIza...` pattern in WhatsApp protocol compression dictionary (src/WABinary/constants.ts:601) — a false positive; context is a pre-shared token array, not an active API key.</h3>
+      </div>
+    </div>
+    <div class="finding-card info stack-sm">
+      <div class="finding-header">
+        <span class="tag info-tag">Gap</span>
+        <h3>install_script_analysis flagged `yarn add github:WhiskeySockets/Baileys` as a master-tracking install pattern; the current root README does not contain this snippet (likely pulled from CHANGELOG or historical README content in tarball).</h3>
+      </div>
+    </div>
+    <div class="finding-card info stack-sm">
+      <div class="finding-header">
+        <span class="tag info-tag">Gap</span>
+        <h3>OSSF Scorecard not indexed — governance signals derived from raw gh api data.</h3>
+      </div>
+    </div>
+    <div class="finding-card info stack-sm">
+      <div class="finding-header">
+        <span class="tag info-tag">Gap</span>
+        <h3>Dependabot alerts API required admin scope (403); no .github/dependabot.yml present to inspect ecosystems tracked.</h3>
+      </div>
+    </div>
+    <div class="finding-card info stack-sm">
+      <div class="finding-header">
+        <span class="tag info-tag">Gap</span>
+        <h3>Gitleaks secret-scanning not available on this scanner host.</h3>
+      </div>
+    </div>
+    <div class="finding-card info stack-sm">
+      <div class="finding-header">
+        <span class="tag info-tag">Gap</span>
+        <h3>Q4 signal `q4_has_critical_on_default_path` doesn&#39;t auto-fire from reverse-engineered-API-library category signals — Phase 4 authored the override (signal_vocabulary_gap). A compute derivation watching for README disclaimers + platform-operator-API install paths would close this signal class.</h3>
+      </div>
+    </div>
+
+    </div>
+  </details>
+
+  <details class="collapsible-section">
+    <summary>
+      <div class="section-header">
+        <span class="section-number">07</span>
+        <h2>Evidence Appendix</h2>
+        <span class="section-status">
+          <span class="pill info">11 facts</span>
+          <span class="pill amber">3 &#9733; priority</span>
+        </span>
+      </div>
+      <div class="section-subtitle">
+        11 command-backed claims. <span class="emph">Skip ahead to items marked &#9733; START HERE</span> &mdash; those are the most consequential for the verdict.
+      </div>
+      <div class="section-action info">
+        <span class="lbl">Your action</span>
+        Use this section if you want to verify a claim yourself. Each entry shows the exact command (copy-paste into a terminal with <code>gh</code> authenticated) and the expected result.
+      </div>
+    </summary>
+    <div class="section-body">
+    <p class="p-meta">Each major claim is backed by a command and an observed result. Inferences are marked as such. The <span class="priority-flag inline">&#9733; Start here</span> items at the top are the most consequential evidence.</p>
+
+    <div class="evidence-group-label warns">&#9733; Priority evidence (read first)</div>
+    <div class="finding-card info evidence-priority stack-md">
+      <div class="finding-header">
+        <span class="tag info-tag">Evidence 1</span>
+        <span class="priority-flag">&#9733; Start here</span>
+        <h3>Baileys is explicitly a reverse-engineered, unofficial WhatsApp Web library. The GitHub topic list includes `reverse-engineering`. The README carries a CAUTION-flagged disclaimer: &#39;This project is not affiliated, associated, authorized, endorsed by, or in any way officially connected with WhatsApp&#39; + &#39;The maintainers of Baileys do not in any way condone the use of this application in practices that violate the Terms of Service of WhatsApp.&#39; Consumer who uses Baileys is attaching their WhatsApp account to an unofficial client.</h3>
+      </div>
+      <div class="finding-body">
+        <div class="evidence-row">
+          <div class="evidence-label">Command</div>
+          <pre class="evidence-pre">gh api repos/WhiskeySockets/Baileys --jq &#39;.topics&#39;; gh api repos/WhiskeySockets/Baileys/readme | jq -r .content | base64 -d | head -40</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Result observed</div>
+          <pre class="evidence-pre result">topics: [&#39;bun&#39;, &#39;deno&#39;, &#39;nodejs&#39;, &#39;reverse-engineering&#39;, &#39;typescript&#39;, &#39;websockets&#39;, &#39;whatsapp-web&#39;, &#39;ws&#39;]. README lines 32-38 contain the disclaimer quoted above. Copyright: &#39;Copyright (c) 2025 Rajeh Taher/WhiskeySockets&#39; (Rajeh = purpshell, current active maintainer). License: MIT (free to redistribute) — but MIT only governs the code itself; the WhatsApp-ToS risk is inherent to using the code, independent of license.</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Classification</div>
+          <div class="evidence-classification fact">fact</div>
+        </div>
+      </div>
+    </div>
+    <div class="finding-card info evidence-priority stack-md">
+      <div class="finding-header">
+        <span class="tag info-tag">Evidence 3</span>
+        <span class="priority-flag">&#9733; Start here</span>
+        <h3>Security-motivated dep-modernization PR #1996 &#39;Vulnerability Fixes&#39; (by KaivalyaGauns, opened 2025-10-30) was closed unmerged 2026-03-26 via stale-bot after 148 days. The PR replaced the deprecated `request`/`request-promise-core`/`request-promise-native` chain (with known CVEs GHSA-p8p7-x288-28g6 SSRF + GHSA-7xfp-9c55-5vqj credential leak) with `node-fetch` + `form-data`. Maintainer purpshell commented 2026-01-08: &#39;We should make our own version of this PR. Opening an issue in its stead.&#39; As of scan date, master still ships `request` as a runtime dep in proto-extract/.</h3>
+      </div>
+      <div class="finding-body">
+        <div class="evidence-row">
+          <div class="evidence-label">Command</div>
+          <pre class="evidence-pre">gh api repos/WhiskeySockets/Baileys/pulls/1996/files; gh api repos/WhiskeySockets/Baileys/issues/1996/comments</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Result observed</div>
+          <pre class="evidence-pre result">PR #1996 modifies: package.json (+form-data), proto-extract/index.js (switch from request-promise-native to node-fetch + form-data), proto-extract/package-lock.json + package.json (remove request + request-promise-core + request-promise-native, add node-fetch 2.7.0 + form-data 4.0.4), yarn.lock (large diff). Comments timeline: opened 2025-10-30 by KaivalyaGauns; stale bot warnings 2025-12-06 and 2025-12-27; vinikjkkj asked &#39;any updates?&#39; 2025-12-12; purpshell &#39;We should make our own version of this PR. Opening an issue in its stead&#39; 2026-01-08; two more stale warnings; closed 2026-03-26 by stale-bot. No replacement PR was merged — current master proto-extract/package.json still contains `request`/`request-promise-core`/`request-promise-native` (confirmed in Phase 1 harness dependency inventory).</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Classification</div>
+          <div class="evidence-classification fact">fact</div>
+        </div>
+      </div>
+    </div>
+    <div class="finding-card info evidence-priority stack-md">
+      <div class="finding-header">
+        <span class="tag info-tag">Evidence 5</span>
+        <span class="priority-flag">&#9733; Start here</span>
+        <h3>Zero governance gates: classic branch protection HTTP 404, 0 rulesets, 0 rules on default branch, no CODEOWNERS, no SECURITY.md, no CONTRIBUTING, no CODE_OF_CONDUCT. community health_percentage=50%. Top-2 maintainer concentration: adiwajshing 1166 commits (71.1%) + purpshell 302 (18.4%) = 89.5% — concentrated but not solo. adiwajshing (original author) appears inactive in recent timeline; purpshell is the current active maintainer (README copyright &#39;Rajeh Taher/WhiskeySockets&#39; = purpshell).</h3>
+      </div>
+      <div class="finding-body">
+        <div class="evidence-row">
+          <div class="evidence-label">Command</div>
+          <pre class="evidence-pre">gh api repos/WhiskeySockets/Baileys/branches/master/protection; gh api repos/WhiskeySockets/Baileys/rulesets; gh api repos/WhiskeySockets/Baileys/community/profile; gh api repos/WhiskeySockets/Baileys/contributors?per_page=6</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Result observed</div>
+          <pre class="evidence-pre result">classic: 404. rulesets.count: 0. rules_on_default.count: 0. CODEOWNERS: absent (checked root, .github/, docs/). community_profile: {health_percentage: 50, has_code_of_conduct: false, has_contributing: false, has_security_policy: false}. Top-6 contributors: adiwajshing (1166), purpshell (302), github-actions[bot] (52), jlucaso1 (45), canove (44), edgardmessias (30). total_contributor_count: 100. adiwajshing is listed but the original creator (&#39;inspired from whatsmeow&#39; comments show lineage); purpshell is the current active maintainer (README explicitly names him, has paid-support channel at purpshell.dev/book).</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Classification</div>
+          <div class="evidence-classification fact">fact</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="evidence-group-label context">Other evidence supporting findings</div>
+    <div class="finding-card info stack-md">
+      <div class="finding-header">
+        <span class="tag info-tag">Evidence 2</span>
+        <h3>Command-injection pattern in extractVideoThumb: `cmd = \`ffmpeg -ss ${time} -i ${path} -y -vf scale=${size.width}:-1 -vframes 1 -f image2 ${destPath}\`` followed by `exec(cmd, err =&gt; {...})` at src/Utils/messages-media.ts lines 125-126. Current callers use tmpdir+randomID-derived paths (safe), but the pattern itself uses `child_process.exec` with string interpolation — any future caller (or consumer using the exported generateThumbnail API) that passes external path strings would expose shell-injection via filename metacharacters.</h3>
+      </div>
+      <div class="finding-body">
+        <div class="evidence-row">
+          <div class="evidence-label">Command</div>
+          <pre class="evidence-pre">gh api repos/WhiskeySockets/Baileys/contents/src/Utils/messages-media.ts | jq -r .content | base64 -d | sed -n &#39;115,135p&#39;</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Result observed</div>
+          <pre class="evidence-pre result">Line 118: `const extractVideoThumb = async (path: string, destPath: string, time: string, size: {width, height})`. Line 125: `const cmd = \`ffmpeg -ss ${time} -i ${path} -y -vf scale=${size.width}:-1 -vframes 1 -f image2 ${destPath}\``. Line 126: `exec(cmd, err =&gt; {...})`. Caller (src/Utils/messages.ts:254-259) uses `originalFilePath` from encryptedStream (which sets it to `join(tmpdir(), mediaType + generateMessageIDV2() + &#39;-original&#39;)` — safe — and `imgFilename` from `join(tmpdir(), generateMessageIDV2() + &#39;.jpg&#39;)` — safe). generateMessageIDV2 returns `&#39;3EB0&#39; + hex` — no metacharacters. Current risk is latent, not active. BUT the `extractVideoThumb`-style string-interpolation-then-exec pattern is the anti-pattern; the safer form is `spawn(&#39;ffmpeg&#39;, [...args])` which doesn&#39;t touch a shell at all.</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Classification</div>
+          <div class="evidence-classification fact">fact</div>
+        </div>
+      </div>
+    </div>
+    <div class="finding-card info stack-md">
+      <div class="finding-header">
+        <span class="tag info-tag">Evidence 4</span>
+        <h3>Runtime-dep CVE surface: 14 known CVEs across 6 direct dependencies: ws × 5 (core WebSocket library for this WhatsApp-Web client), protobufjs × 4, request × 2 (deprecated), acorn × 1 (in proto-extract), music-metadata × 1, @hapi/boom × 1 (on EOL 9.x line). No `.github/dependabot.yml` present; Dependabot Updates workflow shows active in GitHub Actions but no explicit ecosystem tracking config.</h3>
+      </div>
+      <div class="finding-body">
+        <div class="evidence-row">
+          <div class="evidence-label">Command</div>
+          <pre class="evidence-pre">cat proto-extract/package.json package.json; for p in ws protobufjs request acorn music-metadata @hapi/boom; do curl -s https://api.osv.dev/v1/query -d &#34;{\&#34;package\&#34;:{\&#34;name\&#34;:\&#34;$p\&#34;,\&#34;ecosystem\&#34;:\&#34;npm\&#34;}}&#34;; done</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Result observed</div>
+          <pre class="evidence-pre result">Per-package OSV counts at pinned versions: ws (^8.13.0) 5 vulns: GHSA-2mhh-w6q8-5hxw (DoS on arbitrary headers), GHSA-3h5v-q93c-6h6q, GHSA-5v72-xg48-5rpm, +2 more. protobufjs (^7.2.4): 4 vulns including GHSA-762f-c2wg-m8c8 (proto parser prototype pollution), GHSA-g954-5hwp-pp24, GHSA-h755-8qp9-cq85. request (^2.88.0 via proto-extract): 2 vulns — GHSA-p8p7-x288-28g6 (SSRF redirect to internal), GHSA-7xfp-9c55-5vqj (tls-insecure cert). acorn (^8.15.0 via proto-extract): GHSA-6chw-6frg-f759 (ReDoS). music-metadata (^11.7.0): GHSA-v6c2-xwv6-8xf7. @hapi/boom (^9.1.3): GHSA-2ggq-vfcp-gwhj (on EOL line). Relevance: `ws` is the core connection layer — 5 known CVEs on the primary WebSocket library of a WebSocket-based library is the one that most directly affects consumers.</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Classification</div>
+          <div class="evidence-classification fact">fact</div>
+        </div>
+      </div>
+    </div>
+    <div class="finding-card info stack-md">
+      <div class="finding-header">
+        <span class="tag info-tag">Evidence 6</span>
+        <h3>150-day release stall. Latest stable: v6.7.21 (2025-11-06, 165 days before scan). Latest RC: v7.0.0-rc.9 (2025-11-21, 150 days before scan). Master last pushed 2026-04-19, one day before scan — active development on master, but no release tagging for 150 days. 42 total releases. v7.0.0 breaking changes are staged but not cut.</h3>
+      </div>
+      <div class="finding-body">
+        <div class="evidence-row">
+          <div class="evidence-label">Command</div>
+          <pre class="evidence-pre">gh api &#39;repos/WhiskeySockets/Baileys/releases?per_page=10&#39;</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Result observed</div>
+          <pre class="evidence-pre result">total releases: 42. Recent (newest first): v7.0.0-rc.9 (2025-11-21), v7.0.0-rc.8 (2025-11-19), v7.0.0-rc.7 (2025-11-19), v6.7.21 (2025-11-06), v7.0.0-rc.6 (2025-10-19), v7.0.0-rc.5 (2025-10-02), v7.0.0-rc.4 (2025-09-26), v7.0.0-rc.3 (2025-09-14). Gap from v7.0.0-rc.9 to scan = 150 days. Main activity continues (last push 2026-04-19) — the v7.0.0 cut is staged but postponed. Consumers of the `baileys` npm package get v7.0.0-rc.9 as `@latest` (confirmed via npm registry query in harness).</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Classification</div>
+          <div class="evidence-classification fact">fact</div>
+        </div>
+      </div>
+    </div>
+    <div class="finding-card info stack-md">
+      <div class="finding-header">
+        <span class="tag info-tag">Evidence 7</span>
+        <h3>0 published GHSA security advisories in 4 years of development. Consistent with catalog-wide silent-fix pattern (now 11/11 V1.2 scans). PR #1996 thread documents an explicit case where a security-motivated dep fix was NOT merged and NOT replaced — the &#39;silent fix&#39; norm in this case appears to have been &#39;do not fix publicly&#39; rather than &#39;fix without GHSA.&#39;</h3>
+      </div>
+      <div class="finding-body">
+        <div class="evidence-row">
+          <div class="evidence-label">Command</div>
+          <pre class="evidence-pre">gh api &#39;repos/WhiskeySockets/Baileys/security-advisories&#39;; gh api &#39;repos/WhiskeySockets/Baileys/issues/1996/comments&#39;</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Result observed</div>
+          <pre class="evidence-pre result">security_advisories.count: 0 across 4-year history. PR #1996 comment thread: community contributor filed Vulnerability Fixes PR; maintainer purpshell committed to &#39;make our own version&#39; on 2026-01-08; stale-bot closed it 2026-03-26; no replacement PR is visible in merged history (confirmed via harness dependency inventory showing `request`/`request-promise-*` still in proto-extract/package.json).</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Classification</div>
+          <div class="evidence-classification fact">fact</div>
+        </div>
+      </div>
+    </div>
+    <div class="finding-card info stack-md">
+      <div class="finding-header">
+        <span class="tag info-tag">Evidence 8</span>
+        <h3>PR-review coverage observation: harness sampled 0 PRs despite 352 lifetime merges. Direct API query shows Baileys&#39; closed-PR stream is dominated by closed-WITHOUT-merge (external community PRs being dropped rather than merged/reviewed) — the harness sampling fell on the wrong side of this.</h3>
+      </div>
+      <div class="finding-body">
+        <div class="evidence-row">
+          <div class="evidence-label">Command</div>
+          <pre class="evidence-pre">gh api &#39;repos/WhiskeySockets/Baileys/pulls?state=closed&amp;per_page=50&#39; --jq &#39;[.[] | {merged: (.merged_at != null)}] | group_by(.merged) | map({merged: .[0].merged, count: length})&#39;</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Result observed</div>
+          <pre class="evidence-pre result">50-most-recent closed PRs: ~6 merged (12%), ~44 closed-without-merge (88%). Pattern: most external community PRs are closed by maintainer or by stale-bot rather than merged. Most merged PRs are either (a) `github-actions[bot]` chore updates (WhatsApp Web version bumps), (b) core maintainer self-merges (purpshell, jlucaso1), or (c) a handful of external-contributor merges that received direct maintainer acceptance. Formal-review rate on the 6-merged sample: 0 APPROVED decisions visible (review_decision: null). This is consistent with a high-control maintainer workflow where formal review is bypassed in favor of merge-when-maintainer-agrees.</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Classification</div>
+          <div class="evidence-classification inference">inference — harness-coverage-gap + methodology observation</div>
+        </div>
+      </div>
+    </div>
+    <div class="finding-card info stack-md">
+      <div class="finding-header">
+        <span class="tag info-tag">Evidence 9</span>
+        <h3>Copilot code review workflow is active (dynamic/copilot-pull-request-reviewer), providing AI-assisted review commentary on PRs. 12 total workflows — Build, E2E Tests, Lint, Manual Release, PR Comment, Publish Release, Stale, Test, Update WAProto, Update WhatsApp Version, Copilot review, pages-build-deployment. 1 workflow uses pull_request_target (pr-comment.yml — comments on PRs). 0 SHA-pinned actions across 9 workflow files, 25 tag-pinned.</h3>
+      </div>
+      <div class="finding-body">
+        <div class="evidence-row">
+          <div class="evidence-label">Command</div>
+          <pre class="evidence-pre">gh api repos/WhiskeySockets/Baileys/actions/workflows --jq &#39;.workflows[] | {name, state}&#39;; gh api repos/WhiskeySockets/Baileys/contents/.github/workflows/pr-comment.yml | jq -r .content | base64 -d</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Result observed</div>
+          <pre class="evidence-pre result">12 workflows total. pr-comment.yml: 53 lines, `pull_request_target` trigger, no permissions block, 2 tag-pinned actions. The pull_request_target+no-permissions-block combo is the known-risky pattern (same class as WLED entry 25 F2 + kamal entry 18 structural pattern). Copilot code review workflow is dynamic/managed (GitHub&#39;s Copilot-PR-review AI) — different from QuickLook&#39;s Copilot SWE agent (which writes PRs).</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Classification</div>
+          <div class="evidence-classification fact">fact</div>
+        </div>
+      </div>
+    </div>
+    <div class="finding-card info stack-md">
+      <div class="finding-header">
+        <span class="tag info-tag">Evidence 10</span>
+        <h3>README install pathway: two npm packages published. (1) `baileys` (primary): `npm install baileys` → pulls v7.0.0-rc.9. (2) `whatsapp-web-protobuf-extractor` (internal build tool): `npm install whatsapp-web-protobuf-extractor` → v1.0.0. Both verified on npm registry (harness artifact_verification). Primary install path is clean npm-standard. README ALSO documents legacy `yarn add github:WhiskeySockets/Baileys` form which installs directly from master branch (no version pinning) — the harness install_script_analysis flagged this.</h3>
+      </div>
+      <div class="finding-body">
+        <div class="evidence-row">
+          <div class="evidence-label">Command</div>
+          <pre class="evidence-pre">gh api repos/WhiskeySockets/Baileys/readme | jq -r .content | base64 -d; npm view baileys; npm view whatsapp-web-protobuf-extractor</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Result observed</div>
+          <pre class="evidence-pre result">npm view baileys: name=baileys, version=7.0.0-rc.9, license=MIT, maintainer=purpshell, publishConfig.registry=https://registry.npmjs.org/. Downloads visible via the `baileys` npm listing. The legacy `yarn add github:WhiskeySockets/Baileys` snippet in the harness install_script_analysis is from archived or documentation content (not the current root README, which redirects to baileys.wiki). If a consumer follows the legacy instructions, they install HEAD of master — no version pinning, supply-chain exposure.</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Classification</div>
+          <div class="evidence-classification inference">inference — install-path gap annotation</div>
+        </div>
+      </div>
+    </div>
+    <div class="finding-card info stack-md">
+      <div class="finding-header">
+        <span class="tag info-tag">Evidence 11</span>
+        <h3>Scanner harness produced a false-positive on vendor_keys: `AIzaSyDR5yfaG7OG8sMTUj8kfQEb8T9pN8BM6Lk` at src/WABinary/constants.ts:601 matches the Google API key regex but is actually an entry in WhatsApp Web&#39;s protocol-compression dictionary (a list of pre-shared strings that the binary protocol references by index). Not an exposed secret.</h3>
+      </div>
+      <div class="finding-body">
+        <div class="evidence-row">
+          <div class="evidence-label">Command</div>
+          <pre class="evidence-pre">gh api repos/WhiskeySockets/Baileys/contents/src/WABinary/constants.ts | jq -r .content | base64 -d | sed -n &#39;595,615p&#39;</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Result observed</div>
+          <pre class="evidence-pre result">Line context shows the string in a JavaScript array of short tokens: &#39;690&#39;, &#39;045&#39;, &#39;enc_iv&#39;, &#39;75&#39;, &#39;failure&#39;, &#39;ptt_oot_playback&#39;, &#39;AIzaSyDR5yfaG7OG8sMTUj8kfQEb8T9pN8BM6Lk&#39;, &#39;w&#39;, &#39;048&#39;, &#39;2201&#39;, etc. This is the WhatsApp Web binary protocol&#39;s SINGLE_BYTE_TOKENS or DOUBLE_BYTE_TOKENS dictionary — a pre-shared list used for binary-format compression. The string format matches Google API key regex by coincidence (it&#39;s an arbitrary WhatsApp-chosen dictionary entry, possibly an obfuscated reference). Scanner-side mitigation: the vendor_keys regex should require the string to be in a context that suggests actual key usage (assignment to a variable named `apiKey`, `API_KEY`, `GOOGLE_API_KEY`; `process.env` reference; or URL embedding) rather than string-in-array-context.</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Classification</div>
+          <div class="evidence-classification inference">inference — scanner-coverage-gap annotation</div>
+        </div>
+      </div>
+    </div>
+
+    </div>
+  </details>
+
+  <details class="collapsible-section">
+    <summary>
+      <div class="section-header">
+        <span class="section-number">08</span>
+        <h2>How This Scan Works</h2>
+        <span class="section-status">
+          <span class="pill muted">Methodology reference</span>
+        </span>
+      </div>
+      <div class="section-subtitle">
+        What we checked, what tools we used, and what this scan cannot detect.
+      </div>
+    </summary>
+    <div class="section-body">
+
+    <h3>What this scan is</h3>
+    <p>This is an <strong>LLM-driven security investigation</strong> &mdash; an AI assistant with terminal access used the <a href="https://cli.github.com/" target="_blank" rel="noopener">GitHub CLI</a> and free public APIs to investigate this repo&rsquo;s governance, code patterns, dependencies, and distribution pipeline. It then synthesized its findings into this plain-English report.</p>
+    <p class="p-meta">This is <strong>not</strong> a static analyzer, penetration test, or formal security audit. It is a trust-assessment tool that answers: &ldquo;Should I install this?&rdquo;</p>
+
+    <h3>What we checked</h3>
+    <div class="vitals-grid">
+      <div class="vital-cell">
+        <div class="vital-label">Governance &amp; Trust</div>
+        <div class="vital-note">Branch protection, rulesets, CODEOWNERS, SECURITY.md, community health, maintainer account age &amp; activity, code review rates</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Code Patterns</div>
+        <div class="vital-note">Dangerous primitives (eval, exec, fetch), hardcoded secrets, executable file inventory, install scripts, README paste-blocks</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Supply Chain</div>
+        <div class="vital-note">Dependencies, CI/CD workflows, GitHub Actions SHA-pinning, release pipeline, artifact verification, published-vs-source comparison</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">AI Agent Rules</div>
+        <div class="vital-note">CLAUDE.md, AGENTS.md, .cursorrules, .mcp.json &mdash; files that instruct AI coding assistants. Checked for prompt injection and behavioral manipulation</div>
+      </div>
+    </div>
+
+    <h3>External tools used</h3>
+    <div class="vitals-grid">
+      <div class="vital-cell">
+        <div class="vital-label"><a href="https://securityscorecards.dev/" target="_blank" rel="noopener">OSSF Scorecard</a></div>
+        <div class="vital-note">Independent security rating from the Open Source Security Foundation. Scores 24 practices from 0&ndash;10. Free API, no installation needed.</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label"><a href="https://osv.dev/" target="_blank" rel="noopener">osv.dev</a></div>
+        <div class="vital-note">Google-backed vulnerability database. Used as fallback when GitHub&rsquo;s Dependabot data is not accessible (requires repo admin).</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label"><a href="https://gitleaks.io/" target="_blank" rel="noopener">gitleaks</a> (optional)</div>
+        <div class="vital-note">Scans code history for leaked passwords, API keys, and tokens. Requires installation. If unavailable, this gap is noted in Coverage.</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label"><a href="https://cli.github.com/" target="_blank" rel="noopener">GitHub CLI</a></div>
+        <div class="vital-note">Primary data source. All repo metadata, PR history, workflow files, contributor data, and issue history come from authenticated GitHub API calls.</div>
+      </div>
+    </div>
+
+    <h3>What this scan cannot detect</h3>
+    <ul>
+      <li><strong>Transitive dependency vulnerabilities</strong> &mdash; we check direct dependencies but cannot fully resolve the dependency tree without running the package manager</li>
+      <li><strong>Runtime behavior</strong> &mdash; we see what the code <em>could</em> do, not what it <em>does</em> when running</li>
+      <li><strong>Published artifact tampering</strong> &mdash; we read the source code but cannot verify that what&rsquo;s published to npm/PyPI matches this source exactly</li>
+      <li><strong>Sophisticated backdoors</strong> &mdash; our pattern-matching catches common dangerous primitives but not logic bombs or obfuscated payloads</li>
+      <li><strong>Container image contents</strong> &mdash; we read Dockerfiles but cannot inspect built images for extra layers or embedded secrets</li>
+    </ul>
+    <p class="p-meta">For comprehensive vulnerability scanning, pair this report with tools like <a href="https://semgrep.dev/" target="_blank" rel="noopener">Semgrep</a> (code analysis), <a href="https://www.snyk.io/" target="_blank" rel="noopener">Snyk</a> (dependency scanning), or <a href="https://aquasecurity.github.io/trivy/" target="_blank" rel="noopener">Trivy</a> (container scanning).</p>
+
+    <h3>Scan methodology version</h3>
+    <p class="p-meta">Scanner prompt V2.4 &middot; Operator Guide V0.2 &middot; Validator version V2.5-preview &middot; Validator with XSS checks + verdict-severity coherence &middot; <a href="https://github.com/stefans71/stop-git-std" target="_blank" rel="noopener">stop-git-std</a></p>
+
+    </div>
+  </details>
+
+  <div class="footer">
+    Generated by <a href="https://github.com/stefans71/stop-git-std">stop-git-std</a> deep dive &middot; 2026-04-20 &middot; scanned main @ 8e5093c () &middot; scanner V2.5-preview
+    <br>This report is an automated investigation, not a professional security audit. It may miss issues. If you are making a business decision, consult a security professional.
+  </div>
+
+</div>
+</body>
+</html>

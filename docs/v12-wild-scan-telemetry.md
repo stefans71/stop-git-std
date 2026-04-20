@@ -1,15 +1,15 @@
 # V1.2 Wild-Scan Telemetry — Cross-Scan Analysis
 
-**Scope:** Catalog entries 16–25 (10 V1.2-schema wild scans).
+**Scope:** Catalog entries 16–26 (11 V1.2-schema wild scans).
 **Date:** 2026-04-20.
-**Status:** Living document — update after each new V1.2 wild scan.
+**Status:** Living document — **V13-3 COMPARATOR-CALIBRATION TRIGGER FIRED at n=11** (entry 26 Baileys closes the counting window; the follow-up analysis is now owed per CONSOLIDATION §8 deferred ledger).
 **Related:** [V13-1 override-telemetry analysis](v13-1-override-telemetry-analysis.md) (covered the first 3 scans and drove the V1.2.x signal widening).
 
 This document persists cross-scan patterns that accumulate value over many scans and would otherwise be scattered across per-scan catalog rows and commit messages.
 
 ---
 
-## §1 · Scan roster (entries 16–25)
+## §1 · Scan roster (entries 16–26)
 
 | # | Repo | Shape | Verdict | Overrides | Override detail |
 |---|---|---|---|---|---|
@@ -23,36 +23,38 @@ This document persists cross-scan patterns that accumulate value over many scans
 | 23 | jtroo/kanata | Rust keyboard daemon | Critical | **0** | — |
 | 24 | freerouting/freerouting | Java PCB auto-router | Critical | 1 | Q4 signal_vocabulary_gap (Java deserialization) |
 | 25 | wled/WLED | ESP32 IoT firmware | Critical | 1 | Q4 signal_vocabulary_gap (firmware default-no-auth + CORS wildcard) |
+| 26 | WhiskeySockets/Baileys | Reverse-engineered WhatsApp Web lib | Critical | 1 | Q4 signal_vocabulary_gap (reverse-engineered-API-library ToS risk) |
 
-**Totals**: 10 scans, 8 overrides, 3 zero-override.
+**Totals**: 11 scans, 9 overrides, 3 zero-override. **V13-3 comparator-calibration trigger fires at n=11.**
 
 ---
 
 ## §2 · Override-enum distribution
 
-**8 overrides across 10 scans (80% override-rate at scan level).**
+**9 overrides across 11 scans (82% override-rate at scan level).**
 
 | `override_reason` | Count | % | Scans |
 |---|---|---|---|
-| `signal_vocabulary_gap` | **5** | **62%** | ghostty Q1, kamal Q1, Kronos Q2, freerouting Q4, **WLED Q4** |
-| `harness_coverage_gap` | 2 | 25% | Kronos Q4, browser_terminal Q4 |
-| `threshold_too_strict` | 1 | 13% | Xray-core Q2 |
+| `signal_vocabulary_gap` | **6** | **67%** | ghostty Q1, kamal Q1, Kronos Q2, freerouting Q4, WLED Q4, **Baileys Q4** |
+| `harness_coverage_gap` | 2 | 22% | Kronos Q4, browser_terminal Q4 |
+| `threshold_too_strict` | 1 | 11% | Xray-core Q2 |
 | `missing_qualitative_context` | 0 | 0% | — |
 | `threshold_too_lenient` | 0 | 0% | — |
 | `rubric_literal_vs_intent` | 0 | 0% | — |
 | `other` | 0 | 0% | — |
 
-**Observations:**
+**Observations (n=11):**
 
-- **`signal_vocabulary_gap` is the modal label** at 62% of overrides (up from 57% at n=9). Each new Q4 override has been signal_vocabulary_gap rather than harness_coverage_gap — the harness is correctly detecting the fact-surface (35 ObjectInputStream imports on freerouting; CORS wildcard + no-auth on WLED) but the compute signal vocabulary doesn't roll those facts up to a cell-level judgment.
-- **4 of 7 enum values unexercised** after 10 scans. `missing_qualitative_context` (the pre-V13-1 catchall) hasn't fired once since V13-1 relabeled existing entries — strong signal that the V13-1 split was correct.
-- **Override fires on Q1, Q2, Q4 but not Q3** across the 10 scans. Q3 (disclosure) has been uniformly red/amber from compute and Phase 4 hasn't needed to correct it. Notably, WLED entry 25 had a strong case for Q3 override (documented disclosure-handling failure with 74-day silence on GHSA-2xwq-cxqw-wfv8) but Phase 4 kept Q3 at amber — amber already reflects "unclear/partly" which captures the WLED disclosure pattern adequately.
+- **`signal_vocabulary_gap` is strongly modal** at 67% of overrides (trend: 57% → 62% → 67% across n=9, 10, 11). Every Q4 override since wezterm (entry 21, zero) has fired signal_vocabulary_gap — 4 consecutive scans where Phase 4's default-path-critical judgment lives in a compute-signal category that compute doesn't derive from harness facts.
+- **4 of 7 enum values unexercised** after 11 scans. `missing_qualitative_context` (the pre-V13-1 catchall) hasn't fired once since V13-1 relabeled existing entries — stronger signal at n=11 that the V13-1 split was correct and complete. `threshold_too_lenient`, `rubric_literal_vs_intent`, and `other` remain unused — candidates for V1.3 enum pruning consideration.
+- **Override fires on Q1, Q2, Q4 but not Q3** across all 11 scans. Q3 (disclosure) has been uniformly red/amber from compute and Phase 4 has never corrected it — even in cases with concrete documented disclosure-handling failures (WLED entry 25, Baileys entry 26). This is a consistent data point worth naming: the current Q3 rubric is sensitive enough to read the silent-fix pattern correctly without Phase 4 intervention.
+- **Q4 has become the override hotspot.** 6 of 9 overrides are Q4 (67%). Q1 fires 2, Q2 fires 2, Q3 fires 0. Q4's `q4_has_critical_on_default_path` is a Phase-4-authored bool by driver convention — the concept is right but the signal shape is wrong. Every shape requires a different concrete derivation (pickle hit count for ML, ObjectInputStream for Java, CORS+no-auth for IoT firmware, README-disclaimer+platform-API for reverse-engineered libraries). V1.2.x Priority 1–1b harness-patch candidates address the first three; Baileys adds a fourth compound-signal class.
 
 ---
 
 ## §3 · Zero-override streak
 
-**3 consecutive zero-override scans**: wezterm (21) → QuickLook (22) → kanata (23). Streak broken by freerouting (24), continued-broken by WLED (25).
+**3 consecutive zero-override scans**: wezterm (21) → QuickLook (22) → kanata (23). Streak broken by freerouting (24), continued-broken by WLED (25), continued-broken by Baileys (26). **Current streak of OVERRIDES: 3** (scans 24, 25, 26 all fire Q4 signal_vocabulary_gap).
 
 What the zero-override scans had in common:
 - **wezterm**: Rust terminal emulator, stalled 807-day release cadence, pure-tool threat model
@@ -63,7 +65,9 @@ What the zero-override scans had in common:
 
 **What WLED (25) added (2nd break)**: a **confirmed, specific, remote-exploitable surface** (factory-default webserver has no auth + CORS wildcard + unauthenticated `/reset`) that's invisible to compute because the pattern lives in C++ control-flow (correctPIN gating logic tied to settingsPIN string length), not in a grep-able primitive family. `dangerous_primitives.tls_cors` DID surface the `Access-Control-Allow-Origin: *` hit, but there's no compute derivation that combines `tls_cors_hit + no_auth_primitive_detected + firmware_shape → q4_has_critical_on_default_path=True`.
 
-**Inference (refined at n=10)**: zero-override scans remain possible when compute-signal judgment aligns with Phase 4 judgment; the break happens every time Phase 4 finds a specific critical-on-default-path condition whose identification requires either (a) language-semantic analysis beyond regex (freerouting) or (b) multi-primitive composition + shape context (WLED). Both are V12x-class harness-patch candidates.
+**What Baileys (26) added (3rd break)**: a **category-level ToS-violation risk** that's invisible to compute because the threat lives in WhatsApp's terms-of-service enforcement, not in the library's code. The README's own CAUTION-flagged disclaimer is a strong signal ('not affiliated with WhatsApp… do not condone practices that violate the Terms of Service') but no grep-able primitive captures 'reverse-engineered platform-API library'. This is a distinct pattern from freerouting + WLED — those had grep-able facts that compute couldn't roll up; Baileys has prose-only facts (README disclaimer + topic list `reverse-engineering`) that compute doesn't consider.
+
+**Inference (refined at n=11)**: zero-override scans remain possible when compute-signal judgment aligns with Phase 4 judgment; the break happens every time Phase 4 finds a specific critical-on-default-path condition whose identification requires one of: (a) language-semantic analysis beyond regex (freerouting); (b) multi-primitive composition + shape context (WLED); (c) README/metadata-level disclaimer parsing + topic-based shape classification (Baileys). All three are V12x-class harness-patch candidates but live in different harness layers — (a) in Step A regex, (b) in compute signal derivation, (c) in Step 7.5 README parsing + Step 1a topic analysis.
 
 ---
 
@@ -86,6 +90,16 @@ What the zero-override scans had in common:
 **Scans it would auto-resolve**: WLED Q4.
 
 **Signal-widening proposal**: compute derives `q4_has_critical_on_default_path = True` when `tls_cors.hit_count >= 1` (wildcard Origin/Methods/Headers pattern) AND `auth_bypass.hit_count == 0` (no auth-gate pattern detected) AND shape is `firmware | iot | on-device-webserver`. Shape classification would be a new compute-side input — bootstrappable from README keywords (ESP32, ESP8266, firmware, on-device, LAN webserver) + install-path signals (.bin releases, browser-WebSerial flasher).
+
+### Priority 1c: Reverse-engineered-platform-API shape signal for Q4
+
+**New class observed on Baileys (26)**: README disclaimers acknowledging third-party-client status AND install path terminating at a named platform operator's API (WhatsApp, Discord, Instagram, etc.) AND GitHub topic list containing `reverse-engineering` or `reverse-engineered` → default-path critical (ToS-violation + account-ban risk).
+
+**Scans it would auto-resolve**: Baileys Q4. The shape is distinctive enough that other reverse-engineered-API libraries (whatsmeow in Go, discord.py-self, instagrapi, etc.) would also match.
+
+**Signal-widening proposal**: compute derives `q4_has_critical_on_default_path = True` when README (Step 7.5 output) contains disclaimer phrases matching `(not affiliated|not endorsed|not authorized|reverse.?engineered|unofficial.*client)` AND topic list contains `reverse-engineering` OR the library name references a named platform (whatsapp, discord, instagram, telegram-client, facebook-messenger). This sits in the harness's Step 7.5 README paste-scan extension + Step 1a topic-field read; both already produce the raw data. The missing piece is the compound rule in compute that reads them.
+
+**Open question**: whether 'official third-party clients' (e.g., libraries with vendor partnerships) should be excluded. A possible safeguard: require the disclaimer AND the absence of an `authorized_by` metadata signal — though that's likely out-of-scope for a regex/compute-based approach. V1.3 candidate if the false-positive rate is high; V1.2.x candidate if the shape is rare enough that disclaimer+topic is a strong-enough signal in isolation.
 
 ### Priority 2: Multi-ecosystem Maven/Gradle/Cargo/Gomod parsing
 
@@ -147,7 +161,7 @@ Firing pattern observed:
 
 ### 5.2 · Silent-fix / zero-advisories consistency
 
-**10 of 10 V1.2 wild scans have 0 published GHSA advisories** despite histories ranging from 10 months (Kronos) to 12 years (freerouting) on privileged tools:
+**11 of 11 V1.2 wild scans have 0 published GHSA advisories** despite histories ranging from 10 months (Kronos) to 12 years (freerouting) on privileged tools:
 
 | Scan | Years active | Advisories | Threat surface |
 |---|---|---|---|
@@ -161,12 +175,15 @@ Firing pattern observed:
 | kanata (23) | 4 | 0 | Keyboard interceptor |
 | freerouting (24) | 12 | 0 | Java deserialization surface |
 | WLED (25) | 9 | 0 | ESP32 firmware + on-device webserver |
+| Baileys (26) | 4 | 0 | Reverse-engineered WhatsApp Web client |
 
-**Pattern (n=10)**: even active, widely-used privileged tools uniformly skip GHSA publication. Readings are (a) no security-relevant issues discovered (implausible for this sample), (b) silent-fix-via-release cadence, (c) disclosure stops at maintainer.
+**Pattern (n=11)**: even active, widely-used privileged tools uniformly skip GHSA publication. Readings are (a) no security-relevant issues discovered (implausible for this sample), (b) silent-fix-via-release cadence, (c) disclosure stops at maintainer.
 
-**WLED strengthens reading (c)**: WLED (25) has a **publicly-documented disclosure-handling failure** — issue #5340 shows a researcher had to escalate publicly after 10+ days of maintainer silence on a private GHSA, and once a maintainer responded he said the critical had been 'reported before and fixed' without publishing a GHSA for either the old fix or the new report. That's a specific instance of the silent-fix pattern where the maintainer's framing confirms the pattern is deliberate ('other issues reported are very fairly basic rather than significant discoveries') rather than accidental.
+**11-for-11 is significant**. At n=9, 10 readings (a), (b), (c) were plausible individually. At n=11 with the documented failure modes on WLED (25) + Baileys (26), reading (c) dominates: disclosure cycles don't reach GHSA publication. The specific mechanisms differ — WLED had a permissions misconfiguration on the private advisory UI; Baileys had a community-submitted vulnerability-fix PR (#1996) stale-closed after 148 days with the maintainer's promised 'own version' never materializing — but both show the same end state (no GHSA published for the identified issue).
 
-**Implication for V1.3**: the `community_norms_differ` enum value that DeepSeek preserved as a V1.3 expansion trigger (CONSOLIDATION §5 R3 Item C) hasn't fired — but the silent-fix pattern is NOW the documented community norm for this catalog's shape. WLED's documented process failure (private-advisory permissions misconfigured, maintainer couldn't view own project's advisory) is a sharper version of the pattern worth revisiting whether Q3's red/amber rubric should adjust. Specifically: when a researcher publicly documents disclosure-handling failure on a repo with 0 published advisories, should Q3 escalate from amber to red?
+**WLED + Baileys documented disclosure-handling failures** are two distinct instances of reading (c) at concrete level: when a researcher identifies a real vulnerability class and attempts to route it through the documented or undocumented channels, the process halts before GHSA publication. This is not the same as 'fix silently via next release' — in both cases, the fix itself did NOT land (WLED 0.15.x backport unconfirmed, Baileys `request` still in master).
+
+**Implication for V1.3**: the `community_norms_differ` enum value that DeepSeek preserved as a V1.3 expansion trigger (CONSOLIDATION §5 R3 Item C) hasn't fired — but the silent-fix pattern is now 11/11, documented enough that it IS the community norm for this catalog's shape. Both WLED and Baileys Phase 4 had strong cases for Q3 override (from amber to red) and in both cases Phase 4 declined — the current amber/'partly' framing is considered adequate. V13-3 analysis should consider whether the Q3 rubric language should mention this pattern explicitly.
 
 ### 5.3 · Maintainer concentration taxonomy
 
@@ -206,7 +223,7 @@ Languages catalogued (post-V1.2):
 - **C#**: QuickLook (22)
 - **Java**: freerouting (24)
 - **C++**: WLED (25) — first C++ entry; ESP32 embedded firmware
-- **JS/TS**: browser_terminal extension frontend (part of 20)
+- **TypeScript / JavaScript**: Baileys (26) — first TS entry as primary language; reverse-engineered API library. Also browser_terminal extension frontend (part of 20).
 
 Category diversity:
 - Terminal emulators: ghostty (Zig) + wezterm (Rust) — direct cross-shape comparator pair for V13-3
@@ -219,6 +236,7 @@ Category diversity:
 - EDA / PCB autorouter: freerouting
 - Document conversion: markitdown
 - Embedded IoT firmware: WLED (new — first networked-device-on-home-LAN threat model)
+- Reverse-engineered platform-API library: Baileys (new — first ToS-violation-category threat model; category contains whatsmeow, discord.py-self, etc.)
 
 ---
 
@@ -226,7 +244,9 @@ Category diversity:
 
 **V13-3 trigger**: 11 V1.2 wild scans (per CONSOLIDATION §8 deferred ledger).
 
-**Status**: **10 of 11** complete (entries 16–25). **1 more wild scan** will trigger the 11-scan comparator-calibration analysis.
+**Status**: **11 of 11 — TRIGGER FIRED.** All 11 V1.2 wild scans complete (entries 16–26). The comparator-calibration analysis is now owed per CONSOLIDATION §8.
+
+**V13-3 analysis scope** (from CONSOLIDATION §8 + this telemetry doc): compare all 11 V1.2 scan outputs against equivalent-SHA V2.4 outputs where comparator exists (the Step G pinned entries 12–14); look for cross-shape calibration patterns now that the wild-scan sample has expanded to 11 entries covering 10 language ecosystems (Zig, Python, Ruby, Go, JS/TS, Rust × 2, C#, Java, C++ firmware) across 11 distinct shape categories; evaluate the override-enum distribution (6 signal_vocabulary_gap / 2 harness_coverage_gap / 1 threshold_too_strict / 0 of the other 4 enum values) for V1.3 pruning candidates; codify the V1.2.x harness-patch candidates (§4 Priority 1/1b/1c) that would collapse most of the Q4 overrides.
 
 V13-3 analysis scope (from CONSOLIDATION §8): compare all V1.2 scan outputs against equivalent-SHA V2.4 outputs where comparator exists (the Step G pinned entries 12–14), plus look for cross-shape calibration patterns now that the wild-scan sample is large enough to generalize from.
 
@@ -238,12 +258,16 @@ Derived from patterns in this document:
 
 | ID | Item | Evidence | Priority |
 |---|---|---|---|
-| V12x-5 | Deserialization auto-fire for Q4 (pattern-based compute signal) | 2/7 overrides; collapses Kronos Q4 + freerouting Q4 | **High** |
-| V12x-6 | Multi-ecosystem manifest parsing (Maven/Gradle/Cargo/Gomod/Bundler/.NET) | 6/9 scans hit this coverage gap | **High** |
-| V12x-7 | Install-doc URL TLD-deviation detection | 1/9 scans (browser_terminal), high severity when hit | **Medium** |
-| V12x-8 | Distribution-channel detection for language-specific package managers | 7/9 scans surface fictitious or missing channels | **Medium** |
-| V12x-9 | Dangerous-primitives regex tuning for Rust serde, bundled minified JS | False positives on 3/9 scans (wezterm, kanata, QuickLook) | Low |
-| V12x-10 | Silent-fix pattern telemetry | 9/9 scans show 0 advisories — might merit a Q3 rubric adjustment in V1.3 | Informational |
+| V12x-5 | Deserialization auto-fire for Q4 (pattern-based compute signal) | 2/9 overrides; collapses Kronos Q4 + freerouting Q4 | **High** |
+| V12x-6 | Multi-ecosystem manifest parsing (Maven/Gradle/Cargo/Gomod/Bundler/.NET) | 7/11 scans hit this coverage gap | **High** |
+| V12x-7 | Install-doc URL TLD-deviation detection | 1/11 scans (browser_terminal), high severity when hit | **Medium** |
+| V12x-8 | Distribution-channel detection for language-specific package managers | 8/11 scans surface fictitious or missing channels | **Medium** |
+| V12x-9 | Dangerous-primitives regex tuning — language qualifier on deserialization family | False positives on 4/11 scans (wezterm, kanata, QuickLook, **WLED** — ArduinoJson) | **Medium** (promoted from Low: 4 FP cases + Priority 1 requires this fix) |
+| V12x-10 | Silent-fix pattern telemetry | **11/11** scans show 0 advisories — strong case for Q3 rubric adjustment in V1.3 | Informational → **V1.3 candidate** |
+| V12x-11 | Firmware-default-no-auth + CORS-wildcard compound Q4 signal | 1/11 scans (WLED) — Priority 1b | **Medium** |
+| V12x-12 | Reverse-engineered-API-library shape Q4 signal (README disclaimer + topic + platform-name) | 1/11 scans (Baileys) — Priority 1c | **Medium** |
+| V12x-13 | vendor_keys proximity-context requirement | 1/11 scans (Baileys — `AIza` in WhatsApp protocol dictionary FP) | Low |
+| V12x-14 | PR-sampler robustness when closed-without-merge dominates stream | 1/11 scans (Baileys — 0 sample despite 352 lifetime merges) | Low |
 
 Each V12x item is additive per board Item F (signal additions are V1.2.x, signal removals are V1.3).
 
@@ -266,3 +290,4 @@ The V13-1 split (`missing_qualitative_context` → `signal_vocabulary_gap` + `ha
 
 - **2026-04-20** — Document created after 9 V1.2 wild scans. Consolidates observations from catalog entries 16–24 + the V13-1 analysis document.
 - **2026-04-20 (entry 25 update)** — Added WLED (25) to roster. signal_vocabulary_gap now modal at 62% (5/8 overrides); 10/10 silent-fix pattern confirmed with a **publicly-documented disclosure-handling failure** (issue #5340 — GHSA-2xwq-cxqw-wfv8). New Priority 1b harness-patch: firmware default-no-auth + CORS-wildcard compound signal. Zero-override streak broken continues (freerouting 24 + WLED 25 both fire signal_vocabulary_gap). V13-3 progress: 10 of 11.
+- **2026-04-20 (entry 26 update — V13-3 TRIGGER FIRED)** — Added Baileys (26) to roster. **11 V1.2 wild scans complete.** signal_vocabulary_gap now strongly modal at 67% (6/9 overrides — 3 consecutive Q4 overrides since wezterm streak ended). **11/11 silent-fix pattern** with Baileys adding a second distinct documented failure mode (PR #1996 stale-closed after 148 days, maintainer-promised replacement never materialized). New Priority 1c harness-patch: reverse-engineered-platform-API-library shape signal (README disclaimer phrase detection + topic analysis + platform-name matching). Q4 has become the override hotspot (6 of 9 overrides). V13-3 comparator-calibration analysis is now owed — see §7. TypeScript added as first-class catalog language. Three new V12x backlog items (V12x-11/12/13) derived from Baileys observations; V12x-9 promoted from Low to Medium (4 FP cases now).

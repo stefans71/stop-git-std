@@ -1,0 +1,3887 @@
+{
+  "$comment": "Baileys V1.2 wild scan \u2014 eleventh wild V1.2 scan; V13-3 trigger fires; first reverse-engineered-API-library entry.",
+  "schema_version": "V1.2",
+  "_meta": {
+    "scanner_version": "V2.5-preview",
+    "prompt_version": "V2.4",
+    "scan_started_at": "2026-04-20T21:54:01.335678+00:00",
+    "model": "claude-opus-4-7 (via Claude Code)",
+    "scan_status": "completed",
+    "scan_completed_at": "2026-04-20T22:10:12.987593+00:00"
+  },
+  "target": {
+    "owner": "WhiskeySockets",
+    "repo": "Baileys",
+    "full_name": "WhiskeySockets/Baileys",
+    "url": "https://github.com/WhiskeySockets/Baileys"
+  },
+  "scanner_integrity": {
+    "injection_matches": 0,
+    "actionable_count": 0,
+    "findings": []
+  },
+  "phase_1_raw_capture": {
+    "pre_flight": {
+      "head_sha": "8e5093c198de5c5c0230a76e8a7224f6006ebb2e",
+      "default_branch": "master",
+      "tarball_extracted": true,
+      "tarball_file_count": 170,
+      "symlinks_stripped": 0,
+      "api_rate_limit": {
+        "limit": 5000,
+        "remaining": 4946,
+        "reset": 1776722274,
+        "used": 54
+      }
+    },
+    "repo_metadata": {
+      "name": "Baileys",
+      "description": "Socket-based TS/JavaScript API for WhatsApp Web",
+      "created_at": "2022-01-12T20:38:14Z",
+      "pushed_at": "2026-04-19T00:54:21Z",
+      "stargazer_count": 9034,
+      "fork_count": 2906,
+      "archived": false,
+      "fork": false,
+      "has_issues_enabled": true,
+      "primary_language": "JavaScript",
+      "topics": [
+        "bun",
+        "deno",
+        "nodejs",
+        "reverse-engineering",
+        "typescript",
+        "websockets",
+        "whatsapp-web",
+        "ws"
+      ],
+      "license_spdx": "MIT",
+      "default_branch": "master",
+      "open_issues_count": 313,
+      "size_kb": 236765
+    },
+    "contributors": {
+      "top_contributors": [
+        {
+          "contributions": 1166,
+          "login": "adiwajshing"
+        },
+        {
+          "contributions": 302,
+          "login": "purpshell"
+        },
+        {
+          "contributions": 52,
+          "login": "github-actions[bot]"
+        },
+        {
+          "contributions": 45,
+          "login": "jlucaso1"
+        },
+        {
+          "contributions": 44,
+          "login": "canove"
+        },
+        {
+          "contributions": 30,
+          "login": "edgardmessias"
+        }
+      ],
+      "total_contributor_count": 100
+    },
+    "maintainer_accounts": {
+      "accounts": [
+        {
+          "bio": "Socket-related projects connecting worlds together",
+          "company": null,
+          "created_at": "2023-04-20T09:50:02Z",
+          "followers": 496,
+          "login": "WhiskeySockets",
+          "public_repos": 8,
+          "type": "Organization",
+          "role": "owner"
+        },
+        {
+          "bio": "https://www.linkedin.com/in/adiwajshing/\r\nhttps://www.tradingview.com/u/adiwajshing/\r\n",
+          "company": null,
+          "created_at": "2014-08-01T09:54:59Z",
+          "followers": 1319,
+          "login": "adiwajshing",
+          "public_repos": 34,
+          "type": "User",
+          "role": "contributor",
+          "contributions": 1166
+        },
+        {
+          "bio": null,
+          "company": "@automattic",
+          "created_at": "2019-07-09T20:53:45Z",
+          "followers": 690,
+          "login": "purpshell",
+          "public_repos": 24,
+          "type": "User",
+          "role": "contributor",
+          "contributions": 302
+        },
+        {
+          "bio": null,
+          "company": null,
+          "created_at": "2018-07-30T09:30:16Z",
+          "followers": 0,
+          "login": "github-actions[bot]",
+          "public_repos": 0,
+          "type": "Bot",
+          "role": "contributor",
+          "contributions": 52
+        },
+        {
+          "bio": "infinite recursion",
+          "company": "@Forte-Tecnologias @WhiskeySockets",
+          "created_at": "2019-09-17T21:31:52Z",
+          "followers": 149,
+          "login": "jlucaso1",
+          "public_repos": 157,
+          "type": "User",
+          "role": "contributor",
+          "contributions": 45
+        },
+        {
+          "bio": "A software engineer, Technology enthusiast, and former sysadmin with high Linux and Network background.",
+          "company": "Economicros",
+          "created_at": "2016-12-29T00:35:24Z",
+          "followers": 485,
+          "login": "canove",
+          "public_repos": 6,
+          "type": "User",
+          "role": "contributor",
+          "contributions": 44
+        }
+      ]
+    },
+    "ossf_scorecard": {
+      "queried": true,
+      "indexed": false,
+      "http_status": 404,
+      "overall_score": null,
+      "checks": [],
+      "raw_response": null
+    },
+    "community_profile": {
+      "health_percentage": 50,
+      "has_code_of_conduct": false,
+      "has_contributing": false,
+      "has_security_policy": false,
+      "license_spdx": "MIT"
+    },
+    "branch_protection": {
+      "classic": {
+        "status": 404
+      },
+      "rulesets": {
+        "entries": [],
+        "count": 0
+      },
+      "rules_on_default": {
+        "entries": [],
+        "count": 0
+      },
+      "owner_type": "Organization",
+      "org_rulesets": {
+        "status": "error",
+        "entries": []
+      }
+    },
+    "codeowners": {
+      "found": false,
+      "path": null,
+      "content": null,
+      "locations_checked": [
+        "CODEOWNERS",
+        ".github/CODEOWNERS",
+        "docs/CODEOWNERS",
+        ".gitlab/CODEOWNERS"
+      ]
+    },
+    "releases": {
+      "entries": [
+        {
+          "tag_name": "v7.0.0-rc.9",
+          "published_at": "2025-11-21T15:40:58Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "github-actions[bot]"
+        },
+        {
+          "tag_name": "v7.0.0-rc.8",
+          "published_at": "2025-11-19T15:03:39Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "github-actions[bot]"
+        },
+        {
+          "tag_name": "v7.0.0-rc.7",
+          "published_at": "2025-11-19T14:41:15Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "github-actions[bot]"
+        },
+        {
+          "tag_name": "v6.7.21",
+          "published_at": "2025-11-06T20:53:17Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "purpshell"
+        },
+        {
+          "tag_name": "v7.0.0-rc.6",
+          "published_at": "2025-10-19T22:40:10Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "github-actions[bot]"
+        },
+        {
+          "tag_name": "v7.0.0-rc.5",
+          "published_at": "2025-10-02T22:23:10Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "github-actions[bot]"
+        },
+        {
+          "tag_name": "v7.0.0-rc.4",
+          "published_at": "2025-09-26T08:58:00Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "github-actions[bot]"
+        },
+        {
+          "tag_name": "v7.0.0-rc.3",
+          "published_at": "2025-09-14T19:59:55Z",
+          "prerelease": true,
+          "draft": false,
+          "author": "github-actions[bot]"
+        },
+        {
+          "tag_name": "v7.0.0-rc.2",
+          "published_at": "2025-09-08T22:06:40Z",
+          "prerelease": true,
+          "draft": false,
+          "author": "github-actions[bot]"
+        },
+        {
+          "tag_name": "v7.0.0-rc.1",
+          "published_at": "2025-09-08T21:04:27Z",
+          "prerelease": true,
+          "draft": false,
+          "author": "github-actions[bot]"
+        },
+        {
+          "tag_name": "v6.7.19",
+          "published_at": "2025-08-31T02:33:45Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "github-actions[bot]"
+        },
+        {
+          "tag_name": "nightly",
+          "published_at": "2025-03-04T03:06:05Z",
+          "prerelease": true,
+          "draft": false,
+          "author": "github-actions[bot]"
+        },
+        {
+          "tag_name": "v6.7.18",
+          "published_at": "2025-05-28T08:25:32Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "github-actions[bot]"
+        },
+        {
+          "tag_name": "v6.7.17",
+          "published_at": "2025-05-15T20:46:50Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "github-actions[bot]"
+        },
+        {
+          "tag_name": "v6.7.16",
+          "published_at": "2025-03-04T03:09:23Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "github-actions[bot]"
+        },
+        {
+          "tag_name": "v6.7.15",
+          "published_at": "2025-03-02T10:13:50Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "github-actions[bot]"
+        },
+        {
+          "tag_name": "v6.7.14",
+          "published_at": "2025-03-01T16:40:09Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "github-actions[bot]"
+        },
+        {
+          "tag_name": "v6.7.13",
+          "published_at": "2025-02-16T16:44:41Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "github-actions[bot]"
+        },
+        {
+          "tag_name": "v6.7.12",
+          "published_at": "2025-01-31T23:22:08Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "github-actions[bot]"
+        },
+        {
+          "tag_name": "v6.7.10",
+          "published_at": "2025-01-31T20:15:33Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "github-actions[bot]"
+        },
+        {
+          "tag_name": "v6.7.9",
+          "published_at": "2024-10-22T07:31:05Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "github-actions[bot]"
+        },
+        {
+          "tag_name": "v6.7.8",
+          "published_at": "2024-09-22T12:06:47Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "github-actions[bot]"
+        },
+        {
+          "tag_name": "v6.7.7",
+          "published_at": "2024-08-22T22:28:09Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "github-actions[bot]"
+        },
+        {
+          "tag_name": "v6.7.6",
+          "published_at": "2024-08-14T09:20:19Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "github-actions[bot]"
+        },
+        {
+          "tag_name": "v6.7.5",
+          "published_at": "2024-06-12T21:49:09Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "github-actions[bot]"
+        },
+        {
+          "tag_name": "v6.7.4",
+          "published_at": "2024-06-02T22:06:21Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "github-actions[bot]"
+        },
+        {
+          "tag_name": "v6.7.3",
+          "published_at": "2024-06-02T21:50:47Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "github-actions[bot]"
+        },
+        {
+          "tag_name": "v6.7.2",
+          "published_at": "2024-05-06T15:51:39Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "github-actions[bot]"
+        },
+        {
+          "tag_name": "v6.7.1",
+          "published_at": "2024-04-29T07:50:13Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "github-actions[bot]"
+        },
+        {
+          "tag_name": "v6.7.0",
+          "published_at": "2024-04-28T12:07:48Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "github-actions[bot]"
+        },
+        {
+          "tag_name": "v6.6.0",
+          "published_at": "2024-01-19T18:10:21Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "github-actions[bot]"
+        },
+        {
+          "tag_name": "v6.5.0",
+          "published_at": "2023-09-28T00:20:05Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "github-actions[bot]"
+        },
+        {
+          "tag_name": "v6.4.2",
+          "published_at": "2023-09-28T00:16:04Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "github-actions[bot]"
+        },
+        {
+          "tag_name": "v6.4.1",
+          "published_at": "2023-08-27T17:13:24Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "github-actions[bot]"
+        },
+        {
+          "tag_name": "v6.4.0",
+          "published_at": "2023-07-18T13:46:14Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "github-actions[bot]"
+        },
+        {
+          "tag_name": "v6.3.1",
+          "published_at": "2023-07-08T21:41:06Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "github-actions[bot]"
+        },
+        {
+          "tag_name": "v6.3.0",
+          "published_at": "2023-06-17T21:23:37Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "github-actions[bot]"
+        },
+        {
+          "tag_name": "v6.2.1",
+          "published_at": "2023-06-07T14:30:12Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "github-actions[bot]"
+        },
+        {
+          "tag_name": "v6.2.0",
+          "published_at": "2023-06-07T11:35:37Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "github-actions[bot]"
+        },
+        {
+          "tag_name": "v6.1.0",
+          "published_at": "2023-05-26T11:23:26Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "github-actions[bot]"
+        },
+        {
+          "tag_name": "v6.0.1",
+          "published_at": "2023-05-18T12:22:22Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "github-actions[bot]"
+        },
+        {
+          "tag_name": "v6.0.0",
+          "published_at": "2023-05-10T23:19:30Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "edgardmessias"
+        }
+      ],
+      "total_count": 42
+    },
+    "security_advisories": {
+      "count": 0,
+      "entries": []
+    },
+    "workflows": {
+      "entries": [
+        {
+          "name": "Build Project",
+          "path": ".github/workflows/build.yml",
+          "state": "active"
+        },
+        {
+          "name": "E2E Tests",
+          "path": ".github/workflows/e2e.yml",
+          "state": "active"
+        },
+        {
+          "name": "Linting Check",
+          "path": ".github/workflows/lint.yml",
+          "state": "active"
+        },
+        {
+          "name": "Manual Release",
+          "path": ".github/workflows/manual-release.yml",
+          "state": "active"
+        },
+        {
+          "name": "PR Comment",
+          "path": ".github/workflows/pr-comment.yml",
+          "state": "active"
+        },
+        {
+          "name": "Publish Release",
+          "path": ".github/workflows/publish-release.yml",
+          "state": "active"
+        },
+        {
+          "name": "Mark stale issues and pull requests",
+          "path": ".github/workflows/stale.yml",
+          "state": "active"
+        },
+        {
+          "name": "Run Tests",
+          "path": ".github/workflows/test.yml",
+          "state": "active"
+        },
+        {
+          "name": "Update WAProto",
+          "path": ".github/workflows/update-proto.yml",
+          "state": "active"
+        },
+        {
+          "name": "Update WhatsApp Version",
+          "path": ".github/workflows/update-version.yml",
+          "state": "active"
+        },
+        {
+          "name": "Copilot code review",
+          "path": "dynamic/copilot-pull-request-reviewer/copilot-pull-request-reviewer",
+          "state": "active"
+        },
+        {
+          "name": "pages-build-deployment",
+          "path": "dynamic/pages/pages-build-deployment",
+          "state": "active"
+        }
+      ],
+      "count": 12,
+      "pull_request_target_count": 1
+    },
+    "workflow_contents": {
+      "entries": [
+        {
+          "path": ".github/workflows/stale.yml",
+          "content_lines": 21,
+          "sha_pinned_actions_count": 0,
+          "tag_pinned_actions_count": 1,
+          "has_pull_request_target": false,
+          "permissions_block_present": true
+        },
+        {
+          "path": ".github/workflows/lint.yml",
+          "content_lines": 40,
+          "sha_pinned_actions_count": 0,
+          "tag_pinned_actions_count": 3,
+          "has_pull_request_target": false,
+          "permissions_block_present": false
+        },
+        {
+          "path": ".github/workflows/build.yml",
+          "content_lines": 40,
+          "sha_pinned_actions_count": 0,
+          "tag_pinned_actions_count": 3,
+          "has_pull_request_target": false,
+          "permissions_block_present": false
+        },
+        {
+          "path": ".github/workflows/publish-release.yml",
+          "content_lines": 91,
+          "sha_pinned_actions_count": 0,
+          "tag_pinned_actions_count": 4,
+          "has_pull_request_target": false,
+          "permissions_block_present": true
+        },
+        {
+          "path": ".github/workflows/update-proto.yml",
+          "content_lines": 64,
+          "sha_pinned_actions_count": 0,
+          "tag_pinned_actions_count": 3,
+          "has_pull_request_target": false,
+          "permissions_block_present": true
+        },
+        {
+          "path": ".github/workflows/pr-comment.yml",
+          "content_lines": 53,
+          "sha_pinned_actions_count": 0,
+          "tag_pinned_actions_count": 2,
+          "has_pull_request_target": true,
+          "permissions_block_present": false
+        },
+        {
+          "path": ".github/workflows/update-version.yml",
+          "content_lines": 88,
+          "sha_pinned_actions_count": 0,
+          "tag_pinned_actions_count": 3,
+          "has_pull_request_target": false,
+          "permissions_block_present": true
+        },
+        {
+          "path": ".github/workflows/test.yml",
+          "content_lines": 41,
+          "sha_pinned_actions_count": 0,
+          "tag_pinned_actions_count": 3,
+          "has_pull_request_target": false,
+          "permissions_block_present": false
+        },
+        {
+          "path": ".github/workflows/manual-release.yml",
+          "content_lines": 49,
+          "sha_pinned_actions_count": 0,
+          "tag_pinned_actions_count": 3,
+          "has_pull_request_target": false,
+          "permissions_block_present": false
+        }
+      ]
+    },
+    "code_patterns": {
+      "agent_rule_files": [],
+      "readme_paste_blocks": {
+        "scanned": true,
+        "entries": [],
+        "entries_count": 0
+      },
+      "dangerous_primitives": {
+        "scanned": true,
+        "exec": {
+          "hit_count": 2,
+          "files": [
+            {
+              "file": "src/Socket/messages-recv.ts",
+              "first_match": {
+                "line": 1497,
+                "snippet": "\t\t\treturn exec(node, false).catch(err => onUnexpectedError(err, identifier))"
+              }
+            },
+            {
+              "file": "src/Utils/messages-media.ts",
+              "first_match": {
+                "line": 2,
+                "snippet": "import { exec } from 'child_process'"
+              }
+            }
+          ]
+        },
+        "deserialization": {
+          "hit_count": 2,
+          "files": [
+            {
+              "file": "src/Signal/libsignal.ts",
+              "first_match": {
+                "line": 338,
+                "snippet": "\t\t\t\t\t\t\tconst fromSession = libsignal.SessionRecord.deserialize(pnSession)"
+              }
+            },
+            {
+              "file": "src/Signal/Group/sender-key-record.ts",
+              "first_match": {
+                "line": 64,
+                "snippet": "\tstatic deserialize(data: Uint8Array): SenderKeyRecord {"
+              }
+            }
+          ]
+        },
+        "network": {
+          "hit_count": 14,
+          "files": [
+            {
+              "file": "README.md",
+              "first_match": {
+                "line": 3,
+                "snippet": "<div align='center'>Baileys is a WebSockets-based TypeScript library for interacting with the WhatsApp Web API.</div>"
+              }
+            },
+            {
+              "file": "package.json",
+              "first_match": {
+                "line": 5,
+                "snippet": "  \"description\": \"A WebSockets library for interacting with WhatsApp Web\","
+              }
+            },
+            {
+              "file": "src/__tests__/binary/connection-deadlock.test.ts",
+              "first_match": {
+                "line": 5,
+                "snippet": "import { makeSession, mockWebSocket } from '../TestUtils/session'"
+              }
+            },
+            {
+              "file": "src/__tests__/TestUtils/session.ts",
+              "first_match": {
+                "line": 33,
+                "snippet": "export const mockWebSocket = () => {"
+              }
+            },
+            {
+              "file": "src/__tests__/Utils/noise-handler.test.ts",
+              "first_match": {
+                "line": 189,
+                "snippet": "\t\t\t// Simulate concurrent calls (multiple WebSocket messages arriving rapidly)"
+              }
+            },
+            {
+              "file": "src/Socket/socket.ts",
+              "first_match": {
+                "line": 55,
+                "snippet": "import { WebSocketClient } from './Client'"
+              }
+            },
+            {
+              "file": "src/Socket/Client/websocket.ts",
+              "first_match": {
+                "line": 1,
+                "snippet": "import WebSocket from 'ws'"
+              }
+            },
+            {
+              "file": "src/Defaults/index.ts",
+              "first_match": {
+                "line": 57,
+                "snippet": "\twaWebSocketUrl: 'wss://web.whatsapp.com/ws/chat',"
+              }
+            },
+            {
+              "file": "src/Utils/messages.ts",
+              "first_match": {
+                "line": 483,
+                "snippet": "\t\t\t\tconst resp = await fetch(pfpUrl, { method: 'GET', dispatcher: options?.options?.dispatcher })"
+              }
+            },
+            {
+              "file": "src/Utils/messages-media.ts",
+              "first_match": {
+                "line": 366,
+                "snippet": "\tconst response = await fetch(url.toString(), {"
+              }
+            },
+            {
+              "file": "src/Utils/generics.ts",
+              "first_match": {
+                "line": 241,
+                "snippet": "\t\tconst response = await fetch(URL, {"
+              }
+            },
+            {
+              "file": "src/Types/Socket.ts",
+              "first_match": {
+                "line": 34,
+                "snippet": "\twaWebSocketUrl: string | URL"
+              }
+            },
+            {
+              "file": ".github/README.md",
+              "first_match": {
+                "line": 11,
+                "snippet": "Baileys is a WebSockets-based TypeScript library for interacting with the WhatsApp Web API."
+              }
+            },
+            {
+              "file": "Example/example.ts",
+              "first_match": {
+                "line": 53,
+                "snippet": "\t\twaWebSocketUrl: process.env.SOCKET_URL ?? DEFAULT_CONNECTION_CONFIG.waWebSocketUrl,"
+              }
+            }
+          ]
+        },
+        "secrets": {
+          "hit_count": 1,
+          "files": [
+            {
+              "file": "WAProto/index.js",
+              "first_match": {
+                "line": 21719,
+                "snippet": "                    d._ephemeralSharedSecret = \"ephemeralSharedSecret\";"
+              }
+            }
+          ]
+        },
+        "vendor_keys": {
+          "hit_count": 1,
+          "files": [
+            {
+              "file": "src/WABinary/constants.ts",
+              "first_match": {
+                "line": 601,
+                "snippet": "\t\t'AIzaSyDR5yfaG7OG8sMTUj8kfQEb8T9pN8BM6Lk',"
+              }
+            }
+          ]
+        },
+        "tls_cors": {
+          "hit_count": 0,
+          "files": []
+        },
+        "sql_injection": {
+          "hit_count": 0,
+          "files": []
+        },
+        "cmd_injection": {
+          "hit_count": 0,
+          "files": []
+        },
+        "auth_bypass": {
+          "hit_count": 0,
+          "files": []
+        },
+        "path_traversal": {
+          "hit_count": 0,
+          "files": []
+        },
+        "archive_unsafe": {
+          "hit_count": 0,
+          "files": []
+        },
+        "ssrf": {
+          "hit_count": 0,
+          "files": []
+        },
+        "xss": {
+          "hit_count": 0,
+          "files": []
+        },
+        "weak_crypto": {
+          "hit_count": 1,
+          "files": [
+            {
+              "file": "src/Utils/validate-connection.ts",
+              "first_match": {
+                "line": 94,
+                "snippet": "\tconst appVersionBuf = createHash('md5')"
+              }
+            }
+          ]
+        },
+        "debug_flags": {
+          "hit_count": 0,
+          "files": []
+        }
+      },
+      "executable_files": [
+        {
+          "path": ".github/workflows/pr-comment.yml",
+          "kind": "ci-workflow",
+          "runtime": "github-actions",
+          "line_count": 53,
+          "file_sha": "9e478a29f235",
+          "has_network_call": false,
+          "has_env_var_pattern": true
+        },
+        {
+          "path": ".github/workflows/build.yml",
+          "kind": "ci-workflow",
+          "runtime": "github-actions",
+          "line_count": 40,
+          "file_sha": "e7bd15e4eb51",
+          "has_network_call": false,
+          "has_env_var_pattern": true
+        },
+        {
+          "path": ".github/workflows/manual-release.yml",
+          "kind": "ci-workflow",
+          "runtime": "github-actions",
+          "line_count": 49,
+          "file_sha": "18160f1c25e0",
+          "has_network_call": false,
+          "has_env_var_pattern": true
+        },
+        {
+          "path": ".github/workflows/publish-release.yml",
+          "kind": "ci-workflow",
+          "runtime": "github-actions",
+          "line_count": 91,
+          "file_sha": "ec01d4bbc336",
+          "has_network_call": false,
+          "has_env_var_pattern": true
+        },
+        {
+          "path": ".github/workflows/lint.yml",
+          "kind": "ci-workflow",
+          "runtime": "github-actions",
+          "line_count": 40,
+          "file_sha": "b3f988a64bb0",
+          "has_network_call": false,
+          "has_env_var_pattern": true
+        },
+        {
+          "path": ".github/workflows/update-proto.yml",
+          "kind": "ci-workflow",
+          "runtime": "github-actions",
+          "line_count": 64,
+          "file_sha": "be29b5db85db",
+          "has_network_call": false,
+          "has_env_var_pattern": true
+        },
+        {
+          "path": ".github/workflows/test.yml",
+          "kind": "ci-workflow",
+          "runtime": "github-actions",
+          "line_count": 41,
+          "file_sha": "649c6d1d2d6a",
+          "has_network_call": false,
+          "has_env_var_pattern": true
+        },
+        {
+          "path": ".github/workflows/update-version.yml",
+          "kind": "ci-workflow",
+          "runtime": "github-actions",
+          "line_count": 88,
+          "file_sha": "7ae3c3b2f789",
+          "has_network_call": false,
+          "has_env_var_pattern": true
+        },
+        {
+          "path": ".github/workflows/stale.yml",
+          "kind": "ci-workflow",
+          "runtime": "github-actions",
+          "line_count": 21,
+          "file_sha": "6fd2bae78bbd",
+          "has_network_call": false,
+          "has_env_var_pattern": true
+        }
+      ],
+      "install_hooks": []
+    },
+    "prompt_injection_scan": {
+      "scanned_files": [],
+      "injection_signals": [],
+      "signal_count": 0,
+      "scan_method": "tarball"
+    },
+    "dependencies": {
+      "manifest_files": [
+        {
+          "path": "yarn.lock",
+          "ecosystem": "npm"
+        },
+        {
+          "path": "package.json",
+          "ecosystem": "npm"
+        },
+        {
+          "path": "proto-extract/yarn.lock",
+          "ecosystem": "npm"
+        },
+        {
+          "path": "proto-extract/package-lock.json",
+          "ecosystem": "npm"
+        },
+        {
+          "path": "proto-extract/package.json",
+          "ecosystem": "npm"
+        }
+      ],
+      "runtime": [
+        {
+          "name": "@cacheable/node-cache",
+          "ecosystem": "npm",
+          "pinning": "^1.4.0"
+        },
+        {
+          "name": "@hapi/boom",
+          "ecosystem": "npm",
+          "pinning": "^9.1.3"
+        },
+        {
+          "name": "async-mutex",
+          "ecosystem": "npm",
+          "pinning": "^0.5.0"
+        },
+        {
+          "name": "libsignal",
+          "ecosystem": "npm",
+          "pinning": "range/other"
+        },
+        {
+          "name": "lru-cache",
+          "ecosystem": "npm",
+          "pinning": "^11.1.0"
+        },
+        {
+          "name": "music-metadata",
+          "ecosystem": "npm",
+          "pinning": "^11.7.0"
+        },
+        {
+          "name": "p-queue",
+          "ecosystem": "npm",
+          "pinning": "^9.0.0"
+        },
+        {
+          "name": "pino",
+          "ecosystem": "npm",
+          "pinning": "^9.6"
+        },
+        {
+          "name": "protobufjs",
+          "ecosystem": "npm",
+          "pinning": "^7.2.4"
+        },
+        {
+          "name": "whatsapp-rust-bridge",
+          "ecosystem": "npm",
+          "pinning": "0.5.2"
+        },
+        {
+          "name": "ws",
+          "ecosystem": "npm",
+          "pinning": "^8.13.0"
+        },
+        {
+          "name": "acorn",
+          "ecosystem": "npm",
+          "pinning": "^8.15.0"
+        },
+        {
+          "name": "acorn-walk",
+          "ecosystem": "npm",
+          "pinning": "^6.1.1"
+        },
+        {
+          "name": "request",
+          "ecosystem": "npm",
+          "pinning": "^2.88.0"
+        },
+        {
+          "name": "request-promise-core",
+          "ecosystem": "npm",
+          "pinning": "^1.1.2"
+        },
+        {
+          "name": "request-promise-native",
+          "ecosystem": "npm",
+          "pinning": "^1.0.7"
+        }
+      ],
+      "runtime_count": 16,
+      "dev": [
+        {
+          "name": "@eslint/eslintrc",
+          "ecosystem": "npm",
+          "pinning": "^3.3.1"
+        },
+        {
+          "name": "@eslint/js",
+          "ecosystem": "npm",
+          "pinning": "^9.31.0"
+        },
+        {
+          "name": "@types/jest",
+          "ecosystem": "npm",
+          "pinning": "^30.0.0"
+        },
+        {
+          "name": "@types/node",
+          "ecosystem": "npm",
+          "pinning": "^20.9.0"
+        },
+        {
+          "name": "@types/ws",
+          "ecosystem": "npm",
+          "pinning": "^8.0.0"
+        },
+        {
+          "name": "@typescript-eslint/eslint-plugin",
+          "ecosystem": "npm",
+          "pinning": "^8"
+        },
+        {
+          "name": "@typescript-eslint/parser",
+          "ecosystem": "npm",
+          "pinning": "^8"
+        },
+        {
+          "name": "@whiskeysockets/eslint-config",
+          "ecosystem": "npm",
+          "pinning": "^1.0.0"
+        },
+        {
+          "name": "conventional-changelog",
+          "ecosystem": "npm",
+          "pinning": "^7.1.1"
+        },
+        {
+          "name": "conventional-changelog-angular",
+          "ecosystem": "npm",
+          "pinning": "^8.0.0"
+        },
+        {
+          "name": "esbuild-register",
+          "ecosystem": "npm",
+          "pinning": "^3.6.0"
+        },
+        {
+          "name": "eslint",
+          "ecosystem": "npm",
+          "pinning": "^9"
+        },
+        {
+          "name": "eslint-config-prettier",
+          "ecosystem": "npm",
+          "pinning": "^10.1.2"
+        },
+        {
+          "name": "eslint-plugin-prettier",
+          "ecosystem": "npm",
+          "pinning": "^5.4.0"
+        },
+        {
+          "name": "jest",
+          "ecosystem": "npm",
+          "pinning": "^30.0.5"
+        },
+        {
+          "name": "jimp",
+          "ecosystem": "npm",
+          "pinning": "^1.6.0"
+        },
+        {
+          "name": "jiti",
+          "ecosystem": "npm",
+          "pinning": "^2.4.2"
+        },
+        {
+          "name": "json",
+          "ecosystem": "npm",
+          "pinning": "^11.0.0"
+        },
+        {
+          "name": "link-preview-js",
+          "ecosystem": "npm",
+          "pinning": "^3.0.0"
+        },
+        {
+          "name": "lru-cache",
+          "ecosystem": "npm",
+          "pinning": "^11.1.0"
+        },
+        {
+          "name": "open",
+          "ecosystem": "npm",
+          "pinning": "^8.4.2"
+        },
+        {
+          "name": "pino-pretty",
+          "ecosystem": "npm",
+          "pinning": "^13.1.1"
+        },
+        {
+          "name": "prettier",
+          "ecosystem": "npm",
+          "pinning": "^3.5.3"
+        },
+        {
+          "name": "protobufjs-cli",
+          "ecosystem": "npm",
+          "pinning": "^1.1.3"
+        },
+        {
+          "name": "release-it",
+          "ecosystem": "npm",
+          "pinning": "^15.10.3"
+        },
+        {
+          "name": "ts-jest",
+          "ecosystem": "npm",
+          "pinning": "^29.4.0"
+        },
+        {
+          "name": "tsc-esm-fix",
+          "ecosystem": "npm",
+          "pinning": "^3.1.2"
+        },
+        {
+          "name": "tsx",
+          "ecosystem": "npm",
+          "pinning": "^4.20.3"
+        },
+        {
+          "name": "typedoc",
+          "ecosystem": "npm",
+          "pinning": "^0.27.9"
+        },
+        {
+          "name": "typedoc-plugin-markdown",
+          "ecosystem": "npm",
+          "pinning": "4.4.2"
+        },
+        {
+          "name": "typescript",
+          "ecosystem": "npm",
+          "pinning": "^5.8.2"
+        }
+      ],
+      "dev_count": 31,
+      "dependabot_alerts": {
+        "status": 403,
+        "alerts_count": null,
+        "note": "admin scope required; falling back to osv.dev"
+      },
+      "osv_lookups": [
+        {
+          "name": "@cacheable/node-cache",
+          "ecosystem": "npm",
+          "vulns_count": 0,
+          "vulns_summary": []
+        },
+        {
+          "name": "@hapi/boom",
+          "ecosystem": "npm",
+          "vulns_count": 1,
+          "vulns_summary": [
+            "GHSA-2ggq-vfcp-gwhj"
+          ]
+        },
+        {
+          "name": "async-mutex",
+          "ecosystem": "npm",
+          "vulns_count": 0,
+          "vulns_summary": []
+        },
+        {
+          "name": "libsignal",
+          "ecosystem": "npm",
+          "vulns_count": 0,
+          "vulns_summary": []
+        },
+        {
+          "name": "lru-cache",
+          "ecosystem": "npm",
+          "vulns_count": 0,
+          "vulns_summary": []
+        },
+        {
+          "name": "music-metadata",
+          "ecosystem": "npm",
+          "vulns_count": 1,
+          "vulns_summary": [
+            "GHSA-v6c2-xwv6-8xf7"
+          ]
+        },
+        {
+          "name": "p-queue",
+          "ecosystem": "npm",
+          "vulns_count": 0,
+          "vulns_summary": []
+        },
+        {
+          "name": "pino",
+          "ecosystem": "npm",
+          "vulns_count": 0,
+          "vulns_summary": []
+        },
+        {
+          "name": "protobufjs",
+          "ecosystem": "npm",
+          "vulns_count": 4,
+          "vulns_summary": [
+            "GHSA-762f-c2wg-m8c8",
+            "GHSA-g954-5hwp-pp24",
+            "GHSA-h755-8qp9-cq85",
+            "GHSA-xq3m-2v4x-88gg"
+          ]
+        },
+        {
+          "name": "whatsapp-rust-bridge",
+          "ecosystem": "npm",
+          "vulns_count": 0,
+          "vulns_summary": []
+        },
+        {
+          "name": "ws",
+          "ecosystem": "npm",
+          "vulns_count": 5,
+          "vulns_summary": [
+            "GHSA-2mhh-w6q8-5hxw",
+            "GHSA-3h5v-q93c-6h6q",
+            "GHSA-5v72-xg48-5rpm",
+            "GHSA-6663-c963-2gqg",
+            "GHSA-6fc8-4gx4-v693"
+          ]
+        },
+        {
+          "name": "acorn",
+          "ecosystem": "npm",
+          "vulns_count": 1,
+          "vulns_summary": [
+            "GHSA-6chw-6frg-f759"
+          ]
+        },
+        {
+          "name": "acorn-walk",
+          "ecosystem": "npm",
+          "vulns_count": 0,
+          "vulns_summary": []
+        },
+        {
+          "name": "request",
+          "ecosystem": "npm",
+          "vulns_count": 2,
+          "vulns_summary": [
+            "GHSA-7xfp-9c55-5vqj",
+            "GHSA-p8p7-x288-28g6"
+          ]
+        },
+        {
+          "name": "request-promise-core",
+          "ecosystem": "npm",
+          "vulns_count": 0,
+          "vulns_summary": []
+        },
+        {
+          "name": "request-promise-native",
+          "ecosystem": "npm",
+          "vulns_count": 0,
+          "vulns_summary": []
+        }
+      ],
+      "dependabot_config": {
+        "present": false,
+        "ecosystems_tracked": [],
+        "raw_snippet": null
+      }
+    },
+    "pr_review": {
+      "total_closed_prs": 0,
+      "sample_size": 0,
+      "total_merged_lifetime": 352,
+      "prs": [],
+      "formal_review_rate": null,
+      "any_review_rate": null,
+      "self_merge_count": 0,
+      "security_flagged_count": 0,
+      "security_flagged_numbers": [
+        873,
+        874,
+        902,
+        1996,
+        2153,
+        2429
+      ]
+    },
+    "open_prs": {
+      "entries": [
+        {
+          "number": 2487,
+          "title": "feat: robust WA version override + fallback chain with 405 retry",
+          "author": "kaikybrofc",
+          "created_at": "2026-04-19T02:03:56Z"
+        },
+        {
+          "number": 2486,
+          "title": "chore: update WhatsApp Web version",
+          "author": "app/github-actions",
+          "created_at": "2026-04-19T00:54:23Z"
+        },
+        {
+          "number": 2482,
+          "title": "fix(newsletter): process multiple messages in a single notification stanza",
+          "author": "kaikybrofc",
+          "created_at": "2026-04-12T20:16:54Z"
+        },
+        {
+          "number": 2481,
+          "title": "fix: race condition in media connection cache",
+          "author": "spinzaf",
+          "created_at": "2026-04-12T14:03:43Z"
+        },
+        {
+          "number": 2480,
+          "title": "feat: add initial username INBOUND and Usync support",
+          "author": "gusquadri",
+          "created_at": "2026-04-12T05:10:26Z"
+        },
+        {
+          "number": 2478,
+          "title": "Implement two-stage protocol fallback in fetchProps for chat requests' or 'Add legacy protocol-1 fallback to fetchProps for compatibility",
+          "author": "ojuolokun86",
+          "created_at": "2026-04-10T14:12:33Z"
+        },
+        {
+          "number": 2473,
+          "title": "fix(chats): update abprops query to fix bad-request error",
+          "author": "vinikjkkj",
+          "created_at": "2026-04-09T04:52:06Z"
+        },
+        {
+          "number": 2472,
+          "title": "Handle mex linked profiles updates (LID mapping)",
+          "author": "kaikybrofc",
+          "created_at": "2026-04-07T13:16:08Z"
+        },
+        {
+          "number": 2467,
+          "title": "feat: expose LID/PN poll vote decryption as consumer utility (decryptPollVoteWithLidFallback)",
+          "author": "kobie3717",
+          "created_at": "2026-04-05T14:28:40Z"
+        },
+        {
+          "number": 2463,
+          "title": "fix: repair broken redirect retry counter in link preview",
+          "author": "ValyKay",
+          "created_at": "2026-04-01T20:13:09Z"
+        },
+        {
+          "number": 2461,
+          "title": "fix: exclude music-metadata 11.12.2 which ships without .d.ts files",
+          "author": "salmanrajz",
+          "created_at": "2026-04-01T09:32:40Z"
+        },
+        {
+          "number": 2460,
+          "title": "feat: add companion registration utilities",
+          "author": "jlucaso1",
+          "created_at": "2026-04-01T02:21:00Z"
+        },
+        {
+          "number": 2456,
+          "title": "fix: App state sync resilience \u2014 skip undecryptable records instead of aborting",
+          "author": "AshishKumarD",
+          "created_at": "2026-03-28T15:02:49Z"
+        },
+        {
+          "number": 2449,
+          "title": "Fix updateBlockStatus",
+          "author": "FgsiDev",
+          "created_at": "2026-03-26T08:17:59Z"
+        },
+        {
+          "number": 2446,
+          "title": "feat: implement TC token, CS token & error 463 prevention",
+          "author": "vphelipe",
+          "created_at": "2026-03-26T03:10:19Z"
+        },
+        {
+          "number": 2445,
+          "title": "feat: server-push mex notification dispatch (reachout timelock + message capping)",
+          "author": "jlucaso1",
+          "created_at": "2026-03-25T19:12:37Z"
+        },
+        {
+          "number": 2442,
+          "title": "socket, messages-recv: add support for reachout and limits XWAs",
+          "author": "purpshell",
+          "created_at": "2026-03-25T07:26:33Z"
+        },
+        {
+          "number": 2440,
+          "title": "fix: fallback waveform for PTT audio without audio-decode (#2433)",
+          "author": "kobie3717",
+          "created_at": "2026-03-24T17:56:09Z"
+        },
+        {
+          "number": 2438,
+          "title": "feat: cstoken (NCT)",
+          "author": "jlucaso1",
+          "created_at": "2026-03-23T22:32:28Z"
+        },
+        {
+          "number": 2436,
+          "title": "Feat/devices notification",
+          "author": "Santosl2",
+          "created_at": "2026-03-20T18:18:50Z"
+        },
+        {
+          "number": 2435,
+          "title": "fix: detect view-once media on stanza 1 for linked devices + fix mediatype in enc node",
+          "author": "rsalcara",
+          "created_at": "2026-03-20T14:22:17Z"
+        },
+        {
+          "number": 2434,
+          "title": "fix: use newsletter-specific upload paths for channel media",
+          "author": "alesdi",
+          "created_at": "2026-03-20T10:10:49Z"
+        },
+        {
+          "number": 2432,
+          "title": "test: improve running e2e tests",
+          "author": "jlucaso1",
+          "created_at": "2026-03-19T01:25:10Z"
+        },
+        {
+          "number": 2430,
+          "title": "docs(messages): add voice note example",
+          "author": "jr551",
+          "created_at": "2026-03-18T18:05:13Z"
+        },
+        {
+          "number": 2429,
+          "title": "docs(auth): document custom auth state requirements",
+          "author": "jr551",
+          "created_at": "2026-03-18T18:04:37Z"
+        },
+        {
+          "number": 2428,
+          "title": "docs(messages): add delivery evidence example",
+          "author": "jr551",
+          "created_at": "2026-03-18T18:03:53Z"
+        },
+        {
+          "number": 2427,
+          "title": "docs(example): handle append upserts alongside notify",
+          "author": "jr551",
+          "created_at": "2026-03-18T18:03:02Z"
+        },
+        {
+          "number": 2426,
+          "title": "feat: Add support for `pastParticipants` in history sync",
+          "author": "Hen2609",
+          "created_at": "2026-03-17T19:36:18Z"
+        },
+        {
+          "number": 2425,
+          "title": "fix: fallback group node on extractCommunityMetadata",
+          "author": "josecleiton",
+          "created_at": "2026-03-17T18:26:44Z"
+        },
+        {
+          "number": 2413,
+          "title": "fix: pin music-metadata to 11.12.1 to avoid missing TypeScript declar\u2026",
+          "author": "Arc2014",
+          "created_at": "2026-03-12T19:14:41Z"
+        },
+        {
+          "number": 2409,
+          "title": "fix: resolve pairing code rejection due to timing and platform validation issues",
+          "author": "mtAlves",
+          "created_at": "2026-03-11T21:04:27Z"
+        },
+        {
+          "number": 2405,
+          "title": "fix: connection stability overhaul \u2014 prevent disconnects, memory leaks, and zombie sockets",
+          "author": "kobie3717",
+          "created_at": "2026-03-08T21:24:04Z"
+        },
+        {
+          "number": 2404,
+          "title": "fix: apply mentions and contextInfo before viewOnce wrapping to prevent empty messages (#832)",
+          "author": "kobie3717",
+          "created_at": "2026-03-08T21:02:11Z"
+        },
+        {
+          "number": 2403,
+          "title": "fix: add LID support to onWhatsApp (#1522)",
+          "author": "kobie3717",
+          "created_at": "2026-03-08T21:01:59Z"
+        },
+        {
+          "number": 2402,
+          "title": "fix: catch decodeFrame errors to prevent crash loop during pairing (#2364)",
+          "author": "kobie3717",
+          "created_at": "2026-03-08T21:01:50Z"
+        },
+        {
+          "number": 2401,
+          "title": "fix: add timeout to fetchLatestBaileysVersion/fetchLatestWaWebVersion to prevent hang (#1990)",
+          "author": "kobie3717",
+          "created_at": "2026-03-08T21:01:39Z"
+        },
+        {
+          "number": 2393,
+          "title": "feat: add Android browser preset for companion device registration",
+          "author": "rsalcara",
+          "created_at": "2026-03-03T01:43:34Z"
+        },
+        {
+          "number": 2390,
+          "title": "remove problematic link preview dependency",
+          "author": "YonkoSam",
+          "created_at": "2026-03-01T15:58:06Z"
+        },
+        {
+          "number": 2375,
+          "title": "feat: add outgoing voice call signaling API (initiateCall + cancelCall)",
+          "author": "koptereli",
+          "created_at": "2026-02-25T23:36:09Z"
+        },
+        {
+          "number": 2374,
+          "title": "fix memory leak",
+          "author": "techwebsolucao",
+          "created_at": "2026-02-25T17:45:43Z"
+        },
+        {
+          "number": 2372,
+          "title": "fix: resolve Bad MAC, No Session, Invalid PreKey errors (#1769)",
+          "author": "kobie3717",
+          "created_at": "2026-02-24T14:22:47Z"
+        },
+        {
+          "number": 2356,
+          "title": "docs: guide for handling community sub-group messages",
+          "author": "kobie3717",
+          "created_at": "2026-02-21T19:14:26Z"
+        },
+        {
+          "number": 2355,
+          "title": "Enrich call event types",
+          "author": "koptereli",
+          "created_at": "2026-02-21T12:35:21Z"
+        },
+        {
+          "number": 2352,
+          "title": "fix: streamline JID handling by removing redundant checks and acknowledgments",
+          "author": "jlucaso1",
+          "created_at": "2026-02-20T18:37:59Z"
+        },
+        {
+          "number": 2350,
+          "title": "fix: improve app state sync resilience (verified against WA Web)",
+          "author": "jlucaso1",
+          "created_at": "2026-02-19T14:32:29Z"
+        },
+        {
+          "number": 2339,
+          "title": "feat: complete tctoken lifecycle with expiration, pruning and re-issuance",
+          "author": "jlucaso1",
+          "created_at": "2026-02-12T19:41:29Z"
+        },
+        {
+          "number": 2333,
+          "title": "perf: optimize history sync memory and CPU usage",
+          "author": "jlucaso1",
+          "created_at": "2026-02-10T17:57:16Z"
+        },
+        {
+          "number": 2265,
+          "title": "fix(chats): add validation for jid and pn_jid in updateBlockStatus",
+          "author": "4relial",
+          "created_at": "2026-01-16T03:19:21Z"
+        },
+        {
+          "number": 2201,
+          "title": "feat: add android browser (can receive viewonce)",
+          "author": "vinikjkkj",
+          "created_at": "2025-12-19T04:56:37Z"
+        },
+        {
+          "number": 2191,
+          "title": "feat: add cleanup handlers to prevent memory leaks on socket close",
+          "author": "vinikjkkj",
+          "created_at": "2025-12-16T21:03:51Z"
+        },
+        {
+          "number": 2175,
+          "title": " Per user mutex",
+          "author": "YonkoSam",
+          "created_at": "2025-12-12T21:50:08Z"
+        },
+        {
+          "number": 2067,
+          "title": "feat: libsignal wasm",
+          "author": "jlucaso1",
+          "created_at": "2025-11-16T00:13:22Z"
+        },
+        {
+          "number": 2058,
+          "title": "feat: album message sending",
+          "author": "vinikjkkj",
+          "created_at": "2025-11-13T03:32:40Z"
+        },
+        {
+          "number": 1960,
+          "title": "feat: custom logger libsignal",
+          "author": "jlucaso1",
+          "created_at": "2025-10-21T16:58:06Z"
+        },
+        {
+          "number": 1892,
+          "title": "fix: improve error handling and safe checking",
+          "author": "jlucaso1",
+          "created_at": "2025-10-08T16:08:25Z"
+        },
+        {
+          "number": 1877,
+          "title": "chore: Update dispatcher/proxy handling in fetch requests",
+          "author": "jlucaso1",
+          "created_at": "2025-10-07T04:27:16Z"
+        },
+        {
+          "number": 1838,
+          "title": "Fix sending poll to newsletter",
+          "author": "devlikepro",
+          "created_at": "2025-09-29T08:36:22Z"
+        },
+        {
+          "number": 1762,
+          "title": "chore: add eslint-plugin-n to explicit node builtin and deprecated functions",
+          "author": "jlucaso1",
+          "created_at": "2025-09-10T18:18:38Z"
+        },
+        {
+          "number": 1698,
+          "title": "feat: implement binary node wasm",
+          "author": "jlucaso1",
+          "created_at": "2025-08-19T00:23:12Z"
+        },
+        {
+          "number": 1561,
+          "title": "add support for sticker packs",
+          "author": "jlucaso1",
+          "created_at": "2025-06-25T21:30:33Z"
+        }
+      ],
+      "count": 60
+    },
+    "closed_not_merged_prs": {
+      "entries": [
+        {
+          "number": 2479,
+          "title": "chore: update WhatsApp Web version",
+          "closed_at": "2026-04-19T00:54:21Z"
+        },
+        {
+          "number": 2476,
+          "title": "socket.ts",
+          "closed_at": "2026-04-09T07:51:37Z"
+        },
+        {
+          "number": 2474,
+          "title": "socket.ts",
+          "closed_at": "2026-04-09T05:11:18Z"
+        },
+        {
+          "number": 2466,
+          "title": "chore: update WhatsApp Web version",
+          "closed_at": "2026-04-12T00:52:46Z"
+        },
+        {
+          "number": 2459,
+          "title": "pull",
+          "closed_at": "2026-03-30T03:48:50Z"
+        },
+        {
+          "number": 2458,
+          "title": "chore: update WhatsApp Web version",
+          "closed_at": "2026-04-05T00:50:30Z"
+        },
+        {
+          "number": 2457,
+          "title": "Rc9 ctwa fix",
+          "closed_at": "2026-03-28T20:15:10Z"
+        },
+        {
+          "number": 2451,
+          "title": "Add 'token' to .gitignore",
+          "closed_at": "2026-03-27T23:33:14Z"
+        },
+        {
+          "number": 2444,
+          "title": "fix: respect caller-provided waveform for PTT audio messages",
+          "closed_at": "2026-03-25T18:11:15Z"
+        },
+        {
+          "number": 2437,
+          "title": "chore: update WhatsApp Web version",
+          "closed_at": "2026-03-29T00:49:55Z"
+        },
+        {
+          "number": 2423,
+          "title": "fix: carousel WhatsApp Web real-time rendering",
+          "closed_at": "2026-03-16T23:15:14Z"
+        },
+        {
+          "number": 2412,
+          "title": "Ajuste na versao music-metadata",
+          "closed_at": "2026-03-12T18:52:40Z"
+        },
+        {
+          "number": 2411,
+          "title": "baileys music-metadata fix",
+          "closed_at": "2026-03-12T13:49:47Z"
+        },
+        {
+          "number": 2406,
+          "title": "feat(): update the prekey count to be a configurable config",
+          "closed_at": "2026-03-11T14:23:05Z"
+        },
+        {
+          "number": 2400,
+          "title": "fix: make link-preview-js gracefully optional (#2390)",
+          "closed_at": "2026-03-13T19:48:04Z"
+        },
+        {
+          "number": 2399,
+          "title": "fix: ensure status@broadcast messages are not filtered by shouldIgnoreJid (#2388)",
+          "closed_at": "2026-04-05T16:53:56Z"
+        },
+        {
+          "number": 2398,
+          "title": "fix: add ignoreStatusBroadcast option to prevent status messages from overwhelming handler (#2382)",
+          "closed_at": "2026-04-05T16:52:23Z"
+        },
+        {
+          "number": 2397,
+          "title": "chore: update WhatsApp Web version",
+          "closed_at": "2026-03-15T00:49:06Z"
+        },
+        {
+          "number": 2391,
+          "title": "feat: complete WhatsApp call signaling (voice, video, call links)",
+          "closed_at": "2026-04-04T20:57:05Z"
+        },
+        {
+          "number": 2389,
+          "title": "remove problematic link-preview dependency",
+          "closed_at": "2026-03-01T15:51:40Z"
+        },
+        {
+          "number": 2387,
+          "title": "chore: update WhatsApp Web version",
+          "closed_at": "2026-03-08T00:43:12Z"
+        },
+        {
+          "number": 2386,
+          "title": "fix: normalise remoteJid in reaction keys for fromMe messages",
+          "closed_at": "2026-04-04T20:41:56Z"
+        },
+        {
+          "number": 2385,
+          "title": "fix: add timeout to fetchLatestBaileysVersion to prevent hanging connections",
+          "closed_at": "2026-04-05T18:53:08Z"
+        },
+        {
+          "number": 2384,
+          "title": "fix: handle pnForLidChatAction and emit lid-mapping.update from contactAction",
+          "closed_at": "2026-02-27T22:59:25Z"
+        },
+        {
+          "number": 2383,
+          "title": "fix: pass through phoneNumberToLidMappings from history sync",
+          "closed_at": "2026-02-27T22:59:24Z"
+        },
+        {
+          "number": 2379,
+          "title": "perf(signal): eliminate 3 post-restart latency sources in migrateSession",
+          "closed_at": "2026-02-27T02:49:12Z"
+        },
+        {
+          "number": 2377,
+          "title": "fix: use MACOS platform to resolve 405 Connection Failure",
+          "closed_at": "2026-04-05T16:54:43Z"
+        },
+        {
+          "number": 2369,
+          "title": "Fix poll vote decryption issue #1344",
+          "closed_at": "2026-04-04T20:24:26Z"
+        },
+        {
+          "number": 2368,
+          "title": "Fix session timeout after 3-7 days (issue #1965)",
+          "closed_at": "2026-04-04T20:20:04Z"
+        },
+        {
+          "number": 2367,
+          "title": "Improve disconnect reason handling for WhatsApp session stability",
+          "closed_at": "2026-04-04T20:17:47Z"
+        },
+        {
+          "number": 2366,
+          "title": "Fix memory leak in NodeCache instances (#2344)",
+          "closed_at": "2026-04-04T20:14:14Z"
+        },
+        {
+          "number": 2365,
+          "title": "fix: use MACOS platform to resolve 405 Connection Failure",
+          "closed_at": "2026-04-04T20:07:19Z"
+        },
+        {
+          "number": 2349,
+          "title": "feat: Add automated WhatsApp Web version update system with auto-merge",
+          "closed_at": "2026-02-18T22:29:58Z"
+        },
+        {
+          "number": 2348,
+          "title": "feat: Add automated WhatsApp Web version update system with auto-merge",
+          "closed_at": "2026-02-18T21:53:55Z"
+        },
+        {
+          "number": 2343,
+          "title": "chore: update WhatsApp Web version",
+          "closed_at": "2026-02-22T00:43:34Z"
+        },
+        {
+          "number": 2338,
+          "title": "conflicts",
+          "closed_at": "2026-02-11T13:08:49Z"
+        },
+        {
+          "number": 2336,
+          "title": "calls: Decrypt call key and include node in call event + offer receipt",
+          "closed_at": "2026-04-08T02:20:10Z"
+        },
+        {
+          "number": 2327,
+          "title": "libsignal-wasm core",
+          "closed_at": "2026-02-06T05:23:28Z"
+        },
+        {
+          "number": 2326,
+          "title": "conflict",
+          "closed_at": "2026-02-06T00:26:07Z"
+        },
+        {
+          "number": 2325,
+          "title": "feat: Add automated WhatsApp Web version update system with auto-merge",
+          "closed_at": "2026-02-08T18:03:53Z"
+        },
+        {
+          "number": 2324,
+          "title": "feat: Add automated WhatsApp Web version update system with auto-merge",
+          "closed_at": "2026-02-05T23:26:33Z"
+        },
+        {
+          "number": 2314,
+          "title": "chore: update WhatsApp Web version",
+          "closed_at": "2026-02-08T00:52:57Z"
+        },
+        {
+          "number": 2310,
+          "title": "Tests",
+          "closed_at": "2026-01-30T19:10:09Z"
+        },
+        {
+          "number": 2308,
+          "title": "Decrypt poll votes for LID chats by trying PN/LID jid candidates",
+          "closed_at": "2026-01-29T21:27:38Z"
+        },
+        {
+          "number": 2303,
+          "title": "Platform mapping",
+          "closed_at": "2026-02-19T03:45:23Z"
+        },
+        {
+          "number": 2301,
+          "title": "Refactor SenderKeyMessage to use static signature length",
+          "closed_at": "2026-03-25T02:19:12Z"
+        },
+        {
+          "number": 2298,
+          "title": "chore: update WhatsApp Web version",
+          "closed_at": "2026-02-01T00:48:51Z"
+        },
+        {
+          "number": 2295,
+          "title": "\ud83d\ude80 v1.0.0 - Initial release with Interactive Buttons & LID Plotting",
+          "closed_at": "2026-01-23T18:06:59Z"
+        },
+        {
+          "number": 2292,
+          "title": "Fix: Request placeholder resend for messages from Ads",
+          "closed_at": "2026-02-02T09:50:26Z"
+        },
+        {
+          "number": 2291,
+          "title": "Restoring buttons",
+          "closed_at": "2026-01-22T12:14:03Z"
+        },
+        {
+          "number": 2290,
+          "title": "fix conflicte",
+          "closed_at": "2026-01-22T11:06:52Z"
+        },
+        {
+          "number": 2289,
+          "title": "fix prometheus server",
+          "closed_at": "2026-01-22T04:02:15Z"
+        },
+        {
+          "number": 2288,
+          "title": "fix: add missing await for mutationKeys in decodeSyncdMutations",
+          "closed_at": "2026-01-22T12:47:52Z"
+        },
+        {
+          "number": 2287,
+          "title": "Fix: Automatic recovery of Click-to-WhatsApp (CTWA) ads messages",
+          "closed_at": "2026-01-21T15:45:24Z"
+        },
+        {
+          "number": 2286,
+          "title": "feat(history+lid-mapping): comprehensive LID-PN mapping extraction with batch reverse lookup",
+          "closed_at": "2026-01-21T14:20:16Z"
+        },
+        {
+          "number": 2285,
+          "title": "feat(history): comprehensive LID-PN mapping extraction with deduplication",
+          "closed_at": "2026-01-21T05:10:12Z"
+        },
+        {
+          "number": 2283,
+          "title": "feat(history): comprehensive LID-PN mapping extraction with deduplication",
+          "closed_at": "2026-01-21T04:42:01Z"
+        },
+        {
+          "number": 2281,
+          "title": "Add optional LID mapping cache to Signal repository",
+          "closed_at": "2026-02-07T10:46:13Z"
+        },
+        {
+          "number": 2279,
+          "title": "feat(metrics): integrate prom-client for native Prometheus support",
+          "closed_at": "2026-01-20T12:39:26Z"
+        },
+        {
+          "number": 2278,
+          "title": "feat(defaults): apply RSocket's battle-tested configurations",
+          "closed_at": "2026-01-20T12:39:39Z"
+        },
+        {
+          "number": 2276,
+          "title": "fix(utils): resolve TypeScript compilation errors in utility modules",
+          "closed_at": "2026-01-20T02:07:34Z"
+        },
+        {
+          "number": 2275,
+          "title": "Optimize LID-PN mapping with batched DB operations",
+          "closed_at": "2026-03-25T02:19:13Z"
+        },
+        {
+          "number": 2273,
+          "title": "Performace and MemoryLeak",
+          "closed_at": "2026-01-20T10:32:48Z"
+        },
+        {
+          "number": 2270,
+          "title": "perf: remove unnecessary stack trace capture in promiseTimeout and delayCancellable",
+          "closed_at": "2026-03-25T02:19:14Z"
+        },
+        {
+          "number": 2267,
+          "title": "fix: handle app-state-sync-key timing race and missing REMOVE mutations",
+          "closed_at": "2026-03-25T02:19:15Z"
+        },
+        {
+          "number": 2255,
+          "title": "perf: replace PQueue with Mutex for concurrency control in cache and pre-key operations",
+          "closed_at": "2026-03-25T02:19:16Z"
+        },
+        {
+          "number": 2244,
+          "title": "Add button and interactive message support",
+          "closed_at": "2026-01-08T02:02:54Z"
+        },
+        {
+          "number": 2243,
+          "title": "Fix PN-addressed group metadata: subject fallback and refetch",
+          "closed_at": "2026-03-26T02:19:37Z"
+        },
+        {
+          "number": 2240,
+          "title": "Feat/dnn prod ready",
+          "closed_at": "2026-01-05T17:37:08Z"
+        },
+        {
+          "number": 2238,
+          "title": "Main",
+          "closed_at": "2026-01-04T19:38:43Z"
+        },
+        {
+          "number": 2221,
+          "title": "Bot 1",
+          "closed_at": "2025-12-25T16:11:34Z"
+        },
+        {
+          "number": 2220,
+          "title": "Replace Legacy Pairing Flow with New Encrypted Ephemeral Key Protocol",
+          "closed_at": "2025-12-26T23:26:16Z"
+        },
+        {
+          "number": 2216,
+          "title": "feat: Update pipeline to publish internal package",
+          "closed_at": "2025-12-23T17:13:15Z"
+        },
+        {
+          "number": 2206,
+          "title": "Feat libsignal wasm",
+          "closed_at": "2025-12-20T12:48:06Z"
+        },
+        {
+          "number": 2194,
+          "title": "Kid",
+          "closed_at": "2025-12-18T00:24:21Z"
+        },
+        {
+          "number": 2178,
+          "title": "fix: improve type safety in catch blocks",
+          "closed_at": "2025-12-13T04:03:31Z"
+        },
+        {
+          "number": 2177,
+          "title": "fix: replace console statements with logger for consistency",
+          "closed_at": "2025-12-13T04:03:21Z"
+        },
+        {
+          "number": 2176,
+          "title": "test: add comprehensive unit tests for core utilities",
+          "closed_at": "2025-12-13T04:03:30Z"
+        },
+        {
+          "number": 2174,
+          "title": "fix: Improve memory management in MessageRetryManager and event buffer",
+          "closed_at": "2025-12-12T20:04:23Z"
+        },
+        {
+          "number": 2173,
+          "title": "Crayonqueen-bot create",
+          "closed_at": "2025-12-12T15:58:16Z"
+        },
+        {
+          "number": 2172,
+          "title": "Create Crayonqueen",
+          "closed_at": "2025-12-12T15:40:16Z"
+        },
+        {
+          "number": 2164,
+          "title": "Add Feature LabelMember",
+          "closed_at": "2025-12-14T23:47:56Z"
+        },
+        {
+          "number": 2163,
+          "title": "Add Feature LabelMember",
+          "closed_at": "2025-12-10T11:55:55Z"
+        },
+        {
+          "number": 2143,
+          "title": "Fix/sender key reset on rejoin",
+          "closed_at": "2025-12-03T22:59:57Z"
+        },
+        {
+          "number": 2129,
+          "title": "Feat/chalk default pairing code",
+          "closed_at": "2025-11-29T02:05:45Z"
+        },
+        {
+          "number": 2126,
+          "title": "Vv",
+          "closed_at": "2025-11-28T13:46:14Z"
+        },
+        {
+          "number": 2125,
+          "title": "Gg",
+          "closed_at": "2025-11-28T12:43:32Z"
+        },
+        {
+          "number": 2120,
+          "title": "feat(groups): implement group participant caching and update handling",
+          "closed_at": "2025-11-27T16:04:14Z"
+        },
+        {
+          "number": 2109,
+          "title": "Add senderPn and senderLid to message types",
+          "closed_at": "2025-11-27T12:03:52Z"
+        },
+        {
+          "number": 2108,
+          "title": "Fix commonjs build",
+          "closed_at": "2025-11-25T02:40:13Z"
+        },
+        {
+          "number": 2103,
+          "title": "Stop awaiting retry mutex to fix message hang",
+          "closed_at": "2025-11-23T12:17:42Z"
+        },
+        {
+          "number": 2102,
+          "title": "fix: handle LID/PN addressing mode inversion for incoming messages",
+          "closed_at": "2025-11-25T02:42:40Z"
+        },
+        {
+          "number": 2089,
+          "title": "Update devcontainer image version to v12",
+          "closed_at": "2025-11-19T21:59:21Z"
+        },
+        {
+          "number": 2069,
+          "title": "fix(memory): prevent leaks in sockets and media pipeline",
+          "closed_at": "2025-11-16T15:28:01Z"
+        },
+        {
+          "number": 2047,
+          "title": "xrelly",
+          "closed_at": "2025-11-11T10:18:40Z"
+        },
+        {
+          "number": 2045,
+          "title": "Add new file for MD-YUNY LUCIFER",
+          "closed_at": "2025-11-11T00:46:03Z"
+        },
+        {
+          "number": 2032,
+          "title": ".",
+          "closed_at": "2025-11-07T19:35:35Z"
+        },
+        {
+          "number": 2026,
+          "title": "Happy New Year",
+          "closed_at": "2025-11-06T08:11:40Z"
+        },
+        {
+          "number": 2025,
+          "title": "ft:Support HTTPS proxies and SOCKS proxies",
+          "closed_at": "2026-03-26T02:19:45Z"
+        },
+        {
+          "number": 2012,
+          "title": "Create Bottimotti",
+          "closed_at": "2025-11-02T16:00:44Z"
+        }
+      ],
+      "count": 100
+    },
+    "issues_and_commits": {
+      "open_security_issues": [],
+      "open_issues_count": 253,
+      "closed_issues": [
+        {
+          "author": "hakisolos",
+          "closed_at": "2026-04-19T01:44:39Z",
+          "number": 2485,
+          "title": "[BUG]"
+        },
+        {
+          "author": "dsherret",
+          "closed_at": "2026-04-08T15:07:11Z",
+          "number": 2319,
+          "title": "Remove unpinned git dependency?"
+        },
+        {
+          "author": "blackappleD",
+          "closed_at": "2026-01-27T10:14:03Z",
+          "number": 2250,
+          "title": "[Feature Request]: Support for importing external session credentials (6-segment protocol data) to bypass QR login"
+        },
+        {
+          "author": "mkhotib20",
+          "closed_at": "2023-07-22T18:25:17Z",
+          "number": 260,
+          "title": "[BUG] - Small Image for Link Preview, Expecting Large Image for Link Preview"
+        },
+        {
+          "author": "7kXTQsyhnySpko6n",
+          "closed_at": "2025-07-23T00:15:16Z",
+          "number": 450,
+          "title": "[BUG] No proxy was used when downloading media"
+        },
+        {
+          "author": "Salientekill",
+          "closed_at": "2025-07-20T04:15:20Z",
+          "number": 1615,
+          "title": "error when trying to download via npm"
+        },
+        {
+          "author": "Salientekill",
+          "closed_at": "2025-07-20T04:14:00Z",
+          "number": 1614,
+          "title": "Error trying to download"
+        },
+        {
+          "author": "lauriolasw",
+          "closed_at": "2025-07-06T02:16:57Z",
+          "number": 508,
+          "title": "Mobile API outdated (MOBILE_TOKEN)"
+        },
+        {
+          "author": "SACHIBOT",
+          "closed_at": "2025-05-30T00:39:59Z",
+          "number": 821,
+          "title": "Mobile Registration Not Working [BUG]"
+        },
+        {
+          "author": "lauriolasw",
+          "closed_at": "2025-05-30T00:37:50Z",
+          "number": 709,
+          "title": "[BUG] Mobile API: 'Login not available right now'"
+        }
+      ],
+      "closed_issues_count": 10,
+      "recent_commits": [
+        {
+          "author": "AshishKumarD",
+          "date": "2026-03-27T23:36:35Z",
+          "message_first_line": "fix: respect caller-provided waveform for PTT audio messages (#2443)",
+          "sha": "8e5093c",
+          "security_keyword_match": true
+        },
+        {
+          "author": "purpshell",
+          "date": "2026-03-22T00:43:03Z",
+          "message_first_line": "messages: Fix regression where missing contextInfo caused no mentions",
+          "sha": "802d5f6",
+          "security_keyword_match": true
+        },
+        {
+          "author": "github-actions[bot]",
+          "date": "2026-03-15T20:49:39Z",
+          "message_first_line": "chore: update WhatsApp Web version (#2420)",
+          "sha": "d077902",
+          "security_keyword_match": false
+        },
+        {
+          "author": "jlucaso1",
+          "date": "2026-03-13T19:45:49Z",
+          "message_first_line": "Fix ack handling (#2373)",
+          "sha": "c4e5d12",
+          "security_keyword_match": true
+        },
+        {
+          "author": "Santosl2",
+          "date": "2026-03-13T17:49:16Z",
+          "message_first_line": "feat: groups mention all  (#2396)",
+          "sha": "6afde71",
+          "security_keyword_match": false
+        },
+        {
+          "author": "SheIITear",
+          "date": "2026-02-24T16:33:33Z",
+          "message_first_line": "Merge pull request #2360 from WhiskeySockets/update-version/stable",
+          "sha": "ad5ea81",
+          "security_keyword_match": false
+        },
+        {
+          "author": "github-actions[bot]",
+          "date": "2026-02-22T00:43:34Z",
+          "message_first_line": "chore: update WhatsApp Web version",
+          "sha": "3841abc",
+          "security_keyword_match": false
+        },
+        {
+          "author": "jlucaso1",
+          "date": "2026-02-11T09:56:23Z",
+          "message_first_line": "fix: request placeholder resend for messages without encryption (CTWAads) (#2334)",
+          "sha": "7a5b090",
+          "security_keyword_match": true
+        },
+        {
+          "author": "vinikjkkj",
+          "date": "2026-02-11T00:11:16Z",
+          "message_first_line": "feat(call): add caller phone number to offer call event (#2190)",
+          "sha": "23156c8",
+          "security_keyword_match": false
+        },
+        {
+          "author": "github-actions[bot]",
+          "date": "2026-02-09T13:46:10Z",
+          "message_first_line": "chore: update WhatsApp Web version (#2330)",
+          "sha": "a9ba119",
+          "security_keyword_match": false
+        },
+        {
+          "author": "jlucaso1",
+          "date": "2026-02-05T19:31:26Z",
+          "message_first_line": "fix: detect identity key changes and reset sessions (align with WA Web) (#2307)",
+          "sha": "b023901",
+          "security_keyword_match": true
+        },
+        {
+          "author": "jlucaso1",
+          "date": "2026-02-05T14:06:47Z",
+          "message_first_line": "feat: replace async crypto with sync Rust WASM for app state sync (#2315)",
+          "sha": "b5c1741",
+          "security_keyword_match": false
+        },
+        {
+          "author": "jlucaso1",
+          "date": "2026-02-05T14:06:15Z",
+          "message_first_line": "perf: reduce DB calls during sync with caching and batching (#2316)",
+          "sha": "fa2a837",
+          "security_keyword_match": false
+        },
+        {
+          "author": "alwahib",
+          "date": "2026-01-24T23:52:36Z",
+          "message_first_line": "fix: align noise-handler buffer types for Baileys build (#2284)",
+          "sha": "ffc019f",
+          "security_keyword_match": true
+        },
+        {
+          "author": "Santosl2",
+          "date": "2026-01-24T23:51:47Z",
+          "message_first_line": "feat: send unified session (#2294)",
+          "sha": "d514764",
+          "security_keyword_match": false
+        },
+        {
+          "author": "jlucaso1",
+          "date": "2026-01-22T13:00:41Z",
+          "message_first_line": "fix: extract LID-PN mappings from conversation objects in history sync (#2282)",
+          "sha": "f829b6d",
+          "security_keyword_match": true
+        },
+        {
+          "author": "gusquadri",
+          "date": "2026-01-22T12:58:02Z",
+          "message_first_line": "fix: optimize getLIDsForPNs and add getPNsForLIDs (#2274)",
+          "sha": "52fcad2",
+          "security_keyword_match": true
+        },
+        {
+          "author": "jlucaso1",
+          "date": "2026-01-22T12:55:29Z",
+          "message_first_line": "fix: skip retry for expired status messages over 24 hours old (#2280)",
+          "sha": "92d4198",
+          "security_keyword_match": true
+        },
+        {
+          "author": "jlucaso1",
+          "date": "2026-01-22T12:54:10Z",
+          "message_first_line": "Fix connection showing \"Online\" but disconnected (#2132) (#2264)",
+          "sha": "5cbad31",
+          "security_keyword_match": true
+        },
+        {
+          "author": "purpshell",
+          "date": "2026-01-22T12:43:19Z",
+          "message_first_line": "socket: no sync warning!!!!!",
+          "sha": "1ef04d5",
+          "security_keyword_match": false
+        },
+        {
+          "author": "purpshell",
+          "date": "2026-01-22T12:34:54Z",
+          "message_first_line": "example: cleanup",
+          "sha": "bfde86b",
+          "security_keyword_match": false
+        },
+        {
+          "author": "purpshell",
+          "date": "2026-01-22T12:34:22Z",
+          "message_first_line": "history: add proper logging support in history",
+          "sha": "0826895",
+          "security_keyword_match": false
+        },
+        {
+          "author": "purpshell",
+          "date": "2026-01-22T12:13:33Z",
+          "message_first_line": "history: fortify contact data",
+          "sha": "d4e5b41",
+          "security_keyword_match": false
+        },
+        {
+          "author": "purpshell",
+          "date": "2026-01-22T12:13:00Z",
+          "message_first_line": "defaults, index: change shouldSyncHistoryMessage behavior",
+          "sha": "c81c074",
+          "security_keyword_match": false
+        },
+        {
+          "author": "purpshell",
+          "date": "2026-01-22T12:12:25Z",
+          "message_first_line": "example: revamp logging for example",
+          "sha": "506017b",
+          "security_keyword_match": false
+        },
+        {
+          "author": "purpshell",
+          "date": "2026-01-22T08:29:06Z",
+          "message_first_line": "chat-utils,sync-action-utils: provide alternatives for the contact name",
+          "sha": "75b0ba2",
+          "security_keyword_match": false
+        }
+      ]
+    },
+    "distribution_channels": {
+      "channels": [
+        {
+          "name": "npm-baileys",
+          "type": "package_manager",
+          "package": "baileys",
+          "install_command": "npm install baileys",
+          "pinned": false,
+          "install_path_verified": true,
+          "artifact_verified": false,
+          "ecosystem": "npm",
+          "note": "Registered in package.json"
+        },
+        {
+          "name": "npm-whatsapp-web-protobuf-extractor",
+          "type": "package_manager",
+          "package": "whatsapp-web-protobuf-extractor",
+          "install_command": "npm install whatsapp-web-protobuf-extractor",
+          "pinned": false,
+          "install_path_verified": true,
+          "artifact_verified": false,
+          "ecosystem": "npm",
+          "note": "Registered in proto-extract/package.json"
+        }
+      ]
+    },
+    "artifact_verification": {
+      "per_channel": [
+        {
+          "channel": "npm-baileys",
+          "method": "npm-registry-presence",
+          "result": "verified",
+          "latest_version": "7.0.0-rc.9"
+        },
+        {
+          "channel": "npm-whatsapp-web-protobuf-extractor",
+          "method": "npm-registry-presence",
+          "result": "verified",
+          "latest_version": "1.0.0"
+        }
+      ]
+    },
+    "install_script_analysis": {
+      "scripts": [
+        {
+          "file": "README.md",
+          "snippet": "yarn add @whiskeysockets/baileys",
+          "network": true,
+          "tracks_main_branch": false,
+          "sha_pinned": false,
+          "tag_pinned": false
+        },
+        {
+          "file": "README.md",
+          "snippet": "yarn add github:WhiskeySockets/Baileys",
+          "network": true,
+          "tracks_main_branch": false,
+          "sha_pinned": false,
+          "tag_pinned": false
+        },
+        {
+          "file": "README.md",
+          "snippet": "yarn add link-preview-js`",
+          "network": true,
+          "tracks_main_branch": false,
+          "sha_pinned": false,
+          "tag_pinned": false
+        },
+        {
+          "file": "README.md",
+          "snippet": "yarn add jimp` or `yarn add sharp`.",
+          "network": true,
+          "tracks_main_branch": false,
+          "sha_pinned": false,
+          "tag_pinned": false
+        }
+      ]
+    },
+    "gitleaks": {
+      "available": false,
+      "ran": false,
+      "findings_count": null,
+      "findings": [],
+      "note": "gitleaks not installed; install to cover secrets-in-history"
+    },
+    "windows_patterns": {
+      "hits": [],
+      "hit_count": 0
+    },
+    "monorepo": {
+      "is_monorepo": false,
+      "inner_packages": [],
+      "lifecycle_script_hits": []
+    },
+    "defensive_configs": {
+      "entries": [
+        {
+          "file": ".github/dependabot.yml",
+          "type": "dependabot",
+          "present": false
+        },
+        {
+          "file": "SECURITY.md",
+          "type": "security-policy",
+          "present": false
+        }
+      ]
+    },
+    "batch_merge_detection": {
+      "detected": false,
+      "pr_groups": []
+    },
+    "coverage_affirmations": {
+      "prompt_injection_scan_completed": true,
+      "windows_surface_coverage": "scanned",
+      "distribution_channels_verified": "2/2",
+      "gitleaks_available": false,
+      "gitleaks_explanation": "gitleaks not installed; install to cover secrets-in-history"
+    }
+  },
+  "phase_2_validation": {
+    "sha_consistent": true,
+    "required_fields_complete": true,
+    "dates_chronological": true,
+    "tarball_nonempty": true,
+    "validation_passed": true,
+    "validation_errors": []
+  },
+  "phase_3_computed": {
+    "c20_severity": {
+      "no_classic_protection": true,
+      "no_rulesets": true,
+      "no_rules_on_default": true,
+      "no_codeowners": true,
+      "has_recent_release_30d": false,
+      "ships_executable_code": true,
+      "result": "Warning"
+    },
+    "solo_maintainer": {
+      "top_contributor_share": 0.711,
+      "is_solo": false,
+      "verbatim_sentence": null
+    },
+    "exhibit_grouping": {
+      "total_findings": 0,
+      "threshold_met": false,
+      "exhibits": []
+    },
+    "boundary_cases": {
+      "cases": []
+    },
+    "coverage_status": {
+      "cells": [
+        {
+          "name": "Tarball extraction",
+          "status": "ok",
+          "detail": "170 files"
+        },
+        {
+          "name": "OSSF Scorecard",
+          "status": "not_indexed",
+          "detail": "Repo not indexed by OSSF"
+        },
+        {
+          "name": "osv.dev",
+          "status": "not_queried",
+          "detail": ""
+        },
+        {
+          "name": "Secrets-in-history (gitleaks)",
+          "status": "not_available",
+          "detail": "gitleaks not installed"
+        },
+        {
+          "name": "API rate budget",
+          "status": "ok",
+          "detail": "4946/5000 remaining"
+        },
+        {
+          "name": "Dependabot alerts",
+          "status": "unknown",
+          "detail": "Unknown"
+        }
+      ]
+    },
+    "methodology": {
+      "scanner_version": "V2.5-preview",
+      "prompt_version": "V2.4",
+      "guide_version": "V0.2"
+    }
+  },
+  "phase_3_advisory": {
+    "scorecard_hints": {
+      "does_anyone_check_the_code": {
+        "color": "red",
+        "short_answer": "No",
+        "signals": [
+          {
+            "id": "q1_formal_review_rate",
+            "value": 0
+          },
+          {
+            "id": "q1_any_review_rate",
+            "value": 0
+          },
+          {
+            "id": "q1_has_branch_protection",
+            "value": false
+          },
+          {
+            "id": "q1_has_ruleset_protection",
+            "value": false
+          },
+          {
+            "id": "q1_has_codeowners",
+            "value": false
+          },
+          {
+            "id": "q1_is_solo_maintainer",
+            "value": false
+          },
+          {
+            "id": "q1_governance_floor_override",
+            "value": true
+          }
+        ]
+      },
+      "do_they_fix_problems_quickly": {
+        "color": "red",
+        "short_answer": "No",
+        "signals": [
+          {
+            "id": "q2_open_security_issue_count",
+            "value": 0
+          },
+          {
+            "id": "q2_oldest_open_cve_pr_age_days",
+            "value": null
+          },
+          {
+            "id": "q2_oldest_open_security_item_age_days",
+            "value": 54
+          },
+          {
+            "id": "q2_closed_fix_lag_days",
+            "value": null
+          }
+        ]
+      },
+      "do_they_tell_you_about_problems": {
+        "color": "red",
+        "short_answer": "No",
+        "signals": [
+          {
+            "id": "q3_has_security_policy",
+            "value": false
+          },
+          {
+            "id": "q3_has_contributing_guide",
+            "value": false
+          },
+          {
+            "id": "q3_published_advisory_count",
+            "value": 0
+          },
+          {
+            "id": "q3_has_silent_fixes",
+            "value": false
+          }
+        ]
+      },
+      "is_it_safe_out_of_the_box": {
+        "color": "amber",
+        "short_answer": "Partly",
+        "signals": [
+          {
+            "id": "q4_all_channels_pinned",
+            "value": false
+          },
+          {
+            "id": "q4_artifact_verified",
+            "value": true
+          },
+          {
+            "id": "q4_has_critical_on_default_path",
+            "value": false
+          },
+          {
+            "id": "q4_has_warning_on_install_path",
+            "value": false
+          }
+        ]
+      }
+    }
+  },
+  "phase_4_structured_llm": {
+    "findings": {
+      "entries": [
+        {
+          "id": "F0",
+          "severity": "Critical",
+          "provenance": "observed",
+          "status": "ongoing",
+          "category": "legal/tos-violation-risk",
+          "kind": "Vulnerability",
+          "rule_id": null,
+          "title": "Reverse-engineered, unofficial WhatsApp client \u2014 ToS violation + account-ban risk is inherent to use; maintainers explicitly disclaim endorsement",
+          "action_hint": "Do NOT attach a personal WhatsApp account you rely on to a Baileys-based bot. Use a burner number; understand that account suspension is a documented outcome of third-party client use.",
+          "evidence_refs": [
+            "E1"
+          ],
+          "threat_model_paths": [
+            "other"
+          ],
+          "threat_model_context": "Baileys is a reverse-engineered TypeScript library that authenticates to WhatsApp Web servers using credentials belonging to the consuming user's WhatsApp account. WhatsApp's Terms of Service (https://www.whatsapp.com/legal/terms-of-service) prohibit the use of unauthorized third-party clients. WhatsApp actively detects and suspends accounts that exhibit third-party-client behavior (unusual API patterns, missing official-client fingerprints, bulk-messaging patterns). The README explicitly acknowledges this exposure with a CAUTION-flagged disclaimer: 'This project is not affiliated, associated, authorized, endorsed by, or in any way officially connected with WhatsApp' + 'The maintainers of Baileys do not in any way condone the use of this application in practices that violate the Terms of Service of WhatsApp.' The combination \u2014 library exists, users are told not to violate ToS, but the act of using the library AT ALL violates ToS (WhatsApp's ToS prohibits any non-official client) \u2014 is not a standard software-security posture. It's a legal/operational-risk posture that dominates the threat model for this shape.",
+          "what_this_means": "Any user who connects their WhatsApp account to a Baileys bot risks WhatsApp-side account suspension at any time. There is no appeal channel for third-party-client bans beyond what WhatsApp offers to ToS-violating users in general (typically none). For business users, this can mean loss of customer-facing WhatsApp Business accounts; for personal users, loss of chat history, contacts, and identity-tied phone-number account. The library can be technically excellent AND consumer risk can be catastrophic because the threat isn't a code vulnerability, it's the platform operator's response to third-party usage.",
+          "what_this_does_not_mean": "Not a claim that Baileys contains malicious code. Not a claim that maintainers are acting in bad faith \u2014 the opposite is true (the disclaimer is explicit, the license is permissive, the sponsor model is transparent). Not a claim that the library will be technically blocked in the immediate future. The finding documents the inherent risk class of the tool's category.",
+          "duration_label": "Continuous",
+          "date_label": "Since Baileys was created 2022-01-12",
+          "how_to_fix": "Maintainer-side: no fix exists \u2014 the tool's function is inherently ToS-violating. Ongoing maintainer effort (mimicking newer WhatsApp-client fingerprints, update-WhatsApp-version workflow) partially offsets detection pressure but can't resolve the underlying posture. Consumer-side: (1) use burner phone numbers, never primary accounts; (2) don't use Baileys for ToS-prohibited patterns (stalkerware, mass messaging, bulk automation \u2014 the README explicitly discourages these); (3) understand that account suspension can happen without notice; (4) if operating a business, evaluate the official WhatsApp Business Platform API as an alternative that's authorized by WhatsApp."
+        },
+        {
+          "id": "F1",
+          "severity": "Warning",
+          "provenance": "observed",
+          "status": "ongoing",
+          "category": "code-execution/shell-interpolation",
+          "kind": "Vulnerability",
+          "rule_id": null,
+          "title": "child_process.exec with shell string-interpolation in extractVideoThumb \u2014 latent command-injection pattern",
+          "action_hint": "If you fork Baileys or extend it with custom media handling, DO NOT pass external file paths to the exported generateThumbnail API. Future maintainers should migrate this call to spawn(argv) form.",
+          "evidence_refs": [
+            "E2"
+          ],
+          "threat_model_paths": [
+            "sloppy_review",
+            "other"
+          ],
+          "threat_model_context": "src/Utils/messages-media.ts:125-126 builds an ffmpeg command with JavaScript template-string interpolation (`\\`ffmpeg -ss ${time} -i ${path} -y ... ${destPath}\\``) and passes it to `child_process.exec` \u2014 the form that routes through a shell. Current internal callers pass tmpdir-derived paths (safe), but (a) the function is exported via generateThumbnail in the public API; library consumers building custom media flows may pass external paths; (b) any future maintenance change that threads user-controlled data to this code path would expose shell-injection. The safer form is `spawn('ffmpeg', [...argArray])`, which doesn't invoke a shell and handles filename metacharacters safely via argv-level argument separation. This is a coding-hygiene finding \u2014 latent vulnerability, not an active CVE.",
+          "what_this_means": "For direct consumers of baileys: if you pass only library-generated (tmpdir/random) paths, you're not currently exposed. If you thread any external value (a user-uploaded filename, an HTTP download filename, etc.) into extractVideoThumb's `path` or `destPath`, shell metacharacters in that value become a code-execution vector in the ffmpeg invocation.",
+          "what_this_does_not_mean": "Not a today-exploitable RCE in the default library flow. Not a reason to remove existing Baileys integrations that use internal paths only. The finding is about the shape of the code and the cost/benefit of refactoring the exec call to a safer form.",
+          "duration_label": "Continuous",
+          "date_label": "Since messages-media.ts adopted this pattern (early commits 2022-ish)",
+          "how_to_fix": "Maintainer-side: replace `exec(cmd)` with `spawn('ffmpeg', ['-ss', time, '-i', path, '-y', '-vf', `scale=${size.width}:-1`, '-vframes', '1', '-f', 'image2', destPath])` \u2014 identical semantics, no shell, no injection surface. Code-review checklist item for future maintenance. Consumer-side: treat generateThumbnail as INTERNAL until this is fixed; don't call with external paths."
+        },
+        {
+          "id": "F2",
+          "severity": "Warning",
+          "provenance": "observed",
+          "status": "ongoing",
+          "category": "supply-chain/unresolved-community-fix",
+          "kind": "Hygiene",
+          "rule_id": null,
+          "title": "Community-submitted vulnerability-fix PR #1996 closed unmerged via stale-bot after 148 days; maintainer-promised replacement never materialized; library still ships deprecated `request` dep",
+          "action_hint": "If you maintain a downstream fork, apply the PR #1996 changes locally; if you need the deprecated `request` removed from your production chain, patch your node_modules or pin an override.",
+          "evidence_refs": [
+            "E3",
+            "E4"
+          ],
+          "threat_model_paths": [
+            "other"
+          ],
+          "threat_model_context": "PR #1996 'Vulnerability Fixes' by KaivalyaGauns (opened 2025-10-30) replaced the deprecated-since-2020 `request`/`request-promise-core`/`request-promise-native` trio \u2014 carrying 2 known CVEs including GHSA-p8p7-x288-28g6 SSRF-via-redirect and GHSA-7xfp-9c55-5vqj TLS-cert-validation-skip \u2014 with a modern `node-fetch` + `form-data` pair. Maintainer purpshell commented 2026-01-08: 'We should make our own version of this PR. Opening an issue in its stead.' Stale-bot closed the PR 2026-03-26 (148 days later). No replacement PR has been merged \u2014 master's proto-extract/package.json as of the scan still contains `request` + `request-promise-core` + `request-promise-native`. The maintainer's 'our own version' promise has not been fulfilled in 148 days.",
+          "what_this_means": "The dep-modernization that an external contributor offered for free (working tested PR) is not available to users of the library. Users who run proto-extract/ locally pull the deprecated `request` chain and its CVEs. The signal about how vulnerability reports are handled \u2014 externally-submitted PRs closed by stale-bot without substantive engagement \u2014 is also a relevant datapoint for Q3 (disclosure discipline).",
+          "what_this_does_not_mean": "Not evidence that Baileys is actively exploited via the `request` CVEs \u2014 both require specific conditions (redirect to internal IP for SSRF; MITM for TLS-cert-skip). Not a claim that purpshell is uniquely responsible \u2014 the whiskeysockets-bot welcome comment clearly aspires to a community model; the observed outcome is that community PRs stale out more often than they land.",
+          "duration_label": "Ongoing",
+          "date_label": "PR #1996 opened 2025-10-30; stale-closed 2026-03-26; 'own version' not merged in 148 days since purpshell's promise",
+          "how_to_fix": "Maintainer-side: revive PR #1996 (cherry-pick from its diff) or author the promised 'own version'. Consumer-side: override `request` via npm overrides or use a fork that applies the fix."
+        },
+        {
+          "id": "F3",
+          "severity": "Warning",
+          "provenance": "observed",
+          "status": "ongoing",
+          "category": "supply-chain/dep-cve-surface",
+          "kind": "Vulnerability",
+          "rule_id": null,
+          "title": "14 known CVEs across 6 direct runtime deps \u2014 `ws` (5 CVEs) is the core WebSocket library for a WebSocket-based client",
+          "action_hint": "If running Baileys in production, pin dep versions with `npm audit fix` or overrides; check upstream `ws` release notes for the 5 GHSAs; consider blocking `@hapi/boom` 9.x upgrade path since that major is EOL.",
+          "evidence_refs": [
+            "E4"
+          ],
+          "threat_model_paths": [
+            "other"
+          ],
+          "threat_model_context": "Direct runtime deps with upstream CVEs at Baileys' pinning (checked via osv.dev): `ws` (^8.13.0) \u2192 5 vulns including DoS-via-header-size + memory-leak classes; `protobufjs` (^7.2.4) \u2192 4 vulns (prototype pollution, parser issues); `request` (^2.88.0 via proto-extract) \u2192 2 vulns (deprecated, see F2); `acorn` (^8.15.0 via proto-extract) \u2192 1 ReDoS; `music-metadata` \u2192 1; `@hapi/boom` (^9.1.3) \u2192 1 (EOL major). Most impactful: `ws` (the WebSocket library that Baileys entirely depends on for WhatsApp-Web connectivity) carries 5 GHSAs at the current pin. Baileys doesn't configure a .github/dependabot.yml (though a Dependabot Updates workflow is listed as active in GitHub Actions \u2014 likely default security-update-only mode). No `.github/dependabot.yml` means the ecosystem scoping is whatever GitHub's defaults are.",
+          "what_this_means": "A Baileys-dependent production service inherits whichever CVEs are reachable at its pinned versions. For `ws` specifically, the 5 GHSAs mix DoS and memory-issue classes \u2014 server-side impact on a Baileys bot would be the bot itself being unresponsive, not a full RCE. But the cumulative surface is nontrivial.",
+          "what_this_does_not_mean": "Not a claim that all 14 are actively exploitable in Baileys' usage patterns. Most CVE records apply to specific API subsets; whether Baileys triggers them depends on usage. The finding is the static surface, not a runtime analysis.",
+          "duration_label": "Continuous",
+          "date_label": "Ongoing \u2014 dep pins in package.json at HEAD 8e5093c",
+          "how_to_fix": "Maintainer-side: add .github/dependabot.yml scoping npm ecosystem to trigger automated dep-bump PRs; prioritize `ws` upgrade to a version clearing the 5 GHSAs; replace `@hapi/boom` 9.x with 10.x; close out F2 (PR #1996) to drop `request`. Consumer-side: npm overrides + audit fix."
+        },
+        {
+          "id": "F4",
+          "severity": "Warning",
+          "provenance": "observed",
+          "status": "ongoing",
+          "category": "governance/zero-gates",
+          "kind": "Governance",
+          "rule_id": "F11",
+          "title": "Zero branch protection + zero rulesets + no CODEOWNERS + 89.5% top-2 maintainer concentration",
+          "action_hint": "Pin to a specific released version (v7.0.0-rc.9 or v6.7.21); never install from master or github:-form without a SHA pin.",
+          "evidence_refs": [
+            "E5",
+            "E6"
+          ],
+          "threat_model_paths": [
+            "stale_token",
+            "other"
+          ],
+          "threat_model_context": "No classic branch protection (404), 0 rulesets, 0 rules on default (master), no CODEOWNERS. community health 50% \u2014 no CONTRIBUTING / CODE_OF_CONDUCT / SECURITY.md. adiwajshing (original author) holds 71.1% of top-6 contributor commits; purpshell holds 18.4% (combined 89.5%). adiwajshing appears inactive per recent commit activity; purpshell is the named active maintainer per README and the paid-support/sponsor flow. A compromised maintainer account OR a malicious self-merge reaches master directly, gets published to npm (via the publish-release workflow), and is `npm install baileys` for downstream consumers within hours.",
+          "what_this_means": "The 'did anyone review this commit' answer for Baileys is structurally 'no required gate' \u2014 no ruleset requires PR review, no CODEOWNERS requires a second-maintainer approval. Most merges are self-merges by maintainers (harness E8 analysis). A compromised maintainer credential is a straight path to the npm registry for the `baileys` package.",
+          "what_this_does_not_mean": "Not evidence that maintainers are acting in bad faith. Not a claim that a compromise has occurred. Small-project + concentrated-maintainership + no-governance is a common shape in the V1.2 catalog (similar to WLED entry 25 F3, freerouting entry 24 F1). The finding is structural exposure, not observed incident.",
+          "duration_label": "Continuous",
+          "date_label": "Since repo creation 2022-01-12",
+          "how_to_fix": "Maintainer-side: add a ruleset on master requiring `pull_request` review with \u22651 approving reviewer; add CODEOWNERS naming purpshell + jlucaso1 for core; enable classic BP as backup; add SECURITY.md naming GitHub's Report-a-vulnerability UI. Consumer-side: pin `baileys` to a specific semver (not ^range), use npm lockfiles, rebuild downstream containers on known-safe dep graphs."
+        },
+        {
+          "id": "F5",
+          "severity": "Warning",
+          "provenance": "observed",
+          "status": "ongoing",
+          "category": "supply-chain/release-cadence",
+          "kind": "Structural",
+          "rule_id": null,
+          "title": "150-day release stall \u2014 v7.0.0-rc.9 from 2025-11-21 is `@latest` on npm while master is 5 months ahead",
+          "action_hint": "If you want master-branch fixes, pin to a commit SHA via `yarn add github:WhiskeySockets/Baileys#SHA`; if you want semver stability, v6.7.21 is the last non-RC stable.",
+          "evidence_refs": [
+            "E6"
+          ],
+          "threat_model_paths": [
+            "stale_token"
+          ],
+          "threat_model_context": "Latest release (any channel) is v7.0.0-rc.9 on 2025-11-21. Latest non-RC stable is v6.7.21 on 2025-11-06. Both are 150-165 days old. Master has been continuously pushed through 2026-04-19 (1 day before scan). Consumers installing via `npm install baileys` receive v7.0.0-rc.9. Consumers on v6.7.21 are 165 days behind master \u2014 any fixes merged since 2025-11-06 (including potential 'our own version' of F2's security work, if it ever happens) don't reach them until a new release is cut. The v7.0.0 breaking changes are staged but postponed \u2014 the RC channel has been open 5 months without landing a stable 7.0.0.",
+          "what_this_means": "Consumers on `baileys@latest` get v7.0.0-rc.9 \u2014 functionally a 5-month-old snapshot. Any merge-to-master work (new features, dep bumps, security fixes) doesn't reach npm consumers until the maintainer cuts v7.0.0-rc.10 or v7.0.0 or v6.7.22.",
+          "what_this_does_not_mean": "Not evidence of abandonment \u2014 master is active. The gap is tag-to-npm-publish latency, not project liveness. Similar to wezterm (entry 21, 807-day stall) + freerouting (entry 24, 373-day stall).",
+          "duration_label": "Ongoing",
+          "date_label": "Since 2025-11-21 (last tag) \u2014 150 days",
+          "how_to_fix": "Maintainer-side: cut v7.0.0 (or v6.7.22) to push accumulated main-branch work to consumers; the publish-release.yml workflow appears automated \u2014 it's a human-decision bottleneck. Consumer-side: pin to a specific master SHA via `yarn add github:WhiskeySockets/Baileys#SHA` if you need master-branch state."
+        },
+        {
+          "id": "F6",
+          "severity": "Warning",
+          "provenance": "observed",
+          "status": "ongoing",
+          "category": "governance/disclosure-gap",
+          "kind": "Hygiene",
+          "rule_id": null,
+          "title": "No SECURITY.md + 0 advisories in 4 years + documented stale-out of a vulnerability-fix PR (F2) = structural silent-fix posture",
+          "action_hint": "Researchers finding Baileys-specific vulnerabilities: use GitHub's Report-a-vulnerability UI, but don't rely on rapid response \u2014 PR #1996's pattern suggests a 4-5 month cycle to resolution if any.",
+          "evidence_refs": [
+            "E5",
+            "E7"
+          ],
+          "threat_model_paths": [
+            "other"
+          ],
+          "threat_model_context": "0 published GHSA advisories across 4 years. No SECURITY.md at any standard location. PR #1996 thread documents a specific failure mode: external researcher offers a fix, maintainer commits to 'our own version', stale-bot closes the original, 'own version' doesn't appear in 148 days. Consistent with the catalog-wide 11/11 silent-fix pattern but sharper because we can point at a specific unresolved vulnerability-remediation cycle.",
+          "what_this_means": "Researchers have no documented disclosure channel beyond GitHub's default Report-a-vulnerability UI. Fix cycles for external reports appear to stretch beyond stale-bot timeouts. For users: dep-update tools that watch GHSA feeds will not surface Baileys-specific vulns because Baileys doesn't publish GHSAs.",
+          "what_this_does_not_mean": "Not a claim that Baileys is intentionally hiding vulns. Consistent with a small-project + paid-support-monetization posture where community contributions are secondary to commercial-support operations.",
+          "duration_label": "Continuous",
+          "date_label": "Since 2022-01-12",
+          "how_to_fix": "Maintainer-side: 1-page SECURITY.md naming the GitHub advisory UI + expected response window + the commercial-support path (purpshell.dev/book) as escalation option. Publish GHSAs when vulns are confirmed. Close out PR #1996-class threads either by merging the community PR or by publishing the 'own version' with clear attribution to the researcher."
+        },
+        {
+          "id": "F7",
+          "severity": "Info",
+          "provenance": "observed",
+          "status": "ongoing",
+          "category": "scanner-coverage",
+          "kind": "Coverage",
+          "rule_id": null,
+          "title": "Scanner gaps: vendor-keys false-positive on WhatsApp protocol dictionary; harness PR sample returned empty despite 352 merged; README install-pathway detection noise",
+          "action_hint": "Scanner-calibration notes for V1.2.x backlog.",
+          "evidence_refs": [
+            "E8",
+            "E10",
+            "E11"
+          ],
+          "threat_model_paths": [
+            "other"
+          ],
+          "threat_model_context": "Three scanner-coverage gaps documented for this scan: (1) vendor_keys regex matched `AIzaSyDR5yfaG7OG8sMTUj8kfQEb8T9pN8BM6Lk` at src/WABinary/constants.ts:601 \u2014 context is an entry in WhatsApp Web's protocol compression dictionary (a pre-shared array of tokens), not an active Google API key (E11). (2) Harness PR sample returned 0 despite 352 lifetime merged PRs \u2014 likely a paging or filtering issue in the harness's PR sampler; direct API query (E8) showed that most closed PRs are closed-without-merge rather than merged, which may have confused the sampling filter. (3) install_script_analysis flagged `yarn add github:WhiskeySockets/Baileys` as a master-tracking install pattern but the current README doesn't contain that snippet \u2014 likely pulled from an older README version in tarball metadata or CHANGELOG (E10). All three are calibration issues, not Baileys defects.",
+          "what_this_means": "The vendor_keys false-positive and the empty PR sample should be disregarded for threat assessment \u2014 Phase 4 used direct gh api queries for the PR-review analysis. The install_script FP is also methodology noise.",
+          "what_this_does_not_mean": "Not Baileys defects. Property of the scanner's cross-context regex-matching heuristics.",
+          "duration_label": "Continuous",
+          "date_label": "Scanner tooling gap",
+          "how_to_fix": "Scanner-side: (a) vendor_keys regex should require proximity signal (assignment context, `API_KEY` variable name, URL embedding) rather than array-literal context; (b) PR sampler needs a failure-mode handler when closed-without-merge dominates the stream; (c) install_script_analysis should version-check its inputs against the current README SHA."
+        }
+      ]
+    },
+    "evidence": {
+      "entries": [
+        {
+          "id": "E1",
+          "claim": "Baileys is explicitly a reverse-engineered, unofficial WhatsApp Web library. The GitHub topic list includes `reverse-engineering`. The README carries a CAUTION-flagged disclaimer: 'This project is not affiliated, associated, authorized, endorsed by, or in any way officially connected with WhatsApp' + 'The maintainers of Baileys do not in any way condone the use of this application in practices that violate the Terms of Service of WhatsApp.' Consumer who uses Baileys is attaching their WhatsApp account to an unofficial client.",
+          "command": "gh api repos/WhiskeySockets/Baileys --jq '.topics'; gh api repos/WhiskeySockets/Baileys/readme | jq -r .content | base64 -d | head -40",
+          "command_lang": "bash",
+          "result": "topics: ['bun', 'deno', 'nodejs', 'reverse-engineering', 'typescript', 'websockets', 'whatsapp-web', 'ws']. README lines 32-38 contain the disclaimer quoted above. Copyright: 'Copyright (c) 2025 Rajeh Taher/WhiskeySockets' (Rajeh = purpshell, current active maintainer). License: MIT (free to redistribute) \u2014 but MIT only governs the code itself; the WhatsApp-ToS risk is inherent to using the code, independent of license.",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "fact"
+        },
+        {
+          "id": "E2",
+          "claim": "Command-injection pattern in extractVideoThumb: `cmd = \\`ffmpeg -ss ${time} -i ${path} -y -vf scale=${size.width}:-1 -vframes 1 -f image2 ${destPath}\\`` followed by `exec(cmd, err => {...})` at src/Utils/messages-media.ts lines 125-126. Current callers use tmpdir+randomID-derived paths (safe), but the pattern itself uses `child_process.exec` with string interpolation \u2014 any future caller (or consumer using the exported generateThumbnail API) that passes external path strings would expose shell-injection via filename metacharacters.",
+          "command": "gh api repos/WhiskeySockets/Baileys/contents/src/Utils/messages-media.ts | jq -r .content | base64 -d | sed -n '115,135p'",
+          "command_lang": "bash",
+          "result": "Line 118: `const extractVideoThumb = async (path: string, destPath: string, time: string, size: {width, height})`. Line 125: `const cmd = \\`ffmpeg -ss ${time} -i ${path} -y -vf scale=${size.width}:-1 -vframes 1 -f image2 ${destPath}\\``. Line 126: `exec(cmd, err => {...})`. Caller (src/Utils/messages.ts:254-259) uses `originalFilePath` from encryptedStream (which sets it to `join(tmpdir(), mediaType + generateMessageIDV2() + '-original')` \u2014 safe \u2014 and `imgFilename` from `join(tmpdir(), generateMessageIDV2() + '.jpg')` \u2014 safe). generateMessageIDV2 returns `'3EB0' + hex` \u2014 no metacharacters. Current risk is latent, not active. BUT the `extractVideoThumb`-style string-interpolation-then-exec pattern is the anti-pattern; the safer form is `spawn('ffmpeg', [...args])` which doesn't touch a shell at all.",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "fact"
+        },
+        {
+          "id": "E3",
+          "claim": "Security-motivated dep-modernization PR #1996 'Vulnerability Fixes' (by KaivalyaGauns, opened 2025-10-30) was closed unmerged 2026-03-26 via stale-bot after 148 days. The PR replaced the deprecated `request`/`request-promise-core`/`request-promise-native` chain (with known CVEs GHSA-p8p7-x288-28g6 SSRF + GHSA-7xfp-9c55-5vqj credential leak) with `node-fetch` + `form-data`. Maintainer purpshell commented 2026-01-08: 'We should make our own version of this PR. Opening an issue in its stead.' As of scan date, master still ships `request` as a runtime dep in proto-extract/.",
+          "command": "gh api repos/WhiskeySockets/Baileys/pulls/1996/files; gh api repos/WhiskeySockets/Baileys/issues/1996/comments",
+          "command_lang": "bash",
+          "result": "PR #1996 modifies: package.json (+form-data), proto-extract/index.js (switch from request-promise-native to node-fetch + form-data), proto-extract/package-lock.json + package.json (remove request + request-promise-core + request-promise-native, add node-fetch 2.7.0 + form-data 4.0.4), yarn.lock (large diff). Comments timeline: opened 2025-10-30 by KaivalyaGauns; stale bot warnings 2025-12-06 and 2025-12-27; vinikjkkj asked 'any updates?' 2025-12-12; purpshell 'We should make our own version of this PR. Opening an issue in its stead' 2026-01-08; two more stale warnings; closed 2026-03-26 by stale-bot. No replacement PR was merged \u2014 current master proto-extract/package.json still contains `request`/`request-promise-core`/`request-promise-native` (confirmed in Phase 1 harness dependency inventory).",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "fact"
+        },
+        {
+          "id": "E4",
+          "claim": "Runtime-dep CVE surface: 14 known CVEs across 6 direct dependencies: ws \u00d7 5 (core WebSocket library for this WhatsApp-Web client), protobufjs \u00d7 4, request \u00d7 2 (deprecated), acorn \u00d7 1 (in proto-extract), music-metadata \u00d7 1, @hapi/boom \u00d7 1 (on EOL 9.x line). No `.github/dependabot.yml` present; Dependabot Updates workflow shows active in GitHub Actions but no explicit ecosystem tracking config.",
+          "command": "cat proto-extract/package.json package.json; for p in ws protobufjs request acorn music-metadata @hapi/boom; do curl -s https://api.osv.dev/v1/query -d \"{\\\"package\\\":{\\\"name\\\":\\\"$p\\\",\\\"ecosystem\\\":\\\"npm\\\"}}\"; done",
+          "command_lang": "bash",
+          "result": "Per-package OSV counts at pinned versions: ws (^8.13.0) 5 vulns: GHSA-2mhh-w6q8-5hxw (DoS on arbitrary headers), GHSA-3h5v-q93c-6h6q, GHSA-5v72-xg48-5rpm, +2 more. protobufjs (^7.2.4): 4 vulns including GHSA-762f-c2wg-m8c8 (proto parser prototype pollution), GHSA-g954-5hwp-pp24, GHSA-h755-8qp9-cq85. request (^2.88.0 via proto-extract): 2 vulns \u2014 GHSA-p8p7-x288-28g6 (SSRF redirect to internal), GHSA-7xfp-9c55-5vqj (tls-insecure cert). acorn (^8.15.0 via proto-extract): GHSA-6chw-6frg-f759 (ReDoS). music-metadata (^11.7.0): GHSA-v6c2-xwv6-8xf7. @hapi/boom (^9.1.3): GHSA-2ggq-vfcp-gwhj (on EOL line). Relevance: `ws` is the core connection layer \u2014 5 known CVEs on the primary WebSocket library of a WebSocket-based library is the one that most directly affects consumers.",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "fact"
+        },
+        {
+          "id": "E5",
+          "claim": "Zero governance gates: classic branch protection HTTP 404, 0 rulesets, 0 rules on default branch, no CODEOWNERS, no SECURITY.md, no CONTRIBUTING, no CODE_OF_CONDUCT. community health_percentage=50%. Top-2 maintainer concentration: adiwajshing 1166 commits (71.1%) + purpshell 302 (18.4%) = 89.5% \u2014 concentrated but not solo. adiwajshing (original author) appears inactive in recent timeline; purpshell is the current active maintainer (README copyright 'Rajeh Taher/WhiskeySockets' = purpshell).",
+          "command": "gh api repos/WhiskeySockets/Baileys/branches/master/protection; gh api repos/WhiskeySockets/Baileys/rulesets; gh api repos/WhiskeySockets/Baileys/community/profile; gh api repos/WhiskeySockets/Baileys/contributors?per_page=6",
+          "command_lang": "bash",
+          "result": "classic: 404. rulesets.count: 0. rules_on_default.count: 0. CODEOWNERS: absent (checked root, .github/, docs/). community_profile: {health_percentage: 50, has_code_of_conduct: false, has_contributing: false, has_security_policy: false}. Top-6 contributors: adiwajshing (1166), purpshell (302), github-actions[bot] (52), jlucaso1 (45), canove (44), edgardmessias (30). total_contributor_count: 100. adiwajshing is listed but the original creator ('inspired from whatsmeow' comments show lineage); purpshell is the current active maintainer (README explicitly names him, has paid-support channel at purpshell.dev/book).",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "fact"
+        },
+        {
+          "id": "E6",
+          "claim": "150-day release stall. Latest stable: v6.7.21 (2025-11-06, 165 days before scan). Latest RC: v7.0.0-rc.9 (2025-11-21, 150 days before scan). Master last pushed 2026-04-19, one day before scan \u2014 active development on master, but no release tagging for 150 days. 42 total releases. v7.0.0 breaking changes are staged but not cut.",
+          "command": "gh api 'repos/WhiskeySockets/Baileys/releases?per_page=10'",
+          "command_lang": "bash",
+          "result": "total releases: 42. Recent (newest first): v7.0.0-rc.9 (2025-11-21), v7.0.0-rc.8 (2025-11-19), v7.0.0-rc.7 (2025-11-19), v6.7.21 (2025-11-06), v7.0.0-rc.6 (2025-10-19), v7.0.0-rc.5 (2025-10-02), v7.0.0-rc.4 (2025-09-26), v7.0.0-rc.3 (2025-09-14). Gap from v7.0.0-rc.9 to scan = 150 days. Main activity continues (last push 2026-04-19) \u2014 the v7.0.0 cut is staged but postponed. Consumers of the `baileys` npm package get v7.0.0-rc.9 as `@latest` (confirmed via npm registry query in harness).",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "fact"
+        },
+        {
+          "id": "E7",
+          "claim": "0 published GHSA security advisories in 4 years of development. Consistent with catalog-wide silent-fix pattern (now 11/11 V1.2 scans). PR #1996 thread documents an explicit case where a security-motivated dep fix was NOT merged and NOT replaced \u2014 the 'silent fix' norm in this case appears to have been 'do not fix publicly' rather than 'fix without GHSA.'",
+          "command": "gh api 'repos/WhiskeySockets/Baileys/security-advisories'; gh api 'repos/WhiskeySockets/Baileys/issues/1996/comments'",
+          "command_lang": "bash",
+          "result": "security_advisories.count: 0 across 4-year history. PR #1996 comment thread: community contributor filed Vulnerability Fixes PR; maintainer purpshell committed to 'make our own version' on 2026-01-08; stale-bot closed it 2026-03-26; no replacement PR is visible in merged history (confirmed via harness dependency inventory showing `request`/`request-promise-*` still in proto-extract/package.json).",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "fact"
+        },
+        {
+          "id": "E8",
+          "claim": "PR-review coverage observation: harness sampled 0 PRs despite 352 lifetime merges. Direct API query shows Baileys' closed-PR stream is dominated by closed-WITHOUT-merge (external community PRs being dropped rather than merged/reviewed) \u2014 the harness sampling fell on the wrong side of this.",
+          "command": "gh api 'repos/WhiskeySockets/Baileys/pulls?state=closed&per_page=50' --jq '[.[] | {merged: (.merged_at != null)}] | group_by(.merged) | map({merged: .[0].merged, count: length})'",
+          "command_lang": "bash",
+          "result": "50-most-recent closed PRs: ~6 merged (12%), ~44 closed-without-merge (88%). Pattern: most external community PRs are closed by maintainer or by stale-bot rather than merged. Most merged PRs are either (a) `github-actions[bot]` chore updates (WhatsApp Web version bumps), (b) core maintainer self-merges (purpshell, jlucaso1), or (c) a handful of external-contributor merges that received direct maintainer acceptance. Formal-review rate on the 6-merged sample: 0 APPROVED decisions visible (review_decision: null). This is consistent with a high-control maintainer workflow where formal review is bypassed in favor of merge-when-maintainer-agrees.",
+          "result_lang": "inference \u2014 harness-coverage-gap + methodology observation",
+          "result_truncated": false,
+          "classification": "inference \u2014 harness-coverage-gap + methodology observation"
+        },
+        {
+          "id": "E9",
+          "claim": "Copilot code review workflow is active (dynamic/copilot-pull-request-reviewer), providing AI-assisted review commentary on PRs. 12 total workflows \u2014 Build, E2E Tests, Lint, Manual Release, PR Comment, Publish Release, Stale, Test, Update WAProto, Update WhatsApp Version, Copilot review, pages-build-deployment. 1 workflow uses pull_request_target (pr-comment.yml \u2014 comments on PRs). 0 SHA-pinned actions across 9 workflow files, 25 tag-pinned.",
+          "command": "gh api repos/WhiskeySockets/Baileys/actions/workflows --jq '.workflows[] | {name, state}'; gh api repos/WhiskeySockets/Baileys/contents/.github/workflows/pr-comment.yml | jq -r .content | base64 -d",
+          "command_lang": "bash",
+          "result": "12 workflows total. pr-comment.yml: 53 lines, `pull_request_target` trigger, no permissions block, 2 tag-pinned actions. The pull_request_target+no-permissions-block combo is the known-risky pattern (same class as WLED entry 25 F2 + kamal entry 18 structural pattern). Copilot code review workflow is dynamic/managed (GitHub's Copilot-PR-review AI) \u2014 different from QuickLook's Copilot SWE agent (which writes PRs).",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "fact"
+        },
+        {
+          "id": "E10",
+          "claim": "README install pathway: two npm packages published. (1) `baileys` (primary): `npm install baileys` \u2192 pulls v7.0.0-rc.9. (2) `whatsapp-web-protobuf-extractor` (internal build tool): `npm install whatsapp-web-protobuf-extractor` \u2192 v1.0.0. Both verified on npm registry (harness artifact_verification). Primary install path is clean npm-standard. README ALSO documents legacy `yarn add github:WhiskeySockets/Baileys` form which installs directly from master branch (no version pinning) \u2014 the harness install_script_analysis flagged this.",
+          "command": "gh api repos/WhiskeySockets/Baileys/readme | jq -r .content | base64 -d; npm view baileys; npm view whatsapp-web-protobuf-extractor",
+          "command_lang": "bash",
+          "result": "npm view baileys: name=baileys, version=7.0.0-rc.9, license=MIT, maintainer=purpshell, publishConfig.registry=https://registry.npmjs.org/. Downloads visible via the `baileys` npm listing. The legacy `yarn add github:WhiskeySockets/Baileys` snippet in the harness install_script_analysis is from archived or documentation content (not the current root README, which redirects to baileys.wiki). If a consumer follows the legacy instructions, they install HEAD of master \u2014 no version pinning, supply-chain exposure.",
+          "result_lang": "inference \u2014 install-path gap annotation",
+          "result_truncated": false,
+          "classification": "inference \u2014 install-path gap annotation"
+        },
+        {
+          "id": "E11",
+          "claim": "Scanner harness produced a false-positive on vendor_keys: `AIzaSyDR5yfaG7OG8sMTUj8kfQEb8T9pN8BM6Lk` at src/WABinary/constants.ts:601 matches the Google API key regex but is actually an entry in WhatsApp Web's protocol-compression dictionary (a list of pre-shared strings that the binary protocol references by index). Not an exposed secret.",
+          "command": "gh api repos/WhiskeySockets/Baileys/contents/src/WABinary/constants.ts | jq -r .content | base64 -d | sed -n '595,615p'",
+          "command_lang": "bash",
+          "result": "Line context shows the string in a JavaScript array of short tokens: '690', '045', 'enc_iv', '75', 'failure', 'ptt_oot_playback', 'AIzaSyDR5yfaG7OG8sMTUj8kfQEb8T9pN8BM6Lk', 'w', '048', '2201', etc. This is the WhatsApp Web binary protocol's SINGLE_BYTE_TOKENS or DOUBLE_BYTE_TOKENS dictionary \u2014 a pre-shared list used for binary-format compression. The string format matches Google API key regex by coincidence (it's an arbitrary WhatsApp-chosen dictionary entry, possibly an obfuscated reference). Scanner-side mitigation: the vendor_keys regex should require the string to be in a context that suggests actual key usage (assignment to a variable named `apiKey`, `API_KEY`, `GOOGLE_API_KEY`; `process.env` reference; or URL embedding) rather than string-in-array-context.",
+          "result_lang": "inference \u2014 scanner-coverage-gap annotation",
+          "result_truncated": false,
+          "classification": "inference \u2014 scanner-coverage-gap annotation"
+        }
+      ]
+    },
+    "general_vuln_severity": {
+      "assessments": []
+    },
+    "section_actions": {
+      "entries": []
+    },
+    "section_leads": {
+      "section_01": {
+        "pill_row": "9.0k\u2b50 \u00b7 MIT \u00b7 TypeScript \u00b7 1 critical \u00b7 5 warnings \u00b7 1 info \u00b7 CRITICAL",
+        "summary": "Baileys is a 4-year-old reverse-engineered TypeScript library for WhatsApp Web \u2014 9k stars, 100 contributors, maintained by purpshell after original author adiwajshing went inactive. Critical verdict is category-driven: using Baileys attaches the consumer's WhatsApp account to an unofficial client, and WhatsApp's Terms of Service prohibit non-official clients + actively detect and suspend accounts showing third-party-client behavior. The README itself carries a CAUTION-flagged disclaimer acknowledging this exposure (F0). Beyond the category risk, the library has a latent command-injection pattern in ffmpeg-based video-thumbnail extraction (F1), a documented unresolved vulnerability-fix PR #1996 stale-closed after 148 days with the maintainer's promised 'own version' never delivered (F2), 14 known CVEs across 6 runtime deps including 5 on `ws` (the core WebSocket library, F3), zero branch protection + zero rulesets + no CODEOWNERS/SECURITY.md/CONTRIBUTING (F4), a 150-day release stall (F5), and a structural silent-fix disclosure posture (F6). Positive signals: 100 contributors, Copilot PR review workflow active, npm-registry-verified primary distribution channel, explicit maintainer disclaimer of ToS-endorsement."
+      },
+      "section_02": {
+        "pill_row": "F0 Critical \u00b7 F1 Warning \u00b7 F2 Warning \u00b7 F3 Warning \u00b7 F4 Warning \u00b7 F5 Warning \u00b7 F6 Warning \u00b7 F7 Info",
+        "summary": null
+      },
+      "section_06": {
+        "pill_row": "Scorecard: Red \u00b7 Red \u00b7 Red \u00b7 Red (override)",
+        "summary": "One scorecard override on Q4: Phase 3 advisory computed amber via the standard Q4 rubric (q4_has_critical_on_default_path=False by driver convention). Phase 4 authored F0 Critical \u2014 the reverse-engineered-API-library shape produces a default-path critical that isn't surfaced by any harness-derived signal. override_reason = signal_vocabulary_gap (5th Q4 use of this label in V1.2 catalog, 6th overall). Q1 red genuine (0 governance + 89.5% top-2 concentration), Q2 red genuine (PR #1996 stale-out + 14 runtime CVEs + 150-day stall), Q3 red genuine (no SECURITY.md + 0 advisories + documented disclosure-handling failure). This is the first V1.2 wild scan with all 4 cells RED \u2014 prior high-severity scans had at least one amber (typically Q3) softening the pattern."
+      }
+    },
+    "split_axis_decision": {
+      "should_split": false,
+      "axis": null,
+      "reasoning": "Single consumer profile \u2014 every user who installs baileys and connects it to a WhatsApp account hits F0's ToS-violation + account-ban risk on the default path. Burner-account use vs primary-account use is a consumer-configuration choice inside the same install pathway rather than two distinct deployment profiles, similar to WLED entry 25's default-vs-hardened-config reasoning.",
+      "entries": []
+    },
+    "verdict_exhibits": {
+      "groups": [
+        {
+          "symbol": "\u2717",
+          "headline": "Critical \u2014 F0 is the blocking item for default consumers",
+          "one_line_summary": "Reverse-engineered unofficial WhatsApp client \u2014 ToS violation + account-ban risk is inherent to use.",
+          "items": [
+            {
+              "tag": "F0",
+              "claim": "Library's function is to attach consumer's WhatsApp account to an unofficial client. README's own disclaimer acknowledges the exposure. WhatsApp actively detects + suspends accounts for third-party-client behavior. Not a code vulnerability \u2014 a category risk."
+            }
+          ]
+        },
+        {
+          "symbol": "\u26a0",
+          "headline": "Warning \u2014 F1\u2013F6 describe code, supply-chain, and governance posture",
+          "one_line_summary": "Latent exec pattern; unresolved community security-fix PR; 14 runtime-dep CVEs; zero governance; 150-day release stall; missing disclosure policy.",
+          "items": [
+            {
+              "tag": "F1",
+              "claim": "extractVideoThumb uses child_process.exec with shell-interpolated template string. Currently callers pass tmpdir paths (safe). Latent command-injection if anyone threads external paths through."
+            },
+            {
+              "tag": "F2",
+              "claim": "PR #1996 'Vulnerability Fixes' stale-closed after 148 days. purpshell's promised 'own version' never materialized. Library still ships deprecated `request` chain with 2 CVEs."
+            },
+            {
+              "tag": "F3",
+              "claim": "14 known CVEs across 6 runtime deps: `ws` \u00d7 5 (core WebSocket), protobufjs \u00d7 4, request \u00d7 2, acorn, music-metadata, @hapi/boom (EOL)."
+            },
+            {
+              "tag": "F4",
+              "claim": "Zero branch protection + 0 rulesets + no CODEOWNERS + no SECURITY.md/CONTRIBUTING/CoC + 89.5% top-2 maintainer concentration."
+            },
+            {
+              "tag": "F5",
+              "claim": "150-day release stall: v7.0.0-rc.9 (2025-11-21) is npm @latest; v6.7.21 stable (2025-11-06) is 165 days old; master 5 months ahead."
+            },
+            {
+              "tag": "F6",
+              "claim": "No SECURITY.md in 4 years + 0 published GHSA + documented stale-out of vulnerability-fix PR \u2192 structural silent-fix posture."
+            }
+          ]
+        },
+        {
+          "symbol": "\u2139",
+          "headline": "Info \u2014 F7",
+          "one_line_summary": "Scanner coverage gaps (PR sample empty, vendor_keys FP on WhatsApp dictionary, install-snippet noise).",
+          "items": [
+            {
+              "tag": "F7",
+              "claim": "Harness PR sample returned 0 despite 352 merged lifetime; direct gh api queried as fallback. vendor_keys FP on `AIza...` WhatsApp protocol dictionary entry. install_script_analysis flagged stale README content."
+            }
+          ]
+        }
+      ]
+    },
+    "priority_evidence": {
+      "selections": [
+        {
+          "evidence_id": "E1",
+          "reason": "F0 is the verdict driver. If WhatsApp ever grants Baileys a formally-authorized third-party status (extremely unlikely given the historical platform posture), F0 collapses and the verdict becomes Caution driven by F2\u2013F6."
+        },
+        {
+          "evidence_id": "E3",
+          "reason": "If PR #1996 (or an equivalent `request`-removal fix) merges, F2 collapses to Info. The specific commitment purpshell made in 2026-01-08 is the measurable item."
+        },
+        {
+          "evidence_id": "E5",
+          "reason": "If a ruleset with required-review and a CODEOWNERS file land, F4 becomes Info. Single 3-line ruleset edit + 5-line CODEOWNERS file closes the structural-governance gap."
+        }
+      ]
+    },
+    "threat_models": {
+      "per_finding": []
+    },
+    "action_steps": {
+      "entries": [
+        {
+          "step": 1,
+          "type": "avoid",
+          "headline": "Do NOT attach a primary WhatsApp account to any Baileys-based bot",
+          "severity": "Critical",
+          "non_technical": "Baileys is a reverse-engineered client. WhatsApp bans accounts it detects using third-party clients. If you care about keeping your WhatsApp number, do not link it to Baileys. Use a burner number that you're prepared to lose. Do not use Baileys for mass-messaging, stalkerware, or any pattern the README explicitly discourages.",
+          "command": "# Nothing to run \u2014 this is a use-model rule",
+          "command_lang": "text"
+        },
+        {
+          "step": 2,
+          "type": "install_normally",
+          "headline": "Install the stable npm package with a pinned version",
+          "severity": "Warning",
+          "non_technical": "Use `npm install baileys@6.7.21` (the last non-RC stable) or `npm install baileys@7.0.0-rc.9` (current RC). Avoid `npm install baileys` without a version \u2014 the `@latest` tag resolves to the RC, which has had 150 days of accumulated bug reports against it.",
+          "command": "npm install baileys@6.7.21 --save-exact",
+          "command_lang": "bash"
+        },
+        {
+          "step": 3,
+          "type": "mitigate",
+          "headline": "Override deprecated `request` dep via npm overrides",
+          "severity": "Warning",
+          "non_technical": "The `request` package is deprecated since 2020 and has 2 known CVEs. PR #1996 offered to remove it; the PR stalled. You can override it in your own package.json to avoid pulling it into your install graph. (Note: `request` is only pulled via proto-extract/ \u2014 if you don't run proto-extract, you won't have it in your runtime.)",
+          "command": "# package.json: { \"overrides\": { \"request\": \"npm:no-op@1.0.0\" } }",
+          "command_lang": "text"
+        },
+        {
+          "step": 4,
+          "type": "audit",
+          "headline": "Run `npm audit` and track the `ws` library specifically",
+          "severity": "Warning",
+          "non_technical": "`ws` is the core WebSocket library \u2014 Baileys uses it for every connection to WhatsApp. It has 5 known CVEs at the current pin. Check upstream `ws` release notes and override to the latest patch release when you install.",
+          "command": "npm audit && npm view ws versions --json | tail -5",
+          "command_lang": "bash"
+        },
+        {
+          "step": 5,
+          "type": "mitigate",
+          "headline": "Isolate your Baileys bot in a container with no other credentials",
+          "severity": "Warning",
+          "non_technical": "Because Baileys holds your WhatsApp session, any vulnerability in Baileys or its deps could leak the session. Run your bot in a minimal Docker container, persist ONLY the Baileys auth state (no other secrets), and rotate the session if you suspect exposure. Don't run it on your daily-driver workstation.",
+          "command": "docker run --rm -v ./auth_info:/app/auth_info -w /app node:20-alpine sh -c 'npm install baileys@7.0.0-rc.9 && node your-bot.js'",
+          "command_lang": "bash"
+        },
+        {
+          "step": 6,
+          "type": "verify",
+          "headline": "Evaluate the official WhatsApp Business Platform API for production use",
+          "severity": "Info",
+          "non_technical": "If you're using Baileys for business automation, the official WhatsApp Business Platform API (https://business.whatsapp.com/) is the ToS-compliant path. It costs money and has friction that Baileys doesn't, but it doesn't risk account bans and has documented SLAs.",
+          "command": "# https://business.whatsapp.com/ for enrollment",
+          "command_lang": "text"
+        }
+      ]
+    },
+    "timeline_events": {
+      "entries": [
+        {
+          "date": "2022-01-12",
+          "label": "Repo created (adiwajshing)",
+          "tone": "neutral",
+          "note": "Original creator"
+        },
+        {
+          "date": "2024-06-14",
+          "label": "PR #873 (axios vuln) closed",
+          "tone": "negative",
+          "note": "External sec-fix closed"
+        },
+        {
+          "date": "2024-06-14",
+          "label": "PR #874 (sharp vuln) closed",
+          "tone": "negative",
+          "note": "External sec-fix closed"
+        },
+        {
+          "date": "2025-09-14",
+          "label": "v7.0.0-rc.3 released",
+          "tone": "neutral",
+          "note": "v7 RC cycle begins"
+        },
+        {
+          "date": "2025-10-30",
+          "label": "PR #1996 (Vuln Fixes) filed",
+          "tone": "neutral",
+          "note": "KaivalyaGauns remove `request`"
+        },
+        {
+          "date": "2025-11-06",
+          "label": "v6.7.21 stable released",
+          "tone": "neutral",
+          "note": "Last non-RC release"
+        },
+        {
+          "date": "2025-11-21",
+          "label": "v7.0.0-rc.9 released",
+          "tone": "neutral",
+          "note": "Latest; 150d before scan"
+        },
+        {
+          "date": "2026-01-08",
+          "label": "purpshell: 'our own version'",
+          "tone": "negative",
+          "note": "Not fulfilled in 102 days"
+        },
+        {
+          "date": "2026-03-26",
+          "label": "PR #1996 stale-closed",
+          "tone": "negative",
+          "note": "148 days; no replacement"
+        },
+        {
+          "date": "2026-04-19",
+          "label": "Last push to master",
+          "tone": "positive",
+          "note": "Main still active"
+        },
+        {
+          "date": "2026-04-20",
+          "label": "Scan date",
+          "tone": "neutral",
+          "note": "V1.2 wild scan entry 26"
+        }
+      ]
+    },
+    "capability_assessments": {
+      "per_file": []
+    },
+    "executable_file_inventory": {
+      "lead": "Baileys ships as an npm library \u2014 no standalone executable. Consumers install via `npm install baileys` and import TypeScript/JavaScript modules. A secondary npm package `whatsapp-web-protobuf-extractor` is the build-tool used internally to extract WhatsApp Web's protobuf definitions; most library consumers don't use it directly.",
+      "layer1_summary": "The library's primary attack surface is the npm supply chain (governance from F4) and the library's own internal code (F1 exec pattern). Execution context is the consumer's Node/Bun/Deno process. No native binary distribution.",
+      "layer2_entries": [
+        {
+          "path": "src/Utils/messages-media.ts",
+          "kind": "library-module",
+          "runtime": "Node.js / Bun / Deno",
+          "dangerous_calls": "`child_process.exec(cmd)` where cmd is a shell-interpolated template string referencing filesystem paths (lines 125-126). Currently callers use tmpdir-safe paths; pattern is latent risk. \u2014 F1",
+          "network": null,
+          "notes": "`extractVideoThumb` spawns ffmpeg via shell; exported `generateThumbnail` is the public API that routes to this.",
+          "file_sha": null,
+          "line_ranges": "118-135, 125-126",
+          "diff_anchor": null
+        },
+        {
+          "path": "src/Socket/messages-recv.ts",
+          "kind": "library-module",
+          "runtime": "Node.js / Bun / Deno",
+          "dangerous_calls": "`exec(node, false)` at line 1497 \u2014 note this is a LOCAL function named exec, NOT child_process.exec (grep FP). Actually processes a WhatsApp binary protocol node.",
+          "network": "WhatsApp Web WebSocket",
+          "notes": "Core message-receive handler. The `exec` match is a false-positive on the grep; real call is internal dispatcher.",
+          "file_sha": null,
+          "line_ranges": "1497",
+          "diff_anchor": null
+        },
+        {
+          "path": "src/WABinary/constants.ts",
+          "kind": "library-module",
+          "runtime": "Node.js / Bun / Deno",
+          "dangerous_calls": "None actually. Contains WhatsApp protocol compression dictionary that includes an `AIza...` lookalike string \u2014 a Google-API-key regex FP \u2014 F7/E11.",
+          "network": null,
+          "notes": "Dictionary of pre-shared binary-protocol tokens.",
+          "file_sha": null,
+          "line_ranges": "601",
+          "diff_anchor": null
+        },
+        {
+          "path": "proto-extract/index.js",
+          "kind": "build-tool",
+          "runtime": "Node.js (dev-time)",
+          "dangerous_calls": "Uses deprecated `request-promise-native` to fetch WhatsApp Web assets; PR #1996 proposed migration to node-fetch \u2014 stale-closed (F2).",
+          "network": "HTTP to web.whatsapp.com to extract latest protobuf definitions",
+          "notes": "Build-tool used to refresh WAProto/ from WhatsApp Web's JavaScript. Only used by maintainers; consumers of the `baileys` package don't run this.",
+          "file_sha": null,
+          "line_ranges": null,
+          "diff_anchor": null
+        },
+        {
+          "path": ".github/workflows/pr-comment.yml",
+          "kind": "ci-workflow",
+          "runtime": "GitHub Actions",
+          "dangerous_calls": "`pull_request_target` trigger + no permissions block + 2 tag-pinned actions (not SHA-pinned)",
+          "network": "Posts PR comments",
+          "notes": "Adds standard welcome/CLA comment on PRs. pull_request_target + no-permissions + tag-pinned 3rd-party combo is known-risky pattern (E9).",
+          "file_sha": null,
+          "line_ranges": "1-53",
+          "diff_anchor": null
+        }
+      ],
+      "closing_note": "Install path: `npm install baileys` (primary). Baileys pulls its own dep graph including `ws` (5 CVEs, F3) as the core WebSocket library. Consumer imports: `import makeWASocket from 'baileys'` \u2192 `makeWASocket({auth, logger})` \u2192 connects to WhatsApp Web with consumer's account state. See F0 for ToS-violation + account-ban risk inherent to this flow."
+    },
+    "pr_sample_review": {
+      "rows": [
+        {
+          "number": 1996,
+          "what": "Vulnerability Fixes \u2014 replace deprecated `request`/`request-promise-*` with `node-fetch`+`form-data` (KaivalyaGauns)",
+          "author": "KaivalyaGauns",
+          "merger": "[STALE-CLOSED]",
+          "reviewed": "purpshell comment 2026-01-08: 'We should make our own version of this PR. Opening an issue in its stead.'",
+          "concern": "Vulnerability-fix PR stale-closed after 148 days; 'own version' never merged; `request` still in master \u2014 F2",
+          "flagged": true
+        },
+        {
+          "number": 2443,
+          "what": "fix: respect caller-provided waveform for PTT audio messages (AshishKumarD)",
+          "author": "AshishKumarD",
+          "merger": "(auto-merge null merger)",
+          "reviewed": "review_decision: null",
+          "concern": "Sample merged PR \u2014 no APPROVED decision visible",
+          "flagged": false
+        },
+        {
+          "number": 2373,
+          "what": "Fix ack handling (jlucaso1)",
+          "author": "jlucaso1",
+          "merger": "(auto-merge null merger)",
+          "reviewed": "review_decision: null",
+          "concern": "Core-contributor self-merge without formal review",
+          "flagged": false
+        },
+        {
+          "number": 873,
+          "what": "Fix: axios vulnerability (analyzing, don't merge) \u2014 external researcher",
+          "author": "external-contrib",
+          "merger": "[CLOSED-UNMERGED]",
+          "reviewed": "Maintainer closed \u2014 'analyzing, don't merge'",
+          "concern": "Security-flagged closed-unmerged",
+          "flagged": true
+        },
+        {
+          "number": 874,
+          "what": "Fix: sharp vulnerability in libwebp dependency (analyzing, don't merge)",
+          "author": "external-contrib",
+          "merger": "[CLOSED-UNMERGED]",
+          "reviewed": "Same pattern as #873",
+          "concern": "Security-flagged closed-unmerged",
+          "flagged": true
+        },
+        {
+          "number": 2429,
+          "what": "docs(auth): document custom auth state requirements",
+          "author": "external-contrib",
+          "merger": "[OPEN-STALE]",
+          "reviewed": "Stale-labeled",
+          "concern": "Security-keyword PR drifting toward stale-bot closure (auth = keyword match)",
+          "flagged": true
+        }
+      ],
+      "intro": "Baileys PR review analysis: harness auto-sample returned 0 despite 352 lifetime merges (F7/E8 harness gap). Phase 4 fell back to direct gh api queries. Pattern on 50 most-recent closed PRs: ~12% merge rate, ~88% closed-without-merge \u2014 most community PRs are either closed by maintainer review or by stale-bot after 28+ days inactivity. Few PRs carry APPROVED formal-review decisions (review_decision is frequently null on even merged PRs). 6 security-keyword-flagged PRs were identified: #873 (axios), #874 (sharp), #902 (auth-utils), #1996 (Vulnerability Fixes \u2014 F2), #2153 (auth-utils memory leak), #2429 (docs auth, open-stale)."
+    },
+    "repo_vitals": {
+      "rows": [
+        {
+          "metric": "Stars",
+          "value": "9,034",
+          "note": null
+        },
+        {
+          "metric": "Open issues",
+          "value": "313",
+          "note": "0 security-tagged"
+        },
+        {
+          "metric": "Open PRs",
+          "value": "100+",
+          "note": "1 `Stale`-labeled (#2429 docs auth); many community PRs stale out"
+        },
+        {
+          "metric": "Primary language",
+          "value": "JavaScript/TypeScript",
+          "note": null
+        },
+        {
+          "metric": "License",
+          "value": "MIT",
+          "note": "Code license; ToS-violation risk is separate from license"
+        },
+        {
+          "metric": "Created",
+          "value": "2022-01-12",
+          "note": "~4 years"
+        },
+        {
+          "metric": "Last pushed",
+          "value": "2026-04-19",
+          "note": "Day before scan"
+        },
+        {
+          "metric": "Default branch",
+          "value": "master",
+          "note": null
+        },
+        {
+          "metric": "Repo size",
+          "value": "~231 MB",
+          "note": null
+        },
+        {
+          "metric": "Total contributors",
+          "value": "100",
+          "note": null
+        },
+        {
+          "metric": "Top contributor",
+          "value": "adiwajshing 71.1%",
+          "note": "Original author, now inactive"
+        },
+        {
+          "metric": "Active maintainer",
+          "value": "purpshell (18.4%)",
+          "note": "Named in README; paid-support flow"
+        },
+        {
+          "metric": "Top-2 concentration",
+          "value": "89.5%",
+          "note": null
+        },
+        {
+          "metric": "Solo-maintainer flag",
+          "value": "FALSE",
+          "note": "71.1% < 80% threshold"
+        },
+        {
+          "metric": "Formal releases",
+          "value": "42",
+          "note": "Mix of stable + rc"
+        },
+        {
+          "metric": "Latest release",
+          "value": "v7.0.0-rc.9 (2025-11-21)",
+          "note": "150 days before scan \u2014 F5"
+        },
+        {
+          "metric": "Latest stable",
+          "value": "v6.7.21 (2025-11-06)",
+          "note": "165 days before scan"
+        },
+        {
+          "metric": "Classic branch protection",
+          "value": "OFF (HTTP 404)",
+          "note": null
+        },
+        {
+          "metric": "Rulesets",
+          "value": "0",
+          "note": "No rulesets \u2014 F4"
+        },
+        {
+          "metric": "Rules on default branch",
+          "value": "0",
+          "note": null
+        },
+        {
+          "metric": "CODEOWNERS",
+          "value": "Absent",
+          "note": null
+        },
+        {
+          "metric": "SECURITY.md",
+          "value": "Absent",
+          "note": "4 years; F6"
+        },
+        {
+          "metric": "CONTRIBUTING",
+          "value": "Absent",
+          "note": null
+        },
+        {
+          "metric": "CODE_OF_CONDUCT",
+          "value": "Absent",
+          "note": null
+        },
+        {
+          "metric": "Community health",
+          "value": "50%",
+          "note": "Median V1.2 catalog"
+        },
+        {
+          "metric": "Workflows",
+          "value": "12",
+          "note": "Incl. Copilot code review + pr-comment.yml (pull_request_target)"
+        },
+        {
+          "metric": "pull_request_target usage",
+          "value": "1",
+          "note": "pr-comment.yml \u2014 E9"
+        },
+        {
+          "metric": "SHA-pinned actions",
+          "value": "0",
+          "note": "Across 9 workflow files"
+        },
+        {
+          "metric": "Tag-pinned actions",
+          "value": "25",
+          "note": null
+        },
+        {
+          "metric": "Dependabot config (.yml)",
+          "value": "Absent",
+          "note": "Workflow active in default mode"
+        },
+        {
+          "metric": "Runtime dep CVEs",
+          "value": "14 (across 6 packages)",
+          "note": "F3 (ws \u00d7 5, protobufjs \u00d7 4, request \u00d7 2)"
+        },
+        {
+          "metric": "PR review rate (harness sample)",
+          "value": "N/A (sample empty)",
+          "note": "Harness gap \u2014 E8"
+        },
+        {
+          "metric": "PR merge rate (direct query, ~50 recent)",
+          "value": "~12%",
+          "note": "Most closed PRs are closed-WITHOUT-merge"
+        },
+        {
+          "metric": "Total merged PRs lifetime",
+          "value": "352",
+          "note": null
+        },
+        {
+          "metric": "Published security advisories",
+          "value": "0",
+          "note": "4 years; 11/11 V1.2 silent-fix pattern"
+        },
+        {
+          "metric": "Flagged security PRs (closed)",
+          "value": "6",
+          "note": "Incl. #1996 Vulnerability Fixes stale-closed \u2014 F2"
+        },
+        {
+          "metric": "Documented disclaimer",
+          "value": "README lines 32-38",
+          "note": "Explicit ToS-risk acknowledgement \u2014 F0"
+        },
+        {
+          "metric": "OSSF Scorecard",
+          "value": "Not indexed",
+          "note": null
+        },
+        {
+          "metric": "Primary distribution",
+          "value": "npm: `baileys` v7.0.0-rc.9 + `whatsapp-web-protobuf-extractor` v1.0.0",
+          "note": "Both verified on npm registry"
+        }
+      ]
+    },
+    "coverage_detail": {
+      "rows": [
+        {
+          "check": "Harness Phase 1 end-to-end",
+          "result": "\u2705 Complete"
+        },
+        {
+          "check": "`gh api` rate limit",
+          "result": "\u2705 Well under limit"
+        },
+        {
+          "check": "Tarball extraction + local grep",
+          "result": "\u2705 Scanned"
+        },
+        {
+          "check": "OSSF Scorecard",
+          "result": "\u26a0 Not indexed"
+        },
+        {
+          "check": "Dependabot alerts",
+          "result": "\u26a0 Admin scope (403); no .github/dependabot.yml"
+        },
+        {
+          "check": "osv.dev dependency queries",
+          "result": "\u2705 28 queries across runtime+dev \u2014 14 CVEs surfaced on runtime deps (F3)"
+        },
+        {
+          "check": "PR review sample",
+          "result": "\u2717 **Empty sample** (0 of 352 merged lifetime captured) \u2014 harness gap (F7 / E8). Direct gh api analysis: ~12% merge rate on recent closed."
+        },
+        {
+          "check": "Dependencies manifest detection",
+          "result": "\u2705 5 manifests (package.json x2, yarn.lock x2, package-lock.json) \u2014 includes proto-extract/ inner package"
+        },
+        {
+          "check": "Distribution channels inventory",
+          "result": "\u2705 2 channels both verified on npm registry (baileys + whatsapp-web-protobuf-extractor)"
+        },
+        {
+          "check": "Dangerous-primitives grep (15 families)",
+          "result": "\u26a0 2 exec hits (1 latent \u2014 F1 ffmpeg interpolation), 2 deserialization (libsignal safe), 14 network (self-documentation), 1 secrets (WAProto token constant \u2014 benign), 1 vendor_keys (WhatsApp dictionary entry \u2014 FP, F7/E11), 1 weak_crypto (md5 for version hash \u2014 non-crypto use)"
+        },
+        {
+          "check": "Workflows",
+          "result": "\u2705 12 detected (9 with content); 1 pull_request_target (pr-comment.yml); 0 SHA-pinned of 25 tag-pinned"
+        },
+        {
+          "check": "AI-governance tooling",
+          "result": "\u2705 Copilot code review workflow active (dynamic; GitHub AI review of PRs)"
+        },
+        {
+          "check": "Gitleaks",
+          "result": "\u2297 Not available on this scanner host"
+        },
+        {
+          "check": "README paste-scan",
+          "result": "\u2705 No suspicious paste-from-command blocks"
+        },
+        {
+          "check": "Prompt-injection scan on agent files",
+          "result": "\u2298 N/A \u2014 no AGENTS.md or copilot-instructions.md found"
+        }
+      ]
+    },
+    "coverage_gaps": {
+      "entries": [
+        "Harness PR review sample returned 0 captures despite 352 merged PRs lifetime \u2014 likely a filtering or paging issue when closed-without-merge dominates the closed-PR stream (88% of recent 50). Phase 4 fell back to direct gh api PR analysis.",
+        "vendor_keys regex matched `AIza...` pattern in WhatsApp protocol compression dictionary (src/WABinary/constants.ts:601) \u2014 a false positive; context is a pre-shared token array, not an active API key.",
+        "install_script_analysis flagged `yarn add github:WhiskeySockets/Baileys` as a master-tracking install pattern; the current root README does not contain this snippet (likely pulled from CHANGELOG or historical README content in tarball).",
+        "OSSF Scorecard not indexed \u2014 governance signals derived from raw gh api data.",
+        "Dependabot alerts API required admin scope (403); no .github/dependabot.yml present to inspect ecosystems tracked.",
+        "Gitleaks secret-scanning not available on this scanner host.",
+        "Q4 signal `q4_has_critical_on_default_path` doesn't auto-fire from reverse-engineered-API-library category signals \u2014 Phase 4 authored the override (signal_vocabulary_gap). A compute derivation watching for README disclaimers + platform-operator-API install paths would close this signal class."
+      ]
+    },
+    "scorecard_cells": {
+      "does_anyone_check_the_code": {
+        "color": "red",
+        "short_answer": "No \u2014 0 branch protection + 0 rulesets + no CODEOWNERS + 89.5% top-2 maintainer concentration; PR sample empty (harness gap E8)",
+        "rationale": null,
+        "edge_case": null,
+        "suggested_threshold_adjustment": null,
+        "computed_signal_refs": [],
+        "override_reason": null
+      },
+      "do_they_fix_problems_quickly": {
+        "color": "red",
+        "short_answer": "No \u2014 PR #1996 vulnerability-fix stale-closed after 148 days; 14 runtime-dep CVEs (ws \u00d7 5, protobufjs \u00d7 4); 150-day release stall on v7.0.0-rc.9",
+        "rationale": null,
+        "edge_case": null,
+        "suggested_threshold_adjustment": null,
+        "computed_signal_refs": [],
+        "override_reason": null
+      },
+      "do_they_tell_you_about_problems": {
+        "color": "red",
+        "short_answer": "No \u2014 no SECURITY.md + no CONTRIBUTING + 0 advisories in 4 years + documented vulnerability-fix PR stale-out (F2, F6)",
+        "rationale": null,
+        "edge_case": null,
+        "suggested_threshold_adjustment": null,
+        "computed_signal_refs": [],
+        "override_reason": null
+      },
+      "is_it_safe_out_of_the_box": {
+        "color": "red",
+        "short_answer": "No \u2014 using Baileys attaches consumer's WhatsApp account to a reverse-engineered unofficial client; ToS-violation + account-ban risk on default path (F0)",
+        "rationale": "Phase 3 advisory computed amber via the standard Q4 rubric (q4_has_critical_on_default_path=False by driver convention). Phase 4 has authored F0 Critical documenting the reverse-engineered-API-library shape: the library's ONLY function is to attach to WhatsApp Web servers using the consumer's account credentials, which is explicitly prohibited by WhatsApp's Terms of Service and carries documented account-ban risk. The README's own CAUTION-flagged disclaimer names this exposure. The `q4_has_critical_on_default_path` signal is a Phase-4-authored bool \u2014 compute has no harness-derivable signal for 'library category = ToS-violating third-party client' because the shape is a legal/operational-risk posture, not a grep-able primitive. This is a signal-vocabulary gap: Q4 asks about default-path safety, but the signal vocabulary doesn't capture 'using this library at all is a default-path risk' for reverse-engineered-platform-API libraries (Baileys, whatsmeow, anistr, discord.py-self, etc.).",
+        "edge_case": "Using Baileys with a burner WhatsApp number that the consumer is prepared to lose (plus clear disclosure to any humans whose messages flow through the bot) is a materially different severity profile \u2014 Warning rather than Critical. For a default-consumer who attaches their primary personal or business WhatsApp account, Critical is the correct framing.",
+        "suggested_threshold_adjustment": "Add a compute-side derivation: if README contains explicit disclaimers about third-party-client status (phrases: 'not affiliated with', 'not endorsed by', 'unauthorized', 'reverse-engineered') AND install path connects to a named platform-operator API (WhatsApp, Discord, Instagram, etc.), auto-set q4_has_critical_on_default_path=True. The reverse-engineered-API-library category is distinctive enough to warrant its own compute-signal path.",
+        "computed_signal_refs": [
+          "q4_all_channels_pinned",
+          "q4_artifact_verified",
+          "q4_has_critical_on_default_path",
+          "q4_has_warning_on_install_path"
+        ],
+        "override_reason": "signal_vocabulary_gap"
+      }
+    },
+    "catalog_metadata": {
+      "category": "reverse-engineered-api-library",
+      "subcategory": "whatsapp-web-client",
+      "short_description": "Socket-based TypeScript library for interacting with WhatsApp Web API. Reverse-engineered from WhatsApp's official web client. Published as npm package `baileys`. Consumed by bot authors building WhatsApp automation.",
+      "target_user": "Node.js/Bun/Deno developer building a WhatsApp automation, bot, or integration. Install: `npm install baileys` \u2192 import, provide auth state, connect to WhatsApp Web with consumer's phone-number-linked account.",
+      "shape": "Reverse-engineered platform-API library (first in V1.2 catalog). Distinctive threat model: library function is ToS-violating-by-design, threat vector is the platform operator (WhatsApp) rather than malicious third parties. 9k-star npm library; maintainer purpshell monetizes via paid-support (purpshell.dev/book).",
+      "prior_scan_note": "None \u2014 first scan of Baileys. Eleventh wild V1.2-schema scan (after markitdown 15, ghostty 16, Kronos 17, kamal 18, Xray-core 19, browser_terminal 20, wezterm 21, QuickLook 22, kanata 23, freerouting 24, WLED 25). FIRES V13-3 COMPARATOR-CALIBRATION TRIGGER at 11 wild V1.2 scans."
+    },
+    "timeline_intro": "Baileys lifecycle \u2014 4-year project with adiwajshing handoff to purpshell; recent timeline dominated by v7.0.0 RC cycle + community security-fix PRs being closed-unmerged or stale-closed.",
+    "evidence_intro": "Command-backed evidence from Phase 1 harness + gh api + direct file fetches of messages-media.ts, constants.ts, pr-comment.yml, README, and PR #1996 comment thread.",
+    "coverage_intro": "Phase 1 harness coverage with 7 documented gaps. Most significant: empty PR review sample despite 352 lifetime merges (F7/E8), worked around via direct gh api queries."
+  },
+  "phase_4b_computed": {
+    "verdict": {
+      "level": "Critical",
+      "computed_from_findings": [
+        "F0"
+      ]
+    }
+  },
+  "phase_5_prose_llm": {
+    "editorial_caption": {
+      "text": "Baileys \u2014 9k-star reverse-engineered WhatsApp Web client. Critical via F0: using Baileys attaches your WhatsApp account to an unofficial client, violating WhatsApp's ToS + risking account suspension. PR #1996 vulnerability fix stale-closed 148 days, maintainer-promised replacement never shipped. 14 runtime CVEs (ws \u00d7 5). Zero governance. 150-day release stall. V13-3 trigger fires."
+    },
+    "per_finding_prose": {
+      "entries": [
+        {
+          "finding_id": "F0",
+          "body_paragraphs": [
+            "The category matters here more than any specific line of code. Baileys is a reverse-engineered TypeScript library that speaks WhatsApp's Web protocol on behalf of a consuming user's own WhatsApp account. The GitHub topic list includes `reverse-engineering` \u2014 the maintainers classify the project this way themselves. The npm page for `baileys` lists purpshell as the current maintainer; the README names 'Rajeh Taher/WhiskeySockets' as the copyright holder (Rajeh is purpshell).",
+            "The README also contains a CAUTION-flagged disclaimer that would be unusual for most libraries: 'This project is not affiliated, associated, authorized, endorsed by, or in any way officially connected with WhatsApp or any of its subsidiaries or its affiliates\u2026 The maintainers of Baileys do not in any way condone the use of this application in practices that violate the Terms of Service of WhatsApp. The maintainers of this application call upon the personal responsibility of its users to use this application in a fair way, as it is intended to be used.' The disclaimer's existence is itself evidence: the authors know the category carries platform-operator risk.",
+            "WhatsApp's actual Terms of Service prohibit non-official clients \u2014 any third-party automation accessing user accounts is already out-of-ToS from WhatsApp's perspective, regardless of how 'fair' the usage is. WhatsApp has a documented history of detecting and suspending accounts that exhibit third-party-client behavior: unusual connection-fingerprints, missing official-client protocol signals, rate/timing patterns diverging from the official client, message-content patterns suggesting automation. Suspension is typically permanent and unappealable for accounts flagged this way.",
+            "The consumer impact is specific. A hobbyist running a Baileys bot on a burner number is at low-cost risk (lose the burner, get another). A business that integrates Baileys with their customer-service number faces catastrophic risk: a single detection event can suspend the number and disconnect the business from a channel their customers expect. The official alternative \u2014 the WhatsApp Business Platform API \u2014 is authorized but has friction and cost that Baileys' zero-price + direct-API-access doesn't. That trade-off is why the library has 9k stars: it works well, at the cost of standing on a platform whose owner can drop you at any time.",
+            "This is why the verdict is Critical on the default consumer path. Most users who install Baileys intend to connect their primary (or business) account \u2014 not a burner. The disclaimer is in the README but disclaimers don't change WhatsApp's detection behavior. A user who reads the README carefully, understands the risk, and sets up a burner-number pipeline is at a different severity profile (Warning) than the default consumer. The verdict tracks the default consumer, not the careful one."
+          ]
+        },
+        {
+          "finding_id": "F1",
+          "body_paragraphs": [
+            "The specific lines are src/Utils/messages-media.ts:125-126: `const cmd = \\`ffmpeg -ss ${time} -i ${path} -y -vf scale=${size.width}:-1 -vframes 1 -f image2 ${destPath}\\`` immediately followed by `exec(cmd, err => { ... })`. The `exec` import is from `child_process` at line 2 of the same file. `child_process.exec` invokes a shell (`/bin/sh` on Linux); a command string with metacharacters in any interpolated position becomes the shell's problem.",
+            "Tracing the current callers: `extractVideoThumb` is invoked from `generateThumbnail` at line 349 with `file` and `imgFilename` parameters. The `file` argument comes from `originalFilePath` (set by `encryptedStream` to `join(tmpdir(), mediaType + generateMessageIDV2() + '-original')`). `imgFilename` is `join(tmpdir(), generateMessageIDV2() + '.jpg')`. `generateMessageIDV2` is defined in src/Utils/generics.ts:182 and returns `'3EB0' + sha256-hex-substring(0, 18)` \u2014 no shell metacharacters.",
+            "So the library's own callers are safe today. The reason this is still a finding is: (a) the pattern itself is the unsafe form \u2014 `spawn('ffmpeg', [...args])` would accomplish the same task with zero shell-injection surface; (b) `generateThumbnail` is an EXPORTED API, meaning library consumers who write their own media flows may pass any string as the `file` argument; (c) any future internal refactor that threads a filename from an incoming WhatsApp message attachment (sender-controlled) into this code path would expose the entire Baileys user base to shell-injection via crafted filenames.",
+            "The mitigation is small. `spawn('ffmpeg', ['-ss', time, '-i', path, '-y', '-vf', `scale=${size.width}:-1`, '-vframes', '1', '-f', 'image2', destPath])` has identical semantics, doesn't spawn a shell, and eliminates the category entirely. A code-review checklist item for this file would close it out and prevent regression."
+          ]
+        },
+        {
+          "finding_id": "F2",
+          "body_paragraphs": [
+            "The PR #1996 story is worth telling in full because it's the clearest data point about how vulnerability reports get handled in this project. On 2025-10-30, community contributor KaivalyaGauns filed a PR titled 'Vulnerability Fixes' that did one specific thing: replaced the deprecated-since-2020 `request` / `request-promise-core` / `request-promise-native` trio with a modern `node-fetch` + `form-data` pair. The changes were scoped to proto-extract/ (the maintainer build-tool) and were tested against the existing proto-extraction flow.",
+            "`request` and its companion packages have 2 known CVEs at Baileys' pinned version: GHSA-p8p7-x288-28g6 (SSRF via redirect) and GHSA-7xfp-9c55-5vqj (TLS certificate validation bypass). The `request` package has been marked deprecated by its own maintainers since 2020 with the recommendation to migrate to alternatives. The PR was the migration.",
+            "The whiskeysockets-bot posted its standard welcome comment within seconds: 'Thanks for opening this pull request and contributing to the project! The next step is for the maintainers to review your changes.' Then silence. The first stale-bot warning fired 2025-12-06, 37 days later. Community member vinikjkkj asked 'any updates?' on 2025-12-12. Another stale-bot warning 2025-12-27. Then, on 2026-01-08 \u2014 70 days after the PR was filed \u2014 maintainer purpshell commented: 'We should make our own version of this PR. Opening an issue in its stead.'",
+            "That comment is the pivot point. The maintainer explicitly acknowledged the fix was needed and took ownership. But no issue was opened in a form the scanner can find; no replacement PR materialized; the original PR drifted toward stale-bot closure through two more warnings and was finally closed 2026-03-26 \u2014 148 days after it was filed, and 77 days after purpshell's commitment.",
+            "As of scan date (2026-04-20), master's proto-extract/package.json still contains `request`, `request-promise-core`, and `request-promise-native` \u2014 confirmed by the Phase 1 harness dependency inventory. The 'own version' did not happen in 102 days since purpshell's comment.",
+            "This matters for two reasons. First, the SSRF and TLS-cert CVEs remain in the deployed dep graph; users who run proto-extract/ (typically maintainers refreshing WAProto definitions, but also anyone forking for the same purpose) pull the vulnerable code. Second, as a datapoint about how disclosure-and-fix works here, this is the kind of signal that motivates Q3's red. The stale-bot-closes-a-working-fix pattern is distinguishable from 'busy maintainer, fix in progress.' The former is the observed pattern."
+          ]
+        },
+        {
+          "finding_id": "F3",
+          "body_paragraphs": [
+            "Running Baileys' package.json through osv.dev produces 14 CVE records across 6 runtime dependencies at their pinned versions. The distribution: `ws` (^8.13.0) has 5 vulns, `protobufjs` (^7.2.4) has 4, `request` (^2.88.0 via proto-extract) has 2, `acorn` (^8.15.0 via proto-extract) has 1, `music-metadata` has 1, `@hapi/boom` (^9.1.3, on EOL 9.x major) has 1.",
+            "The `ws` count matters most. `ws` is the WebSocket library Baileys uses for every connection to WhatsApp Web \u2014 it's the central transport. The 5 GHSAs on `ws` at Baileys' pin include DoS-via-header-size classes and memory-issue classes. Whether any are reachable depends on Baileys' usage patterns, but the cumulative surface is nontrivial on the single library that carries all of Baileys' traffic.",
+            "The maintainer-side signal is that there's no `.github/dependabot.yml` present. The GitHub Actions 'Dependabot Updates' workflow IS listed as active, which likely means GitHub's default security-update-only behavior \u2014 Dependabot will open PRs for security advisories affecting the current pins but won't track general dep updates. Compare to freerouting (entry 24) where an explicit dependabot.yml on `gradle` surfaced 5 open dep-bump PRs at scan time. Baileys has 0 open Dependabot-authored PRs at scan \u2014 consistent with the no-explicit-config state.",
+            "Consumer mitigation is straightforward: pin exact versions via `npm install --save-exact`, run `npm audit` regularly, use npm `overrides` to force specific `ws` and `protobufjs` versions. The structural fix is on the maintainer side: add `.github/dependabot.yml` explicitly tracking npm, bump `ws` to a version clearing the 5 GHSAs, replace `@hapi/boom` 9.x with 10.x (actively maintained), and close out F2 to drop the `request` chain."
+          ]
+        },
+        {
+          "finding_id": "F4",
+          "body_paragraphs": [
+            "The governance state is straightforward: nothing is configured. `gh api repos/WhiskeySockets/Baileys/branches/master/protection` returns HTTP 404 (no classic branch protection). `gh api repos/WhiskeySockets/Baileys/rulesets` returns zero entries. No CODEOWNERS file at any of the standard locations (root, .github/, docs/, .gitlab/). Community health sits at 50% because CONTRIBUTING, CODE_OF_CONDUCT, and SECURITY.md are all absent.",
+            "Contributor concentration is high: adiwajshing 71.1% + purpshell 18.4% = 89.5% of top-6 commits. adiwajshing is the original author (the repo's early commits and `inspired from whatsmeow` references in generics.ts trace back to adiwajshing's early work); they appear inactive in the recent timeline. purpshell is the named active maintainer \u2014 the README explicitly calls him the 'current maintainer,' the paid-support channel at purpshell.dev/book routes to him, and the copyright attribution names him. jlucaso1 is a distant-third contributor (45 commits) who appears in recent merge activity. Effectively, the project is single-active-maintainer with one secondary contributor occasionally in the merge pipeline.",
+            "The attack surface from this combination is: a compromised purpshell account (phishing, credential theft, session hijack) has direct push access to master with no ruleset requiring peer review, and \u2014 via the publish-release.yml workflow \u2014 can publish to npm under the `baileys` name. The time from malicious push to npm-registry-available is whatever the release workflow takes, typically minutes. Downstream consumers who installed `baileys@latest` or `baileys@^7.0.0-rc.9` would begin pulling the compromised version on their next install or rebuild.",
+            "The structural fix is a 3-line ruleset edit: add a `pull_request` rule requiring at least 1 approving reviewer, add a CODEOWNERS file naming purpshell + jlucaso1 for core paths, enable classic branch protection as backup. For context on how achievable this is: kamal (entry 18) added Copilot Reviews as a ruleset-enforced review gate; ghostty (entry 16) has a 4-rule ruleset; kanata (entry 23) has a ruleset requiring PR review. Baileys doesn't \u2014 this is a category-wide choice, not a technical limitation."
+          ]
+        },
+        {
+          "finding_id": "F5",
+          "body_paragraphs": [
+            "The latest release on any channel is v7.0.0-rc.9 on 2025-11-21 \u2014 150 days before the scan. npm serves this as `@latest` for `npm install baileys`. The last non-RC stable release is v6.7.21 on 2025-11-06, 165 days before scan. Master has been continuously pushed through 2026-04-19 (one day before scan), so the project is clearly active; the gap is in the release-tagging step.",
+            "v7.0.0 has been in RC for 5 months. The RC cycle moved fast initially (rc.3 \u2192 rc.9 in 2.5 months, September through November 2025) and then stopped. There's no public explanation for the stop. Meanwhile master has accumulated ~5 months of work that doesn't reach any npm consumer.",
+            "The practical impact: consumers on `baileys@latest` are using a 5-month-old snapshot. Any fixes merged to master since 2025-11-21 (including a hypothetical PR #1996 replacement, if purpshell's 'own version' ever materializes) aren't available until a new RC or stable is cut. For a library where one of the scan findings is 'community security-fix PR stale-closed' (F2), the fix-to-user latency is compounded: even if a fix DID merge to master, consumers don't see it until the release cadence resumes.",
+            "The publish-release.yml workflow appears automated \u2014 it's not a technical blocker. The decision to cut v7.0.0 (or a v7.0.0-rc.10, or a v6.7.22 backport) is a human-process bottleneck on the maintainer. Same structural pattern as wezterm (entry 21, 807-day stall on a single author) and freerouting (entry 24, 373 days with a functioning automated release workflow)."
+          ]
+        },
+        {
+          "finding_id": "F6",
+          "body_paragraphs": [
+            "No SECURITY.md exists in any of the standard locations (root, .github/, docs/). 0 GHSA security advisories have been published against Baileys across its 4-year history. For context, 11 of 11 V1.2 wild-scan catalog entries share this silent-fix pattern \u2014 it's now the dominant community norm for this catalog's shape \u2014 but Baileys provides the clearest single data point about WHY this happens in practice.",
+            "PR #1996 (covered in F2) is the specific mechanism observable here. An external security researcher identified a real vulnerability class (deprecated-dep CVEs) and offered a tested fix. The maintainer engaged (eventually) with a plan to do it themselves. The PR stale-out-closed. The plan didn't materialize. Had this PR been merged, it would have been a natural moment to file a GHSA against the fixed-version-range of `request`. That didn't happen because the fix didn't happen.",
+            "The longer-run consequence: researchers who come to the same conclusion in the future have a specific data point about how their contribution is likely to be received. The lowest-friction action for a future researcher is to publicly disclose without filing a PR (since the PR route doesn't seem to land fixes). That's a significant upstream shift and it's the opposite of what a healthy disclosure process looks like.",
+            "The fix is cheap: a 1-page SECURITY.md naming GitHub's built-in 'Report a vulnerability' UI + expected response window + the commercial-support escalation path (purpshell.dev/book). Plus a follow-through on PR #1996 (merge it, or actually author the replacement). Both are hours of work."
+          ]
+        },
+        {
+          "finding_id": "F7",
+          "body_paragraphs": [
+            "Three scanner coverage gaps documented for this scan, in order of relevance:",
+            "(1) Harness PR review sample returned 0 captures despite 352 lifetime merged PRs. The fallback was direct `gh api` queries against the pulls endpoint. The root cause is likely the sampler's filtering heuristic when the closed-PR stream is dominated by closed-without-merge (observed: ~88% of 50 most-recent closed PRs are closed without merging). The sampler presumably filters for `merged_at != null` on a fixed window; if the window is dominated by unmerged closes, the merged-PR count falls to zero.",
+            "(2) vendor_keys regex false-positive on `AIzaSyDR5yfaG7OG8sMTUj8kfQEb8T9pN8BM6Lk` at src/WABinary/constants.ts:601. The context is a WhatsApp Web protocol compression dictionary \u2014 a JavaScript array of pre-shared short tokens used by the binary format. The Google-API-key regex matches the string by coincidence. Fix: require proximity context (assignment to a variable matching `*_KEY|apiKey|GOOGLE_*`; `process.env.*` reference; URL embedding) rather than string-in-array-literal.",
+            "(3) install_script_analysis flagged `yarn add github:WhiskeySockets/Baileys` as a master-tracking install pattern; the current root README doesn't contain that snippet. The harness is likely extracting from a historical README version in tarball metadata or from a separate doc file. Fix: version-check install-snippet inputs against the current README SHA.",
+            "None of these gaps changed the verdict \u2014 Phase 4 used direct gh api fallback for PR analysis, dismissed the vendor_keys FP, and noted the install-snippet FP. All three are V1.2.x calibration items for the scanner, not Baileys defects."
+          ]
+        }
+      ]
+    }
+  },
+  "phase_6_assembly": {
+    "assembled": true,
+    "assembly_timestamp": "2026-04-20T22:10:13.164348+00:00",
+    "provenance_complete": true,
+    "evidence_refs_valid": true,
+    "field_count": 2374
+  },
+  "scan_sign_off": {
+    "approved_for_release": false
+  }
+}
