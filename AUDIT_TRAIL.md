@@ -17,6 +17,67 @@ Canonical log of milestone commits with the verification state captured at commi
 
 ---
 
+## Checkpoint — 2026-04-20 (session 7) — 2 wild scans (WLED + Baileys) + V13-3 board CLOSE + V1.2.x Priority 1 landing
+
+**HEAD:** `c0d2ba2` on `origin/main` (clean push; tree clean).
+
+**Session 7 commits from `c6e7502` (session 6 close) →:**
+
+```
+c0d2ba2  Archive Codex code-review 3-pass iteration for V13-3 landing
+fcc4e81  V13-3 CLOSE: comparator-calibration board review + V1.2.x landings
+c558b9f  Resolve catalog entry 26 commit hash to 2b295ef
+2b295ef  Catalog entry 26: WhiskeySockets/Baileys — V13-3 trigger fires at n=11
+f4f3332  Resolve catalog entry 25 commit hash to b3622b5
+b3622b5  Catalog entry 25: wled/WLED — first ESP32 IoT firmware scan
+```
+
+**Verification at checkpoint:**
+- 414/414 tests passing (was 385 at session 6 close; +19 V13-3 tests + pre-existing +10 from other touches)
+- 26 catalog entries — 11 V2.4 + 15 v2.5-preview (3 Step G validation + 11 V1.2-schema wild scans entries 16-26)
+- V13-3 TRIGGER FIRED at entry 26 Baileys → board review launched → CLOSED 2026-04-20 with 2/3 R3 AGREE + owner directive OD-4
+- All 4 validator gates clean on both new scans (WLED + Baileys): MD + HTML + --parity + schema
+- V1.2.x code landings cleared Codex code-review after 3-pass iteration (BLOCK → BLOCK → SIGN OFF W/ NOTES)
+
+**Key outputs (session 7):**
+
+Per-scan outputs (WLED entry 25, Baileys entry 26):
+- `docs/GitHub-Scanner-WLED.md` + `.html` + `docs/board-review-data/scan-bundles/WLED-01328a6.json`
+- `docs/GitHub-Scanner-Baileys.md` + `.html` + `docs/board-review-data/scan-bundles/Baileys-8e5093c.json`
+
+V13-3 board review archive:
+- `docs/External-Board-Reviews/042026-v13-3-comparator-calibration/` — CONSOLIDATION.md, r1/r2/r3 briefs, pragmatist/codex/deepseek R1+R2+R3 responses, Codex code-review r1/r2/r3
+- 33-item dissent audit; zero silent drops per SOP §4 Pre-Archive Gate
+
+V13-3 V1.2.x code landings (commit `fcc4e81`):
+- `docs/phase_1_harness.py` — C2: deserialization regex drops bare `deserialize` keyword (suppresses ArduinoJson FP class)
+- `docs/compute.py` — C5: `derive_q4_critical_on_default_path_from_deserialization` + C18: `derive_tool_loads_user_files` + `compute_q4_autofires_from_phase_1` wrapper + Q4 rubric reorder (critical-on-default-path now highest priority); `compute_scorecard_cells(**kwargs, phase_1_raw_capture=...)` auto-fires Q4 red when C5 conditions met
+- `docs/phase-1-checklist.md` — A2 row updated to reflect V13-3 C2 language qualifier
+- `docs/v13-3-analysis.md` — FROZEN 191-line analysis document mirroring v13-1 template
+- `docs/v13-3-fp-dry-run.md` — C20 dry-run: 0 FPs on 11 bundles, 1 true-positive (freerouting)
+- `tests/test_compute.py` — +17 tests across TestV13_3_DeriveToolLoadsUserFiles (10), TestV13_3_Q4AutoFireFromDeserialization (7), TestV13_3_ComputeQ4AutofiresFromPhase1 (6), TestV13_3_C5LiveIntegrationInScorecardCells (4)
+- `tests/test_phase_1_harness.py` — +2 regression tests (ArduinoJson suppression + unsafe-specific retention)
+
+Telemetry updates:
+- `docs/v12-wild-scan-telemetry.md` — §1 roster 10 → 11; §2 distribution signal_vocabulary_gap 67% modal; §3 streak 3-consecutive Q4 breaks; §4 Priority 1b + 1c harness-patch candidates; §5.2 silent-fix 11/11 with 2 documented failures; §7 V13-3 FIRED; §8 V12x backlog V12x-11/12/13 added; §10 changelog entry 26 + V13-3-CLOSE entries
+- `docs/scanner-catalog.md` — rows 25 + 26 appended with full per-scan summaries; footer updated (25 → 26 entries; 9 overrides across 11 scans)
+- `CLAUDE.md` — current-state paragraph rewritten for session 7 (414 tests, 26 entries, V13-3 RESOLVED); reference list pointer updated
+- `docs/External-Board-Reviews/README.md` — V13-3 review row added to chronological index
+
+**Revert paths:**
+- To revert V13-3 code landings only: `git revert fcc4e81 c0d2ba2` — preserves catalog + scans; removes the compute/harness/analysis changes
+- To revert V13-3 entirely including board-review archive: `git reset --hard c558b9f` — destructive; returns to post-Baileys-scan state (Baileys stays; V13-3 work undone)
+- To revert back to session 6 close (pre-WLED): `git reset --hard c6e7502` — destructive; removes all session 7 commits including WLED + Baileys scans
+
+**Decision points to preserve:**
+- V13-3 CLOSED by 2/3 R3 AGREE + owner directive OD-4 (Codex R3 unavailable due to OpenAI capacity; R2 positions consistent with resolutions; Codex assigned code-review gate as substantive-review surrogate — THIS PATTERN IS PRECEDENT for future owner-directive closes when one agent is unavailable and their R2 positions are consistent with resolutions)
+- Q4 rubric reorder in compute_scorecard_cells: has_critical_on_default_path check moved to highest priority. Was a pre-existing bug exposed by C5 integration tests. Landed in `fcc4e81`.
+- compute_scorecard_cells signature widened: new optional `phase_1_raw_capture` kwarg. Backwards-compatible (defaults to None → pre-existing behavior). Future scan drivers should pass phase_1_raw_capture to get C5 auto-fire applied.
+- V1.3 deferred ledger populated with 6 items + 2 new-item additions (N1 deserialization primitive taxonomy redesign; N2 statistical CIs on override-rate claims — N2 already applied in v13-3-analysis.md §3.1)
+- V13-3 follow-up cadence (G4-broadened): re-trigger on N=25 V1.2 wild scans OR any of 6 taxonomy-strain events
+
+---
+
 ## Checkpoint — 2026-04-20 (session 6) — V13-1 resolution + V1.2.x signal widening + D-6 automation + 6 wild scans
 
 **HEAD:** `edf8f57` on `origin/main` (clean push; tree clean).
