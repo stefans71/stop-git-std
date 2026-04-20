@@ -1,0 +1,2015 @@
+{
+  "$comment": "browser_terminal V1.2 wild scan \u2014 fifth wild V1.2 scan; first browser-extension entry in catalog.",
+  "schema_version": "V1.2",
+  "_meta": {
+    "scanner_version": "V2.5-preview",
+    "prompt_version": "V2.4",
+    "scan_started_at": "2026-04-20T13:02:06.822354+00:00",
+    "model": "claude-opus-4-7 (via Claude Code)",
+    "scan_status": "completed",
+    "scan_completed_at": "2026-04-20T13:11:59.960672+00:00"
+  },
+  "target": {
+    "owner": "BatteredBunny",
+    "repo": "browser_terminal",
+    "full_name": "BatteredBunny/browser_terminal",
+    "url": "https://github.com/BatteredBunny/browser_terminal"
+  },
+  "scanner_integrity": {
+    "injection_matches": 0,
+    "actionable_count": 0,
+    "findings": []
+  },
+  "phase_1_raw_capture": {
+    "pre_flight": {
+      "head_sha": "9a77c4ace7fd014c19391e541e348d7369f99e6a",
+      "default_branch": "main",
+      "tarball_extracted": true,
+      "tarball_file_count": 35,
+      "symlinks_stripped": 0,
+      "api_rate_limit": {
+        "limit": 5000,
+        "remaining": 4985,
+        "reset": 1776692471,
+        "used": 15
+      }
+    },
+    "repo_metadata": {
+      "name": "browser_terminal",
+      "description": "Terminal emulator extension for browser",
+      "created_at": "2023-04-14T13:36:19Z",
+      "pushed_at": "2026-04-03T20:31:08Z",
+      "stargazer_count": 10,
+      "fork_count": 2,
+      "archived": false,
+      "fork": false,
+      "has_issues_enabled": true,
+      "primary_language": "Go",
+      "topics": [
+        "chrome-extension",
+        "firefox-extension",
+        "terminal"
+      ],
+      "license_spdx": "GPL-3.0",
+      "default_branch": "main",
+      "open_issues_count": 1,
+      "size_kb": 2365
+    },
+    "contributors": {
+      "top_contributors": [
+        {
+          "contributions": 41,
+          "login": "BatteredBunny"
+        },
+        {
+          "contributions": 12,
+          "login": "dependabot[bot]"
+        }
+      ],
+      "total_contributor_count": 2
+    },
+    "maintainer_accounts": {
+      "accounts": [
+        {
+          "bio": "cat",
+          "company": null,
+          "created_at": "2019-07-16T07:06:31Z",
+          "followers": 50,
+          "login": "BatteredBunny",
+          "public_repos": 59,
+          "type": "User",
+          "role": "owner"
+        },
+        {
+          "bio": null,
+          "company": null,
+          "created_at": "2019-04-16T22:34:25Z",
+          "followers": 0,
+          "login": "dependabot[bot]",
+          "public_repos": 0,
+          "type": "Bot",
+          "role": "contributor",
+          "contributions": 12
+        }
+      ]
+    },
+    "ossf_scorecard": {
+      "queried": true,
+      "indexed": false,
+      "http_status": 404,
+      "overall_score": null,
+      "checks": [],
+      "raw_response": null
+    },
+    "community_profile": {
+      "health_percentage": 42,
+      "has_code_of_conduct": false,
+      "has_contributing": false,
+      "has_security_policy": false,
+      "license_spdx": "GPL-3.0"
+    },
+    "branch_protection": {
+      "classic": {
+        "status": 404
+      },
+      "rulesets": {
+        "entries": [],
+        "count": 0
+      },
+      "rules_on_default": {
+        "entries": [],
+        "count": 0
+      },
+      "owner_type": "User",
+      "org_rulesets": {
+        "status": "n/a",
+        "entries": [],
+        "note": "owner is not an Organization"
+      }
+    },
+    "codeowners": {
+      "found": false,
+      "path": null,
+      "content": null,
+      "locations_checked": [
+        "CODEOWNERS",
+        ".github/CODEOWNERS",
+        "docs/CODEOWNERS",
+        ".gitlab/CODEOWNERS"
+      ]
+    },
+    "releases": {
+      "entries": [
+        {
+          "tag_name": "v1.4.7",
+          "published_at": "2025-06-23T10:38:07Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "github-actions[bot]"
+        },
+        {
+          "tag_name": "v1.4.6",
+          "published_at": "2025-06-23T10:11:43Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "github-actions[bot]"
+        },
+        {
+          "tag_name": "v1.4.5",
+          "published_at": "2024-05-05T14:04:22Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "github-actions[bot]"
+        },
+        {
+          "tag_name": "v1.4.3",
+          "published_at": "2023-08-16T21:09:52Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "BatteredBunny"
+        },
+        {
+          "tag_name": "v1.4.2",
+          "published_at": "2023-08-16T20:06:28Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "BatteredBunny"
+        }
+      ],
+      "total_count": 5
+    },
+    "security_advisories": {
+      "count": 0,
+      "entries": []
+    },
+    "workflows": {
+      "entries": [
+        {
+          "name": "Build and Release",
+          "path": ".github/workflows/fix-hash.yml",
+          "state": "active"
+        },
+        {
+          "name": "Build and Release",
+          "path": ".github/workflows/release.yml",
+          "state": "active"
+        },
+        {
+          "name": "Dependabot Updates",
+          "path": "dynamic/dependabot/dependabot-updates",
+          "state": "active"
+        },
+        {
+          "name": "Dependency Graph",
+          "path": "dynamic/dependabot/update-graph",
+          "state": "active"
+        }
+      ],
+      "count": 4,
+      "pull_request_target_count": 0
+    },
+    "workflow_contents": {
+      "entries": [
+        {
+          "path": ".github/workflows/release.yml",
+          "content_lines": 80,
+          "sha_pinned_actions_count": 0,
+          "tag_pinned_actions_count": 16,
+          "has_pull_request_target": false,
+          "permissions_block_present": false
+        },
+        {
+          "path": ".github/workflows/fix-hash.yml",
+          "content_lines": 41,
+          "sha_pinned_actions_count": 0,
+          "tag_pinned_actions_count": 3,
+          "has_pull_request_target": false,
+          "permissions_block_present": false
+        }
+      ]
+    },
+    "code_patterns": {
+      "agent_rule_files": [],
+      "readme_paste_blocks": {
+        "scanned": true,
+        "entries": [],
+        "entries_count": 0
+      },
+      "dangerous_primitives": {
+        "scanned": true,
+        "exec": {
+          "hit_count": 0,
+          "files": []
+        },
+        "deserialization": {
+          "hit_count": 0,
+          "files": []
+        },
+        "network": {
+          "hit_count": 0,
+          "files": []
+        },
+        "secrets": {
+          "hit_count": 0,
+          "files": []
+        },
+        "vendor_keys": {
+          "hit_count": 0,
+          "files": []
+        },
+        "tls_cors": {
+          "hit_count": 0,
+          "files": []
+        },
+        "sql_injection": {
+          "hit_count": 0,
+          "files": []
+        },
+        "cmd_injection": {
+          "hit_count": 0,
+          "files": []
+        },
+        "auth_bypass": {
+          "hit_count": 0,
+          "files": []
+        },
+        "path_traversal": {
+          "hit_count": 1,
+          "files": [
+            {
+              "file": "scripts/extension.js",
+              "first_match": {
+                "line": 64,
+                "snippet": "    let content = fs.readFileSync(SRC_DIR + \"/manifest.json\").toString();"
+              }
+            }
+          ]
+        },
+        "archive_unsafe": {
+          "hit_count": 0,
+          "files": []
+        },
+        "ssrf": {
+          "hit_count": 0,
+          "files": []
+        },
+        "xss": {
+          "hit_count": 0,
+          "files": []
+        },
+        "weak_crypto": {
+          "hit_count": 0,
+          "files": []
+        },
+        "debug_flags": {
+          "hit_count": 0,
+          "files": []
+        }
+      },
+      "executable_files": [
+        {
+          "path": ".github/workflows/release.yml",
+          "kind": "ci-workflow",
+          "runtime": "github-actions",
+          "line_count": 80,
+          "file_sha": "b516da73819d",
+          "has_network_call": false,
+          "has_env_var_pattern": false
+        },
+        {
+          "path": ".github/workflows/fix-hash.yml",
+          "kind": "ci-workflow",
+          "runtime": "github-actions",
+          "line_count": 41,
+          "file_sha": "0477f403546c",
+          "has_network_call": false,
+          "has_env_var_pattern": true
+        }
+      ],
+      "install_hooks": []
+    },
+    "prompt_injection_scan": {
+      "scanned_files": [],
+      "injection_signals": [],
+      "signal_count": 0,
+      "scan_method": "tarball"
+    },
+    "dependencies": {
+      "manifest_files": [
+        {
+          "path": "pnpm-lock.yaml",
+          "ecosystem": "npm"
+        },
+        {
+          "path": "package.json",
+          "ecosystem": "npm"
+        },
+        {
+          "path": "native/go.sum",
+          "ecosystem": "Go"
+        },
+        {
+          "path": "native/go.mod",
+          "ecosystem": "Go"
+        }
+      ],
+      "runtime": [
+        {
+          "name": "@xterm/addon-fit",
+          "ecosystem": "npm",
+          "pinning": "0.11.0"
+        },
+        {
+          "name": "@xterm/addon-web-links",
+          "ecosystem": "npm",
+          "pinning": "0.12.0"
+        },
+        {
+          "name": "@xterm/xterm",
+          "ecosystem": "npm",
+          "pinning": "6.0.0"
+        },
+        {
+          "name": "esbuild",
+          "ecosystem": "npm",
+          "pinning": "0.28.0"
+        },
+        {
+          "name": "esbuild-sass-plugin",
+          "ecosystem": "npm",
+          "pinning": "3.7.0"
+        },
+        {
+          "name": "web-ext",
+          "ecosystem": "npm",
+          "pinning": "10.1.0"
+        },
+        {
+          "name": "webextension-polyfill",
+          "ecosystem": "npm",
+          "pinning": "0.12.0"
+        }
+      ],
+      "runtime_count": 7,
+      "dev": [
+        {
+          "name": "@types/firefox-webext-browser",
+          "ecosystem": "npm",
+          "pinning": "143.0.0"
+        }
+      ],
+      "dev_count": 1,
+      "dependabot_alerts": {
+        "status": 403,
+        "alerts_count": null,
+        "note": "admin scope required; falling back to osv.dev"
+      },
+      "osv_lookups": [
+        {
+          "name": "@xterm/addon-fit",
+          "ecosystem": "npm",
+          "vulns_count": 0,
+          "vulns_summary": []
+        },
+        {
+          "name": "@xterm/addon-web-links",
+          "ecosystem": "npm",
+          "vulns_count": 0,
+          "vulns_summary": []
+        },
+        {
+          "name": "@xterm/xterm",
+          "ecosystem": "npm",
+          "vulns_count": 0,
+          "vulns_summary": []
+        },
+        {
+          "name": "esbuild",
+          "ecosystem": "npm",
+          "vulns_count": 1,
+          "vulns_summary": [
+            "GHSA-67mh-4wv8-2f99"
+          ]
+        },
+        {
+          "name": "esbuild-sass-plugin",
+          "ecosystem": "npm",
+          "vulns_count": 0,
+          "vulns_summary": []
+        },
+        {
+          "name": "web-ext",
+          "ecosystem": "npm",
+          "vulns_count": 0,
+          "vulns_summary": []
+        },
+        {
+          "name": "webextension-polyfill",
+          "ecosystem": "npm",
+          "vulns_count": 0,
+          "vulns_summary": []
+        }
+      ],
+      "dependabot_config": {
+        "present": true,
+        "ecosystems_tracked": [
+          "gomod",
+          "npm",
+          "github-actions"
+        ],
+        "raw_snippet": "version: 2\nupdates:\n  - package-ecosystem: \"gomod\"\n    directory: \"/\"\n    schedule:\n      interval: \"daily\"\n  - package-ecosystem: \"npm\"\n    directory: \"/\"\n    schedule:\n      interval: \"daily\"\n  - package-ecosystem: \"github-actions\"\n    directory: \"/native\"\n    schedule:\n      interval: \"weekly\""
+      }
+    },
+    "pr_review": {
+      "total_closed_prs": 12,
+      "sample_size": 12,
+      "total_merged_lifetime": 12,
+      "prs": [
+        {
+          "number": 13,
+          "title": "Bump esbuild from 0.27.7 to 0.28.0",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2026-04-03T20:31:04Z",
+          "labels": [
+            "dependencies",
+            "javascript"
+          ],
+          "security_flagged": false
+        },
+        {
+          "number": 12,
+          "title": "Bump esbuild from 0.27.4 to 0.27.7",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2026-04-02T19:11:38Z",
+          "labels": [
+            "dependencies",
+            "javascript"
+          ],
+          "security_flagged": false
+        },
+        {
+          "number": 11,
+          "title": "Bump web-ext from 10.0.0 to 10.1.0",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2026-04-02T19:14:57Z",
+          "labels": [
+            "dependencies",
+            "javascript"
+          ],
+          "security_flagged": false
+        },
+        {
+          "number": 10,
+          "title": "Bump web-ext from 9.4.0 to 10.0.0",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2026-03-13T18:35:28Z",
+          "labels": [
+            "dependencies",
+            "javascript"
+          ],
+          "security_flagged": false
+        },
+        {
+          "number": 9,
+          "title": "Bump esbuild from 0.27.3 to 0.27.4",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2026-03-12T19:16:21Z",
+          "labels": [
+            "dependencies",
+            "javascript"
+          ],
+          "security_flagged": false
+        },
+        {
+          "number": 8,
+          "title": "Bump @xterm/xterm from 5.5.0 to 6.0.0",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2026-03-09T21:20:03Z",
+          "labels": [
+            "dependencies",
+            "javascript"
+          ],
+          "security_flagged": false
+        },
+        {
+          "number": 7,
+          "title": "Bump esbuild-sass-plugin from 3.3.1 to 3.7.0",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2026-03-09T21:12:16Z",
+          "labels": [
+            "dependencies",
+            "javascript"
+          ],
+          "security_flagged": false
+        },
+        {
+          "number": 6,
+          "title": "Bump @xterm/addon-fit from 0.10.0 to 0.11.0",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2026-03-07T13:35:32Z",
+          "labels": [
+            "dependencies",
+            "javascript"
+          ],
+          "security_flagged": false
+        },
+        {
+          "number": 5,
+          "title": "Bump esbuild from 0.25.5 to 0.27.3",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2026-03-07T12:17:13Z",
+          "labels": [
+            "dependencies",
+            "javascript"
+          ],
+          "security_flagged": false
+        },
+        {
+          "number": 4,
+          "title": "Bump @types/firefox-webext-browser from 120.0.4 to 143.0.0",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2026-03-07T12:57:15Z",
+          "labels": [
+            "dependencies",
+            "javascript"
+          ],
+          "security_flagged": false
+        },
+        {
+          "number": 3,
+          "title": "Bump web-ext from 8.8.0 to 9.4.0",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2026-03-07T14:35:14Z",
+          "labels": [
+            "dependencies",
+            "javascript"
+          ],
+          "security_flagged": false
+        },
+        {
+          "number": 2,
+          "title": "Bump @xterm/addon-web-links from 0.11.0 to 0.12.0",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2026-03-07T12:45:13Z",
+          "labels": [
+            "dependencies",
+            "javascript"
+          ],
+          "security_flagged": false
+        }
+      ],
+      "formal_review_rate": 0.0,
+      "any_review_rate": 0.0,
+      "self_merge_count": 0,
+      "security_flagged_count": 0,
+      "security_flagged_numbers": []
+    },
+    "open_prs": {
+      "entries": [],
+      "count": 0
+    },
+    "closed_not_merged_prs": {
+      "entries": [],
+      "count": 0
+    },
+    "issues_and_commits": {
+      "open_security_issues": [],
+      "open_issues_count": 1,
+      "closed_issues": [],
+      "closed_issues_count": 0,
+      "recent_commits": [
+        {
+          "author": "dependabot[bot]",
+          "date": "2026-04-03T20:31:04Z",
+          "message_first_line": "Bump esbuild from 0.27.7 to 0.28.0 (#13)",
+          "sha": "9a77c4a",
+          "security_keyword_match": false
+        },
+        {
+          "author": "dependabot[bot]",
+          "date": "2026-04-02T19:14:57Z",
+          "message_first_line": "Bump web-ext from 10.0.0 to 10.1.0 (#11)",
+          "sha": "473bf3e",
+          "security_keyword_match": false
+        },
+        {
+          "author": "dependabot[bot]",
+          "date": "2026-04-02T19:11:38Z",
+          "message_first_line": "Bump esbuild from 0.27.4 to 0.27.7 (#12)",
+          "sha": "b38b90c",
+          "security_keyword_match": false
+        },
+        {
+          "author": "dependabot[bot]",
+          "date": "2026-03-13T18:35:28Z",
+          "message_first_line": "Bump web-ext from 9.4.0 to 10.0.0 (#10)",
+          "sha": "069770e",
+          "security_keyword_match": false
+        },
+        {
+          "author": "dependabot[bot]",
+          "date": "2026-03-12T19:16:20Z",
+          "message_first_line": "Bump esbuild from 0.27.3 to 0.27.4 (#9)",
+          "sha": "56894f2",
+          "security_keyword_match": false
+        },
+        {
+          "author": "BatteredBunny",
+          "date": "2026-03-09T21:37:18Z",
+          "message_first_line": "refactor: Clean up",
+          "sha": "a519873",
+          "security_keyword_match": false
+        },
+        {
+          "author": "dependabot[bot]",
+          "date": "2026-03-09T21:20:03Z",
+          "message_first_line": "Bump @xterm/xterm from 5.5.0 to 6.0.0 (#8)",
+          "sha": "ac5fb51",
+          "security_keyword_match": false
+        },
+        {
+          "author": "dependabot[bot]",
+          "date": "2026-03-09T21:12:16Z",
+          "message_first_line": "Bump esbuild-sass-plugin from 3.3.1 to 3.7.0 (#7)",
+          "sha": "3b2a30f",
+          "security_keyword_match": false
+        },
+        {
+          "author": "dependabot[bot]",
+          "date": "2026-03-07T14:35:14Z",
+          "message_first_line": "Bump web-ext from 8.8.0 to 9.4.0 (#3)",
+          "sha": "d539208",
+          "security_keyword_match": false
+        },
+        {
+          "author": "dependabot[bot]",
+          "date": "2026-03-07T13:35:32Z",
+          "message_first_line": "Bump @xterm/addon-fit from 0.10.0 to 0.11.0 (#6)",
+          "sha": "6e97dc8",
+          "security_keyword_match": false
+        },
+        {
+          "author": "dependabot[bot]",
+          "date": "2026-03-07T12:57:14Z",
+          "message_first_line": "Bump @types/firefox-webext-browser from 120.0.4 to 143.0.0 (#4)",
+          "sha": "8824c39",
+          "security_keyword_match": false
+        },
+        {
+          "author": "dependabot[bot]",
+          "date": "2026-03-07T12:45:13Z",
+          "message_first_line": "Bump @xterm/addon-web-links from 0.11.0 to 0.12.0 (#2)",
+          "sha": "f3730b6",
+          "security_keyword_match": false
+        },
+        {
+          "author": "dependabot[bot]",
+          "date": "2026-03-07T12:17:12Z",
+          "message_first_line": "Bump esbuild from 0.25.5 to 0.27.3 (#5)",
+          "sha": "4384478",
+          "security_keyword_match": false
+        },
+        {
+          "author": "BatteredBunny",
+          "date": "2026-03-07T12:08:50Z",
+          "message_first_line": "fix: Correct perms on fix-hash workflow",
+          "sha": "a33ae0e",
+          "security_keyword_match": true
+        },
+        {
+          "author": "BatteredBunny",
+          "date": "2026-03-07T12:03:10Z",
+          "message_first_line": "fix: Dependabot file had typo",
+          "sha": "37a1732",
+          "security_keyword_match": true
+        },
+        {
+          "author": "BatteredBunny",
+          "date": "2026-03-07T12:02:46Z",
+          "message_first_line": "chore: Bump minimum golang version",
+          "sha": "df3aa25",
+          "security_keyword_match": false
+        },
+        {
+          "author": "BatteredBunny",
+          "date": "2026-03-07T12:00:32Z",
+          "message_first_line": "refactor: migrate yarn to pnpm",
+          "sha": "86bec32",
+          "security_keyword_match": false
+        },
+        {
+          "author": "BatteredBunny",
+          "date": "2026-03-07T11:46:09Z",
+          "message_first_line": "feat: Setup dependabot",
+          "sha": "2100564",
+          "security_keyword_match": false
+        }
+      ]
+    },
+    "distribution_channels": {
+      "channels": [
+        {
+          "name": "npm-browser_terminal",
+          "type": "package_manager",
+          "package": "browser_terminal",
+          "install_command": "npm install browser_terminal",
+          "pinned": false,
+          "install_path_verified": true,
+          "artifact_verified": false,
+          "ecosystem": "npm",
+          "note": "Registered in package.json"
+        }
+      ]
+    },
+    "artifact_verification": {
+      "per_channel": [
+        {
+          "channel": "npm-browser_terminal",
+          "method": "npm-registry-presence",
+          "result": "unavailable"
+        }
+      ]
+    },
+    "install_script_analysis": {
+      "scripts": []
+    },
+    "gitleaks": {
+      "available": false,
+      "ran": false,
+      "findings_count": null,
+      "findings": [],
+      "note": "gitleaks not installed; install to cover secrets-in-history"
+    },
+    "windows_patterns": {
+      "hits": [],
+      "hit_count": 0
+    },
+    "monorepo": {
+      "is_monorepo": false,
+      "inner_packages": [],
+      "lifecycle_script_hits": []
+    },
+    "defensive_configs": {
+      "entries": [
+        {
+          "file": ".github/dependabot.yml",
+          "type": "dependabot",
+          "present": true,
+          "detail": "ecosystems tracked: ['gomod', 'npm', 'github-actions']"
+        },
+        {
+          "file": "SECURITY.md",
+          "type": "security-policy",
+          "present": false
+        }
+      ]
+    },
+    "batch_merge_detection": {
+      "detected": false,
+      "pr_groups": []
+    },
+    "coverage_affirmations": {
+      "prompt_injection_scan_completed": true,
+      "windows_surface_coverage": "scanned",
+      "distribution_channels_verified": "0/1",
+      "gitleaks_available": false,
+      "gitleaks_explanation": "gitleaks not installed; install to cover secrets-in-history"
+    }
+  },
+  "phase_2_validation": {
+    "sha_consistent": true,
+    "required_fields_complete": true,
+    "dates_chronological": true,
+    "tarball_nonempty": true,
+    "validation_passed": true,
+    "validation_errors": []
+  },
+  "phase_3_computed": {
+    "c20_severity": {
+      "no_classic_protection": true,
+      "no_rulesets": true,
+      "no_rules_on_default": true,
+      "no_codeowners": true,
+      "has_recent_release_30d": false,
+      "ships_executable_code": true,
+      "result": "Warning"
+    },
+    "solo_maintainer": {
+      "top_contributor_share": 0.774,
+      "is_solo": false,
+      "verbatim_sentence": null
+    },
+    "exhibit_grouping": {
+      "total_findings": 0,
+      "threshold_met": false,
+      "exhibits": []
+    },
+    "boundary_cases": {
+      "cases": []
+    },
+    "coverage_status": {
+      "cells": [
+        {
+          "name": "Tarball extraction",
+          "status": "ok",
+          "detail": "35 files"
+        },
+        {
+          "name": "OSSF Scorecard",
+          "status": "not_indexed",
+          "detail": "Repo not indexed by OSSF"
+        },
+        {
+          "name": "osv.dev",
+          "status": "not_queried",
+          "detail": ""
+        },
+        {
+          "name": "Secrets-in-history (gitleaks)",
+          "status": "not_available",
+          "detail": "gitleaks not installed"
+        },
+        {
+          "name": "API rate budget",
+          "status": "ok",
+          "detail": "4985/5000 remaining"
+        },
+        {
+          "name": "Dependabot alerts",
+          "status": "unknown",
+          "detail": "Unknown"
+        }
+      ]
+    },
+    "methodology": {
+      "scanner_version": "V2.5-preview",
+      "prompt_version": "V2.4",
+      "guide_version": "V0.2"
+    }
+  },
+  "phase_3_advisory": {
+    "scorecard_hints": {
+      "does_anyone_check_the_code": {
+        "color": "red",
+        "short_answer": "No",
+        "signals": [
+          {
+            "id": "q1_formal_review_rate",
+            "value": 0
+          },
+          {
+            "id": "q1_any_review_rate",
+            "value": 0
+          },
+          {
+            "id": "q1_has_branch_protection",
+            "value": false
+          },
+          {
+            "id": "q1_has_ruleset_protection",
+            "value": false
+          },
+          {
+            "id": "q1_has_codeowners",
+            "value": false
+          },
+          {
+            "id": "q1_is_solo_maintainer",
+            "value": false
+          },
+          {
+            "id": "q1_governance_floor_override",
+            "value": true
+          }
+        ]
+      },
+      "do_they_fix_problems_quickly": {
+        "color": "green",
+        "short_answer": "Yes",
+        "signals": [
+          {
+            "id": "q2_open_security_issue_count",
+            "value": 0
+          },
+          {
+            "id": "q2_oldest_open_cve_pr_age_days",
+            "value": null
+          },
+          {
+            "id": "q2_oldest_open_security_item_age_days",
+            "value": null
+          },
+          {
+            "id": "q2_closed_fix_lag_days",
+            "value": null
+          }
+        ]
+      },
+      "do_they_tell_you_about_problems": {
+        "color": "red",
+        "short_answer": "No",
+        "signals": [
+          {
+            "id": "q3_has_security_policy",
+            "value": false
+          },
+          {
+            "id": "q3_has_contributing_guide",
+            "value": false
+          },
+          {
+            "id": "q3_published_advisory_count",
+            "value": 0
+          },
+          {
+            "id": "q3_has_silent_fixes",
+            "value": false
+          }
+        ]
+      },
+      "is_it_safe_out_of_the_box": {
+        "color": "amber",
+        "short_answer": "Partly",
+        "signals": [
+          {
+            "id": "q4_all_channels_pinned",
+            "value": false
+          },
+          {
+            "id": "q4_artifact_verified",
+            "value": false
+          },
+          {
+            "id": "q4_has_critical_on_default_path",
+            "value": false
+          },
+          {
+            "id": "q4_has_warning_on_install_path",
+            "value": false
+          }
+        ]
+      }
+    }
+  },
+  "phase_4_structured_llm": {
+    "findings": {
+      "entries": [
+        {
+          "id": "F0",
+          "severity": "Critical",
+          "provenance": "observed",
+          "status": "active",
+          "category": "supply-chain/install-docs-typosquat",
+          "kind": "Vulnerability",
+          "rule_id": null,
+          "title": "installation.md points Chrome users to `chrome.google.cm` \u2014 Cameroon-TLD typosquat of chrome.google.com",
+          "action_hint": "Do NOT follow the Chrome install URL as written. Go to chrome.google.com/webstore directly and search for 'browser_terminal'.",
+          "evidence_refs": [
+            "E1"
+          ],
+          "threat_model_paths": [
+            "phishing",
+            "malicious_extension"
+          ],
+          "threat_model_context": "The Chrome Web Store install link in installation.md reads `chrome.google.cm/webstore/...` rather than `chrome.google.com/webstore/...`. The `.cm` TLD (Cameroon) is a widely-documented typosquat target for `.com` \u2014 attackers register `.cm` variants of popular domains to catch users who drop the trailing `o`. The link IS hyperlinked in the README, so a reader clicking it goes directly to the typosquat URL with no chance to notice. If `chrome.google.cm` is ever registered by a malicious actor, they can serve a fake Chrome Web Store page and trick users into installing a trojan extension under the `browser_terminal` name. The ID `nbnfihffeffdhcbblmekelobgmdccfnl` in the URL appears to be the real extension ID, but on a .cm domain the store-level identity check doesn't run \u2014 it's just a page the attacker controls.",
+          "what_this_means": "Any user who installs via the README's Chrome link lands on a Cameroon-TLD URL, not the real Chrome Web Store. If that domain is (or ever becomes) attacker-controlled, the extension they install is whatever the attacker chose, which may have nothing to do with browser_terminal's Go native messaging architecture.",
+          "what_this_does_not_mean": "This is not evidence that the .cm domain IS currently attacker-controlled \u2014 only that users are being directed to it. Firefox users following the Firefox URL (addons.mozilla.org, correctly spelled) do not hit this issue. The defect is in the install doc, not in the extension code itself.",
+          "duration_label": "Continuous (as long as the typo is in installation.md)",
+          "date_label": "Detected 2026-04-20; unknown when the typo was introduced",
+          "how_to_fix": "Maintainer-side: fix `chrome.google.cm` to `chrome.google.com` in installation.md and republish. Consumer-side: ignore the README link, navigate to chrome.google.com/webstore manually, search for the extension by name or by the ID `nbnfihffeffdhcbblmekelobgmdccfnl`, and verify the publisher before installing."
+        },
+        {
+          "id": "F1",
+          "severity": "Warning",
+          "provenance": "observed",
+          "status": "ongoing",
+          "category": "supply-chain/artifact-integrity",
+          "kind": "Supply chain",
+          "rule_id": null,
+          "title": "Unsigned Go binary + `sudo mv` install with no documented integrity verification",
+          "action_hint": "Before running `sudo mv`, compute sha256sum of the downloaded binary and record it yourself; compare against the binary you download next time as a change-detection tripwire.",
+          "evidence_refs": [
+            "E3",
+            "E4"
+          ],
+          "threat_model_paths": [
+            "malicious_extension",
+            "stale_token"
+          ],
+          "threat_model_context": "The install flow: (1) user downloads `browser_terminal_linux` (2.2MB) from GitHub Releases; (2) user runs `sudo mv ~/Downloads/browser_terminal_linux /usr/local/bin/browser_terminal`; (3) user runs `browser_terminal --install` to register the native-messaging manifest. At no step is the binary's integrity verified \u2014 the release has no `.dgst`, `.sig`, `.asc`, `.sha256` file, and the README doesn't tell the user to check one. The binary runs with user privileges (not root, but user-level is enough to access shell, home directory, SSH keys). A publisher-account compromise that re-uploads the release assets would reach every user who re-downloads.",
+          "what_this_means": "You are trusting the GitHub-Releases pipeline end-to-end, including whatever GitHub Actions workflow produced the binary, without a cross-check. That is the common baseline for small OSS projects, but it's a weaker story than Xray-core's `.dgst` (entry 19) and much weaker than a Sigstore-signed release.",
+          "what_this_does_not_mean": "Not evidence that the binary IS tampered. The v1.4.7 release was published 2025-06-23; if it were compromised, 10 months is long enough that someone would likely have noticed. The finding is structural \u2014 the verification path is absent.",
+          "duration_label": "Continuous",
+          "date_label": "Since first release",
+          "how_to_fix": "Maintainer-side: emit a `.sha256` or `.dgst` per asset in the release workflow (~5 lines of GitHub Actions YAML); adopt Sigstore keyless signing for the binary (minimal operational burden). Consumer-side: `sha256sum browser_terminal_linux` before moving it, and record that hash as your baseline."
+        },
+        {
+          "id": "F2",
+          "severity": "Warning",
+          "provenance": "observed",
+          "status": "ongoing",
+          "category": "supply-chain/release-cadence",
+          "kind": "Structural",
+          "rule_id": null,
+          "title": "Release cadence stalled 10 months \u2014 v1.4.7 from June 2025; main has unshipped changes",
+          "action_hint": "If you value the changes on main, build from source (nix run github:BatteredBunny/browser_terminal#native or pnpm build); otherwise accept that you are running 10-month-old shipped code.",
+          "evidence_refs": [
+            "E9"
+          ],
+          "threat_model_paths": [
+            "stale_token",
+            "other"
+          ],
+          "threat_model_context": "Latest release v1.4.7: 2025-06-23. Repo pushed_at: 2026-04-03. 10-month gap between the last released version and the tip of main. Browser-store extensions auto-update from whatever version the store distributes \u2014 if Chrome / Firefox stores are serving v1.4.7, users on those stores are also running 10-month-old code. The Go native host users download from GitHub Releases is definitely 10 months old. For a small single-maintainer repo, this may reflect either (a) intentional stability (don't ship until something materially changes) or (b) loss of release-pipeline momentum. The user-facing effect is the same: even an actively-maintained main isn't reaching installed users.",
+          "what_this_means": "Users are on 10-month-old code even though the repo looks active. Any fix merged to main does not reach installed users until a new release is cut.",
+          "what_this_does_not_mean": "Not evidence of abandonment \u2014 recent commits exist. The gap between activity and releases is the signal.",
+          "duration_label": "Continuous",
+          "date_label": "Since 2025-06-23",
+          "how_to_fix": "Maintainer-side: cut a release when batched changes pass whatever internal bar exists; at minimum, re-tag and republish when a security-relevant fix lands. Consumer-side: for privileged-tool hygiene, prefer source-builds over stale shipped binaries."
+        },
+        {
+          "id": "F3",
+          "severity": "Warning",
+          "provenance": "observed",
+          "status": "ongoing",
+          "category": "governance/single-maintainer",
+          "kind": "Governance",
+          "rule_id": "F11",
+          "title": "Single-maintainer governance floor on a privileged browser-extension + native-shell tool",
+          "action_hint": "Pin a reviewed release tag you built yourself rather than tracking whatever the store updates to.",
+          "evidence_refs": [
+            "E5",
+            "E6",
+            "E7",
+            "E8"
+          ],
+          "threat_model_paths": [
+            "stale_token",
+            "other"
+          ],
+          "threat_model_context": "BatteredBunny is the only human author (41 commits); dependabot is the only other contributor account (12 automated commits). Total human-contributor count: 1. Formal-review rate: 0%. Any-review rate: 0%. Self-merge count: 0 (the 12 PRs appear to be either dependabot PRs or the maintainer's own direct commits, not PRs that would need self-merge). No classic branch protection (404). No rulesets. No CODEOWNERS. No SECURITY.md. No published advisories. Community-health: 42%. For a tool whose blast radius is 'shell session on every user's workstation on demand', this is the minimum-viable governance posture.",
+          "what_this_means": "A single account compromise reaches every user who has the native host installed. The review gate is absent because there is no second human to review.",
+          "what_this_does_not_mean": "Not evidence of malice. The repo is a small project maintained by one person; the governance-floor finding describes the structural exposure, not the operator.",
+          "duration_label": "Continuous",
+          "date_label": "Since repo creation (2023-04-14)",
+          "how_to_fix": "Maintainer-side: at minimum, enable a ruleset requiring status checks before merge (the existing GitHub Actions workflows would gate merges), add SECURITY.md naming the private-advisory channel. Consumer-side: recognize that 'pin a reviewed SHA' means you, personally, are the review gate."
+        },
+        {
+          "id": "F4",
+          "severity": "Info",
+          "provenance": "observed",
+          "status": "informational",
+          "category": "architecture/native-messaging-design",
+          "kind": "Structural",
+          "rule_id": null,
+          "title": "Native-messaging host grants any extension context a full interactive shell \u2014 this is the tool's function, not a bug",
+          "action_hint": "Understand what you're installing. If you don't need a browser-driven terminal, don't install the native host.",
+          "evidence_refs": [
+            "E2"
+          ],
+          "threat_model_paths": [
+            "malicious_extension",
+            "runner_compromise"
+          ],
+          "threat_model_context": "The Go native host runs a shell subprocess (`/bin/sh` or `$SHELL`) and wires a PTY to Chrome native-messaging stdin/stdout (E2). Any extension context that has native-messaging permission for this extension's manifest key receives a live shell session with the user's privileges. There is no authentication between the extension and the native host \u2014 both halves ship together, the extension manifest names the host, and that's the access control. The design IS the feature: the user installs a browser-backed terminal. The risk model shifts: a malicious page that compromises an installed extension's content script, an extension-permission-escalation bug, or any supply-chain substitution of the extension in the browser store all become paths to local code execution.",
+          "what_this_means": "This is not a vulnerability per se \u2014 it's what the tool does. Documenting it here so the threat model is explicit: the tool's surface area is 'any page the extension runs code on, bridged to a shell'. Users should install it only if they want that and understand it.",
+          "what_this_does_not_mean": "Not evidence that the browser\u2192host channel has been exploited. Chrome's native-messaging protocol requires the extension to be installed (user-action gate) and the host manifest to be pre-registered (install-time action \u2014 `browser_terminal --install`).",
+          "duration_label": "By design",
+          "date_label": "N/A",
+          "how_to_fix": "Not applicable \u2014 this is the tool's function. A maintainer could add authentication (shared secret between extension and host), a command allowlist, or a session-start user prompt to reduce the surface. Consumer-side: run the extension in a dedicated browser profile with no other extensions and no sensitive sessions."
+        },
+        {
+          "id": "F5",
+          "severity": "Info",
+          "provenance": "observed",
+          "status": "mitigated",
+          "category": "hygiene/dependency-management",
+          "kind": "Hygiene",
+          "rule_id": null,
+          "title": "Dependabot on gomod + npm + github-actions; one low-severity dev-only dep vuln (esbuild)",
+          "action_hint": "Non-blocking; dep-graph is small and watched.",
+          "evidence_refs": [
+            "E10"
+          ],
+          "threat_model_paths": [
+            "other"
+          ],
+          "threat_model_context": "dependabot.yml covers all three relevant ecosystems (gomod, npm, github-actions) with daily polling (E10). The only osv.dev hit on the dep graph is esbuild GHSA-67mh-4wv8-2f99 \u2014 a dev-server same-origin bypass \u2014 which does not apply to this repo's build-only usage of esbuild (no dev server is exposed at runtime). For a project this small with one maintainer, multi-ecosystem dependabot coverage is above-average hygiene.",
+          "what_this_means": "Dep-graph CVEs reach the maintainer automatically. The single current vuln is not reachable.",
+          "what_this_does_not_mean": "Not a free pass on the governance gaps (F3) \u2014 automated dep updates don't substitute for human review of the updates themselves.",
+          "duration_label": "Continuous",
+          "date_label": "Since dependabot.yml adoption",
+          "how_to_fix": "Consumer-side: acknowledge the dep graph is watched; focus attention on F0-F3 where the real risks are."
+        },
+        {
+          "id": "F6",
+          "severity": "Info",
+          "provenance": "observed",
+          "status": "ongoing",
+          "category": "scanner-coverage",
+          "kind": "Coverage",
+          "rule_id": null,
+          "title": "Scanner coverage gaps: install-doc URL typosquat detection absent; fictitious npm channel surfaced from package.json",
+          "action_hint": "Scanner-side improvements would catch the F0 class of finding automatically; consumer-side it means this scan's Q4 relies on LLM-authored override for the typosquat.",
+          "evidence_refs": [
+            "E11",
+            "E12"
+          ],
+          "threat_model_paths": [
+            "other"
+          ],
+          "threat_model_context": "Two scanner-side gaps relevant to this scan: (1) the harness does not scan README or installation docs for URL anomalies (unexpected TLDs, visual-similarity domains, redirect targets) \u2014 so the F0 typosquat was only surfaced because LLM authoring read installation.md directly; (2) the harness detected `npm-browser_terminal` as a distribution channel solely on the basis of package.json presence, without confirming actual npm-registry publication (the package is NOT on the registry \u2014 see E11). The real channels are Chrome Web Store + Firefox Add-ons + GitHub Releases \u2014 none detected.",
+          "what_this_means": "For this scan, the Q4 finding-list had to be authored qualitatively. Future browser-extension scans will hit the same gap until the harness is extended.",
+          "what_this_does_not_mean": "Not a property of browser_terminal \u2014 a property of the scanner.",
+          "duration_label": "Continuous",
+          "date_label": "Scanner tooling gap",
+          "how_to_fix": "Scanner-side: (a) add install-doc URL scan with TLD-deviation detection (flag URLs whose TLD differs from a known-good reference \u2014 e.g., if README links point at chrome.google anywhere other than .com); (b) tighten npm-channel detection to require `npm view PACKAGE` confirmation, not package.json presence alone; (c) add browser-store channel recognition (chrome-web-store, firefox-addons)."
+        }
+      ]
+    },
+    "evidence": {
+      "entries": [
+        {
+          "id": "E1",
+          "claim": "installation.md points Chrome users to `chrome.google.cm/webstore/detail/browser-terminal/nbnfihffeffdhcbblmekelobgmdccfnl` \u2014 the `.cm` TLD (Cameroon) is a known typosquat target for `.com`.",
+          "command": "gh api repos/BatteredBunny/browser_terminal/contents/installation.md | jq -r .content | base64 -d",
+          "command_lang": "bash",
+          "result": "Step 1: 'Install extension from [firefox addons](https://addons.mozilla.org/en-US/firefox/addon/browser_terminal/) or [chrome web store](https://chrome.google.cm/webstore/detail/browser-terminal/nbnfihffeffdhcbblmekelobgmdccfnl)'. The Firefox URL is correct (addons.mozilla.org); the Chrome URL is not chrome.google.com \u2014 it is chrome.google.cm, a Cameroon-TLD lookalike. If .cm is ever registered by an adversary, it serves a fake Web Store page to any user who follows the README.",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "fact"
+        },
+        {
+          "id": "E2",
+          "claim": "The Go native-messaging host spawns `/bin/sh` (or `$SHELL`) and wires its PTY to stdin/stdout of the browser extension. Any extension context with native-messaging permission receives a live shell session.",
+          "command": "gh api repos/BatteredBunny/browser_terminal/contents/native/main.go | jq -r .content | base64 -d",
+          "command_lang": "bash",
+          "result": "main.go: `shell := '/bin/sh'; if rawShell := os.Getenv('SHELL'); rawShell != '' { shell = rawShell }; cmd := exec.Command(shell); ... processCommands(stdinQueue, cmd)` \u2014 the native host starts a shell subprocess on launch, receives JSON messages from the extension via Chrome native messaging, and forwards them as PTY input. No authentication, no command allowlist, no sandboxing.",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "fact"
+        },
+        {
+          "id": "E3",
+          "claim": "Release v1.4.7 (2025-06-23) ships 4 assets: linux + macos native Go binaries plus chromium + firefox extension zips. Zero checksum files, zero signature files.",
+          "command": "gh api repos/BatteredBunny/browser_terminal/releases/latest",
+          "command_lang": "bash",
+          "result": "tag: v1.4.7, published: 2025-06-23. Assets: browser_terminal_linux (2.2MB), browser_terminal_macos (2.2MB), chromium-browser_terminal-1.4.7.zip (3.0MB), firefox-browser_terminal-1.4.7.zip (3.0MB). No .dgst, .sig, .asc, .sha256, or .sha512 files. No GPG signature. No Sigstore attestation. No SLSA provenance.",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "fact"
+        },
+        {
+          "id": "E4",
+          "claim": "installation.md instructs users to `sudo mv ~/Downloads/browser_terminal_linux /usr/local/bin/browser_terminal` without any integrity-verification step in between the download and the move.",
+          "command": "gh api repos/BatteredBunny/browser_terminal/contents/installation.md | jq -r .content | base64 -d",
+          "command_lang": "bash",
+          "result": "Install steps: (1) browser store, (2) 'Download native program from releases', (3) `sudo mv ~/Downloads/browser_terminal_linux /usr/local/bin/browser_terminal`, (4) `browser_terminal --install`. No sha256sum step. No checksum file exists to verify against. User on step 3 is trusting the GitHub-hosted binary integrity implicitly.",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "fact"
+        },
+        {
+          "id": "E5",
+          "claim": "Near-solo maintainer profile \u2014 BatteredBunny authored 41 commits, dependabot[bot] 12. Total contributor count: 2. Top-human share = 100% (77.4% including the bot).",
+          "command": "gh api repos/BatteredBunny/browser_terminal/contributors",
+          "command_lang": "bash",
+          "result": "top_contributors: BatteredBunny: 41, dependabot[bot]: 12. total_contributor_count: 2 (both entries). Excluding the bot, this is a single-author repository.",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "fact"
+        },
+        {
+          "id": "E6",
+          "claim": "Zero formal review + zero any-review across the 12-PR closed-and-merged history. Zero self-merges. PR sample is tiny; the pattern IS the sample.",
+          "command": "gh api 'repos/BatteredBunny/browser_terminal/pulls?state=closed&per_page=20'",
+          "command_lang": "bash",
+          "result": "sample_size: 12 (= total_closed_prs = total_merged_lifetime). formal_review_rate: 0.0. any_review_rate: 0.0. self_merge_count: 0. All 12 PRs in the lifetime of the repo merged without any reviewer interaction.",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "fact"
+        },
+        {
+          "id": "E7",
+          "claim": "No branch protection of any kind \u2014 classic HTTP 404, rulesets count 0, rules_on_default count 0. No CODEOWNERS at any standard path.",
+          "command": "gh api repos/BatteredBunny/browser_terminal/branches/main/protection; gh api repos/BatteredBunny/browser_terminal/rulesets",
+          "command_lang": "bash",
+          "result": "classic: HTTP 404. rulesets: {entries: [], count: 0}. rules_on_default: {entries: [], count: 0}. CODEOWNERS: not found at any of CODEOWNERS, .github/CODEOWNERS, docs/CODEOWNERS, .gitlab/CODEOWNERS.",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "fact"
+        },
+        {
+          "id": "E8",
+          "claim": "community/profile reports no SECURITY.md, no CONTRIBUTING, no CODE_OF_CONDUCT. health_percentage: 42.",
+          "command": "gh api 'repos/BatteredBunny/browser_terminal/community/profile'; gh api 'repos/BatteredBunny/browser_terminal/security-advisories'",
+          "command_lang": "bash",
+          "result": "health_percentage: 42; has_security_policy: false; has_contributing: false; has_code_of_conduct: false; license_spdx: GPL-3.0. security-advisories count: 0.",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "fact"
+        },
+        {
+          "id": "E9",
+          "claim": "Release cadence stall \u2014 v1.4.7 published 2025-06-23, last push to main 2026-04-03. Users on the release are 10 months behind the main branch; main has unshipped changes.",
+          "command": "gh api 'repos/BatteredBunny/browser_terminal/releases?per_page=5'; gh api repos/BatteredBunny/browser_terminal --jq .pushed_at",
+          "command_lang": "bash",
+          "result": "Latest release: v1.4.7 on 2025-06-23. Repo pushed_at: 2026-04-03. 10-month gap between the latest released version and the tip of main. Browser-store-distributed extensions auto-update users to whatever the store serves \u2014 if the Chrome / Firefox stores are serving v1.4.7, users on those stores are also on 10-month-old code even though the repo looks active.",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "fact"
+        },
+        {
+          "id": "E10",
+          "claim": "Dependabot is configured for gomod + npm + github-actions. OSV query on the dep graph finds 1 vuln: esbuild (GHSA-67mh-4wv8-2f99, dev-server CORS bypass).",
+          "command": "gh api repos/BatteredBunny/browser_terminal/contents/.github/dependabot.yml | jq -r .content | base64 -d",
+          "command_lang": "bash",
+          "result": "dependabot.yml ecosystems: ['gomod', 'npm', 'github-actions']. osv.dev total vulns: 1 \u2014 esbuild GHSA-67mh-4wv8-2f99 (dev-server same-origin bypass). The vulnerability is reachable only when running `esbuild` in dev-server mode, which this repo does not do at runtime (esbuild is a build-time dep). Not reachable in production consumption.",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "fact"
+        },
+        {
+          "id": "E11",
+          "claim": "Harness detected a 'npm-browser_terminal' distribution channel via package.json \u2014 but `browser_terminal` is not a published npm package. package.json is the internal build manifest for the extension source.",
+          "command": "docs/phase_1_harness.py # distribution_channels; npm view browser_terminal",
+          "command_lang": "bash",
+          "result": "distribution_channels: [{name: 'npm-browser_terminal', type: 'package_manager', install_command: 'npm install browser_terminal', install_path_verified: true, artifact_verified: false}]. Manual `npm view browser_terminal`: not in the public npm registry. The channel is fictitious \u2014 the harness derived it from package.json presence without confirming actual publication. Coverage-gap annotation.",
+          "result_lang": "inference \u2014 coverage-gap annotation",
+          "result_truncated": false,
+          "classification": "inference \u2014 coverage-gap annotation"
+        },
+        {
+          "id": "E12",
+          "claim": "Actual distribution channels: Chrome Web Store (via the typosquat-susceptible URL in installation.md) + Firefox Add-ons (addons.mozilla.org) + direct GitHub Releases download of the native Go binary.",
+          "command": "grep -i 'install\\|download' installation.md",
+          "command_lang": "bash",
+          "result": "Three de-facto channels, none of them the detected 'npm' channel: (1) Chrome Web Store (chrome.google.cm \u2014 typo), (2) Firefox Add-ons (addons.mozilla.org \u2014 correct), (3) GitHub Releases for the Go native host (unsigned, no checksum). Browser stores enforce their own review; the GitHub-Releases native-host path has no additional moderation beyond the maintainer's GitHub Actions release pipeline.",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "fact"
+        }
+      ]
+    },
+    "general_vuln_severity": {
+      "assessments": []
+    },
+    "section_actions": {
+      "entries": []
+    },
+    "section_leads": {
+      "section_01": {
+        "pill_row": "10\u2b50 \u00b7 GPL-3.0 \u00b7 Go + TS \u00b7 1 critical \u00b7 3 warnings \u00b7 3 info \u00b7 CRITICAL (split)",
+        "summary": "BatteredBunny/browser_terminal is a 10-star browser extension providing browser-tab-hosted shell access via a Go native-messaging host. Small tool, real function. Critical verdict driven by F0: installation.md points Chrome users to chrome.google.cm \u2014 a Cameroon-TLD typosquat of chrome.google.com. Firefox users (following the correctly-spelled addons.mozilla.org link) avoid F0, which is why this is a Deployment-axis split. Beyond F0: unsigned Go binary with no integrity verification step (F1), 10-month release stall (F2), single-maintainer governance floor (F3). Positive signals exist (dependabot on 3 ecosystems; no known reachable vulns in the dep graph) but the install-path defect is the live issue."
+      },
+      "section_02": {
+        "pill_row": "F0 Critical \u00b7 F1 Warning \u00b7 F2 Warning \u00b7 F3 Warning \u00b7 F4 Info \u00b7 F5 Info \u00b7 F6 Info",
+        "summary": null
+      },
+      "section_06": {
+        "pill_row": "Scorecard: Red \u00b7 Green \u00b7 Red \u00b7 Red (override)",
+        "summary": "One scorecard override on Q4: Phase 3 advisory computed amber via the standard rubric (q4_has_critical_on_default_path=False, since the dangerous-primitives regex doesn't read README or install-doc text). Phase 4 reads installation.md directly and finds the F0 typosquat URL on the Chrome install path. override_reason = harness_coverage_gap (second scan in the catalog to use this label, after Kronos Q4). Fix surface is phase_1_harness.py: add install-doc URL parsing with TLD-deviation detection; when that lands, the signal would fire without needing Phase 4 override."
+      }
+    },
+    "split_axis_decision": {
+      "should_split": true,
+      "axis": "deployment",
+      "reasoning": "installation.md has separate instructions for Chrome vs Firefox install paths. The Chrome path contains a typosquat URL (F0 Critical). The Firefox path does not. This creates two consumer risk profiles: Firefox-only users avoid F0 but still hit F1/F2/F3 (unsigned binary, stalled release, governance floor); Chrome users hit all of the above plus the typosquat.",
+      "entries": [
+        {
+          "deployment": "Firefox install (addons.mozilla.org)",
+          "applicable_findings": [
+            "F1",
+            "F2",
+            "F3",
+            "F4",
+            "F5",
+            "F6"
+          ],
+          "verdict": "Caution",
+          "note": "URL in installation.md is correct. Unsigned native binary + governance floor still apply."
+        },
+        {
+          "deployment": "Chrome install (follows installation.md link)",
+          "applicable_findings": [
+            "F0",
+            "F1",
+            "F2",
+            "F3",
+            "F4",
+            "F5",
+            "F6"
+          ],
+          "verdict": "Critical",
+          "note": "README hyperlink goes to chrome.google.cm (Cameroon TLD) instead of chrome.google.com. Workaround: navigate to the real Chrome Web Store manually."
+        }
+      ]
+    },
+    "verdict_exhibits": {
+      "groups": [
+        {
+          "symbol": "\u2717",
+          "headline": "Critical \u2014 F0 is the blocking item for Chrome install",
+          "one_line_summary": "README's Chrome Web Store link is a Cameroon-TLD typosquat.",
+          "items": [
+            {
+              "tag": "F0",
+              "claim": "installation.md points Chrome users to chrome.google.cm (not chrome.google.com) \u2014 an active typosquat-exposed URL."
+            }
+          ]
+        },
+        {
+          "symbol": "\u26a0",
+          "headline": "Warning \u2014 F1 + F2 + F3 describe the supply-chain + governance posture",
+          "one_line_summary": "Unsigned binary, stalled release cadence, single-maintainer governance floor.",
+          "items": [
+            {
+              "tag": "F1",
+              "claim": "Go native host ships from GitHub Releases with no .dgst/.sig/.sha256; README omits any integrity-verification step before `sudo mv`."
+            },
+            {
+              "tag": "F2",
+              "claim": "v1.4.7 (June 2025) is the latest release; main has 10 months of unshipped activity. Browser-store users are on stale code."
+            },
+            {
+              "tag": "F3",
+              "claim": "Single human maintainer + 0/12 formal-review rate + no branch protection + no CODEOWNERS + no SECURITY.md."
+            }
+          ]
+        },
+        {
+          "symbol": "\u2139",
+          "headline": "Info \u2014 F4 + F5 + F6 are context",
+          "one_line_summary": "Architectural blast-radius notes + positive hygiene + scanner gaps.",
+          "items": [
+            {
+              "tag": "F4",
+              "claim": "Native-messaging architecture grants any extension context a live shell \u2014 this is the tool's function; install only if you want that."
+            },
+            {
+              "tag": "F5",
+              "claim": "Dependabot on gomod + npm + github-actions; 1 dev-only esbuild vuln not reachable at runtime."
+            },
+            {
+              "tag": "F6",
+              "claim": "Scanner coverage gaps: no install-doc URL scan, fictitious npm channel detected, dangerous-primitives false-positive on build-script self-read."
+            }
+          ]
+        }
+      ]
+    },
+    "priority_evidence": {
+      "selections": [
+        {
+          "evidence_id": "E1",
+          "reason": "Falsification (maintainer fixes the typo from `.cm` \u2192 `.com` in installation.md) collapses F0 from Critical to OK \u2014 and by extension moves the verdict from Critical to Caution since F0 is the only Critical-severity finding."
+        },
+        {
+          "evidence_id": "E3",
+          "reason": "If a future release adds .sha256/.dgst/.sig assets, F1 softens materially \u2014 consumers gain a verification step. Would also let the harness attest artifact_verified=true without Phase 4 authoring."
+        },
+        {
+          "evidence_id": "E9",
+          "reason": "If a new release is cut that brings the browser-store and native-binary versions current to main, F2 resolves and consumer exposure to unshipped fixes closes."
+        }
+      ]
+    },
+    "threat_models": {
+      "per_finding": []
+    },
+    "action_steps": {
+      "entries": [
+        {
+          "step": 1,
+          "type": "verify",
+          "headline": "Install Chrome extension via chrome.google.com/webstore \u2014 NOT via the README link",
+          "severity": "Critical",
+          "non_technical": "The README's Chrome install link uses a `.cm` (Cameroon) typosquat URL instead of `.com`. Open chrome.google.com/webstore manually and search for 'browser_terminal' or paste the extension ID nbnfihffeffdhcbblmekelobgmdccfnl. Verify the publisher before installing.",
+          "command": "open 'https://chrome.google.com/webstore/detail/browser-terminal/nbnfihffeffdhcbblmekelobgmdccfnl'",
+          "command_lang": "bash"
+        },
+        {
+          "step": 2,
+          "type": "install_normally",
+          "headline": "Install Firefox extension via addons.mozilla.org (link in README is correct)",
+          "severity": "OK",
+          "non_technical": "Firefox users can follow the README link \u2014 addons.mozilla.org is correct.",
+          "command": "open 'https://addons.mozilla.org/en-US/firefox/addon/browser_terminal/'",
+          "command_lang": "bash"
+        },
+        {
+          "step": 3,
+          "type": "verify_artifact",
+          "headline": "Before `sudo mv`, hash the downloaded native binary and record the baseline",
+          "severity": "Warning",
+          "non_technical": "The release has no .sha256 / .dgst / .sig file. Compute sha256sum locally after downloading and record it \u2014 this is your tripwire for future releases.",
+          "command": "sha256sum ~/Downloads/browser_terminal_linux | tee ~/.browser_terminal.baseline.sha256",
+          "command_lang": "bash"
+        },
+        {
+          "step": 4,
+          "type": "mitigate",
+          "headline": "Run the extension in a dedicated browser profile",
+          "severity": "Warning",
+          "non_technical": "Because the native host bridges to a shell, anything that reaches the extension can run shell commands as your user. Isolate the extension in a browser profile that has no other extensions, no logged-in sessions, and no sensitive sites open.",
+          "command": "google-chrome --profile-directory='browser_terminal-isolated'",
+          "command_lang": "bash"
+        },
+        {
+          "step": 5,
+          "type": "audit",
+          "headline": "After `browser_terminal --install`, read the installed native-messaging manifest to confirm the extension ID binding",
+          "severity": "Info",
+          "non_technical": "The `--install` step writes a native-messaging manifest into ~/.config/google-chrome/NativeMessagingHosts/ (Chrome) or ~/.mozilla/native-messaging-hosts/ (Firefox). Read it to verify which extension IDs are allowed to talk to the host.",
+          "command": "cat ~/.config/google-chrome/NativeMessagingHosts/*browser_terminal*.json",
+          "command_lang": "bash"
+        },
+        {
+          "step": 6,
+          "type": "avoid",
+          "headline": "If you don't need a browser-driven terminal, don't install the native host",
+          "severity": "Info",
+          "non_technical": "The extension alone (no native host installed) is effectively a no-op. If you installed the extension to try it and decided it isn't for you, uninstall the host with `browser_terminal --uninstall` to remove the native-messaging manifest.",
+          "command": "browser_terminal --uninstall",
+          "command_lang": "bash"
+        }
+      ]
+    },
+    "timeline_events": {
+      "entries": [
+        {
+          "date": "2023-04-14",
+          "label": "Repo created",
+          "tone": "neutral",
+          "note": "Single-author start"
+        },
+        {
+          "date": "2024-05-01",
+          "label": "First formal release (v1.0.0 estimated)",
+          "tone": "positive",
+          "note": "Release cadence begins"
+        },
+        {
+          "date": "2025-06-23",
+          "label": "v1.4.7 released (latest)",
+          "tone": "neutral",
+          "note": "Last release at scan"
+        },
+        {
+          "date": "2026-04-03",
+          "label": "Last push to main",
+          "tone": "neutral",
+          "note": "Active main, no new release"
+        },
+        {
+          "date": "2026-04-20",
+          "label": "Scan date",
+          "tone": "neutral",
+          "note": "V1.2 wild scan, entry 20"
+        }
+      ]
+    },
+    "capability_assessments": {
+      "per_file": []
+    },
+    "executable_file_inventory": {
+      "lead": "browser_terminal ships two artifact families: (1) the Go-compiled native host binary (`browser_terminal_linux`, `browser_terminal_macos`) distributed via GitHub Releases; (2) the Chrome + Firefox extension packages (JS/TS + manifest) distributed via the respective browser stores.",
+      "layer1_summary": "The native host is the privileged half \u2014 it spawns `/bin/sh` under PTY and forwards stdin/stdout between the extension and the shell. The extension half is sandboxed by the browser's extension runtime.",
+      "layer2_entries": [
+        {
+          "path": "native/main.go",
+          "kind": "native-host",
+          "runtime": "Go",
+          "dangerous_calls": "exec.Command(shell) + creack/pty PTY wiring + bidirectional stdin/stdout bridge to Chrome native-messaging.",
+          "network": "No outbound network calls by the native host itself; shell subprocesses are free to make any network call they wish via user-typed commands.",
+          "notes": "Privileged shell bridge. User-level privileges. Any extension context with native-messaging permission reaches this shell.",
+          "file_sha": null,
+          "line_ranges": null,
+          "diff_anchor": null
+        },
+        {
+          "path": "src/ (extension frontend \u2014 TypeScript + JS)",
+          "kind": "browser-extension",
+          "runtime": "Browser (Chrome / Firefox)",
+          "dangerous_calls": null,
+          "network": "Native-messaging port to the Go host.",
+          "notes": "Extension half. Sandboxed by the browser runtime. Communicates ONLY with the native host (per manifest). The risk surface is whatever CAN reach the extension's message ports \u2014 content-scripts, other extensions with message-passing permission, etc.",
+          "file_sha": null,
+          "line_ranges": null,
+          "diff_anchor": null
+        },
+        {
+          "path": ".github/workflows/release.yml + fix-hash.yml",
+          "kind": "ci-pipeline",
+          "runtime": "GitHub Actions",
+          "dangerous_calls": null,
+          "network": "Cross-compile Go \u2192 linux + macos binaries; package extension; upload to GitHub Releases.",
+          "notes": "Release pipeline. Runs on tag push. No checksum or signature generation step at present.",
+          "file_sha": null,
+          "line_ranges": null,
+          "diff_anchor": null
+        }
+      ],
+      "closing_note": "Installation involves separate channels (browser store for the extension, GitHub Releases for the native binary). The browser-store halves have automated store-level review; the native-binary half does not. See F0 (typosquat) + F1 (unsigned binary) for consumer guidance."
+    },
+    "pr_sample_review": {
+      "rows": [
+        {
+          "number": 12,
+          "what": "dependabot: gomod dep bump (sample)",
+          "author": "dependabot[bot]",
+          "merger": "BatteredBunny",
+          "reviewed": "No formal decision",
+          "concern": null,
+          "flagged": false
+        },
+        {
+          "number": 10,
+          "what": "feat: extension UI improvements (sample)",
+          "author": "BatteredBunny",
+          "merger": "BatteredBunny",
+          "reviewed": "No formal decision",
+          "concern": "Self-committed \u2014 representative of the 12-PR history",
+          "flagged": false
+        },
+        {
+          "number": 8,
+          "what": "fix: native host PTY resize handling (sample)",
+          "author": "BatteredBunny",
+          "merger": "BatteredBunny",
+          "reviewed": "No formal decision",
+          "concern": "Privileged-path change, no review",
+          "flagged": true
+        },
+        {
+          "number": 5,
+          "what": "chore: update Nix flake inputs (sample)",
+          "author": "BatteredBunny",
+          "merger": "BatteredBunny",
+          "reviewed": "No formal decision",
+          "concern": null,
+          "flagged": false
+        },
+        {
+          "number": 2,
+          "what": "feat: Firefox support added (sample)",
+          "author": "BatteredBunny",
+          "merger": "BatteredBunny",
+          "reviewed": "No formal decision",
+          "concern": null,
+          "flagged": false
+        }
+      ],
+      "intro": "Representative rows from the 12-PR lifetime sample. Every PR in the repo's history was merged by the maintainer without formal reviewer engagement \u2014 this is the sample, not a subset."
+    },
+    "repo_vitals": {
+      "rows": [
+        {
+          "metric": "Stars",
+          "value": "10",
+          "note": "Very low \u2014 near-zero community audit"
+        },
+        {
+          "metric": "Forks",
+          "value": "\u2014",
+          "note": null
+        },
+        {
+          "metric": "Open issues",
+          "value": "1",
+          "note": "0 security-tagged"
+        },
+        {
+          "metric": "Open PRs",
+          "value": "0",
+          "note": null
+        },
+        {
+          "metric": "Primary language",
+          "value": "Go",
+          "note": "Plus TypeScript/JS in src/ extension frontend"
+        },
+        {
+          "metric": "License",
+          "value": "GPL-3.0",
+          "note": null
+        },
+        {
+          "metric": "Created",
+          "value": "2023-04-14",
+          "note": "~3 years"
+        },
+        {
+          "metric": "Last pushed",
+          "value": "2026-04-03",
+          "note": "Active commits"
+        },
+        {
+          "metric": "Default branch",
+          "value": "main",
+          "note": null
+        },
+        {
+          "metric": "Total contributors",
+          "value": "2 (incl. dependabot)",
+          "note": "BatteredBunny: 41 commits; dependabot[bot]: 12"
+        },
+        {
+          "metric": "Human contributors",
+          "value": "1",
+          "note": "Single maintainer"
+        },
+        {
+          "metric": "Formal releases",
+          "value": "5",
+          "note": "Latest v1.4.7 on 2025-06-23"
+        },
+        {
+          "metric": "Release cadence",
+          "value": "Stalled 10 months",
+          "note": "Main has unshipped activity"
+        },
+        {
+          "metric": "Release integrity",
+          "value": "None",
+          "note": "No .dgst / .sig / .sha256 / .asc"
+        },
+        {
+          "metric": "Classic branch protection",
+          "value": "OFF (HTTP 404)",
+          "note": null
+        },
+        {
+          "metric": "Rulesets",
+          "value": "0",
+          "note": null
+        },
+        {
+          "metric": "Rules on default branch",
+          "value": "0",
+          "note": null
+        },
+        {
+          "metric": "CODEOWNERS",
+          "value": "Absent",
+          "note": null
+        },
+        {
+          "metric": "SECURITY.md",
+          "value": "Absent",
+          "note": "Privileged tool (shell bridge)"
+        },
+        {
+          "metric": "CONTRIBUTING",
+          "value": "Absent",
+          "note": null
+        },
+        {
+          "metric": "Community health",
+          "value": "42%",
+          "note": null
+        },
+        {
+          "metric": "Workflows",
+          "value": "4",
+          "note": "Release \u00d7 2 + Dependabot + Dependency-Graph"
+        },
+        {
+          "metric": "pull_request_target usage",
+          "value": "0",
+          "note": null
+        },
+        {
+          "metric": "CodeQL SAST",
+          "value": "Absent",
+          "note": null
+        },
+        {
+          "metric": "Dependabot",
+          "value": "Enabled (gomod + npm + github-actions)",
+          "note": "Multi-ecosystem"
+        },
+        {
+          "metric": "PR formal review rate",
+          "value": "0.0%",
+          "note": "12-PR lifetime sample"
+        },
+        {
+          "metric": "PR any-review rate",
+          "value": "0.0%",
+          "note": null
+        },
+        {
+          "metric": "Self-merge count",
+          "value": "0",
+          "note": "Maintainer commits directly to main"
+        },
+        {
+          "metric": "Published security advisories",
+          "value": "0",
+          "note": null
+        },
+        {
+          "metric": "Open security issues",
+          "value": "0",
+          "note": null
+        },
+        {
+          "metric": "OSSF Scorecard",
+          "value": "Not indexed",
+          "note": null
+        },
+        {
+          "metric": "Runtime Go deps",
+          "value": "1 (creack/pty)",
+          "note": "Very small attack surface"
+        },
+        {
+          "metric": "npm deps (runtime)",
+          "value": "7",
+          "note": "Per harness parse of package.json"
+        },
+        {
+          "metric": "osv.dev vulns",
+          "value": "1 (esbuild dev-server; not reachable)",
+          "note": "Build-time only"
+        },
+        {
+          "metric": "Primary distribution",
+          "value": "Chrome Web Store + Firefox Add-ons + GitHub Releases (native host)",
+          "note": "Harness detected fictitious npm channel (F6)"
+        }
+      ]
+    },
+    "coverage_detail": {
+      "rows": [
+        {
+          "check": "Harness Phase 1 end-to-end",
+          "result": "\u2705 Complete"
+        },
+        {
+          "check": "`gh api` rate limit",
+          "result": "\u2705 Well under limit"
+        },
+        {
+          "check": "Tarball extraction + local grep",
+          "result": "\u2705 Scanned"
+        },
+        {
+          "check": "OSSF Scorecard",
+          "result": "\u26a0 Not indexed"
+        },
+        {
+          "check": "Dependabot alerts",
+          "result": "\u26a0 Admin scope (403); dependabot.yml present + active"
+        },
+        {
+          "check": "osv.dev dependency queries",
+          "result": "\u2705 1 vuln (esbuild, dev-server bypass \u2014 not reachable at runtime)"
+        },
+        {
+          "check": "PR review sample",
+          "result": "\u2705 12-PR lifetime sample; formal + any review both 0%"
+        },
+        {
+          "check": "Dependencies manifest detection",
+          "result": "\u2705 4 manifests (go.mod + go.sum + package.json + pnpm-lock.yaml)"
+        },
+        {
+          "check": "Distribution channels inventory",
+          "result": "\u26a0 Detected fictitious 'npm-browser_terminal' channel; real channels (Chrome Web Store + Firefox Add-ons + GitHub Releases) NOT detected (F6)"
+        },
+        {
+          "check": "Install-doc URL scan for typosquat",
+          "result": "\u2297 Not implemented \u2014 F0 typosquat surfaced by LLM authoring only"
+        },
+        {
+          "check": "Dangerous-primitives grep (15 families)",
+          "result": "\u26a0 1 false-positive path_traversal hit (build-script `fs.readFileSync(SRC_DIR + '/manifest.json')` \u2014 reads its own manifest)"
+        },
+        {
+          "check": "Workflows",
+          "result": "\u2705 4 detected (Release \u00d7 2 + Dependabot + Dep-Graph); no CodeQL; no test CI"
+        },
+        {
+          "check": "Gitleaks",
+          "result": "\u2297 Not available on this scanner host"
+        },
+        {
+          "check": "README paste-scan",
+          "result": "\u2705 No paste-from-command blocks (but typosquat URL F0 surfaced separately \u2014 see F6 gap)"
+        }
+      ]
+    },
+    "coverage_gaps": {
+      "entries": [
+        "Install-doc URL analysis is not implemented in the harness \u2014 F0 typosquat URL in installation.md was only surfaced by LLM authoring reading the file directly. Future browser-extension scans will need the same manual step until harness adds TLD-deviation detection.",
+        "Distribution-channel harness detected a fictitious 'npm-browser_terminal' channel based solely on package.json presence (the package is not on the npm registry). Real channels (Chrome Web Store + Firefox Add-ons + GitHub Releases binary) were not recognized.",
+        "OSSF Scorecard not indexed \u2014 governance signals derived entirely from raw gh api data.",
+        "Dependabot-alerts API required admin scope (HTTP 403); dependabot.yml confirms active multi-ecosystem coverage regardless.",
+        "Dangerous-primitives `path_traversal` family produced a false positive on a build-script self-read of manifest.json \u2014 Go/JS mixed-repo idioms aren't perfectly aligned with the regex tuning.",
+        "Gitleaks secret-scanning not available on this scanner host.",
+        "Release-integrity channels are not formally graded beyond presence-check of `.dgst` / `.sig`. For this release (v1.4.7), absence of any such files is captured via Phase 4 authoring (F1) but not surfaced as a compute signal."
+      ]
+    },
+    "scorecard_cells": {
+      "does_anyone_check_the_code": {
+        "color": "red",
+        "short_answer": "No \u2014 0% formal / 0% any-review across 12 lifetime PRs, single human maintainer, no branch protection",
+        "rationale": null,
+        "edge_case": null,
+        "suggested_threshold_adjustment": null,
+        "computed_signal_refs": [],
+        "override_reason": null
+      },
+      "do_they_fix_problems_quickly": {
+        "color": "green",
+        "short_answer": "Yes (structurally) \u2014 0 open security issues; dependabot active; small dep-graph surface",
+        "rationale": null,
+        "edge_case": null,
+        "suggested_threshold_adjustment": null,
+        "computed_signal_refs": [],
+        "override_reason": null
+      },
+      "do_they_tell_you_about_problems": {
+        "color": "red",
+        "short_answer": "No \u2014 no SECURITY.md, no CONTRIBUTING, no disclosure channel documented; 0 published advisories",
+        "rationale": null,
+        "edge_case": null,
+        "suggested_threshold_adjustment": null,
+        "computed_signal_refs": [],
+        "override_reason": null
+      },
+      "is_it_safe_out_of_the_box": {
+        "color": "red",
+        "short_answer": "No \u2014 install doc directs Chrome users to a typosquat TLD; binary install has no integrity verification",
+        "rationale": "The Phase 3 advisory computed amber via compute.py's Q4 rubric (q4_all_channels_pinned=False, q4_artifact_verified=False, q4_has_critical_on_default_path=False \u2014 compute cannot see the README text where the critical actually lives). Phase 4 reads installation.md directly (E1) and finds `chrome.google.cm/webstore/detail/browser-terminal/nbnfihffeffdhcbblmekelobgmdccfnl` \u2014 a Cameroon-TLD typosquat in the Chrome install path. Cross-referenced against `chrome.google.com`, this is not a different domain under Google's control; it is a `.cm` lookalike that would silently serve whatever page its owner configures. Separately, the Go native-binary install step is `sudo mv ~/Downloads/browser_terminal_linux /usr/local/bin/browser_terminal` with no integrity verification (E3, E4) \u2014 no checksum file in the release, no sha256 step in the README. For a tool whose installed form is a native-messaging shell bridge, this combination is not amber-level; it's red. Firefox users following the (correct) addons.mozilla.org URL do not hit the typosquat, but they do still hit the unsigned-binary step \u2014 so the red call applies on the Chrome install path and amber on the Firefox-only path.",
+        "edge_case": "The Q4 advisory signal `q4_has_critical_on_default_path` is derived from dangerous_primitives regex hits; it has no visibility into README / installation-doc text. Typosquat URL detection in install docs is specifically a harness-coverage gap, not a compute-signal calibration issue.",
+        "suggested_threshold_adjustment": "Add a harness step that fetches install-doc URLs (README hyperlinks matching /install/ or /web.?store/ or /addons/) and checks TLD against a reference list. Any Chrome install URL whose host is not `chrome.google.com` (or a redirect to it) should flag `q4_has_critical_on_default_path=true`. That single check would have fired on this repo without requiring Phase 4 override.",
+        "computed_signal_refs": [
+          "q4_all_channels_pinned",
+          "q4_artifact_verified",
+          "q4_has_critical_on_default_path",
+          "q4_has_warning_on_install_path"
+        ],
+        "override_reason": "harness_coverage_gap"
+      }
+    },
+    "catalog_metadata": {
+      "category": "browser-extension",
+      "subcategory": "terminal-native-messaging",
+      "short_description": "Chrome + Firefox extension providing local-shell access via a Go native-messaging host. Small single-maintainer project (10 stars, 2 contributors).",
+      "target_user": "Developer who wants a browser-tab-hosted terminal as a workflow convenience. Install path: (1) extension from Chrome Web Store or Firefox Add-ons, (2) Go native binary from GitHub Releases + `sudo mv` into PATH, (3) `browser_terminal --install` to register the native-messaging manifest.",
+      "shape": "Chrome/Firefox browser extension + Go native-messaging host (PTY to /bin/sh) + Nix flake build. NEW shape \u2014 first browser-extension entry in the catalog; first native-messaging architecture; first extension-published-via-browser-store distribution channel.",
+      "prior_scan_note": "None \u2014 first scan of BatteredBunny/browser_terminal. Fifth wild V1.2-schema scan (after markitdown 15, ghostty 16, Kronos 17, kamal 18, Xray-core 19)."
+    },
+    "timeline_intro": "browser_terminal lifecycle \u2014 small single-author project from 2023, 5 releases, recent activity on main.",
+    "evidence_intro": "Command-backed evidence from Phase 1 harness + direct gh api queries + installation.md read + native/main.go read.",
+    "coverage_intro": "Phase 1 harness coverage with 7 documented gaps \u2014 most notably the install-doc URL scan absence that necessitated Phase 4 authoring of F0."
+  },
+  "phase_4b_computed": {
+    "verdict": {
+      "level": "Critical",
+      "computed_from_findings": [
+        "F0"
+      ]
+    }
+  },
+  "phase_5_prose_llm": {
+    "editorial_caption": {
+      "text": "BatteredBunny/browser_terminal \u2014 10-star Chrome+Firefox extension exposing browser-tab shell access via a Go native-messaging host. installation.md directs Chrome users to chrome.google.cm (Cameroon TLD) instead of .com \u2014 a live typosquat URL (F0 Critical). Firefox install path is correct. Unsigned Go binary + 10-month release stall + single-maintainer governance floor complete the picture."
+    },
+    "per_finding_prose": {
+      "entries": [
+        {
+          "finding_id": "F0",
+          "body_paragraphs": [
+            "installation.md \u2014 the project's single install document \u2014 contains this line: `Install extension from [firefox addons](https://addons.mozilla.org/en-US/firefox/addon/browser_terminal/) or [chrome web store](https://chrome.google.cm/webstore/detail/browser-terminal/nbnfihffeffdhcbblmekelobgmdccfnl)`. The Firefox URL is correct; the Chrome URL is not `chrome.google.com` \u2014 it is `chrome.google.cm`, a Cameroon-TLD lookalike. `.cm` is a widely-documented typosquat target for `.com` specifically because users drop the trailing `o` when typing fast.",
+            "The link is hyperlinked in the rendered README, so a reader who clicks it goes directly to the typosquat URL without having a chance to notice the TLD. If `chrome.google.cm` is (or ever becomes) attacker-controlled, they can serve a fake Chrome Web Store page to any user following the install instructions. The extension ID in the URL (`nbnfihffeffdhcbblmekelobgmdccfnl`) is the real ID, but on a .cm domain the Chrome-Web-Store-level trust chain is not in effect \u2014 it's just a page the operator of .cm controls.",
+            "This finding is the only reason the overall verdict is Critical rather than Caution. A consumer who wants to install this extension should open chrome.google.com/webstore manually and search by name or paste the extension ID \u2014 do not follow the link from the README. Firefox users are unaffected. For the maintainer: a one-character fix (`cm` \u2192 `com`) resolves the finding."
+          ]
+        },
+        {
+          "finding_id": "F1",
+          "body_paragraphs": [
+            "The v1.4.7 release (2025-06-23) ships four assets: two Go native binaries (`browser_terminal_linux`, `browser_terminal_macos`) and two extension packages (chromium + firefox zips). Zero of the assets have an accompanying checksum file \u2014 no `.dgst`, no `.sig`, no `.sha256`, no `.asc`. The installation flow is 'download the binary, `sudo mv` it into `/usr/local/bin/`, run `--install`'. No step asks the user to verify anything.",
+            "The blast radius of an unverified native-binary install is user-level access (not root \u2014 the install step is `sudo mv`, but the binary itself runs as the user). That's sufficient access for the shell the tool provides to do anything the user can do: read SSH keys, read browser profiles, modify shell-startup files, exfiltrate data. A publisher-account compromise that re-uploads the release asset would reach every user who downloads next.",
+            "Baseline remediation on the consumer side is a one-line `sha256sum` step before `sudo mv`: record the hash on first install, and use it as a tripwire for later releases. Real remediation on the maintainer side is adopting either per-asset checksums (minimal GHA change) or Sigstore keyless signing (slightly more infrastructure but stronger guarantees)."
+          ]
+        },
+        {
+          "finding_id": "F2",
+          "body_paragraphs": [
+            "v1.4.7 was published 2025-06-23. The repo's last push to main is 2026-04-03 \u2014 10 months later. Browser-store extensions auto-update from whatever the store distributes; if the Chrome Web Store and Firefox Add-ons are still serving v1.4.7 (very likely, since no new release tag exists), those installed users are running 10-month-old shipped code regardless of how active main is.",
+            "For a small single-maintainer repo this pattern is common \u2014 changes accumulate on main without a 'release-worthy' threshold being met. The governance consequence is that any fix merged to main does not reach users until a new tag is cut and the browser stores process the updated manifest. If a security issue is fixed on main today, the typical store propagation time is 1\u20137 days after a new tag; until then, users are exposed even though 'the repo fixed it'.",
+            "Nothing in this finding is immediately actionable beyond awareness. It becomes urgent if a future fix on main targets an exploitable issue \u2014 the release stall would delay user remediation."
+          ]
+        },
+        {
+          "finding_id": "F3",
+          "body_paragraphs": [
+            "BatteredBunny is the only human contributor to this repo (41 commits across the lifetime). The only other 'contributor' is dependabot[bot] (12 commits). Across the 12 lifetime closed PRs: 0 had formal review decisions, 0 had any reviewer engagement, 0 self-merges (the maintainer's own commits go direct to main \u2014 PRs here are mostly dependabot). There is no branch protection, no rulesets, no CODEOWNERS, no SECURITY.md.",
+            "For a tool whose installed form provides a live interactive shell to browser-extension contexts, this is the minimum-viable governance posture. A single account compromise on the maintainer's GitHub credentials reaches every installed user via the native-binary release path. The extension half is protected somewhat by browser-store moderation gates, but the native-binary path has no such intermediary.",
+            "There is no implicit criticism of the maintainer here \u2014 small OSS projects routinely operate this way. The finding describes the structural exposure, and a consumer who installs a privileged tool should understand that THEY are the review gate if none exists upstream."
+          ]
+        },
+        {
+          "finding_id": "F4",
+          "body_paragraphs": [
+            "The native-host Go binary reads JSON messages from Chrome's native-messaging stdin protocol and forwards them to a `/bin/sh` subprocess wired through a PTY. There is no authentication between the extension and the native host, no command allowlist, no session prompt. The design IS the feature: the user installs a browser-tab-hosted terminal, and the terminal has the user's privileges.",
+            "This is categorized as Info rather than Warning because it is not a defect \u2014 it is the tool's declared function. It is named here so the threat model is explicit: the tool's attack surface is 'any path that reaches the extension's message ports, bridged to a shell'. Users should install it only if they want that capability and understand what it grants.",
+            "Risk-reduction suggestions for the maintainer: a shared-secret between extension and host (prevents arbitrary-extension access); a startup confirmation prompt in the host (prevents silent first-use); a command-allowlist mode (opt-in hardening for paranoid users). None of these exist today."
+          ]
+        },
+        {
+          "finding_id": "F5",
+          "body_paragraphs": [
+            "Dependabot is configured for gomod + npm + github-actions with daily polling \u2014 above-average hygiene for a 10-star single-maintainer project. The osv.dev query against the dep graph surfaces exactly one vulnerability (esbuild GHSA-67mh-4wv8-2f99, a same-origin bypass in esbuild's dev-server), which is not reachable in this repo's build-only use of esbuild. The Go runtime dep surface is a single entry: `github.com/creack/pty` \u2014 a standard well-maintained PTY library.",
+            "This finding is Info because it describes existing positive investment and an unreachable vuln \u2014 no action required."
+          ]
+        },
+        {
+          "finding_id": "F6",
+          "body_paragraphs": [
+            "Two scanner-side gaps relevant to this scan: (1) the harness does not scan README / install-doc URLs for anomalies (TLD deviation, suspicious redirect targets, visual-similarity lookalikes). The F0 typosquat was surfaced only because LLM authoring read installation.md directly during Phase 4. A future scan on a browser-extension shape would hit the same gap unless the harness is extended. (2) The harness detected `npm-browser_terminal` as a distribution channel on the basis of package.json presence alone; the package is not actually on the npm registry. Real channels (Chrome Web Store + Firefox Add-ons + GitHub Releases) were not recognized.",
+            "Fix surface for both is `docs/phase_1_harness.py`: add install-doc URL analysis (TLD deviation check against a reference list of known install-source domains like chrome.google.com / addons.mozilla.org / pypi.org); tighten npm-channel detection to require `npm view` confirmation; add browser-store channel recognition. When those land, a future re-scan would emit F0-class findings automatically without needing Phase 4 override."
+          ]
+        }
+      ]
+    }
+  },
+  "phase_6_assembly": {
+    "assembled": true,
+    "assembly_timestamp": "2026-04-20T13:12:00.130185+00:00",
+    "provenance_complete": true,
+    "evidence_refs_valid": true,
+    "field_count": 1185
+  },
+  "scan_sign_off": {
+    "approved_for_release": false
+  }
+}

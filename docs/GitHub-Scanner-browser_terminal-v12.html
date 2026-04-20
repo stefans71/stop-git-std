@@ -1,0 +1,2102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Security Investigation Report: BatteredBunny/browser_terminal @ 9a77c4a | Generated 2026-04-20 | Prompt V2.4 (V1.1 schema) -->
+<title>Security Investigation: BatteredBunny/browser_terminal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Unbounded:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; script-src 'unsafe-inline';">
+<style>
+  /* ═══════════════════════════════════════════════
+     DESIGN SYSTEM — DO NOT MODIFY
+     Dark theme, security monitoring aesthetic
+     ═══════════════════════════════════════════════ */
+  :root {
+    --bg-void: #0a0a0c;
+    --bg-surface: #131316;
+    --bg-elevated: #1a1a1f;
+    --bg-hover: #222228;
+    --border: #32323c;
+    --border-subtle: #26262e;
+    --text-primary: #f0f0f4;
+    --text-secondary: #b0b0bc;
+    --text-muted: #7e7e8e;
+    --red-glow: #ff4545;
+    --red-dim: #ff454520;
+    --red-bg: #1a0f0f;
+    --amber-glow: #ffaa2a;
+    --amber-dim: #ffaa2a20;
+    --amber-bg: #1a150e;
+    --green-glow: #22c55e;
+    --green-dim: #22c55e20;
+    --green-bg: #0e1a12;
+    --cyan-glow: #06b6d4;
+    --cyan-dim: #06b6d420;
+    --font-mono: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace;
+    --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-display: 'Unbounded', 'Inter', sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--font-sans);
+    background: var(--bg-void);
+    color: var(--text-primary);
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Noise texture + horizontal scanlines — forensic console feel */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      repeating-linear-gradient(
+        to bottom,
+        rgba(255,255,255,0.008) 0px,
+        rgba(255,255,255,0.008) 1px,
+        transparent 1px,
+        transparent 3px
+      ),
+      url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+  }
+  /* Single-pass scan line — thin cyan line sweeps once then disappears */
+  body::after {
+    content: ''; position: fixed; left: 0; right: 0; height: 2px;
+    background: linear-gradient(to right, transparent 5%, var(--cyan-glow) 30%, var(--cyan-glow) 70%, transparent 95%);
+    box-shadow: 0 0 12px var(--cyan-glow), 0 0 4px var(--cyan-glow);
+    pointer-events: none; z-index: 9998; opacity: 0.7;
+    animation: scan-sweep 3s ease-in-out 1s 1 forwards;
+  }
+  @keyframes scan-sweep {
+    0% { top: -2px; opacity: 0.7; }
+    90% { opacity: 0.5; }
+    100% { top: 100vh; opacity: 0; }
+  }
+
+  /* Scan strip — the data ribbon above the hero */
+  .scan-strip {
+    display: flex; flex-wrap: wrap; gap: 1.25rem; align-items: center;
+    padding: 0.625rem 0 0.75rem; margin-bottom: 1.5rem;
+    border-top: 1px solid var(--border-subtle);
+    border-bottom: 1px solid var(--border-subtle);
+    font-family: var(--font-mono); font-size: 0.65rem;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--text-secondary);
+  }
+  .scan-strip-item { display: inline-flex; align-items: center; gap: 0.4rem; }
+  .scan-strip-item .dot {
+    display: inline-block; width: 6px; height: 6px; border-radius: 50%;
+    box-shadow: 0 0 6px currentColor;
+  }
+  .scan-strip-item.amber, .scan-strip-item .dot.amber { color: var(--amber-glow); background: var(--amber-glow); }
+  .scan-strip-item .dot.amber { background: var(--amber-glow); box-shadow: 0 0 8px var(--amber-glow); animation: pulse 3s ease-in-out infinite; }
+  .scan-strip-item.flash {
+    color: var(--red-glow); animation: flash-blink 1.4s ease-in-out infinite;
+  }
+  @keyframes flash-blink {
+    0%, 80%, 100% { opacity: 1; }
+    85%, 95% { opacity: 0.25; }
+  }
+
+  /* Hero caption — the editorial line under the H1.
+     Readable sans-serif, slightly larger than body, no italic (readability > flavor). */
+  .hero-caption {
+    font-family: var(--font-sans); font-size: 1.0625rem; line-height: 1.55;
+    color: var(--text-primary); font-weight: 400;
+    max-width: 68ch; margin: 0.75rem 0 1.75rem;
+    letter-spacing: -0.005em;
+  }
+
+  /* ─────────────── Utility classes (replaces inline style="" attributes) ─────────────── */
+  /* Semantic value colors — use on chip-value, vital-value, td.val, etc. */
+  .val-good  { color: var(--green-glow) !important; }
+  .val-bad   { color: var(--red-glow)   !important; }
+  .val-warn  { color: var(--amber-glow) !important; }
+  .val-info  { color: var(--cyan-glow)  !important; }
+  .fw-semi   { font-weight: 600; }
+  /* Card vertical rhythm — replaces margin-bottom:12px inline on cards */
+  .stack-md  { margin-bottom: 0.75rem; }
+  .stack-sm  { margin-top: 0.75rem; }
+  /* Subdued paragraph — replaces the meta-text inline patterns */
+  .p-meta {
+    color: var(--text-secondary); margin-bottom: 1rem;
+    font-size: 0.875rem; line-height: 1.55;
+  }
+  .p-meta-tight {
+    color: var(--text-secondary); margin: 0.75rem 0 1rem;
+    font-size: 0.8125rem; line-height: 1.55;
+  }
+  /* Priority-evidence visual uplift — replaces inline border-left hack */
+  .finding-card.evidence-priority {
+    border-left: 4px solid var(--amber-glow);
+  }
+  /* Inline-flag variant — when priority-flag appears mid-sentence, not block */
+  .priority-flag.inline { display: inline-block; }
+
+  a { color: var(--cyan-glow); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* Font size controls */
+  .font-controls {
+    position: fixed; top: 16px; right: 16px; z-index: 1000;
+    display: flex; align-items: center; gap: 2px;
+    background: var(--bg-elevated); border: 1px solid var(--border);
+    border-radius: 8px; padding: 4px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5); backdrop-filter: blur(12px);
+  }
+  .font-controls button {
+    font-family: var(--font-mono); font-size: 0.875rem; font-weight: 700;
+    width: 34px; height: 34px; border: none; border-radius: 6px;
+    background: transparent; color: var(--text-secondary); cursor: pointer;
+    display: flex; align-items: center; justify-content: center; transition: all 0.15s;
+  }
+  .font-controls button:hover { background: var(--bg-hover); color: var(--text-primary); }
+  .font-controls button:active { transform: scale(0.92); }
+  .font-controls .font-size-display {
+    font-family: var(--font-mono); font-size: 0.6875rem; color: var(--text-muted);
+    min-width: 38px; text-align: center; letter-spacing: 0.05em; user-select: none;
+  }
+
+  .page { max-width: 960px; margin: 0 auto; padding: 0 20px; }
+
+  /* Hero */
+  .hero { padding: 64px 0 48px; border-bottom: 1px solid var(--border); position: relative; }
+  .hero::after {
+    content: ''; position: absolute; bottom: -1px; left: 0; right: 0; height: 120px;
+    background: linear-gradient(to top, var(--bg-void), transparent); pointer-events: none;
+  }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-family: var(--font-mono); font-size: 0.6875rem; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--text-muted); margin-bottom: 20px;
+    padding: 6px 12px; border: 1px solid var(--border); border-radius: 6px; background: var(--bg-surface);
+  }
+  .hero-badge .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--text-muted); /* Neutral default — LLM must set .red, .green, or .amber */
+  }
+  .hero-badge .dot.red { background: var(--red-glow); box-shadow: 0 0 8px var(--red-glow); animation: pulse 2s ease-in-out infinite; }
+  .hero-badge .dot.green { background: var(--green-glow); box-shadow: 0 0 8px var(--green-glow); }
+  .hero-badge .dot.amber { background: var(--amber-glow); box-shadow: 0 0 8px var(--amber-glow); animation: pulse 3s ease-in-out infinite; }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+  .hero h1 {
+    font-family: var(--font-display); font-size: clamp(1.8rem, 4vw, 3.4rem);
+    font-weight: 800; letter-spacing: -0.04em; line-height: 1.05; margin-bottom: 16px;
+  }
+  .hero h1 .slash {
+    color: var(--text-muted); font-weight: 300;
+    margin: 0 0.1em; font-size: 0.85em;
+  }
+  .hero h1 span { color: var(--red-glow); }
+  .hero h1 span.green { color: var(--green-glow); }
+  .hero h1 span.amber { color: var(--amber-glow); }
+  .hero .meta { font-size: 0.875rem; color: var(--text-primary); display: flex; flex-wrap: wrap; gap: 16px; }
+  .hero .meta-item { display: flex; align-items: center; gap: 6px; }
+  .hero .meta-item .label { color: var(--text-secondary); font-size: 0.75rem; }
+
+  /* Verdict */
+  .verdict-section { padding: 48px 0 40px; }
+  .verdict-banner {
+    border-radius: 0; padding: 2.25rem 2.75rem 2rem 4.5rem;
+    position: relative; overflow: hidden;
+    border-left-width: 6px; border-left-style: solid;
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%);
+  }
+  .verdict-banner.critical { background: linear-gradient(135deg, #1f0a0a 0%, #0a0a0c 100%); border: 1px solid #ff454540; border-left-color: var(--red-glow); }
+  .verdict-banner.caution { background: linear-gradient(135deg, #1f1810 0%, #0a0a0c 100%); border: 1px solid #ffaa2a40; border-left-color: var(--amber-glow); }
+  .verdict-banner.clean { background: linear-gradient(135deg, #0a1f14 0%, #0a0a0c 100%); border: 1px solid #22c55e40; border-left-color: var(--green-glow); }
+  /* Radial wash */
+  .verdict-banner::before {
+    content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+    pointer-events: none;
+  }
+  .verdict-banner.critical::before { background: radial-gradient(circle at 20% 30%, #ff454510, transparent 55%); }
+  .verdict-banner.caution::before { background: radial-gradient(circle at 20% 30%, #ffaa2a12, transparent 55%); }
+  .verdict-banner.clean::before { background: radial-gradient(circle at 20% 30%, #22c55e10, transparent 55%); }
+  /* Vertical scan-ID bar on the left */
+  .verdict-banner::after {
+    content: attr(data-dossier); position: absolute;
+    left: 1.4rem; top: 2.1rem; bottom: 2rem;
+    writing-mode: vertical-rl; transform: rotate(180deg);
+    font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.25em;
+    color: var(--text-muted); text-transform: uppercase;
+    display: flex; align-items: center;
+    opacity: 0.55;
+  }
+  .verdict-banner .verdict-label {
+    font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.22em;
+    text-transform: uppercase; margin-bottom: 1rem; position: relative;
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    padding: 0.25rem 0.625rem; border-radius: 0.125rem;
+    background: rgba(255,170,42,0.08); border: 1px solid rgba(255,170,42,0.25);
+  }
+  .verdict-banner.critical .verdict-label { color: var(--red-glow); background: rgba(255,69,69,0.08); border-color: rgba(255,69,69,0.25); }
+  .verdict-banner.caution .verdict-label { color: var(--amber-glow); }
+  .verdict-banner.clean .verdict-label { color: var(--green-glow); background: rgba(34,197,94,0.08); border-color: rgba(34,197,94,0.25); }
+  .verdict-banner h2 {
+    font-family: var(--font-display);
+    font-size: clamp(1.5rem, 3.2vw, 2.2rem); font-weight: 600; line-height: 1.18;
+    letter-spacing: -0.025em; margin-bottom: 1rem; position: relative; color: #ff8c00;
+    max-width: 56ch;
+  }
+  .verdict-banner.clean h2 { color: var(--green-glow); }
+  .verdict-banner.critical h2 { color: var(--red-glow); }
+
+  /* Split-verdict layout — two audience blocks separated by a divider */
+  .verdict-split {
+    display: grid; grid-template-columns: 1fr auto 1fr; gap: 1.75rem;
+    margin-bottom: 1.25rem; align-items: stretch;
+  }
+  @media (max-width: 820px) {
+    .verdict-split { grid-template-columns: 1fr; gap: 1rem; }
+  }
+  .verdict-entry { display: flex; flex-direction: column; gap: 0.5rem; }
+  .verdict-entry-scope {
+    font-family: var(--font-mono); font-size: 0.65rem; letter-spacing: 0.2em;
+    text-transform: uppercase; color: var(--text-muted);
+    padding-bottom: 0.375rem; border-bottom: 1px solid var(--border-subtle);
+  }
+  .verdict-entry-headline {
+    font-family: var(--font-display); font-weight: 600;
+    font-size: clamp(1.35rem, 2.5vw, 1.85rem); line-height: 1.15;
+    letter-spacing: -0.02em; margin: 0;
+  }
+  .verdict-entry-headline.good { color: #8dd492; }
+  .verdict-entry-headline.warn { color: var(--amber-glow); }
+  .verdict-entry-headline.bad  { color: var(--red-glow); }
+  .verdict-entry-detail {
+    font-family: var(--font-sans); font-size: 0.8125rem; line-height: 1.55;
+    color: var(--text-secondary); margin-top: 0.25rem;
+  }
+  .verdict-split-divider {
+    width: 1px; background: linear-gradient(to bottom, transparent, var(--border), transparent);
+  }
+  @media (max-width: 820px) {
+    .verdict-split-divider { width: 100%; height: 1px; background: var(--border-subtle); }
+  }
+
+  /* Rolled verdict exhibits — 3 themed panels that replace the 10-bullet glaze list */
+  .verdict-exhibits { display: grid; gap: 0.875rem; margin-top: 0.5rem; }
+  .exhibit {
+    position: relative; overflow: hidden; border-radius: 10px;
+    border: 1px solid var(--border-subtle);
+  }
+  .exhibit.vuln    { background: linear-gradient(135deg, #1a1008 0%, #0f0a0a 100%); border-color: #ffaa2a30; }
+  .exhibit.govern  { background: linear-gradient(135deg, #100c1a 0%, #0a0a0f 100%); border-color: #ff808040; }
+  .exhibit.signals { background: linear-gradient(135deg, #0a1812 0%, #0a0f0a 100%); border-color: #22c55e30; }
+  /* Left accent bar */
+  .exhibit::before {
+    content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
+  }
+  .exhibit.vuln::before    { background: var(--amber-glow); }
+  .exhibit.govern::before  { background: var(--red-glow); }
+  .exhibit.signals::before { background: var(--green-glow); }
+  /* Summary row (collapsed state) */
+  .exhibit > summary {
+    list-style: none; cursor: pointer;
+    padding: 0.875rem 1rem 0.875rem 1.5rem;
+    display: flex; align-items: center; gap: 0.75rem;
+    position: relative;
+  }
+  .exhibit > summary::-webkit-details-marker { display: none; }
+  .exhibit > summary::after {
+    content: '\25B6'; margin-left: auto; font-size: 0.7rem;
+    color: var(--text-muted); transition: transform 0.2s;
+  }
+  .exhibit[open] > summary::after { transform: rotate(90deg); }
+  .exhibit-glyph {
+    width: 1.75rem; height: 1.75rem; border-radius: 50%;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 0.85rem; font-weight: 700; flex-shrink: 0;
+  }
+  .exhibit.vuln .exhibit-glyph    { background: rgba(255,170,42,0.18); color: var(--amber-glow); }
+  .exhibit.govern .exhibit-glyph  { background: rgba(255,69,69,0.18);  color: var(--red-glow); }
+  .exhibit.signals .exhibit-glyph { background: rgba(34,197,94,0.18);  color: var(--green-glow); }
+  .exhibit-title {
+    font-family: var(--font-display); font-size: 1.05rem; font-weight: 600;
+    letter-spacing: -0.01em; line-height: 1.25;
+  }
+  .exhibit-count {
+    margin-left: 0.5rem; font-family: var(--font-mono); font-size: 0.7rem;
+    letter-spacing: 0.12em; color: var(--text-muted); text-transform: uppercase;
+  }
+  .exhibit-summary-line {
+    font-family: var(--font-sans); font-size: 0.82rem; color: var(--text-secondary);
+    margin-left: 0.5rem; line-height: 1.45; font-weight: 400;
+  }
+  @media (max-width: 720px) {
+    .exhibit-summary-line { display: block; margin-left: 2.5rem; margin-top: 0.25rem; }
+  }
+  /* Expanded content — zebra-striped items */
+  .exhibit-body {
+    border-top: 1px solid var(--border-subtle);
+    padding: 0; background: rgba(0,0,0,0.15);
+  }
+  .exhibit-item {
+    display: grid; grid-template-columns: 1.5rem 1fr; gap: 0.75rem;
+    padding: 0.75rem 1rem 0.75rem 1.5rem;
+    font-size: 0.88rem; line-height: 1.55; color: var(--text-primary);
+    border-bottom: 1px solid var(--border-subtle);
+  }
+  .exhibit-item:last-child { border-bottom: none; }
+  /* Zebra striping — every other row gets a subtle background shift */
+  .exhibit-item:nth-child(even) { background: rgba(255,255,255,0.015); }
+  .exhibit-item-glyph {
+    font-family: var(--font-mono); font-weight: 700; font-size: 0.8rem;
+    text-align: center; padding-top: 0.15rem;
+  }
+  .exhibit.vuln .exhibit-item-glyph    { color: var(--amber-glow); }
+  .exhibit.govern .exhibit-item-glyph  { color: var(--red-glow); }
+  .exhibit.signals .exhibit-item-glyph { color: var(--green-glow); }
+  .exhibit-item-tag {
+    font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--text-muted); display: block;
+    margin-bottom: 0.15rem;
+  }
+
+  /* Verdict bullet list */
+  .verdict-bullets { list-style: none; padding: 0; margin: 0; position: relative; }
+  .verdict-bullets li {
+    display: flex; align-items: flex-start; gap: 12px; font-size: 0.9375rem;
+    color: var(--text-primary); line-height: 1.6; padding: 8px 0; border-bottom: 1px solid #ffffff08;
+  }
+  .verdict-bullets li:last-child { border-bottom: none; }
+  .verdict-bullets .bullet-icon {
+    flex-shrink: 0; width: 22px; height: 22px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center; font-size: 0.6875rem; margin-top: 2px;
+  }
+  .verdict-bullets .bullet-icon.red { background: var(--red-dim); color: var(--red-glow); box-shadow: 0 0 6px var(--red-dim); }
+  .verdict-bullets .bullet-icon.amber { background: var(--amber-dim); color: var(--amber-glow); box-shadow: 0 0 6px var(--amber-dim); }
+  .verdict-bullets .bullet-icon.green { background: var(--green-dim); color: var(--green-glow); box-shadow: 0 0 6px var(--green-dim); }
+
+  /* Scorecard */
+  .scorecard-section { padding: 0 0 48px; }
+  .scorecard-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px;
+    background: var(--border); border-radius: 12px; overflow: hidden;
+  }
+  .score-cell { background: var(--bg-surface); padding: 24px 20px; text-align: center; transition: background 0.2s; }
+  .score-cell:hover { background: var(--bg-elevated); }
+  .score-cell .score-icon {
+    width: 32px; height: 32px; margin: 0 auto 12px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center; font-size: 1rem;
+  }
+  .score-cell .score-icon.red { background: var(--red-dim); color: var(--red-glow); }
+  .score-cell .score-icon.amber { background: var(--amber-dim); color: var(--amber-glow); }
+  .score-cell .score-icon.green { background: var(--green-dim); color: var(--green-glow); }
+  .score-cell .score-label {
+    font-family: var(--font-mono); font-size: 0.625rem; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--text-muted); margin-bottom: 6px;
+  }
+  .score-cell .score-value { font-size: 1.125rem; font-weight: 700; line-height: 1.2; }
+  .score-cell .score-value.red { color: var(--red-glow); }
+  .score-cell .score-value.amber { color: var(--amber-glow); }
+  .score-cell .score-value.green { color: var(--green-glow); }
+
+  /* Collapsible sections */
+  details summary { cursor: pointer; list-style: none; }
+  details summary::-webkit-details-marker { display: none; }
+  .collapsible-section > summary { padding: 48px 0 0; border-top: 1px solid var(--border-subtle); }
+  .collapsible-section > summary .section-header { margin-bottom: 0; display: flex; align-items: center; gap: 12px; }
+  .collapsible-section[open] > summary .section-header { margin-bottom: 28px; }
+  .collapsible-section .section-body { padding-bottom: 0; }
+  .collapsible-section > summary .section-header::after {
+    content: '\25B6'; font-size: 0.625rem; color: var(--text-muted); transition: transform 0.2s; margin-left: auto;
+  }
+  .collapsible-section[open] > summary .section-header::after { transform: rotate(90deg); }
+  .section-header .section-number {
+    font-family: var(--font-mono); font-size: 0.6875rem; letter-spacing: 0.1em; color: var(--text-muted);
+    width: 28px; height: 28px; border-radius: 6px; border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .section-header h2 {
+    font-family: var(--font-display); font-size: 1.4rem; font-weight: 600;
+    letter-spacing: -0.02em; line-height: 1.15;
+    color: var(--cyan-glow);
+  }
+  /* Slightly emphasize the section number too so the landmark row reads as a unit */
+  .section-header .section-number {
+    color: var(--cyan-glow); opacity: 0.75;
+  }
+
+  /* Finding cards */
+  .finding-card {
+    background: var(--bg-surface); border: 1px solid var(--border); border-radius: 10px;
+    margin-bottom: 12px; overflow: hidden; transition: border-color 0.2s;
+  }
+  .finding-card:hover { border-color: #3a3a44; }
+  .finding-card.critical { border-left: 3px solid var(--red-glow); }
+  .finding-card.warning { border-left: 3px solid var(--amber-glow); }
+  .finding-card.info { border-left: 3px solid var(--cyan-glow); }
+  .finding-card.ok { border-left: 3px solid var(--green-glow); }
+  @keyframes border-pulse {
+    0%, 100% { border-left-color: var(--red-glow); box-shadow: -2px 0 8px var(--red-dim); }
+    50% { border-left-color: #ff454580; box-shadow: -2px 0 4px transparent; }
+  }
+  .finding-card.critical { animation: border-pulse 3s ease-in-out infinite; }
+
+  .finding-header {
+    padding: 16px 20px 12px; display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 16px;
+  }
+  .finding-header .tag {
+    font-family: var(--font-mono); font-size: 0.625rem; letter-spacing: 0.08em;
+    text-transform: uppercase; padding: 3px 8px; border-radius: 4px; font-weight: 600; flex-shrink: 0;
+  }
+  .tag.critical-tag { background: var(--red-dim); color: var(--red-glow); }
+  .tag.warning-tag { background: var(--amber-dim); color: var(--amber-glow); }
+  .tag.info-tag { background: var(--cyan-dim); color: var(--cyan-glow); }
+  .tag.ok-tag { background: var(--green-dim); color: var(--green-glow); }
+  .finding-header .finding-date { font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-secondary); }
+  .finding-header .finding-duration {
+    font-family: var(--font-mono); font-size: 0.6875rem; font-weight: 600;
+    color: var(--amber-glow); background: var(--amber-dim); border: 1px solid #ffaa2a30;
+    padding: 3px 10px; border-radius: 4px;
+  }
+  .finding-header h3 {
+    width: 100%; font-family: var(--font-display); font-size: 1.125rem;
+    font-weight: 600; line-height: 1.3; letter-spacing: -0.015em; margin-top: 4px;
+  }
+
+  /* Finding collapsible */
+  .finding-card summary { list-style: none; cursor: pointer; }
+  .finding-card summary::-webkit-details-marker { display: none; }
+  .finding-card summary .finding-header { position: relative; padding-right: 40px; }
+  .finding-card summary .finding-header::after {
+    content: '\25B6'; font-size: 0.625rem; color: var(--text-muted);
+    transition: transform 0.2s; position: absolute; right: 20px; top: 20px;
+  }
+  .finding-card details[open] > summary .finding-header::after { transform: rotate(90deg); }
+
+  .finding-body { padding: 0 20px 16px; }
+  .finding-body p { font-size: 0.875rem; color: var(--text-primary); line-height: 1.7; margin-bottom: 12px; }
+  .finding-meta {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 8px; margin-top: 12px;
+  }
+  .meta-chip {
+    font-size: 0.75rem; padding: 8px 12px; border-radius: 6px;
+    background: var(--bg-elevated); border: 1px solid var(--border-subtle);
+    display: flex; flex-direction: column; gap: 2px;
+  }
+  .meta-chip .chip-label {
+    font-family: var(--font-mono); font-size: 0.625rem; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--text-secondary);
+  }
+  .meta-chip .chip-value { color: var(--text-primary); font-weight: 500; }
+
+  /* Sub-finding (nested under parent finding) */
+  .sub-finding {
+    margin: 16px 0 8px; padding: 16px; border-left: 2px solid var(--amber-glow);
+    background: var(--bg-elevated); border-radius: 0 8px 8px 0;
+  }
+  .sub-finding .sub-finding-label {
+    font-family: var(--font-mono); font-size: 0.625rem; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--amber-glow); margin-bottom: 8px;
+  }
+  .sub-finding h4 { font-size: 1rem; font-weight: 700; line-height: 1.4; margin-bottom: 10px; }
+  .sub-finding p { font-size: 0.875rem; color: var(--text-primary); line-height: 1.7; margin-bottom: 12px; }
+
+  /* PR Table */
+  .pr-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.8125rem; }
+  th {
+    font-family: var(--font-mono); font-size: 0.625rem; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--text-secondary); text-align: left;
+    padding: 12px 16px; background: var(--bg-surface); border-bottom: 1px solid var(--border);
+    position: sticky; top: 0; white-space: nowrap;
+  }
+  td { padding: 14px 16px; border-bottom: 1px solid var(--border-subtle); color: var(--text-primary); vertical-align: top; }
+  tr:hover td { background: var(--bg-surface); }
+  td:first-child { font-family: var(--font-mono); font-weight: 600; color: var(--cyan-glow); white-space: nowrap; }
+  .td-concern { color: var(--amber-glow); font-weight: 500; }
+  .td-reviewed-no { color: var(--red-glow); font-family: var(--font-mono); font-weight: 600; }
+  .td-reviewed-yes { color: var(--green-glow); font-family: var(--font-mono); font-weight: 600; }
+  .td-reviewed-rejected { color: var(--amber-glow); font-family: var(--font-mono); font-weight: 600; }
+  .td-merge-fast { font-family: var(--font-mono); color: var(--red-glow); font-weight: 600; }
+  .td-person { font-weight: 500; color: var(--text-primary); }
+
+  /* Timeline */
+  .timeline { position: relative; padding-left: 28px; }
+  .timeline::before {
+    content: ''; position: absolute; left: 7px; top: 8px; bottom: 8px; width: 1px;
+    background: linear-gradient(to bottom, var(--border), var(--red-glow), var(--border));
+  }
+  .tl-item { position: relative; margin-bottom: 20px; padding-left: 8px; }
+  .tl-item::before {
+    content: ''; position: absolute; left: -24px; top: 7px; width: 9px; height: 9px;
+    border-radius: 50%; background: var(--text-muted); border: 2px solid var(--bg-void);
+  }
+  .tl-item.bad::before { background: var(--red-glow); box-shadow: 0 0 6px var(--red-dim); }
+  .tl-item.good::before { background: var(--green-glow); }
+  .tl-item.neutral::before { background: var(--amber-glow); }
+  .tl-date { font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-secondary); font-weight: 600; }
+  .tl-desc { font-size: 0.875rem; color: var(--text-primary); margin-top: 2px; line-height: 1.6; }
+
+  /* Vitals */
+  .vitals-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1px; background: var(--border); border-radius: 10px; overflow: hidden;
+  }
+  .vital-cell { background: var(--bg-surface); padding: 18px 20px; }
+  .vital-cell .vital-label {
+    font-family: var(--font-mono); font-size: 0.625rem; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--text-muted); margin-bottom: 4px;
+  }
+  .vital-cell .vital-value { font-size: 1rem; font-weight: 700; margin-bottom: 4px; }
+  .vital-cell .vital-note { font-size: 0.75rem; color: var(--text-secondary); line-height: 1.5; }
+  .vital-cell .vital-explainer {
+    font-size: 0.7rem; color: var(--text-muted); line-height: 1.5;
+    margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--border-subtle);
+  }
+  .vital-cell .vital-explainer a {
+    color: var(--cyan-glow); text-decoration: none;
+  }
+  .vital-cell .vital-explainer a:hover { text-decoration: underline; }
+
+  /* Action cards */
+  .action-card { padding: 24px; border-radius: 10px; margin-bottom: 12px; }
+  .action-card.stop { background: var(--red-bg); border: 1px solid #ff454530; }
+  .action-card.wait { background: var(--amber-bg); border: 1px solid #ffaa2a30; }
+  .action-card.info-action { background: var(--bg-surface); border: 1px solid var(--border); }
+  .action-card.ok-action { background: var(--green-bg); border: 1px solid #22c55e30; }
+  .action-card h3 { font-size: 0.9375rem; font-weight: 700; margin-bottom: 8px; }
+  .action-card p { font-size: 0.875rem; color: var(--text-primary); line-height: 1.7; }
+
+  /* Code blocks inside action cards */
+  .action-card pre {
+    background: var(--bg-void); border: 1px solid var(--border); border-radius: 8px;
+    padding: 16px; margin: 12px 0; overflow-x: auto;
+    font-family: var(--font-mono); font-size: 0.8125rem; color: var(--cyan-glow); line-height: 1.6;
+  }
+
+  /* Catalog metadata block — sits between hero and verdict
+     Font sizes use rem so the font +/- controls (which mutate root font-size) scale them. */
+  .catalog-meta {
+    background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: 10px;
+    padding: 1.125rem 1.375rem; margin-bottom: 1rem;
+  }
+  .catalog-meta .catalog-label {
+    font-family: var(--font-mono); font-size: 0.65rem; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--text-secondary); margin-bottom: 0.625rem;
+  }
+  .catalog-meta table { width: 100%; }
+  .catalog-meta td { padding: 0.375rem 0.75rem 0.375rem 0; border: none; font-size: 0.82rem; vertical-align: top; }
+  .catalog-meta td.key {
+    font-family: var(--font-mono); color: var(--text-secondary);
+    white-space: nowrap; width: 1%; font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.06em;
+  }
+  .catalog-meta td.val { color: var(--text-primary); }
+  .catalog-meta td.val a { color: var(--cyan-glow); text-decoration: none; }
+  .catalog-meta td.val a:hover { text-decoration: underline; }
+
+  /* ─────────────── UX-FIX CSS (section status pills, finding status chips,
+     timeline glyphs, evidence priority markers) ─────────────── */
+
+  /* Section status pills — shown on the collapsed <summary> row so readers know
+     at a glance whether a section needs attention. */
+  .section-status {
+    display: inline-flex; gap: 0.5rem; margin-left: auto; padding-right: 2.5rem;
+    font-size: 0.72rem; font-family: var(--font-mono); align-items: center;
+    flex-wrap: wrap;
+  }
+  .section-status .pill {
+    display: inline-flex; align-items: center; gap: 0.25rem;
+    padding: 0.1875rem 0.5rem; border-radius: 0.625rem; border: 1px solid;
+    letter-spacing: 0.04em; white-space: nowrap;
+  }
+  .section-status .pill.red {
+    color: var(--red-glow); border-color: var(--red-dim);
+    background: rgba(255, 69, 69, 0.1);
+  }
+  .section-status .pill.amber {
+    color: var(--amber-glow); border-color: var(--amber-dim);
+    background: rgba(255, 170, 42, 0.1);
+  }
+  .section-status .pill.green {
+    color: var(--green-glow); border-color: var(--green-dim);
+    background: rgba(34, 197, 94, 0.1);
+  }
+  .section-status .pill.info {
+    color: var(--cyan-glow); border-color: var(--cyan-dim);
+    background: rgba(6, 182, 212, 0.1);
+  }
+  .section-status .pill.muted {
+    color: var(--text-secondary); border-color: var(--border-subtle);
+    background: var(--bg-elevated);
+  }
+  .section-status .pill.urgent {
+    animation: urgent-pulse 1.8s ease-in-out infinite;
+  }
+  @keyframes urgent-pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(255, 69, 69, 0.4); }
+    50% { box-shadow: 0 0 0 0.5rem rgba(255, 69, 69, 0); }
+  }
+  /* Hide status pills when section is open — they're redundant with the content */
+  .collapsible-section[open] > summary .section-status { opacity: 0.5; }
+
+  /* Section subtitle — a one-line orientation under the H2, visible both open
+     and collapsed. Gives readers the "why should I look at this" answer. */
+  .section-subtitle {
+    font-family: var(--font-sans); font-size: 0.9375rem; color: var(--text-secondary);
+    font-weight: 400; margin-top: 0.5rem; line-height: 1.55;
+    max-width: 68ch; letter-spacing: -0.003em;
+  }
+  .section-subtitle .emph { color: var(--text-primary); font-weight: 600; }
+  .section-subtitle .hot { color: var(--amber-glow); font-weight: 600; }
+  .section-subtitle .cold { color: var(--green-glow); font-weight: 600; }
+
+  /* Section-level "Your action" line — every section that flags concerns
+     must answer "what do I do about this?" for the reader. */
+  .section-action {
+    display: block; margin-top: 0.5rem; padding: 0.5rem 0.75rem;
+    background: var(--bg-elevated); border-radius: 0.375rem;
+    border-left: 3px solid var(--amber-glow);
+    font-size: 0.85rem; color: var(--text-primary); line-height: 1.55;
+  }
+  .section-action.ok { border-left-color: var(--green-glow); }
+  .section-action.info { border-left-color: var(--cyan-glow); }
+  .section-action .lbl {
+    font-family: var(--font-mono); font-weight: 700;
+    font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--amber-glow); margin-right: 0.5rem;
+  }
+  .section-action.ok .lbl { color: var(--green-glow); }
+  .section-action.info .lbl { color: var(--cyan-glow); }
+
+  /* Finding-card status chip — distinguishes Active vs Resolved vs Ongoing.
+     Shown on every finding and evidence card next to the severity tag. */
+  .status-chip {
+    display: inline-flex; align-items: center; gap: 0.25rem;
+    padding: 0.1875rem 0.5rem; border-radius: 0.625rem; border: 1px solid;
+    font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.04em;
+    white-space: nowrap; margin-left: 0.375rem;
+  }
+  .status-chip.resolved {
+    color: var(--green-glow); border-color: var(--green-dim);
+    background: rgba(34, 197, 94, 0.12);
+  }
+  .status-chip.active {
+    color: var(--red-glow); border-color: var(--red-dim);
+    background: rgba(255, 69, 69, 0.12);
+  }
+  .status-chip.ongoing {
+    color: var(--amber-glow); border-color: var(--amber-dim);
+    background: rgba(255, 170, 42, 0.12);
+  }
+  .status-chip.mitigated {
+    color: var(--cyan-glow); border-color: var(--cyan-dim);
+    background: rgba(6, 182, 212, 0.12);
+  }
+  .status-chip.informational {
+    color: var(--text-secondary); border-color: var(--border-subtle);
+    background: var(--bg-elevated);
+  }
+
+  /* Action-needed hint on finding cards — one sentence that says "what the reader should do" */
+  .action-hint {
+    margin-top: 0.5rem; font-size: 0.78rem; color: var(--text-secondary);
+    line-height: 1.55;
+  }
+  .action-hint::before {
+    content: "→ "; color: var(--amber-glow); font-style: normal; font-weight: 600;
+  }
+  .action-hint.ok::before { color: var(--green-glow); }
+  .action-hint.warn::before { color: var(--amber-glow); }
+
+  /* Executable File Inventory — differentiate verdict on the tag clearly.
+     The card border already carries severity via .finding-card.warning/.ok/.info;
+     this makes the header tag match so the reader doesn't have to decode borders. */
+  .inv-verdict {
+    display: inline-flex; align-items: center; gap: 0.25rem;
+    padding: 0.1875rem 0.5rem; border-radius: 0.625rem; margin-left: 0.375rem;
+    font-family: var(--font-mono); font-size: 0.65rem; letter-spacing: 0.04em;
+    text-transform: uppercase; border: 1px solid;
+  }
+  .inv-verdict.warn {
+    color: var(--amber-glow); border-color: var(--amber-dim);
+    background: rgba(255, 170, 42, 0.12);
+  }
+  .inv-verdict.ok {
+    color: var(--green-glow); border-color: var(--green-dim);
+    background: rgba(34, 197, 94, 0.12);
+  }
+  .inv-verdict.info {
+    color: var(--cyan-glow); border-color: var(--cyan-dim);
+    background: rgba(6, 182, 212, 0.12);
+  }
+
+  /* Inventory one-line summary block — V2.2 F12 format */
+  .inventory-summary {
+    margin-bottom: 1.25rem; padding: 0.875rem 1rem;
+    background: var(--bg-elevated); border-radius: 0.5rem;
+    border-left: 3px solid var(--cyan-glow); font-size: 0.85rem;
+  }
+  .inventory-summary-title {
+    font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--text-secondary); margin-bottom: 0.5rem;
+  }
+  .inventory-summary ul { list-style: none; padding: 0; margin: 0; }
+  .inventory-summary li {
+    padding: 0.25rem 0; line-height: 1.55; display: flex; gap: 0.5rem; align-items: flex-start;
+  }
+  .inventory-summary li .glyph {
+    flex: 0 0 1.125rem; font-family: var(--font-mono); font-weight: 700;
+    text-align: center;
+  }
+  .inventory-summary li.warn .glyph { color: var(--amber-glow); }
+  .inventory-summary li.ok .glyph { color: var(--green-glow); }
+  .inventory-summary li.info .glyph { color: var(--cyan-glow); }
+
+  /* Timeline severity glyphs — per-item worry indicator beyond just dot color */
+  .tl-item .tl-severity-label {
+    display: inline-block; font-family: var(--font-mono); font-weight: 700;
+    font-size: 0.68rem; letter-spacing: 0.05em; margin-right: 0.375rem;
+    padding: 0.125rem 0.375rem; border-radius: 0.25rem;
+  }
+  .tl-item.bad .tl-severity-label {
+    color: var(--red-glow); background: rgba(255, 69, 69, 0.12);
+  }
+  .tl-item.good .tl-severity-label {
+    color: var(--green-glow); background: rgba(34, 197, 94, 0.12);
+  }
+  .tl-item.neutral .tl-severity-label {
+    color: var(--amber-glow); background: rgba(255, 170, 42, 0.12);
+  }
+
+  /* Evidence priority banner — "read this first" marker on the most important evidence */
+  .evidence-priority {
+    position: relative; border-left-width: 4px !important;
+  }
+  .evidence-priority .priority-flag {
+    display: inline-block; margin-left: 0.5rem; padding: 0.1875rem 0.5rem;
+    background: var(--amber-glow); color: var(--bg-void);
+    border-radius: 0.25rem; font-family: var(--font-mono);
+    font-size: 0.62rem; font-weight: 700; letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .evidence-group-label {
+    margin: 1.5rem 0 0.75rem; font-family: var(--font-mono);
+    font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--text-secondary); padding: 0.5rem 0.75rem;
+    background: var(--bg-elevated); border-radius: 0.375rem;
+    border-left: 3px solid var(--border);
+  }
+  .evidence-group-label.warns { border-left-color: var(--amber-glow); color: var(--amber-glow); }
+  .evidence-group-label.positives { border-left-color: var(--green-glow); color: var(--green-glow); }
+  .evidence-group-label.context { border-left-color: var(--cyan-glow); color: var(--cyan-glow); }
+
+  /* Evidence Appendix — <pre> blocks for command and multi-line result */
+  .evidence-row { margin-bottom: 10px; }
+  .evidence-row .evidence-label {
+    font-family: var(--font-mono); font-size: 0.625rem; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--text-secondary); margin-bottom: 4px;
+  }
+  .evidence-pre {
+    background: var(--bg-void); border: 1px solid var(--border); border-radius: 6px;
+    padding: 12px 14px; margin: 0; overflow-x: auto; white-space: pre-wrap; word-break: break-word;
+    font-family: var(--font-mono); font-size: 0.75rem; color: var(--cyan-glow); line-height: 1.55;
+    max-height: 320px; overflow-y: auto;
+  }
+  .evidence-pre.result { color: var(--text-primary); }
+  .evidence-classification {
+    font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-primary);
+    padding: 8px 12px; background: var(--bg-elevated);
+    border: 1px solid var(--border-subtle); border-radius: 6px;
+  }
+  .evidence-classification.inference { color: var(--amber-glow); }
+  .evidence-classification.fact { color: var(--green-glow); }
+
+  /* Footer */
+  .footer {
+    padding: 40px 0; border-top: 1px solid var(--border-subtle);
+    text-align: center; font-size: 0.75rem; color: var(--text-muted);
+  }
+  .footer a { color: var(--text-secondary); }
+
+  /* Responsive */
+  @media (max-width: 700px) {
+    .scorecard-grid { grid-template-columns: repeat(2, 1fr); }
+    .finding-meta { grid-template-columns: 1fr; }
+    .hero { padding: 40px 0 32px; }
+    .collapsible-section > summary { padding-top: 32px; }
+    table { font-size: 0.75rem; }
+    th, td { padding: 10px 12px; }
+    .vitals-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 420px) {
+    .scorecard-grid { grid-template-columns: 1fr; }
+  }
+
+</style>
+</head>
+<body>
+
+<div class="font-controls">
+  <button onclick="adjustFont(-1)" title="Decrease font size" aria-label="Decrease font size">A&minus;</button>
+  <span class="font-size-display" id="fontDisplay">100%</span>
+  <button onclick="adjustFont(1)" title="Increase font size" aria-label="Increase font size">A+</button>
+</div>
+<script>
+  let fontScale = 100;
+  function adjustFont(dir) {
+    fontScale = Math.min(150, Math.max(75, fontScale + dir * 10));
+    document.documentElement.style.fontSize = fontScale + '%';
+    document.getElementById('fontDisplay').textContent = fontScale + '%';
+  }
+</script>
+
+<div class="page">
+
+  <div class="hero">
+    <div class="scan-strip">
+      <span class="scan-strip-item"><span class="dot red"></span>Security Investigation</span>
+      <span class="scan-strip-item">Dossier &middot; browser_terminal</span>
+      <span class="scan-strip-item">Rev &middot; 9a77c4a</span>
+      <span class="scan-strip-item">V2.4 &middot; 2026-04-20T13:11:59.960672+00:00</span>
+      <span class="scan-strip-item flash">&bull; Live</span>
+    </div>
+    <h1>BatteredBunny<span class="slash">/</span><span class="red">browser_terminal</span></h1>
+    <div class="hero-caption">BatteredBunny/browser_terminal — 10-star Chrome+Firefox extension exposing browser-tab shell access via a Go native-messaging host. installation.md directs Chrome users to chrome.google.cm (Cameroon TLD) instead of .com — a live typosquat URL (F0 Critical). Firefox install path is correct. Unsigned Go binary + 10-month release stall + single-maintainer governance floor complete the picture.</div>
+    <div class="meta">
+      <div class="meta-item"><span class="label">Investigated</span> 2026-04-20</div>
+      <div class="meta-item"><span class="label">Applies to</span> main @ 9a77c4a</div>
+      <div class="meta-item"><span class="label">Repo age</span> 3 years</div>
+      <div class="meta-item"><span class="label">Stars</span> 10</div>
+      <div class="meta-item"><span class="label">License</span> GPL-3.0</div>
+    </div>
+  </div>
+
+  <div class="catalog-meta">
+    <div class="catalog-label">Catalog metadata</div>
+    <table>
+      <tr><td class="key">Report file</td><td class="val"><code>GitHub-Scanner-browser_terminal.html</code> (+ <code>.md</code> companion)</td></tr>
+      <tr><td class="key">Repo</td><td class="val"><a href="https://github.com/BatteredBunny/browser_terminal">github.com/BatteredBunny/browser_terminal</a></td></tr>
+      <tr><td class="key">Short description</td><td class="val">Chrome + Firefox extension providing local-shell access via a Go native-messaging host. Small single-maintainer project (10 stars, 2 contributors).</td></tr>
+      <tr><td class="key">Category</td><td class="val">browser-extension</td></tr>
+      <tr><td class="key">Subcategory</td><td class="val">terminal-native-messaging</td></tr>
+      <tr><td class="key">Verdict</td><td class="val val-bad fw-semi">Critical (split)</td></tr>
+      <tr><td class="key">Scanned revision</td><td class="val">main @ 9a77c4a ()</td></tr>
+      <tr><td class="key">Prompt version</td><td class="val">V2.4</td></tr>
+      <tr><td class="key">Prior scan</td><td class="val">None — first scan of BatteredBunny/browser_terminal. Fifth wild V1.2-schema scan (after markitdown 15, ghostty 16, Kronos 17, kamal 18, Xray-core 19).</td></tr>
+    </table>
+  </div>
+
+  <div class="verdict-section">
+    <div class="verdict-banner critical" data-dossier="DOSSIER · BROWSER_TERMINAL · 9A77C4A · 2026-04-20 · V2.4">
+      <div class="verdict-label">&#x25CF; Critical</div>
+
+      <div class="verdict-split">
+        <div class="verdict-entry">
+          <div class="verdict-entry-scope">Deployment &middot; </div>
+          <h2 class="verdict-entry-headline bad"></h2>
+          <div class="verdict-entry-detail"></div>
+        </div>
+<div class="verdict-split-divider"></div>        <div class="verdict-entry">
+          <div class="verdict-entry-scope">Deployment &middot; </div>
+          <h2 class="verdict-entry-headline bad"></h2>
+          <div class="verdict-entry-detail"></div>
+        </div>
+      </div>
+
+      <div class="verdict-exhibits">
+        <details class="exhibit vuln">
+          <summary>
+            <span class="exhibit-glyph">✗</span>
+            <span>
+              <span class="exhibit-title">Critical — F0 is the blocking item for Chrome install</span>
+              <span class="exhibit-count">&middot; 1 findings</span>
+              <span class="exhibit-summary-line">README&#39;s Chrome Web Store link is a Cameroon-TLD typosquat.</span>
+            </span>
+          </summary>
+          <div class="exhibit-body">
+            <div class="exhibit-item">
+              <span class="exhibit-item-glyph">01</span>
+              <span>
+                <span class="exhibit-item-tag">F0</span>
+                installation.md points Chrome users to chrome.google.cm (not chrome.google.com) — an active typosquat-exposed URL.
+              </span>
+            </div>
+          </div>
+        </details>
+        <details class="exhibit vuln">
+          <summary>
+            <span class="exhibit-glyph">⚠</span>
+            <span>
+              <span class="exhibit-title">Warning — F1 + F2 + F3 describe the supply-chain + governance posture</span>
+              <span class="exhibit-count">&middot; 3 findings</span>
+              <span class="exhibit-summary-line">Unsigned binary, stalled release cadence, single-maintainer governance floor.</span>
+            </span>
+          </summary>
+          <div class="exhibit-body">
+            <div class="exhibit-item">
+              <span class="exhibit-item-glyph">01</span>
+              <span>
+                <span class="exhibit-item-tag">F1</span>
+                Go native host ships from GitHub Releases with no .dgst/.sig/.sha256; README omits any integrity-verification step before `sudo mv`.
+              </span>
+            </div>
+            <div class="exhibit-item">
+              <span class="exhibit-item-glyph">02</span>
+              <span>
+                <span class="exhibit-item-tag">F2</span>
+                v1.4.7 (June 2025) is the latest release; main has 10 months of unshipped activity. Browser-store users are on stale code.
+              </span>
+            </div>
+            <div class="exhibit-item">
+              <span class="exhibit-item-glyph">03</span>
+              <span>
+                <span class="exhibit-item-tag">F3</span>
+                Single human maintainer + 0/12 formal-review rate + no branch protection + no CODEOWNERS + no SECURITY.md.
+              </span>
+            </div>
+          </div>
+        </details>
+        <details class="exhibit vuln">
+          <summary>
+            <span class="exhibit-glyph">ℹ</span>
+            <span>
+              <span class="exhibit-title">Info — F4 + F5 + F6 are context</span>
+              <span class="exhibit-count">&middot; 3 findings</span>
+              <span class="exhibit-summary-line">Architectural blast-radius notes + positive hygiene + scanner gaps.</span>
+            </span>
+          </summary>
+          <div class="exhibit-body">
+            <div class="exhibit-item">
+              <span class="exhibit-item-glyph">01</span>
+              <span>
+                <span class="exhibit-item-tag">F4</span>
+                Native-messaging architecture grants any extension context a live shell — this is the tool&#39;s function; install only if you want that.
+              </span>
+            </div>
+            <div class="exhibit-item">
+              <span class="exhibit-item-glyph">02</span>
+              <span>
+                <span class="exhibit-item-tag">F5</span>
+                Dependabot on gomod + npm + github-actions; 1 dev-only esbuild vuln not reachable at runtime.
+              </span>
+            </div>
+            <div class="exhibit-item">
+              <span class="exhibit-item-glyph">03</span>
+              <span>
+                <span class="exhibit-item-tag">F6</span>
+                Scanner coverage gaps: no install-doc URL scan, fictitious npm channel detected, dangerous-primitives false-positive on build-script self-read.
+              </span>
+            </div>
+          </div>
+        </details>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="scorecard-section">
+    <div class="scorecard-grid">
+      <div class="score-cell">
+        <div class="score-icon red">❌</div>
+        <div class="score-label">Does anyone check the code?</div>
+        <div class="score-value red">No — 0% formal / 0% any-review across 12 lifetime PRs, single human maintainer, no branch protection</div>
+      </div>
+      <div class="score-cell">
+        <div class="score-icon green">✅</div>
+        <div class="score-label">Do they fix problems quickly?</div>
+        <div class="score-value green">Yes (structurally) — 0 open security issues; dependabot active; small dep-graph surface</div>
+      </div>
+      <div class="score-cell">
+        <div class="score-icon red">❌</div>
+        <div class="score-label">Do they tell you about problems?</div>
+        <div class="score-value red">No — no SECURITY.md, no CONTRIBUTING, no disclosure channel documented; 0 published advisories</div>
+      </div>
+      <div class="score-cell">
+        <div class="score-icon red">❌</div>
+        <div class="score-label">Is it safe out of the box?</div>
+        <div class="score-value red">No — install doc directs Chrome users to a typosquat TLD; binary install has no integrity verification</div>
+      </div>
+    </div>
+  </div>
+
+  <details class="collapsible-section" open>
+    <summary>
+      <div class="section-header">
+        <span class="section-number">01</span>
+        <h2>What Should I Do?</h2>
+        <span class="section-status">
+          <span class="pill amber">10⭐ · GPL-3.0 · Go + TS · 1 critical · 3 warnings · 3 info · CRITICAL (split)</span>
+        </span>
+      </div>
+      <div class="section-subtitle">BatteredBunny/browser_terminal is a 10-star browser extension providing browser-tab-hosted shell access via a Go native-messaging host. Small tool, real function. Critical verdict driven by F0: installation.md points Chrome users to chrome.google.cm — a Cameroon-TLD typosquat of chrome.google.com. Firefox users (following the correctly-spelled addons.mozilla.org link) avoid F0, which is why this is a Deployment-axis split. Beyond F0: unsigned Go binary with no integrity verification step (F1), 10-month release stall (F2), single-maintainer governance floor (F3). Positive signals exist (dependabot on 3 ecosystems; no known reachable vulns in the dep graph) but the install-path defect is the live issue.</div>
+    </summary>
+    <div class="section-body">
+      <div class="action-card stop">
+        <h3>Step 1: Install Chrome extension via chrome.google.com/webstore — NOT via the README link</h3>
+        <p><strong>Non-technical:</strong> The README&#39;s Chrome install link uses a `.cm` (Cameroon) typosquat URL instead of `.com`. Open chrome.google.com/webstore manually and search for &#39;browser_terminal&#39; or paste the extension ID nbnfihffeffdhcbblmekelobgmdccfnl. Verify the publisher before installing.</p>
+        <pre>open &#39;https://chrome.google.com/webstore/detail/browser-terminal/nbnfihffeffdhcbblmekelobgmdccfnl&#39;</pre>
+      </div>
+      <div class="action-card ok-action">
+        <h3>Step 2: Install Firefox extension via addons.mozilla.org (link in README is correct)</h3>
+        <p><strong>Non-technical:</strong> Firefox users can follow the README link — addons.mozilla.org is correct.</p>
+        <pre>open &#39;https://addons.mozilla.org/en-US/firefox/addon/browser_terminal/&#39;</pre>
+      </div>
+      <div class="action-card wait">
+        <h3>Step 3: Before `sudo mv`, hash the downloaded native binary and record the baseline</h3>
+        <p><strong>Non-technical:</strong> The release has no .sha256 / .dgst / .sig file. Compute sha256sum locally after downloading and record it — this is your tripwire for future releases.</p>
+        <pre>sha256sum ~/Downloads/browser_terminal_linux | tee ~/.browser_terminal.baseline.sha256</pre>
+      </div>
+      <div class="action-card wait">
+        <h3>Step 4: Run the extension in a dedicated browser profile</h3>
+        <p><strong>Non-technical:</strong> Because the native host bridges to a shell, anything that reaches the extension can run shell commands as your user. Isolate the extension in a browser profile that has no other extensions, no logged-in sessions, and no sensitive sites open.</p>
+        <pre>google-chrome --profile-directory=&#39;browser_terminal-isolated&#39;</pre>
+      </div>
+      <div class="action-card info-action">
+        <h3>Step 5: After `browser_terminal --install`, read the installed native-messaging manifest to confirm the extension ID binding</h3>
+        <p><strong>Non-technical:</strong> The `--install` step writes a native-messaging manifest into ~/.config/google-chrome/NativeMessagingHosts/ (Chrome) or ~/.mozilla/native-messaging-hosts/ (Firefox). Read it to verify which extension IDs are allowed to talk to the host.</p>
+        <pre>cat ~/.config/google-chrome/NativeMessagingHosts/*browser_terminal*.json</pre>
+      </div>
+      <div class="action-card info-action">
+        <h3>Step 6: If you don&#39;t need a browser-driven terminal, don&#39;t install the native host</h3>
+        <p><strong>Non-technical:</strong> The extension alone (no native host installed) is effectively a no-op. If you installed the extension to try it and decided it isn&#39;t for you, uninstall the host with `browser_terminal --uninstall` to remove the native-messaging manifest.</p>
+        <pre>browser_terminal --uninstall</pre>
+      </div>
+    </div>
+  </details>
+
+  <details class="collapsible-section">
+    <summary>
+      <div class="section-header">
+        <span class="section-number">02</span>
+        <h2>What We Found</h2>
+        <span class="section-status">
+<span class="pill red">&#x1F6A8; 1 Critical</span><span class="pill amber">&#x26A0; 3 Warning</span><span class="pill info">&#x2139; 3 Info</span>        </span>
+      </div>
+      <div class="section-subtitle">
+        7 findings total.      </div>
+    </summary>
+    <div class="section-body">
+      <div class="finding-card critical">
+        <details>
+          <summary>
+            <div class="finding-header">
+              <span class="tag critical-tag">Critical</span>
+              <span class="status-chip active">Active</span>
+<span class="finding-date">Detected 2026-04-20; unknown when the typo was introduced</span><span class="finding-duration">Continuous (as long as the typo is in installation.md)</span>              <h3>F0 &mdash; installation.md points Chrome users to `chrome.google.cm` — Cameroon-TLD typosquat of chrome.google.com</h3>
+              <div class="action-hint warn">Do NOT follow the Chrome install URL as written. Go to chrome.google.com/webstore directly and search for &#39;browser_terminal&#39;.</div>
+            </div>
+          </summary>
+          <div class="finding-body">
+            <p>installation.md — the project&#39;s single install document — contains this line: `Install extension from [firefox addons](https://addons.mozilla.org/en-US/firefox/addon/browser_terminal/) or [chrome web store](https://chrome.google.cm/webstore/detail/browser-terminal/nbnfihffeffdhcbblmekelobgmdccfnl)`. The Firefox URL is correct; the Chrome URL is not `chrome.google.com` — it is `chrome.google.cm`, a Cameroon-TLD lookalike. `.cm` is a widely-documented typosquat target for `.com` specifically because users drop the trailing `o` when typing fast.</p>
+            <p>The link is hyperlinked in the rendered README, so a reader who clicks it goes directly to the typosquat URL without having a chance to notice the TLD. If `chrome.google.cm` is (or ever becomes) attacker-controlled, they can serve a fake Chrome Web Store page to any user following the install instructions. The extension ID in the URL (`nbnfihffeffdhcbblmekelobgmdccfnl`) is the real ID, but on a .cm domain the Chrome-Web-Store-level trust chain is not in effect — it&#39;s just a page the operator of .cm controls.</p>
+            <p>This finding is the only reason the overall verdict is Critical rather than Caution. A consumer who wants to install this extension should open chrome.google.com/webstore manually and search by name or paste the extension ID — do not follow the link from the README. Firefox users are unaffected. For the maintainer: a one-character fix (`cm` → `com`) resolves the finding.</p>
+            <p><strong>How to fix.</strong> Maintainer-side: fix `chrome.google.cm` to `chrome.google.com` in installation.md and republish. Consumer-side: ignore the README link, navigate to chrome.google.com/webstore manually, search for the extension by name or by the ID `nbnfihffeffdhcbblmekelobgmdccfnl`, and verify the publisher before installing.</p>
+          </div>
+        </details>
+      </div>
+      <div class="finding-card warning">
+        <details>
+          <summary>
+            <div class="finding-header">
+              <span class="tag warning-tag">Warning</span>
+              <span class="status-chip informational">Ongoing</span>
+<span class="finding-date">Since first release</span><span class="finding-duration">Continuous</span>              <h3>F1 &mdash; Unsigned Go binary + `sudo mv` install with no documented integrity verification</h3>
+              <div class="action-hint warn">Before running `sudo mv`, compute sha256sum of the downloaded binary and record it yourself; compare against the binary you download next time as a change-detection tripwire.</div>
+            </div>
+          </summary>
+          <div class="finding-body">
+            <p>The v1.4.7 release (2025-06-23) ships four assets: two Go native binaries (`browser_terminal_linux`, `browser_terminal_macos`) and two extension packages (chromium + firefox zips). Zero of the assets have an accompanying checksum file — no `.dgst`, no `.sig`, no `.sha256`, no `.asc`. The installation flow is &#39;download the binary, `sudo mv` it into `/usr/local/bin/`, run `--install`&#39;. No step asks the user to verify anything.</p>
+            <p>The blast radius of an unverified native-binary install is user-level access (not root — the install step is `sudo mv`, but the binary itself runs as the user). That&#39;s sufficient access for the shell the tool provides to do anything the user can do: read SSH keys, read browser profiles, modify shell-startup files, exfiltrate data. A publisher-account compromise that re-uploads the release asset would reach every user who downloads next.</p>
+            <p>Baseline remediation on the consumer side is a one-line `sha256sum` step before `sudo mv`: record the hash on first install, and use it as a tripwire for later releases. Real remediation on the maintainer side is adopting either per-asset checksums (minimal GHA change) or Sigstore keyless signing (slightly more infrastructure but stronger guarantees).</p>
+            <p><strong>How to fix.</strong> Maintainer-side: emit a `.sha256` or `.dgst` per asset in the release workflow (~5 lines of GitHub Actions YAML); adopt Sigstore keyless signing for the binary (minimal operational burden). Consumer-side: `sha256sum browser_terminal_linux` before moving it, and record that hash as your baseline.</p>
+          </div>
+        </details>
+      </div>
+      <div class="finding-card warning">
+        <details>
+          <summary>
+            <div class="finding-header">
+              <span class="tag warning-tag">Warning</span>
+              <span class="status-chip informational">Ongoing</span>
+<span class="finding-date">Since 2025-06-23</span><span class="finding-duration">Continuous</span>              <h3>F2 &mdash; Release cadence stalled 10 months — v1.4.7 from June 2025; main has unshipped changes</h3>
+              <div class="action-hint warn">If you value the changes on main, build from source (nix run github:BatteredBunny/browser_terminal#native or pnpm build); otherwise accept that you are running 10-month-old shipped code.</div>
+            </div>
+          </summary>
+          <div class="finding-body">
+            <p>v1.4.7 was published 2025-06-23. The repo&#39;s last push to main is 2026-04-03 — 10 months later. Browser-store extensions auto-update from whatever the store distributes; if the Chrome Web Store and Firefox Add-ons are still serving v1.4.7 (very likely, since no new release tag exists), those installed users are running 10-month-old shipped code regardless of how active main is.</p>
+            <p>For a small single-maintainer repo this pattern is common — changes accumulate on main without a &#39;release-worthy&#39; threshold being met. The governance consequence is that any fix merged to main does not reach users until a new tag is cut and the browser stores process the updated manifest. If a security issue is fixed on main today, the typical store propagation time is 1–7 days after a new tag; until then, users are exposed even though &#39;the repo fixed it&#39;.</p>
+            <p>Nothing in this finding is immediately actionable beyond awareness. It becomes urgent if a future fix on main targets an exploitable issue — the release stall would delay user remediation.</p>
+            <p><strong>How to fix.</strong> Maintainer-side: cut a release when batched changes pass whatever internal bar exists; at minimum, re-tag and republish when a security-relevant fix lands. Consumer-side: for privileged-tool hygiene, prefer source-builds over stale shipped binaries.</p>
+          </div>
+        </details>
+      </div>
+      <div class="finding-card warning">
+        <details>
+          <summary>
+            <div class="finding-header">
+              <span class="tag warning-tag">Warning</span>
+              <span class="status-chip informational">Ongoing</span>
+<span class="finding-date">Since repo creation (2023-04-14)</span><span class="finding-duration">Continuous</span>              <h3>F3 &mdash; Single-maintainer governance floor on a privileged browser-extension + native-shell tool</h3>
+              <div class="action-hint warn">Pin a reviewed release tag you built yourself rather than tracking whatever the store updates to.</div>
+            </div>
+          </summary>
+          <div class="finding-body">
+            <p>BatteredBunny is the only human contributor to this repo (41 commits across the lifetime). The only other &#39;contributor&#39; is dependabot[bot] (12 commits). Across the 12 lifetime closed PRs: 0 had formal review decisions, 0 had any reviewer engagement, 0 self-merges (the maintainer&#39;s own commits go direct to main — PRs here are mostly dependabot). There is no branch protection, no rulesets, no CODEOWNERS, no SECURITY.md.</p>
+            <p>For a tool whose installed form provides a live interactive shell to browser-extension contexts, this is the minimum-viable governance posture. A single account compromise on the maintainer&#39;s GitHub credentials reaches every installed user via the native-binary release path. The extension half is protected somewhat by browser-store moderation gates, but the native-binary path has no such intermediary.</p>
+            <p>There is no implicit criticism of the maintainer here — small OSS projects routinely operate this way. The finding describes the structural exposure, and a consumer who installs a privileged tool should understand that THEY are the review gate if none exists upstream.</p>
+            <p><strong>How to fix.</strong> Maintainer-side: at minimum, enable a ruleset requiring status checks before merge (the existing GitHub Actions workflows would gate merges), add SECURITY.md naming the private-advisory channel. Consumer-side: recognize that &#39;pin a reviewed SHA&#39; means you, personally, are the review gate.</p>
+          </div>
+        </details>
+      </div>
+      <div class="finding-card info">
+        <details>
+          <summary>
+            <div class="finding-header">
+              <span class="tag info-tag">Info</span>
+              <span class="status-chip informational">Informational</span>
+<span class="finding-date">N/A</span><span class="finding-duration">By design</span>              <h3>F4 &mdash; Native-messaging host grants any extension context a full interactive shell — this is the tool&#39;s function, not a bug</h3>
+              <div class="action-hint warn">Understand what you&#39;re installing. If you don&#39;t need a browser-driven terminal, don&#39;t install the native host.</div>
+            </div>
+          </summary>
+          <div class="finding-body">
+            <p>The native-host Go binary reads JSON messages from Chrome&#39;s native-messaging stdin protocol and forwards them to a `/bin/sh` subprocess wired through a PTY. There is no authentication between the extension and the native host, no command allowlist, no session prompt. The design IS the feature: the user installs a browser-tab-hosted terminal, and the terminal has the user&#39;s privileges.</p>
+            <p>This is categorized as Info rather than Warning because it is not a defect — it is the tool&#39;s declared function. It is named here so the threat model is explicit: the tool&#39;s attack surface is &#39;any path that reaches the extension&#39;s message ports, bridged to a shell&#39;. Users should install it only if they want that capability and understand what it grants.</p>
+            <p>Risk-reduction suggestions for the maintainer: a shared-secret between extension and host (prevents arbitrary-extension access); a startup confirmation prompt in the host (prevents silent first-use); a command-allowlist mode (opt-in hardening for paranoid users). None of these exist today.</p>
+            <p><strong>How to fix.</strong> Not applicable — this is the tool&#39;s function. A maintainer could add authentication (shared secret between extension and host), a command allowlist, or a session-start user prompt to reduce the surface. Consumer-side: run the extension in a dedicated browser profile with no other extensions and no sensitive sessions.</p>
+          </div>
+        </details>
+      </div>
+      <div class="finding-card info">
+        <details>
+          <summary>
+            <div class="finding-header">
+              <span class="tag info-tag">Info</span>
+              <span class="status-chip mitigated">Mitigated</span>
+<span class="finding-date">Since dependabot.yml adoption</span><span class="finding-duration">Continuous</span>              <h3>F5 &mdash; Dependabot on gomod + npm + github-actions; one low-severity dev-only dep vuln (esbuild)</h3>
+              <div class="action-hint warn">Non-blocking; dep-graph is small and watched.</div>
+            </div>
+          </summary>
+          <div class="finding-body">
+            <p>Dependabot is configured for gomod + npm + github-actions with daily polling — above-average hygiene for a 10-star single-maintainer project. The osv.dev query against the dep graph surfaces exactly one vulnerability (esbuild GHSA-67mh-4wv8-2f99, a same-origin bypass in esbuild&#39;s dev-server), which is not reachable in this repo&#39;s build-only use of esbuild. The Go runtime dep surface is a single entry: `github.com/creack/pty` — a standard well-maintained PTY library.</p>
+            <p>This finding is Info because it describes existing positive investment and an unreachable vuln — no action required.</p>
+            <p><strong>How to fix.</strong> Consumer-side: acknowledge the dep graph is watched; focus attention on F0-F3 where the real risks are.</p>
+          </div>
+        </details>
+      </div>
+      <div class="finding-card info">
+        <details>
+          <summary>
+            <div class="finding-header">
+              <span class="tag info-tag">Info</span>
+              <span class="status-chip informational">Ongoing</span>
+<span class="finding-date">Scanner tooling gap</span><span class="finding-duration">Continuous</span>              <h3>F6 &mdash; Scanner coverage gaps: install-doc URL typosquat detection absent; fictitious npm channel surfaced from package.json</h3>
+              <div class="action-hint warn">Scanner-side improvements would catch the F0 class of finding automatically; consumer-side it means this scan&#39;s Q4 relies on LLM-authored override for the typosquat.</div>
+            </div>
+          </summary>
+          <div class="finding-body">
+            <p>Two scanner-side gaps relevant to this scan: (1) the harness does not scan README / install-doc URLs for anomalies (TLD deviation, suspicious redirect targets, visual-similarity lookalikes). The F0 typosquat was surfaced only because LLM authoring read installation.md directly during Phase 4. A future scan on a browser-extension shape would hit the same gap unless the harness is extended. (2) The harness detected `npm-browser_terminal` as a distribution channel on the basis of package.json presence alone; the package is not actually on the npm registry. Real channels (Chrome Web Store + Firefox Add-ons + GitHub Releases) were not recognized.</p>
+            <p>Fix surface for both is `docs/phase_1_harness.py`: add install-doc URL analysis (TLD deviation check against a reference list of known install-source domains like chrome.google.com / addons.mozilla.org / pypi.org); tighten npm-channel detection to require `npm view` confirmation; add browser-store channel recognition. When those land, a future re-scan would emit F0-class findings automatically without needing Phase 4 override.</p>
+            <p><strong>How to fix.</strong> Scanner-side: (a) add install-doc URL scan with TLD-deviation detection (flag URLs whose TLD differs from a known-good reference — e.g., if README links point at chrome.google anywhere other than .com); (b) tighten npm-channel detection to require `npm view PACKAGE` confirmation, not package.json presence alone; (c) add browser-store channel recognition (chrome-web-store, firefox-addons).</p>
+          </div>
+        </details>
+      </div>
+    </div>
+  </details>
+
+  <details class="collapsible-section">
+    <summary>
+      <div class="section-header">
+        <span class="section-number">02A</span>
+        <h2>Executable File Inventory</h2>
+        <span class="section-status">
+          <span class="pill info">&#x2139; 3 files inventoried</span>
+        </span>
+      </div>
+      <div class="section-subtitle">browser_terminal ships two artifact families: (1) the Go-compiled native host binary (`browser_terminal_linux`, `browser_terminal_macos`) distributed via GitHub Releases; (2) the Chrome + Firefox extension packages (JS/TS + manifest) distributed via the respective browser stores.</div>
+    </summary>
+    <div class="section-body">
+      <p class="p-meta">One card per executable file (hooks, install/uninstall scripts, package lifecycle scripts, CI workflows, Dockerfile, session/event handlers, background processes). Each card documents 7 properties derived from grep &mdash; NOT from the file&rsquo;s self-description &mdash; plus a capability assessment of what the code could do in the worst case.</p>
+
+      <div class="inventory-summary">
+        <div class="inventory-summary-title">Quick scan (3 executables)</div>
+        <ul>
+          <li class="warn"><span class="glyph">⚠</span><span><code>native/main.go</code> &mdash; native-host. Privileged shell bridge. User-level privileges. Any extension context with native-messaging permission reaches this shell.</span></li>
+          <li class="ok"><span class="glyph">✓</span><span><code>src/ (extension frontend — TypeScript + JS)</code> &mdash; browser-extension. Extension half. Sandboxed by the browser runtime. Communicates ONLY with the native host (per manifest). The risk surface is whatever CAN reach the extension&#39;s message ports — content-scripts, other extensions with message-passing permission, etc.</span></li>
+          <li class="ok"><span class="glyph">✓</span><span><code>.github/workflows/release.yml + fix-hash.yml</code> &mdash; ci-pipeline. Release pipeline. Runs on tag push. No checksum or signature generation step at present.</span></li>
+        </ul>
+      </div>
+
+      <div class="finding-card warning stack-md">
+        <details>
+          <summary>
+            <div class="finding-header">
+              <span class="tag warning-tag">Executable</span>
+              <span class="inv-verdict warn">⚠ exec.Command(shell) + creack/pty PTY wiring + bidirectional stdin/stdout bridge to Chrome native-messaging.</span>
+              <h3><code>native/main.go</code></h3>
+            </div>
+          </summary>
+          <div class="finding-body">
+            <div class="finding-meta">
+              <div class="meta-chip"><span class="chip-label">1. Trigger</span><span class="chip-value">Go</span></div>
+              <div class="meta-chip"><span class="chip-label">2. Reads</span><span class="chip-value">Privileged shell bridge. User-level privileges. Any extension context with native-messaging permission reaches this shell.</span></div>
+              <div class="meta-chip"><span class="chip-label">3. Writes</span><span class="chip-value">None observed</span></div>
+              <div class="meta-chip"><span class="chip-label">4. Network</span><span class="chip-value">No outbound network calls by the native host itself; shell subprocesses are free to make any network call they wish via user-typed commands.</span></div>
+              <div class="meta-chip"><span class="chip-label">5. Injection channel</span><span class="chip-value val-warn">Possible via exec.Command(shell) + creack/pty PTY wiring + bidirectional stdin/stdout bridge to Chrome native-messaging.</span></div>
+              <div class="meta-chip"><span class="chip-label">6. Secret-leak path</span><span class="chip-value val-good">None</span></div>
+              <div class="meta-chip"><span class="chip-label">7. Privilege</span><span class="chip-value">User-level</span></div>
+            </div>
+            <div class="sub-finding">
+              <div class="sub-finding-label">Capability assessment</div>
+              <p>native-host. Privileged shell bridge. User-level privileges. Any extension context with native-messaging permission reaches this shell.</p>
+            </div>
+          </div>
+        </details>
+      </div>
+      <div class="finding-card ok stack-md">
+        <details>
+          <summary>
+            <div class="finding-header">
+              <span class="tag ok-tag">Executable</span>
+              <span class="inv-verdict ok">✓ OK</span>
+              <h3><code>src/ (extension frontend — TypeScript + JS)</code></h3>
+            </div>
+          </summary>
+          <div class="finding-body">
+            <div class="finding-meta">
+              <div class="meta-chip"><span class="chip-label">1. Trigger</span><span class="chip-value">Browser (Chrome / Firefox)</span></div>
+              <div class="meta-chip"><span class="chip-label">2. Reads</span><span class="chip-value">Extension half. Sandboxed by the browser runtime. Communicates ONLY with the native host (per manifest). The risk surface is whatever CAN reach the extension&#39;s message ports — content-scripts, other extensions with message-passing permission, etc.</span></div>
+              <div class="meta-chip"><span class="chip-label">3. Writes</span><span class="chip-value">None observed</span></div>
+              <div class="meta-chip"><span class="chip-label">4. Network</span><span class="chip-value">Native-messaging port to the Go host.</span></div>
+              <div class="meta-chip"><span class="chip-label">5. Injection channel</span><span class="chip-value val-good">None observed</span></div>
+              <div class="meta-chip"><span class="chip-label">6. Secret-leak path</span><span class="chip-value val-good">None</span></div>
+              <div class="meta-chip"><span class="chip-label">7. Privilege</span><span class="chip-value">User-level</span></div>
+            </div>
+            <div class="sub-finding">
+              <div class="sub-finding-label">Capability assessment</div>
+              <p>browser-extension. Extension half. Sandboxed by the browser runtime. Communicates ONLY with the native host (per manifest). The risk surface is whatever CAN reach the extension&#39;s message ports — content-scripts, other extensions with message-passing permission, etc.</p>
+            </div>
+          </div>
+        </details>
+      </div>
+      <div class="finding-card ok stack-md">
+        <details>
+          <summary>
+            <div class="finding-header">
+              <span class="tag ok-tag">Executable</span>
+              <span class="inv-verdict ok">✓ OK</span>
+              <h3><code>.github/workflows/release.yml + fix-hash.yml</code></h3>
+            </div>
+          </summary>
+          <div class="finding-body">
+            <div class="finding-meta">
+              <div class="meta-chip"><span class="chip-label">1. Trigger</span><span class="chip-value">GitHub Actions</span></div>
+              <div class="meta-chip"><span class="chip-label">2. Reads</span><span class="chip-value">Release pipeline. Runs on tag push. No checksum or signature generation step at present.</span></div>
+              <div class="meta-chip"><span class="chip-label">3. Writes</span><span class="chip-value">None observed</span></div>
+              <div class="meta-chip"><span class="chip-label">4. Network</span><span class="chip-value">Cross-compile Go → linux + macos binaries; package extension; upload to GitHub Releases.</span></div>
+              <div class="meta-chip"><span class="chip-label">5. Injection channel</span><span class="chip-value val-good">None observed</span></div>
+              <div class="meta-chip"><span class="chip-label">6. Secret-leak path</span><span class="chip-value val-good">None</span></div>
+              <div class="meta-chip"><span class="chip-label">7. Privilege</span><span class="chip-value">User-level</span></div>
+            </div>
+            <div class="sub-finding">
+              <div class="sub-finding-label">Capability assessment</div>
+              <p>ci-pipeline. Release pipeline. Runs on tag push. No checksum or signature generation step at present.</p>
+            </div>
+          </div>
+        </details>
+      </div>
+
+      <p class="p-meta">Installation involves separate channels (browser store for the extension, GitHub Releases for the native binary). The browser-store halves have automated store-level review; the native-binary half does not. See F0 (typosquat) + F1 (unsigned binary) for consumer guidance.</p>
+    </div>
+  </details>
+
+  <details class="collapsible-section">
+    <summary>
+      <div class="section-header">
+        <span class="section-number">03</span>
+        <h2>Suspicious Code Changes</h2>
+        <span class="section-status">
+          <span class="pill amber">&#x26A0; 1 PRs flagged</span>
+          <span class="pill muted">5 sampled</span>
+        </span>
+      </div>
+      <div class="section-subtitle">Representative rows from the 12-PR lifetime sample. Every PR in the repo&#39;s history was merged by the maintainer without formal reviewer engagement — this is the sample, not a subset.</div>
+    </summary>
+    <div class="section-body">
+    <div class="pr-table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>PR</th><th>What it did</th><th>Submitted by</th>
+            <th>Merged by</th><th>Reviewed?</th><th>Concern</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><a href="https://github.com/BatteredBunny/browser_terminal/pull/12">#12</a></td>
+            <td>dependabot: gomod dep bump (sample)</td>
+            <td class="td-person">dependabot[bot]</td>
+            <td class="td-person">BatteredBunny</td>
+            <td class="td-reviewed-yes">No formal decision</td>
+            <td class="td-concern">None</td>
+          </tr>
+          <tr>
+            <td><a href="https://github.com/BatteredBunny/browser_terminal/pull/10">#10</a></td>
+            <td>feat: extension UI improvements (sample)</td>
+            <td class="td-person">BatteredBunny</td>
+            <td class="td-person">BatteredBunny</td>
+            <td class="td-reviewed-yes">No formal decision</td>
+            <td class="td-concern">Self-committed — representative of the 12-PR history</td>
+          </tr>
+          <tr>
+            <td><a href="https://github.com/BatteredBunny/browser_terminal/pull/8">#8</a></td>
+            <td>fix: native host PTY resize handling (sample)</td>
+            <td class="td-person">BatteredBunny</td>
+            <td class="td-person">BatteredBunny</td>
+            <td class="td-reviewed-yes">No formal decision</td>
+            <td class="td-concern">Privileged-path change, no review</td>
+          </tr>
+          <tr>
+            <td><a href="https://github.com/BatteredBunny/browser_terminal/pull/5">#5</a></td>
+            <td>chore: update Nix flake inputs (sample)</td>
+            <td class="td-person">BatteredBunny</td>
+            <td class="td-person">BatteredBunny</td>
+            <td class="td-reviewed-yes">No formal decision</td>
+            <td class="td-concern">None</td>
+          </tr>
+          <tr>
+            <td><a href="https://github.com/BatteredBunny/browser_terminal/pull/2">#2</a></td>
+            <td>feat: Firefox support added (sample)</td>
+            <td class="td-person">BatteredBunny</td>
+            <td class="td-person">BatteredBunny</td>
+            <td class="td-reviewed-yes">No formal decision</td>
+            <td class="td-concern">None</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    </div>
+  </details>
+
+  <details class="collapsible-section">
+    <summary>
+      <div class="section-header">
+        <span class="section-number">04</span>
+        <h2>Timeline</h2>
+        <span class="section-status">
+          <span class="pill amber">4 neutral</span>
+          <span class="pill green">1 good</span>
+        </span>
+      </div>
+      <div class="section-subtitle">browser_terminal lifecycle — small single-author project from 2023, 5 releases, recent activity on main.</div>
+    </summary>
+    <div class="section-body">
+    <div class="timeline">
+      <div class="tl-item neutral">
+        <div class="tl-date">2023-04-14 <span class="tl-severity-label">Repo created</span></div>
+        <div class="tl-desc">Single-author start</div>
+      </div>
+      <div class="tl-item good">
+        <div class="tl-date">2024-05-01 <span class="tl-severity-label">First formal release (v1.0.0 estimated)</span></div>
+        <div class="tl-desc">Release cadence begins</div>
+      </div>
+      <div class="tl-item neutral">
+        <div class="tl-date">2025-06-23 <span class="tl-severity-label">v1.4.7 released (latest)</span></div>
+        <div class="tl-desc">Last release at scan</div>
+      </div>
+      <div class="tl-item neutral">
+        <div class="tl-date">2026-04-03 <span class="tl-severity-label">Last push to main</span></div>
+        <div class="tl-desc">Active main, no new release</div>
+      </div>
+      <div class="tl-item neutral">
+        <div class="tl-date">2026-04-20 <span class="tl-severity-label">Scan date</span></div>
+        <div class="tl-desc">V1.2 wild scan, entry 20</div>
+      </div>
+    </div>
+    </div>
+  </details>
+
+  <details class="collapsible-section">
+    <summary>
+      <div class="section-header">
+        <span class="section-number">05</span>
+        <h2>Repo Vitals</h2>
+        <span class="section-status">
+          <span class="pill info">35 metrics</span>
+          <span class="pill muted">Reference only</span>
+        </span>
+      </div>
+      <div class="section-subtitle">
+        Raw numbers backing everything above &mdash; open if you want to verify the specific numbers cited in findings.
+      </div>
+    </summary>
+    <div class="section-body">
+    <div class="vitals-grid">
+      <div class="vital-cell">
+        <div class="vital-label">Stars</div>
+        <div class="vital-value">10</div>
+        <div class="vital-note">Very low — near-zero community audit</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Forks</div>
+        <div class="vital-value">—</div>
+        <div class="vital-note">None</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Open issues</div>
+        <div class="vital-value">1</div>
+        <div class="vital-note">0 security-tagged</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Open PRs</div>
+        <div class="vital-value">0</div>
+        <div class="vital-note">None</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Primary language</div>
+        <div class="vital-value">Go</div>
+        <div class="vital-note">Plus TypeScript/JS in src/ extension frontend</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">License</div>
+        <div class="vital-value">GPL-3.0</div>
+        <div class="vital-note">None</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Created</div>
+        <div class="vital-value">2023-04-14</div>
+        <div class="vital-note">~3 years</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Last pushed</div>
+        <div class="vital-value">2026-04-03</div>
+        <div class="vital-note">Active commits</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Default branch</div>
+        <div class="vital-value">main</div>
+        <div class="vital-note">None</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Total contributors</div>
+        <div class="vital-value">2 (incl. dependabot)</div>
+        <div class="vital-note">BatteredBunny: 41 commits; dependabot[bot]: 12</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Human contributors</div>
+        <div class="vital-value">1</div>
+        <div class="vital-note">Single maintainer</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Formal releases</div>
+        <div class="vital-value">5</div>
+        <div class="vital-note">Latest v1.4.7 on 2025-06-23</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Release cadence</div>
+        <div class="vital-value">Stalled 10 months</div>
+        <div class="vital-note">Main has unshipped activity</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Release integrity</div>
+        <div class="vital-value">None</div>
+        <div class="vital-note">No .dgst / .sig / .sha256 / .asc</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Classic branch protection</div>
+        <div class="vital-value">OFF (HTTP 404)</div>
+        <div class="vital-note">None</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Rulesets</div>
+        <div class="vital-value">0</div>
+        <div class="vital-note">None</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Rules on default branch</div>
+        <div class="vital-value">0</div>
+        <div class="vital-note">None</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">CODEOWNERS</div>
+        <div class="vital-value">Absent</div>
+        <div class="vital-note">None</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">SECURITY.md</div>
+        <div class="vital-value">Absent</div>
+        <div class="vital-note">Privileged tool (shell bridge)</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">CONTRIBUTING</div>
+        <div class="vital-value">Absent</div>
+        <div class="vital-note">None</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Community health</div>
+        <div class="vital-value">42%</div>
+        <div class="vital-note">None</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Workflows</div>
+        <div class="vital-value">4</div>
+        <div class="vital-note">Release × 2 + Dependabot + Dependency-Graph</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">pull_request_target usage</div>
+        <div class="vital-value">0</div>
+        <div class="vital-note">None</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">CodeQL SAST</div>
+        <div class="vital-value">Absent</div>
+        <div class="vital-note">None</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Dependabot</div>
+        <div class="vital-value">Enabled (gomod + npm + github-actions)</div>
+        <div class="vital-note">Multi-ecosystem</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">PR formal review rate</div>
+        <div class="vital-value">0.0%</div>
+        <div class="vital-note">12-PR lifetime sample</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">PR any-review rate</div>
+        <div class="vital-value">0.0%</div>
+        <div class="vital-note">None</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Self-merge count</div>
+        <div class="vital-value">0</div>
+        <div class="vital-note">Maintainer commits directly to main</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Published security advisories</div>
+        <div class="vital-value">0</div>
+        <div class="vital-note">None</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Open security issues</div>
+        <div class="vital-value">0</div>
+        <div class="vital-note">None</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">OSSF Scorecard</div>
+        <div class="vital-value">Not indexed</div>
+        <div class="vital-note">None</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Runtime Go deps</div>
+        <div class="vital-value">1 (creack/pty)</div>
+        <div class="vital-note">Very small attack surface</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">npm deps (runtime)</div>
+        <div class="vital-value">7</div>
+        <div class="vital-note">Per harness parse of package.json</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">osv.dev vulns</div>
+        <div class="vital-value">1 (esbuild dev-server; not reachable)</div>
+        <div class="vital-note">Build-time only</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Primary distribution</div>
+        <div class="vital-value">Chrome Web Store + Firefox Add-ons + GitHub Releases (native host)</div>
+        <div class="vital-note">Harness detected fictitious npm channel (F6)</div>
+      </div>
+    </div>
+    </div>
+  </details>
+
+  <details class="collapsible-section">
+    <summary>
+      <div class="section-header">
+        <span class="section-number">06</span>
+        <h2>Investigation Coverage</h2>
+        <span class="section-status">
+          <span class="pill amber">7 gaps noted</span>
+        </span>
+      </div>
+      <div class="section-subtitle">Phase 1 harness coverage with 7 documented gaps — most notably the install-doc URL scan absence that necessitated Phase 4 authoring of F0.</div>
+    </summary>
+    <div class="section-body">
+    <div class="vitals-grid">
+      <div class="vital-cell">
+        <div class="vital-label">Harness Phase 1 end-to-end</div>
+        <div class="vital-value">✅ Complete</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">`gh api` rate limit</div>
+        <div class="vital-value">✅ Well under limit</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Tarball extraction + local grep</div>
+        <div class="vital-value">✅ Scanned</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">OSSF Scorecard</div>
+        <div class="vital-value">⚠ Not indexed</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Dependabot alerts</div>
+        <div class="vital-value">⚠ Admin scope (403); dependabot.yml present + active</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">osv.dev dependency queries</div>
+        <div class="vital-value">✅ 1 vuln (esbuild, dev-server bypass — not reachable at runtime)</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">PR review sample</div>
+        <div class="vital-value">✅ 12-PR lifetime sample; formal + any review both 0%</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Dependencies manifest detection</div>
+        <div class="vital-value">✅ 4 manifests (go.mod + go.sum + package.json + pnpm-lock.yaml)</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Distribution channels inventory</div>
+        <div class="vital-value">⚠ Detected fictitious &#39;npm-browser_terminal&#39; channel; real channels (Chrome Web Store + Firefox Add-ons + GitHub Releases) NOT detected (F6)</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Install-doc URL scan for typosquat</div>
+        <div class="vital-value">⊗ Not implemented — F0 typosquat surfaced by LLM authoring only</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Dangerous-primitives grep (15 families)</div>
+        <div class="vital-value">⚠ 1 false-positive path_traversal hit (build-script `fs.readFileSync(SRC_DIR + &#39;/manifest.json&#39;)` — reads its own manifest)</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Workflows</div>
+        <div class="vital-value">✅ 4 detected (Release × 2 + Dependabot + Dep-Graph); no CodeQL; no test CI</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Gitleaks</div>
+        <div class="vital-value">⊗ Not available on this scanner host</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">README paste-scan</div>
+        <div class="vital-value">✅ No paste-from-command blocks (but typosquat URL F0 surfaced separately — see F6 gap)</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Tarball extraction</div>
+        <div class="vital-value">✅ 35 files</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">osv.dev</div>
+        <div class="vital-value">ℹ </div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Secrets-in-history (gitleaks)</div>
+        <div class="vital-value">⚠ gitleaks not installed</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">API rate budget</div>
+        <div class="vital-value">✅ 4985/5000 remaining</div>
+      </div>
+    </div>
+
+    <div class="finding-card info stack-sm">
+      <div class="finding-header">
+        <span class="tag info-tag">Gap</span>
+        <h3>Install-doc URL analysis is not implemented in the harness — F0 typosquat URL in installation.md was only surfaced by LLM authoring reading the file directly. Future browser-extension scans will need the same manual step until harness adds TLD-deviation detection.</h3>
+      </div>
+    </div>
+    <div class="finding-card info stack-sm">
+      <div class="finding-header">
+        <span class="tag info-tag">Gap</span>
+        <h3>Distribution-channel harness detected a fictitious &#39;npm-browser_terminal&#39; channel based solely on package.json presence (the package is not on the npm registry). Real channels (Chrome Web Store + Firefox Add-ons + GitHub Releases binary) were not recognized.</h3>
+      </div>
+    </div>
+    <div class="finding-card info stack-sm">
+      <div class="finding-header">
+        <span class="tag info-tag">Gap</span>
+        <h3>OSSF Scorecard not indexed — governance signals derived entirely from raw gh api data.</h3>
+      </div>
+    </div>
+    <div class="finding-card info stack-sm">
+      <div class="finding-header">
+        <span class="tag info-tag">Gap</span>
+        <h3>Dependabot-alerts API required admin scope (HTTP 403); dependabot.yml confirms active multi-ecosystem coverage regardless.</h3>
+      </div>
+    </div>
+    <div class="finding-card info stack-sm">
+      <div class="finding-header">
+        <span class="tag info-tag">Gap</span>
+        <h3>Dangerous-primitives `path_traversal` family produced a false positive on a build-script self-read of manifest.json — Go/JS mixed-repo idioms aren&#39;t perfectly aligned with the regex tuning.</h3>
+      </div>
+    </div>
+    <div class="finding-card info stack-sm">
+      <div class="finding-header">
+        <span class="tag info-tag">Gap</span>
+        <h3>Gitleaks secret-scanning not available on this scanner host.</h3>
+      </div>
+    </div>
+    <div class="finding-card info stack-sm">
+      <div class="finding-header">
+        <span class="tag info-tag">Gap</span>
+        <h3>Release-integrity channels are not formally graded beyond presence-check of `.dgst` / `.sig`. For this release (v1.4.7), absence of any such files is captured via Phase 4 authoring (F1) but not surfaced as a compute signal.</h3>
+      </div>
+    </div>
+
+    </div>
+  </details>
+
+  <details class="collapsible-section">
+    <summary>
+      <div class="section-header">
+        <span class="section-number">07</span>
+        <h2>Evidence Appendix</h2>
+        <span class="section-status">
+          <span class="pill info">12 facts</span>
+          <span class="pill amber">3 &#9733; priority</span>
+        </span>
+      </div>
+      <div class="section-subtitle">
+        12 command-backed claims. <span class="emph">Skip ahead to items marked &#9733; START HERE</span> &mdash; those are the most consequential for the verdict.
+      </div>
+      <div class="section-action info">
+        <span class="lbl">Your action</span>
+        Use this section if you want to verify a claim yourself. Each entry shows the exact command (copy-paste into a terminal with <code>gh</code> authenticated) and the expected result.
+      </div>
+    </summary>
+    <div class="section-body">
+    <p class="p-meta">Each major claim is backed by a command and an observed result. Inferences are marked as such. The <span class="priority-flag inline">&#9733; Start here</span> items at the top are the most consequential evidence.</p>
+
+    <div class="evidence-group-label warns">&#9733; Priority evidence (read first)</div>
+    <div class="finding-card info evidence-priority stack-md">
+      <div class="finding-header">
+        <span class="tag info-tag">Evidence 1</span>
+        <span class="priority-flag">&#9733; Start here</span>
+        <h3>installation.md points Chrome users to `chrome.google.cm/webstore/detail/browser-terminal/nbnfihffeffdhcbblmekelobgmdccfnl` — the `.cm` TLD (Cameroon) is a known typosquat target for `.com`.</h3>
+      </div>
+      <div class="finding-body">
+        <div class="evidence-row">
+          <div class="evidence-label">Command</div>
+          <pre class="evidence-pre">gh api repos/BatteredBunny/browser_terminal/contents/installation.md | jq -r .content | base64 -d</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Result observed</div>
+          <pre class="evidence-pre result">Step 1: &#39;Install extension from [firefox addons](https://addons.mozilla.org/en-US/firefox/addon/browser_terminal/) or [chrome web store](https://chrome.google.cm/webstore/detail/browser-terminal/nbnfihffeffdhcbblmekelobgmdccfnl)&#39;. The Firefox URL is correct (addons.mozilla.org); the Chrome URL is not chrome.google.com — it is chrome.google.cm, a Cameroon-TLD lookalike. If .cm is ever registered by an adversary, it serves a fake Web Store page to any user who follows the README.</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Classification</div>
+          <div class="evidence-classification fact">fact</div>
+        </div>
+      </div>
+    </div>
+    <div class="finding-card info evidence-priority stack-md">
+      <div class="finding-header">
+        <span class="tag info-tag">Evidence 3</span>
+        <span class="priority-flag">&#9733; Start here</span>
+        <h3>Release v1.4.7 (2025-06-23) ships 4 assets: linux + macos native Go binaries plus chromium + firefox extension zips. Zero checksum files, zero signature files.</h3>
+      </div>
+      <div class="finding-body">
+        <div class="evidence-row">
+          <div class="evidence-label">Command</div>
+          <pre class="evidence-pre">gh api repos/BatteredBunny/browser_terminal/releases/latest</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Result observed</div>
+          <pre class="evidence-pre result">tag: v1.4.7, published: 2025-06-23. Assets: browser_terminal_linux (2.2MB), browser_terminal_macos (2.2MB), chromium-browser_terminal-1.4.7.zip (3.0MB), firefox-browser_terminal-1.4.7.zip (3.0MB). No .dgst, .sig, .asc, .sha256, or .sha512 files. No GPG signature. No Sigstore attestation. No SLSA provenance.</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Classification</div>
+          <div class="evidence-classification fact">fact</div>
+        </div>
+      </div>
+    </div>
+    <div class="finding-card info evidence-priority stack-md">
+      <div class="finding-header">
+        <span class="tag info-tag">Evidence 9</span>
+        <span class="priority-flag">&#9733; Start here</span>
+        <h3>Release cadence stall — v1.4.7 published 2025-06-23, last push to main 2026-04-03. Users on the release are 10 months behind the main branch; main has unshipped changes.</h3>
+      </div>
+      <div class="finding-body">
+        <div class="evidence-row">
+          <div class="evidence-label">Command</div>
+          <pre class="evidence-pre">gh api &#39;repos/BatteredBunny/browser_terminal/releases?per_page=5&#39;; gh api repos/BatteredBunny/browser_terminal --jq .pushed_at</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Result observed</div>
+          <pre class="evidence-pre result">Latest release: v1.4.7 on 2025-06-23. Repo pushed_at: 2026-04-03. 10-month gap between the latest released version and the tip of main. Browser-store-distributed extensions auto-update users to whatever the store serves — if the Chrome / Firefox stores are serving v1.4.7, users on those stores are also on 10-month-old code even though the repo looks active.</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Classification</div>
+          <div class="evidence-classification fact">fact</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="evidence-group-label context">Other evidence supporting findings</div>
+    <div class="finding-card info stack-md">
+      <div class="finding-header">
+        <span class="tag info-tag">Evidence 2</span>
+        <h3>The Go native-messaging host spawns `/bin/sh` (or `$SHELL`) and wires its PTY to stdin/stdout of the browser extension. Any extension context with native-messaging permission receives a live shell session.</h3>
+      </div>
+      <div class="finding-body">
+        <div class="evidence-row">
+          <div class="evidence-label">Command</div>
+          <pre class="evidence-pre">gh api repos/BatteredBunny/browser_terminal/contents/native/main.go | jq -r .content | base64 -d</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Result observed</div>
+          <pre class="evidence-pre result">main.go: `shell := &#39;/bin/sh&#39;; if rawShell := os.Getenv(&#39;SHELL&#39;); rawShell != &#39;&#39; { shell = rawShell }; cmd := exec.Command(shell); ... processCommands(stdinQueue, cmd)` — the native host starts a shell subprocess on launch, receives JSON messages from the extension via Chrome native messaging, and forwards them as PTY input. No authentication, no command allowlist, no sandboxing.</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Classification</div>
+          <div class="evidence-classification fact">fact</div>
+        </div>
+      </div>
+    </div>
+    <div class="finding-card info stack-md">
+      <div class="finding-header">
+        <span class="tag info-tag">Evidence 4</span>
+        <h3>installation.md instructs users to `sudo mv ~/Downloads/browser_terminal_linux /usr/local/bin/browser_terminal` without any integrity-verification step in between the download and the move.</h3>
+      </div>
+      <div class="finding-body">
+        <div class="evidence-row">
+          <div class="evidence-label">Command</div>
+          <pre class="evidence-pre">gh api repos/BatteredBunny/browser_terminal/contents/installation.md | jq -r .content | base64 -d</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Result observed</div>
+          <pre class="evidence-pre result">Install steps: (1) browser store, (2) &#39;Download native program from releases&#39;, (3) `sudo mv ~/Downloads/browser_terminal_linux /usr/local/bin/browser_terminal`, (4) `browser_terminal --install`. No sha256sum step. No checksum file exists to verify against. User on step 3 is trusting the GitHub-hosted binary integrity implicitly.</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Classification</div>
+          <div class="evidence-classification fact">fact</div>
+        </div>
+      </div>
+    </div>
+    <div class="finding-card info stack-md">
+      <div class="finding-header">
+        <span class="tag info-tag">Evidence 5</span>
+        <h3>Near-solo maintainer profile — BatteredBunny authored 41 commits, dependabot[bot] 12. Total contributor count: 2. Top-human share = 100% (77.4% including the bot).</h3>
+      </div>
+      <div class="finding-body">
+        <div class="evidence-row">
+          <div class="evidence-label">Command</div>
+          <pre class="evidence-pre">gh api repos/BatteredBunny/browser_terminal/contributors</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Result observed</div>
+          <pre class="evidence-pre result">top_contributors: BatteredBunny: 41, dependabot[bot]: 12. total_contributor_count: 2 (both entries). Excluding the bot, this is a single-author repository.</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Classification</div>
+          <div class="evidence-classification fact">fact</div>
+        </div>
+      </div>
+    </div>
+    <div class="finding-card info stack-md">
+      <div class="finding-header">
+        <span class="tag info-tag">Evidence 6</span>
+        <h3>Zero formal review + zero any-review across the 12-PR closed-and-merged history. Zero self-merges. PR sample is tiny; the pattern IS the sample.</h3>
+      </div>
+      <div class="finding-body">
+        <div class="evidence-row">
+          <div class="evidence-label">Command</div>
+          <pre class="evidence-pre">gh api &#39;repos/BatteredBunny/browser_terminal/pulls?state=closed&amp;per_page=20&#39;</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Result observed</div>
+          <pre class="evidence-pre result">sample_size: 12 (= total_closed_prs = total_merged_lifetime). formal_review_rate: 0.0. any_review_rate: 0.0. self_merge_count: 0. All 12 PRs in the lifetime of the repo merged without any reviewer interaction.</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Classification</div>
+          <div class="evidence-classification fact">fact</div>
+        </div>
+      </div>
+    </div>
+    <div class="finding-card info stack-md">
+      <div class="finding-header">
+        <span class="tag info-tag">Evidence 7</span>
+        <h3>No branch protection of any kind — classic HTTP 404, rulesets count 0, rules_on_default count 0. No CODEOWNERS at any standard path.</h3>
+      </div>
+      <div class="finding-body">
+        <div class="evidence-row">
+          <div class="evidence-label">Command</div>
+          <pre class="evidence-pre">gh api repos/BatteredBunny/browser_terminal/branches/main/protection; gh api repos/BatteredBunny/browser_terminal/rulesets</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Result observed</div>
+          <pre class="evidence-pre result">classic: HTTP 404. rulesets: {entries: [], count: 0}. rules_on_default: {entries: [], count: 0}. CODEOWNERS: not found at any of CODEOWNERS, .github/CODEOWNERS, docs/CODEOWNERS, .gitlab/CODEOWNERS.</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Classification</div>
+          <div class="evidence-classification fact">fact</div>
+        </div>
+      </div>
+    </div>
+    <div class="finding-card info stack-md">
+      <div class="finding-header">
+        <span class="tag info-tag">Evidence 8</span>
+        <h3>community/profile reports no SECURITY.md, no CONTRIBUTING, no CODE_OF_CONDUCT. health_percentage: 42.</h3>
+      </div>
+      <div class="finding-body">
+        <div class="evidence-row">
+          <div class="evidence-label">Command</div>
+          <pre class="evidence-pre">gh api &#39;repos/BatteredBunny/browser_terminal/community/profile&#39;; gh api &#39;repos/BatteredBunny/browser_terminal/security-advisories&#39;</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Result observed</div>
+          <pre class="evidence-pre result">health_percentage: 42; has_security_policy: false; has_contributing: false; has_code_of_conduct: false; license_spdx: GPL-3.0. security-advisories count: 0.</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Classification</div>
+          <div class="evidence-classification fact">fact</div>
+        </div>
+      </div>
+    </div>
+    <div class="finding-card info stack-md">
+      <div class="finding-header">
+        <span class="tag info-tag">Evidence 10</span>
+        <h3>Dependabot is configured for gomod + npm + github-actions. OSV query on the dep graph finds 1 vuln: esbuild (GHSA-67mh-4wv8-2f99, dev-server CORS bypass).</h3>
+      </div>
+      <div class="finding-body">
+        <div class="evidence-row">
+          <div class="evidence-label">Command</div>
+          <pre class="evidence-pre">gh api repos/BatteredBunny/browser_terminal/contents/.github/dependabot.yml | jq -r .content | base64 -d</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Result observed</div>
+          <pre class="evidence-pre result">dependabot.yml ecosystems: [&#39;gomod&#39;, &#39;npm&#39;, &#39;github-actions&#39;]. osv.dev total vulns: 1 — esbuild GHSA-67mh-4wv8-2f99 (dev-server same-origin bypass). The vulnerability is reachable only when running `esbuild` in dev-server mode, which this repo does not do at runtime (esbuild is a build-time dep). Not reachable in production consumption.</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Classification</div>
+          <div class="evidence-classification fact">fact</div>
+        </div>
+      </div>
+    </div>
+    <div class="finding-card info stack-md">
+      <div class="finding-header">
+        <span class="tag info-tag">Evidence 11</span>
+        <h3>Harness detected a &#39;npm-browser_terminal&#39; distribution channel via package.json — but `browser_terminal` is not a published npm package. package.json is the internal build manifest for the extension source.</h3>
+      </div>
+      <div class="finding-body">
+        <div class="evidence-row">
+          <div class="evidence-label">Command</div>
+          <pre class="evidence-pre">docs/phase_1_harness.py # distribution_channels; npm view browser_terminal</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Result observed</div>
+          <pre class="evidence-pre result">distribution_channels: [{name: &#39;npm-browser_terminal&#39;, type: &#39;package_manager&#39;, install_command: &#39;npm install browser_terminal&#39;, install_path_verified: true, artifact_verified: false}]. Manual `npm view browser_terminal`: not in the public npm registry. The channel is fictitious — the harness derived it from package.json presence without confirming actual publication. Coverage-gap annotation.</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Classification</div>
+          <div class="evidence-classification inference">inference — coverage-gap annotation</div>
+        </div>
+      </div>
+    </div>
+    <div class="finding-card info stack-md">
+      <div class="finding-header">
+        <span class="tag info-tag">Evidence 12</span>
+        <h3>Actual distribution channels: Chrome Web Store (via the typosquat-susceptible URL in installation.md) + Firefox Add-ons (addons.mozilla.org) + direct GitHub Releases download of the native Go binary.</h3>
+      </div>
+      <div class="finding-body">
+        <div class="evidence-row">
+          <div class="evidence-label">Command</div>
+          <pre class="evidence-pre">grep -i &#39;install\|download&#39; installation.md</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Result observed</div>
+          <pre class="evidence-pre result">Three de-facto channels, none of them the detected &#39;npm&#39; channel: (1) Chrome Web Store (chrome.google.cm — typo), (2) Firefox Add-ons (addons.mozilla.org — correct), (3) GitHub Releases for the Go native host (unsigned, no checksum). Browser stores enforce their own review; the GitHub-Releases native-host path has no additional moderation beyond the maintainer&#39;s GitHub Actions release pipeline.</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Classification</div>
+          <div class="evidence-classification fact">fact</div>
+        </div>
+      </div>
+    </div>
+
+    </div>
+  </details>
+
+  <details class="collapsible-section">
+    <summary>
+      <div class="section-header">
+        <span class="section-number">08</span>
+        <h2>How This Scan Works</h2>
+        <span class="section-status">
+          <span class="pill muted">Methodology reference</span>
+        </span>
+      </div>
+      <div class="section-subtitle">
+        What we checked, what tools we used, and what this scan cannot detect.
+      </div>
+    </summary>
+    <div class="section-body">
+
+    <h3>What this scan is</h3>
+    <p>This is an <strong>LLM-driven security investigation</strong> &mdash; an AI assistant with terminal access used the <a href="https://cli.github.com/" target="_blank" rel="noopener">GitHub CLI</a> and free public APIs to investigate this repo&rsquo;s governance, code patterns, dependencies, and distribution pipeline. It then synthesized its findings into this plain-English report.</p>
+    <p class="p-meta">This is <strong>not</strong> a static analyzer, penetration test, or formal security audit. It is a trust-assessment tool that answers: &ldquo;Should I install this?&rdquo;</p>
+
+    <h3>What we checked</h3>
+    <div class="vitals-grid">
+      <div class="vital-cell">
+        <div class="vital-label">Governance &amp; Trust</div>
+        <div class="vital-note">Branch protection, rulesets, CODEOWNERS, SECURITY.md, community health, maintainer account age &amp; activity, code review rates</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Code Patterns</div>
+        <div class="vital-note">Dangerous primitives (eval, exec, fetch), hardcoded secrets, executable file inventory, install scripts, README paste-blocks</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Supply Chain</div>
+        <div class="vital-note">Dependencies, CI/CD workflows, GitHub Actions SHA-pinning, release pipeline, artifact verification, published-vs-source comparison</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">AI Agent Rules</div>
+        <div class="vital-note">CLAUDE.md, AGENTS.md, .cursorrules, .mcp.json &mdash; files that instruct AI coding assistants. Checked for prompt injection and behavioral manipulation</div>
+      </div>
+    </div>
+
+    <h3>External tools used</h3>
+    <div class="vitals-grid">
+      <div class="vital-cell">
+        <div class="vital-label"><a href="https://securityscorecards.dev/" target="_blank" rel="noopener">OSSF Scorecard</a></div>
+        <div class="vital-note">Independent security rating from the Open Source Security Foundation. Scores 24 practices from 0&ndash;10. Free API, no installation needed.</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label"><a href="https://osv.dev/" target="_blank" rel="noopener">osv.dev</a></div>
+        <div class="vital-note">Google-backed vulnerability database. Used as fallback when GitHub&rsquo;s Dependabot data is not accessible (requires repo admin).</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label"><a href="https://gitleaks.io/" target="_blank" rel="noopener">gitleaks</a> (optional)</div>
+        <div class="vital-note">Scans code history for leaked passwords, API keys, and tokens. Requires installation. If unavailable, this gap is noted in Coverage.</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label"><a href="https://cli.github.com/" target="_blank" rel="noopener">GitHub CLI</a></div>
+        <div class="vital-note">Primary data source. All repo metadata, PR history, workflow files, contributor data, and issue history come from authenticated GitHub API calls.</div>
+      </div>
+    </div>
+
+    <h3>What this scan cannot detect</h3>
+    <ul>
+      <li><strong>Transitive dependency vulnerabilities</strong> &mdash; we check direct dependencies but cannot fully resolve the dependency tree without running the package manager</li>
+      <li><strong>Runtime behavior</strong> &mdash; we see what the code <em>could</em> do, not what it <em>does</em> when running</li>
+      <li><strong>Published artifact tampering</strong> &mdash; we read the source code but cannot verify that what&rsquo;s published to npm/PyPI matches this source exactly</li>
+      <li><strong>Sophisticated backdoors</strong> &mdash; our pattern-matching catches common dangerous primitives but not logic bombs or obfuscated payloads</li>
+      <li><strong>Container image contents</strong> &mdash; we read Dockerfiles but cannot inspect built images for extra layers or embedded secrets</li>
+    </ul>
+    <p class="p-meta">For comprehensive vulnerability scanning, pair this report with tools like <a href="https://semgrep.dev/" target="_blank" rel="noopener">Semgrep</a> (code analysis), <a href="https://www.snyk.io/" target="_blank" rel="noopener">Snyk</a> (dependency scanning), or <a href="https://aquasecurity.github.io/trivy/" target="_blank" rel="noopener">Trivy</a> (container scanning).</p>
+
+    <h3>Scan methodology version</h3>
+    <p class="p-meta">Scanner prompt V2.4 &middot; Operator Guide V0.2 &middot; Validator version V2.5-preview &middot; Validator with XSS checks + verdict-severity coherence &middot; <a href="https://github.com/stefans71/stop-git-std" target="_blank" rel="noopener">stop-git-std</a></p>
+
+    </div>
+  </details>
+
+  <div class="footer">
+    Generated by <a href="https://github.com/stefans71/stop-git-std">stop-git-std</a> deep dive &middot; 2026-04-20 &middot; scanned main @ 9a77c4a () &middot; scanner V2.5-preview
+    <br>This report is an automated investigation, not a professional security audit. It may miss issues. If you are making a business decision, consult a security professional.
+  </div>
+
+</div>
+</body>
+</html>
