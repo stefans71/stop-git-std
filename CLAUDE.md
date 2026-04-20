@@ -96,7 +96,7 @@ Wait for the user's choice. If they pick option 2, read the `.md` file and give 
 
 ## Current state (summary)
 
-As of HEAD `a80f239` (2026-04-20): Scanner prompt V2.4, Operator Guide V0.2 (§8.8 fully implements Step G execution spec with FN-1..FN-9 + D-4/D-6), 279/279 tests passing, 11 V2.4 catalog scans, Phase 7 renderer Steps A-F complete, **Step G board-approved and ready to execute** per FN-7 pilot-and-checkpoint ordering (zustand first). All 4 Step G pre-reqs cleared. 13/13 MD+HTML parity pairs clean.
+As of HEAD `9840cdf` (2026-04-20 session 2): Scanner prompt V2.4, Operator Guide V0.2 (§8.8 implements Step G execution spec with FN-1..FN-9 + D-4/D-6), 279/279 tests passing, 11 V2.4 catalog scans, Phase 7 renderer Steps A-F complete. **Step G HALTED at Finding SF1 (scorecard calibration drift) before zustand pilot authoring began.** Pre-flight Steps -2, -1, 0 all passed. Compute driver dry-run surfaced systemic cell-color divergence between `compute.py` and V2.4 comparator MD across all 3 targets (5 cell mismatches). §8.8.3 Step 3b byte-for-byte rule and §8.8.5 gate 6.3 cell-match rule are mutually exclusive under current state. Board review on SF1 required before Step G can resume — this is a DESIGN decision (A/B/C options), not a code fix. Finding doc: `.board-review-temp/step-g-execution/step-g-finding-SF1-scorecard-calibration.md`. 13/13 MD+HTML parity pairs clean after FN-5 grep pattern fix + warning/info reclassification.
 
 **For everything else — look in `REPO_MAP.md`:**
 

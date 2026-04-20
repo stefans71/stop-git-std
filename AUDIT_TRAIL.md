@@ -17,6 +17,75 @@ Canonical log of milestone commits with the verification state captured at commi
 
 ---
 
+## Checkpoint — 2026-04-20 (session 2) — Step G pre-flight passed; HALTED at Finding SF1 (scorecard calibration drift)
+
+**HEAD:** `9840cdf`
+**Session commit range (from prior `90b04b7` → `9840cdf`):**
+- `9840cdf` Step G pre-flight: validator warning/info reclassification + FN-5 grep fix (3 files, 77+/21-)
+
+**Final state:**
+- pytest: `279 passed in 40.78s`
+- 13/13 MD+HTML pairs `--parity` clean (validator updated to classify authoring/rendering variations as `ℹ Note:` instead of `⚠ WARNING:`)
+- Repo ↔ package validator: byte-identical (no change this session)
+- 11 catalog entries (unchanged)
+- Commits ahead of origin/main: 1 (will be 2 after session-close commit)
+
+**What got done this session:**
+
+1. **Step G pre-flight Steps -2, -1, 0 all passed** (per §8.8.3 + §8.8.5):
+   - Step -2: Provenance entry for `zustand-step-g-form.json` pre-registered in `tests/fixtures/provenance.json` with `step-g-live-pipeline` tag (transitions on gate acceptance or failure)
+   - Step -1: V2.4 comparator `--parity` cleanliness sweep — all 3 targets (zustand-v3, caveman, Archon) return exit 0, zero `WARNING:` lines, INFO notes only (non-gating)
+   - Step 0: 4-case adversarial bundle validator smoke test — 3 failure cases exit 1 with specific messages, compact-bundle case exits 0 as spec'd
+
+2. **Owner directive pre-flight blocker fix (commit `9840cdf`, U-10 alignment):**
+   - FN-5 grep pattern `'^WARNING:'` didn't match validator's emission format (`  ⚠ <text>`); fix: emit `⚠ WARNING:` prefix for real warnings, `ℹ Note:` for info; update grep to substring `WARNING:`
+   - `--parity` + `--bundle` warnings reclassified per MD-canonical asymmetry — MD findings not extractable from HTML (authoring variation), compact-bundle style (U-10 approved), section rendering differences, compact-bundle verdict-without-F-IDs → INFO not WARNING; real errors + structural ambiguity warnings retained
+   - Attempted compound-F-ID tail paren extraction reverted (false-positive flagged Archon F11+F14 as MD-canonical violation; those are rule-ID references, not finding-card IDs)
+   - Operator Guide §8.8.2 step 4 + §8.8.3 Step -1 + §8.8.5 gate 3 updated to reflect INFO non-gating semantics
+
+3. **Step G authoring HALTED at Finding SF1 before zustand pilot started.** Compute driver dry-run on template Phase 1 data surfaced scorecard cell color divergence between `compute.py` output and V2.4 comparator MD. Confirmed systemic across all 3 targets:
+   - zustand-v3: Q3 red vs amber, Q4 amber vs green
+   - caveman: Q2 green vs amber
+   - Archon: Q1 amber vs red, Q3 amber vs green
+
+   §8.8.3 Step 3b (compute.py byte-for-byte equality required) and §8.8.5 gate 6.3 (scorecard cells match comparator cell-by-cell) are **mutually exclusive** under current state. No authoring choice resolves this. Per §8.8.6 ambiguity → HALT rule.
+
+   **Finding document (local-only, `.board-review-temp/` gitignored):** `.board-review-temp/step-g-execution/step-g-finding-SF1-scorecard-calibration.md` (8KB; frames 3 resolution options A/B/C as a DESIGN decision for board review, not a code fix).
+
+**Key decisions made this session (preserve for future sessions):**
+
+1. **FN-5 + FN-6 as originally written were both broken.** Prior AUDIT_TRAIL entries claiming "13/13 pairs clean" relied on exit-code-only check; the `^WARNING:` grep pattern matched nothing because validator emits `⚠` (unicode). Fixed in commit `9840cdf`.
+
+2. **MD-canonical is asymmetric** (re-established formally): HTML may not ADD findings not in MD; MD MAY have F-IDs not explicitly encoded in HTML h3 tags (authoring choice). Validator flags HTML-extras as error; MD→HTML asymmetry is info, not warning.
+
+3. **Step G is HALTED (not failed).** Pre-flight infrastructure is sound. The halt is pre-authoring — zero authoring was done on the zustand pilot form. Template copy in `.board-review-temp/step-g-execution/zustand-step-g-form.json` remains unmodified V2.3 template content. Operator Guide §8.8 remains canonical and is NOT rolled back.
+
+4. **Finding SF1 is the FIRST real Step G acceptance-matrix output.** The halt validates the Step G gate design — it surfaced a systemic calibration gap that could not have been detected by the renderer-validation fixtures. This is exactly what Step G's live-pipeline validation is for.
+
+5. **Board review on SF1 is a DESIGN decision, not a code fix.** Resolution shapes:
+   - **A:** Adjust compute.py calibration to match V2.4 LLM judgments (compute.py becomes codification of current catalog)
+   - **B:** Keep compute.py strict, re-harmonize V2.4 catalog MDs to match compute.py output (second catalog pass after U-10)
+   - **C:** Schema split — move scorecard cells out of `phase_3_computed` into `phase_4_structured_llm` (V1.1 → V1.2 schema change, deferred)
+   - See `.board-review-temp/step-g-execution/step-g-finding-SF1-scorecard-calibration.md` for full analysis.
+
+**Files modified but uncommitted at session boundary** (session-close commit pending):
+- `AUDIT_TRAIL.md` (this entry)
+- `REPO_MAP.md` §2.2 + §2.4
+- `/root/.claude/plans/GitHub-scanner-tool-Jaunty-dazzling-poiny.md` (not in repo; local personal state)
+
+**Files created in `.board-review-temp/` (gitignored, local-only):**
+- `step-g-execution/compute_driver.py` — two-pass compute driver for Phase 3 + Phase 4b verdict
+- `step-g-execution/step-g-finding-SF1-scorecard-calibration.md` — SF1 finding doc for next session's board review
+- `step-g-execution/zustand-step-g-form.json` — V2.3 template copy (unmodified — authoring not started)
+- `step-g-execution/adversarial/` — 4 synthetic bundles from Step 0 smoke test + base
+- `step-g-execution/parity-{zustand-v3,caveman,Archon}-comparator.txt` — parity sweep captures
+
+**Revert paths:**
+- Revert to pre-session state: `git reset --hard 90b04b7` (session-close from prior session)
+- Revert to post-pre-flight state: HEAD `9840cdf` is the clean pre-flight; no revert needed
+
+---
+
 ## Checkpoint — 2026-04-20 — Session close: Step G board-approved + FN-1..FN-9 implemented in Operator Guide §8.8
 
 **HEAD:** `a80f239`

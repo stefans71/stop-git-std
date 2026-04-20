@@ -80,16 +80,16 @@ Older flat-file board records (pre-`External-Board-Reviews/` layout, kept for hi
 
 ### 2.2 Current state
 
-- **HEAD:** `a80f239` (2026-04-20) — Step G FN-1..FN-9 + D-4/D-6 implemented in Operator Guide §8.8 after 3-round board review + Codex pre-commit code review (9/11 clean, FN-1 nit applied, FN-6 reject overridden as false positive with rationale in commit body)
-- **Tests:** 279/279 passing (`python3 -m pytest tests/ -q`) — includes 16 bundle-validator tests from U-5/PD3
-- **Validator on all 3 V1.1 fixtures:** `--report` clean, `--parity` zero errors + zero warnings
-- **Parity sweep:** 13/13 MD+HTML pairs clean (11 catalog entries + zustand + zustand-v2 + agency-agents + open-lovable)
-- **Repo↔package validator:** byte-identical (0 diff lines)
+- **HEAD:** `9840cdf` (2026-04-20 session 2) — Step G pre-flight infrastructure: validator warning/info reclassification + FN-5 grep pattern fix (owner directive B, U-10 alignment)
+- **Tests:** 279/279 passing (`python3 -m pytest tests/ -q`)
+- **Validator on all 3 V1.1 fixtures:** `--report` clean, `--parity` zero errors + zero `WARNING:` lines (INFO notes only, non-gating per new classification)
+- **Parity sweep:** 13/13 MD+HTML pairs clean; 2 pre-existing verdict-extraction warnings on fd + archon-board-review (not Step G targets, non-blocking, logged as POST-STEP-G IMMEDIATE follow-up)
+- **Repo↔package validator:** byte-identical (0 diff lines; no change this session)
 - **CSS:** 824 lines
-- **Catalog:** 11 V2.4 scans (unchanged from prior session)
-- **Step G status:** board-approved (041926-step-g-execution, unanimous clean R3 SIGN OFF) + Operator Guide §8.8 fully implements FN-1..FN-9 + D-4/D-6. **Ready to execute** per FN-7 pilot-and-checkpoint ordering (zustand first → hard checkpoint → caveman + Archon).
-- **Commits ahead of origin:** 67 (via `git log --oneline origin/main..HEAD`)
-- **Cross-repo FrontierBoard SOP update** (pushed to stefans71/FrontierBoard main as `e01303a`): pre-archive dissent audit gate now mandatory SOP requirement. Not in stop-git-std repo; canonical at `/root/.frontierboard/FrontierBoard/docs/REVIEW-SOP.md` and `/root/tinkering/FrontierBoard/Git-030126/docs/REVIEW-SOP.md`.
+- **Catalog:** 11 V2.4 scans (unchanged)
+- **Step G status:** **HALTED at Finding SF1 (scorecard calibration drift)** before zustand pilot authoring began. Pre-flight Steps -2, -1, 0 all passed clean. Compute driver dry-run surfaced systemic cell-color divergence between `compute.py` and V2.4 comparator MD across all 3 targets (5 cell mismatches total). §8.8.3 Step 3b + §8.8.5 gate 6.3 mutually exclusive under current state. Board review on SF1 required before authoring resumes. Finding doc at `.board-review-temp/step-g-execution/step-g-finding-SF1-scorecard-calibration.md`.
+- **Commits ahead of origin:** 2 (`9840cdf` + pending session-close)
+- **Cross-repo FrontierBoard SOP update** (pushed to stefans71/FrontierBoard main as `e01303a`): pre-archive dissent audit gate mandatory SOP requirement. Canonical at `/root/.frontierboard/FrontierBoard/docs/REVIEW-SOP.md` and `/root/tinkering/FrontierBoard/Git-030126/docs/REVIEW-SOP.md`.
 
 ### 2.3 Board runbook — how to run the 3-model governance board
 
@@ -163,7 +163,14 @@ Then update `docs/External-Board-Reviews/README.md` master index.
 - 3-round with 2-1 owner-directive resolutions: `docs/External-Board-Reviews/041826-step-g-kickoff/`
 - Fix-artifact-first governance: R3 brief has owner-authored BEFORE/AFTER, board votes SECOND/ADJUST/REJECT
 
-### 2.4 Step G — board-approved and ready to execute
+### 2.4 Step G — HALTED at Finding SF1 (pre-flight passed; authoring blocked)
+
+**Current blocker:** Scorecard cell color calibration drift between `docs/compute.py` and V2.4 comparator MD adjudication. Systemic across all 3 targets (5 cell mismatches total). Per §8.8.3 Step 3b, compute.py output is byte-for-byte authoritative for Phase 3. Per §8.8.5 gate 6.3, scorecard cells must match V2.4 comparator cell-by-cell. These are mutually exclusive without design resolution. See `.board-review-temp/step-g-execution/step-g-finding-SF1-scorecard-calibration.md` for the full finding + 3 resolution options (A/B/C). Board review required before Step G authoring can resume on any target.
+
+**Pre-flight state (clean, preserved across the halt):**
+- Step -2 (provenance): `zustand-step-g-form.json` pre-registered with `step-g-live-pipeline` tag in `tests/fixtures/provenance.json`
+- Step -1 (comparator cleanliness): zustand-v3, caveman, Archon all 0 `WARNING:` / 0 errors (after `9840cdf` FN-5 grep + warning reclassification)
+- Step 0 (adversarial bundle smoke test): 4 cases behave per spec (3 fail, 1 compact-bundle pass)
 
 **All 4 pre-reqs cleared** per `docs/External-Board-Reviews/041826-step-g-kickoff/CONSOLIDATION.md`:
 
@@ -197,6 +204,18 @@ Then update `docs/External-Board-Reviews/README.md` master index.
 **Execution order (per FN-7):** zustand first end-to-end → hard checkpoint → caveman + Archon sequentially in same session. Checkpoint branching: pipeline-correctness pass → continue; pipeline-correctness fail → STOP (rollback per §8.8.6); authoring-only fail → one retry permitted.
 
 **Cross-repo SOP invariant:** pre-archive dissent audit is mandatory per FrontierBoard SOP §4 (commit `e01303a` on stefans71/FrontierBoard main). Applies to the Step G post-execution archive.
+
+**SF1 scorecard calibration drift — evidence summary** (for next-session board brief):
+
+| Target | Cell | V2.4 comparator MD | compute.py output | Root cause |
+|---|---|---|---|---|
+| zustand-v3 | Q3 Do they tell you about problems? | Amber (contributing guide softens) | red (no-policy + 0 advisories) | LLM weights secondary signals |
+| zustand-v3 | Q4 Is it safe out of the box? | Green (install/runtime clean) | amber (any warning drops it) | Interpretation scope differs |
+| caveman | Q2 Do they fix problems quickly? | Amber (5-day lag visible friction) | green (≤7 threshold met) | Threshold vs friction |
+| Archon | Q1 Does anyone check the code? | Red (8% formal, no gate) | amber (any≥50 branch) | LLM treats formal ≪ any as red |
+| Archon | Q3 Do they tell you about problems? | Green (SECURITY.md + public issues) | amber (no advisories published) | Presence vs publication count |
+
+**The design question for SF1 board review:** where does scorecard cell-color authority live? Options A (adjust compute.py), B (re-harmonize V2.4 catalog MDs), C (schema split to move cells into `phase_4_structured_llm`, V1.1 → V1.2). **Not** a code bug; a calibration philosophy choice with downstream consequences for Step G acceptance and catalog stability.
 
 ### 2.5 Deferred ledger
 
