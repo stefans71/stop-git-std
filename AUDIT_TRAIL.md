@@ -17,6 +17,55 @@ Canonical log of milestone commits with the verification state captured at commi
 
 ---
 
+## Checkpoint — 2026-04-20 (session 5) — Schema V1.2 LANDED + ghostty wild scan (override-explained proven)
+
+**HEAD:** `5f5d1cd` on `origin/main` (clean push; tree clean).
+
+**Session 5 commits from `4512084` (session 4 close) →:**
+
+```
+5f5d1cd  Catalog entry 16: ghostty-org/ghostty — first V1.2-schema wild scan
+2c5aca0  Schema V1.2 implementation: D-7 + D-8 landing per CONSOLIDATION §7
+a0e370e  Schema V1.2 design frozen: D-7 + D-8 board review 3/3 SIGN OFF
+4512084  [session 4 close base — V2.5-preview production-cleared, markitdown entry 15]
+```
+
+**Final state:**
+
+- Tests: **342/342 passing** (319 session-4 baseline + 23 new V1.2 tests: 10 validator override-gate, 9 migration round-trip, 3 signal vocab, 1 scorecard-path invariant)
+- Catalog: **16 entries** (11 v2.4 + 5 v2.5-preview: zustand-v3, caveman, Archon, markitdown, ghostty)
+- Parity sweep: **18/18 MD+HTML pairs clean**
+- Schema: **V1.2** — harness-canonical shapes + names; transformer deleted; `phase_3_advisory.scorecard_hints` top-level; `phase_4_structured_llm.scorecard_cells` authoritative with `{rationale, edge_case, suggested_threshold_adjustment, computed_signal_refs, override_reason}`; 23-row frozen signal ID vocabulary (`compute.SIGNAL_IDS`); 5-value `override_reason` enum frozen; `agent_rule_files.total_bytes` dropped
+- Gate 6.3 semantics: changed from "cell-by-cell match" to **"override-explained"** — validator (`docs/validate-scanner-report.py --form`) enforces rationale ≥50 chars + `computed_signal_refs` non-empty with all refs resolving against `compute.SIGNAL_IDS` + `override_reason` in the 5-value enum, *only when* Phase 4 color differs from Phase 3 advisory color
+- **Override-explained proven end-to-end** via ghostty Q1 (advisory red → Phase 4 amber, `override_reason = missing_qualitative_context`, 7 `computed_signal_refs` citing the gap where compute.py's narrow `q1_has_branch_protection` check misses ruleset-based protection)
+- Harness = **Phase 1 standard** for V2.5-preview; V1.2 schema accepts harness output natively (no transformer, no sidecar bridge)
+- Phase 4/5/6 authoring remains LLM-driven; compute.py runs Phase 3 + advisory + Phase 4b verdict
+
+**Board review archive:** `docs/External-Board-Reviews/042026-schema-v12/CONSOLIDATION.md` (3 rounds + 2 owner directives; 3/3 SIGN OFF; 31-item dissent audit with zero silent drops; 9 live preserved dissents + 3 moot-preserved + 5 deferred with triggers).
+
+**V1.2 implementation files:**
+- `docs/scan-schema.json` — V1.2 bump + all D1/D2 deltas
+- `docs/compute.py` — `SIGNAL_IDS` frozenset + `OVERRIDE_REASON_ENUM` + `compute_scorecard_cells` rewritten to advisory shape
+- `docs/phase_1_harness.py` — 4 new fields gathered (`has_issues_enabled`, `primary_language`, `topics`, `fork_count`)
+- `docs/validate-scanner-report.py` — new `--form` mode + `validate_override_rationale()`
+- `docs/templates/partials/scorecard.md.j2` + `docs/templates-html/partials/scorecard.html.j2` — path change to `phase_4_structured_llm`
+- `migrate-v1.1-to-v1.2.py` (repo-root) — idempotent one-time migration, all 3 active fixtures migrated clean
+- `tests/test_validator_v12_override.py` + `tests/test_migrate_v12.py` — 19 new tests
+
+**Ghostty scan artifacts:**
+- `docs/GitHub-Scanner-ghostty-v12.md` (404 lines) + `.html` (1732 lines)
+- `docs/scanner-catalog.md` entry 16
+- `.board-review-temp/ghostty-scan/` (gitignored): `head-sha.txt`, `phase-1-raw.json`, `form.json`, `build_form.py`, `author_phase_4.py`, `author_phase_5_6.py`
+
+**Revert paths:**
+- Revert entire session: `git reset --hard 4512084` (session 4 close)
+- Revert just ghostty scan, keep V1.2 implementation: `git revert 5f5d1cd`
+- Revert just V1.2 implementation (keep schema design doc): `git revert 2c5aca0` then `git revert a0e370e`
+
+**D-7 + D-8 status:** CLOSED. Moved from deferred ledger to implemented.
+
+---
+
 ## Checkpoint — 2026-04-20 (session 4) — V2.5-preview PRODUCTION-CLEARED via first wild scan
 
 **HEAD:** session 4 close commit (pending) on top of `4ad4cf6` (Phase 1 tooling)
