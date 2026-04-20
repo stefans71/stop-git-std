@@ -926,6 +926,7 @@
               "description": "V1.2 D1: harness-native shape with entries_count + entries (was {found, blocks} wrapper in V1.1).",
               "properties": {
                 "$comment": { "type": "string" },
+                "scanned": { "type": ["boolean", "null"] },
                 "entries_count": { "type": ["integer", "null"] },
                 "entries": { "type": "array" }
               },
@@ -971,6 +972,10 @@
             "security_flagged_count": {
               "type": ["integer", "null"],
               "description": "V1.2 D1: harness-emitted count of security-flagged PRs in the sample."
+            },
+            "security_flagged_numbers": {
+              "type": "array",
+              "description": "V1.2 D1: harness-emitted list of PR numbers flagged as security-relevant."
             },
             "security_relevant_prs": { "type": "array" }
           },
@@ -1091,6 +1096,7 @@
             "$comment": { "type": "string" },
             "available": { "type": "boolean" },
             "ran": { "type": "boolean" },
+            "note": { "type": ["string", "null"] },
             "findings_count": { "type": ["integer", "null"] },
             "findings": { "type": "array" }
           },
@@ -1113,7 +1119,8 @@
             "$comment": { "type": "string" },
             "scanned_files": { "type": "array" },
             "injection_signals": { "type": "array" },
-            "signal_count": { "type": ["integer", "null"] }
+            "signal_count": { "type": ["integer", "null"] },
+            "scan_method": { "type": ["string", "null"] }
           },
           "additionalProperties": false
         },
