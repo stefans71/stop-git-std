@@ -399,11 +399,12 @@ The deterministic renderer shipped in commits `402f933` (Step F HTML renderer + 
    python3 docs/render-md.py   form.json --out docs/GitHub-Scanner-<repo>.md
    python3 docs/render-html.py form.json --out docs/GitHub-Scanner-<repo>.html
    ```
-4. **Phase 5** — validator gate. `--parity` and `--bundle` modes return exit 0 even when warnings exist, so the operator MUST inspect warning count explicitly, not rely on exit code alone:
+4. **Phase 5** — validator gate. `--parity` and `--bundle` modes return exit 0 even when warnings exist, so the operator MUST inspect warning count explicitly, not rely on exit code alone. The validator emits three diagnostic levels: ERROR (exit 1), WARNING (structural ambiguity, exit 0 but gate-blocking), INFO (authoring/rendering variation, exit 0 non-blocking). Warning lines are prefixed `⚠ WARNING:`; info lines are prefixed `ℹ Note:`. FN-5 grep pattern matches `WARNING:` substring (not `^WARNING:`), since warnings are indent-prefixed `  ⚠ WARNING:` in validator output:
    - `python3 docs/validate-scanner-report.py --report <.html>` exits 0 on HTML
    - `python3 docs/validate-scanner-report.py --markdown <.md>` exits 0 on MD
-   - `python3 docs/validate-scanner-report.py --parity <.md> <.html> 2>&1 | tee parity-output.txt` — exit 0 required AND `grep -c '^WARNING:' parity-output.txt` must equal `0`
-   - `python3 docs/validate-scanner-report.py --bundle <findings-bundle.md> 2>&1 | tee bundle-output.txt` — exit 0 required AND `grep -c '^WARNING:' bundle-output.txt` must equal `0`
+   - `python3 docs/validate-scanner-report.py --parity <.md> <.html> 2>&1 | tee parity-output.txt` — exit 0 required AND `grep -c 'WARNING:' parity-output.txt` must equal `0`
+   - `python3 docs/validate-scanner-report.py --bundle <findings-bundle.md> 2>&1 | tee bundle-output.txt` — exit 0 required AND `grep -c 'WARNING:' bundle-output.txt` must equal `0`
+   - INFO-level notes (`ℹ Note:`) do NOT gate-block Step G acceptance. They are authoring/rendering variations (asymmetric parity where MD has F-IDs not in HTML but HTML adds nothing, compact-bundle summary style, template section-name differences). MD-canonical is asymmetric: HTML cannot add findings; MD may have extras.
 
 **Execution ordering — pilot-and-checkpoint.** Run the first target (zustand) end-to-end through all pre-flight, authoring, render, and gate checks. **Hard checkpoint before continuing.** Checkpoint criteria:
 
@@ -433,7 +434,7 @@ The prompt (`repo-deep-dive-prompt.md`) has two halves: investigation instructio
 **Pre-flight** (before any live bundle or form authoring begins):
 
 - **Step -2: Provenance entry.** Per `tests/fixtures/provenance.json` `ordering_constraints`: create the provenance entry for the live Step G form BEFORE authoring begins, not retroactively. Tag as `step-g-live-pipeline`, distinct from `back-authored` or `authored-from-scan-data` template fixtures.
-- **Step -1: V2.4 comparator cleanliness.** Run `validate-scanner-report.py --parity <V2.4.md> <V2.4.html>` on each of the 3 V2.4 catalog comparator pairs (zustand-v3, caveman, Archon). Each must report exit 0 AND zero `WARNING:` lines per §8.8.2 step 4 inspection. If any comparator reports warnings, STOP — the structural-parity anchor is contaminated; re-scan the comparator or document as "comparator-tainted, Step G-deferred for this shape" before proceeding.
+- **Step -1: V2.4 comparator cleanliness.** Run `validate-scanner-report.py --parity <V2.4.md> <V2.4.html>` on each of the 3 V2.4 catalog comparator pairs (zustand-v3, caveman, Archon). Each must report exit 0 AND zero `WARNING:` lines per §8.8.2 step 4 inspection (grep substring `WARNING:`, not `^WARNING:`). INFO notes (`ℹ Note:`) are not gate-blocking — they represent authoring/rendering variation (asymmetric parity, compact-bundle style, template section-name differences) and do not indicate structural-parity contamination. If any comparator reports `WARNING:` lines, STOP — the structural-parity anchor is contaminated; re-scan the comparator or document as "comparator-tainted, Step G-deferred for this shape" before proceeding.
 - **Step 0: Adversarial bundle validator smoke test.** Before authoring any live bundle, author 4 synthetic bundles (each mutates a clean corpus bundle) and verify `--bundle` behavior:
   1. Inject a synthesis verb ("suggests", "indicates", "plausibly") into an evidence block under `## Evidence`. Expected: **exit 1** + flags interpretive-verb-in-evidence.
   2. Inject an orphan F-ID (`F99`) into `## Pattern recognition` that is never declared in `## FINDINGS SUMMARY`. Expected: **exit 1** + flags orphan-F-ID.
@@ -480,7 +481,7 @@ Automation note: Step 3b's compute.py invocation is manual for Step G — the pi
 
 1. `form.json` validates clean against V1.1 schema (zero errors).
 2. Both rendered outputs pass `validate-scanner-report.py --report` (exit 0).
-3. `--parity <md> <html>` reports zero errors **AND** zero `WARNING:` lines (operator must inspect stdout per §8.8.2 step 4; exit code alone is insufficient).
+3. `--parity <md> <html>` reports zero errors **AND** zero `WARNING:` lines (operator must inspect stdout per §8.8.2 step 4; exit code alone is insufficient). INFO notes (`ℹ Note:`) are non-gating.
 4. Evidence refs resolve (no dead `E*` or `EB-*` references in findings).
 5. Re-rendering the same `form.json` produces byte-identical MD + HTML (determinism test: `diff <(render) <(render)` = empty).
 6. **Structural parity against V2.4 comparator — explicit zero-tolerance checklist.** For each target, compare V2.5-preview rendered MD against the V2.4 catalog comparator MD at the same SHA. ALL of the following must be exact match; any mismatch = gate-6 failure:

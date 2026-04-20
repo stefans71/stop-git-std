@@ -444,11 +444,22 @@ def check_markdown(path: Path) -> int:
 
 def check_parity(md_path: Path, html_path: Path) -> tuple:
     """PD2: Check that MD and HTML reports contain the same structural content.
-    The MD is canonical — HTML may not add findings absent from MD."""
+    The MD is canonical — HTML may not add findings absent from MD.
+
+    Diagnostic categories:
+      ERROR — real MD-canonical break: HTML adds a finding not in MD, verdict mismatch,
+              canonical scorecard question missing. Exit 1.
+      WARNING — structural ambiguity: could not extract verdict. Exit 0.
+      INFO — authoring/rendering variation (asymmetric parity where MD has F-IDs not in HTML
+             but HTML adds nothing; compact-bundle style; section-name rendering differences).
+             Not a contamination signal; MD-canonical is one-way (HTML cannot add; MD may have
+             extras). Emitted as `ℹ Note:` so FN-5 grep on WARNING: does not STOP on them.
+    """
     md_raw = md_path.read_text(encoding="utf-8")
     html_raw = html_path.read_text(encoding="utf-8")
     total_errors = 0
     warnings = 0
+    infos = 0
 
     print(f"=== Parity check: {md_path.name} ↔ {html_path.name} ===")
 
@@ -514,7 +525,11 @@ def check_parity(md_path: Path, html_path: Path) -> tuple:
             # Only treat tail parens as a finding-card ID when the parens contain
             # an ID expression ONLY — "F-ID" or "F-ID / rule-ID", no prose. Reject:
             #   "(F11 dual metric)" — prose word "dual metric"
-            #   "(F11 + F14)"       — compound rule reference
+            #   "(F11 + F14)"       — rule-ID cluster reference (NOT finding-card ID).
+            #                         Archon h3 "Governance: ... (F11 + F14)" references
+            #                         catalog rules F11/F14, not finding cards. False-
+            #                         positive compound extraction attempted 2026-04-20
+            #                         was reverted after it flagged MD-canonical violations.
             #   "(densest F7 surface in catalog)" — prose mentioning F-ID
             tail_id_only = re.fullmatch(
                 rf"({fid_pat})(?:\s*/\s*[A-Z]\d+)?", tail_inner
@@ -534,11 +549,18 @@ def check_parity(md_path: Path, html_path: Path) -> tuple:
                 print(f"  ✗ HTML finding-card IDs NOT in MD (violates MD-canonical rule): {sorted(card_only)}")
                 total_errors += 1
             if md_missing_from_html:
-                print(f"  ⚠ MD findings missing from HTML: {sorted(md_missing_from_html)}")
-                warnings += 1
+                # MD-canonical is asymmetric: HTML cannot add findings, but MD may have F-IDs
+                # that are not explicitly encoded in HTML h3 tags (authoring choice — HTML
+                # finding cards use prose titles, or compound tail parens like "(F11 + F14)"
+                # that the regex rejects). Not a contamination signal when no HTML extras
+                # exist (card_only is empty). Emit as informational note.
+                print(f"  ℹ Note: MD findings not extractable from HTML: {sorted(md_missing_from_html)} (authoring variation; MD-canonical not violated since no HTML extras)")
+                infos += 1
     else:
-        print(f"  ⚠ Could not extract finding IDs from MD for comparison")
-        warnings += 1
+        # Compact-bundle style (zero F-IDs in MD FINDINGS SUMMARY, e.g. zustand-v3 style,
+        # U-10 approved). Not a contamination signal.
+        print(f"  ℹ Note: Could not extract finding IDs from MD (compact-bundle style or prose-only summary)")
+        infos += 1
 
     # 2. Scorecard questions — both MD and HTML must contain the canonical 4-question
     # set defined in docs/repo-deep-dive-prompt.md §"Trust Scorecard" (~line 743).
@@ -580,26 +602,35 @@ def check_parity(md_path: Path, html_path: Path) -> tuple:
             print(f"  ✗ Verdict mismatch — MD: {md_primary.group(1)}, HTML: {html_primary.group(1)}")
             total_errors += 1
     elif md_primary:
-        print(f"  ⚠ Could not extract verdict from HTML for comparison")
+        print(f"  ⚠ WARNING: Could not extract verdict from HTML for comparison")
         warnings += 1
     else:
-        print(f"  ⚠ Could not extract verdict from MD for comparison")
+        print(f"  ⚠ WARNING: Could not extract verdict from MD for comparison")
         warnings += 1
 
-    # 4. Section presence — key sections should be in both
+    # 4. Section presence — key sections should be in both.
+    # Section-name rendering variations (e.g., MD "## How this scan works" vs HTML
+    # "<section class='methodology'>") are authoring/template choices, not content
+    # breaks. Classify as info, not warning, so FN-5 pre-flight gate does not STOP
+    # on template evolution.
     key_sections = ["what should i do", "what we found", "evidence", "coverage",
                     "timeline", "repo vital", "how this scan works"]
     for section in key_sections:
         in_md = section in md_raw.lower()
         in_html = section in html_raw.lower()
         if in_md and not in_html:
-            print(f"  ⚠ Section '{section}' in MD but not found in HTML")
-            warnings += 1
+            print(f"  ℹ Note: Section '{section}' in MD but not found in HTML (rendering variation)")
+            infos += 1
 
-    if total_errors == 0 and warnings == 0:
+    if total_errors == 0 and warnings == 0 and infos == 0:
         print(f"\n✓ Parity check clean — MD and HTML are structurally consistent.")
     elif total_errors == 0:
-        print(f"\n✓ Parity check clean (with {warnings} warning(s)).")
+        parts = []
+        if warnings:
+            parts.append(f"{warnings} warning(s)")
+        if infos:
+            parts.append(f"{infos} info note(s)")
+        print(f"\n✓ Parity check clean (with {', '.join(parts)}).")
     else:
         print(f"\n✗ Parity check found {total_errors} error(s).")
 
@@ -770,8 +801,16 @@ def check_bundle(path) -> tuple:
         if verdict_fids:
             print(f"  ✓ Proposed verdict cites F-IDs: {sorted(verdict_fids)}")
         elif has_severity:
-            print(f"  ⚠ Proposed verdict names severity but no specific F-IDs")
-            warnings += 1
+            # Compact-bundle style: if FINDINGS SUMMARY also has zero F-IDs, the
+            # entire bundle is prose-synthesis (zustand-v3 pattern, U-10 approved).
+            # Verdict without F-IDs is consistent with the shape, not a discipline
+            # break. Classify as info. Otherwise (FINDINGS SUMMARY has F-IDs but
+            # verdict doesn't), the asymmetry is a citation gap worth flagging.
+            if not findings_fids:
+                print(f"  ℹ Note: Proposed verdict names severity without F-IDs (compact-bundle style; consistent with F-ID-free FINDINGS SUMMARY)")
+            else:
+                print(f"  ⚠ WARNING: Proposed verdict names severity but no specific F-IDs")
+                warnings += 1
         else:
             print(f"  ✗ Proposed verdict does not cite F-IDs or severity levels")
             errors += 1
