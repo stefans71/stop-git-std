@@ -1,0 +1,2271 @@
+{
+  "$comment": "Kronos V1.2 wild scan \u2014 second wild V1.2 scan (Python ML foundation model shape).",
+  "schema_version": "V1.2",
+  "_meta": {
+    "scanner_version": "V2.5-preview",
+    "prompt_version": "V2.4",
+    "scan_started_at": "2026-04-20T10:51:21.767777+00:00",
+    "model": "claude-opus-4-7 (via Claude Code)",
+    "scan_status": "completed",
+    "scan_completed_at": "2026-04-20T11:03:34.739384+00:00"
+  },
+  "target": {
+    "owner": "shiyu-coder",
+    "repo": "Kronos",
+    "full_name": "shiyu-coder/Kronos",
+    "url": "https://github.com/shiyu-coder/Kronos"
+  },
+  "scanner_integrity": {
+    "injection_matches": 0,
+    "actionable_count": 0,
+    "findings": []
+  },
+  "phase_1_raw_capture": {
+    "pre_flight": {
+      "head_sha": "67b630e67f6a18c9e9be918d9b4337c960db1e9a",
+      "default_branch": "master",
+      "tarball_extracted": true,
+      "tarball_file_count": 92,
+      "symlinks_stripped": 0,
+      "api_rate_limit": {
+        "limit": 5000,
+        "remaining": 4992,
+        "reset": 1776684189,
+        "used": 8
+      }
+    },
+    "repo_metadata": {
+      "name": "Kronos",
+      "description": "Kronos: A Foundation Model for the Language of Financial Markets",
+      "created_at": "2025-07-01T02:54:32Z",
+      "pushed_at": "2026-04-13T12:38:49Z",
+      "stargazer_count": 19724,
+      "fork_count": 3561,
+      "archived": false,
+      "fork": false,
+      "has_issues_enabled": true,
+      "primary_language": "Python",
+      "topics": [],
+      "license_spdx": "MIT",
+      "default_branch": "master",
+      "open_issues_count": 172,
+      "size_kb": 9539
+    },
+    "contributors": {
+      "top_contributors": [
+        {
+          "contributions": 36,
+          "login": "shiyu-coder"
+        },
+        {
+          "contributions": 9,
+          "login": "Luciferbobo"
+        },
+        {
+          "contributions": 7,
+          "login": "CharlesJ-ABu"
+        },
+        {
+          "contributions": 6,
+          "login": "AnMakc"
+        },
+        {
+          "contributions": 2,
+          "login": "randyy179"
+        },
+        {
+          "contributions": 1,
+          "login": "xxsunyxx"
+        }
+      ],
+      "total_contributor_count": 19
+    },
+    "maintainer_accounts": {
+      "accounts": [
+        {
+          "bio": "Nanjing University(bachelor)           \r\n - Tsinghua University(doctoral student)",
+          "company": null,
+          "created_at": "2020-05-22T08:43:11Z",
+          "followers": 565,
+          "login": "shiyu-coder",
+          "public_repos": 7,
+          "type": "User",
+          "role": "owner"
+        },
+        {
+          "bio": null,
+          "company": "UCLA",
+          "created_at": "2019-09-05T09:25:11Z",
+          "followers": 44,
+          "login": "Luciferbobo",
+          "public_repos": 21,
+          "type": "User",
+          "role": "contributor",
+          "contributions": 9
+        },
+        {
+          "bio": null,
+          "company": null,
+          "created_at": "2016-04-07T09:59:03Z",
+          "followers": 42,
+          "login": "CharlesJ-ABu",
+          "public_repos": 47,
+          "type": "User",
+          "role": "contributor",
+          "contributions": 7
+        },
+        {
+          "bio": null,
+          "company": null,
+          "created_at": "2012-05-25T10:39:43Z",
+          "followers": 14,
+          "login": "AnMakc",
+          "public_repos": 11,
+          "type": "User",
+          "role": "contributor",
+          "contributions": 6
+        },
+        {
+          "bio": null,
+          "company": null,
+          "created_at": "2023-04-04T00:41:01Z",
+          "followers": 5,
+          "login": "randyy179",
+          "public_repos": 4,
+          "type": "User",
+          "role": "contributor",
+          "contributions": 2
+        }
+      ]
+    },
+    "ossf_scorecard": {
+      "queried": true,
+      "indexed": false,
+      "http_status": 404,
+      "overall_score": null,
+      "checks": [],
+      "raw_response": null
+    },
+    "community_profile": {
+      "health_percentage": 42,
+      "has_code_of_conduct": false,
+      "has_contributing": false,
+      "has_security_policy": false,
+      "license_spdx": "MIT"
+    },
+    "branch_protection": {
+      "classic": {
+        "status": 404
+      },
+      "rulesets": {
+        "entries": [],
+        "count": 0
+      },
+      "rules_on_default": {
+        "entries": [],
+        "count": 0
+      },
+      "owner_type": "User",
+      "org_rulesets": {
+        "status": "n/a",
+        "entries": [],
+        "note": "owner is not an Organization"
+      }
+    },
+    "codeowners": {
+      "found": false,
+      "path": null,
+      "content": null,
+      "locations_checked": [
+        "CODEOWNERS",
+        ".github/CODEOWNERS",
+        "docs/CODEOWNERS",
+        ".gitlab/CODEOWNERS"
+      ]
+    },
+    "releases": {
+      "entries": [],
+      "total_count": 0
+    },
+    "security_advisories": {
+      "count": 0,
+      "entries": []
+    },
+    "workflows": {
+      "entries": [
+        {
+          "name": "Copilot code review",
+          "path": "dynamic/copilot-pull-request-reviewer/copilot-pull-request-reviewer",
+          "state": "active"
+        }
+      ],
+      "count": 1,
+      "pull_request_target_count": 0
+    },
+    "workflow_contents": {
+      "entries": []
+    },
+    "code_patterns": {
+      "agent_rule_files": [],
+      "readme_paste_blocks": {
+        "scanned": true,
+        "entries": [],
+        "entries_count": 0
+      },
+      "dangerous_primitives": {
+        "scanned": true,
+        "exec": {
+          "hit_count": 7,
+          "files": [
+            {
+              "file": "finetune_csv/finetune_base_model.py",
+              "first_match": {
+                "line": 313,
+                "snippet": "        model.eval()"
+              }
+            },
+            {
+              "file": "finetune_csv/finetune_tokenizer.py",
+              "first_match": {
+                "line": 236,
+                "snippet": "        model.eval()"
+              }
+            },
+            {
+              "file": "tests/test_kronos_regression.py",
+              "first_match": {
+                "line": 64,
+                "snippet": "    tokenizer.eval()"
+              }
+            },
+            {
+              "file": "tests/data/generate_regression_output.py",
+              "first_match": {
+                "line": 49,
+                "snippet": "    tokenizer.eval()"
+              }
+            },
+            {
+              "file": "finetune/qlib_test.py",
+              "first_match": {
+                "line": 211,
+                "snippet": "    tokenizer = KronosTokenizer.from_pretrained(config['tokenizer_path']).to(device).eval()"
+              }
+            },
+            {
+              "file": "finetune/train_tokenizer.py",
+              "first_match": {
+                "line": 174,
+                "snippet": "        model.eval()"
+              }
+            },
+            {
+              "file": "finetune/train_predictor.py",
+              "first_match": {
+                "line": 135,
+                "snippet": "        model.eval()"
+              }
+            }
+          ]
+        },
+        "deserialization": {
+          "hit_count": 0,
+          "files": []
+        },
+        "network": {
+          "hit_count": 2,
+          "files": [
+            {
+              "file": "examples/get_date_new.py",
+              "first_match": {
+                "line": 62,
+                "snippet": "        response = requests.get(url, params=params, headers=headers, timeout=15)"
+              }
+            },
+            {
+              "file": "examples/get_akshare_date_2024-2025_x.py",
+              "first_match": {
+                "line": 69,
+                "snippet": "        response = requests.get(url, params=params, headers=headers, timeout=10)"
+              }
+            }
+          ]
+        },
+        "secrets": {
+          "hit_count": 0,
+          "files": []
+        },
+        "vendor_keys": {
+          "hit_count": 0,
+          "files": []
+        },
+        "tls_cors": {
+          "hit_count": 2,
+          "files": [
+            {
+              "file": "webui/run.py",
+              "first_match": {
+                "line": 82,
+                "snippet": "        app.run(debug=True, host='0.0.0.0', port=7070)"
+              }
+            },
+            {
+              "file": "webui/app.py",
+              "first_match": {
+                "line": 708,
+                "snippet": "    app.run(debug=True, host='0.0.0.0', port=7070)"
+              }
+            }
+          ]
+        },
+        "sql_injection": {
+          "hit_count": 0,
+          "files": []
+        },
+        "cmd_injection": {
+          "hit_count": 0,
+          "files": []
+        },
+        "auth_bypass": {
+          "hit_count": 0,
+          "files": []
+        },
+        "path_traversal": {
+          "hit_count": 0,
+          "files": []
+        },
+        "archive_unsafe": {
+          "hit_count": 0,
+          "files": []
+        },
+        "ssrf": {
+          "hit_count": 0,
+          "files": []
+        },
+        "xss": {
+          "hit_count": 0,
+          "files": []
+        },
+        "weak_crypto": {
+          "hit_count": 0,
+          "files": []
+        },
+        "debug_flags": {
+          "hit_count": 0,
+          "files": []
+        }
+      },
+      "executable_files": [],
+      "install_hooks": []
+    },
+    "prompt_injection_scan": {
+      "scanned_files": [],
+      "injection_signals": [],
+      "signal_count": 0,
+      "scan_method": "tarball"
+    },
+    "dependencies": {
+      "manifest_files": [
+        {
+          "path": "requirements.txt",
+          "ecosystem": "PyPI"
+        },
+        {
+          "path": "webui/requirements.txt",
+          "ecosystem": "PyPI"
+        }
+      ],
+      "runtime": [
+        {
+          "name": "numpy",
+          "ecosystem": "PyPI",
+          "pinning": "unpinned"
+        },
+        {
+          "name": "pandas",
+          "ecosystem": "PyPI",
+          "pinning": "unpinned"
+        },
+        {
+          "name": "torch",
+          "ecosystem": "PyPI",
+          "pinning": ">=2.0.0"
+        },
+        {
+          "name": "einops",
+          "ecosystem": "PyPI",
+          "pinning": "==0.8.1"
+        },
+        {
+          "name": "huggingface_hub",
+          "ecosystem": "PyPI",
+          "pinning": "==0.33.1"
+        },
+        {
+          "name": "matplotlib",
+          "ecosystem": "PyPI",
+          "pinning": "==3.9.3"
+        },
+        {
+          "name": "pandas",
+          "ecosystem": "PyPI",
+          "pinning": "==2.2.2"
+        },
+        {
+          "name": "tqdm",
+          "ecosystem": "PyPI",
+          "pinning": "==4.67.1"
+        },
+        {
+          "name": "safetensors",
+          "ecosystem": "PyPI",
+          "pinning": "==0.6.2"
+        },
+        {
+          "name": "flask",
+          "ecosystem": "PyPI",
+          "pinning": "==2.3.3"
+        },
+        {
+          "name": "flask-cors",
+          "ecosystem": "PyPI",
+          "pinning": "==4.0.0"
+        },
+        {
+          "name": "pandas",
+          "ecosystem": "PyPI",
+          "pinning": "==2.2.2"
+        },
+        {
+          "name": "numpy",
+          "ecosystem": "PyPI",
+          "pinning": ">=1.26.0"
+        },
+        {
+          "name": "plotly",
+          "ecosystem": "PyPI",
+          "pinning": "==5.17.0"
+        },
+        {
+          "name": "torch",
+          "ecosystem": "PyPI",
+          "pinning": ">=2.1.0"
+        },
+        {
+          "name": "huggingface_hub",
+          "ecosystem": "PyPI",
+          "pinning": "==0.33.1"
+        }
+      ],
+      "runtime_count": 16,
+      "dev": [],
+      "dev_count": 0,
+      "dependabot_alerts": {
+        "status": 403,
+        "alerts_count": null,
+        "note": "admin scope required; falling back to osv.dev"
+      },
+      "osv_lookups": [
+        {
+          "name": "numpy",
+          "ecosystem": "PyPI",
+          "vulns_count": 16,
+          "vulns_summary": [
+            "GHSA-2fc2-6r4j-p65h",
+            "GHSA-5545-2q6w-2gh6",
+            "GHSA-6p56-wp2h-9hxr",
+            "GHSA-9fq2-x9r6-wfmf",
+            "GHSA-cw6w-4rcx-xphc"
+          ]
+        },
+        {
+          "name": "pandas",
+          "ecosystem": "PyPI",
+          "vulns_count": 1,
+          "vulns_summary": [
+            "PYSEC-2020-73"
+          ]
+        },
+        {
+          "name": "torch",
+          "ecosystem": "PyPI",
+          "vulns_count": 12,
+          "vulns_summary": [
+            "GHSA-3749-ghw9-m3mg",
+            "GHSA-47fc-vmwq-366v",
+            "GHSA-53q9-r3pm-6pq6",
+            "GHSA-5pcm-hx3q-hm94",
+            "GHSA-887c-mr87-cxwp"
+          ]
+        },
+        {
+          "name": "einops",
+          "ecosystem": "PyPI",
+          "vulns_count": 0,
+          "vulns_summary": []
+        },
+        {
+          "name": "huggingface_hub",
+          "ecosystem": "PyPI",
+          "vulns_count": 0,
+          "vulns_summary": []
+        },
+        {
+          "name": "matplotlib",
+          "ecosystem": "PyPI",
+          "vulns_count": 0,
+          "vulns_summary": []
+        },
+        {
+          "name": "tqdm",
+          "ecosystem": "PyPI",
+          "vulns_count": 3,
+          "vulns_summary": [
+            "GHSA-g7vv-2v7x-gj9p",
+            "GHSA-r7q7-xcjw-qx8q",
+            "PYSEC-2017-74"
+          ]
+        },
+        {
+          "name": "safetensors",
+          "ecosystem": "PyPI",
+          "vulns_count": 0,
+          "vulns_summary": []
+        },
+        {
+          "name": "flask",
+          "ecosystem": "PyPI",
+          "vulns_count": 8,
+          "vulns_summary": [
+            "GHSA-4grg-w6v8-c28g",
+            "GHSA-562c-5r94-xh97",
+            "GHSA-5wv5-4vpf-pj6m",
+            "GHSA-68rp-wp8r-4726",
+            "GHSA-m2qf-hxjv-5gpq"
+          ]
+        },
+        {
+          "name": "flask-cors",
+          "ecosystem": "PyPI",
+          "vulns_count": 8,
+          "vulns_summary": [
+            "GHSA-43qf-4rqw-9q2g",
+            "GHSA-7rxf-gvfg-47g4",
+            "GHSA-84pr-m4jr-85g5",
+            "GHSA-8vgw-p6qm-5gr7",
+            "GHSA-hxwh-jpp2-84pm"
+          ]
+        },
+        {
+          "name": "plotly",
+          "ecosystem": "PyPI",
+          "vulns_count": 0,
+          "vulns_summary": []
+        }
+      ],
+      "dependabot_config": {
+        "present": false,
+        "ecosystems_tracked": [],
+        "raw_snippet": null
+      }
+    },
+    "pr_review": {
+      "total_closed_prs": 19,
+      "sample_size": 19,
+      "total_merged_lifetime": 19,
+      "prs": [
+        {
+          "number": 243,
+          "title": "fix: preserve batch dimension in tokenizer and predictor training",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2026-04-13T12:38:49Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 234,
+          "title": "Fix data leakage in normalization window (#227)",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2026-04-13T12:36:38Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 232,
+          "title": "fix: use torch.topk instead of calling top_k int parameter as a function in sample_from_logits",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2026-04-13T12:36:00Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 224,
+          "title": "Fixes #223 : remove incompatible numpy pin from webui requirements",
+          "review_decision": "",
+          "any_review_count": 2,
+          "self_merge": false,
+          "merged_at": "2026-04-13T12:35:21Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 211,
+          "title": "Auto-detect device for easier getting started",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2026-01-02T14:16:31Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 182,
+          "title": "Add examples from China\u2019s A-share market",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2025-11-05T09:48:37Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 174,
+          "title": "Improve inference throughput",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2025-11-05T09:48:13Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 173,
+          "title": "Add regression tests",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2025-10-29T15:20:55Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 167,
+          "title": "fix: define missing split_token in HierarchicalEmbedding",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2025-10-26T12:30:18Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 152,
+          "title": "Update README.md",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2025-10-19T08:25:33Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 139,
+          "title": "\u4fee\u6539\u5185\u5bb9",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2026-04-13T12:35:03Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 138,
+          "title": "add CSV-based finetuning pipeline for Kronos models",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2025-10-12T09:06:30Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 93,
+          "title": "wrong expressions and typo",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2025-09-16T02:36:13Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 63,
+          "title": "doc: add links to translated README versions",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2025-09-03T13:57:07Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 59,
+          "title": "fix: add torch.cuda.empty_cache() during autoregressive inference",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2025-09-02T02:36:56Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 54,
+          "title": "bugfix: add missing dependency safetensors==0.6.2",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2025-09-01T11:37:28Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 53,
+          "title": "batch prediction ",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2025-09-01T13:27:10Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 25,
+          "title": "feat: \u6dfb\u52a0Kronos Web UI\u5b8c\u6574\u529f\u80fd",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2025-08-27T09:13:38Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 20,
+          "title": "Update qlib_data_preprocess.py",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2025-08-27T02:41:28Z",
+          "labels": [],
+          "security_flagged": false
+        }
+      ],
+      "formal_review_rate": 0.0,
+      "any_review_rate": 5.3,
+      "self_merge_count": 0,
+      "security_flagged_count": 0,
+      "security_flagged_numbers": []
+    },
+    "open_prs": {
+      "entries": [
+        {
+          "number": 272,
+          "title": "docs: clarify published pretraining scope limits",
+          "author": "chethanuk",
+          "created_at": "2026-04-18T10:08:54Z"
+        },
+        {
+          "number": 271,
+          "title": "docs: clarify Hugging Face loading for Kronos models",
+          "author": "chethanuk",
+          "created_at": "2026-04-18T10:08:54Z"
+        },
+        {
+          "number": 267,
+          "title": "Add FastAPI HTTP service and MCP server for OpenClaw integration",
+          "author": "yizhibenshayu-bit",
+          "created_at": "2026-04-17T07:09:48Z"
+        },
+        {
+          "number": 266,
+          "title": "Fix: save_pretrained saves tokenizer weights, replace with safetensor\u2026",
+          "author": "1321213430",
+          "created_at": "2026-04-15T16:37:56Z"
+        },
+        {
+          "number": 263,
+          "title": "fix(finetune): prevent data leakage in CustomKlineDataset normalization",
+          "author": "JasonOA888",
+          "created_at": "2026-04-15T04:53:15Z"
+        },
+        {
+          "number": 262,
+          "title": "fix(sampling): top-k and top-p filters applied simultaneously",
+          "author": "JasonOA888",
+          "created_at": "2026-04-15T04:50:53Z"
+        },
+        {
+          "number": 258,
+          "title": "fix: correct typo accpeted -> accepted in README",
+          "author": "Jah-yee",
+          "created_at": "2026-04-14T12:41:27Z"
+        },
+        {
+          "number": 256,
+          "title": "Add mybot demo with enhanced prediction engine and realtime data",
+          "author": "NguyenThong251",
+          "created_at": "2026-04-14T10:05:32Z"
+        },
+        {
+          "number": 255,
+          "title": "Fix: Enhance out-of-the-box compatibility and resolve example path issues",
+          "author": "Shadowell",
+          "created_at": "2026-04-14T07:21:58Z"
+        },
+        {
+          "number": 253,
+          "title": "fix: capture tensor dims before unsqueeze to fix wrong reshape in auto_regressive_inference",
+          "author": "kuishou68",
+          "created_at": "2026-04-14T01:10:23Z"
+        },
+        {
+          "number": 251,
+          "title": "fix: ReadMe Typo",
+          "author": "VictorTherache",
+          "created_at": "2026-04-13T19:14:34Z"
+        },
+        {
+          "number": 250,
+          "title": "fix: use flexible dependency ranges in requirements.txt",
+          "author": "mvanhorn",
+          "created_at": "2026-04-13T17:33:09Z"
+        },
+        {
+          "number": 249,
+          "title": "fix: replace unsafe pickle.load with restricted unpickler",
+          "author": "mvanhorn",
+          "created_at": "2026-04-13T17:07:40Z"
+        },
+        {
+          "number": 248,
+          "title": "fix: correct encoder/decoder block count to match configured layers",
+          "author": "mvanhorn",
+          "created_at": "2026-04-13T16:44:18Z"
+        },
+        {
+          "number": 247,
+          "title": "test: add 55 offline unit tests for model components and utilities",
+          "author": "sjhddh",
+          "created_at": "2026-04-13T14:28:11Z"
+        },
+        {
+          "number": 246,
+          "title": "refactor: extract shared utilities to eliminate finetune code duplication",
+          "author": "sjhddh",
+          "created_at": "2026-04-13T14:28:05Z"
+        },
+        {
+          "number": 245,
+          "title": "build: add pyproject.toml and eliminate sys.path.append hacks",
+          "author": "sjhddh",
+          "created_at": "2026-04-13T14:27:55Z"
+        },
+        {
+          "number": 244,
+          "title": "fix: resolve 8 bugs in core model and inference code",
+          "author": "sjhddh",
+          "created_at": "2026-04-13T14:27:46Z"
+        },
+        {
+          "number": 242,
+          "title": "optimization test_kronos_regression.py",
+          "author": "saiganesh47",
+          "created_at": "2026-04-13T06:14:27Z"
+        },
+        {
+          "number": 241,
+          "title": "test_kronos_regression.py",
+          "author": "saiganesh47",
+          "created_at": "2026-04-13T06:11:05Z"
+        },
+        {
+          "number": 239,
+          "title": "chore: ruff lint fixes and formatting across all source files",
+          "author": "korbonits",
+          "created_at": "2026-04-12T05:35:42Z"
+        },
+        {
+          "number": 238,
+          "title": "fix: three silent bugs in sampling and quantization + unit tests",
+          "author": "korbonits",
+          "created_at": "2026-04-12T05:35:05Z"
+        },
+        {
+          "number": 192,
+          "title": "Add KV cache",
+          "author": "AnMakc",
+          "created_at": "2025-11-12T20:47:22Z"
+        },
+        {
+          "number": 83,
+          "title": "Fix/dataloader window leakage",
+          "author": "HarvestStars",
+          "created_at": "2025-09-09T16:25:48Z"
+        },
+        {
+          "number": 48,
+          "title": "add uv, ruff, mypy and pre-commit for project management",
+          "author": "cove9988",
+          "created_at": "2025-08-30T02:01:52Z"
+        }
+      ],
+      "count": 25
+    },
+    "closed_not_merged_prs": {
+      "entries": [
+        {
+          "number": 225,
+          "title": "feat: clean up examples and make finetune workflows config-aware",
+          "closed_at": "2026-03-10T22:04:54Z"
+        },
+        {
+          "number": 206,
+          "title": "Feat/offline mode 3029399501962764805",
+          "closed_at": "2025-12-17T08:46:27Z"
+        },
+        {
+          "number": 183,
+          "title": "test",
+          "closed_at": "2025-11-05T11:49:19Z"
+        },
+        {
+          "number": 172,
+          "title": "Add regression tests",
+          "closed_at": "2025-10-28T21:16:36Z"
+        },
+        {
+          "number": 140,
+          "title": "\u57fa\u4e8e\u914d\u7f6e\u6587\u4ef6\u7684\u80a1\u7968\u9884\u6d4b\u811a\u672c\u652f\u6301\u7075\u6d3b\u7684\u53c2\u6570\u914d\u7f6e\u548c\u6279\u91cf\u5904\u7406",
+          "closed_at": "2025-10-10T11:38:39Z"
+        },
+        {
+          "number": 127,
+          "title": "Fix/local model loading issue",
+          "closed_at": "2025-10-02T16:19:11Z"
+        }
+      ],
+      "count": 6
+    },
+    "issues_and_commits": {
+      "open_security_issues": [
+        {
+          "author": "Doria77486",
+          "body_snippet": "## Description\nThe `QlibDataset` class loads training/validation data from pickle files (`train_data.pkl` or `val_data.pkl`) using Python's `pickle.load`. This poses a remote code execution (RCE) risk if an attacker can supply a malicious `.pkl` file.\n```python\nclass QlibDataset(Dataset):\n    def __",
+          "created_at": "2026-01-15T07:21:16Z",
+          "labels": [],
+          "number": 216,
+          "state": "open",
+          "title": "Security Issue: Unsafe deserialization in `QlibDataset`"
+        }
+      ],
+      "open_issues_count": 147,
+      "closed_issues": [],
+      "closed_issues_count": 0,
+      "recent_commits": [
+        {
+          "author": "shiyu-coder",
+          "date": "2026-04-13T12:38:49Z",
+          "message_first_line": "Merge pull request #243 from ElhamDevelopmentStudio/fix/batch-dimension-training",
+          "sha": "67b630e",
+          "security_keyword_match": true
+        },
+        {
+          "author": "shiyu-coder",
+          "date": "2026-04-13T12:36:38Z",
+          "message_first_line": "Merge pull request #234 from Nikhil1869/master",
+          "sha": "edee1e5",
+          "security_keyword_match": false
+        },
+        {
+          "author": "shiyu-coder",
+          "date": "2026-04-13T12:36:00Z",
+          "message_first_line": "Merge pull request #232 from kuishou68/fix/issue-231-sample-from-logits-topk-bug",
+          "sha": "22140cd",
+          "security_keyword_match": true
+        },
+        {
+          "author": "shiyu-coder",
+          "date": "2026-04-13T12:35:21Z",
+          "message_first_line": "Merge pull request #224 from randyy179/codex/fix-webui-python312-deps",
+          "sha": "05b75b6",
+          "security_keyword_match": true
+        },
+        {
+          "author": "shiyu-coder",
+          "date": "2026-04-13T12:35:03Z",
+          "message_first_line": "Merge pull request #139 from billconan2017/my-feature-branch",
+          "sha": "29491b0",
+          "security_keyword_match": false
+        },
+        {
+          "author": "ElhamDevelopmentStudio",
+          "date": "2026-04-13T09:23:18Z",
+          "message_first_line": "fix: preserve batch dimension in tokenizer and predictor training",
+          "sha": "8ca2821",
+          "security_keyword_match": true
+        },
+        {
+          "author": "Nikhil1869",
+          "date": "2026-04-11T06:31:04Z",
+          "message_first_line": "Fix data leakage in normalization window (#227)",
+          "sha": "79d6d40",
+          "security_keyword_match": true
+        },
+        {
+          "author": "kuishou68",
+          "date": "2026-04-09T16:03:01Z",
+          "message_first_line": "fix: use torch.topk instead of calling top_k parameter as function in sample_from_logits",
+          "sha": "fde8f60",
+          "security_keyword_match": true
+        },
+        {
+          "author": "randyy179",
+          "date": "2026-03-10T03:41:36Z",
+          "message_first_line": "fix: relax numpy requirement in webui dependencies",
+          "sha": "8c08af6",
+          "security_keyword_match": true
+        },
+        {
+          "author": "randyy179",
+          "date": "2026-03-10T03:27:39Z",
+          "message_first_line": "fix: remove incompatible numpy pin from webui requirements",
+          "sha": "a7d0d23",
+          "security_keyword_match": true
+        }
+      ]
+    },
+    "distribution_channels": {
+      "channels": []
+    },
+    "artifact_verification": {
+      "per_channel": []
+    },
+    "install_script_analysis": {
+      "scripts": [
+        {
+          "file": "README.md",
+          "snippet": "pip install -r requirements.txt",
+          "network": true,
+          "tracks_main_branch": false,
+          "sha_pinned": false,
+          "tag_pinned": false
+        },
+        {
+          "file": "README.md",
+          "snippet": "pip install pyqlib",
+          "network": true,
+          "tracks_main_branch": false,
+          "sha_pinned": false,
+          "tag_pinned": false
+        }
+      ]
+    },
+    "gitleaks": {
+      "available": false,
+      "ran": false,
+      "findings_count": null,
+      "findings": [],
+      "note": "gitleaks not installed; install to cover secrets-in-history"
+    },
+    "windows_patterns": {
+      "hits": [],
+      "hit_count": 0
+    },
+    "monorepo": {
+      "is_monorepo": false,
+      "inner_packages": [],
+      "lifecycle_script_hits": []
+    },
+    "defensive_configs": {
+      "entries": [
+        {
+          "file": ".github/dependabot.yml",
+          "type": "dependabot",
+          "present": false
+        },
+        {
+          "file": "SECURITY.md",
+          "type": "security-policy",
+          "present": false
+        }
+      ]
+    },
+    "batch_merge_detection": {
+      "detected": true,
+      "pr_groups": [
+        {
+          "merged_at_bucket": "2026-04-13T12:35:00Z",
+          "pr_count": 5,
+          "prs": [
+            243,
+            234,
+            232,
+            224,
+            139
+          ]
+        }
+      ]
+    },
+    "coverage_affirmations": {
+      "prompt_injection_scan_completed": true,
+      "windows_surface_coverage": "scanned",
+      "distribution_channels_verified": "0/0",
+      "gitleaks_available": false,
+      "gitleaks_explanation": "gitleaks not installed; install to cover secrets-in-history"
+    }
+  },
+  "phase_2_validation": {
+    "sha_consistent": true,
+    "required_fields_complete": true,
+    "dates_chronological": true,
+    "tarball_nonempty": true,
+    "validation_passed": true,
+    "validation_errors": []
+  },
+  "phase_3_computed": {
+    "c20_severity": {
+      "no_classic_protection": true,
+      "no_rulesets": true,
+      "no_rules_on_default": true,
+      "no_codeowners": true,
+      "has_recent_release_30d": false,
+      "ships_executable_code": false,
+      "result": "Warning"
+    },
+    "solo_maintainer": {
+      "top_contributor_share": 0.59,
+      "is_solo": false,
+      "verbatim_sentence": null
+    },
+    "exhibit_grouping": {
+      "total_findings": 0,
+      "threshold_met": false,
+      "exhibits": []
+    },
+    "boundary_cases": {
+      "cases": []
+    },
+    "coverage_status": {
+      "cells": [
+        {
+          "name": "Tarball extraction",
+          "status": "ok",
+          "detail": "92 files"
+        },
+        {
+          "name": "OSSF Scorecard",
+          "status": "not_indexed",
+          "detail": "Repo not indexed by OSSF"
+        },
+        {
+          "name": "osv.dev",
+          "status": "not_queried",
+          "detail": ""
+        },
+        {
+          "name": "Secrets-in-history (gitleaks)",
+          "status": "not_available",
+          "detail": "gitleaks not installed"
+        },
+        {
+          "name": "API rate budget",
+          "status": "ok",
+          "detail": "4992/5000 remaining"
+        },
+        {
+          "name": "Dependabot alerts",
+          "status": "unknown",
+          "detail": "Unknown"
+        }
+      ]
+    },
+    "methodology": {
+      "scanner_version": "V2.5-preview",
+      "prompt_version": "V2.4",
+      "guide_version": "V0.2"
+    }
+  },
+  "phase_3_advisory": {
+    "scorecard_hints": {
+      "does_anyone_check_the_code": {
+        "color": "red",
+        "short_answer": "No",
+        "signals": [
+          {
+            "id": "q1_formal_review_rate",
+            "value": 0
+          },
+          {
+            "id": "q1_any_review_rate",
+            "value": 5.3
+          },
+          {
+            "id": "q1_has_branch_protection",
+            "value": false
+          },
+          {
+            "id": "q1_has_codeowners",
+            "value": false
+          },
+          {
+            "id": "q1_is_solo_maintainer",
+            "value": false
+          },
+          {
+            "id": "q1_governance_floor_override",
+            "value": true
+          }
+        ]
+      },
+      "do_they_fix_problems_quickly": {
+        "color": "amber",
+        "short_answer": "Partly",
+        "signals": [
+          {
+            "id": "q2_open_security_issue_count",
+            "value": 1
+          },
+          {
+            "id": "q2_oldest_open_cve_pr_age_days",
+            "value": null
+          },
+          {
+            "id": "q2_closed_fix_lag_days",
+            "value": null
+          }
+        ]
+      },
+      "do_they_tell_you_about_problems": {
+        "color": "red",
+        "short_answer": "No",
+        "signals": [
+          {
+            "id": "q3_has_security_policy",
+            "value": false
+          },
+          {
+            "id": "q3_has_contributing_guide",
+            "value": false
+          },
+          {
+            "id": "q3_published_advisory_count",
+            "value": 0
+          },
+          {
+            "id": "q3_has_silent_fixes",
+            "value": false
+          }
+        ]
+      },
+      "is_it_safe_out_of_the_box": {
+        "color": "amber",
+        "short_answer": "Partly",
+        "signals": [
+          {
+            "id": "q4_all_channels_pinned",
+            "value": false
+          },
+          {
+            "id": "q4_artifact_verified",
+            "value": false
+          },
+          {
+            "id": "q4_has_critical_on_default_path",
+            "value": false
+          },
+          {
+            "id": "q4_has_warning_on_install_path",
+            "value": false
+          }
+        ]
+      }
+    }
+  },
+  "phase_4_structured_llm": {
+    "findings": {
+      "entries": [
+        {
+          "id": "F0",
+          "severity": "Critical",
+          "provenance": "observed",
+          "status": "active",
+          "category": "code-execution/deserialization",
+          "kind": "Vulnerability",
+          "rule_id": null,
+          "title": "Unsafe pickle.load on training data \u2014 disclosed RCE unfixed for 95 days",
+          "action_hint": "Finetune users: do NOT run finetune/* with untrusted .pkl files. Apply PR #249 patch locally or wait for merge.",
+          "evidence_refs": [
+            "E1",
+            "E2"
+          ],
+          "threat_model_paths": [
+            "malicious_extension",
+            "runner_compromise"
+          ],
+          "threat_model_context": "Issue #216 identifies finetune/dataset.py:42 calling pickle.load on train_data.pkl/val_data.pkl. Any attacker who controls the .pkl file \u2014 via shared dataset, collaboration repo, or supply of 'pretrained' data \u2014 achieves arbitrary code execution at load time. Fix PR #249 proposes a RestrictedUnpickler, sitting unreviewed.",
+          "what_this_means": "If you finetune Kronos on a `.pkl` file you did not generate locally, and that file was tampered with, running the dataset loader executes attacker-controlled Python. This is the canonical Python pickle-deserialization RCE class.",
+          "what_this_does_not_mean": "This does NOT affect the inference-only path. Users who only load models from Hugging Face (NeoQuasar/Kronos-*) and call KronosPredictor never invoke pickle.load on user data. The RCE surface is finetune/ exclusively.",
+          "duration_label": "Continuous (95 days)",
+          "date_label": "Disclosed 2026-01-15; fix unmerged as of scan",
+          "how_to_fix": "Consumer-side (finetune users): apply PR #249 locally as a patch, OR only run finetune/ code on .pkl files you generated yourself on the same machine. Maintainer-side: review + merge PR #249; publish a security advisory documenting the window."
+        },
+        {
+          "id": "F1",
+          "severity": "Critical",
+          "provenance": "observed",
+          "status": "ongoing",
+          "category": "supply-chain/dependency-graph",
+          "kind": "Vulnerability",
+          "rule_id": null,
+          "title": "48 known CVEs in runtime dependency graph, with loose/unpinned pinning",
+          "action_hint": "Pin deps in a project-local constraints file; re-scan dep graph with `pip-audit` at install time.",
+          "evidence_refs": [
+            "E3",
+            "E4"
+          ],
+          "threat_model_paths": [
+            "stale_token",
+            "other"
+          ],
+          "threat_model_context": "numpy (16 CVEs), torch (12), flask (8), flask-cors (8), tqdm (3), pandas (1) all have current osv.dev advisories. requirements.txt leaves numpy and pandas unpinned and torch at `>=2.0.0` \u2014 a fresh install may resolve to a vulnerable version or an older already-patched version depending on pip's resolver state. webui adds flask==2.3.3 (released 2023; superseded by fixed releases) and flask-cors==4.0.0 (multiple GHSAs against 4.x).",
+          "what_this_means": "On a fresh `pip install -r requirements.txt`, the dependency resolver may pull versions with published CVEs. Neither dependabot nor a lockfile gates this.",
+          "what_this_does_not_mean": "This is not evidence that Kronos itself exploits these CVEs. These are transitive advisory surfaces. Whether any individual CVE is reachable from Kronos's usage of numpy/torch is a separate, code-path question not investigated here.",
+          "duration_label": "Continuous",
+          "date_label": "Since requirements.txt inception",
+          "how_to_fix": "Consumer-side: `pip-audit` after install; maintain a project-local constraints file that pins to known-clean versions. Maintainer-side: add dependabot config (.github/dependabot.yml), pin flask/flask-cors to patched versions, decide whether to pin or range-lock numpy/pandas/torch."
+        },
+        {
+          "id": "F2",
+          "severity": "Warning",
+          "provenance": "observed",
+          "status": "ongoing",
+          "category": "governance/review-culture",
+          "kind": "Governance",
+          "rule_id": "F11",
+          "title": "Zero formal review + no branch protection + solo-maintainer signature",
+          "action_hint": "Treat master as 'maintainer's working branch' not 'reviewed code' \u2014 pin to a reviewed SHA before production use.",
+          "evidence_refs": [
+            "E6",
+            "E7",
+            "E9"
+          ],
+          "threat_model_paths": [
+            "stale_token",
+            "other"
+          ],
+          "threat_model_context": "0% formal-review rate and 5.3% any-review rate across the last 19 closed PRs. No classic branch protection, no rulesets, no CODEOWNERS. Maintainer shiyu-coder (Tsinghua PhD student) authors or merges the majority of commits directly. If the maintainer's credentials leak or the account is compromised, there is no second-human review gate before a malicious commit lands on master.",
+          "what_this_means": "Commits land on master without independent review. Research-repo norm, not a malicious signal, but structurally indistinguishable from a one-account supply-chain target.",
+          "what_this_does_not_mean": "This is not a claim of malicious behavior by the maintainer. It's a structural-risk observation about the review gate.",
+          "duration_label": "Continuous",
+          "date_label": "Since repo creation (2025-07-01)",
+          "how_to_fix": "Maintainer-side: enable branch protection on master (classic or ruleset) requiring at least 1 review + status checks; add CODEOWNERS naming 2 reviewers. Consumer-side: pin installs to a specific SHA that you personally reviewed."
+        },
+        {
+          "id": "F3",
+          "severity": "Warning",
+          "provenance": "observed",
+          "status": "ongoing",
+          "category": "supply-chain/versioning",
+          "kind": "Structural",
+          "rule_id": null,
+          "title": "Zero formal releases \u2014 installs resolve to master HEAD",
+          "action_hint": "Pin to a specific commit SHA for any reproducible install.",
+          "evidence_refs": [
+            "E5"
+          ],
+          "threat_model_paths": [
+            "stale_token",
+            "other"
+          ],
+          "threat_model_context": "Kronos has never cut a release tag. `pip install -r requirements.txt` from a git clone resolves the installed code to whatever commit is on master at clone time. No semver, no changelog boundary, no rollback target. A regression or malicious commit reaches users immediately.",
+          "what_this_means": "There is no concept of 'Kronos v1.2.3' \u2014 every user installs whatever was on master when they cloned. Two users installing a week apart get different Kronos code.",
+          "what_this_does_not_mean": "This is not unusual for 10-month-old research repos. It IS a structural amplifier for F2 (review gap) because the lack of release boundary means unreviewed commits ship instantly.",
+          "duration_label": "Continuous",
+          "date_label": "Since 2025-07-01",
+          "how_to_fix": "Maintainer-side: cut even informal date-based tags (e.g., 2026.04) so downstreams have a rollback target. Consumer-side: `git clone && git checkout REVIEWED-SHA` instead of `git clone && pip install`."
+        },
+        {
+          "id": "F4",
+          "severity": "Warning",
+          "provenance": "observed",
+          "status": "ongoing",
+          "category": "governance/disclosure",
+          "kind": "Hygiene",
+          "rule_id": null,
+          "title": "No SECURITY.md, no published advisories despite a known unfixed RCE",
+          "action_hint": "If you discover a vuln in Kronos, expect to report it via the public issue tracker only.",
+          "evidence_refs": [
+            "E1",
+            "E10"
+          ],
+          "threat_model_paths": [
+            "other"
+          ],
+          "threat_model_context": "community/profile reports no SECURITY.md, no CONTRIBUTING, no code-of-conduct. Published-advisory count is 0. Issue #216 (95 days old, unfixed pickle RCE) was reported publicly with no silent-disclosure option. Any future vuln reporter will follow the same public-issue path \u2014 which, for a pre-patched RCE, is a leak by design.",
+          "what_this_means": "There is no private vulnerability-disclosure channel documented. Vulnerabilities reach the public before fixes do.",
+          "what_this_does_not_mean": "Not evidence that disclosure is impossible \u2014 GitHub's 'Report a vulnerability' button still exists under Security. But its absence from README/SECURITY.md means reporters may default to the public issue tracker.",
+          "duration_label": "Continuous",
+          "date_label": "Ongoing",
+          "how_to_fix": "Maintainer-side: add a 1-page SECURITY.md naming 'Report a vulnerability' button + expected response window; publish GHSA advisory retroactively for #216."
+        },
+        {
+          "id": "F5",
+          "severity": "Info",
+          "provenance": "observed",
+          "status": "ongoing",
+          "category": "hygiene/dependency-management",
+          "kind": "Hygiene",
+          "rule_id": null,
+          "title": "No dependabot config, no CODEOWNERS, no formal CI beyond Copilot review",
+          "action_hint": "Non-blocking; indicates maintenance-capacity ceiling.",
+          "evidence_refs": [
+            "E6",
+            "E10"
+          ],
+          "threat_model_paths": [
+            "other"
+          ],
+          "threat_model_context": "No .github/dependabot.yml. No CODEOWNERS. Single workflow is a Copilot PR reviewer (auto-review only). No test CI workflow gates merges. Combined with F2 this paints a picture of a research repo operated by a solo maintainer near capacity \u2014 not a production-supported project.",
+          "what_this_means": "Operational hygiene is minimal. Dep-graph updates do not arrive automatically; no enforced ownership; no automated test gate.",
+          "what_this_does_not_mean": "Not an exploitable vulnerability by itself. Signals the repo's investment level rather than a specific bug.",
+          "duration_label": "Continuous",
+          "date_label": "Since 2025-07-01",
+          "how_to_fix": "Maintainer-side: enable dependabot (security-alerts-only minimum); add one CODEOWNERS entry; add a trivial CI workflow that runs existing regression tests."
+        }
+      ]
+    },
+    "evidence": {
+      "entries": [
+        {
+          "id": "E1",
+          "claim": "Open security issue #216 discloses unsafe pickle.load on QlibDataset training data \u2014 sitting 95 days unfixed; fix PR #249 sitting 7 days unreviewed.",
+          "command": "gh api repos/shiyu-coder/Kronos/issues/216; gh api repos/shiyu-coder/Kronos/pulls/249",
+          "command_lang": "bash",
+          "result": "Issue #216 created 2026-01-15 (state=open, 1 comment, labels=[]). PR #249 'fix: replace unsafe pickle.load with restricted unpickler' created 2026-04-13 (state=open, not merged).",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "fact"
+        },
+        {
+          "id": "E2",
+          "claim": "pickle.load exists at finetune/dataset.py:42 and pickle.dump calls at finetune/qlib_data_preprocess.py lines 115/117/119 \u2014 confirms the RCE vector described in #216.",
+          "command": "gh api repos/shiyu-coder/Kronos/contents/finetune/dataset.py | jq -r .content | base64 -d | grep -n pickle",
+          "command_lang": "bash",
+          "result": "finetune/dataset.py:1: import pickle\nfinetune/dataset.py:42:            self.data = pickle.load(f)\nfinetune/qlib_data_preprocess.py:2: import pickle\nfinetune/qlib_data_preprocess.py:115:            pickle.dump(train_data, f)",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "fact"
+        },
+        {
+          "id": "E3",
+          "claim": "osv.dev enumerates 48 known CVEs across the runtime dependency graph: numpy (16), torch (12), flask (8), flask-cors (8), tqdm (3), pandas (1).",
+          "command": "docs/phase_1_harness.py shiyu-coder/Kronos # dependencies.osv_lookups",
+          "command_lang": "bash",
+          "result": "numpy: 16 vulns; torch: 12; flask: 8; flask-cors: 8; tqdm: 3; pandas: 1. Total 48 advisories queryable via osv.dev for the unpinned/loose runtime dependency set.",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "fact"
+        },
+        {
+          "id": "E4",
+          "claim": "requirements.txt entries are unpinned (numpy, pandas) or loosely pinned (torch >= 2.0.0) \u2014 mixed with exact pins (einops==0.8.1, safetensors==0.6.2). webui/requirements.txt similarly mixes pins.",
+          "command": "gh api repos/shiyu-coder/Kronos/contents/requirements.txt | jq -r .content | base64 -d",
+          "command_lang": "bash",
+          "result": "runtime dependencies (harness-parsed): numpy unpinned; pandas unpinned; torch >=2.0.0; einops ==0.8.1; huggingface_hub ==0.33.1; matplotlib ==3.9.3; safetensors ==0.6.2; flask ==2.3.3; flask-cors ==4.0.0; plotly ==5.17.0.",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "fact"
+        },
+        {
+          "id": "E5",
+          "claim": "Zero formal releases \u2014 the repo has never cut a version tag; installers resolve to HEAD on master.",
+          "command": "gh api 'repos/shiyu-coder/Kronos/releases?per_page=10'",
+          "command_lang": "bash",
+          "result": "total_count: 0; releases.entries: []. No git tags. Installation path is `git clone + pip install -r requirements.txt` against the current default-branch commit.",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "fact"
+        },
+        {
+          "id": "E6",
+          "claim": "No branch protection at any layer \u2014 classic protection returns 404, rulesets count is 0, rules_on_default is 0.",
+          "command": "gh api repos/shiyu-coder/Kronos/branches/master/protection; gh api repos/shiyu-coder/Kronos/rulesets; gh api 'repos/shiyu-coder/Kronos/rules/branches/master'",
+          "command_lang": "bash",
+          "result": "classic: HTTP 404; rulesets: {entries:[], count:0}; rules_on_default: {entries:[], count:0}. CODEOWNERS: not found at any standard location.",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "fact"
+        },
+        {
+          "id": "E7",
+          "claim": "PR review rate is 0.0% formal and 5.3% any-review across the last 19 closed PRs \u2014 only 1 of 19 PRs received reviewer feedback before merge.",
+          "command": "gh api 'repos/shiyu-coder/Kronos/pulls?state=closed&per_page=19' # pr_review section",
+          "command_lang": "bash",
+          "result": "sample_size: 19; formal_review_rate: 0.0; any_review_rate: 5.3 (1 of 19 PRs had 2 reviews \u2014 PR #224). self_merge_count: 0. Maintainer merges author-submitted PRs without independent review.",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "fact"
+        },
+        {
+          "id": "E8",
+          "claim": "25 open PRs include multiple unreviewed fixes from external contributors (including security-relevant ones) sitting 5-7 days stale.",
+          "command": "gh api 'repos/shiyu-coder/Kronos/pulls?state=open&per_page=25'",
+          "command_lang": "bash",
+          "result": "Open (age as of scan): #249 pickle.load fix (7d), #250 flexible dep ranges (7d), #244 'resolve 8 bugs in core model' (7d), #238 '3 silent bugs in sampling' (8d), #263 fix data leakage finetune (5d), #262 fix sampling top-k/top-p (5d), #266 save_pretrained safetensors (5d), #253 tensor-dims fix (6d), #248 encoder/decoder block count (7d). Plus #83 dataloader leakage fix (224 days).",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "fact"
+        },
+        {
+          "id": "E9",
+          "claim": "Contributor concentration: shiyu-coder holds 36 of 61 top-contributor commits (59%); top-3 share is 52/61 (85%). Solo-maintainer author signature.",
+          "command": "gh api repos/shiyu-coder/Kronos/contributors --jq '[.[] | {login, contributions}] | .[:6]'",
+          "command_lang": "bash",
+          "result": "shiyu-coder: 36; Luciferbobo: 9; CharlesJ-ABu: 7; AnMakc: 6; randyy179: 2; xxsunyxx: 1. Total contributor count: 19. Maintainer profile: PhD student at Tsinghua University per GitHub bio.",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "fact"
+        },
+        {
+          "id": "E10",
+          "claim": "community/profile reports no SECURITY.md, no CONTRIBUTING, no CODE_OF_CONDUCT; published-advisory count is 0 despite the known pickle RCE (issue #216).",
+          "command": "gh api 'repos/shiyu-coder/Kronos/community/profile'; gh api 'repos/shiyu-coder/Kronos/security-advisories'",
+          "command_lang": "bash",
+          "result": "health_percentage: 42; has_security_policy: false; has_contributing: false; has_code_of_conduct: false. security-advisories count: 0. Disclosure channel is neither documented nor exercised.",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "fact"
+        },
+        {
+          "id": "E11",
+          "claim": "Model weights are hosted off-GitHub at Hugging Face under NeoQuasar/* \u2014 separate integrity and provenance surface from the repo.",
+          "command": "curl -sI https://huggingface.co/NeoQuasar/Kronos-base; gh api repos/shiyu-coder/Kronos/readme | jq -r .content | base64 -d | grep -i huggingface",
+          "command_lang": "bash",
+          "result": "README references NeoQuasar/Kronos-mini, NeoQuasar/Kronos-small, NeoQuasar/Kronos-base, NeoQuasar/Kronos-Tokenizer-2k, NeoQuasar/Kronos-Tokenizer-base. Model-weight integrity depends on HuggingFace Hub access controls, not on this repo's governance.",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "fact"
+        },
+        {
+          "id": "E12",
+          "claim": "Harness dangerous_primitives scan reported 0 hits in the deserialization family despite pickle.load being confirmed present at finetune/dataset.py:42 \u2014 coverage gap in the harness's regex family.",
+          "command": "docs/phase_1_harness.py # code_patterns.dangerous_primitives.deserialization",
+          "command_lang": "bash",
+          "result": "deserialization: 0 hits across all scanned files. Authoritative evidence for the pickle RCE comes from issue #216 + direct gh api fetch of finetune/dataset.py, not from the harness primitive scan. Coverage-gap annotation surfaced in coverage_gaps.",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "inference \u2014 coverage-gap annotation"
+        }
+      ]
+    },
+    "general_vuln_severity": {
+      "assessments": []
+    },
+    "section_actions": {
+      "entries": []
+    },
+    "section_leads": {
+      "section_01": {
+        "pill_row": "19.7k\u2b50 \u00b7 MIT \u00b7 Python \u00b7 2 critical \u00b7 3 warning \u00b7 1 info \u00b7 CRITICAL (split)",
+        "summary": "Kronos is a 19.7k-star Python foundation model for financial candlestick forecasting, backed by AAAI-accepted research and Hugging Face weight distribution. The research artifact is legitimate; the operational posture is not. An unfixed 95-day-old pickle RCE on the finetuning path, a dependency graph with 48 CVEs, zero formal releases, no branch protection, and 0% formal PR review together make this Critical on the Deployment axis."
+      },
+      "section_02": {
+        "pill_row": "F0 Critical \u00b7 F1 Critical \u00b7 F2 Warning \u00b7 F3 Warning \u00b7 F4 Warning \u00b7 F5 Info",
+        "summary": null
+      },
+      "section_06": {
+        "pill_row": "Scorecard: Red \u00b7 Red \u00b7 Red \u00b7 Red",
+        "summary": "All four scorecard cells land at red. Q1 and Q3 align with the Phase 3 advisory and need no override. Q2 and Q4 are ESCALATE overrides: Phase 3 compute returned amber on both because its signals are sparse (open_security_issue_count=1 alone is thin for Q2; q4_has_critical_on_default_path=False missed the pickle path entirely). Phase 4 sees the qualitative context \u2014 disclosed 95-day RCE, 48-CVE dep graph, no-release install model \u2014 and escalates both to red with override_reason=missing_qualitative_context."
+      }
+    },
+    "split_axis_decision": {
+      "should_split": true,
+      "axis": "deployment",
+      "reasoning": "The F0 pickle RCE lives on the finetune path (finetune/dataset.py). Inference-only users \u2014 who load pre-trained weights from Hugging Face (NeoQuasar/Kronos-*) and call KronosPredictor \u2014 do NOT traverse that code path. Their exposure is F1 (dep-graph CVEs) + F3 (master-HEAD install) + governance (F2/F4). Finetune users traverse the full risk surface including F0. Same repo, two consumer profiles with materially different risk.",
+      "entries": [
+        {
+          "deployment": "Inference-only (load HF model \u2192 KronosPredictor)",
+          "applicable_findings": [
+            "F1",
+            "F2",
+            "F3",
+            "F4",
+            "F5"
+          ],
+          "verdict": "Warning",
+          "note": "No pickle RCE exposure; still faces dep-graph CVEs + no-release install model."
+        },
+        {
+          "deployment": "Finetune (run finetune/*.py with self-prepared .pkl)",
+          "applicable_findings": [
+            "F0",
+            "F1",
+            "F2",
+            "F3",
+            "F4",
+            "F5"
+          ],
+          "verdict": "Critical",
+          "note": "Full risk surface including unfixed pickle RCE on dataset-loading path."
+        }
+      ]
+    },
+    "verdict_exhibits": {
+      "groups": [
+        {
+          "symbol": "\u2717",
+          "headline": "Critical \u2014 F0 + F1 are the blocking items for anyone finetuning Kronos",
+          "one_line_summary": "Unfixed RCE on finetune path + 48-CVE dependency graph.",
+          "items": [
+            {
+              "tag": "F0",
+              "claim": "pickle.load on untrusted training data \u2014 disclosed 95 days, fix PR sitting 7 days."
+            },
+            {
+              "tag": "F1",
+              "claim": "48 CVEs in runtime deps; numpy/pandas unpinned, torch >=2.0.0."
+            }
+          ]
+        },
+        {
+          "symbol": "\u26a0",
+          "headline": "Warning \u2014 F2 + F3 + F4 describe the governance posture",
+          "one_line_summary": "Solo-maintainer + no branch protection + no releases + no disclosure policy.",
+          "items": [
+            {
+              "tag": "F2",
+              "claim": "0% formal PR review, no branch protection, no CODEOWNERS."
+            },
+            {
+              "tag": "F3",
+              "claim": "Zero releases; installs resolve to master HEAD."
+            },
+            {
+              "tag": "F4",
+              "claim": "No SECURITY.md, 0 published advisories despite known RCE."
+            }
+          ]
+        },
+        {
+          "symbol": "\u2139",
+          "headline": "Info \u2014 F5 is hygiene, non-blocking",
+          "one_line_summary": "No dependabot, no CODEOWNERS, only a Copilot PR reviewer workflow.",
+          "items": [
+            {
+              "tag": "F5",
+              "claim": "Minimal operational tooling \u2014 single-maintainer capacity signature."
+            }
+          ]
+        }
+      ]
+    },
+    "priority_evidence": {
+      "selections": [
+        {
+          "evidence_id": "E1",
+          "reason": "Falsification of the 95-day open-RCE claim (e.g., #216 closed, #249 merged between scan and read) moves F0 from Critical to Warning/Info and lets Q2 fall back to amber without override."
+        },
+        {
+          "evidence_id": "E3",
+          "reason": "Re-querying osv.dev after a requirements.txt pin-tightening (e.g., flask\u21922.3.x-latest, pandas pinned) may halve the advisory count and move F1 from Critical to Warning."
+        },
+        {
+          "evidence_id": "E6",
+          "reason": "Enabling branch protection + CODEOWNERS + formal review would flip Q1 signals, collapse the governance floor, and move F2 severity."
+        }
+      ]
+    },
+    "threat_models": {
+      "per_finding": []
+    },
+    "action_steps": {
+      "entries": [
+        {
+          "step": 1,
+          "type": "verify",
+          "headline": "Before installing: review issue #216 and PR #249",
+          "severity": "Warning",
+          "non_technical": "Kronos has a known, unfixed code-execution risk on the finetuning path. Read the issue and proposed fix before deciding whether this affects your workflow.",
+          "command": "gh api repos/shiyu-coder/Kronos/issues/216; gh api repos/shiyu-coder/Kronos/pulls/249",
+          "command_lang": "bash"
+        },
+        {
+          "step": 2,
+          "type": "pin_commit",
+          "headline": "Pin to a specific reviewed commit SHA, not HEAD",
+          "severity": "Warning",
+          "non_technical": "Kronos has no releases. Cloning master means installing whatever landed today. Pick a commit you're comfortable with and pin to it.",
+          "command": "git clone https://github.com/shiyu-coder/Kronos && cd Kronos && git checkout 67b630e67f6a18c9e9be918d9b4337c960db1e9a",
+          "command_lang": "bash"
+        },
+        {
+          "step": 3,
+          "type": "install",
+          "headline": "Install in a fresh virtualenv + audit dependency graph",
+          "severity": "Warning",
+          "non_technical": "The dependency graph has 48 known CVEs. Install into an isolated venv and audit with pip-audit before importing.",
+          "command": "python3 -m venv .venv && source .venv/bin/activate && pip install -r requirements.txt && pip install pip-audit && pip-audit",
+          "command_lang": "bash"
+        },
+        {
+          "step": 4,
+          "type": "mitigate",
+          "headline": "If finetuning: apply PR #249 locally before running finetune/* code",
+          "severity": "Critical",
+          "non_technical": "The pickle.load RCE is on the finetuning path. If you plan to run any finetune/*.py scripts, patch finetune/dataset.py with the restricted-unpickler change from PR #249 BEFORE invoking it on any .pkl file you did not generate yourself.",
+          "command": "gh pr diff 249 --repo shiyu-coder/Kronos | git apply",
+          "command_lang": "bash"
+        },
+        {
+          "step": 5,
+          "type": "verify",
+          "headline": "Inference-only users: verify model downloads from HuggingFace integrity",
+          "severity": "Info",
+          "non_technical": "If you are only running inference (loading a model from HuggingFace via KronosPredictor), the pickle RCE does not apply to you. Still \u2014 verify the HF model hashes match the NeoQuasar/* repo state before trusting them.",
+          "command": "huggingface-cli download NeoQuasar/Kronos-base --local-dir ./Kronos-base && ls -la ./Kronos-base",
+          "command_lang": "bash"
+        }
+      ]
+    },
+    "timeline_events": {
+      "entries": [
+        {
+          "date": "2025-07-01",
+          "label": "Repo created",
+          "tone": "neutral",
+          "note": "First commit"
+        },
+        {
+          "date": "2025-08-02",
+          "label": "arXiv paper published",
+          "tone": "positive",
+          "note": "Kronos research artifact public"
+        },
+        {
+          "date": "2025-08-17",
+          "label": "Finetune scripts released",
+          "tone": "neutral",
+          "note": "pickle.load path introduced"
+        },
+        {
+          "date": "2025-11-10",
+          "label": "Accepted to AAAI 2026",
+          "tone": "positive",
+          "note": "Academic validation"
+        },
+        {
+          "date": "2026-01-15",
+          "label": "Issue #216 opened \u2014 pickle RCE disclosed",
+          "tone": "negative",
+          "note": "Start of unfixed-RCE window"
+        },
+        {
+          "date": "2026-04-13",
+          "label": "PR #249 opened proposing fix",
+          "tone": "neutral",
+          "note": "Fix proposed; unmerged at scan"
+        },
+        {
+          "date": "2026-04-13",
+          "label": "Last push to master",
+          "tone": "neutral",
+          "note": "HEAD at scan: 67b630e"
+        },
+        {
+          "date": "2026-04-20",
+          "label": "Scan date",
+          "tone": "neutral",
+          "note": "#216 now 95 days open; #249 now 7 days open"
+        }
+      ]
+    },
+    "capability_assessments": {
+      "per_file": []
+    },
+    "executable_file_inventory": {
+      "lead": "Kronos ships Python source files executed via `pip install -r requirements.txt` + `python examples/*.py`. No curl-pipe installer, no shell-executable files classified by the harness (`executable_files: 0`).",
+      "layer1_summary": "Primary install vector is pip-install-requirements; primary code-execution surface is Python modules imported by the user.",
+      "layer2_entries": [
+        {
+          "path": "finetune/dataset.py",
+          "kind": "library",
+          "runtime": "Python",
+          "dangerous_calls": "pickle.load (line 42) \u2014 see F0",
+          "network": null,
+          "notes": "QlibDataset loads train_data.pkl / val_data.pkl via pickle.load \u2014 disclosed RCE vector (issue #216).",
+          "file_sha": null,
+          "line_ranges": "lines 42",
+          "diff_anchor": null
+        },
+        {
+          "path": "finetune/qlib_data_preprocess.py",
+          "kind": "library",
+          "runtime": "Python",
+          "dangerous_calls": "pickle.dump (lines 115-119)",
+          "network": null,
+          "notes": "Writes train_data.pkl / val_data.pkl consumed by dataset.py. Dump-side is not directly exploitable but creates the attack surface.",
+          "file_sha": null,
+          "line_ranges": "lines 115-119",
+          "diff_anchor": null
+        },
+        {
+          "path": "webui/",
+          "kind": "web-service",
+          "runtime": "Python (Flask 2.3.3 + flask-cors 4.0.0)",
+          "dangerous_calls": null,
+          "network": "Flask listens on a local port when run",
+          "notes": "Web UI surfaces forecasts via Flask. Dep-graph carries 16 CVEs (flask=8 + flask-cors=8).",
+          "file_sha": null,
+          "line_ranges": null,
+          "diff_anchor": null
+        }
+      ],
+      "closing_note": "No postinstall scripts, no curl-pipe installer, no shell-executable helpers. Risk surface is the Python code paths themselves, especially finetune/."
+    },
+    "pr_sample_review": {
+      "rows": [
+        {
+          "number": 243,
+          "what": "fix: preserve batch dim in tokenizer/predictor training",
+          "author": "ElhamDevelopmentStudio",
+          "merger": "shiyu-coder",
+          "reviewed": "No formal decision",
+          "concern": "Merged without review \u2014 training-correctness fix",
+          "flagged": false
+        },
+        {
+          "number": 234,
+          "what": "Fix data leakage in normalization window (#227)",
+          "author": "Nikhil1869",
+          "merger": "shiyu-coder",
+          "reviewed": "No formal decision",
+          "concern": "Merged without review \u2014 data-integrity fix",
+          "flagged": true
+        },
+        {
+          "number": 232,
+          "what": "fix: use torch.topk instead of calling top_k as function in sample_from_logits",
+          "author": "kuishou68",
+          "merger": "shiyu-coder",
+          "reviewed": "No formal decision",
+          "concern": "Merged without review \u2014 sampling bug",
+          "flagged": false
+        },
+        {
+          "number": 224,
+          "what": "Fixes #223: remove incompatible numpy pin from webui requirements",
+          "author": "randyy179",
+          "merger": "shiyu-coder",
+          "reviewed": "2 non-formal reviews",
+          "concern": "Only PR in sample with reviewer feedback",
+          "flagged": false
+        },
+        {
+          "number": 211,
+          "what": "Auto-detect device for easier getting started",
+          "author": "external",
+          "merger": "shiyu-coder",
+          "reviewed": "No formal decision",
+          "concern": null,
+          "flagged": false
+        },
+        {
+          "number": 174,
+          "what": "Improve inference throughput",
+          "author": "external",
+          "merger": "shiyu-coder",
+          "reviewed": "No formal decision",
+          "concern": null,
+          "flagged": false
+        },
+        {
+          "number": 167,
+          "what": "fix: define missing split_token in HierarchicalEmbedding",
+          "author": "external",
+          "merger": "shiyu-coder",
+          "reviewed": "No formal decision",
+          "concern": null,
+          "flagged": false
+        },
+        {
+          "number": 59,
+          "what": "fix: add torch.cuda.empty_cache() during autoregressive inference",
+          "author": "external",
+          "merger": "shiyu-coder",
+          "reviewed": "No formal decision",
+          "concern": null,
+          "flagged": false
+        },
+        {
+          "number": 54,
+          "what": "bugfix: add missing dependency safetensors==0.6.2",
+          "author": "external",
+          "merger": "shiyu-coder",
+          "reviewed": "No formal decision",
+          "concern": null,
+          "flagged": false
+        },
+        {
+          "number": 25,
+          "what": "feat: full Kronos Web UI functionality",
+          "author": "external",
+          "merger": "shiyu-coder",
+          "reviewed": "No formal decision",
+          "concern": "Full webui feature merged without review",
+          "flagged": false
+        }
+      ],
+      "intro": "Sample of 19 recent closed+merged PRs. Only PR #224 received any reviewer feedback; the other 18 merged without independent review."
+    },
+    "repo_vitals": {
+      "rows": [
+        {
+          "metric": "Stars",
+          "value": "19,724",
+          "note": "High-visibility research repo"
+        },
+        {
+          "metric": "Forks",
+          "value": "\u2014",
+          "note": null
+        },
+        {
+          "metric": "Open issues",
+          "value": "172",
+          "note": "1 is a security issue (#216 pickle RCE)"
+        },
+        {
+          "metric": "Primary language",
+          "value": "Python",
+          "note": null
+        },
+        {
+          "metric": "License",
+          "value": "MIT",
+          "note": null
+        },
+        {
+          "metric": "Created",
+          "value": "2025-07-01",
+          "note": "~10 months old at scan"
+        },
+        {
+          "metric": "Last pushed",
+          "value": "2026-04-13",
+          "note": null
+        },
+        {
+          "metric": "Default branch",
+          "value": "master",
+          "note": null
+        },
+        {
+          "metric": "Total contributors",
+          "value": "19",
+          "note": "Top-1 share 59% (shiyu-coder)"
+        },
+        {
+          "metric": "Formal releases",
+          "value": "0",
+          "note": "Ships from master HEAD"
+        },
+        {
+          "metric": "Latest release tag",
+          "value": "\u2014",
+          "note": "No tags"
+        },
+        {
+          "metric": "Open PRs",
+          "value": "25",
+          "note": "Including security-relevant fixes sitting 5-7 days"
+        },
+        {
+          "metric": "Classic branch protection",
+          "value": "OFF (HTTP 404)",
+          "note": null
+        },
+        {
+          "metric": "Rulesets",
+          "value": "0",
+          "note": "No modern ruleset-based protection either"
+        },
+        {
+          "metric": "CODEOWNERS",
+          "value": "Absent",
+          "note": null
+        },
+        {
+          "metric": "SECURITY.md",
+          "value": "Absent",
+          "note": null
+        },
+        {
+          "metric": "CONTRIBUTING",
+          "value": "Absent",
+          "note": null
+        },
+        {
+          "metric": "Published security advisories",
+          "value": "0",
+          "note": "Despite open pickle RCE in #216"
+        },
+        {
+          "metric": "Dependabot config",
+          "value": "Absent",
+          "note": null
+        },
+        {
+          "metric": "Workflows",
+          "value": "1",
+          "note": "Copilot PR reviewer only; no test CI"
+        },
+        {
+          "metric": "PR formal review rate",
+          "value": "0.0%",
+          "note": "0 of 19 closed PRs had formal review"
+        },
+        {
+          "metric": "PR any-review rate",
+          "value": "5.3%",
+          "note": "1 of 19 PRs (PR #224)"
+        },
+        {
+          "metric": "Runtime deps (osv advisories)",
+          "value": "48",
+          "note": "numpy=16, torch=12, flask=8, flask-cors=8, tqdm=3, pandas=1"
+        },
+        {
+          "metric": "Model weight distribution",
+          "value": "Hugging Face (NeoQuasar/*)",
+          "note": "Off-GitHub integrity surface"
+        },
+        {
+          "metric": "OSSF Scorecard",
+          "value": "Not indexed (HTTP 404)",
+          "note": "Coverage gap"
+        }
+      ]
+    },
+    "coverage_detail": {
+      "rows": [
+        {
+          "check": "Harness Phase 1 end-to-end",
+          "result": "\u2705 Complete"
+        },
+        {
+          "check": "`gh api` rate limit",
+          "result": "\u2705 4992/5000 remaining at scan start"
+        },
+        {
+          "check": "Tarball extraction + local grep",
+          "result": "\u2705 Scanned (92 files after extraction)"
+        },
+        {
+          "check": "OSSF Scorecard",
+          "result": "\u26a0 Not indexed (HTTP 404)"
+        },
+        {
+          "check": "Dependabot alerts",
+          "result": "\u26a0 HTTP 403 (admin scope required; fell back to osv.dev)"
+        },
+        {
+          "check": "osv.dev dependency queries",
+          "result": "\u2705 48 CVEs across 6 packages"
+        },
+        {
+          "check": "PR review sample",
+          "result": "\u2705 19 closed PRs analyzed"
+        },
+        {
+          "check": "Dependencies manifest parse",
+          "result": "\u2705 2 manifest files (requirements.txt + webui/requirements.txt)"
+        },
+        {
+          "check": "Distribution channels inventory",
+          "result": "\u26a0 0 channels detected \u2014 harness does not model 'git clone + pip install' from master as a channel"
+        },
+        {
+          "check": "Dangerous-primitives grep (15 families)",
+          "result": "\u26a0 0 hits reported, but pickle.load confirmed present at finetune/dataset.py:42 \u2014 coverage gap"
+        },
+        {
+          "check": "Agent-rule files inventory",
+          "result": "\u2705 0 (not an agent-tool repo)"
+        },
+        {
+          "check": "Gitleaks",
+          "result": "\u2297 Not available on this scanner host"
+        },
+        {
+          "check": "README paste-scan",
+          "result": "\u2705 No suspicious paste-from-command blocks"
+        },
+        {
+          "check": "Install script analysis",
+          "result": "\u2705 2 detected (pip install -r requirements.txt; pip install pyqlib) \u2014 both network, neither pinned"
+        }
+      ]
+    },
+    "coverage_gaps": {
+      "entries": [
+        "OSSF Scorecard not indexed \u2014 overall_score and per-check signals unavailable; governance/review signals derived from raw gh api data instead.",
+        "Dependabot alerts require admin scope (HTTP 403) \u2014 osv.dev used as substitute; dependabot-configured alerting is absent from this repo regardless.",
+        "Dangerous-primitives deserialization family reported 0 hits but pickle.load is confirmed present at finetune/dataset.py:42 (E12). Harness regex family missed it; authoritative evidence comes from issue #216 + direct file fetch. Pattern-family gap logged.",
+        "Distribution-channel harness does not classify 'git clone + pip install -r requirements.txt' as a channel \u2014 the 0/0 channel count is a coverage artifact, not evidence of 'no install path'.",
+        "Gitleaks secret-scanning not available on this scan host \u2014 secret-in-history check deferred.",
+        "Hugging Face model-weight integrity (NeoQuasar/*) is outside the scanner's scope \u2014 HF access controls + HF hub integrity determine actual artifact provenance."
+      ]
+    },
+    "scorecard_cells": {
+      "does_anyone_check_the_code": {
+        "color": "red",
+        "short_answer": "No \u2014 0% formal review, no branch protection, no CODEOWNERS",
+        "rationale": null,
+        "edge_case": null,
+        "suggested_threshold_adjustment": null,
+        "computed_signal_refs": [],
+        "override_reason": null
+      },
+      "do_they_fix_problems_quickly": {
+        "color": "red",
+        "short_answer": "No \u2014 95-day-old RCE issue #216 unfixed, fix PR #249 sitting 7 days unreviewed",
+        "rationale": "The Phase 3 advisory computed amber because compute.py's Q2 signals are sparse: only `q2_open_security_issue_count=1` is populated, with `q2_oldest_open_cve_pr_age_days=None` and `q2_closed_fix_lag_days=None` (harness does not currently tag PRs as CVE-fixes or measure closed-PR lag against security-label filters). Phase 4 sees richer qualitative evidence: (1) issue #216 is an unambiguous RCE disclosed 2026-01-15 \u2014 95 days unfixed as of scan; (2) the proposed fix PR #249 has been sitting open 7 days with zero reviewer engagement; (3) the broader PR queue shows 9 other security-relevant fixes from external contributors stuck in the same review starvation (E8); (4) the full dependency graph carries 48 osv.dev advisories with no dependabot gate. Red reflects 'the fix channel is not functioning', not just 'we found one issue'.",
+        "edge_case": "Kronos is a research repo with a single maintainer; `fix-quickly` is plausibly outside the maintainer's operational capacity rather than a governance-intent failure. The red color reflects consumer-impact \u2014 fixes DON'T reach users quickly \u2014 not a judgment about maintainer effort.",
+        "suggested_threshold_adjustment": "Add a q2_oldest_open_security_issue_age_days signal (would have caught the 95-day gap here without any override). Add a q2_open_security_fix_pr_age_days signal that measures the oldest open PR whose title matches security-fix keywords. Either would move this from 'amber via limited-data' to 'red via signal' without requiring Phase 4 override.",
+        "computed_signal_refs": [
+          "q2_open_security_issue_count",
+          "q2_oldest_open_cve_pr_age_days",
+          "q2_closed_fix_lag_days",
+          "q3_has_silent_fixes",
+          "q3_published_advisory_count"
+        ],
+        "override_reason": "missing_qualitative_context"
+      },
+      "do_they_tell_you_about_problems": {
+        "color": "red",
+        "short_answer": "No \u2014 no SECURITY.md, 0 advisories published despite open RCE issue #216",
+        "rationale": null,
+        "edge_case": null,
+        "suggested_threshold_adjustment": null,
+        "computed_signal_refs": [],
+        "override_reason": null
+      },
+      "is_it_safe_out_of_the_box": {
+        "color": "red",
+        "short_answer": "No \u2014 install from master + unpinned deps + disclosed RCE on finetune path",
+        "rationale": "The Phase 3 advisory computed amber because compute.py's Q4 signals report `q4_has_critical_on_default_path=False` and `q4_has_warning_on_install_path=False` (both derived from harness coverage that did not confirm a critical on the install path \u2014 the dangerous_primitives deserialization family missed the pickle.load at finetune/dataset.py:42; see E12 coverage gap). Phase 4 sees (1) an unambiguous disclosed RCE on the documented finetune path (F0); (2) the only install model is `pip install -r requirements.txt` from a master checkout with no release boundary (F3); (3) the dependency graph ships 48 known CVEs (F1) with loose/unpinned requirements; (4) no artifact verification of any kind \u2014 no SLSA, no signed wheels, no checksums. 'Out of the box safe' is not a defensible reading for a finetune user. Red reflects the realistic consumer experience on the documented default path.",
+        "edge_case": "Inference-only users (load from Hugging Face, call KronosPredictor) do not traverse the pickle RCE path \u2014 their exposure is the dependency-graph CVEs + master-HEAD install only. This is the basis for the Deployment-axis split (see Verdict).",
+        "suggested_threshold_adjustment": "Extend q4_has_critical_on_default_path to accept evidence from `security_advisories`+`issues_and_commits.open_security_issues` when title/body keyword-matches RCE/deserialization/injection/command-exec. The narrow code-pattern grep missed this one.",
+        "computed_signal_refs": [
+          "q4_all_channels_pinned",
+          "q4_artifact_verified",
+          "q4_has_critical_on_default_path",
+          "q4_has_warning_on_install_path",
+          "q2_open_security_issue_count"
+        ],
+        "override_reason": "missing_qualitative_context"
+      }
+    },
+    "catalog_metadata": {
+      "category": "ml-foundation-model",
+      "subcategory": "financial-time-series",
+      "short_description": "Python decoder-only foundation model for financial K-line data; Flask webui; model weights on Hugging Face; ships from master (no releases).",
+      "target_user": "Quant researcher or finetuning user who wants to predict candlestick sequences. Install is `git clone + pip install -r requirements.txt`; models load from `NeoQuasar/Kronos-*` on HF.",
+      "shape": "Python ML library + Flask webui + HF-hosted weights (new shape \u2014 outside the 5 prior V2.5-preview shapes zustand/caveman/Archon/markitdown/ghostty)",
+      "prior_scan_note": "None \u2014 first scan of Kronos. Second wild V1.2-schema scan (after markitdown entry 15 and ghostty entry 16)."
+    },
+    "timeline_intro": "Key beats in Kronos's public lifecycle, anchored on the 95-day pickle-RCE window.",
+    "evidence_intro": "Command-backed evidence from the Phase 1 harness run + direct gh api queries + osv.dev lookups.",
+    "coverage_intro": "Phase 1 harness coverage with 6 documented gaps (OSSF, dependabot scope, dangerous-primitives deserialization miss, distribution-channel model, gitleaks, HF-weight provenance)."
+  },
+  "phase_4b_computed": {
+    "verdict": {
+      "level": "Critical",
+      "computed_from_findings": [
+        "F0",
+        "F1"
+      ]
+    }
+  },
+  "phase_5_prose_llm": {
+    "editorial_caption": {
+      "text": "Kronos is a legitimate AAAI-2026 research artifact for financial candlestick forecasting, 19.7k stars, MIT, Python. The science is real; the operational posture is not. A pickle RCE on the finetune data path (issue #216) has sat unfixed 95 days with its fix PR unreviewed 7 days. The dep graph carries 48 known CVEs. Zero releases \u2014 every install tracks master \u2014 with no branch protection and 0% formal PR review. Inference-only users (HF weights via KronosPredictor) avoid the pickle path; finetune users do not \u2014 the Deployment split reflects that gap."
+    },
+    "per_finding_prose": {
+      "entries": [
+        {
+          "finding_id": "F0",
+          "body_paragraphs": [
+            "Issue #216 was opened on 2026-01-15 by an external reporter who noticed that `QlibDataset` in `finetune/dataset.py` calls `pickle.load` on `train_data.pkl` and `val_data.pkl` files that the user is expected to generate with `finetune/qlib_data_preprocess.py`. Python's `pickle` module executes arbitrary code during deserialization \u2014 this is not a subtle vulnerability, it is the textbook RCE class that Python's own docs warn against.",
+            "A fix PR (#249) was opened on 2026-04-13 proposing a `RestrictedUnpickler` that whitelists safe classes. As of the scan, PR #249 has been open for 7 days with zero reviewer engagement \u2014 unremarkable for this repo's PR queue, where 9 other security-relevant fixes from external contributors have sat 5-7 days in the same state (E8). The issue itself has been open 95 days.",
+            "For consumers: if you plan to run anything under `finetune/`, you need to treat every `.pkl` file as potentially executable. The safe paths are (a) only load `.pkl` files you generated on the same machine in this session, (b) apply PR #249 locally before running any finetune code, or (c) stick to the inference-only usage mode (loading models from Hugging Face via `KronosPredictor`), which does not traverse this code path.",
+            "This finding is what drives the Critical verdict on the finetune-deployment split. Without it, the verdict collapses to Warning on governance + dependency hygiene."
+          ]
+        },
+        {
+          "finding_id": "F1",
+          "body_paragraphs": [
+            "`pip install -r requirements.txt` resolves a dependency graph that currently carries 48 published advisories on osv.dev: numpy (16), torch (12), flask (8), flask-cors (8), tqdm (3), pandas (1). The quality of that install depends on the resolver's state and when you ran it.",
+            "Two classes of pinning problem compound the CVE load. Numpy and pandas are fully unpinned in the top-level requirements.txt, leaving the resolver free to pick either a known-vulnerable older release or a post-patch release depending on environment state. Torch is pinned only at `>=2.0.0`, which spans multiple major versions with different CVE exposures. Even the exactly-pinned entries (flask==2.3.3, flask-cors==4.0.0) resolve to versions with published CVEs in their own right.",
+            "Neither a dependabot config nor a project-level lockfile gates this. The maintainer has no automated way to know which advisories apply to the current graph. Consumer mitigation is straightforward: run `pip-audit` against your `pip freeze` output in a fresh virtualenv; if it surfaces anything critical in your actual execution path, override-pin those packages in a project-local constraints file before trusting the install."
+          ]
+        },
+        {
+          "finding_id": "F2",
+          "body_paragraphs": [
+            "Across the last 19 closed-and-merged PRs the formal-review rate is 0% and the any-review rate is 5.3% \u2014 PR #224 (a webui numpy-pin cleanup) is the only PR in the sample that drew even an informal comment. Every other PR was merged by the maintainer without independent review.",
+            "The repo has no classic branch protection (`gh api repos/shiyu-coder/Kronos/branches/master/protection` returns 404), no rulesets (count=0), no CODEOWNERS, and no test-gating CI workflow \u2014 the single workflow is a Copilot PR reviewer that produces advisory output, not a merge gate. Combined with a 59% commit share for the maintainer, this is a structurally single-point-of-trust repository: a leaked credential or a compromised maintainer account lands a malicious commit on master with no second-human or automated check.",
+            "None of this is evidence of current malice. It IS evidence that the repository's operational model does not include independent review, and consumers who depend on Kronos in production contexts should plan around that \u2014 minimally by pinning to a reviewed SHA rather than tracking master."
+          ]
+        },
+        {
+          "finding_id": "F3",
+          "body_paragraphs": [
+            "Kronos has never cut a release tag. `gh api repos/shiyu-coder/Kronos/releases` returns `total_count: 0`. The documented install path in the README is `pip install -r requirements.txt` against a fresh clone \u2014 meaning the installed code is literally whatever commit was on master at clone time.",
+            "The absence of releases is an amplifier for F2. In projects with versioned releases, the governance gap at HEAD matters less to consumers because they can pin to a reviewed tag. Here, HEAD is the only reachable version. Regressions and malicious commits both ship instantly to anyone who clones after they land.",
+            "The fix on the consumer side is trivial (`git checkout REVIEWED-SHA` before the pip install). The fix on the maintainer side \u2014 cutting even informal date-based tags (`2026.04`) so downstreams have a rollback target \u2014 is also trivial but has not happened in 10 months."
+          ]
+        },
+        {
+          "finding_id": "F4",
+          "body_paragraphs": [
+            "`community/profile` reports no SECURITY.md, no CONTRIBUTING, no CODE_OF_CONDUCT; health percentage 42. The security-advisories endpoint reports 0 published advisories \u2014 despite the known pickle RCE in issue #216, which arrived via the public issue tracker and has remained publicly visible and unfixed for 95 days.",
+            "The disclosure posture here is effectively 'everything is public'. A reporter with a pre-patched RCE has nowhere to go except the issue tracker, which means any future vulnerability is public before a fix exists. This is a process gap rather than a code defect \u2014 but it turns every finding into a race condition between disclosure and exploitation.",
+            "The fix is a 1-page SECURITY.md naming the 'Report a vulnerability' button under GitHub's Security tab, plus a retroactive GHSA advisory for #216 documenting the patch once #249 merges. Neither has happened."
+          ]
+        },
+        {
+          "finding_id": "F5",
+          "body_paragraphs": [
+            "No `.github/dependabot.yml`, no CODEOWNERS, no test-gating CI workflow \u2014 the only workflow is a Copilot PR reviewer. This is operational-capacity signal rather than a specific vulnerability. Combined with F2-F4 it paints a consistent picture of a solo-maintainer research repository operating at the edge of its capacity, not a production-supported project. Non-blocking, but useful context for organizations evaluating adoption."
+          ]
+        }
+      ]
+    }
+  },
+  "phase_6_assembly": {
+    "assembled": true,
+    "assembly_timestamp": "2026-04-20T11:04:24.064519+00:00",
+    "provenance_complete": true,
+    "evidence_refs_valid": true,
+    "field_count": 1342
+  },
+  "scan_sign_off": {
+    "approved_for_release": false
+  }
+}
