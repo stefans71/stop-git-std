@@ -475,6 +475,53 @@ def test_v13_1_deserialization_safe_calls_do_not_match(tmp_path):
     assert r["deserialization"]["hit_count"] == 0
 
 
+def test_v13_3_c2_arduinojson_deserializejson_suppressed(tmp_path):
+    """V1.2.x (V13-3 C2, owner directive 2026-04-20): the bare `deserialize`
+    keyword was dropped from the pattern because ArduinoJson's
+    `deserializeJson(...)` is SAFE JSON parsing and produced 19 false-positives
+    in WLED entry 25. Every actual unsafe-deserialization case (Kronos pickle,
+    freerouting ObjectInputStream) matches via language-specific method names.
+    """
+    scan = tmp_path / "scan"
+    scan.mkdir()
+    # Simulate WLED-style C++ firmware code
+    (scan / "wled_server.cpp").write_text(
+        "DeserializationError error = deserializeJson(*pDoc, request->_tempObject);\n"
+        "if (error) return;\n"
+    )
+    (scan / "json.cpp").write_text(
+        "static bool deserializeSegment(JsonObject elem, byte it, byte presetId = 0) {\n"
+        "  return true;\n"
+        "}\n"
+    )
+    r = harness.step_a_dangerous_patterns(scan)
+    assert r["deserialization"]["hit_count"] == 0, (
+        "ArduinoJson deserializeJson + deserializeSegment must NOT match after "
+        "V13-3 C2 language-qualifier fix (bare `deserialize` keyword dropped)"
+    )
+
+
+def test_v13_3_c2_unsafe_specific_still_matches(tmp_path):
+    """Regression: V13-3 C2 MUST preserve all language-specific unsafe patterns.
+    pickle / ObjectInputStream / Marshal / yaml.load / unserialize / marshal /
+    joblib / dill must all still match.
+    """
+    scan = tmp_path / "scan"
+    scan.mkdir()
+    (scan / "py_pickle.py").write_text("import pickle\npickle.load(f)\n")
+    (scan / "py_yaml.py").write_text("import yaml\nyaml.load(f)\n")
+    (scan / "rb_marshal.rb").write_text("data = Marshal.load(raw)\n")
+    (scan / "java_ois.java").write_text(
+        "ObjectInputStream ois = new ObjectInputStream(fis);\n"
+        "Object o = ois.readObject();\n"
+    )
+    (scan / "php_uns.php").write_text("<?php $x = unserialize($raw); ?>\n")
+    r = harness.step_a_dangerous_patterns(scan)
+    assert r["deserialization"]["hit_count"] == 5, (
+        "All 5 language-specific unsafe patterns must still match after V13-3 C2"
+    )
+
+
 def test_step_c_executable_inventory_discovers_files(tmp_path):
     scan = tmp_path / "scan"
     scan.mkdir()

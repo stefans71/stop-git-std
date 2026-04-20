@@ -182,6 +182,7 @@ def compute_scorecard_cells(
     closed_fix_lag_days: int | None = None,
     has_ruleset_protection: bool = False,
     oldest_open_security_item_age_days: int | None = None,
+    phase_1_raw_capture: dict | None = None,
 ) -> dict:
     """Compute the 4 scorecard cells using the V2.4 calibration table.
     Returns dict with color (red/amber/green) and short_answer per cell.
@@ -207,7 +208,25 @@ def compute_scorecard_cells(
         oldest_open_security_item_age_days). Addresses Kronos entry 17 Q2
         override where a 95-day-old open issue was invisible to the
         PR-scoped signal.
+
+    V1.2.x (V13-3 C5 integration, owner directive OD-4 + Codex code-review
+    gate 2026-04-20):
+      - phase_1_raw_capture: optional. When provided, compute_q4_autofires_from_phase_1
+        is invoked and its `has_critical_on_default_path` result is OR-merged
+        with the explicit kwarg. This is the live integration point for the
+        C5 deserialization auto-fire: scan drivers pass phase_1_raw_capture
+        and the Q4 advisory upgrades automatically when unsafe-deserialization
+        + tool-loads-user-files conditions are met. Phase 4 retains override
+        authority per D-7 scorecard-authority boundary (may still author a
+        different color in phase_4_structured_llm.scorecard_cells).
     """
+
+    # V13-3 C5: Q4 auto-fire from Phase 1 raw capture (when provided).
+    # OR-merge with the explicit kwarg — never downgrades an explicit True.
+    if phase_1_raw_capture is not None:
+        autofires = compute_q4_autofires_from_phase_1(phase_1_raw_capture)
+        if autofires.get("has_critical_on_default_path"):
+            has_critical_on_default_path = True
 
     # Q1: Does anyone check the code?
     # V2.4 calibration: Green = any>=60% AND formal>=30% AND branch protection
@@ -273,18 +292,22 @@ def compute_scorecard_cells(
         q3_answer = "No"
 
     # Q4: Is it safe out of the box?
-    # V2.4 calibration: Green = all pinned + verified + no Warning+ on install path
-    # Red = any Critical on default install path
+    # V2.4 calibration: Red = any Critical on default install path (highest priority)
+    # Green = all pinned + verified + no Warning+ on install path + no Critical on default
     # Amber = any unverified channel OR install-path Warning OR group-specific finding
     # SF1 patch: has_warning_on_install_path replaces has_warning_or_above —
     # governance/upstream warnings outside the install path (zustand F0:
     # no branch protection) no longer drop Q4 below green.
-    if all_channels_pinned and artifact_verified and not has_warning_on_install_path:
-        q4_color = "green"
-        q4_answer = "Yes"
-    elif has_critical_on_default_path:
+    # V13-3 (2026-04-20 Codex code-review r2): has_critical_on_default_path check
+    # moved FIRST so a Critical-on-default-path (including C5 auto-fire) always
+    # forces red even when channels are pinned. Prior ordering let green win
+    # first, making Critical-but-pinned scans incorrectly report green.
+    if has_critical_on_default_path:
         q4_color = "red"
         q4_answer = "No"
+    elif all_channels_pinned and artifact_verified and not has_warning_on_install_path:
+        q4_color = "green"
+        q4_answer = "Yes"
     elif has_warning_on_install_path or not all_channels_pinned or not artifact_verified:
         q4_color = "amber"
         q4_answer = "Partly"
@@ -423,6 +446,163 @@ def derive_q2_oldest_open_security_item_age_days(
                 continue
 
     return max(ages) if ages else None
+
+
+# V1.2.x (V13-3 C18, owner directive 2026-04-20): derivation helper for the
+# "tool loads user files" judgment. Canonical storage of this heuristic lives
+# in compute.py per V13-1 precedent (derive_q1_has_ruleset_protection,
+# derive_q2_oldest_open_security_item_age_days). Scan drivers MUST NOT
+# reimplement this logic ad hoc.
+# Verb-then-noun-within-few-words pattern. Captures phrases like
+# "opens a board file", "parses a document", "loads a pretrained model",
+# "reads a binsnapshot" — i.e. the tool consuming user-provided input as a
+# default operation, typed in either plural-verb (opens/parses/loads/reads)
+# or singular-verb (open/parse/load/read) form.
+_FILE_LOADING_README_PATTERNS = re.compile(
+    r"\b(opens?|parses?|loads?|reads?|imports?)\b"
+    r"(?:\s+\w+){0,4}\s+"
+    r"\b(files?|documents?|designs?|boards?|models?|presets?|configs?|"
+    r"datasets?|checkpoints?|pdfs?|docx|epub|binsnapshots?|snapshots?|"
+    r"binaries?|archives?)\b",
+    re.IGNORECASE,
+)
+
+_FILE_LOADING_TOPICS = frozenset({
+    # Tools that inherently consume user files / designs / datasets
+    "document-conversion", "document-parser", "pdf", "docx",
+    "eda", "cad", "pcb", "routing",
+    "ml", "machine-learning", "deep-learning", "foundation-model",
+    "dataset", "checkpoint", "pretrained",
+    "file-parser", "format-converter",
+})
+
+
+def derive_tool_loads_user_files(
+    readme_text: str | None,
+    repo_metadata: dict | None,
+) -> bool:
+    """V1.2.x (V13-3 C18): True when repo README or topic list indicates the
+    tool consumes user-provided files as a default operation.
+
+    Logic is OR over two independent evidence sources:
+      - README text (phase_1_raw_capture source) matches verb-then-noun phrases
+        like "opens a board file", "parses a document", "loads a pretrained
+        model" — see _FILE_LOADING_README_PATTERNS.
+      - repo_metadata.topics[] contains a file-consuming category from
+        _FILE_LOADING_TOPICS (document-conversion, eda, pcb, ml, dataset, etc.)
+
+    Returns True if EITHER source matches; False only when both are absent or
+    neither yields a match.
+
+    Used as a precondition for V13-3 Q4 auto-fire from deserialization hits:
+    if a repo both exposes unsafe deserialization AND is documented as loading
+    user files, the default-path critical condition is true.
+
+    Not a regex on code — this is a README/metadata-level judgment helper.
+    """
+    if readme_text and _FILE_LOADING_README_PATTERNS.search(readme_text):
+        return True
+
+    if repo_metadata:
+        topics = repo_metadata.get("topics") or []
+        if any(t in _FILE_LOADING_TOPICS for t in topics):
+            return True
+
+    return False
+
+
+def derive_q4_critical_on_default_path_from_deserialization(
+    dangerous_primitives: dict | None,
+    readme_text: str | None = None,
+    repo_metadata: dict | None = None,
+    threshold: int = 3,
+) -> bool:
+    """V1.2.x (V13-3 C5, owner directive 2026-04-20): auto-fire Q4
+    has_critical_on_default_path when a repo exposes unsafe deserialization
+    primitives AND is documented as loading user files.
+
+    Condition (all must be true):
+      - `dangerous_primitives.deserialization.hit_count >= threshold` (default 3)
+      - `derive_tool_loads_user_files()` returns True
+
+    Cross-module contract: this function reads only the aggregate `hit_count`,
+    not individual hit snippets. It relies on Phase 1 (`phase_1_harness.py`
+    STEP_A_PATTERNS) having already language-qualified the deserialization
+    family — specifically, the V13-3 C2 change dropped the bare `deserialize`
+    keyword so that ArduinoJson-class `deserializeJson(...)` and serde-style
+    `deserialize()` no longer count toward hit_count. If that harness-side
+    qualification is weakened in future, this helper's precision degrades
+    correspondingly.
+
+    Would have auto-resolved freerouting entry 24 Q4 (30 ObjectInputStream
+    hits in BasicBoard.java + pcb topic → True) per dry-run at
+    `docs/v13-3-fp-dry-run.md`. Does NOT fire on WLED entry 25 because
+    post-C2 ArduinoJson hit_count = 0. Kronos entry 17 (single pickle.load
+    site) is below the default threshold and would not fire from
+    deserialization alone — collapse of that override depends on the broader
+    V1.2.x pickle.loads? regex widening landed earlier, not on this helper.
+
+    Returns False if deserialization field missing, hit_count below threshold,
+    or tool-loads-user-files false.
+    """
+    if not dangerous_primitives:
+        return False
+    deser = dangerous_primitives.get("deserialization") or {}
+    hit_count = deser.get("hit_count") or 0
+    if hit_count < threshold:
+        return False
+
+    loads_user_files = derive_tool_loads_user_files(
+        readme_text=readme_text,
+        repo_metadata=repo_metadata,
+    )
+    return loads_user_files
+
+
+def compute_q4_autofires_from_phase_1(phase_1_raw_capture: dict | None) -> dict:
+    """V1.2.x (V13-3 C5 integration, owner directive OD-4 + Codex code-review
+    gate 2026-04-20): derive Q4 auto-fire signals from Phase 1 raw capture.
+
+    Call sites: this wrapper is invoked INTERNALLY by `compute_scorecard_cells()`
+    when the caller passes `phase_1_raw_capture=<p1>`. Scan drivers do NOT need
+    to call this directly — passing phase_1_raw_capture to compute_scorecard_cells
+    triggers the auto-fire automatically. The wrapper is exposed here for unit
+    testing and for rare callers who need the auto-fire result without
+    invoking the full scorecard computation.
+
+    Returns a dict with the auto-fire signals derivable from phase_1_raw_capture:
+      - has_critical_on_default_path (bool): True when V13-3 C5 fires
+      - reasons (list[str]): which derivation paths contributed to the True
+        verdict (e.g., ["deserialization_c5"])
+
+    Reads from phase_1_raw_capture:
+      - code_patterns.dangerous_primitives (C5 input)
+      - repo_metadata (C18 topic signal)
+      - README is NOT currently stored in phase_1_raw_capture; the C18
+        README-text signal is therefore not exercised by this wrapper.
+        Callers that have README text in hand may call
+        `derive_q4_critical_on_default_path_from_deserialization` directly.
+
+    Conservative by design: if phase_1_raw_capture is missing/empty, returns
+    {has_critical_on_default_path: False, reasons: []}.
+    """
+    result = {"has_critical_on_default_path": False, "reasons": []}
+    if not phase_1_raw_capture:
+        return result
+
+    code_patterns = phase_1_raw_capture.get("code_patterns") or {}
+    dangerous_primitives = code_patterns.get("dangerous_primitives") or {}
+    repo_metadata = phase_1_raw_capture.get("repo_metadata") or {}
+
+    if derive_q4_critical_on_default_path_from_deserialization(
+        dangerous_primitives=dangerous_primitives,
+        readme_text=None,  # not currently stored in phase_1_raw_capture
+        repo_metadata=repo_metadata,
+    ):
+        result["has_critical_on_default_path"] = True
+        result["reasons"].append("deserialization_c5")
+
+    return result
 
 
 def compute_solo_maintainer(contributors: list) -> dict:

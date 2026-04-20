@@ -598,6 +598,259 @@ class TestV13_1_Q2WidenedEvidence:
         assert r["do_they_fix_problems_quickly"]["color"] == "green"
 
 
+class TestV13_3_DeriveToolLoadsUserFiles:
+    """V1.2.x (V13-3 C18, owner directive 2026-04-20): canonical helper for
+    'tool loads user files' judgment. Used as precondition for C5 Q4 auto-fire.
+    """
+
+    def test_readme_with_open_a_file_phrase_fires(self):
+        readme = "freerouting opens a file from disk when the user imports a design..."
+        assert derive_tool_loads_user_files(readme, None) is True
+
+    def test_readme_with_load_design_phrase_fires(self):
+        readme = "Load a design board for autorouting. Specctra DSN format supported."
+        assert derive_tool_loads_user_files(readme, None) is True
+
+    def test_readme_with_parse_document_phrase_fires(self):
+        readme = "markitdown parses a document into Markdown. Supports .pdf, .docx, .epub."
+        assert derive_tool_loads_user_files(readme, None) is True
+
+    def test_readme_with_load_pickle_in_ml_context_fires(self):
+        readme = "Kronos loads a pretrained model checkpoint from Hugging Face."
+        assert derive_tool_loads_user_files(readme, None) is True
+
+    def test_topic_document_conversion_fires(self):
+        repo_meta = {"topics": ["document-conversion", "pdf", "markdown"]}
+        assert derive_tool_loads_user_files(None, repo_meta) is True
+
+    def test_topic_eda_fires(self):
+        repo_meta = {"topics": ["eda", "pcb", "autorouter"]}
+        assert derive_tool_loads_user_files(None, repo_meta) is True
+
+    def test_topic_ml_fires(self):
+        repo_meta = {"topics": ["foundation-model", "pretrained", "pytorch"]}
+        assert derive_tool_loads_user_files(None, repo_meta) is True
+
+    def test_no_readme_and_no_metadata_returns_false(self):
+        assert derive_tool_loads_user_files(None, None) is False
+
+    def test_readme_without_matching_phrase_returns_false(self):
+        readme = "kanata is a keyboard remapping daemon with Lisp-style config."
+        assert derive_tool_loads_user_files(readme, None) is False
+
+    def test_irrelevant_topics_return_false(self):
+        repo_meta = {"topics": ["terminal-emulator", "rust", "gpu-accelerated"]}
+        assert derive_tool_loads_user_files(None, repo_meta) is False
+
+
+class TestV13_3_Q4AutoFireFromDeserialization:
+    """V1.2.x (V13-3 C5): auto-fire q4_has_critical_on_default_path when unsafe
+    deserialization hits are present AND tool loads user files. Would have
+    collapsed Kronos + freerouting Q4 overrides without Phase 4 authoring.
+    """
+
+    def test_freerouting_pattern_auto_fires(self):
+        """35 ObjectInputStream hits + README mentions opening files → True."""
+        dp = {"deserialization": {"hit_count": 35, "files": []}}
+        readme = "freerouting opens a board file and auto-routes traces between components."
+        assert derive_q4_critical_on_default_path_from_deserialization(
+            dp, readme_text=readme
+        ) is True
+
+    def test_kronos_pattern_auto_fires(self):
+        """pickle.load hit + ML topic → True. Would collapse Kronos Q4 override."""
+        dp = {"deserialization": {"hit_count": 3, "files": []}}
+        repo_meta = {"topics": ["foundation-model", "pretrained"]}
+        assert derive_q4_critical_on_default_path_from_deserialization(
+            dp, repo_metadata=repo_meta
+        ) is True
+
+    def test_wled_arduinojson_does_not_fire(self):
+        """WLED had 19 ArduinoJson deserializeJson hits — suppressed by V13-3 C2
+        language qualifier, so hit_count=0 here. Simulates post-C2 state."""
+        dp = {"deserialization": {"hit_count": 0, "files": []}}
+        readme = "WLED is a firmware for addressable LEDs over WiFi."
+        repo_meta = {"topics": ["esp32", "led", "firmware"]}
+        assert derive_q4_critical_on_default_path_from_deserialization(
+            dp, readme_text=readme, repo_metadata=repo_meta
+        ) is False
+
+    def test_below_threshold_does_not_fire(self):
+        """2 hits + loads-files → False (below default threshold of 3)."""
+        dp = {"deserialization": {"hit_count": 2, "files": []}}
+        readme = "Opens a file and does something."
+        assert derive_q4_critical_on_default_path_from_deserialization(
+            dp, readme_text=readme
+        ) is False
+
+    def test_above_threshold_but_no_user_files_does_not_fire(self):
+        """10 hits but README/topics don't indicate file loading → False.
+        Avoids firing on internal deserialization."""
+        dp = {"deserialization": {"hit_count": 10, "files": []}}
+        assert derive_q4_critical_on_default_path_from_deserialization(
+            dp, readme_text="An internal RPC library for service-to-service calls."
+        ) is False
+
+    def test_missing_dangerous_primitives_returns_false(self):
+        assert derive_q4_critical_on_default_path_from_deserialization(
+            None, readme_text="opens a file"
+        ) is False
+
+    def test_custom_threshold_respected(self):
+        """Caller can override threshold; default is 3."""
+        dp = {"deserialization": {"hit_count": 5, "files": []}}
+        readme = "opens a file"
+        assert derive_q4_critical_on_default_path_from_deserialization(
+            dp, readme_text=readme, threshold=10
+        ) is False
+        assert derive_q4_critical_on_default_path_from_deserialization(
+            dp, readme_text=readme, threshold=3
+        ) is True
+
+
+class TestV13_3_C5LiveIntegrationInScorecardCells:
+    """V1.2.x (V13-3 C5 LIVE INTEGRATION, per Codex code-review r2 gate):
+    compute_scorecard_cells() now accepts phase_1_raw_capture and auto-fires
+    Q4 red when the deserialization + tool-loads-user-files condition is met.
+    This is the production integration point that makes C5 live — no scan
+    driver has to remember to pre-compute the auto-fire, it happens inside
+    compute_scorecard_cells.
+    """
+
+    _BASE_KWARGS = dict(
+        formal_review_rate=50, any_review_rate=80,
+        has_branch_protection=True, has_codeowners=True,
+        is_solo_maintainer=False,
+        open_security_issue_count=0, oldest_cve_pr_age_days=0,
+        has_security_policy=True, published_advisory_count=2,
+        has_silent_fixes=False,
+        all_channels_pinned=True, artifact_verified=True,
+        has_critical_on_default_path=False,  # Phase-4-authored default
+        has_warning_on_install_path=False,
+    )
+
+    def test_freerouting_phase_1_upgrades_q4_to_red(self):
+        """Baseline kwargs have Q4 green (no critical/warning explicit).
+        Passing phase_1_raw_capture with 35 ObjectInputStream hits + pcb topic
+        triggers C5 auto-fire → Q4 upgrades to red."""
+        p1 = {
+            "code_patterns": {
+                "dangerous_primitives": {
+                    "deserialization": {"hit_count": 35, "files": []},
+                }
+            },
+            "repo_metadata": {"topics": ["pcb", "autorouter"]},
+        }
+        r = compute_scorecard_cells(**self._BASE_KWARGS, phase_1_raw_capture=p1)
+        assert r["is_it_safe_out_of_the_box"]["color"] == "red", (
+            "C5 auto-fire should upgrade Q4 from green to red when "
+            "phase_1_raw_capture shows unsafe deserialization + pcb topic"
+        )
+
+    def test_wled_phase_1_does_not_upgrade_q4(self):
+        """ArduinoJson-shape phase_1 (hit_count=0 after C2 suppression) does
+        not trigger C5 auto-fire → Q4 stays green."""
+        p1 = {
+            "code_patterns": {
+                "dangerous_primitives": {
+                    "deserialization": {"hit_count": 0, "files": []},
+                }
+            },
+            "repo_metadata": {"topics": ["esp32", "led", "firmware"]},
+        }
+        r = compute_scorecard_cells(**self._BASE_KWARGS, phase_1_raw_capture=p1)
+        assert r["is_it_safe_out_of_the_box"]["color"] == "green"
+
+    def test_no_phase_1_preserves_existing_behavior(self):
+        """Without phase_1_raw_capture, compute_scorecard_cells behavior is
+        unchanged — backwards compatibility for historical scan drivers."""
+        r = compute_scorecard_cells(**self._BASE_KWARGS)
+        assert r["is_it_safe_out_of_the_box"]["color"] == "green"
+
+    def test_explicit_true_kwarg_not_downgraded_by_nonfiring_phase_1(self):
+        """OR-merge semantics: if caller explicitly passed
+        has_critical_on_default_path=True but phase_1 doesn't auto-fire, Q4
+        stays red. The auto-fire never DOWNGRADES; it only upgrades."""
+        kwargs = dict(self._BASE_KWARGS)
+        kwargs["has_critical_on_default_path"] = True
+        p1 = {
+            "code_patterns": {"dangerous_primitives": {"deserialization": {"hit_count": 0, "files": []}}},
+            "repo_metadata": {"topics": ["terminal-emulator"]},
+        }
+        r = compute_scorecard_cells(**kwargs, phase_1_raw_capture=p1)
+        assert r["is_it_safe_out_of_the_box"]["color"] == "red"
+
+
+class TestV13_3_ComputeQ4AutofiresFromPhase1:
+    """V1.2.x (V13-3 C5): unit tests for the wrapper. In the integrated design,
+    compute_scorecard_cells() calls this wrapper internally when
+    phase_1_raw_capture is passed — see TestV13_3_C5LiveIntegrationInScorecardCells
+    above for end-to-end coverage. These tests exercise the wrapper in
+    isolation (null inputs, missing-code-patterns, negative cases) for unit-
+    level regression coverage.
+    """
+
+    def test_freerouting_shape_fires(self):
+        """Phase-1-shaped input with 35 ObjectInputStream hits + pcb topic →
+        auto-fire. Would collapse freerouting Q4 override."""
+        p1 = {
+            "code_patterns": {
+                "dangerous_primitives": {
+                    "deserialization": {"hit_count": 35, "files": []},
+                }
+            },
+            "repo_metadata": {"topics": ["pcb", "autorouter", "eda"]},
+        }
+        r = compute_q4_autofires_from_phase_1(p1)
+        assert r["has_critical_on_default_path"] is True
+        assert "deserialization_c5" in r["reasons"]
+
+    def test_wled_shape_does_not_fire(self):
+        """Phase-1-shaped input with post-C2 hit_count=0 (ArduinoJson
+        suppressed) + firmware topics (not in _FILE_LOADING_TOPICS) → no fire.
+        Confirms WLED class does not auto-fire."""
+        p1 = {
+            "code_patterns": {
+                "dangerous_primitives": {
+                    "deserialization": {"hit_count": 0, "files": []},
+                }
+            },
+            "repo_metadata": {"topics": ["esp32", "led", "firmware"]},
+        }
+        r = compute_q4_autofires_from_phase_1(p1)
+        assert r["has_critical_on_default_path"] is False
+        assert r["reasons"] == []
+
+    def test_missing_phase_1_returns_false(self):
+        r = compute_q4_autofires_from_phase_1(None)
+        assert r == {"has_critical_on_default_path": False, "reasons": []}
+
+    def test_missing_code_patterns_returns_false(self):
+        p1 = {"repo_metadata": {"topics": ["pcb"]}}
+        r = compute_q4_autofires_from_phase_1(p1)
+        assert r["has_critical_on_default_path"] is False
+
+    def test_missing_dangerous_primitives_returns_false(self):
+        p1 = {"code_patterns": {}, "repo_metadata": {"topics": ["pcb"]}}
+        r = compute_q4_autofires_from_phase_1(p1)
+        assert r["has_critical_on_default_path"] is False
+
+    def test_deserialization_without_loads_user_files_does_not_fire(self):
+        """20 hits but no matching README/topics → no fire. Avoids firing on
+        internal-RPC-only deserialization where file-loading condition is
+        absent."""
+        p1 = {
+            "code_patterns": {
+                "dangerous_primitives": {
+                    "deserialization": {"hit_count": 20, "files": []},
+                }
+            },
+            "repo_metadata": {"topics": ["rpc", "grpc"]},
+        }
+        r = compute_q4_autofires_from_phase_1(p1)
+        assert r["has_critical_on_default_path"] is False
+
+
 if __name__ == "__main__":
     import pytest
     sys.exit(pytest.main([__file__, "-v"]))

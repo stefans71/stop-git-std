@@ -1,0 +1,2256 @@
+sudo: unable to resolve host hostdzire: Name or service not known
+Reading additional input from stdin...
+OpenAI Codex v0.118.0 (research preview)
+--------
+workdir: /tmp
+model: gpt-5.4
+provider: openai
+approval: never
+sandbox: danger-full-access
+reasoning effort: none
+reasoning summaries: none
+session id: 019dad18-c232-7e80-aaf1-8ba7e701c192
+--------
+user
+You are the SYSTEMS THINKER seat on a FrontierBoard R2 board review. Your role: integration, data flow, downstream effects.
+
+You are STATELESS — treat this as a fresh session. Your R1 output is inlined in section 9.2 of the brief; re-read it, do not assume it is remembered.
+
+READ THIS BRIEF FIRST (it contains all 3 R1 responses verbatim + all C-items for voting):
+/tmp/v13-3-r2-brief.md
+
+Then read the section 8 files as needed:
+- /root/tinkering/stop-git-std/docs/v12-wild-scan-telemetry.md
+- /root/tinkering/stop-git-std/docs/External-Board-Reviews/042026-schema-v12/CONSOLIDATION.md
+- /root/tinkering/stop-git-std/docs/v13-1-override-telemetry-analysis.md
+- /root/tinkering/stop-git-std/docs/compute.py
+
+Write your output to:
+/root/tinkering/stop-git-std/.board-review-temp/v13-3-comparator-calibration/codex-r2.md
+
+Follow section 7 output format EXACTLY — Per-C-item votes for C1 through C20 (each AGREE/DISAGREE/MODIFY with 1-3 sentence rationale), then Meta-positions (did R1 change your mind? does C5+C6/C7+C14 resolve principled vs one-off?), then New items / Explicit non-escalations / Blind spots.
+
+Word cap 2000. R2 convergence on well-framed items is the goal.
+warning: Codex could not find system bubblewrap on PATH. Please install bubblewrap with your package manager. Codex will use the vendored bubblewrap in the meantime.
+codex
+I’m reading the brief and the section 8 materials first, with focus on your prior R1 text in section 9.2 and the C1-C20 items so I can produce a clean per-item R2 vote in the exact section 7 format.
+exec
+/bin/bash -lc "sed -n '1,260p' /root/tinkering/stop-git-std/docs/compute.py" in /tmp
+exec
+/bin/bash -lc "sed -n '1,260p' /tmp/v13-3-r2-brief.md" in /tmp
+ succeeded in 0ms:
+#!/usr/bin/env python3
+"""
+compute.py — Phase 3 computation functions for the GitHub repo scanner.
+
+V1.2 scope (post-2026-04-20 board review, docs/External-Board-Reviews/042026-schema-v12/):
+  - 7 byte-for-byte deterministic operations remain in phase_3_computed.
+  - compute_scorecard_cells() is DEMOTED TO ADVISORY — output feeds
+    phase_3_advisory.scorecard_hints (non-authoritative). Phase 4 LLM
+    is the scorecard cell authority and may override with rationale +
+    computed_signal_refs citing the 23 frozen SIGNAL_IDs below.
+  - SIGNAL_IDS exported as a frozenset — validator resolves Phase 4's
+    computed_signal_refs against this set (gate 6.3 override-explained).
+
+Fully automatable operations (board-approved 8/8/4 classification):
+1. C20 severity formula
+2. Scorecard cell ADVISORY hints (was authoritative pre-V1.2)
+3. Solo-maintainer flag (>80% threshold)
+4. Exhibit grouping (7+ threshold)
+5. Boundary-case detection
+6. Coverage cell status
+7. Methodology boilerplate
+8. F5 silent vs unadvertised classification
+
+Each function takes raw data from phase_1 and returns computed output.
+All deterministic: same input → same output, no LLM needed.
+"""
+
+import re
+from datetime import datetime, timedelta, timezone
+
+
+# ===========================================================================
+# V1.2 Signal ID vocabulary (frozen per 2026-04-20 board review Item F)
+# ===========================================================================
+#
+# Phase 4 LLM cites these IDs in scorecard_cells[key].computed_signal_refs
+# when overriding phase_3_advisory.scorecard_hints[key].color. Validator
+# (docs/validate-scanner-report.py) resolves every ref against this set.
+#
+# Naming convention (frozen V1.2):
+#   q1_ / q2_ / q3_ / q4_  — scorecard-input signals (scoped to the 4 cells)
+#   c20_                   — supporting signals for C20 governance SPOF
+#
+# V1.2.x patches may ADD signals without a schema bump; removing any signal
+# requires a V1.3 bump. Post-V1.2 telemetry (override-pattern log) drives
+# the "add more" decision — see CONSOLIDATION §8 V12x-3, V12x-4 triggers.
+
+SIGNAL_IDS: frozenset[str] = frozenset({
+    # Q1 — Does anyone check the code?
+    "q1_formal_review_rate",
+    "q1_any_review_rate",
+    "q1_has_branch_protection",
+    "q1_has_ruleset_protection",  # V1.2.x (V13-1): ruleset-based protection signal
+    "q1_has_codeowners",
+    "q1_is_solo_maintainer",
+    "q1_governance_floor_override",
+    # Q2 — Do they fix problems quickly?
+    "q2_open_security_issue_count",
+    "q2_oldest_open_cve_pr_age_days",
+    "q2_oldest_open_security_item_age_days",  # V1.2.x (V13-1): widened evidence — issues + security-PRs
+    "q2_closed_fix_lag_days",
+    # Q3 — Do they tell you about problems?
+    "q3_has_security_policy",
+    "q3_has_contributing_guide",
+    "q3_published_advisory_count",
+    "q3_has_silent_fixes",
+    "q3_has_reported_fixed_vulns",
+    # Q4 — Is it safe out of the box?
+    "q4_all_channels_pinned",
+    "q4_artifact_verified",
+    "q4_has_critical_on_default_path",
+    "q4_has_warning_on_install_path",
+    # C20 supporting signals
+    "c20_has_classic_protection",
+    "c20_has_rulesets",
+    "c20_has_rules_on_default",
+    "c20_has_recent_release_30d",
+    "c20_ships_executable_code",
+})
+
+
+OVERRIDE_REASON_ENUM: frozenset[str] = frozenset({
+    "threshold_too_strict",
+    "threshold_too_lenient",
+    "missing_qualitative_context",
+    "rubric_literal_vs_intent",
+    "signal_vocabulary_gap",
+    "harness_coverage_gap",
+    "other",
+})
+
+
+# ===========================================================================
+# 1. C20 Severity Formula
+# ===========================================================================
+
+def compute_c20_severity(
+    classic_protection_status: int,  # 200, 404, or 403
+    rulesets: list,
+    rules_on_default: list,
+    has_codeowners: bool,
+    latest_release_date: str | None,  # ISO date or None
+    ships_executable_code: bool,
+    scan_date: str | None = None,  # ISO date, defaults to today
+) -> dict:
+    """C20 governance SPOF severity: Critical when all governance signals
+    negative AND repo ships executable code with a recent release.
+
+    Returns dict with boolean inputs and result severity."""
+    no_classic = classic_protection_status == 404
+    no_rulesets = len(rulesets) == 0
+    no_rules = len(rules_on_default) == 0
+    no_codeowners = not has_codeowners
+
+    has_recent_release = False
+    if latest_release_date:
+        scan = datetime.fromisoformat(scan_date) if scan_date else datetime.now(timezone.utc)
+        if isinstance(scan, datetime) and scan.tzinfo is None:
+            scan = scan.replace(tzinfo=timezone.utc)
+        release = datetime.fromisoformat(latest_release_date.replace("Z", "+00:00"))
+        if release.tzinfo is None:
+            release = release.replace(tzinfo=timezone.utc)
+        has_recent_release = (scan - release).days <= 30
+
+    all_governance_negative = no_classic and no_rulesets and no_rules and no_codeowners
+
+    if all_governance_negative and has_recent_release and ships_executable_code:
+        result = "Critical"
+    elif all_governance_negative:
+        result = "Warning"
+    else:
+        result = None  # No C20 finding
+
+    return {
+        "no_classic_protection": no_classic,
+        "no_rulesets": no_rulesets,
+        "no_rules_on_default": no_rules,
+        "no_codeowners": no_codeowners,
+        "has_recent_release_30d": has_recent_release,
+        "ships_executable_code": ships_executable_code,
+        "result": result,
+    }
+
+
+# ===========================================================================
+# 2. Scorecard Cell Colors (Calibration Table)
+# ===========================================================================
+#
+# SF1 board review (2026-04-20, docs/External-Board-Reviews/042026-sf1-calibration/):
+# The 4 Q1-Q2-Q3-Q4 calibration functions below carry TEMPORARY COMPATIBILITY
+# PATCHES for V1.1 Step G acceptance. These align compute output with the V2.4
+# comparator-MD judgments for zustand-v3, caveman, and Archon. They are NOT the
+# endorsed steady-state design. Scorecard-cell authority migrates to
+# phase_4_structured_llm in V1.2 per deferred item D-7 (Operator Guide §8.8.7).
+#
+# Patch inventory applied here:
+#   Q1: governance-floor override — formal<10% AND no branch_protection AND
+#       no codeowners forces red regardless of any-review threshold.
+#   Q2: closed_fix_lag_days input — merged security fix >3 days drops green
+#       to amber (visible friction signal).
+#   Q3: has_contributing_guide input — amber floor includes contributing
+#       guide as a disclosure gesture.
+#   Q4: has_warning_on_install_path input (replacing has_warning_or_above)
+#       — governance warnings outside install-path no longer block green.
+
+def compute_scorecard_cells(
+    formal_review_rate: float | None,
+    any_review_rate: float | None,
+    has_branch_protection: bool,
+    has_codeowners: bool,
+    is_solo_maintainer: bool,
+    open_security_issue_count: int,
+    oldest_cve_pr_age_days: int | None,
+    has_security_policy: bool,
+    published_advisory_count: int,
+    has_silent_fixes: bool,
+    all_channels_pinned: bool,
+    artifact_verified: bool,
+    has_critical_on_default_path: bool,
+    has_warning_on_install_path: bool,
+    has_contributing_guide: bool = False,
+    closed_fix_lag_days: int | None = None,
+    has_ruleset_protection: bool = False,
+    oldest_open_security_item_age_days: int | None = None,
+) -> dict:
+    """Compute the 4 scorecard cells using the V2.4 calibration table.
+    Returns dict with color (red/amber/green) and short_answer per cell.
+
+    SF1 patches (temporary V1.1 compatibility; migrates to V1.2 D-7):
+      - has_contributing_guide: Q3 amber floor signal (disclosure gesture
+        without formal SECURITY.md).
+      - has_warning_on_install_path: Q4 install-scope warning (governance
+        warnings elsewhere don't block green).
+      - closed_fix_lag_days: Q2 merged security PR age (>3 days → amber).
+      - Q1 governance-floor override baked into the branches below.
+
+    V1.2.x signal widening (V13-1 owner directive 2026-04-20):
+      - has_ruleset_protection: True when branch_protection.rulesets.count >= 1
+        AND branch_protection.rules_on_default.count >= 1. Folds into the Q1
+        governance-floor check as `has_any_branch_protection =
+        has_branch_protection OR has_ruleset_protection`. Addresses ghostty
+        entry 16 + kamal entry 18 Q1 overrides where classic-only check
+        missed ruleset-based protection.
+      - oldest_open_security_item_age_days: widens Q2 age evidence beyond
+        CVE-labeled PRs to include open issues with security keywords and
+        security-labeled PRs. Q2 now considers max(oldest_cve_pr_age_days,
+        oldest_open_security_item_age_days). Addresses Kronos entry 17 Q2
+        override where a 95-day-old open issue was invisible to the
+        PR-scoped signal.
+    """
+
+    # Q1: Does anyone check the code?
+    # V2.4 calibration: Green = any>=60% AND formal>=30% AND branch protection
+    # Amber = any>=50% OR formal>=20%
+    # Red = any<30% OR (solo-maintainer AND any<40%)
+    # SF1 patch: Q1 governance-floor override — formal<10% AND no branch
+    # protection AND no codeowners forces red (Archon-shape: high any-review
+    # masking functionally-absent review process).
+    # V1.2.x (V13-1): has_any_branch_protection = classic OR ruleset-based.
+    formal = formal_review_rate or 0
+    any_rev = any_review_rate or 0
+    has_any_branch_protection = has_branch_protection or has_ruleset_protection
+    if (formal < 10 and not has_any_branch_protection and not has_codeowners):
+        q1_color = "red"
+        q1_answer = "No"
+    elif any_rev >= 60 and formal >= 30 and has_any_branch_protection:
+        q1_color = "green"
+        q1_answer = "Yes"
+    elif any_rev < 30 or (is_solo_maintainer and any_rev < 40):
+        q1_color = "red"
+        q1_answer = "No"
+    elif any_rev >= 50 or formal >= 20:
+        q1_color = "amber"
+        q1_answer = "Partly"
+    else:
+        q1_color = "red"
+        q1_answer = "No"
+
+    # Q2: Do they fix problems quickly?
+    # SF1 patch: closed_fix_lag_days — a repo with merged security PR taking
+    # >3 days is amber even if no open issues (caveman-shape friction signal).
+    # V1.2.x (V13-1): cve_age = max(oldest_cve_pr_age_days,
+    # oldest_open_security_item_age_days) — widens evidence beyond PRs to
+    # include open security issues + security-labeled PRs.
+    cve_age = max(oldest_cve_pr_age_days or 0, oldest_open_security_item_age_days or 0)
+    if open_security_issue_count == 0 and cve_age <= 7:
+        if closed_fix_lag_days is not None and closed_fix_lag_days > 3:
+            q2_color = "amber"
+            q2_answer = "Partly"
+        else:
+            q2_color = "green"
+            q2_answer = "Yes"
+    elif open_security_issue_count <= 3 and cve_age <= 14:
+        q2_color = "amber"
+        q2_answer = "Partly"
+    else:
+        q2_color = "red"
+        q2_answer = "No"
+
+    # Q3: Do they tell you about problems?
+
+ succeeded in 0ms:
+# V13-3 Board Review — R2 Consolidation Brief (Stateless)
+
+**Review topic:** V13-3 — 11-scan comparator calibration analysis. Triggered 2026-04-20 at catalog entry 26 (WhiskeySockets/Baileys), the 11th V1.2-schema wild scan.
+
+**Round:** R2 Consolidation. R1 Blind complete — 3 agents voted independently. This round preserves disagreement where it exists and pushes convergence only where the three R1 positions can honestly be merged.
+
+**Agent instruction:** You are **STATELESS** — read this brief as if you've never seen the project. All three R1 outputs are inlined verbatim in §9 below. Do not treat your own prior R1 output as already-known context; re-read it here. The R1 brief is referenced at `/root/tinkering/stop-git-std/.board-review-temp/v13-3-comparator-calibration/r1-brief.md` for full context (366 lines); this R2 brief re-briefs only the deltas and consolidated items.
+
+---
+
+## 1. Context refresh (compressed)
+
+`stop-git-std` is an LLM-driven GitHub repo security scanner. `docs/phase_1_harness.py` gathers facts; `docs/compute.py` derives Phase 3 advisory signals; LLM authors Phase 4 structured findings + Phase 5 prose into a `form.json`; renderers produce MD + HTML; `docs/validate-scanner-report.py` gates. Schema V1.2 is live (shipped 2026-04-20 via D-7 + D-8 board review). V13-1 owner-directive work shipped same session: expanded `override_reason_enum` from 5→7 values (+`signal_vocabulary_gap`, +`harness_coverage_gap`).
+
+**V13-3 trigger (CONSOLIDATION §8 line 397):** "11-scan comparator calibration analysis | V1.2 schema frozen + telemetry exists + ≥11 V1.2 scans collected". Fired at catalog entry 26 (Baileys, 2026-04-20). Analysis is now owed.
+
+**Across 11 V1.2 wild scans (entries 16-26):** 9 overrides total, `signal_vocabulary_gap` 67% modal, `harness_coverage_gap` 22%, `threshold_too_strict` 11%, 4 of 7 enum values unexercised, Q4 is the override hotspot (5/9), 11/11 silent-fix pattern (0 published GHSA advisories) with 2 concretely-documented disclosure-handling failures (WLED #5340, Baileys PR #1996).
+
+Full R1 brief: `/root/tinkering/stop-git-std/.board-review-temp/v13-3-comparator-calibration/r1-brief.md`.
+
+---
+
+## 2. R1 outcome — vote matrix
+
+| Q | Question | Pragmatist | Systems (Codex) | Skeptic (DeepSeek) | Outcome |
+|---|---|---|---|---|---|
+| **V3Q1** | V13-3 scope | A3 both | A3 both | A2 broad | ⚠️ **2/3 A3, 1 A2** |
+| **V3Q2** | Priority 1 deserialization | B1 land | B1 land | B2 defer | ⚠️ **2/3 B1, 1 B2** |
+| **V3Q3** | Priority 1b firmware CORS | C2 defer | C2 defer | C2 defer | ✅ **Converged C2** |
+| **V3Q4** | Priority 1c reverse-eng | D2 defer | D2 defer | D3 reject | ⚠️ **2/3 D2, 1 D3** |
+| **V3Q5** | Q3 rubric | E2 add enum | E3 keep | E3 keep | ⚠️ **2/3 E3, 1 E2** |
+| **V3Q6** | V1.3 enum pruning | F2 prune 1 | F2 prune 1 | F3 prune none | ⚠️ **2/3 F2, 1 F3** |
+| **V3Q7** | Follow-up cadence | G3 conditions | G4 N=25 or events | G2 N=25 | ⚠️ **3-way split** |
+| **H** | Process | H2 directive | H1 full board | H1 full board | ⚠️ **2/3 H1** |
+
+**Converged on 1/8 (V3Q3).** Majority-positioned on 6/8. True 3-way split on V3Q7.
+
+Per SOP §4 Round 2 tiebreaker rules:
+- 2-of-3 agree → majority classification, note dissent
+- 3-way split → highest severity proposed, flag for R3
+- Owner directives override
+
+---
+
+## 3. Owner directives
+
+**OD-1 (on H, process):** Continue with full board. 2/3 voted H1 (full board) and the multi-axis scope + schema/rubric/enum implications justify the R2-R3 cycle cost. Pragmatist's H2 (owner directive after R1) is noted as dissent and applied asymmetrically: **the items where R1 is unanimous or near-unanimous (V3Q3, C1/C3/C4 FIX NOW themes in §4) are candidates for Round-2-close**; items with genuine dissent (V3Q5, V3Q7 especially) continue to R3 if R2 doesn't converge.
+
+**OD-2 (scope ground rule):** V13-3's output is the frozen analysis document `docs/v13-3-analysis.md` mirroring the `docs/v13-1-override-telemetry-analysis.md` structural template. The existing `docs/v12-wild-scan-telemetry.md` remains living (appended after each new wild scan); `v13-3-analysis.md` is the frozen snapshot citing entries 16-26 at their commit SHAs.
+
+**OD-3 (historical bundle rule):** Entries 16-26 are historical. V13-3 MAY simulate override collapse counterfactually (for evaluating Priority 1/1b/1c), but MUST NOT re-render historical bundles or update their `override_reason` records. This codifies the rule from CONSOLIDATION §8.2 final paragraph.
+
+---
+
+## 4. Consolidated R1 items (for R2 voting)
+
+All items from R1 responses (FIX NOW + DEFER + INFO + blind spots + open questions) are consolidated here with C-IDs for R2 voting. **Vote AGREE / DISAGREE / MODIFY on each.** Blank-positioned items are also in scope — if you didn't address the topic in R1, you can still AGREE / DISAGREE / MODIFY in R2.
+
+### 4.1 FIX NOW candidates
+
+**C1 — Write `docs/v13-3-analysis.md` as a frozen A3-scoped document** (from Systems C-1 + Pragmatist INF-3)
+
+Source: Systems said "Define V13-3 as A3 in the written analysis and explicitly state that Reading A is closed by D-6 while Reading B remains the actionable calibration surface." Pragmatist said "The `docs/v13-3-analysis.md` document format should mirror `docs/v13-1-override-telemetry-analysis.md` structurally — that's the established template for this class of analysis and it worked well."
+
+Proposed classification: **FIX NOW**. Owner is willing to author. Pragmatist and Systems positions are compatible; Skeptic did not explicitly address the deliverable-shape question.
+
+**Vote:** AGREE / DISAGREE / MODIFY (propose different shape or deliverable).
+
+**C2 — V12x-9 language qualifier regex on deserialization family is HARD PREREQUISITE for Priority 1 auto-fire** (from Pragmatist FN-1 + Systems C-2)
+
+Source: Pragmatist said "V12x-9 … MUST be treated as a hard prerequisite for V3Q2/Priority 1 auto-fire — not as a parallel-and-maybe item. … If Priority 1 ships without V12x-9, the WLED ArduinoJson FPs will trigger spurious Critical findings." Systems said "Priority 1 must ship paired with language-qualified matching, or it will contaminate Q4 advisory hints on non-deserialization code paths." Skeptic voted B2 (defer Priority 1 entirely); did not separately address the sequencing.
+
+Proposed classification: **FIX NOW conditional on V3Q2 = B1**. If V3Q2 passes B1 (majority), then Priority 1 + V12x-9 ship together atomically. If V3Q2 flips to B2 in R2, C2 becomes moot.
+
+**Vote:** AGREE / DISAGREE / MODIFY (e.g. keep V12x-9 separate, ship Priority 1 without it, defer both).
+
+**C3 — Freeze entries 16-26 as historical bundles; V13-3 analysis models override collapse counterfactually, NOT by re-rendering** (from Systems C-3)
+
+Source: Systems said "Freeze entries 16–26 as historical bundles; V13-3 analysis may model override collapse counterfactually, but must not re-render prior artifacts."
+
+Proposed classification: **FIX NOW** (already codified as OD-3 above). Included here for explicit R2 agreement because all 3 agents implicitly assume it in their rationales. Owner-authored OD-3 version matches Systems' position verbatim.
+
+**Vote:** AGREE / DISAGREE / MODIFY.
+
+**C4 — Document sample bias explicitly in V13-3 analysis** (from Skeptic C-1)
+
+Source: Skeptic said "Document the sample bias explicitly in the V13-3 analysis. State clearly: '11 scans, Python/Rust heavy, missing major ecosystems.'"
+
+Proposed classification: **FIX NOW**. Low-cost, high-value; constrains over-reading from the sample. Pragmatist's INF-1 implicitly agrees (notes the 82% scan-level rate needs explicit naming); Systems did not address.
+
+**Vote:** AGREE / DISAGREE / MODIFY.
+
+### 4.2 DEFER candidates
+
+**C5 — V3Q2: Priority 1 deserialization auto-fire** — R1 voted B1 B1 B2 (2/3 land)
+
+Majority (2/3) land in V1.2.x. Skeptic dissents (B2 defer): "language qualifier is a bigger change than 'additive signal'; it's a semantic rewrite of the deserialization family."
+
+Proposed classification: **LAND as V1.2.x (majority)**, paired with C2 (V12x-9 blocker). Skeptic's dissent preserved; if R2 Skeptic MODIFIES to articulate specific harm, R3 deliberation follows.
+
+**Vote:** AGREE (B1) / DISAGREE (B2) / MODIFY.
+
+**C6 — V3Q3: Priority 1b firmware CORS compound signal** — R1 voted C2 C2 C2 (3/3 defer)
+
+All 3 agents voted C2 (defer to V1.3). No dissent.
+
+Proposed classification: **DEFER to V1.3**. Trigger for re-evaluation: ≥2 additional firmware/IoT shape scans in V1.2 catalog, OR shape-classification infrastructure lands independently.
+
+**Vote:** AGREE / DISAGREE / MODIFY.
+
+**C7 — V3Q4: Priority 1c reverse-engineered-API shape signal** — R1 voted D2 D2 D3
+
+Majority (2/3) defer; Skeptic rejects outright.
+
+Proposed classification: **DEFER to V1.3** with Skeptic's REJECT dissent documented. Trigger for re-evaluation: ≥3 confirmed reverse-engineered-API-library scans in V1.2 catalog (e.g., whatsmeow, discord.py-self, instagrapi — all live candidates), AND dry-run FP test against 11 existing bundles shows 0 FPs.
+
+**Vote:** AGREE (D2 defer) / DISAGREE-REJECT (D3 close permanently) / MODIFY.
+
+**C8 — V3Q5: Q3 rubric adjustment** — R1 voted E2 E3 E3
+
+Majority (2/3) keep rubric (E3). Pragmatist dissents (E2): "add `community_norms_differ` as a V1.3 candidate (DeepSeek's preserved dissent now has telemetric backing at 11/11); rubric change is a bigger cross-scan comparability event than it looks."
+
+Proposed classification: **KEEP Q3 rubric as-is (majority E3)**, BUT add V13-4 follow-up work: re-evaluate `community_norms_differ` enum-addition proposal when 11/11 silent-fix reaches N=15 or when a Q3 override actually fires (first in catalog). This is a dual DEFER — the rubric change AND the enum addition both defer, but with different triggers.
+
+**Vote:** AGREE (E3 + deferred V13-4) / DISAGREE (E2 land now) / MODIFY.
+
+**C9 — V3Q6: V1.3 enum pruning** — R1 voted F2 F2 F3
+
+Majority (2/3) prune `missing_qualitative_context`; Skeptic says keep all 4 unused values.
+
+Skeptic rationale: "4 unused enum values after 11 biased samples doesn't mean they're dead — they're sleeping. … We haven't seen the shapes that would trigger them."
+
+Pragmatist rationale: "11 scans is enough to drop `missing_qualitative_context` (the V13-1 split was designed to absorb it; it hasn't fired since), but not enough to prune `threshold_too_lenient`, `rubric_literal_vs_intent`, or `other`. The sample is heavily skewed."
+
+Proposed classification: **F2 prune `missing_qualitative_context` only in V1.3 (majority)**. Keep `threshold_too_lenient`, `rubric_literal_vs_intent`, `other` as headroom. Skeptic's F3 absorbed: she agrees with not pruning those 3; disagrees on pruning the catchall. The narrow prune of the V13-1-superseded catchall is structurally different from the broader pruning Skeptic opposes.
+
+**Vote:** AGREE / DISAGREE / MODIFY.
+
+**C10 — V3Q7: V13-3 follow-up cadence** — R1 voted G3 / G4 (N=25 OR event) / G2 (N=25)
+
+TRUE 3-WAY SPLIT per SOP §4 R2 rule: "highest severity proposed" means the most restrictive cadence. All 3 are re-trigger flavors:
+- G2 (Skeptic): hard count, N=25
+- G3 (Pragmatist): condition-based (modal >80%, ≥2 new enums fire, or no-label case)
+- G4 (Systems): N=25 OR enum-escape/multi-label event (hybrid of G2+G3)
+
+Systems' G4 is a compound superset of G2 and G3. Pragmatist's G3 is event-only. Skeptic's G2 is count-only.
+
+Proposed classification: **G4 (Systems, superset)**. All 3 positions are satisfied under G4: the count-based trigger (G2) fires first if routine accumulation reaches 25 without the interesting events; the event-based triggers (G3) fire first if something structurally new happens.
+
+**Vote:** AGREE / DISAGREE / MODIFY. This question is flagged for R3 deliberation if R2 doesn't converge.
+
+### 4.3 INFO items (record without voting — preserve for V13-3 analysis document)
+
+**C11 — 82% scan-level override rate is worth naming** (Pragmatist INF-1): "9 of 11 scans have ≥1 override … higher than the brief frames it. … worth naming explicitly in the V13-3 analysis document."
+
+**C12 — Same 4 Q4 `computed_signal_refs` appear on freerouting + WLED + Baileys despite 3 different root causes** (Systems I-1): "useful symptom that the scorecard-hint vocabulary is underexpressive even when the override enum is adequate."
+
+**C13 — Zero-override streak (wezterm → QuickLook → kanata) is positive calibration data** (Skeptic I-1): signal vocabulary works for some shapes; V13-3 should cite this as evidence of when compute is well-calibrated.
+
+**C14 — `signal_vocabulary_gap` 67% suggests compute needs PRINCIPLED expansion, not one-off patches** (Skeptic I-2): Per Skeptic, "the expansion should be principled (new signal families), not one-off patches." Tension with C5 (land Priority 1 as additive signal) — noted but not blocking.
+
+**C15 — Reading A and Reading B should not share maintenance home** (Systems I-2): "D-6 is executable and living; V13-3 analysis should be frozen and cited." Supports OD-2.
+
+**C16 — V1.2-only scope for V13-3; no V2.4-era back-labeling** (Pragmatist INF-2): "Back-labeling V2.4 prose to machine-readable override categories is manual and error-prone. The V13-3 analysis document should note this as an explicit scope exclusion."
+
+### 4.4 Open questions from R1 (R2 should answer or explicitly defer)
+
+**C17 — V12x-6 (multi-ecosystem manifest parsing) scope landing decision** (Pragmatist OQ-1): V12x-6 affects 7 of 11 scans (Maven/Gradle/Cargo/Gomod/Bundler/.NET producing `runtime_count=0`). Brief treats it as a backlog item. Is V12x-6 V1.2.x scope or V1.3 scope?
+
+Proposed classification: **DEFER to V1.3**. V12x-6 requires multi-ecosystem parser work (Java/Ruby/Rust/Go/.NET), substantially larger than Priority 1's additive-regex-plus-compute-derivation. Skeptic's "principled expansion not one-off patches" (C14) argues for bundling V12x-6 with the V1.3 compute expansion.
+
+**Vote:** AGREE (V1.3) / DISAGREE (V1.2.x) / MODIFY.
+
+**C18 — Canonical storage of "tool loads user files" derivation** (Systems OQ-1): If Priority 1 lands, where does operators' judgment about "tool loads user files" live so they don't recreate it ad hoc in scan drivers?
+
+Proposed classification: **FIX NOW conditional on V3Q2=B1**. The derivation must be in `docs/compute.py` (a helper like `derive_tool_loads_user_files(repo_metadata, readme, install_paths) -> bool`), not in scan drivers. Aligns with the V13-1 precedent where `derive_q1_has_ruleset_protection()` and `derive_q2_oldest_open_security_item_age_days()` are in `docs/compute.py`.
+
+**Vote:** AGREE / DISAGREE / MODIFY.
+
+**C19 — V13-3 analysis document should include "historical vs counterfactual" section** (Systems OQ-2): "so later readers do not confuse simulated override collapse with actual bundle contents."
+
+Proposed classification: **FIX NOW** (as section in the v13-3-analysis.md deliverable).
+
+**Vote:** AGREE / DISAGREE / MODIFY.
+
+**C20 — Dry-run FP rate test for harness patches before V1.3 promotion** (Skeptic OQ-1 + Pragmatist blind-spot): Apply proposed patches to 11 existing bundles, count suppressed safe-deserialization hits vs preserved unsafe hits; measure Priority 1c regex FP on 11 bundle READMEs.
+
+Proposed classification: **FIX NOW for C5 (Priority 1)** (dry-run is part of the V1.2.x landing). **DEFER for C6/C7** (dry-run becomes part of V1.3 promotion gate).
+
+**Vote:** AGREE / DISAGREE / MODIFY.
+
+### 4.5 Blind spots raised
+
+Recorded for R3 awareness:
+
+- **BS-1 (Pragmatist):** compute.py derivation specifics for Priority 1 not traced end-to-end; V12x-9 language-qualifier risk on C/C++/Rust genuine unsafe deserialization coverage.
+- **BS-2 (Systems):** FP profile of shape classifiers outside sampled bundles not quantified.
+- **BS-3 (Skeptic):** implementation complexity of language qualifier not examined; confidence intervals on 67% modal rate not calculated (at n=9 overrides, 95% CI is ~35-90%).
+
+These are not votes — they're context for R3 deliberation if R2 doesn't converge.
+
+---
+
+## 5. Cross-cutting tension — Skeptic's "principled vs one-off" framing
+
+Skeptic (DeepSeek) explicitly framed the Priority 1/1b/1c work as "textbook overfitting" — three patches each solving one observed override. Pragmatist and Systems implicitly accept this for Priority 1 (C5) by requiring language-qualifier pairing (C2), but extend it to Priority 1b/1c via DEFER.
+
+**R2 question to all 3 agents:** does the C5 (land Priority 1 with language qualifier) + C6/C7 (defer Priority 1b/1c) + C14 (Skeptic I-2 "principled expansion") package constitute an acceptable middle path? Or does Skeptic maintain that Priority 1 itself is overfitting and should defer?
+
+If R2 produces Skeptic BLOCK on C5, the review continues to R3 deliberation on C5 specifically.
+
+---
+
+## 6. Voting instructions
+
+**For each C-item in §4 (C1 through C20):**
+
+- **AGREE:** accept proposed classification as-is. One-sentence confirmation.
+- **DISAGREE:** reject proposed classification. One-paragraph rationale. Alternative classification required.
+- **MODIFY:** accept direction, refine details. State the specific modification + rationale.
+
+**Silent drops are not allowed per SOP §4 Pre-Archive Gate.** If you intentionally decline to vote on an item, state "EXPLICIT-SKIP: <reason>."
+
+---
+
+## 7. Required output format
+
+Write to `.board-review-temp/v13-3-comparator-calibration/{pragmatist|codex|deepseek}-r2.md`. Structure:
+
+```
+# V13-3 R2 — [agent name]
+
+## Per-C-item votes
+
+### C1 — [title]
+**Vote:** AGREE / DISAGREE / MODIFY
+**Rationale:** [1-3 sentences]
+[If MODIFY: alternative]
+
+### C2 — [title]
+...
+
+[continue through C20]
+
+## Meta-positions
+- Did R1 change your mind on anything after reading the other two agents' rationales inlined below? [yes/no + explanation]
+- Does the C5 + C6/C7 + C14 package resolve the "principled vs one-off" tension? [yes/no + explanation]
+
+## New items raised at R2 (if any)
+- [N1]: [item + severity]
+
+## Explicit non-escalations (if any)
+- [list items from R1 you are intentionally not pressing further, with one-line rationale]
+
+## Blind spots (updated if anything changed)
+[Brief honest disclosure]
+```
+
+**Word cap: 2000.** Be specific. R2 is narrower than R1 — convergence on well-framed items is the goal.
+
+
+exec
+/bin/bash -lc "sed -n '1,260p' /root/tinkering/stop-git-std/docs/External-Board-Reviews/042026-schema-v12/CONSOLIDATION.md" in /tmp
+exec
+/bin/bash -lc "sed -n '1,260p' /root/tinkering/stop-git-std/docs/v13-1-override-telemetry-analysis.md" in /tmp
+ succeeded in 0ms:
+# Schema V1.2 Board Review — CONSOLIDATION
+
+**Topic:** Scan-schema V1.2 design — co-scheduled D-7 (scorecard cell authority migration) + D-8 (schema hardening for harness output).
+
+**Date range:** 2026-04-20 (single-session, 3 rounds + owner directives)
+
+**HEAD at sign-off:** `4512084` on origin/main
+
+**Board composition:**
+- **Pragmatist:** Claude Sonnet 4.6 via `Agent` tool (same-model blind-spot rule — operator authored the R1 brief using Opus)
+- **Systems Thinker:** Codex GPT-5 via `sudo -u llmuser bash -c "cd /tmp && codex exec --dangerously-bypass-approvals-and-sandbox ..."`
+- **Skeptic:** DeepSeek V4 via `OPENAI_API_KEY=$DEEPSEEK_API_KEY OPENAI_BASE_URL=https://api.deepseek.com/v1 qwen -y -p ... --model deepseek-chat`
+
+**SOP:** `/root/.frontierboard/FrontierBoard/docs/REVIEW-SOP.md` — pre-archive dissent audit mandatory per §4.
+
+**Outcome:** **SIGN OFF with owner directives on 2 structural decisions and 6 substantive item resolutions.** All 3 agents signed off on R3 with "None for R4 — all 6 items have concrete resolutions ready for V1.2 implementation." Owner closed remaining splits by directive.
+
+**Dissent audit result:** ✅ **PASS** — zero silent drops. 24 discrete R1+R2+R3 items traced. 19 resolved by outcome, 5 preserved as accepted dissents in §6 below.
+
+---
+
+## 1. Round summary
+
+| Round | Type | Agents | Purpose | Outcome |
+|---|---|---|---|---|
+| R1 | Blind | P+C+DS | Open scoping on 7 questions (Q1–Q7) | 5/7 converged, 2/7 split (Q3 shape, Q5 override mechanics); 3 transformer bugs surfaced and verified |
+| R2 | Consolidation | P+C+DS | Respond to R1 positions, merge or defend | Q3 resolved 2-1 by vote (D8-B1 majority); Q5 near-converged on G3+G4; 9 open questions surfaced (OQ-1 through OQ-9); 2 structural topology questions (OQ-2/OQ-3) remained split 2-1 |
+| Owner directive | — | Operator | Close Q3 + OQ-2/OQ-3 | D1 (Q3=B1) + D2 (phase_3_advisory new top-level) |
+| R3 | Deliberation (narrow) | P+C+DS | Close 6 remaining substantive items (A-F) | All 3 agents reported "None for R4"; real diffs on 6 items closed by owner directive |
+
+**Timing:**
+- R1 ~10 min (3 agents in parallel)
+- R2 ~15 min
+- R3 ~18 min
+- Total elapsed clock time: ~50 min of LLM work + owner-directive decision time
+
+---
+
+## 2. Owner directives (issued between R2 and R3)
+
+### D1 — Q3 shape: D8-B1 (harness-canonical, transformer deleted)
+
+**Basis:** R2 majority 2/3 (Pragmatist flipped R1 B2-scoped → R2 B-merged ≈ B1; Codex held B1). DeepSeek's R2 B2-scoped (flipped from R1 B3) preserved schema `is_` / `has_` prefix convention. Owner resolved on majority + cleaner contract.
+
+**Concrete V1.2 schema deltas:**
+
+- Field names match harness output natively:
+  - `repo_metadata.archived` (not `is_archived`)
+  - `repo_metadata.fork` (not `is_fork`)
+  - `repo_metadata.default_branch` (not `default_branch_ref`)
+  - `pre_flight.api_rate_limit.reset` (epoch int)
+  - `dependencies.dependabot_alerts` (not `dependabot`)
+  - `dependencies.osv_lookups` (not `osv_dev`)
+- Harness gathers: `open_issues_count`, `size_kb` (already emitted, schema V1.2 accepts)
+- Harness additions required: `has_issues_enabled`, `primary_language`, `topics`, `fork_count` (nullable if not gathered; acceptable to add in V1.2.x)
+- Shapes preserved:
+  - `code_patterns.dangerous_primitives.{exec, deserialization, network, ...15 families}.files[].first_match.{line, snippet}` nested preserved
+  - `code_patterns.executable_files` as list (not `{entries: []}` wrapper)
+  - `code_patterns.install_hooks` as list
+  - `code_patterns.agent_rule_files` as list (per-entry `{path, kind, line_count, ci_amplified, ...}`)
+  - `dependencies.manifest_files: [{path, format}]` (objects, not strings)
+- Type richness restored:
+  - `pre_flight.symlinks_stripped: integer` (count, not bool)
+  - `coverage_affirmations.windows_surface_coverage: string` (status, not bool)
+  - `coverage_affirmations.distribution_channels_verified: {verified: int, total: int}` (object, not bool)
+- Transformer (`.board-review-temp/markitdown-scan/transform_harness.py`) **deleted** from V1.2 path
+- Bug P3-DOUBLE-ASSIGN auto-resolves via deletion
+
+### D2 — OQ-2/OQ-3 topology: new top-level `phase_3_advisory` with `scorecard_hints`
+
+**Basis:** Codex R2 reasoning — keeps `phase_3_computed` owning its 7 deterministic outputs unambiguously; aligns with SF1 CONSOLIDATION wording (`phase_3_advisory.scorecard_hints`). Pragmatist + DeepSeek preferred sibling sub-object inside `phase_3_computed`. Owner resolved on topology-cleanness.
+
+**Concrete V1.2 schema deltas:**
+
+- New top-level: `phase_3_advisory`
+  - `scorecard_hints` — keyed object by canonical question ID:
+    - `does_anyone_check_the_code`
+    - `do_they_fix_problems_quickly`
+    - `do_they_tell_you_about_problems`
+    - `is_it_safe_out_of_the_box`
+  - each key → `{color, short_answer, signals: [{id, value, ...}], $comment?}`
+- `phase_3_computed.scorecard_cells` **deleted** (authority moves to Phase 4)
+- `phase_4_structured_llm.scorecard_cells` — keyed object by canonical question ID (OQ-4 unanimous: keyed not array):
+  - each key → `{color, short_answer, rationale, edge_case, suggested_threshold_adjustment, computed_signal_refs: [string], override_reason: enum}`
+- `compute.compute_scorecard_cells()` demoted to advisory; populates `phase_3_advisory.scorecard_hints`
+- 7 other `compute.py` ops remain in `phase_3_computed` unchanged; Step 3b byte-for-byte equality retained for those 7
+- Gate 6.3 changes from "cell-by-cell match" to "override-explained" per Item A
+
+---
+
+## 3. Q1–Q7 final votes + OQ-1–OQ-9 resolutions
+
+| Q | Question | Final resolution | Basis |
+|---|---|---|---|
+| Q1 | Coordinated vs staged | **Coordinated** | 3/3 unanimous R1 |
+| Q2 | compute.py authority | **D7-A1** (must cite signals when overriding) | 3/3 unanimous R1 |
+| Q3 | V1.2 shape winner | **D8-B1** (harness-canonical) | Owner directive D1 on R2 2/3 majority |
+| Q4 | Back-compat | **Migration script** | 3/3 unanimous R1 |
+| Q5 | Override mechanics | **D7-G3+G4** (enum + validator) + Item A refs-only floor | R2 near-converged, R3 Item A closes |
+| Q6 | Renderer surface in V1.2 | **Narrow** (scorecard path only; no new-feature expansion; `dangerous_primitives` empirically has no current consumer) | 3/3 R2 converged; R3 Item D confirmed |
+| Q7 | Scope guard | **SD2, PD3, Package V2.5, Scanner-Integrity §00, D-4 all OUT** | 3/3 unanimous R1 |
+
+| OQ | Question | Final resolution | Basis |
+|---|---|---|---|
+| OQ-1 | Signal ID vocabulary | Codex R3 question-scoped prefix (`q1_` / `q2_` / `q3_` / `q4_` / `c20_`) — see §5 Item F | Owner directive post-R3 |
+| OQ-2 | Phase 3 container name | `phase_3_advisory.scorecard_hints` | Owner directive D2 |
+| OQ-3 | Rename or sibling | New top-level phase | Owner directive D2 |
+| OQ-4 | scorecard_cells shape | Keyed object by canonical question ID | 3/3 R2 unanimous |
+| OQ-5 | Gate 6.3 mechanism | Schema + validator (Item A enforces) | 3/3 R2 converged |
+| OQ-6 | Migration scope | Active fixtures only + annotation rule for archived | Owner directive post-R3 (Item B) |
+| OQ-7 | Partial Phase 1 | Nullable optional substructures; `phase_2_validation` flags partial | 3/3 R2 converged (wording variations only) |
+| OQ-8 | V2.4-only catalog migration | Stay V2.4-rendered indefinitely unless re-scanned | 3/3 R2 unanimous |
+| OQ-9 | Phase 4 LLM sidecar access | No sidecar needed — B1 absorbs richness natively; LLM reads `phase_1_raw_capture` directly | Resolved logically by D1 (Codex + DeepSeek position); Pragmatist dissent preserved (§6) |
+
+---
+
+## 4. Ground-truth transformer bugs (P1–P3)
+
+All 3 verified by operator against source pre-R2 and absorbed by D1 (transformer deletion).
+
+| ID | Bug | Status |
+|---|---|---|
+| **P1-RENAME** | `transform_repo_metadata()` hardcodes `has_issues_enabled: None`, `primary_language: None`, `topics: []`, `fork_count: None`. Harness doesn't gather these. Operator-extended finding: harness does emit `open_issues_count`, `size_kb` which transformer silently drops (not in V1.1 schema). | ✅ Resolved by D1: schema V1.2 adopts harness fields natively; missing-from-harness fields become nullable until harness gathers them; `open_issues_count` + `size_kb` accepted. |
+| **P2-LOSSY-CAST** | `_transform_coverage_affirmations()` casts `"4/5"` to `False` via `int(num) == int(denom)`. Loses partial-coverage granularity. `windows_surface_coverage` same pattern. | ✅ Resolved by D1: schema V1.2 accepts `{verified: int, total: int}` for distribution channels; string status for windows coverage. |
+| **P3-DOUBLE-ASSIGN** | `transform_phase_1()` assigns `branch_protection` twice (lines 208, 218). Silent overwrite. Result correct by accident (identical calls). | ✅ Resolved by D1: transformer file deleted entirely. |
+
+---
+
+## 5. Six R3 item resolutions
+
+### Item A — Q5 rationale-naming floor
+
+**Resolution: (a) refs-only + length floor + enum check. NO substring check in rationale.**
+
+**Majority:** P + C (2/3). DeepSeek dissented to (b) substring check. Owner resolved on majority + gameability argument.
+
+**Validator pseudocode** (lands in `docs/validate-scanner-report.py`):
+
+```python
+def validate_override_rationale(cell, advisory_hint):
+    if cell["color"] == advisory_hint["color"]:
+        return  # no override — no enforcement required
+    rationale = cell.get("rationale", "") or ""
+    refs = cell.get("computed_signal_refs", []) or []
+    reason = cell.get("override_reason")
+    if reason not in OVERRIDE_REASON_ENUM:
+        raise ValidationError(f"override_reason must be enum value, got {reason!r}")
+    if len(rationale) < 50:
+        raise ValidationError("Override rationale must be >= 50 chars")
+    if not refs:
+        raise ValidationError("Override requires computed_signal_refs non-empty")
+    unknown = [r for r in refs if r not in compute.SIGNAL_IDS]
+    if unknown:
+        raise ValidationError(f"computed_signal_refs contains unknown IDs: {unknown}")
+```
+
+**Dissent preserved:** DeepSeek's substring check. Rationale: "substring is strictly better than length-only — forces the LLM to at least mention the signal name." Owner counter: substring is gameable (dropping a signal name without meaningful engagement meets the check); structural ref resolution + length floor is the minimum-viable floor that resists gaming while staying computable.
+
+### Item B — OQ-6 migration script scope
+
+**Resolution: (d) active fixtures only + explicit annotation rule for archived.**
+
+**Majority:** P + DS (2/3). Codex dissented to (b) active + archived Step G. Owner resolved on majority + regression-witness preservation logic.
+
+**Files migrated by `migrate-v1.1-to-v1.2.py`:**
+1. `tests/fixtures/zustand-form.json`
+2. `tests/fixtures/caveman-form.json`
+3. `tests/fixtures/archon-subset-form.json`
+
+**Rule for archived artifacts:** `step-g-failed-artifact`-tagged entries in `tests/fixtures/provenance.json` **stay on V1.1 schema**. Any test importing a failed-artifact fixture must add `# schema: V1.1` pin comment and the test harness validates it against V1.1 schema. New schema-agnostic tests should not reference failed-artifact fixtures.
+
+**`zustand-step-g-form.json`** (currently `step-g-live-pipeline`) migrates when it transitions to `pipeline-produced` status.
+
+**`provenance.json` update:** migrated fixtures update their `schema_version` field from `1.1` → `1.2`. Failed-artifact entries remain `1.1`.
+
+**Dissent preserved:** Codex's (b) — preferred regenerating archived Step G artifacts that tests reference to keep schema-version consistency across test corpus. Owner counter: failed-artifact fixtures are regression witnesses (captured schema-V1.1-specific failure modes); migrating them erases the regression witness value.
+
+### Item C — override_reason enum (5-value, frozen)
+
+**Frozen V1.2 enum:**
+
+1. **`threshold_too_strict`** — advisory threshold produced a harsher color than the Phase 4 judgment warrants
+2. **`threshold_too_lenient`** — advisory threshold produced a softer color than the Phase 4 judgment warrants
+3. **`missing_qualitative_context`** — advisory inputs are directionally useful but omit qualitative evidence the Phase 4 judgment must account for
+4. **`rubric_literal_vs_intent`** — advisory followed a literal threshold or rule; final judgment follows rubric intent/documented interpretation
+5. **`other`** — residual bucket requiring rationale text when none of the four canonical categories fit
+
+**Majority:** P + C (2/3) on Codex R1's list unchanged. DeepSeek proposed adding `community_norms_differ` (6th value). Owner resolved on majority.
+
+**Dissent preserved:** DeepSeek's `community_norms_differ`. Owner mapping rule: "community norms differ from rubric" overrides should categorize as **`missing_qualitative_context`** with the community-norms context named explicitly in the rationale. If post-V1.2 telemetry shows ≥3 distinct scans using "community norms" as the override reason within `missing_qualitative_context`, revisit in V1.3 for enum expansion (trigger logged).
+
+**Frozen list is minimal** — renderer test, validator, and telemetry all consume finite set. New enum values require V1.3 schema bump.
+
+### Item D — renderer `dangerous_primitives` coupling
+
+**Resolution: no renderer partial edits for `dangerous_primitives` in V1.2. Schema adopts nested per-family shape per D1.**
+
+**Majority:** P + C (2/3), both independently grepped templates and found **no current consumer**. DeepSeek's R2 mandatory-scope premise was empirically falsified.
+
+**Empirical finding:** No Jinja2 template in `docs/templates/` or `docs/templates-html/` references `dangerous_primitives`, `hits[]`, or `agent_rule_files` directly. No `test_render_md.py` or `test_render_html.py` assertion on these shapes. Zero partial lines touched for `dangerous_primitives` in V1.2.
+
+**Forward compatibility:** a regression comment in the schema `$comment` for `dangerous_primitives` notes "no renderer consumer as of V1.2; renderer V1.3 should consume nested shape directly, not re-flatten."
+
+**Dissent preserved:** DeepSeek's (a) nested-partials proposal (30-40 lines). Logically moot because the premise was wrong; carried as V1.3 guidance if/when a renderer consumer is added.
+
+**Mandatory V1.2 renderer edits that DO land** (Q6-narrow, from D2):
+
+- `docs/templates/partials/scorecard.md.j2` — path change from `phase_3_computed.scorecard_cells` → `phase_4_structured_llm.scorecard_cells`
+- `docs/templates-html/partials/scorecard.html.j2` — same path change
+- `tests/test_render_md.py` + `tests/test_render_html.py` — assertion path update
+- New fields added to scorecard cell (rationale, edge_case, suggested_threshold_adjustment, computed_signal_refs, override_reason) — partials optionally surface these; V1.2 scope keeps renderer output shape near-identical to V1.1
+
+### Item E — `agent_rule_files.total_bytes` heuristic
+
+**Resolution: (d) drop `total_bytes` from schema entirely.**
+
+**Majority:** all 3 agree schema does NOT store `total_bytes` in V1.2. Agreement on "drop from schema" is 3/3. Disagreement only on whether a helper exists: Codex (d) says no helper; Pragmatist (b) and DeepSeek (b) would add a compute.py or renderer helper if the need arises. Owner resolved on (d) minimal: no schema field, no helper in V1.2 baseline; add later if a consumer emerges.
+
+**Concrete V1.2 changes:**
+
+- Schema `code_patterns.agent_rule_files` adopts harness-native list shape per D1 (per-entry `line_count` present)
+- Schema does NOT define `total_bytes` at any level
+- `compute.py` does NOT get a `compute_agent_rule_bytes()` helper in V1.2 baseline
+- Migration script drops `total_bytes` from V1.1 fixtures (`tests/fixtures/zustand-form.json` + `caveman-form.json` + `archon-subset-form.json`)
+- If renderer ever wants an aggregate, use `total_lines = sum(line_count for entries)` — deterministic and honest
+
+**Dissent preserved:** P + DS preferred keeping a helper for bytes aggregation if display needs it. Owner counter: `total_lines` is the honest aggregate; pseudo-bytes on a 50-chars/line heuristic is not trustworthy data; no consumer wants it today.
+
+### Item F — signal ID vocabulary (frozen)
+
+**Resolution: Codex R3's 23-row question-scoped-prefix table is the FROZEN V1.2 vocabulary. Exported as `compute.SIGNAL_IDS` frozenset. Post-V1.2 additions require V1.2.x patch; removals require V1.3 bump.**
+
+**Frozen V1.2 signal IDs:**
+
+| ID | Type | Derived from | Kind |
+|---|---|---|---|
+| `q1_formal_review_rate` | number | `phase_1_raw_capture.pr_review.formal_review_rate` | scorecard_input |
+| `q1_any_review_rate` | number | `phase_1_raw_capture.pr_review.any_review_rate` | scorecard_input |
+| `q1_has_branch_protection` | bool | `phase_1_raw_capture.branch_protection.classic.status` or rules on default branch | scorecard_input |
+| `q1_has_codeowners` | bool | `phase_1_raw_capture.codeowners.found` | scorecard_input |
+| `q1_is_solo_maintainer` | bool | `phase_3_computed.solo_maintainer.is_solo` (derived from contributor share) | scorecard_input |
+| `q1_governance_floor_override` | bool | q1_formal_review_rate + no branch protection + no CODEOWNERS (composite) | scorecard_input |
+| `q2_open_security_issue_count` | number | `phase_1_raw_capture.issues_and_commits.open_issues_count` | scorecard_input |
+| `q2_oldest_open_cve_pr_age_days` | number | `phase_1_raw_capture.open_prs.entries[]` age analysis | scorecard_input |
+| `q2_closed_fix_lag_days` | number | closed security-fix PR lag | scorecard_input |
+| `q3_has_security_policy` | bool | `phase_1_raw_capture.community_profile.has_security_policy` | scorecard_input |
+| `q3_has_contributing_guide` | bool | `phase_1_raw_capture.community_profile.has_contributing` | scorecard_input |
+| `q3_published_advisory_count` | number | `phase_1_raw_capture.security_advisories.count` | scorecard_input |
+| `q3_has_silent_fixes` | bool | Phase 3 F5 disclosure classification | scorecard_input |
+| `q3_has_reported_fixed_vulns` | bool | vuln-history proxy from advisories/issues/PR evidence | scorecard_input |
+| `q4_all_channels_pinned` | bool | `phase_1_raw_capture.distribution_channels.channels[]` pinning | scorecard_input |
+| `q4_artifact_verified` | bool | `phase_1_raw_capture.artifact_verification.per_channel[]` | scorecard_input |
+| `q4_has_critical_on_default_path` | bool | Phase 4 findings tagged to default install/runtime path | scorecard_input |
+| `q4_has_warning_on_install_path` | bool | Phase 4 findings tagged to install-path warning scope | scorecard_input |
+| `c20_has_classic_protection` | bool | inverse of `branch_protection.classic.status == 404` | supporting |
+| `c20_has_rulesets` | bool | `phase_1_raw_capture.branch_protection.rulesets.count > 0` | supporting |
+| `c20_has_rules_on_default` | bool | `phase_1_raw_capture.branch_protection.rules_on_default.count > 0` | supporting |
+| `c20_has_recent_release_30d` | bool | latest release published_at within 30 days of scan | supporting |
+| `c20_ships_executable_code` | bool | executable/install-surface signals from Phase 1 | supporting |
+
+
+ succeeded in 0ms:
+# V13-1 Override-Pattern Telemetry Analysis
+
+**Trigger:** 3 V1.2 wild scans completed (ghostty entry 16, Kronos entry 17, kamal entry 18).
+**Date:** 2026-04-20
+**Status:** Draft for owner decision (board-review fallback preserved in §6).
+**Related:** `docs/External-Board-Reviews/042026-schema-v12/CONSOLIDATION.md` §5 (R3 Item C — override_reason enum frozen at 5 values); §8 V13-1 (expansion trigger = ≥3 V1.2 scans).
+
+---
+
+## §1 · Context
+
+Schema V1.2 introduced **gate 6.3 override-explained** with a 5-value `override_reason` enum:
+
+1. `threshold_too_strict` — compute threshold is too conservative for this repo
+2. `threshold_too_lenient` — compute threshold is too permissive for this repo
+3. `missing_qualitative_context` — compute signals don't capture qualitative nuance
+4. `rubric_literal_vs_intent` — compute follows rubric literal, Phase 4 reads intent
+5. `other` — catchall
+
+The enum was frozen in R3 Item C per CONSOLIDATION §5, with DeepSeek's dissent preserving `community_norms_differ` as a V1.3 expansion trigger (needs ≥3 observed overrides). **That expansion trigger has now fired.**
+
+CONSOLIDATION §8 V13-1 also tasked the operator with reviewing the override-reason distribution after 3 V1.2 scans to determine whether the current enum is load-bearing or whether any values should be split / dropped / added.
+
+This document is that review.
+
+---
+
+## §2 · Data — 4 overrides across 12 scorecard cells
+
+| # | Scan (entry) | Cell | Advisory → Phase 4 | Direction | Signal refs | `override_reason` |
+|---|---|---|---|---|---|---|
+| 1 | ghostty (16) | Q1 | red → amber | de-escalate | 7 | `missing_qualitative_context` |
+| 2 | Kronos (17) | Q2 | amber → red | escalate | 5 | `missing_qualitative_context` |
+| 3 | Kronos (17) | Q4 | amber → red | escalate | 5 | `missing_qualitative_context` |
+| 4 | kamal (18) | Q1 | red → amber | de-escalate | 9 | `missing_qualitative_context` |
+
+**Pattern observations:**
+
+- **4 of 4 overrides cite `missing_qualitative_context`** (100%).
+- **4 of 5 enum values are unexercised**: `threshold_too_strict`, `threshold_too_lenient`, `rubric_literal_vs_intent`, `other`.
+- **Override distribution across cells**: Q1 = 2 (both de-escalate), Q2 = 1 (escalate), Q4 = 1 (escalate), Q3 = 0.
+- **Override rate**: 4 / 12 cells = 33% — not rare; the gate 6.3 path is actively used.
+- **Direction split**: 2 de-escalations (ruleset-invisibility on Q1) + 2 escalations (sparse compute signals on Kronos Q2/Q4).
+
+---
+
+## §3 · Root-cause analysis — what each override's rationale actually says
+
+Reading the Phase 4 `rationale` fields on each of the 4 overrides, the underlying cause separates into three distinct surfaces:
+
+### 3.1 Ghostty Q1 — de-escalate red → amber
+- **Signal at fault:** `q1_has_branch_protection` reads only `classic.status == 200`.
+- **Evidence missed by compute:** `branch_protection.rulesets.count=1` + `branch_protection.rules_on_default.count=4` + CODEOWNERS present — all captured in phase_1_raw_capture.
+- **Fix surface:** `docs/compute.py` — widen `q1_has_branch_protection` to also fire when `rulesets.count > 0 AND rules_on_default.count > 0`, OR add a new signal `q1_has_ruleset_protection` that reads the ruleset fields.
+- **Classification:** **Signal vocabulary gap.** The concept exists (branch protection); the signal's definition is narrower than the concept.
+
+### 3.2 Kamal Q1 — de-escalate red → amber
+- **Signal at fault:** Same as ghostty Q1 — `q1_has_branch_protection` misses the Copilot Reviews ruleset.
+- **Additional evidence not encoded as any signal:** 71 semver releases over 3 years (release-cadence discipline); CodeQL SAST workflow enabled; dependabot-for-actions config.
+- **Fix surface:** `docs/compute.py` — same ruleset fix as ghostty Q1, plus optionally add `q1_has_codeql_workflow` and `q1_has_semver_release_cadence` signals.
+- **Classification:** **Signal vocabulary gap.** Same root cause as ghostty Q1; three additional concepts (CodeQL, release cadence, dependabot-for-actions) also lack signals.
+
+### 3.3 Kronos Q2 — escalate amber → red
+- **Signal at fault:** `q2_oldest_open_cve_pr_age_days` reads only from PRs tagged with CVE-related labels or security-prefix titles. Returned `None` for Kronos because the unfixed 95-day-old RCE is an *issue* (#216), not a PR.
+- **Evidence missed by compute:** Issue #216 body contains "pickle.load" + "remote code execution"; issue is 95 days open; separate fix PR #249 has been sitting 7 days unreviewed.
+- **Fix surface:** `docs/compute.py` — widen the signal's input domain. Either rename to `q2_oldest_open_security_item_age_days` reading both issues and PRs with security-keyword title/body matches, or add a sibling signal `q2_oldest_open_security_issue_age_days`. Also add `q2_open_security_fix_pr_age_days` reading PRs whose titles match fix+security keywords.
+- **Classification:** **Signal vocabulary gap** (signal domain is too narrow for the concept it claims to measure). The evidence is present in `phase_1_raw_capture.issues_and_commits`; no harness change needed.
+
+### 3.4 Kronos Q4 — escalate amber → red
+- **Signal at fault:** `q4_has_critical_on_default_path` derived from `code_patterns.dangerous_primitives.deserialization.hits`. Returned `False` for Kronos because the harness's deserialization regex family did not match `pickle.load` at `finetune/dataset.py:42`.
+- **Evidence missed by harness:** `pickle.load` exists at `finetune/dataset.py:42` — confirmed by direct `gh api contents` fetch during scan authoring. The dangerous_primitives regex for the `deserialization` family did not include a pattern that matches `pickle.load` in Python source (or the tarball extraction skipped `finetune/`).
+- **Fix surface:** `docs/phase_1_harness.py` — extend the `deserialization` family regex to include `\bpickle\.loads?\b`, `\bmarshal\.loads?\b`, `\byaml\.load\b` (without SafeLoader), `\bjoblib\.load\b`, etc. Alternative fix at compute.py: add a fallback signal `q4_has_critical_issue_disclosed` that title-matches `open_security_issues` for RCE/deserialization/injection keywords.
+- **Classification:** **Harness coverage gap.** The evidence IS observable but phase_1_harness.py's pattern-matching code didn't capture it. Even a correctly-scoped compute signal reading from `dangerous_primitives.deserialization.hits` would see the empty list.
+
+### 3.5 Summary of root causes
+
+| Override | Fix surface | Classification |
+|---|---|---|
+| Ghostty Q1 | compute.py | Signal vocabulary gap |
+| Kamal Q1 | compute.py | Signal vocabulary gap |
+| Kronos Q2 | compute.py | Signal vocabulary gap (domain too narrow) |
+| Kronos Q4 | phase_1_harness.py | Harness coverage gap |
+
+**3 of 4 overrides point to compute.py changes. 1 of 4 points to harness changes.** Both surfaces are fixable — the evidence is observable in every case — but they live in different files and are maintained on different cadences.
+
+---
+
+## §4 · Proposed taxonomy
+
+### 4.1 User's proposed 2-way split
+- `signal_vocabulary_gap` — ruleset-invisibility pattern
+- `evidence_not_signalable` — sparse-signal-escalation pattern
+
+### 4.2 Alternative 3-way split (recommended)
+
+Expand the enum by adding 2 new values; keep `missing_qualitative_context` for genuinely-judgment cases that don't reduce to a signal change:
+
+1. **`signal_vocabulary_gap`** — compute needs a new or widened signal. The concept or its relevant domain isn't currently read. Fix lives in `docs/compute.py` + `SIGNAL_IDS` frozenset.
+2. **`harness_coverage_gap`** — phase_1_raw_capture didn't record the evidence. Even a correctly-scoped compute signal would see nothing. Fix lives in `docs/phase_1_harness.py`.
+3. **`missing_qualitative_context`** (retained) — evidence is inherently judgment-based, cannot be reduced to a signal. Expected to be rare; acts as the honest catchall.
+
+Plus keep the existing 3 unused enum values (`threshold_too_strict`, `threshold_too_lenient`, `rubric_literal_vs_intent`, `other`) — they cover distinct conceptual gaps not yet observed but anticipated.
+
+### 4.3 Why 3-way beats 2-way
+
+The user's 2-way split works well for the de-escalation pattern (both ghostty Q1 and kamal Q1 are `signal_vocabulary_gap` — ruleset invisibility). But it strains on Kronos:
+
+- **Kronos Q2**: the signal EXISTS (`q2_oldest_open_cve_pr_age_days`) but its domain is too narrow (PRs only, not issues). Is that `signal_vocabulary_gap` (the domain is part of the vocabulary)? Or `evidence_not_signalable` (evidence was available but not read)? Both labels fit partially.
+- **Kronos Q4**: the evidence was *not* in phase_1_raw_capture in the expected form (dangerous_primitives empty). Calling this `evidence_not_signalable` conflates it with Kronos Q2 even though the fix surface is completely different (harness regex vs compute signal widening).
+
+The 3-way split resolves the ambiguity by classifying on **fix surface**, not on severity direction:
+- If the fix is in `compute.py`: `signal_vocabulary_gap`.
+- If the fix is in `phase_1_harness.py`: `harness_coverage_gap`.
+- If no code change would avoid the override: `missing_qualitative_context`.
+
+This mapping is mechanically decidable at override-authoring time ("where would I patch this?") and points the reader of the audit log at the right file to change.
+
+### 4.4 Migration mapping under 3-way split
+
+| Override | Current label | Proposed label |
+|---|---|---|
+| Ghostty Q1 | `missing_qualitative_context` | `signal_vocabulary_gap` |
+| Kamal Q1 | `missing_qualitative_context` | `signal_vocabulary_gap` |
+| Kronos Q2 | `missing_qualitative_context` | `signal_vocabulary_gap` |
+| Kronos Q4 | `missing_qualitative_context` | `harness_coverage_gap` |
+
+**3 of 4 overrides relabel to `signal_vocabulary_gap` (compute.py fix). 1 relabels to `harness_coverage_gap` (harness fix).** The migration is 100% mechanical per §3's fix-surface analysis.
+
+---
+
+## §5 · Implementation cost
+
+### 5.1 Schema + compute + validator
+- `docs/scan-schema.json` — `override_reason_enum.enum` adds 2 strings; no structural change.
+- `docs/compute.py` — `OVERRIDE_REASON_ENUM` frozenset adds 2 entries (currently 5, becomes 7).
+- `docs/validate-scanner-report.py` — **no change**. The `validate_override_rationale` function reads the enum from compute.py; the validation logic is enum-agnostic.
+
+### 5.2 Tests
+- `tests/test_validator_v12_override.py::TestSignalIDVocabulary::test_override_reason_enum_is_exactly_the_5_values` — rename + widen to assert 7 values.
+- Add two tests that validate a form with each new enum value passes gate 6.3.
+
+### 5.3 Existing scan relabeling
+- `docs/board-review-data/scan-bundles/{ghostty-dcc39dc.json, Archon-3dedc22.json, kamal-6a31d14.json, Kronos-67b630e.json}` — relabel `phase_4_structured_llm.scorecard_cells.<cell>.override_reason` where currently `missing_qualitative_context`.
+- `docs/GitHub-Scanner-{ghostty,Kronos,kamal}-v12.{md,html}` — rerender from updated form.json to pick up relabeled overrides (or leave stale with catalog note; rerendering is cleaner).
+- `docs/scanner-catalog.md` — update the relevant entry rows' `override_reason = missing_qualitative_context` prose to the new label.
+
+Total: ~10 files changed, ~50 lines of change, one compute.py patch + tests + rerender.
+
+### 5.4 Risk
+- **Backwards compatibility**: additive enum change; any existing form.json with `missing_qualitative_context` continues to validate under 7-value enum.
+- **Audit-log readability**: improves — `signal_vocabulary_gap` and `harness_coverage_gap` are self-describing; the 4 existing overrides become more informative.
+- **Documentation**: CONSOLIDATION.md §5 R3 Item C resolution needs a post-it note saying "7-value enum as of V13-1 analysis"; CONSOLIDATION §8 V13-1 entry needs resolution recording.
+
+---
+
+## §6 · Decision — board review or owner directive?
+
+### 6.1 Arguments for board review
+- **Enum changes are contract changes**: scan-schema.json's `override_reason_enum` is part of the V1.2 contract. Contract changes traditionally route through board.
+- **The 5-value enum was frozen per board resolution** (R3 Item C, 3/3 SIGN OFF). Reopening it without board assent feels like overriding a closed decision.
+- **DeepSeek's preserved dissent** named `community_norms_differ` as a V1.3 candidate. A board review would surface whether DeepSeek sees `signal_vocabulary_gap` and `harness_coverage_gap` as the right additions or still wants its original candidate.
+- **External defensibility**: "3 agents + owner resolved this" is a stronger audit trail than "operator decided" for anything anyone might later question.
+
+### 6.2 Arguments for owner directive
+- **CONSOLIDATION §8 V13-1 was pre-scheduled for exactly this question.** The deferred ledger's triggers are meant to convert deferred debate into telemetry-driven decisions. V13-1 firing is the board's pre-approved hand-off point.
+- **The data is unambiguous**: 4 overrides, all cite the same reason, each one has a cleanly-distinguishable root cause mapped to a fix surface. The analysis in §3 is mechanical, not judgmental.
+- **The fix is additive**. No existing override becomes invalid; schema validity is preserved under both 5-value and 7-value enums.
+- **Cost of a board review is disproportionate**: a 3-round board review averages 1.5–2 hours of operator orchestration + 3 agent invocations. This question can be answered in 30 minutes of code + rerender.
+- **Escalation is always available**: if the owner-directed implementation surfaces ambiguity that wasn't visible at analysis time (e.g., an override in scan #4 that genuinely fits neither new label), the decision can be revisited via board.
+
+### 6.3 Recommendation: **owner directive, implemented now**, with three explicit escalation triggers
+
+Proceed with the 3-way split (add `signal_vocabulary_gap` + `harness_coverage_gap`; retain `missing_qualitative_context` as catchall).
+
+**Escalate to board review if ANY of the following occur between now and the next board session:**
+
+1. A wild-scan override appears that fits **none** of the 3 labels cleanly — indicates the taxonomy is still undercomplete.
+2. A wild-scan override fits **multiple** labels and the author genuinely cannot choose — indicates the taxonomy has overlap.
+3. DeepSeek (or any future Skeptic agent) flags the relabeling in a post-hoc review as inconsistent with its original R3 dissent.
+
+Otherwise: implement, document in CONSOLIDATION §8 V13-1 with the "resolved by owner directive 2026-04-20" stamp, preserve this analysis document as the rationale.
+
+### 6.4 Reasoning
+
+The R3 board left two explicit legs for future evolution:
+- **V13-1 as a scheduled telemetry review** (CONSOLIDATION §8) — designed to be owner-driven.
+- **Board re-open on data surprise** — implicit in the overall governance pattern.
+
+We are in the first leg, not the second. The data confirms the hypothesis the board anticipated (the enum might need expansion); nothing in the data contradicts any board position. Owner directive is the lighter-weight path that honors both legs.
+
+---
+
+## §7 · Implementation plan (if owner directive approved)
+
+1. **Update schema**: add 2 strings to `override_reason_enum.enum` in `docs/scan-schema.json`.
+2. **Update compute**: add 2 entries to `OVERRIDE_REASON_ENUM` in `docs/compute.py`.
+3. **Update tests**: widen `test_override_reason_enum_is_exactly_the_5_values` to 7; add 2 positive tests for new labels.
+4. **Relabel existing overrides**: patch the 4 scan bundles in `docs/board-review-data/scan-bundles/` + re-render the 3 affected reports (ghostty / Kronos / kamal — Archon has no override per catalog entry 14).
+5. **Update scanner-catalog.md**: fix the override-reason prose in entries 16/17/18.
+6. **Update CONSOLIDATION.md**: append a resolution note to §8 V13-1.
+7. **Single commit** with all changes. Push.
+
+Estimated scope: ~15 minutes for code + rerender, ~15 minutes for doc updates.
+
+### §7.1 Decision point (for owner)
+
+**Approve implementation as outlined?** If yes, proceed to code. If ambiguous on any point, convert to board kickoff by moving this document to `docs/External-Board-Reviews/042026-v13-1-override-taxonomy/` and running the standard 3-round FrontierBoard review.
+
+---
+
+*Draft prepared 2026-04-20. Author: Claude Opus 4.7 via Claude Code session 6. Reviewed no-one yet.*
+
+exec
+/bin/bash -lc "sed -n '1,260p' /root/tinkering/stop-git-std/docs/v12-wild-scan-telemetry.md" in /tmp
+ succeeded in 0ms:
+# V1.2 Wild-Scan Telemetry — Cross-Scan Analysis
+
+**Scope:** Catalog entries 16–26 (11 V1.2-schema wild scans).
+**Date:** 2026-04-20.
+**Status:** Living document — **V13-3 COMPARATOR-CALIBRATION TRIGGER FIRED at n=11** (entry 26 Baileys closes the counting window; the follow-up analysis is now owed per CONSOLIDATION §8 deferred ledger).
+**Related:** [V13-1 override-telemetry analysis](v13-1-override-telemetry-analysis.md) (covered the first 3 scans and drove the V1.2.x signal widening).
+
+This document persists cross-scan patterns that accumulate value over many scans and would otherwise be scattered across per-scan catalog rows and commit messages.
+
+---
+
+## §1 · Scan roster (entries 16–26)
+
+| # | Repo | Shape | Verdict | Overrides | Override detail |
+|---|---|---|---|---|---|
+| 16 | ghostty-org/ghostty | Zig terminal emulator | Caution | 1 | Q1 signal_vocabulary_gap (ruleset invisible) |
+| 17 | shiyu-coder/Kronos | Python ML foundation model | Critical (split) | 2 | Q2 signal_vocabulary_gap + Q4 harness_coverage_gap |
+| 18 | basecamp/kamal | Ruby deploy orchestrator | Caution | 1 | Q1 signal_vocabulary_gap |
+| 19 | XTLS/Xray-core | Go network proxy | Critical | 1 | Q2 threshold_too_strict |
+| 20 | BatteredBunny/browser_terminal | Browser extension + Go host | Critical (split) | 1 | Q4 harness_coverage_gap (typosquat URL) |
+| 21 | wezterm/wezterm | Rust terminal emulator | Caution | **0** | — |
+| 22 | QL-Win/QuickLook | C# Windows shell extender | Caution | **0** | — |
+| 23 | jtroo/kanata | Rust keyboard daemon | Critical | **0** | — |
+| 24 | freerouting/freerouting | Java PCB auto-router | Critical | 1 | Q4 signal_vocabulary_gap (Java deserialization) |
+| 25 | wled/WLED | ESP32 IoT firmware | Critical | 1 | Q4 signal_vocabulary_gap (firmware default-no-auth + CORS wildcard) |
+| 26 | WhiskeySockets/Baileys | Reverse-engineered WhatsApp Web lib | Critical | 1 | Q4 signal_vocabulary_gap (reverse-engineered-API-library ToS risk) |
+
+**Totals**: 11 scans, 9 overrides, 3 zero-override. **V13-3 comparator-calibration trigger fires at n=11.**
+
+---
+
+## §2 · Override-enum distribution
+
+**9 overrides across 11 scans (82% override-rate at scan level).**
+
+| `override_reason` | Count | % | Scans |
+|---|---|---|---|
+| `signal_vocabulary_gap` | **6** | **67%** | ghostty Q1, kamal Q1, Kronos Q2, freerouting Q4, WLED Q4, **Baileys Q4** |
+| `harness_coverage_gap` | 2 | 22% | Kronos Q4, browser_terminal Q4 |
+| `threshold_too_strict` | 1 | 11% | Xray-core Q2 |
+| `missing_qualitative_context` | 0 | 0% | — |
+| `threshold_too_lenient` | 0 | 0% | — |
+| `rubric_literal_vs_intent` | 0 | 0% | — |
+| `other` | 0 | 0% | — |
+
+**Observations (n=11):**
+
+- **`signal_vocabulary_gap` is strongly modal** at 67% of overrides (trend: 57% → 62% → 67% across n=9, 10, 11). Every Q4 override since wezterm (entry 21, zero) has fired signal_vocabulary_gap — 4 consecutive scans where Phase 4's default-path-critical judgment lives in a compute-signal category that compute doesn't derive from harness facts.
+- **4 of 7 enum values unexercised** after 11 scans. `missing_qualitative_context` (the pre-V13-1 catchall) hasn't fired once since V13-1 relabeled existing entries — stronger signal at n=11 that the V13-1 split was correct and complete. `threshold_too_lenient`, `rubric_literal_vs_intent`, and `other` remain unused — candidates for V1.3 enum pruning consideration.
+- **Override fires on Q1, Q2, Q4 but not Q3** across all 11 scans. Q3 (disclosure) has been uniformly red/amber from compute and Phase 4 has never corrected it — even in cases with concrete documented disclosure-handling failures (WLED entry 25, Baileys entry 26). This is a consistent data point worth naming: the current Q3 rubric is sensitive enough to read the silent-fix pattern correctly without Phase 4 intervention.
+- **Q4 has become the override hotspot.** 6 of 9 overrides are Q4 (67%). Q1 fires 2, Q2 fires 2, Q3 fires 0. Q4's `q4_has_critical_on_default_path` is a Phase-4-authored bool by driver convention — the concept is right but the signal shape is wrong. Every shape requires a different concrete derivation (pickle hit count for ML, ObjectInputStream for Java, CORS+no-auth for IoT firmware, README-disclaimer+platform-API for reverse-engineered libraries). V1.2.x Priority 1–1b harness-patch candidates address the first three; Baileys adds a fourth compound-signal class.
+
+---
+
+## §3 · Zero-override streak
+
+**3 consecutive zero-override scans**: wezterm (21) → QuickLook (22) → kanata (23). Streak broken by freerouting (24), continued-broken by WLED (25), continued-broken by Baileys (26). **Current streak of OVERRIDES: 3** (scans 24, 25, 26 all fire Q4 signal_vocabulary_gap).
+
+What the zero-override scans had in common:
+- **wezterm**: Rust terminal emulator, stalled 807-day release cadence, pure-tool threat model
+- **QuickLook**: C# shell extender, 21-plugin parser surface but no new confirmed RCE
+- **kanata**: Rust keyboard daemon, 44% formal review (exceptional), ruleset-but-anti-destruction
+
+**What freerouting (24) added that broke the streak**: a **confirmed, specific, file-reachable RCE class** (Java ObjectInputStream on user-loaded files) that's invisible to `q4_has_critical_on_default_path` (which is set by Phase 4 authoring, not read from `dangerous_primitives.deserialization.hit_count`).
+
+**What WLED (25) added (2nd break)**: a **confirmed, specific, remote-exploitable surface** (factory-default webserver has no auth + CORS wildcard + unauthenticated `/reset`) that's invisible to compute because the pattern lives in C++ control-flow (correctPIN gating logic tied to settingsPIN string length), not in a grep-able primitive family. `dangerous_primitives.tls_cors` DID surface the `Access-Control-Allow-Origin: *` hit, but there's no compute derivation that combines `tls_cors_hit + no_auth_primitive_detected + firmware_shape → q4_has_critical_on_default_path=True`.
+
+**What Baileys (26) added (3rd break)**: a **category-level ToS-violation risk** that's invisible to compute because the threat lives in WhatsApp's terms-of-service enforcement, not in the library's code. The README's own CAUTION-flagged disclaimer is a strong signal ('not affiliated with WhatsApp… do not condone practices that violate the Terms of Service') but no grep-able primitive captures 'reverse-engineered platform-API library'. This is a distinct pattern from freerouting + WLED — those had grep-able facts that compute couldn't roll up; Baileys has prose-only facts (README disclaimer + topic list `reverse-engineering`) that compute doesn't consider.
+
+**Inference (refined at n=11)**: zero-override scans remain possible when compute-signal judgment aligns with Phase 4 judgment; the break happens every time Phase 4 finds a specific critical-on-default-path condition whose identification requires one of: (a) language-semantic analysis beyond regex (freerouting); (b) multi-primitive composition + shape context (WLED); (c) README/metadata-level disclaimer parsing + topic-based shape classification (Baileys). All three are V12x-class harness-patch candidates but live in different harness layers — (a) in Step A regex, (b) in compute signal derivation, (c) in Step 7.5 README parsing + Step 1a topic analysis.
+
+---
+
+## §4 · Harness-patch candidates (ordered by impact × frequency)
+
+### Priority 1: Deserialization auto-fire for Q4
+
+**Signal added**: compute derives `q4_has_critical_on_default_path = True` when `dangerous_primitives.deserialization.hit_count >= N` AND the tool is documented as loading user files.
+
+**Scans it would auto-resolve**: Kronos Q4 (pickle.load in finetune/dataset.py), **freerouting Q4** (Java ObjectInputStream in BasicBoard.java). Two of the eight overrides collapse with this single change.
+
+**Open question**: threshold N. Kronos had 0 harness hits (regex miss — now fixed in V1.2.x); freerouting had 35. After the V1.2.x pickle-regex extension, Kronos would hit. A reasonable threshold is `>= 3` plus README-pattern-match for "open file"/"load"/"import" keywords.
+
+**New subtlety surfaced by WLED (25)**: the V1.2.x-widened deserialization regex produced 19 **false-positive** hits in WLED's C++ codebase — all `deserializeJson` calls (ArduinoJson, safe). Any auto-fire threshold on raw deserialization hit-count will mis-fire on C/C++/Rust projects using JSON libraries with `deserialize` in the function name. The auto-fire derivation needs a **language qualifier** (pickle→Python, ObjectInputStream→Java, Marshal.load→Ruby) rather than a language-agnostic regex. V12x-9 item now promoted to the Priority 1 scope.
+
+### Priority 1b: Firmware default-no-auth + CORS-wildcard compound signal for Q4
+
+**New class observed on WLED (25)**: the combination of (a) `dangerous_primitives.tls_cors` hit on `Access-Control-Allow-Origin: *` + (b) no auth-enforcement primitive detected on a web-server-shipping tool + (c) install-path terminus being a networked end-user device (firmware, IoT, home-LAN server) = critical-on-default-path.
+
+**Scans it would auto-resolve**: WLED Q4.
+
+**Signal-widening proposal**: compute derives `q4_has_critical_on_default_path = True` when `tls_cors.hit_count >= 1` (wildcard Origin/Methods/Headers pattern) AND `auth_bypass.hit_count == 0` (no auth-gate pattern detected) AND shape is `firmware | iot | on-device-webserver`. Shape classification would be a new compute-side input — bootstrappable from README keywords (ESP32, ESP8266, firmware, on-device, LAN webserver) + install-path signals (.bin releases, browser-WebSerial flasher).
+
+### Priority 1c: Reverse-engineered-platform-API shape signal for Q4
+
+**New class observed on Baileys (26)**: README disclaimers acknowledging third-party-client status AND install path terminating at a named platform operator's API (WhatsApp, Discord, Instagram, etc.) AND GitHub topic list containing `reverse-engineering` or `reverse-engineered` → default-path critical (ToS-violation + account-ban risk).
+
+**Scans it would auto-resolve**: Baileys Q4. The shape is distinctive enough that other reverse-engineered-API libraries (whatsmeow in Go, discord.py-self, instagrapi, etc.) would also match.
+
+**Signal-widening proposal**: compute derives `q4_has_critical_on_default_path = True` when README (Step 7.5 output) contains disclaimer phrases matching `(not affiliated|not endorsed|not authorized|reverse.?engineered|unofficial.*client)` AND topic list contains `reverse-engineering` OR the library name references a named platform (whatsapp, discord, instagram, telegram-client, facebook-messenger). This sits in the harness's Step 7.5 README paste-scan extension + Step 1a topic-field read; both already produce the raw data. The missing piece is the compound rule in compute that reads them.
+
+**Open question**: whether 'official third-party clients' (e.g., libraries with vendor partnerships) should be excluded. A possible safeguard: require the disclaimer AND the absence of an `authorized_by` metadata signal — though that's likely out-of-scope for a regex/compute-based approach. V1.3 candidate if the false-positive rate is high; V1.2.x candidate if the shape is rare enough that disclaimer+topic is a strong-enough signal in isolation.
+
+### Priority 2: Multi-ecosystem Maven/Gradle/Cargo/Gomod parsing
+
+**Gap observed across 5 of 9 scans** (Xray-core, kamal, wezterm, kanata, QuickLook, freerouting — actually 6):
+- Go gomod: Xray-core
+- Ruby Gemfile.lock: kamal
+- Rust Cargo.lock: wezterm + kanata
+- .NET .csproj / .sln: QuickLook
+- Java build.gradle: freerouting
+
+Each dumps `runtime_count=0` and `osv total_vulns=0` despite real dep graphs. Scanner workaround each time is Phase 4 annotation. **Single consolidated patch** implementing parser + OSV-query for all 5 ecosystems would close a family of F5/F6-class findings and enable real dep-CVE telemetry.
+
+### Priority 3: Install-doc URL TLD-deviation detection
+
+**Scans affected**: browser_terminal (F0 typosquat URL `chrome.google.cm` in installation.md).
+
+**Proposed check**: README / install-doc URL parse; flag links whose host matches a known-good domain prefix (e.g., `chrome.google`, `addons.mozilla.org`, `pypi.org`, `rubygems.org`) but with a non-matching TLD or subdomain.
+
+**Impact**: Would have surfaced the browser_terminal Critical without Phase 4 override. Rare-but-high-impact class of finding.
+
+### Priority 4: Distribution-channel detection for language-specific package managers
+
+**Gap observed**: real distribution channels are frequently not detected:
+- GitHub Releases binaries: wezterm, kanata, freerouting, Xray-core
+- Homebrew formulas: ghostty, wezterm, kamal
+- `gem install` + RubyGems.org: kamal
+- `cargo install kanata` + crates.io: kanata (works for single top-level crate, surfaces workspace members as fictitious channels)
+- Chrome Web Store + Firefox Add-ons: browser_terminal
+- MSI + Scoop + MS Store: QuickLook
+- Docker images on ghcr.io: freerouting
+
+**Fix**: introduce channel-detector modules per ecosystem; confirm via live registry lookups (`npm view`, `gem info`, `cargo search`) rather than package-manifest presence alone.
+
+---
+
+## §5 · Cross-shape patterns
+
+### 5.1 · C20 calibration
+
+**C20 rule fires Critical when**: `no_classic AND no_rulesets AND no_rules_on_default AND no_codeowners AND ships_executable_code AND has_recent_release_30d`.
+
+Firing pattern observed:
+
+| Scan | Recent release? | C20 result | Verdict |
+|---|---|---|---|
+| Xray-core (19) | Yes (3 days) | **Critical** | Critical |
+| kanata (23) | Yes (8 days) | **Critical** | Critical |
+| wezterm (21) | No (807 days) | Warning | Caution |
+| browser_terminal (20) | No (300 days) | Warning | Critical (via F0 typosquat) |
+| freerouting (24) | No (373 days) | None | Critical (via F0 deserialization) |
+| ghostty (16) | No (1200+ days) | Warning | Caution |
+| QuickLook (22) | Yes | Warning | Caution |
+| Kronos (17) | No releases ever | Warning | Critical (via F0 pickle RCE) |
+| kamal (18) | Yes | Warning | Caution |
+
+**C20 calibration is working well** — it correctly identifies "active release cadence + no governance gates" as the conditions under which unreviewed commits reach users fastest. Stale-release repos dodge C20 because the pathway is blunted even if the gates are equally absent.
+
+**Caveat**: C20 doesn't catch the ACTUAL critical findings (F0 pickle RCE on Kronos, F0 typosquat on browser_terminal, F0 Java deserialization on freerouting). Those reach Critical verdict via Phase 4 authoring, not via C20. C20 is one of several Critical pathways, not the main one.
+
+### 5.2 · Silent-fix / zero-advisories consistency
+
+**11 of 11 V1.2 wild scans have 0 published GHSA advisories** despite histories ranging from 10 months (Kronos) to 12 years (freerouting) on privileged tools:
+
+| Scan | Years active | Advisories | Threat surface |
+|---|---|---|---|
+| ghostty (16) | 4 | 0 | Terminal emulator |
+| Kronos (17) | 10 months | 0 | ML model + Flask webui |
+| kamal (18) | 3 | 0 | SSH + docker orchestrator |
+| Xray-core (19) | 5.5 | 0 | Network proxy (privileged) |
+| browser_terminal (20) | 3 | 0 | Browser extension + shell bridge |
+| wezterm (21) | 8 | 0 | Terminal + SSH + Lua exec |
+| QuickLook (22) | 9 | 0 | 21-plugin parser surface |
+| kanata (23) | 4 | 0 | Keyboard interceptor |
+| freerouting (24) | 12 | 0 | Java deserialization surface |
+| WLED (25) | 9 | 0 | ESP32 firmware + on-device webserver |
+| Baileys (26) | 4 | 0 | Reverse-engineered WhatsApp Web client |
+
+**Pattern (n=11)**: even active, widely-used privileged tools uniformly skip GHSA publication. Readings are (a) no security-relevant issues discovered (implausible for this sample), (b) silent-fix-via-release cadence, (c) disclosure stops at maintainer.
+
+**11-for-11 is significant**. At n=9, 10 readings (a), (b), (c) were plausible individually. At n=11 with the documented failure modes on WLED (25) + Baileys (26), reading (c) dominates: disclosure cycles don't reach GHSA publication. The specific mechanisms differ — WLED had a permissions misconfiguration on the private advisory UI; Baileys had a community-submitted vulnerability-fix PR (#1996) stale-closed after 148 days with the maintainer's promised 'own version' never materializing — but both show the same end state (no GHSA published for the identified issue).
+
+**WLED + Baileys documented disclosure-handling failures** are two distinct instances of reading (c) at concrete level: when a researcher identifies a real vulnerability class and attempts to route it through the documented or undocumented channels, the process halts before GHSA publication. This is not the same as 'fix silently via next release' — in both cases, the fix itself did NOT land (WLED 0.15.x backport unconfirmed, Baileys `request` still in master).
+
+**Implication for V1.3**: the `community_norms_differ` enum value that DeepSeek preserved as a V1.3 expansion trigger (CONSOLIDATION §5 R3 Item C) hasn't fired — but the silent-fix pattern is now 11/11, documented enough that it IS the community norm for this catalog's shape. Both WLED and Baileys Phase 4 had strong cases for Q3 override (from amber to red) and in both cases Phase 4 declined — the current amber/'partly' framing is considered adequate. V13-3 analysis should consider whether the Q3 rubric language should mention this pattern explicitly.
+
+### 5.3 · Maintainer concentration taxonomy
+
+| Pattern | Examples |
+|---|---|
+| Extreme solo (≥95%) | wezterm (97.2%) |
+| High solo (80–95%) | freerouting (86.7%), ghostty (85.9%), Kronos (59% top-1 but effectively solo), kanata (79% — just below 80% threshold) |
+| Two-maintainer (combined ≥85%) | kamal (DHH+djmb 85%), QuickLook (xupefei+emako 94%), kanata (jtroo+ItayGarin 91%) |
+| Dispersed (top-1 ≤40%) | Xray-core (31% RPRX with dependabot-bot as #2) |
+| Single author (near-100%) | browser_terminal (BatteredBunny 100% of human commits) |
+
+### 5.4 · Formal PR review rate distribution
+
+Ordered high → low:
+- kanata: **44%** (highest)
+- freerouting: 9.5%
+- Xray-core: 7.7%
+- QuickLook: 5.1%
+- kamal: 4.7%
+- Xray-core formal: 2.3% (formal-only; any-review 7.7%)
+- wezterm: 3.3%
+- Kronos: 0%
+- browser_terminal: 0%
+
+**Implication**: kanata is an outlier. Voluntary review culture ≠ branch-protection enforcement — but it does change the Q1 advisory color (kanata Q1 = amber without override; all others Q1 = red without correction to amber).
+
+---
+
+## §6 · Shape / category coverage
+
+Languages catalogued (post-V1.2):
+- **Python**: Kronos (17), markitdown (15) — ML model + document-conversion library
+- **Ruby**: kamal (18)
+- **Go**: Xray-core (19), browser_terminal native host (20)
+- **Zig**: ghostty (16)
+- **Rust**: wezterm (21), kanata (23)
+- **C#**: QuickLook (22)
+- **Java**: freerouting (24)
+- **C++**: WLED (25) — first C++ entry; ESP32 embedded firmware
+- **TypeScript / JavaScript**: Baileys (26) — first TS entry as primary language; reverse-engineered API library. Also browser_terminal extension frontend (part of 20).
+
+Category diversity:
+- Terminal emulators: ghostty (Zig) + wezterm (Rust) — direct cross-shape comparator pair for V13-3
+- Network / proxy: Xray-core
+- Deploy orchestrator: kamal
+- Browser extension: browser_terminal
+- Windows shell integration: QuickLook
+- Keyboard / input daemon: kanata
+- ML foundation model: Kronos
+- EDA / PCB autorouter: freerouting
+- Document conversion: markitdown
+- Embedded IoT firmware: WLED (new — first networked-device-on-home-LAN threat model)
+- Reverse-engineered platform-API library: Baileys (new — first ToS-violation-category threat model; category contains whatsmeow, discord.py-self, etc.)
+
+---
+
+## §7 · V13-3 progress
+
+**V13-3 trigger**: 11 V1.2 wild scans (per CONSOLIDATION §8 deferred ledger).
+
+**Status**: **11 of 11 — TRIGGER FIRED.** All 11 V1.2 wild scans complete (entries 16–26). The comparator-calibration analysis is now owed per CONSOLIDATION §8.
+
+**V13-3 analysis scope** (from CONSOLIDATION §8 + this telemetry doc): compare all 11 V1.2 scan outputs against equivalent-SHA V2.4 outputs where comparator exists (the Step G pinned entries 12–14); look for cross-shape calibration patterns now that the wild-scan sample has expanded to 11 entries covering 10 language ecosystems (Zig, Python, Ruby, Go, JS/TS, Rust × 2, C#, Java, C++ firmware) across 11 distinct shape categories; evaluate the override-enum distribution (6 signal_vocabulary_gap / 2 harness_coverage_gap / 1 threshold_too_strict / 0 of the other 4 enum values) for V1.3 pruning candidates; codify the V1.2.x harness-patch candidates (§4 Priority 1/1b/1c) that would collapse most of the Q4 overrides.
+
+V13-3 analysis scope (from CONSOLIDATION §8): compare all V1.2 scan outputs against equivalent-SHA V2.4 outputs where comparator exists (the Step G pinned entries 12–14), plus look for cross-shape calibration patterns now that the wild-scan sample is large enough to generalize from.
+
+---
+
+## §8 · V1.2.x backlog
+
+Derived from patterns in this document:
+
+| ID | Item | Evidence | Priority |
+|---|---|---|---|
+
+codex
+I have the consolidated items and telemetry. Next I’m pulling the inlined R1 section from the brief so I can explicitly check whether the other two agents’ rationales move any of my original positions before I write the R2 votes.
+exec
+/bin/bash -lc "sed -n '260,520p' /tmp/v13-3-r2-brief.md" in /tmp
+exec
+/bin/bash -lc "rg -n \"9\\.2|Systems \\(Codex\\)|# V13-3 R1|## 9\" /tmp/v13-3-r2-brief.md" in /tmp
+ succeeded in 0ms:
+
+---
+
+## 8. Files to READ (absolute paths)
+
+**Required — re-read:**
+
+- `/root/tinkering/stop-git-std/.board-review-temp/v13-3-comparator-calibration/r1-brief.md` — full R1 brief (366 lines; contains all background context + the 8 vote options + files-to-read list).
+- `/root/tinkering/stop-git-std/docs/v12-wild-scan-telemetry.md` — primary 11-scan dataset.
+- `/root/tinkering/stop-git-std/docs/External-Board-Reviews/042026-schema-v12/CONSOLIDATION.md` — V13-3 entry at §8 line 397; V13-1 owner-directive precedent at §8.1; §8.2 historical-bundle rule.
+- `/root/tinkering/stop-git-std/docs/v13-1-override-telemetry-analysis.md` — template for the V13-3 analysis deliverable (C1).
+- `/root/tinkering/stop-git-std/docs/compute.py` — compute layer; SIGNAL_IDS frozenset (25 entries); `derive_*` helpers as precedent for C18.
+
+**Reference (sample as needed):**
+
+- `/root/tinkering/stop-git-std/docs/scan-schema.json` — override_reason_enum values.
+- `/root/tinkering/stop-git-std/docs/scanner-catalog.md` rows 16-26 — 11 V1.2 wild scans.
+- `/root/tinkering/stop-git-std/docs/board-review-data/scan-bundles/Baileys-8e5093c.json` — latest Q4 override example.
+- `/root/tinkering/stop-git-std/docs/board-review-data/scan-bundles/WLED-01328a6.json` — prior Q4 override example.
+- `/root/tinkering/stop-git-std/docs/phase_1_harness.py` — STEP_A_PATTERNS (deserialization regex for V12x-9 language-qualifier work).
+
+---
+
+## 9. R1 responses — VERBATIM
+
+Per SOP §4: stateless agents can't vote on what they can't see. All three R1 responses are inlined below in full. Re-read them — including your own if you were one of the R1 agents.
+
+### 9.1 Pragmatist R1 (verbatim)
+
+```markdown
+# V13-3 R1 — Pragmatist
+
+## Votes
+
+- V3Q1 (scope): **A3** — Confirm D-6 closes the narrow pipeline-comparator reading; the broad cross-scan calibration is the real deliverable V13-3 owes.
+- V3Q2 (Priority 1 deserialization): **B1** — Additive signal, CONSOLIDATION Board Item F permits it; language-qualifier prerequisite (V12x-9) must land first in the same commit.
+- V3Q3 (Priority 1b firmware CORS): **C2** — New shape-classification input required; that's bigger than additive signal work; defer to V1.3 where shape taxonomy is owned.
+- V3Q4 (Priority 1c reverse-eng shape): **D2** — FP risk on authorized third-party clients is real and unquantifiable from 1 observation; need ≥3 confirmed fires before codifying.
+- V3Q5 (Q3 rubric): **E2** — Don't change the rubric; add `community_norms_differ` as a V1.3 candidate (DeepSeek's preserved dissent now has telemetric backing at 11/11); rubric change is a bigger cross-scan comparability event than it looks.
+- V3Q6 (V1.3 enum pruning): **F2** — Prune only `missing_qualitative_context` (superseded by V13-1 split); keep the other 3 as headroom; 11 scans isn't a balanced sample (Lua/PHP/Swift absent).
+- V3Q7 (V13-3 follow-up cadence): **G3** — Condition-triggered is smarter than count-triggered; `signal_vocabulary_gap` at >80%, OR ≥2 new enum values fire in one scan, OR a case fits none are the right tripwires.
+- H (process): **H2** — Owner directive after this R1; the scope is multi-axis but the directional answers are clear enough; R2/R3 only if dissent from Systems Thinker or Skeptic is substantive.
+
+---
+
+## Rationale
+
+**On V3Q1 (scope):** The narrow reading (D-6 covers pipeline-level parity, V13-3 closes with a confirmation note) is correct but insufficient. D-6 already passes on all 3 Step G pairs — that question is closed. The interesting V13-3 work is the broad reading: the 11-scan cross-analysis has never been formally written up as a frozen document. The `docs/v12-wild-scan-telemetry.md` is a living doc, not a decision artifact. V13-3's mandate is to produce a citable analysis document (`docs/v13-3-analysis.md`) that closes the deferred-ledger item with evidence rather than just a note.
+
+**On V3Q2 (deserialization Priority 1):** This is the right call, but the sequencing constraint is hard. V12x-9 (language qualifier on the deserialization regex) is a prerequisite — without it, the Priority 1 compute derivation fires on WLED's 19 ArduinoJson FP hits and produces a Critical finding on what is safe JSON parsing. The two must ship atomically: V12x-9 narrows the regex, then Priority 1 auto-fires from the narrowed output. The brief treats V12x-9 as "promoted from Low to Medium" — the operator needs to treat it as mandatory blocker for Priority 1, not just a parallel work item.
+
+**On V3Q3 (firmware CORS, Priority 1b):** This is not an additive signal — it requires a new shape-classification input (firmware vs non-firmware). The shape taxonomy doesn't exist in compute.py today; building it requires a new harness layer reading README keywords + install-path signals. That's not V1.2.x additive; it's infrastructure. Defer to V1.3 where shape-aware compute can be designed cleanly.
+
+**On V3Q4 (reverse-eng shape, Priority 1c):** 1 observation (Baileys). The FP scenario (authorized third-party clients) is real; libraries like the official Discord SDK, Matrix clients, or vendor-blessed bots would match the disclaimer regex. The cost of a false Critical on a legitimate library is high — it destroys trust in the scanner. Defer to V1.3 and collect ≥3 confirmed fires (whatsmeow, discord.py-self, instagrapi are all live candidates) before codifying.
+
+**On V3Q5 (Q3 rubric):** The brief frames this as E1 (escalate to red on documented failure) vs E3 (keep as-is). E1 is the wrong move for comparability reasons: 9 of 11 prior V1.2 scans would remain amber under Q3 while 2 become red — this creates a retroactive comparability break. The 11/11 silent-fix pattern is strong enough that it argues for naming the community norm explicitly in the rubric language, not for moving the threshold. E2 is the right frame: preserve the amber reading as accurate for the current rubric's purpose ("do they have the infrastructure"), and advance `community_norms_differ` as the V1.3 enum value that lets Phase 4 call out the WLED/Baileys pattern without changing the rubric color decision. DeepSeek's R3 Item C dissent (CONSOLIDATION §5 Item C) explicitly preserved this trigger — the data at n=11 makes it fire.
+
+**On V3Q6 (enum pruning):** 11 scans is enough to drop `missing_qualitative_context` (the V13-1 split was designed to absorb it; it hasn't fired since), but not enough to prune `threshold_too_lenient`, `rubric_literal_vs_intent`, or `other`. The sample is heavily skewed: Zig, Rust, C#, Java, Python ML are all represented, but Lua/PHP/Ruby/Swift/Kotlin aren't. A PHP WordPress plugin or a Ruby-on-Rails server gem might produce `rubric_literal_vs_intent` overrides on Q2 or Q3 where "4 security items open" doesn't actually mean "slow fixes." Hold F3-equivalent headroom for those shapes.
+
+**On V3Q7 (follow-up cadence):** Count-based triggers (G2 at 20 or 25) are dumb timers. The right trigger is: something surprising happens in the data. G3's three conditions are precise enough to fire when the taxonomy is strained without firing every 10 scans on routine operation.
+
+**On H (process):** H2. This review covers 7 connected questions. R1 gives the board a round of input; if the three agents converge on the same key votes (particularly B1/B2 on deserialization, C2/C3 on firmware, E2/E3 on Q3 rubric), the owner has enough to act without a full R2/R3 cycle. Full three-round review adds 30-45 minutes of orchestration overhead for decisions that the data makes clear. Escalate only if the Systems Thinker or Skeptic surfaces something this brief missed.
+
+---
+
+## FIX NOW items
+
+- **FN-1:** V12x-9 (language-qualifier regex on deserialization family) MUST be treated as a hard prerequisite for V3Q2/Priority 1 auto-fire — not as a parallel-and-maybe item. The brief lists it as "promoted from Low to Medium"; it should be elevated to blocker. If Priority 1 ships without V12x-9, the WLED ArduinoJson FPs will trigger spurious Critical findings.
+
+---
+
+## DEFER items
+
+- **V3Q3 (C2):** Priority 1b firmware compound signal — defer to V1.3 pending shape-classification infrastructure.
+- **V3Q4 (D2):** Priority 1c reverse-engineered-API shape signal — defer to V1.3 pending ≥3 confirmed fire observations.
+- **V3Q6-remainder:** `threshold_too_lenient`, `rubric_literal_vs_intent`, `other` — hold at V1.3 pending balanced shape-sample (Lua/PHP/Swift/Kotlin shapes uncovered).
+
+---
+
+## INFO items
+
+- **INF-1:** The 82% scan-level override rate (9 of 11 scans have ≥1 override) is higher than the brief frames it. The 33% cell-level override rate from V13-1 was alarming enough to drive enum expansion. At scan level 82% suggests the harness+compute advisory layer is rarely producing Phase 4-concordant results across an entire scan — worth naming explicitly in the V13-3 analysis document.
+- **INF-2:** §8.3's question about V2.4-era back-labeling: recommend V1.2-only scope for V13-3. Back-labeling V2.4 prose to machine-readable override categories is manual and error-prone. The V13-3 analysis document should note this as an explicit scope exclusion, not leave it ambiguous.
+- **INF-3:** The `docs/v13-3-analysis.md` document format should mirror `docs/v13-1-override-telemetry-analysis.md` structurally — that's the established template for this class of analysis and it worked well.
+
+---
+
+## Open questions the brief missed
+
+- **OQ-1:** V12x-6 (multi-ecosystem manifest parsing) is Priority 2 in the backlog but isn't a V3Qx vote option — it affects 7 of 11 scans and produces `runtime_count=0 / osv_total_vulns=0` for Maven/Gradle/Cargo/Gomod/Bundler/.NET. Is this on or off the V13-3 scope? The brief treats it as a backlog item without a landing-window decision. V1.2.x or V1.3?
+- **OQ-2:** If V3Q2 B1 lands (deserialization auto-fire), entries 17 (Kronos) and 24 (freerouting) would no longer have Q4 overrides if re-processed. But CONSOLIDATION §9 says "existing override records preserved as historical." Does the V13-3 document explicitly codify this non-retroactivity rule, or does it leave it implicit?
+
+---
+
+## Blind spots
+
+My perspective is weakest on the compute.py derivation specifics for Priority 1 — I've read the logic but haven't traced the signal chain from `dangerous_primitives.deserialization.hit_count` through to `q4_has_critical_on_default_path` to verify the threshold mechanics are as described. The "≥3 hits plus README keyword match" threshold N is asserted but not tested. I'm also weakest on whether V12x-9's language-qualifier regex change is truly low-risk or whether suppressing `\bdeserialize\b` in C/C++/Rust creates a coverage blind spot on genuine unsafe deserialization in those languages.
+```
+
+### 9.2 Systems Thinker (Codex) R1 (verbatim)
+
+```markdown
+# V13-3 R1 — Codex
+
+## Votes
+- V3Q1 (scope): A3 — Reading A is already functionally answered by D-6, but V13-3 should explicitly close that loop and then do the broader calibration work because the telemetry is now the larger operational signal.
+- V3Q2 (Priority 1 deserialization): B1
+- V3Q3 (Priority 1b firmware CORS): C2
+- V3Q4 (Priority 1c reverse-eng shape): D2
+- V3Q5 (Q3 rubric): E3
+- V3Q6 (V1.3 enum pruning): F2
+- V3Q7 (V13-3 follow-up cadence): G4-prose — close this pass only after publishing a frozen V13-3 analysis, then re-trigger on whichever comes first: 25 V1.2 wild scans total or any enum-escape / multi-label ambiguity event.
+- H (process): H1
+
+## Rationale (prose)
+V13-3 is both readings, but asymmetrically. Reading A is not where the risk is anymore. D-6 already covers finding-level parity for the three pinned Step G pairs, and the validator plus seven-gate process contain future drift there. The only useful systems move is to make that closure explicit in the V13-3 artifact so operators stop treating "comparator" as an unresolved pipeline-parity question. The real open loop is Reading B: the live contract between `phase_1_harness.py`, `compute.py`, Phase 4 overrides, validator gate 6.3, and the frozen V1.2 historical bundles.
+
+The key pattern is not merely "Q4 overrides are common." It is that Q4 overrides are common for three different integration reasons. Freerouting is a roll-up failure from harness facts to compute signal. WLED is a compound-signal failure that needs shape context. Baileys is a metadata / README classification problem with obvious false-positive risk. Those are three different blast radii. Treating them as one "Priority 1" family would couple compute changes, README parsing, and shape inference into the same V1.2.x patch stream and make regression attribution harder. That is why B1 is right, but C1 and D1 are premature.
+
+Deserialization auto-fire is the only candidate that is both high-yield and structurally disciplined. It uses existing data paths, aligns with the V13-1 precedent that additive signals are valid V1.2.x work, and directly collapses two known overrides. The main risk is false positives from the widened deserialization family, but the telemetry already surfaced the mitigation: language qualification. That is a bounded harness-plus-compute adjustment with a clean validator story and limited renderer impact because scorecard authority already lives in Phase 4, not Phase 3.
+
+By contrast, firmware default-no-auth plus CORS and reverse-engineered API shape classification both inject new upstream semantics into Phase 1 or compute. They rely on shape classification, README interpretation, or platform-name heuristics that are less stable than primitive-family signals. Landing those in V1.2.x would create silent coupling with scan drivers, fixture expectations, and future operator heuristics, while preserving the same validator surface. That is exactly the kind of change that looks additive in schema terms but is not additive in behavior terms. Defer both to V1.3 or at least to a later V12x patch after explicit dry-run evidence.
+
+I do not support a Q3 rubric change now. The telemetry shows a stable amber outcome with zero overrides, which means the system is internally consistent. WLED and Baileys are not evidence that compute is missing the problem; they are evidence that the current rubric intentionally distinguishes "poor disclosure posture" from "actively hides." If you flip those historical cases to red, you break comparability across the 11-scan bundle set and blur the line between absence of process and adversarial concealment. That is a rubric philosophy change, not calibration.
+
+Enum pruning should also be conservative. `missing_qualitative_context` is now clearly superseded by the V13-1 split, so pruning it in V1.3 improves audit clarity. The other three unused values should stay. Eleven scans across eleven shapes is enough to retire a replaced catchall, not enough to declare future threshold or rubric exceptions dead.
+
+The historical-bundle rule matters: preserve entries 16–26 as historical artifacts. Do not re-render them if signals change. V13-3 should be a frozen document that cites those bundles, not a living section that mutates with later V12x patches. Otherwise the board loses the ability to reason about why overrides existed at the time they were authored.
+
+## FIX NOW items (if any)
+- C-1: Define V13-3 as A3 in the written analysis and explicitly state that Reading A is closed by D-6 while Reading B remains the actionable calibration surface.
+- C-2: Land Priority 1 only as a paired change: deserialization auto-fire must ship with language-qualified matching, or it will contaminate Q4 advisory hints on non-deserialization code paths.
+- C-3: Freeze entries 16–26 as historical bundles; V13-3 analysis may model override collapse counterfactually, but must not re-render prior artifacts.
+
+## DEFER items (if any)
+- D-1: Priority 1b firmware default-no-auth + CORS compound signal — defer until a dry-run on the 11 bundles proves shape classification and auth-absence heuristics are not overfitting WLED.
+- D-2: Priority 1c reverse-engineered-platform-API signal — defer until a wider comparator set exists; trigger lift when at least 3 scans of that shape or an equivalent dry-run corpus shows acceptable FP rate.
+- D-3: Q3 rubric escalation for documented disclosure failure — defer until a broader cross-scan sample shows the amber outcome is masking materially distinct operator action.
+
+## INFO items (if any)
+- I-1: The same four Q4 `computed_signal_refs` appear on freerouting, WLED, and Baileys despite three different root causes; that is a useful symptom that the scorecard-hint vocabulary is underexpressive even when the override enum is adequate.
+- I-2: Reading A and Reading B should not share a maintenance home. D-6 is executable and living; V13-3 analysis should be frozen and cited.
+
+## Open questions the brief missed
+- If Priority 1 lands, where is the canonical derivation for "tool loads user files" stored so operators do not recreate that judgment ad hoc in scan drivers?
+- Should the V13-3 document require an explicit "historical vs counterfactual" section so later readers do not confuse simulated override collapse with actual bundle contents?
+
+## Blind spots
+My weakest area here is the false-positive profile of the proposed shape classifiers outside the sampled bundles. I can see the coupling risk clearly, but I have not run the broad README/topic dry-runs that would quantify it.
+```
+
+### 9.3 Skeptic (DeepSeek) R1 (verbatim)
+
+```markdown
+# V13-3 R1 — Skeptic
+
+## Votes
+- V3Q1 (scope): **A2** — Broad cross-scan pattern calibration. The narrow comparator is already covered by D-6; the real value is in the 11-scan pattern analysis.
+- V3Q2 (Priority 1 deserialization): **B2** — Defer to V1.3. Language qualifier is a bigger change than "additive signal"; it's a semantic rewrite of the deserialization family.
+- V3Q3 (Priority 1b firmware CORS): **C2** — Defer to V1.3. Requires shape classification input — a new schema field, not just signal addition.
+- V3Q4 (Priority 1c reverse-eng shape): **D3** — Reject. ToS-violation categories are librarian judgment, not automatable. The false-positive risk on vendor-authorized clients is unacceptably high.
+- V3Q5 (Q3 rubric adjustment): **E3** — Keep Q3 rubric as-is. Amber correctly captures "partly" across all 11 scans; documented failures are already captured.
+- V3Q6 (V1.3 enum pruning): **F3** — Prune none. 11 scans is insufficient evidence; 4 unused values are sleeping, not dead.
+- V3Q7 (V13-3 follow-up cadence): **G2** — Trigger at 25 V1.2 wild scans. 11 is too small for stable patterns.
+- H (process): **H1** — Full board. Multi-axis scope with schema implications warrants board review.
+
+## Rationale (prose)
+
+The fundamental assumption wrong in this brief is that 11 scans constitute a statistically meaningful sample for calibration decisions. They don't. The 11-scan roster shows heavy bias: Python/Rust over-represented (3 each), while entire ecosystems (PHP, Swift, Kotlin, Lua) are absent. The "4 unused enum values are dead" conclusion is premature — we haven't seen the shapes that would trigger them.
+
+What breaks under adversarial reading? The "Q4 is the override hotspot" pattern (6 of 9 overrides). This isn't a structural flaw — it's sample bias. Q4's `q4_has_critical_on_default_path` is a Phase-4-authored boolean by design. The brief treats this as a problem to fix with harness patches, but that misunderstands the contract: Phase 4 is the judgment layer. Automating Q4 judgments via regex risks false positives that Phase 4 would override anyway, creating circular logic.
+
+The Priority 1-3 harness patches are textbook overfitting. Each patch solves exactly one observed override:
+- Priority 1 solves freerouting's Java deserialization (but creates false positives on safe JSON parsing)
+- Priority 1b solves WLED's firmware CORS (but requires new shape classification input)
+- Priority 1c solves Baileys' ToS-violation (but fails on vendor-authorized clients)
+
+This is the "last bug" fallacy — fixing what we just saw, not building robust signals. The language-qualifier requirement for deserialization (Priority 1) reveals the deeper problem: the deserialization primitive family is conceptually broken. It conflates safe JSON parsing with unsafe pickle/ObjectInputStream. Fixing this requires rethinking the primitive taxonomy, not adding language qualifiers.
+
+The silent-fix pattern (11/11 scans with 0 GHSA advisories) is being misinterpreted. The brief suggests Q3 rubric adjustment, but the data shows Phase 4 correctly renders amber for all 11 scans, including WLED and Baileys with documented disclosure failures. The rubric already works — amber means "partly tells you about problems." The two documented failures don't change the community norm; they confirm it. Changing the rubric to red for documented failures would create inconsistency: why red for WLED/Baileys but amber for the other 9 with identical 0-advisory patterns?
+
+The comparator calibration's original purpose — detecting semantic drift between V2.4 and V2.5-preview — is already satisfied by D-6. The expanded "pattern calibration" scope risks mission creep: we're now debating schema changes (shape classification), primitive family redesigns, and rubric adjustments based on 11 biased samples.
+
+My prior R1 framing about `override_category` for semantic drift detection remains unaddressed. The current 7-value enum doesn't distinguish between "threshold calibration" (fixable via signal tuning) and "judgment call" (inherent to Phase 4's role). Without this distinction, the 11-scan analysis conflates fixable gaps with irreducible judgment.
+
+## FIX NOW items (if any)
+- **C-1:** Document the sample bias explicitly in the V13-3 analysis. State clearly: "11 scans, Python/Rust heavy, missing major ecosystems."
+- **C-2:** Reject the "dead enum" narrative. Keep all 7 values through V1.3; revisit at 25+ scans.
+
+## DEFER items (if any)
+- **D-1:** All Priority 1-3 harness patches → V1.3. They require schema changes (shape classification) or primitive family redesigns.
+- **D-2:** Q3 rubric adjustment → Never. The rubric correctly captures the community norm.
+
+## INFO items (if any)
+- **I-1:** The zero-override streak (wezterm→QuickLook→kanata) shows the signal vocabulary works for some shapes. This is positive calibration data.
+- **I-2:** `signal_vocabulary_gap` at 67% modal suggests compute.py needs expansion, but the expansion should be principled (new signal families), not one-off patches.
+
+## Open questions the brief missed
+- What's the **false-positive rate** of the proposed harness patches? Test them against the 11 existing scans.
+- How does **Phase 4 judgment change** if we auto-fire Q4 from deserialization hits? Would Phase 4 override the auto-fire?
+- What **new shapes** would trigger the 4 unused enum values? Design hypothetical test cases.
+
+## Blind spots
+My perspective is weakest on the **implementation complexity** of the language qualifier for deserialization. I'm advocating deferral but haven't examined the regex code to see if language detection is feasible within the current harness architecture.
+
+Also, I'm skeptical of sample size but haven't calculated **confidence intervals** for the 67% `signal_vocabulary_gap` modal rate. At n=9 overrides, the 95% CI is wide (~35-90%). The "strongly modal" claim is statistically weak.
+```
+
+---
+
+## 10. Meta-context (non-voting)
+
+- V13-3 R1 launched 2026-04-20; all three R1 reports collected cleanly.
+- HEAD at R2 authoring: `c558b9f` on origin/main.
+- 385/385 tests passing.
+- Operator's directional read after R1: C5 (Priority 1) is the only concrete V1.2.x landing; C6/C7 defer cleanly; C8 keeps Q3 rubric; C9 prunes the V13-1-superseded catchall; C10 is the contested item (V13-3 follow-up cadence).
+- If R2 converges, R3 is skipped per SOP §4 Expedited path and R4 Confirmation follows directly. If R2 shows substantive new dissent (e.g., Skeptic BLOCK on C5 with new rationale), R3 Deliberation fires on the contested items only.
+- Board composition: Pragmatist (Claude Sonnet 4.6), Systems Thinker (Codex GPT-5.2), Skeptic (DeepSeek V4.0 via Qwen CLI). Each reads this brief cold.
+
+ succeeded in 0ms:
+25:| Q | Question | Pragmatist | Systems (Codex) | Skeptic (DeepSeek) | Outcome |
+283:## 9. R1 responses — VERBATIM
+287:### 9.1 Pragmatist R1 (verbatim)
+290:# V13-3 R1 — Pragmatist
+359:### 9.2 Systems Thinker (Codex) R1 (verbatim)
+362:# V13-3 R1 — Codex
+411:### 9.3 Skeptic (DeepSeek) R1 (verbatim)
+414:# V13-3 R1 — Skeptic
+
+exec
+/bin/bash -lc "sed -n '260,420p' /root/tinkering/stop-git-std/docs/compute.py" in /tmp
+ succeeded in 0ms:
+    # Q3: Do they tell you about problems?
+    # SF1 patch: has_contributing_guide — a repo with a contributing guide
+    # offers a disclosure gesture (place to report) even without SECURITY.md,
+    # so it reaches the amber floor rather than red (zustand-shape).
+    if has_security_policy and published_advisory_count > 0 and not has_silent_fixes:
+        q3_color = "green"
+        q3_answer = "Yes"
+    elif (has_security_policy or has_contributing_guide
+          or (published_advisory_count > 0 and not has_silent_fixes)):
+        q3_color = "amber"
+        q3_answer = "Partly"
+    else:
+        q3_color = "red"
+        q3_answer = "No"
+
+    # Q4: Is it safe out of the box?
+    # V2.4 calibration: Green = all pinned + verified + no Warning+ on install path
+    # Red = any Critical on default install path
+    # Amber = any unverified channel OR install-path Warning OR group-specific finding
+    # SF1 patch: has_warning_on_install_path replaces has_warning_or_above —
+    # governance/upstream warnings outside the install path (zustand F0:
+    # no branch protection) no longer drop Q4 below green.
+    if all_channels_pinned and artifact_verified and not has_warning_on_install_path:
+        q4_color = "green"
+        q4_answer = "Yes"
+    elif has_critical_on_default_path:
+        q4_color = "red"
+        q4_answer = "No"
+    elif has_warning_on_install_path or not all_channels_pinned or not artifact_verified:
+        q4_color = "amber"
+        q4_answer = "Partly"
+    else:
+        q4_color = "amber"
+        q4_answer = "Partly"
+
+    # V1.2: emit advisory shape with signals list (IDs from SIGNAL_IDS
+    # frozenset). Feeds phase_3_advisory.scorecard_hints in the form.
+    # V1.2.x (V13-1): governance floor now reads has_any_branch_protection.
+    governance_floor_triggered = (
+        formal < 10 and not has_any_branch_protection and not has_codeowners
+    )
+    return {
+        "does_anyone_check_the_code": {
+            "color": q1_color, "short_answer": q1_answer,
+            "signals": [
+                {"id": "q1_formal_review_rate", "value": formal},
+                {"id": "q1_any_review_rate", "value": any_rev},
+                {"id": "q1_has_branch_protection", "value": has_branch_protection},
+                {"id": "q1_has_ruleset_protection", "value": has_ruleset_protection},
+                {"id": "q1_has_codeowners", "value": has_codeowners},
+                {"id": "q1_is_solo_maintainer", "value": is_solo_maintainer},
+                {"id": "q1_governance_floor_override", "value": governance_floor_triggered},
+            ],
+        },
+        "do_they_fix_problems_quickly": {
+            "color": q2_color, "short_answer": q2_answer,
+            "signals": [
+                {"id": "q2_open_security_issue_count", "value": open_security_issue_count},
+                {"id": "q2_oldest_open_cve_pr_age_days", "value": oldest_cve_pr_age_days},
+                {"id": "q2_oldest_open_security_item_age_days", "value": oldest_open_security_item_age_days},
+                {"id": "q2_closed_fix_lag_days", "value": closed_fix_lag_days},
+            ],
+        },
+        "do_they_tell_you_about_problems": {
+            "color": q3_color, "short_answer": q3_answer,
+            "signals": [
+                {"id": "q3_has_security_policy", "value": has_security_policy},
+                {"id": "q3_has_contributing_guide", "value": has_contributing_guide},
+                {"id": "q3_published_advisory_count", "value": published_advisory_count},
+                {"id": "q3_has_silent_fixes", "value": has_silent_fixes},
+            ],
+        },
+        "is_it_safe_out_of_the_box": {
+            "color": q4_color, "short_answer": q4_answer,
+            "signals": [
+                {"id": "q4_all_channels_pinned", "value": all_channels_pinned},
+                {"id": "q4_artifact_verified", "value": artifact_verified},
+                {"id": "q4_has_critical_on_default_path", "value": has_critical_on_default_path},
+                {"id": "q4_has_warning_on_install_path", "value": has_warning_on_install_path},
+            ],
+        },
+    }
+
+
+# ===========================================================================
+# 3. Solo-Maintainer Flag
+# ===========================================================================
+
+def derive_q1_has_ruleset_protection(branch_protection: dict | None) -> bool:
+    """V1.2.x (V13-1): True when ruleset-based branch protection is active.
+
+    Reads phase_1_raw_capture.branch_protection. Fires when both:
+      - rulesets.count >= 1 (at least one ruleset scoped to default branch)
+      - rules_on_default.count >= 1 (at least one enforced rule)
+
+    This captures GitHub's modern ruleset-based protection which is invisible
+    to the classic-protection API (branches/<ref>/protection returns 404).
+    Fix for ghostty entry 16 + kamal entry 18 Q1 overrides.
+    """
+    if not branch_protection:
+        return False
+    rulesets = (branch_protection.get("rulesets") or {}).get("count") or 0
+    rules_on_default = (branch_protection.get("rules_on_default") or {}).get("count") or 0
+    return rulesets >= 1 and rules_on_default >= 1
+
+
+_SECURITY_KEYWORDS = re.compile(
+    r"\b(security|vuln|vulnerab|cve|ghsa|rce|xxe|xss|csrf|sqli|injection|"
+    r"deserialization|pickle|traversal|ssrf|advisory|exploit|exposure|leak)\b",
+    re.IGNORECASE,
+)
+
+
+def derive_q2_oldest_open_security_item_age_days(
+    issues_and_commits: dict | None,
+    open_prs: dict | None,
+    scan_date_iso: str | None = None,
+) -> int | None:
+    """V1.2.x (V13-1): max age-in-days of any open security item.
+
+    Reads from phase_1_raw_capture:
+      - issues_and_commits.open_security_issues[*].created_at
+      - open_prs.entries[*] filtered by title keyword match (security, vuln,
+        cve, rce, ...) — labels are rarely applied on non-CVE repos.
+
+    Returns None if nothing matches, else int days since max(created_at).
+
+    Addresses Kronos entry 17 Q2 override where a 95-day-old open issue
+    (#216, pickle deserialization RCE) was invisible to the PR-scoped
+    q2_oldest_open_cve_pr_age_days signal.
+    """
+    from datetime import date, datetime, timezone
+
+    if scan_date_iso:
+        scan_date = date.fromisoformat(scan_date_iso)
+    else:
+        scan_date = datetime.now(timezone.utc).date()
+
+    ages: list[int] = []
+
+    if issues_and_commits:
+        for issue in (issues_and_commits.get("open_security_issues") or []):
+            created = issue.get("created_at")
+            if not created:
+                continue
+            try:
+                created_date = datetime.fromisoformat(created.replace("Z", "+00:00")).date()
+                ages.append((scan_date - created_date).days)
+            except (ValueError, AttributeError):
+                continue
+
+    if open_prs:
+        for pr in (open_prs.get("entries") or []):
+            title = pr.get("title") or ""
+            if not _SECURITY_KEYWORDS.search(title):
+                continue
+            created = pr.get("created_at")
+            if not created:
+                continue
+            try:
+                created_date = datetime.fromisoformat(created.replace("Z", "+00:00")).date()
+
+codex
+I’ve got enough context to write the R2 decision memo. I’m keeping the majority line on the concrete integrations, but I’m tightening a few item wordings where the proposed trigger or implementation home needs to stay explicitly bounded.
+apply patch
+patch: completed
+/root/tinkering/stop-git-std/.board-review-temp/v13-3-comparator-calibration/codex-r2.md
+diff --git a/.board-review-temp/v13-3-comparator-calibration/codex-r2.md b/.board-review-temp/v13-3-comparator-calibration/codex-r2.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..271be8434bffeff6f262cdf1619e37660018908b
+--- /dev/null
++++ b/.board-review-temp/v13-3-comparator-calibration/codex-r2.md
+@@ -0,0 +1,99 @@
++# V13-3 R2 — Codex
++
++## Per-C-item votes
++
++### C1 — Write `docs/v13-3-analysis.md` as a frozen A3-scoped document
++**Vote:** AGREE
++**Rationale:** This is the correct deliverable shape. It closes Reading A explicitly, preserves Reading B as the operative calibration surface, and keeps the analysis in a citable frozen artifact rather than mutating the living telemetry doc.
++
++### C2 — V12x-9 language qualifier regex on deserialization family is HARD PREREQUISITE for Priority 1 auto-fire
++**Vote:** AGREE
++**Rationale:** Priority 1 is only safe as an atomic harness-plus-compute change. Without language qualification, WLED-style safe JSON parsing contaminates Q4 and breaks trust in the advisory path.
++
++### C3 — Freeze entries 16-26 as historical bundles; V13-3 analysis models override collapse counterfactually, NOT by re-rendering
++**Vote:** AGREE
++**Rationale:** Historical bundles are evidence, not a mutable benchmark. Counterfactual modeling belongs in the analysis document, not in rewritten artifacts.
++
++### C4 — Document sample bias explicitly in V13-3 analysis
++**Vote:** AGREE
++**Rationale:** The sample is broad enough to justify calibration discussion, but still biased enough that any pruning or promotion claim needs that caveat stated plainly. This is low-cost guardrail text.
++
++### C5 — V3Q2: Priority 1 deserialization auto-fire
++**Vote:** AGREE
++**Rationale:** This is still the only V1.2.x candidate that materially collapses known overrides while staying within an existing data path. I agree only in the paired form with C2, C18, and C20.
++
++### C6 — V3Q3: Priority 1b firmware CORS compound signal
++**Vote:** AGREE
++**Rationale:** Defer. This crosses into shape classification and auth-absence inference, which is a larger behavioral change than an additive signal patch.
++
++### C7 — V3Q4: Priority 1c reverse-engineered-API shape signal
++**Vote:** AGREE
++**Rationale:** Defer. README/topic heuristics and authorized-client false positives make this unsuitable for V1.2.x promotion without a wider corpus and explicit dry-run evidence.
++
++### C8 — V3Q5: Q3 rubric adjustment
++**Vote:** AGREE
++**Rationale:** Keep the rubric as-is. The current system is internally consistent on Q3, and changing it now would be a philosophy change disguised as calibration.
++
++### C9 — V3Q6: V1.3 enum pruning
++**Vote:** AGREE
++**Rationale:** `missing_qualitative_context` now reads as a superseded catchall after V13-1. The other three unused values should remain as headroom because the sample is still shape-skewed.
++
++### C10 — V3Q7: V13-3 follow-up cadence
++**Vote:** MODIFY
++**Rationale:** I agree with the hybrid cadence, but the trigger should be framed as `N=25 OR any taxonomy-strain event`, where taxonomy strain includes enum-escape, genuine multi-label ambiguity, or a materially new override class. That keeps the count floor while not forcing another routine review before the data changes in kind.
++**Alternative:** Adopt G4 with the event trigger broadened from only enum-escape / multi-label to any clearly new override class that does not map cleanly to the current taxonomy.
++
++### C11 — 82% scan-level override rate is worth naming
++**Vote:** AGREE
++**Rationale:** The document should name this directly because it describes operator burden and calibration quality at scan granularity, not only cell granularity.
++
++### C12 — Same 4 Q4 `computed_signal_refs` appear on freerouting + WLED + Baileys despite 3 different root causes
++**Vote:** AGREE
++**Rationale:** This is useful integration evidence. It shows the advisory vocabulary is underexpressive even when the override enum itself is adequate.
++
++### C13 — Zero-override streak is positive calibration data
++**Vote:** AGREE
++**Rationale:** The analysis should not read as one-way failure accounting. The zero-override streak is evidence that the present contract works on some shapes.
++
++### C14 — `signal_vocabulary_gap` 67% suggests compute needs PRINCIPLED expansion, not one-off patches
++**Vote:** MODIFY
++**Rationale:** I agree with the principle but not as an absolute bar on bounded fixes. The right rule is principled expansion as the default, with narrowly scoped V1.2.x exceptions only when the data path already exists and the FP surface is explicitly tested.
++**Alternative:** Record C14 as governing guidance for V1.3 planning while allowing C5 as a bounded exception because it is existing-data-path work, not a new classifier family.
++
++### C15 — Reading A and Reading B should not share maintenance home
++**Vote:** AGREE
++**Rationale:** D-6 stays living and executable; V13-3 stays frozen and analytical. Mixing them would blur operational drift checks with historical calibration reasoning.
++
++### C16 — V1.2-only scope for V13-3; no V2.4-era back-labeling
++**Vote:** AGREE
++**Rationale:** Back-labeling old prose into new machine categories would create invented precision. The exclusion should be explicit.
++
++### C17 — V12x-6 (multi-ecosystem manifest parsing) scope landing decision
++**Vote:** AGREE
++**Rationale:** This is V1.3 work. It is cross-ecosystem parser expansion, not a narrow calibration patch, and it belongs with the broader principled compute/harness expansion package.
++
++### C18 — Canonical storage of "tool loads user files" derivation
++**Vote:** AGREE
++**Rationale:** If Priority 1 lands, this derivation must live in `docs/compute.py` as a named helper. Storing that judgment in drivers would create silent divergence across scans.
++
++### C19 — V13-3 analysis document should include "historical vs counterfactual" section
++**Vote:** AGREE
++**Rationale:** This is required to keep future readers from misreading simulated override collapse as historical bundle state. It is a documentation control for OD-3.
++
++### C20 — Dry-run FP rate test for harness patches before V1.3 promotion
++**Vote:** AGREE
++**Rationale:** For C5 it should be part of the V1.2.x landing gate, and for C6/C7 it should remain a V1.3 promotion gate. This is the missing evidence layer between observed overrides and safe automation.
++
++## Meta-positions
++- Did R1 change your mind on anything after reading the other two agents' rationales inlined below? Yes. Pragmatist's framing strengthened the need to treat V12x-9 as a hard blocker rather than merely a companion patch, and Skeptic's sample-bias point is strong enough that C4 should be explicit in the analysis. My core votes did not change.
++- Does the C5 + C6/C7 + C14 package resolve the "principled vs one-off" tension? Yes, if C5 is treated as a bounded exception rather than a precedent. The package works because C6/C7 hold the line against new classifier families in V1.2.x while C14 remains the rule for broader V1.3 expansion.
++
++## New items raised at R2 (if any)
++- N1: V13-3 should explicitly distinguish "underexpressive advisory vocabulary" from "underpowered override enum" so later readers do not infer that Q4 override clustering implies another enum expansion.
++
++## Explicit non-escalations (if any)
++- I am not pressing Q3 rubric re-open beyond the deferred note in C8; the current amber behavior is stable and comparable across the 11-scan set.
++- I am not pressing reverse-engineered-API rejection beyond defer; the corpus is too small to justify permanent closure.
++
++## Blind spots (updated if anything changed)
++I still have limited quantified evidence on FP rates outside the sampled bundles, especially for future shape classifiers. My confidence is highest on the integration boundaries and lowest on how broad a dry-run corpus would be needed to safely promote C6 or C7.
+
+diff --git a/.board-review-temp/v13-3-comparator-calibration/codex-r2.md b/.board-review-temp/v13-3-comparator-calibration/codex-r2.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..271be8434bffeff6f262cdf1619e37660018908b
+--- /dev/null
++++ b/.board-review-temp/v13-3-comparator-calibration/codex-r2.md
+@@ -0,0 +1,99 @@
++# V13-3 R2 — Codex
++
++## Per-C-item votes
++
++### C1 — Write `docs/v13-3-analysis.md` as a frozen A3-scoped document
++**Vote:** AGREE
++**Rationale:** This is the correct deliverable shape. It closes Reading A explicitly, preserves Reading B as the operative calibration surface, and keeps the analysis in a citable frozen artifact rather than mutating the living telemetry doc.
++
++### C2 — V12x-9 language qualifier regex on deserialization family is HARD PREREQUISITE for Priority 1 auto-fire
++**Vote:** AGREE
++**Rationale:** Priority 1 is only safe as an atomic harness-plus-compute change. Without language qualification, WLED-style safe JSON parsing contaminates Q4 and breaks trust in the advisory path.
++
++### C3 — Freeze entries 16-26 as historical bundles; V13-3 analysis models override collapse counterfactually, NOT by re-rendering
++**Vote:** AGREE
++**Rationale:** Historical bundles are evidence, not a mutable benchmark. Counterfactual modeling belongs in the analysis document, not in rewritten artifacts.
++
++### C4 — Document sample bias explicitly in V13-3 analysis
++**Vote:** AGREE
++**Rationale:** The sample is broad enough to justify calibration discussion, but still biased enough that any pruning or promotion claim needs that caveat stated plainly. This is low-cost guardrail text.
++
++### C5 — V3Q2: Priority 1 deserialization auto-fire
++**Vote:** AGREE
++**Rationale:** This is still the only V1.2.x candidate that materially collapses known overrides while staying within an existing data path. I agree only in the paired form with C2, C18, and C20.
++
++### C6 — V3Q3: Priority 1b firmware CORS compound signal
++**Vote:** AGREE
++**Rationale:** Defer. This crosses into shape classification and auth-absence inference, which is a larger behavioral change than an additive signal patch.
++
++### C7 — V3Q4: Priority 1c reverse-engineered-API shape signal
++**Vote:** AGREE
++**Rationale:** Defer. README/topic heuristics and authorized-client false positives make this unsuitable for V1.2.x promotion without a wider corpus and explicit dry-run evidence.
++
++### C8 — V3Q5: Q3 rubric adjustment
++**Vote:** AGREE
++**Rationale:** Keep the rubric as-is. The current system is internally consistent on Q3, and changing it now would be a philosophy change disguised as calibration.
++
++### C9 — V3Q6: V1.3 enum pruning
++**Vote:** AGREE
++**Rationale:** `missing_qualitative_context` now reads as a superseded catchall after V13-1. The other three unused values should remain as headroom because the sample is still shape-skewed.
++
++### C10 — V3Q7: V13-3 follow-up cadence
++**Vote:** MODIFY
++**Rationale:** I agree with the hybrid cadence, but the trigger should be framed as `N=25 OR any taxonomy-strain event`, where taxonomy strain includes enum-escape, genuine multi-label ambiguity, or a materially new override class. That keeps the count floor while not forcing another routine review before the data changes in kind.
++**Alternative:** Adopt G4 with the event trigger broadened from only enum-escape / multi-label to any clearly new override class that does not map cleanly to the current taxonomy.
++
++### C11 — 82% scan-level override rate is worth naming
++**Vote:** AGREE
++**Rationale:** The document should name this directly because it describes operator burden and calibration quality at scan granularity, not only cell granularity.
++
++### C12 — Same 4 Q4 `computed_signal_refs` appear on freerouting + WLED + Baileys despite 3 different root causes
++**Vote:** AGREE
++**Rationale:** This is useful integration evidence. It shows the advisory vocabulary is underexpressive even when the override enum itself is adequate.
++
++### C13 — Zero-override streak is positive calibration data
++**Vote:** AGREE
++**Rationale:** The analysis should not read as one-way failure accounting. The zero-override streak is evidence that the present contract works on some shapes.
++
++### C14 — `signal_vocabulary_gap` 67% suggests compute needs PRINCIPLED expansion, not one-off patches
++**Vote:** MODIFY
++**Rationale:** I agree with the principle but not as an absolute bar on bounded fixes. The right rule is principled expansion as the default, with narrowly scoped V1.2.x exceptions only when the data path already exists and the FP surface is explicitly tested.
++**Alternative:** Record C14 as governing guidance for V1.3 planning while allowing C5 as a bounded exception because it is existing-data-path work, not a new classifier family.
++
++### C15 — Reading A and Reading B should not share maintenance home
++**Vote:** AGREE
++**Rationale:** D-6 stays living and executable; V13-3 stays frozen and analytical. Mixing them would blur operational drift checks with historical calibration reasoning.
++
++### C16 — V1.2-only scope for V13-3; no V2.4-era back-labeling
++**Vote:** AGREE
++**Rationale:** Back-labeling old prose into new machine categories would create invented precision. The exclusion should be explicit.
++
++### C17 — V12x-6 (multi-ecosystem manifest parsing) scope landing decision
++**Vote:** AGREE
++**Rationale:** This is V1.3 work. It is cross-ecosystem parser expansion, not a narrow calibration patch, and it belongs with the broader principled compute/harness expansion package.
++
++### C18 — Canonical storage of "tool loads user files" derivation
++**Vote:** AGREE
++**Rationale:** If Priority 1 lands, this derivation must live in `docs/compute.py` as a named helper. Storing that judgment in drivers would create silent divergence across scans.
++
++### C19 — V13-3 analysis document should include "historical vs counterfactual" section
++**Vote:** AGREE
++**Rationale:** This is required to keep future readers from misreading simulated override collapse as historical bundle state. It is a documentation control for OD-3.
++
++### C20 — Dry-run FP rate test for harness patches before V1.3 promotion
++**Vote:** AGREE
++**Rationale:** For C5 it should be part of the V1.2.x landing gate, and for C6/C7 it should remain a V1.3 promotion gate. This is the missing evidence layer between observed overrides and safe automation.
++
++## Meta-positions
++- Did R1 change your mind on anything after reading the other two agents' rationales inlined below? Yes. Pragmatist's framing strengthened the need to treat V12x-9 as a hard blocker rather than merely a companion patch, and Skeptic's sample-bias point is strong enough that C4 should be explicit in the analysis. My core votes did not change.
++- Does the C5 + C6/C7 + C14 package resolve the "principled vs one-off" tension? Yes, if C5 is treated as a bounded exception rather than a precedent. The package works because C6/C7 hold the line against new classifier families in V1.2.x while C14 remains the rule for broader V1.3 expansion.
++
++## New items raised at R2 (if any)
++- N1: V13-3 should explicitly distinguish "underexpressive advisory vocabulary" from "underpowered override enum" so later readers do not infer that Q4 override clustering implies another enum expansion.
++
++## Explicit non-escalations (if any)
++- I am not pressing Q3 rubric re-open beyond the deferred note in C8; the current amber behavior is stable and comparable across the 11-scan set.
++- I am not pressing reverse-engineered-API rejection beyond defer; the corpus is too small to justify permanent closure.
++
++## Blind spots (updated if anything changed)
++I still have limited quantified evidence on FP rates outside the sampled bundles, especially for future shape classifiers. My confidence is highest on the integration boundaries and lowest on how broad a dry-run corpus would be needed to safely promote C6 or C7.
+
+codex
+The R2 memo is written. I’m doing one quick verification pass on the saved file for format and length before I close out.
+exec
+/bin/bash -lc 'wc -w /root/tinkering/stop-git-std/.board-review-temp/v13-3-comparator-calibration/codex-r2.md' in /tmp
+ succeeded in 0ms:
+1114 /root/tinkering/stop-git-std/.board-review-temp/v13-3-comparator-calibration/codex-r2.md
+
+exec
+/bin/bash -lc "sed -n '1,260p' /root/tinkering/stop-git-std/.board-review-temp/v13-3-comparator-calibration/codex-r2.md" in /tmp
+ succeeded in 0ms:
+# V13-3 R2 — Codex
+
+## Per-C-item votes
+
+### C1 — Write `docs/v13-3-analysis.md` as a frozen A3-scoped document
+**Vote:** AGREE
+**Rationale:** This is the correct deliverable shape. It closes Reading A explicitly, preserves Reading B as the operative calibration surface, and keeps the analysis in a citable frozen artifact rather than mutating the living telemetry doc.
+
+### C2 — V12x-9 language qualifier regex on deserialization family is HARD PREREQUISITE for Priority 1 auto-fire
+**Vote:** AGREE
+**Rationale:** Priority 1 is only safe as an atomic harness-plus-compute change. Without language qualification, WLED-style safe JSON parsing contaminates Q4 and breaks trust in the advisory path.
+
+### C3 — Freeze entries 16-26 as historical bundles; V13-3 analysis models override collapse counterfactually, NOT by re-rendering
+**Vote:** AGREE
+**Rationale:** Historical bundles are evidence, not a mutable benchmark. Counterfactual modeling belongs in the analysis document, not in rewritten artifacts.
+
+### C4 — Document sample bias explicitly in V13-3 analysis
+**Vote:** AGREE
+**Rationale:** The sample is broad enough to justify calibration discussion, but still biased enough that any pruning or promotion claim needs that caveat stated plainly. This is low-cost guardrail text.
+
+### C5 — V3Q2: Priority 1 deserialization auto-fire
+**Vote:** AGREE
+**Rationale:** This is still the only V1.2.x candidate that materially collapses known overrides while staying within an existing data path. I agree only in the paired form with C2, C18, and C20.
+
+### C6 — V3Q3: Priority 1b firmware CORS compound signal
+**Vote:** AGREE
+**Rationale:** Defer. This crosses into shape classification and auth-absence inference, which is a larger behavioral change than an additive signal patch.
+
+### C7 — V3Q4: Priority 1c reverse-engineered-API shape signal
+**Vote:** AGREE
+**Rationale:** Defer. README/topic heuristics and authorized-client false positives make this unsuitable for V1.2.x promotion without a wider corpus and explicit dry-run evidence.
+
+### C8 — V3Q5: Q3 rubric adjustment
+**Vote:** AGREE
+**Rationale:** Keep the rubric as-is. The current system is internally consistent on Q3, and changing it now would be a philosophy change disguised as calibration.
+
+### C9 — V3Q6: V1.3 enum pruning
+**Vote:** AGREE
+**Rationale:** `missing_qualitative_context` now reads as a superseded catchall after V13-1. The other three unused values should remain as headroom because the sample is still shape-skewed.
+
+### C10 — V3Q7: V13-3 follow-up cadence
+**Vote:** MODIFY
+**Rationale:** I agree with the hybrid cadence, but the trigger should be framed as `N=25 OR any taxonomy-strain event`, where taxonomy strain includes enum-escape, genuine multi-label ambiguity, or a materially new override class. That keeps the count floor while not forcing another routine review before the data changes in kind.
+**Alternative:** Adopt G4 with the event trigger broadened from only enum-escape / multi-label to any clearly new override class that does not map cleanly to the current taxonomy.
+
+### C11 — 82% scan-level override rate is worth naming
+**Vote:** AGREE
+**Rationale:** The document should name this directly because it describes operator burden and calibration quality at scan granularity, not only cell granularity.
+
+### C12 — Same 4 Q4 `computed_signal_refs` appear on freerouting + WLED + Baileys despite 3 different root causes
+**Vote:** AGREE
+**Rationale:** This is useful integration evidence. It shows the advisory vocabulary is underexpressive even when the override enum itself is adequate.
+
+### C13 — Zero-override streak is positive calibration data
+**Vote:** AGREE
+**Rationale:** The analysis should not read as one-way failure accounting. The zero-override streak is evidence that the present contract works on some shapes.
+
+### C14 — `signal_vocabulary_gap` 67% suggests compute needs PRINCIPLED expansion, not one-off patches
+**Vote:** MODIFY
+**Rationale:** I agree with the principle but not as an absolute bar on bounded fixes. The right rule is principled expansion as the default, with narrowly scoped V1.2.x exceptions only when the data path already exists and the FP surface is explicitly tested.
+**Alternative:** Record C14 as governing guidance for V1.3 planning while allowing C5 as a bounded exception because it is existing-data-path work, not a new classifier family.
+
+### C15 — Reading A and Reading B should not share maintenance home
+**Vote:** AGREE
+**Rationale:** D-6 stays living and executable; V13-3 stays frozen and analytical. Mixing them would blur operational drift checks with historical calibration reasoning.
+
+### C16 — V1.2-only scope for V13-3; no V2.4-era back-labeling
+**Vote:** AGREE
+**Rationale:** Back-labeling old prose into new machine categories would create invented precision. The exclusion should be explicit.
+
+### C17 — V12x-6 (multi-ecosystem manifest parsing) scope landing decision
+**Vote:** AGREE
+**Rationale:** This is V1.3 work. It is cross-ecosystem parser expansion, not a narrow calibration patch, and it belongs with the broader principled compute/harness expansion package.
+
+### C18 — Canonical storage of "tool loads user files" derivation
+**Vote:** AGREE
+**Rationale:** If Priority 1 lands, this derivation must live in `docs/compute.py` as a named helper. Storing that judgment in drivers would create silent divergence across scans.
+
+### C19 — V13-3 analysis document should include "historical vs counterfactual" section
+**Vote:** AGREE
+**Rationale:** This is required to keep future readers from misreading simulated override collapse as historical bundle state. It is a documentation control for OD-3.
+
+### C20 — Dry-run FP rate test for harness patches before V1.3 promotion
+**Vote:** AGREE
+**Rationale:** For C5 it should be part of the V1.2.x landing gate, and for C6/C7 it should remain a V1.3 promotion gate. This is the missing evidence layer between observed overrides and safe automation.
+
+## Meta-positions
+- Did R1 change your mind on anything after reading the other two agents' rationales inlined below? Yes. Pragmatist's framing strengthened the need to treat V12x-9 as a hard blocker rather than merely a companion patch, and Skeptic's sample-bias point is strong enough that C4 should be explicit in the analysis. My core votes did not change.
+- Does the C5 + C6/C7 + C14 package resolve the "principled vs one-off" tension? Yes, if C5 is treated as a bounded exception rather than a precedent. The package works because C6/C7 hold the line against new classifier families in V1.2.x while C14 remains the rule for broader V1.3 expansion.
+
+## New items raised at R2 (if any)
+- N1: V13-3 should explicitly distinguish "underexpressive advisory vocabulary" from "underpowered override enum" so later readers do not infer that Q4 override clustering implies another enum expansion.
+
+## Explicit non-escalations (if any)
+- I am not pressing Q3 rubric re-open beyond the deferred note in C8; the current amber behavior is stable and comparable across the 11-scan set.
+- I am not pressing reverse-engineered-API rejection beyond defer; the corpus is too small to justify permanent closure.
+
+## Blind spots (updated if anything changed)
+I still have limited quantified evidence on FP rates outside the sampled bundles, especially for future shape classifiers. My confidence is highest on the integration boundaries and lowest on how broad a dry-run corpus would be needed to safely promote C6 or C7.
+
+diff --git a/.board-review-temp/v13-3-comparator-calibration/codex-r2.md b/.board-review-temp/v13-3-comparator-calibration/codex-r2.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..271be8434bffeff6f262cdf1619e37660018908b
+--- /dev/null
++++ b/.board-review-temp/v13-3-comparator-calibration/codex-r2.md
+@@ -0,0 +1,99 @@
++# V13-3 R2 — Codex
++
++## Per-C-item votes
++
++### C1 — Write `docs/v13-3-analysis.md` as a frozen A3-scoped document
++**Vote:** AGREE
++**Rationale:** This is the correct deliverable shape. It closes Reading A explicitly, preserves Reading B as the operative calibration surface, and keeps the analysis in a citable frozen artifact rather than mutating the living telemetry doc.
++
++### C2 — V12x-9 language qualifier regex on deserialization family is HARD PREREQUISITE for Priority 1 auto-fire
++**Vote:** AGREE
++**Rationale:** Priority 1 is only safe as an atomic harness-plus-compute change. Without language qualification, WLED-style safe JSON parsing contaminates Q4 and breaks trust in the advisory path.
++
++### C3 — Freeze entries 16-26 as historical bundles; V13-3 analysis models override collapse counterfactually, NOT by re-rendering
++**Vote:** AGREE
++**Rationale:** Historical bundles are evidence, not a mutable benchmark. Counterfactual modeling belongs in the analysis document, not in rewritten artifacts.
++
++### C4 — Document sample bias explicitly in V13-3 analysis
++**Vote:** AGREE
++**Rationale:** The sample is broad enough to justify calibration discussion, but still biased enough that any pruning or promotion claim needs that caveat stated plainly. This is low-cost guardrail text.
++
++### C5 — V3Q2: Priority 1 deserialization auto-fire
++**Vote:** AGREE
++**Rationale:** This is still the only V1.2.x candidate that materially collapses known overrides while staying within an existing data path. I agree only in the paired form with C2, C18, and C20.
++
++### C6 — V3Q3: Priority 1b firmware CORS compound signal
++**Vote:** AGREE
++**Rationale:** Defer. This crosses into shape classification and auth-absence inference, which is a larger behavioral change than an additive signal patch.
++
++### C7 — V3Q4: Priority 1c reverse-engineered-API shape signal
++**Vote:** AGREE
++**Rationale:** Defer. README/topic heuristics and authorized-client false positives make this unsuitable for V1.2.x promotion without a wider corpus and explicit dry-run evidence.
++
++### C8 — V3Q5: Q3 rubric adjustment
++**Vote:** AGREE
++**Rationale:** Keep the rubric as-is. The current system is internally consistent on Q3, and changing it now would be a philosophy change disguised as calibration.
++
++### C9 — V3Q6: V1.3 enum pruning
++**Vote:** AGREE
++**Rationale:** `missing_qualitative_context` now reads as a superseded catchall after V13-1. The other three unused values should remain as headroom because the sample is still shape-skewed.
++
++### C10 — V3Q7: V13-3 follow-up cadence
++**Vote:** MODIFY
++**Rationale:** I agree with the hybrid cadence, but the trigger should be framed as `N=25 OR any taxonomy-strain event`, where taxonomy strain includes enum-escape, genuine multi-label ambiguity, or a materially new override class. That keeps the count floor while not forcing another routine review before the data changes in kind.
++**Alternative:** Adopt G4 with the event trigger broadened from only enum-escape / multi-label to any clearly new override class that does not map cleanly to the current taxonomy.
++
++### C11 — 82% scan-level override rate is worth naming
++**Vote:** AGREE
++**Rationale:** The document should name this directly because it describes operator burden and calibration quality at scan granularity, not only cell granularity.
++
++### C12 — Same 4 Q4 `computed_signal_refs` appear on freerouting + WLED + Baileys despite 3 different root causes
++**Vote:** AGREE
++**Rationale:** This is useful integration evidence. It shows the advisory vocabulary is underexpressive even when the override enum itself is adequate.
++
++### C13 — Zero-override streak is positive calibration data
++**Vote:** AGREE
++**Rationale:** The analysis should not read as one-way failure accounting. The zero-override streak is evidence that the present contract works on some shapes.
++
++### C14 — `signal_vocabulary_gap` 67% suggests compute needs PRINCIPLED expansion, not one-off patches
++**Vote:** MODIFY
++**Rationale:** I agree with the principle but not as an absolute bar on bounded fixes. The right rule is principled expansion as the default, with narrowly scoped V1.2.x exceptions only when the data path already exists and the FP surface is explicitly tested.
++**Alternative:** Record C14 as governing guidance for V1.3 planning while allowing C5 as a bounded exception because it is existing-data-path work, not a new classifier family.
++
++### C15 — Reading A and Reading B should not share maintenance home
++**Vote:** AGREE
++**Rationale:** D-6 stays living and executable; V13-3 stays frozen and analytical. Mixing them would blur operational drift checks with historical calibration reasoning.
++
++### C16 — V1.2-only scope for V13-3; no V2.4-era back-labeling
++**Vote:** AGREE
++**Rationale:** Back-labeling old prose into new machine categories would create invented precision. The exclusion should be explicit.
++
++### C17 — V12x-6 (multi-ecosystem manifest parsing) scope landing decision
++**Vote:** AGREE
++**Rationale:** This is V1.3 work. It is cross-ecosystem parser expansion, not a narrow calibration patch, and it belongs with the broader principled compute/harness expansion package.
++
++### C18 — Canonical storage of "tool loads user files" derivation
++**Vote:** AGREE
++**Rationale:** If Priority 1 lands, this derivation must live in `docs/compute.py` as a named helper. Storing that judgment in drivers would create silent divergence across scans.
++
++### C19 — V13-3 analysis document should include "historical vs counterfactual" section
++**Vote:** AGREE
++**Rationale:** This is required to keep future readers from misreading simulated override collapse as historical bundle state. It is a documentation control for OD-3.
++
++### C20 — Dry-run FP rate test for harness patches before V1.3 promotion
++**Vote:** AGREE
++**Rationale:** For C5 it should be part of the V1.2.x landing gate, and for C6/C7 it should remain a V1.3 promotion gate. This is the missing evidence layer between observed overrides and safe automation.
++
++## Meta-positions
++- Did R1 change your mind on anything after reading the other two agents' rationales inlined below? Yes. Pragmatist's framing strengthened the need to treat V12x-9 as a hard blocker rather than merely a companion patch, and Skeptic's sample-bias point is strong enough that C4 should be explicit in the analysis. My core votes did not change.
++- Does the C5 + C6/C7 + C14 package resolve the "principled vs one-off" tension? Yes, if C5 is treated as a bounded exception rather than a precedent. The package works because C6/C7 hold the line against new classifier families in V1.2.x while C14 remains the rule for broader V1.3 expansion.
++
++## New items raised at R2 (if any)
++- N1: V13-3 should explicitly distinguish "underexpressive advisory vocabulary" from "underpowered override enum" so later readers do not infer that Q4 override clustering implies another enum expansion.
++
++## Explicit non-escalations (if any)
++- I am not pressing Q3 rubric re-open beyond the deferred note in C8; the current amber behavior is stable and comparable across the 11-scan set.
++- I am not pressing reverse-engineered-API rejection beyond defer; the corpus is too small to justify permanent closure.
++
++## Blind spots (updated if anything changed)
++I still have limited quantified evidence on FP rates outside the sampled bundles, especially for future shape classifiers. My confidence is highest on the integration boundaries and lowest on how broad a dry-run corpus would be needed to safely promote C6 or C7.
+
+codex
+Wrote the R2 memo to [codex-r2.md](/root/tinkering/stop-git-std/.board-review-temp/v13-3-comparator-calibration/codex-r2.md). It matches the required section 7 structure and stays under the cap at 1114 words.
+
+Substantively, I held the majority line on C1-C9 and C17-C20, with two bounded refinements: C10 broadens the hybrid follow-up trigger to any taxonomy-strain event, and C14 is accepted only as a V1.3 planning principle, not as a bar against the narrowly scoped C5 exception.
+diff --git a/.board-review-temp/v13-3-comparator-calibration/codex-r2.md b/.board-review-temp/v13-3-comparator-calibration/codex-r2.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..271be8434bffeff6f262cdf1619e37660018908b
+--- /dev/null
++++ b/.board-review-temp/v13-3-comparator-calibration/codex-r2.md
+@@ -0,0 +1,99 @@
++# V13-3 R2 — Codex
++
++## Per-C-item votes
++
++### C1 — Write `docs/v13-3-analysis.md` as a frozen A3-scoped document
++**Vote:** AGREE
++**Rationale:** This is the correct deliverable shape. It closes Reading A explicitly, preserves Reading B as the operative calibration surface, and keeps the analysis in a citable frozen artifact rather than mutating the living telemetry doc.
++
++### C2 — V12x-9 language qualifier regex on deserialization family is HARD PREREQUISITE for Priority 1 auto-fire
++**Vote:** AGREE
++**Rationale:** Priority 1 is only safe as an atomic harness-plus-compute change. Without language qualification, WLED-style safe JSON parsing contaminates Q4 and breaks trust in the advisory path.
++
++### C3 — Freeze entries 16-26 as historical bundles; V13-3 analysis models override collapse counterfactually, NOT by re-rendering
++**Vote:** AGREE
++**Rationale:** Historical bundles are evidence, not a mutable benchmark. Counterfactual modeling belongs in the analysis document, not in rewritten artifacts.
++
++### C4 — Document sample bias explicitly in V13-3 analysis
++**Vote:** AGREE
++**Rationale:** The sample is broad enough to justify calibration discussion, but still biased enough that any pruning or promotion claim needs that caveat stated plainly. This is low-cost guardrail text.
++
++### C5 — V3Q2: Priority 1 deserialization auto-fire
++**Vote:** AGREE
++**Rationale:** This is still the only V1.2.x candidate that materially collapses known overrides while staying within an existing data path. I agree only in the paired form with C2, C18, and C20.
++
++### C6 — V3Q3: Priority 1b firmware CORS compound signal
++**Vote:** AGREE
++**Rationale:** Defer. This crosses into shape classification and auth-absence inference, which is a larger behavioral change than an additive signal patch.
++
++### C7 — V3Q4: Priority 1c reverse-engineered-API shape signal
++**Vote:** AGREE
++**Rationale:** Defer. README/topic heuristics and authorized-client false positives make this unsuitable for V1.2.x promotion without a wider corpus and explicit dry-run evidence.
++
++### C8 — V3Q5: Q3 rubric adjustment
++**Vote:** AGREE
++**Rationale:** Keep the rubric as-is. The current system is internally consistent on Q3, and changing it now would be a philosophy change disguised as calibration.
++
++### C9 — V3Q6: V1.3 enum pruning
++**Vote:** AGREE
++**Rationale:** `missing_qualitative_context` now reads as a superseded catchall after V13-1. The other three unused values should remain as headroom because the sample is still shape-skewed.
++
++### C10 — V3Q7: V13-3 follow-up cadence
++**Vote:** MODIFY
++**Rationale:** I agree with the hybrid cadence, but the trigger should be framed as `N=25 OR any taxonomy-strain event`, where taxonomy strain includes enum-escape, genuine multi-label ambiguity, or a materially new override class. That keeps the count floor while not forcing another routine review before the data changes in kind.
++**Alternative:** Adopt G4 with the event trigger broadened from only enum-escape / multi-label to any clearly new override class that does not map cleanly to the current taxonomy.
++
++### C11 — 82% scan-level override rate is worth naming
++**Vote:** AGREE
++**Rationale:** The document should name this directly because it describes operator burden and calibration quality at scan granularity, not only cell granularity.
++
++### C12 — Same 4 Q4 `computed_signal_refs` appear on freerouting + WLED + Baileys despite 3 different root causes
++**Vote:** AGREE
++**Rationale:** This is useful integration evidence. It shows the advisory vocabulary is underexpressive even when the override enum itself is adequate.
++
++### C13 — Zero-override streak is positive calibration data
++**Vote:** AGREE
++**Rationale:** The analysis should not read as one-way failure accounting. The zero-override streak is evidence that the present contract works on some shapes.
++
++### C14 — `signal_vocabulary_gap` 67% suggests compute needs PRINCIPLED expansion, not one-off patches
++**Vote:** MODIFY
++**Rationale:** I agree with the principle but not as an absolute bar on bounded fixes. The right rule is principled expansion as the default, with narrowly scoped V1.2.x exceptions only when the data path already exists and the FP surface is explicitly tested.
++**Alternative:** Record C14 as governing guidance for V1.3 planning while allowing C5 as a bounded exception because it is existing-data-path work, not a new classifier family.
++
++### C15 — Reading A and Reading B should not share maintenance home
++**Vote:** AGREE
++**Rationale:** D-6 stays living and executable; V13-3 stays frozen and analytical. Mixing them would blur operational drift checks with historical calibration reasoning.
++
++### C16 — V1.2-only scope for V13-3; no V2.4-era back-labeling
++**Vote:** AGREE
++**Rationale:** Back-labeling old prose into new machine categories would create invented precision. The exclusion should be explicit.
++
++### C17 — V12x-6 (multi-ecosystem manifest parsing) scope landing decision
++**Vote:** AGREE
++**Rationale:** This is V1.3 work. It is cross-ecosystem parser expansion, not a narrow calibration patch, and it belongs with the broader principled compute/harness expansion package.
++
++### C18 — Canonical storage of "tool loads user files" derivation
++**Vote:** AGREE
++**Rationale:** If Priority 1 lands, this derivation must live in `docs/compute.py` as a named helper. Storing that judgment in drivers would create silent divergence across scans.
++
++### C19 — V13-3 analysis document should include "historical vs counterfactual" section
++**Vote:** AGREE
++**Rationale:** This is required to keep future readers from misreading simulated override collapse as historical bundle state. It is a documentation control for OD-3.
++
++### C20 — Dry-run FP rate test for harness patches before V1.3 promotion
++**Vote:** AGREE
++**Rationale:** For C5 it should be part of the V1.2.x landing gate, and for C6/C7 it should remain a V1.3 promotion gate. This is the missing evidence layer between observed overrides and safe automation.
++
++## Meta-positions
++- Did R1 change your mind on anything after reading the other two agents' rationales inlined below? Yes. Pragmatist's framing strengthened the need to treat V12x-9 as a hard blocker rather than merely a companion patch, and Skeptic's sample-bias point is strong enough that C4 should be explicit in the analysis. My core votes did not change.
++- Does the C5 + C6/C7 + C14 package resolve the "principled vs one-off" tension? Yes, if C5 is treated as a bounded exception rather than a precedent. The package works because C6/C7 hold the line against new classifier families in V1.2.x while C14 remains the rule for broader V1.3 expansion.
++
++## New items raised at R2 (if any)
++- N1: V13-3 should explicitly distinguish "underexpressive advisory vocabulary" from "underpowered override enum" so later readers do not infer that Q4 override clustering implies another enum expansion.
++
++## Explicit non-escalations (if any)
++- I am not pressing Q3 rubric re-open beyond the deferred note in C8; the current amber behavior is stable and comparable across the 11-scan set.
++- I am not pressing reverse-engineered-API rejection beyond defer; the corpus is too small to justify permanent closure.
++
++## Blind spots (updated if anything changed)
++I still have limited quantified evidence on FP rates outside the sampled bundles, especially for future shape classifiers. My confidence is highest on the integration boundaries and lowest on how broad a dry-run corpus would be needed to safely promote C6 or C7.
+
+tokens used
+44,790
+Wrote the R2 memo to [codex-r2.md](/root/tinkering/stop-git-std/.board-review-temp/v13-3-comparator-calibration/codex-r2.md). It matches the required section 7 structure and stays under the cap at 1114 words.
+
+Substantively, I held the majority line on C1-C9 and C17-C20, with two bounded refinements: C10 broadens the hybrid follow-up trigger to any taxonomy-strain event, and C14 is accepted only as a V1.3 planning principle, not as a bar against the narrowly scoped C5 exception.

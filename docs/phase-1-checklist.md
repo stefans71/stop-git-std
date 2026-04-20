@@ -170,7 +170,7 @@ Each pattern family returns `{hit_count, files[]}`. A hit opens a Step-B targete
 | # | Pattern family | Grep target | Form sub-field |
 |---|---|---|---|
 | A1 | Code execution | `eval\(, Function\(, vm.runIn, exec\(, execSync, spawnSync, child_process, subprocess.(call\|Popen\|run), os.system, shell=True, Runtime.getRuntime().exec` | `code_patterns.dangerous_primitives.exec[]` |
-| A2 | Deserialization | `pickle.loads, yaml.load\(, unserialize\(, ObjectInputStream, deserialize, Marshal.load` | `code_patterns.dangerous_primitives.deserialization[]` |
+| A2 | Deserialization | `pickle.loads?, yaml.load\(, unserialize\(, ObjectInputStream, Marshal.load, marshal.loads?, joblib.load, dill.loads?` (V13-3 C2: bare `deserialize` keyword dropped — was a false-positive source on ArduinoJson `deserializeJson` / serde `deserialize` in C/C++/Rust. Unsafe-specific method names preserved.) | `code_patterns.dangerous_primitives.deserialization[]` |
 | A3 | Network / fetch | `fetch\(, XMLHttpRequest, axios., got\(, http.(get\|post\|request), requests.(get\|post\|put\|delete), urllib.request, net.(connect\|Socket), http.Client, WebSocket, url.URL\(, RestTemplate` | `code_patterns.dangerous_primitives.network[]` |
 | A4 | Secrets / credentials | `(api[_-]?key\|secret\|token\|password\|passwd\|pwd\|auth)\s*[:=]\s*["'][A-Za-z0-9_\-\.]{16,}` and vendor-prefix regex (sk-, ghp_, xox, AIza, AKIA) | `code_patterns.dangerous_primitives.secrets[]` |
 | A5 | CORS / bind-all / TLS-disabled | `Access-Control-Allow-Origin.*\*`, `0\.0\.0\.0`, `rejectUnauthorized: false`, `verify=False`, `CURLOPT_SSL_VERIFYPEER.*false`, `InsecureSkipVerify: true` | `code_patterns.dangerous_primitives.tls_cors[]` |
