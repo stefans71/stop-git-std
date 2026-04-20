@@ -80,15 +80,16 @@ Older flat-file board records (pre-`External-Board-Reviews/` layout, kept for hi
 
 ### 2.2 Current state
 
-- **HEAD:** `5dbd5bf` (2026-04-19) — path-b-test-prompt.md DOM-contract directive propagation
+- **HEAD:** `a80f239` (2026-04-20) — Step G FN-1..FN-9 + D-4/D-6 implemented in Operator Guide §8.8 after 3-round board review + Codex pre-commit code review (9/11 clean, FN-1 nit applied, FN-6 reject overridden as false positive with rationale in commit body)
 - **Tests:** 279/279 passing (`python3 -m pytest tests/ -q`) — includes 16 bundle-validator tests from U-5/PD3
 - **Validator on all 3 V1.1 fixtures:** `--report` clean, `--parity` zero errors + zero warnings
-- **Parity sweep:** 13/13 MD+HTML pairs clean (10 catalog + zustand-v2 + agency-agents + open-lovable + multica)
+- **Parity sweep:** 13/13 MD+HTML pairs clean (11 catalog entries + zustand + zustand-v2 + agency-agents + open-lovable)
 - **Repo↔package validator:** byte-identical (0 diff lines)
 - **CSS:** 824 lines
-- **Catalog:** 11 V2.4 scans — multica #11 added this session (first delegated Sonnet 4.6 scan in catalog; see `f5c523e`)
-- **All 4 Step G pre-reqs cleared** (see §2.4). Next gate: Step G kickoff board review, then first live V2.5-preview Phase 1-6 pipeline run.
-- **Commits ahead of origin:** ~60 (via git log check)
+- **Catalog:** 11 V2.4 scans (unchanged from prior session)
+- **Step G status:** board-approved (041926-step-g-execution, unanimous clean R3 SIGN OFF) + Operator Guide §8.8 fully implements FN-1..FN-9 + D-4/D-6. **Ready to execute** per FN-7 pilot-and-checkpoint ordering (zustand first → hard checkpoint → caveman + Archon).
+- **Commits ahead of origin:** 67 (via `git log --oneline origin/main..HEAD`)
+- **Cross-repo FrontierBoard SOP update** (pushed to stefans71/FrontierBoard main as `e01303a`): pre-archive dissent audit gate now mandatory SOP requirement. Not in stop-git-std repo; canonical at `/root/.frontierboard/FrontierBoard/docs/REVIEW-SOP.md` and `/root/tinkering/FrontierBoard/Git-030126/docs/REVIEW-SOP.md`.
 
 ### 2.3 Board runbook — how to run the 3-model governance board
 
@@ -162,20 +163,40 @@ Then update `docs/External-Board-Reviews/README.md` master index.
 - 3-round with 2-1 owner-directive resolutions: `docs/External-Board-Reviews/041826-step-g-kickoff/`
 - Fix-artifact-first governance: R3 brief has owner-authored BEFORE/AFTER, board votes SECOND/ADJUST/REJECT
 
-### 2.4 Step G prerequisites queue
+### 2.4 Step G — board-approved and ready to execute
 
-Per `docs/External-Board-Reviews/041826-step-g-kickoff/CONSOLIDATION.md`. **All 4 pre-reqs cleared as of HEAD `5dbd5bf` (2026-04-19).**
+**All 4 pre-reqs cleared** per `docs/External-Board-Reviews/041826-step-g-kickoff/CONSOLIDATION.md`:
 
 | Item | Scope | Status |
 |---|---|---|
 | U-1 | V2.5-preview doc integration | ✅ Done (`6a3e471`) |
 | U-3/FX-4 | `tests/fixtures/provenance.json` — separate-file approach | ✅ Done (`3c09afb`) |
-| U-5/PD3 | Bundle/citation validator — validate fact/inference/synthesis separation in findings-bundle.md | ✅ Done (`885bdcf`) — `--bundle` mode in validator, 16 tests, 5 V2.4 bundle corpus pass |
-| U-10 | Re-validate all 10 catalog scans with fixed validator (check for shell-glob evidence corruption) | ✅ Done (`6481533`) — canonical scorecard + Archon verdict alignment, all pairs clean |
+| U-5/PD3 | Bundle/citation validator | ✅ Done (`885bdcf`) — `--bundle` mode, 16 tests, 5-bundle corpus pass |
+| U-10 | Catalog re-validation | ✅ Done (`6481533`) — canonical scorecard alignment, 13/13 pairs clean |
 
-**Next gate — Step G kickoff board review.** Board required before the first live V2.5-preview Phase 1-6 pipeline run. Brief should include: V2.5-preview pipeline readiness (renderer Steps A-F done), bundle validator now live (`--bundle` mode), catalog re-validated clean, multica #11 scan provides a V2.4 baseline for structural-parity comparison on the first live V2.5 run.
+**Step G execution approach — board-approved** per `docs/External-Board-Reviews/041926-step-g-execution/CONSOLIDATION.md` (2026-04-19, unanimous clean R3 SIGN OFF, 41-item dissent audit zero silent drops). Final approved set: 9 fix artifacts (FN-1..FN-9) + 15 carry-forward dispositions (D-1..D-6, I-1..I-9) + 8 adjustments (A-1..A-8).
 
-**Step G itself:** run full Phase 1-6 pipeline against 3 shapes (likely zustand + caveman + Archon), produce form.json → render-md.py + render-html.py → validator clean + parity zero warnings + structural-parity vs V2.4 scan of same repo. See `docs/SCANNER-OPERATOR-GUIDE.md` §8.8 for the operator-facing spec.
+**FN items fully implemented** in `docs/SCANNER-OPERATOR-GUIDE.md` §8.8 per commit `a80f239` (2026-04-20, Codex-reviewed pre-commit). Operator Guide §8.8 is the canonical Step G execution spec:
+
+| FN | Scope | Location |
+|---|---|---|
+| FN-1 | Gate 6 zero-tolerance 6-point checklist + severity mapping doc | §8.8.5 gate 6.1–6.6 |
+| FN-2 | Mandatory `compute.py` + byte-for-byte equality | §8.8.3 Step 3b |
+| FN-3 | Adversarial bundle smoke test (3 fail + 1 pass cases) | §8.8.3 Step 0 |
+| FN-4 | Graduated failure rubric (no "partial pass"; gates 1–3/5 rollback, 4/6 retry, 7 STOP, ambiguity HALT) | §8.8.6 |
+| FN-5 | `tee` + `grep '^WARNING:'` count-check on `--parity` + `--bundle` | §8.8.2 step 4 |
+| FN-6 | V2.4 comparator `--parity` cleanliness pre-flight | §8.8.3 Step -1 |
+| FN-7 | Pilot-and-checkpoint ordering (zustand → checkpoint → caveman + Archon) | §8.8.2 |
+| FN-8 | Phase-boundary contamination check (all 3 targets, semantic, STOP) | §8.8.3 Step 10 + §8.8.5 gate 7 |
+| FN-9 | Bundle-complete gate before form.json authoring | §8.8.3 Step 3c |
+| D-4 | Schema hardening halt-on-smuggle watchpoint | §8.8.7 |
+| D-6 | Severity distribution automation as POST-STEP-G IMMEDIATE | §8.8.7 |
+
+**Execution target:** 3 shapes with V1.1 fixtures — zustand, caveman, Archon — at their pinned V2.4 catalog SHAs (for apples-to-apples structural-parity comparison vs V2.4 MD/HTML goldens).
+
+**Execution order (per FN-7):** zustand first end-to-end → hard checkpoint → caveman + Archon sequentially in same session. Checkpoint branching: pipeline-correctness pass → continue; pipeline-correctness fail → STOP (rollback per §8.8.6); authoring-only fail → one retry permitted.
+
+**Cross-repo SOP invariant:** pre-archive dissent audit is mandatory per FrontierBoard SOP §4 (commit `e01303a` on stefans71/FrontierBoard main). Applies to the Step G post-execution archive.
 
 ### 2.5 Deferred ledger
 

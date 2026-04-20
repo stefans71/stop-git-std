@@ -17,6 +17,71 @@ Canonical log of milestone commits with the verification state captured at commi
 
 ---
 
+## Checkpoint — 2026-04-20 — Session close: Step G board-approved + FN-1..FN-9 implemented in Operator Guide §8.8
+
+**HEAD:** `a80f239`
+**Cumulative session (spans 2 stop-git-std commits + 1 FrontierBoard upstream commit from `e297161` → `a80f239`):**
+- `e297161` Archive 041926-step-g-execution board review — unanimous clean SIGN OFF (14 files, 2079 insertions)
+- `a80f239` Implement Step G FN-1..FN-9 + D-4/D-6 carry-forwards in Operator Guide §8.8 (1 file, 104 insertions, 29 deletions)
+
+**Cross-repo FrontierBoard commit (pushed to stefans71/FrontierBoard main):**
+- `e01303a` Add mandatory pre-archive dissent audit gate to §4 (SOP update, 1 file, 31 insertions, 2 deletions)
+
+**Final state:**
+- pytest: `279 passed in 41.03s`
+- 13/13 MD+HTML pairs `--parity` clean (11 catalog entries + zustand + zustand-v2 + agency-agents + open-lovable)
+- Repo ↔ package validator: byte-identical (0-line diff, unchanged this session)
+- 11 catalog entries (unchanged this session)
+
+**What got done this session:**
+
+1. **Step G execution board review** (3-round, archived at `docs/External-Board-Reviews/041926-step-g-execution/`):
+   - R1 Blind: unanimous SIGN OFF W/ DISSENTS (3 agents × 10–15 items each)
+   - R2 Consolidation: Pragmatist upgraded to clean SIGN OFF; Codex + DeepSeek SIGN OFF W/ DISSENTS with 4 ADJUSTs between them
+   - R3 Confirmation: **all 3 agents clean SIGN OFF**. No R4 needed.
+   - Final approved set: 9 fix artifacts (FN-1..FN-9) + 15 carry-forward dispositions (D-1..D-6, I-1..I-9) + 8 adjustments (A-1..A-8)
+   - 41-item dissent audit, zero silent drops — first review to use the new pre-archive audit gate
+
+2. **Pre-archive dissent audit made mandatory** in FrontierBoard SOP §4 (new subsection + 2 anti-pattern rows + Quick Reference update). Pushed to `stefans71/FrontierBoard` main as `e01303a`. This session triggered the SOP change after owner caught that the first R2 draft silently dropped 15 DEFER/INFO/blind-spot items.
+
+3. **FN-1..FN-9 + D-4/D-6 implemented in Operator Guide §8.8** (commit `a80f239`):
+   - Pre-flight section (new): Step -2 provenance tagging, Step -1 V2.4 comparator cleanliness (FN-6), Step 0 adversarial bundle smoke test 4 cases (FN-3)
+   - Authoring reorg: Step 3b mandatory compute.py with byte-for-byte equality (FN-2), Step 3c bundle-complete gate (FN-9)
+   - Post-render (new): Step 10 phase-boundary contamination check all-target semantic STOP (FN-8), Step 11 gate acceptance
+   - §8.8.2 pilot-and-checkpoint ordering (FN-7) + tee/grep warning-count inspection (FN-5)
+   - §8.8.5 gate 6 rewritten as 6.1–6.6 zero-tolerance checklist with severity mapping doc requirement (FN-1) + gate 7 added (FN-8)
+   - §8.8.6 renamed + graduated failure disposition rubric (FN-4, Step G NOT passed until all 3 shapes pass all gates; no "partial pass" claim)
+   - §8.8.7 D-4 halt-on-smuggle watchpoint + D-6 POST-STEP-G IMMEDIATE commitment
+
+4. **Codex code review of staged diff before commit:**
+   - 9 of 11 items APPROVE clean (FN-2, FN-3, FN-4, FN-5, FN-7, FN-8, FN-9, D-4, D-6)
+   - 6 of 6 meta-integrity checks PASS (Q-M1 board review citation, Q-M2 test count update, Q-M3 cross-ref consistency, Q-M4 no stale language, Q-M5 phase structure coherent, Q-M6 cross-refs live)
+   - FN-1 nit: "No dead refs. No unreferenced evidence cards." in gate 6.6 flagged as exceeding R3-approved text. **Nit applied pre-commit** — trimmed to exact R3 text. (Governance note: that text was in R2 and was SECOND'd; R3 restatement dropped it unintentionally. Owner chose tightest R3 conformance.)
+   - FN-6 reject: flagged "or document as comparator-tainted, Step G-deferred for this shape" escape as weakening a hard STOP. **Override documented in commit body** — false positive. The clause IS in R2 board-approved text (line 521) and was SECOND'd by all 3 agents. My review brief paraphrased the decision without the clause; Codex reviewed against my paraphrase. Implementation matches actual board text.
+
+**Key decisions made this session (preserve for future sessions):**
+
+1. **Step G is NOT passed until all 3 targets clear all 7 gates** (Codex verdict-strictness principle preserved in FN-4 A-2 wording). No "partial pass" language. Graded disposition governs operational handling, not the pass/fail verdict.
+2. **Pre-archive dissent audit is mandatory SOP gate.** Zero silent drops = pass criterion. Applies to every future board review archive.
+3. **R2 briefs must include ALL dissent items** (FIX NOW + DEFER + INFO + blind spots), not just FIX NOW convergence. Stateless agents cannot vote on what they cannot see.
+4. **Code-review briefs must quote board decisions verbatim, not paraphrase.** FN-6 false-positive revealed the drafting discipline gap. (Candidate for future SOP improvement: require verbatim quoting, not summary paraphrase, in code-review briefs.)
+5. **Schema hardening (D-4) is no longer a soft defer** — now an explicit halt-on-smuggle watchpoint. Any need to invent ad hoc fields / overload existing fields / carry semantics outside schema-defined locations upgrades DEFER → FIX NOW + HALTS execution.
+6. **D-6 severity distribution automation** moved from DEFER to POST-STEP-G IMMEDIATE FOLLOW-UP. Must be built before the first production V2.5-preview scan beyond the 3 validation shapes.
+7. **FrontierBoard clone topology** on this VPS:
+   - `/root/tinkering/FrontierBoard/Git-030126/` — authoritative clone at origin/main (matches upstream including SOP update `e01303a`)
+   - `/root/.frontierboard/FrontierBoard/` — non-git reference copy with preserved `.board/` runtime history (past review artifacts). SOP content byte-identical to upstream. Left as-is per owner decision; NOT replaced with fresh clone to preserve `.board/` history.
+   - `/root/FrontierBoard/` + `/root/tinkering/FrontierBoard-Main-Review/` — stale clones at `f1ffa1c` with local-only unpushed README polish commits. Left untouched.
+   - `/root/tinkering/FrontierBoard-Main/` — 1 commit behind upstream. Left untouched.
+
+**Board approval:** Step G execution approach unanimously approved at R3. Implementation was pre-commit Codex-reviewed (9/11 clean, 2 edge cases adjudicated). Step G execution itself is board-cleared to run.
+
+**Revert paths:**
+- Revert to pre-session state: `git reset --hard 30da757` (last commit of prior session — session-close handoff)
+- Revert to post-archive, pre-implementation: `git reset --hard e297161` (archive landed but FN items not yet implemented)
+- Roll back FrontierBoard SOP change: `git -C /root/tinkering/FrontierBoard/Git-030126 revert e01303a && git -C /root/tinkering/FrontierBoard/Git-030126 push origin main` (destructive to upstream; confirm before executing)
+
+---
+
 ## Checkpoint — 2026-04-19 — Session close: Step G pre-reqs all cleared + scan #11 multica
 
 **HEAD:** `5dbd5bf`
