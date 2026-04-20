@@ -80,14 +80,14 @@ Older flat-file board records (pre-`External-Board-Reviews/` layout, kept for hi
 
 ### 2.2 Current state
 
-- **HEAD:** `be56935` (2026-04-20 session 3, pending session-close commit) — Step G 3/3 targets through the acceptance matrix.
-- **Tests:** 289/289 passing (`python3 -m pytest tests/ -q`) — includes 10 new SF1 compute.py patch tests under `TestSF1ScorecardPatches`.
-- **Validator on all 3 V2.5-preview outputs:** `--report` clean on every MD + HTML, `--parity` zero errors + zero `WARNING:` lines on all 3 pairs.
-- **Parity sweep:** 16/16 MD+HTML pairs clean (13 V2.4 catalog + 3 new v2.5-preview).
+- **HEAD:** session 4 close commit (pending) on top of `4ad4cf6` (Phase 1 tooling) on top of `c0f6dc2` (session 3 close). **V2.5-preview production-cleared.**
+- **Tests:** 319/319 passing (289 session-3 + 30 new Phase 1 harness tests under `tests/test_phase_1_harness.py::TestPhase1Harness`).
+- **Validator on all V2.5-preview outputs:** `--report` + `--parity` clean on every MD + HTML (4 pairs: zustand-v3, caveman, Archon, markitdown).
+- **Parity sweep:** 17/17 MD+HTML pairs clean (13 V2.4 catalog + 4 v2.5-preview).
 - **Repo↔package validator:** byte-identical (no package change this session).
 - **CSS:** 824 lines (unchanged).
-- **Catalog:** 14 entries — 11 `v2.4` + 3 new `v2.5-preview` (entries 12-14: zustand-v3, caveman, Archon) from Step G acceptance runs.
-- **Step G status:** **PASSED on 3 validation shapes.** All 3 targets cleared all 7 acceptance gates including gate 6.1-6.6 (finding inventory, severity, cells, verdict, split, evidence-linkage) and gate 7 (phase-boundary contamination). 12/12 scorecard cells match V2.4 comparator cell-by-cell. 19/19 finding cards match V2.4 inventory + severity. SF1 scorecard-calibration resolved via 4-round board (`docs/External-Board-Reviews/042026-sf1-calibration/`); 4 compute.py temporary compatibility patches + U-11 Archon Q3 catalog correction applied; D-7 (scorecard authority migration V1.1 → V1.2) committed as post-Step-G architecture work. **V2.5-preview is NOT yet production-cleared** — first unfixtured wild scan on a shape outside {zustand, caveman, Archon} is the remaining trigger. Until then V2.4 remains default production path.
+- **Catalog:** 15 entries — 11 `v2.4` + 4 `v2.5-preview`: 3 Step G validation (entries 12-14: zustand-v3, caveman, Archon) + 1 wild (entry 15: markitdown).
+- **V2.5-preview status: PRODUCTION-CLEARED 2026-04-20.** Step G acceptance 3/3 + first wild scan (microsoft/markitdown, 112k stars, Python monorepo — outside 3 validated shapes) cleared all 7 applicable gates using harness-gathered Phase 1. Phase 1 is now automated via `docs/phase_1_harness.py` (runs V2.4 prompt Steps 1-8 + A/B/C: gh api + OSSF + osv.dev + gitleaks + package registries + tarball + local grep + README paste scan). Spec at `docs/phase-1-checklist.md`. 30 new tests. D-8 open: harness output is richer than V1.1 schema accepts; current bridge is sidecar (`.board-review-temp/markitdown-scan/phase-1-raw-full.json`) + transformer (`.board-review-temp/markitdown-scan/transform_harness.py`); V1.2 schema hardening is the durable fix.
 - **Cross-repo FrontierBoard SOP update** (pushed to stefans71/FrontierBoard main as `e01303a`): pre-archive dissent audit gate mandatory SOP requirement. Canonical at `/root/.frontierboard/FrontierBoard/docs/REVIEW-SOP.md` and `/root/tinkering/FrontierBoard/Git-030126/docs/REVIEW-SOP.md`.
 
 ### 2.3 Board runbook — how to run the 3-model governance board
@@ -162,7 +162,11 @@ Then update `docs/External-Board-Reviews/README.md` master index.
 - 3-round with 2-1 owner-directive resolutions: `docs/External-Board-Reviews/041826-step-g-kickoff/`
 - Fix-artifact-first governance: R3 brief has owner-authored BEFORE/AFTER, board votes SECOND/ADJUST/REJECT
 
-### 2.4 Step G — PASSED 3/3, production-clearance pending
+### 2.4 Step G — PASSED 3/3; V2.5-preview PRODUCTION-CLEARED 2026-04-20
+
+**Production-clearance fired** via first wild scan on microsoft/markitdown (catalog entry #15, Python monorepo + PyPI + Dockerfile — shape outside {zustand, caveman, Archon}). Cleared all 7 applicable gates (gate 6 N/A on wild scan) using harness-gathered Phase 1 data. Phase 1 automation shipped in commit `4ad4cf6` via `docs/phase_1_harness.py` + `docs/phase-1-checklist.md` + 30 tests. See §8.8 of Operator Guide for current state.
+
+
 
 **Acceptance matrix** (commits `2c13324`, `ed68fae`, `be56935`):
 
@@ -255,7 +259,8 @@ Phase 1 gate log: `.board-review-temp/step-g-execution/phase-1-gate-log.md`
 
 Non-active items tracked for future trigger:
 
-- **D-7 — Scorecard cell authority migration V1.1 → V1.2** (SF1 board 2026-04-20, committed not conditional). Move scorecard cells from `phase_3_computed` to `phase_4_structured_llm.scorecard_cells` with structured fields (`question`, `color`, `short_answer`, `rationale` citing E-IDs, `edge_case`, `suggested_threshold_adjustment`, `computed_signal_refs`). Demote `compute_scorecard_cells()` to advisory. Gate 6.3 changes from "cell-by-cell match" to "override-explained." Step 3b byte-for-byte retained for other 7 Phase 3 ops. Trigger (disjunctive, first-to-fire): (1) first scan on shape outside current 7 catalog shapes; (2) 3 live scans post-Step-G with ≥2 shape categories; (3) 6 months post-Step-G; (4) any semantic-not-threshold drift. Rider: rubric literal-vs-intent doc for Q3; Q1 Archon governance-floor revisit (Phase 3 vs Phase 4); 11-scan comparator analysis; override-pattern telemetry. See `docs/External-Board-Reviews/042026-sf1-calibration/CONSOLIDATION.md` §6 Phase 2 + §7.
+- **D-7 — Scorecard cell authority migration V1.1 → V1.2** (SF1 board 2026-04-20, committed not conditional). Move scorecard cells from `phase_3_computed` to `phase_4_structured_llm.scorecard_cells` with structured fields (`question`, `color`, `short_answer`, `rationale` citing E-IDs, `edge_case`, `suggested_threshold_adjustment`, `computed_signal_refs`). Demote `compute_scorecard_cells()` to advisory. Gate 6.3 changes from "cell-by-cell match" to "override-explained." Step 3b byte-for-byte retained for other 7 Phase 3 ops. Trigger (disjunctive, first-to-fire): (1) first scan on shape outside current 7 catalog shapes — **FIRED 2026-04-20 by markitdown wild scan on Python-monorepo shape**; (2) 3 live scans post-Step-G with ≥2 shape categories; (3) 6 months post-Step-G; (4) any semantic-not-threshold drift. Trigger (1) fired; schedule V1.2 design work. Rider: rubric literal-vs-intent doc for Q3; Q1 Archon governance-floor revisit (Phase 3 vs Phase 4); 11-scan comparator analysis; override-pattern telemetry. See `docs/External-Board-Reviews/042026-sf1-calibration/CONSOLIDATION.md` §6 Phase 2 + §7.
+- **D-8 — Schema V1.2 hardening for harness output** (added 2026-04-20 session 4 by markitdown wild scan). `docs/phase_1_harness.py` produces richer data than V1.1 schema accepts: per-family `dangerous_primitives` hit tables, `dependencies.{dependabot_alerts, osv_lookups, dependabot_config}`, `pr_review.{self_merge_count, total_merged_lifetime, security_flagged_count}`, `ossf_scorecard.http_status`, type mismatches on `agent_rule_files`/`install_hooks`/`executable_files` (list vs object wrapper), `pre_flight.symlinks_stripped` (int vs bool). Current bridge: sidecar `phase-1-raw-full.json` + `.board-review-temp/markitdown-scan/transform_harness.py`. D-8 scope: (a) V1.2 schema with expanded field surface matching harness output; (b) move transformer logic into harness itself; (c) regenerate fixtures for the 4 validated shapes; (d) update renderer partials for new fields. Trigger: POST-STEP-G IMMEDIATE, co-schedule with D-7. See Operator Guide §8.8.7 D-8 entry for spec.
 - **Schema hardening** (Codex R2 defer-ledger) — `scan-schema.json` V1.1 doesn't fully formalize the prompt output spec. Gaps: Scanner Integrity section 00 hit-level structure; Section 08 methodology fields beyond version marker. Trigger: after Step G surfaces concrete schema pain.
 - **`github-scan-package-V2/` V2.5 refresh** — full docs + renderer sync to package. Trigger: after Step G passes acceptance.
 - **V1.1+ roadmap items** (from `docs/board-review-pipeline-methodology.md`): RD1 (automate structured LLM), SD2 (kind+domain typing), RD4 (assumptions field), ~~PD3 (bundle validator)~~ **shipped 2026-04-19 as U-5/PD3** (`885bdcf`), SD3/SD4/SD7/SD8 (V1.2 schema items), SD9/SD10/RD5/PD1/PD4/PD6/PD7 (V2.0+). All triggers documented in the methodology record; none other than PD3 yet fired.

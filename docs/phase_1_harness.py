@@ -296,11 +296,35 @@ def step_1_community_profile(owner_repo: str) -> dict:
                 "has_security_policy": None,
                 "license_spdx": None}
     files = data.get("files") or {}
+    # community/profile has API quirks — can miss SECURITY.md at root even when
+    # present (observed on microsoft/markitdown). Fall back to direct contents
+    # check for all three policy files. This is a V2.4 prompt silent gap.
+    has_security_policy = bool(files.get("security_policy"))
+    if not has_security_policy:
+        for path in ["SECURITY.md", ".github/SECURITY.md", "docs/SECURITY.md"]:
+            rc2, _ = _gh_api(f"repos/{owner_repo}/contents/{path}")
+            if rc2 == 0:
+                has_security_policy = True
+                break
+    has_contributing = bool(files.get("contributing"))
+    if not has_contributing:
+        for path in ["CONTRIBUTING.md", ".github/CONTRIBUTING.md", "docs/CONTRIBUTING.md"]:
+            rc2, _ = _gh_api(f"repos/{owner_repo}/contents/{path}")
+            if rc2 == 0:
+                has_contributing = True
+                break
+    has_code_of_conduct = bool(files.get("code_of_conduct"))
+    if not has_code_of_conduct:
+        for path in ["CODE_OF_CONDUCT.md", ".github/CODE_OF_CONDUCT.md"]:
+            rc2, _ = _gh_api(f"repos/{owner_repo}/contents/{path}")
+            if rc2 == 0:
+                has_code_of_conduct = True
+                break
     return {
         "health_percentage": data.get("health_percentage"),
-        "has_code_of_conduct": bool(files.get("code_of_conduct")),
-        "has_contributing": bool(files.get("contributing")),
-        "has_security_policy": bool(files.get("security_policy")),
+        "has_code_of_conduct": has_code_of_conduct,
+        "has_contributing": has_contributing,
+        "has_security_policy": has_security_policy,
         "license_spdx": (files.get("license") or {}).get("spdx_id")
         if isinstance(files.get("license"), dict) else None,
     }

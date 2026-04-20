@@ -17,6 +17,46 @@ Canonical log of milestone commits with the verification state captured at commi
 
 ---
 
+## Checkpoint — 2026-04-20 (session 4) — V2.5-preview PRODUCTION-CLEARED via first wild scan
+
+**HEAD:** session 4 close commit (pending) on top of `4ad4cf6` (Phase 1 tooling)
+
+**Session 4 commits from `c0f6dc2` (session 3 close) →:**
+
+```
+<session-4-close>  Session 4 close: markitdown wild scan + production clearance + D-8 logged
+4ad4cf6            Phase 1 tooling: checklist + harness + tests
+c0f6dc2            [session 3 close base]
+```
+
+**Final state:**
+
+- Tests: 319/319 passing (289 session-3 + 30 new `tests/test_phase_1_harness.py::TestPhase1Harness`)
+- Catalog: 15 entries (11 v2.4 + 4 v2.5-preview: zustand-v3, caveman, Archon, markitdown)
+- Parity sweep: 17/17 MD+HTML pairs clean
+- V2.5-preview: PRODUCTION-CLEARED 2026-04-20
+- Phase 1 automation: `docs/phase_1_harness.py` implements V2.4 prompt Steps 1-8 + A/B/C end-to-end
+- D-8 open: V1.2 schema hardening to natively accept harness output (bridge via sidecar + transformer)
+
+**What got done this session:**
+
+1. **Surfaced the Phase 1 ad-hoc gap.** Mid-scan on microsoft/markitdown, acknowledged that the wild-scan attempt was ~60% of the V2.4 prompt's investigation steps because no mapping document or harness existed. Reverted to building tooling before completing the scan.
+2. **Authored `docs/phase-1-checklist.md`** — canonical mapping of V2.4 prompt Steps 1-8 + A/B/C to phase_1_raw_capture fields. Every external source (gh api, OSSF Scorecard API, osv.dev, gitleaks, PyPI/npm/crates.io/RubyGems, tarball extraction + local grep, README paste-scan) paired with its target field and failure mode.
+3. **Authored `docs/phase_1_harness.py`** — executable implementation. ~60 functions across pre-flight + Steps 1-8 + A-pre + A + C + monorepo + batch-merge + defensive-configs + coverage-affirmations. Fixed V2.4 prompt typo (`tar --no-absolute-names` — bsdtar only; GNU tar default already safe).
+4. **Authored `tests/test_phase_1_harness.py`** — 30 unit tests with subprocess mocking; end-to-end smoke test asserts all 28 expected fields populate.
+5. **Ran harness on microsoft/markitdown.** Harness surfaced data my ad hoc pass missed, including `archive_unsafe` grep hit on `_zip_converter.py:96` (the exact file in issue #1514) + 2 sibling exposures not separately issue-filed.
+6. **Surfaced D-8.** Harness output is richer than V1.1 schema accepts (dangerous_primitives shape, dependencies shape, pr_review extras, etc). Per §8.8.7 watchpoint, halted and offered user option to either harden schema (board review needed) or bridge via sidecar. User chose bridge — `.board-review-temp/markitdown-scan/transform_harness.py` emits V1.1-compliant form + `phase-1-raw-full.json` sidecar preserves richness. D-8 logged for V1.2 schema update.
+7. **Harness bug discovered + fixed in-session.** community/profile API doesn't always report `files.security_policy` even when SECURITY.md is present at root (markitdown hit). Added direct-path fallback in harness.
+8. **Completed markitdown scan.** Authored Phase 4 findings (F0-F7, 8 total) + evidence (E1-E11) + split-axis (Deployment) + verdict_exhibits + prose from bundle. Schema CLEAN. Rendered MD+HTML deterministically. All 7 applicable gates pass (gate 6 N/A on wild scan).
+9. **Real findings from the scan:** 2 live vulns in default install path when processing untrusted files (F1 XXE, F2 Zip Bomb — both with harness-surfaced sibling exposures); F3 disclosure gap (CVE-2025-64512 silent patch); F0 governance softness (ruleset requires PR but 0 approving reviewers, 76 self-merges, no CODEOWNERS).
+10. **Session-close commit** — scanner-catalog #15, Operator Guide §8.8 opening + §8.8.7 D-8, REPO_MAP §2.2/§2.4/§2.5, CLAUDE.md, AUDIT_TRAIL. All declare V2.5-preview production-cleared.
+
+**Revert paths:**
+
+- Revert session-close commit → state back at session 3 close; V2.5-preview still Step-G-validated-only.
+- Revert `4ad4cf6` → no Phase 1 tooling, no markitdown scan; state back at session 3.
+- Cherry-pick to keep tooling but drop markitdown scan: leave `4ad4cf6` in; revert only the session-close commit's MD/HTML/bundle creations.
+
 ## Checkpoint — 2026-04-20 (session 3 close) — Step G PASSED 3/3; V2.5-preview Step-G-validated; production-clearance pending first wild scan
 
 **HEAD:** (pending session-close commit on top of `be56935`)
