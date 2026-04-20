@@ -1,0 +1,4689 @@
+{
+  "$comment": "Xray-core V1.2 wild scan \u2014 fourth wild V1.2 scan; first after V1.2.x signal widening (d803faf).",
+  "schema_version": "V1.2",
+  "_meta": {
+    "scanner_version": "V2.5-preview",
+    "prompt_version": "V2.4",
+    "scan_started_at": "2026-04-20T12:38:23.447359+00:00",
+    "model": "claude-opus-4-7 (via Claude Code)",
+    "scan_status": "completed",
+    "scan_completed_at": "2026-04-20T12:47:22.517211+00:00"
+  },
+  "target": {
+    "owner": "XTLS",
+    "repo": "Xray-core",
+    "full_name": "XTLS/Xray-core",
+    "url": "https://github.com/XTLS/Xray-core"
+  },
+  "scanner_integrity": {
+    "injection_matches": 0,
+    "actionable_count": 0,
+    "findings": []
+  },
+  "phase_1_raw_capture": {
+    "pre_flight": {
+      "head_sha": "b4650360d6a05c2842d2c7157fb8cb864bba637a",
+      "default_branch": "main",
+      "tarball_extracted": true,
+      "tarball_file_count": 976,
+      "symlinks_stripped": 0,
+      "api_rate_limit": {
+        "limit": 5000,
+        "remaining": 4995,
+        "reset": 1776688834,
+        "used": 5
+      }
+    },
+    "repo_metadata": {
+      "name": "Xray-core",
+      "description": "Xray, Penetrates Everything. Also the best v2ray-core. Where the magic happens. An open platform for various uses.",
+      "created_at": "2020-11-09T11:23:10Z",
+      "pushed_at": "2026-04-20T09:12:13Z",
+      "stargazer_count": 37309,
+      "fork_count": 5201,
+      "archived": false,
+      "fork": false,
+      "has_issues_enabled": true,
+      "primary_language": "Go",
+      "topics": [
+        "anticensorship",
+        "dns",
+        "network",
+        "proxy",
+        "reality",
+        "shadowsocks",
+        "socks5",
+        "tls",
+        "trojan",
+        "tunnel",
+        "utls",
+        "vision",
+        "vless",
+        "vmess",
+        "vpn",
+        "wireguard",
+        "xhttp",
+        "xray",
+        "xtls",
+        "xudp"
+      ],
+      "license_spdx": "MPL-2.0",
+      "default_branch": "main",
+      "open_issues_count": 42,
+      "size_kb": 29826
+    },
+    "contributors": {
+      "top_contributors": [
+        {
+          "contributions": 405,
+          "login": "RPRX"
+        },
+        {
+          "contributions": 381,
+          "login": "dependabot[bot]"
+        },
+        {
+          "contributions": 210,
+          "login": "yuhan6665"
+        },
+        {
+          "contributions": 131,
+          "login": "Fangliding"
+        },
+        {
+          "contributions": 42,
+          "login": "mmmray"
+        },
+        {
+          "contributions": 39,
+          "login": "nekohasekai"
+        }
+      ],
+      "total_contributor_count": 100
+    },
+    "maintainer_accounts": {
+      "accounts": [
+        {
+          "bio": "Cryptography and Internet. Where the magic happens.",
+          "company": null,
+          "created_at": "2020-09-19T17:20:27Z",
+          "followers": 4476,
+          "login": "XTLS",
+          "public_repos": 24,
+          "type": "Organization",
+          "role": "owner"
+        },
+        {
+          "bio": "VLESS & XTLS & REALITY & XHTTP",
+          "company": "Member of Project X Community",
+          "created_at": "2020-04-08T07:44:13Z",
+          "followers": 2833,
+          "login": "RPRX",
+          "public_repos": 11,
+          "type": "User",
+          "role": "contributor",
+          "contributions": 405
+        },
+        {
+          "bio": null,
+          "company": null,
+          "created_at": "2019-04-16T22:34:25Z",
+          "followers": 0,
+          "login": "dependabot[bot]",
+          "public_repos": 0,
+          "type": "Bot",
+          "role": "contributor",
+          "contributions": 381
+        },
+        {
+          "bio": null,
+          "company": null,
+          "created_at": "2012-03-29T22:58:39Z",
+          "followers": 486,
+          "login": "yuhan6665",
+          "public_repos": 12,
+          "type": "User",
+          "role": "contributor",
+          "contributions": 210
+        },
+        {
+          "bio": "\ud835\udcd5\ud835\udcd0\ud835\udcdd\ud835\udcd6\ud835\udcdb\ud835\udcd8\ud835\udcd3\ud835\udcd8\ud835\udcdd\ud835\udcd6||24\u5c81\uff0c\u662f\u5b66\u751f||ACCEED\u96c6\u56e2\u98df\u54c1\u5b89\u5168\u603b\u76d1||\u77e5\u4e4e\u90a3\u4e2a\u662f\u5192\u724c\u8d27(((||PGP key:c71fb17fb95c109c",
+          "company": "ACCEED Catering Group",
+          "created_at": "2018-12-02T13:11:40Z",
+          "followers": 116,
+          "login": "Fangliding",
+          "public_repos": 82,
+          "type": "User",
+          "role": "contributor",
+          "contributions": 131
+        },
+        {
+          "bio": "mmmray@proton.me",
+          "company": null,
+          "created_at": "2023-08-11T11:36:10Z",
+          "followers": 63,
+          "login": "mmmray",
+          "public_repos": 10,
+          "type": "User",
+          "role": "contributor",
+          "contributions": 42
+        }
+      ]
+    },
+    "ossf_scorecard": {
+      "queried": true,
+      "indexed": true,
+      "http_status": 200,
+      "overall_score": 5.1,
+      "checks": [
+        {
+          "name": "Code-Review",
+          "score": 8
+        },
+        {
+          "name": "Maintained",
+          "score": 10
+        },
+        {
+          "name": "Security-Policy",
+          "score": 10
+        },
+        {
+          "name": "Dangerous-Workflow",
+          "score": 10
+        },
+        {
+          "name": "Token-Permissions",
+          "score": 0
+        },
+        {
+          "name": "CII-Best-Practices",
+          "score": 0
+        },
+        {
+          "name": "Binary-Artifacts",
+          "score": 10
+        },
+        {
+          "name": "Fuzzing",
+          "score": 0
+        },
+        {
+          "name": "License",
+          "score": 10
+        },
+        {
+          "name": "Pinned-Dependencies",
+          "score": 0
+        },
+        {
+          "name": "Packaging",
+          "score": 10
+        },
+        {
+          "name": "Branch-Protection",
+          "score": 0
+        },
+        {
+          "name": "Signed-Releases",
+          "score": 0
+        },
+        {
+          "name": "SAST",
+          "score": 0
+        }
+      ],
+      "raw_response": {
+        "date": "2026-04-13",
+        "commit": "d342361c893f22458913c6374aadf98e3a911fac"
+      }
+    },
+    "community_profile": {
+      "health_percentage": 62,
+      "has_code_of_conduct": true,
+      "has_contributing": false,
+      "has_security_policy": true,
+      "license_spdx": "MPL-2.0"
+    },
+    "branch_protection": {
+      "classic": {
+        "status": 404
+      },
+      "rulesets": {
+        "entries": [],
+        "count": 0
+      },
+      "rules_on_default": {
+        "entries": [],
+        "count": 0
+      },
+      "owner_type": "Organization",
+      "org_rulesets": {
+        "status": "error",
+        "entries": []
+      }
+    },
+    "codeowners": {
+      "found": false,
+      "path": null,
+      "content": null,
+      "locations_checked": [
+        "CODEOWNERS",
+        ".github/CODEOWNERS",
+        "docs/CODEOWNERS",
+        ".gitlab/CODEOWNERS"
+      ]
+    },
+    "releases": {
+      "entries": [
+        {
+          "tag_name": "v26.4.17",
+          "published_at": "2026-04-17T23:05:34Z",
+          "prerelease": true,
+          "draft": false,
+          "author": "RPRX"
+        },
+        {
+          "tag_name": "v26.4.15",
+          "published_at": "2026-04-15T23:57:14Z",
+          "prerelease": true,
+          "draft": false,
+          "author": "RPRX"
+        },
+        {
+          "tag_name": "v26.4.13",
+          "published_at": "2026-04-13T22:51:31Z",
+          "prerelease": true,
+          "draft": false,
+          "author": "RPRX"
+        },
+        {
+          "tag_name": "v26.3.27",
+          "published_at": "2026-03-27T17:51:11Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "RPRX"
+        },
+        {
+          "tag_name": "v26.3.23",
+          "published_at": "2026-03-23T10:24:30Z",
+          "prerelease": true,
+          "draft": false,
+          "author": "RPRX"
+        },
+        {
+          "tag_name": "v26.2.6",
+          "published_at": "2026-02-06T10:05:09Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "RPRX"
+        },
+        {
+          "tag_name": "v26.2.4",
+          "published_at": "2026-02-04T00:50:39Z",
+          "prerelease": true,
+          "draft": false,
+          "author": "RPRX"
+        },
+        {
+          "tag_name": "v26.2.2",
+          "published_at": "2026-02-02T09:50:04Z",
+          "prerelease": true,
+          "draft": false,
+          "author": "RPRX"
+        },
+        {
+          "tag_name": "v26.1.31",
+          "published_at": "2026-01-31T14:45:15Z",
+          "prerelease": true,
+          "draft": false,
+          "author": "RPRX"
+        },
+        {
+          "tag_name": "v26.1.23",
+          "published_at": "2026-01-23T15:55:09Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "RPRX"
+        },
+        {
+          "tag_name": "v26.1.18",
+          "published_at": "2026-01-18T06:10:04Z",
+          "prerelease": true,
+          "draft": false,
+          "author": "RPRX"
+        },
+        {
+          "tag_name": "v26.1.13",
+          "published_at": "2026-01-13T15:33:59Z",
+          "prerelease": true,
+          "draft": false,
+          "author": "RPRX"
+        },
+        {
+          "tag_name": "v25.12.8",
+          "published_at": "2025-12-08T13:40:36Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "RPRX"
+        },
+        {
+          "tag_name": "v25.12.2",
+          "published_at": "2025-12-02T13:56:49Z",
+          "prerelease": true,
+          "draft": false,
+          "author": "RPRX"
+        },
+        {
+          "tag_name": "v25.12.1",
+          "published_at": "2025-12-01T14:51:11Z",
+          "prerelease": true,
+          "draft": false,
+          "author": "RPRX"
+        },
+        {
+          "tag_name": "v25.10.15",
+          "published_at": "2025-10-15T08:09:35Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "RPRX"
+        },
+        {
+          "tag_name": "v25.9.11",
+          "published_at": "2025-09-10T11:49:27Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "RPRX"
+        },
+        {
+          "tag_name": "v25.9.10",
+          "published_at": "2025-09-10T01:42:20Z",
+          "prerelease": true,
+          "draft": false,
+          "author": "RPRX"
+        },
+        {
+          "tag_name": "v25.9.5",
+          "published_at": "2025-09-05T09:05:29Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "RPRX"
+        },
+        {
+          "tag_name": "v25.8.31",
+          "published_at": "2025-08-31T13:32:14Z",
+          "prerelease": true,
+          "draft": false,
+          "author": "RPRX"
+        },
+        {
+          "tag_name": "v25.8.29",
+          "published_at": "2025-08-29T14:35:20Z",
+          "prerelease": true,
+          "draft": false,
+          "author": "RPRX"
+        },
+        {
+          "tag_name": "v25.8.3",
+          "published_at": "2025-08-03T11:14:23Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "RPRX"
+        },
+        {
+          "tag_name": "v25.7.26",
+          "published_at": "2025-07-26T10:05:43Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "RPRX"
+        },
+        {
+          "tag_name": "v25.7.25",
+          "published_at": "2025-07-25T15:11:11Z",
+          "prerelease": true,
+          "draft": false,
+          "author": "RPRX"
+        },
+        {
+          "tag_name": "v25.7.24",
+          "published_at": "2025-07-24T02:20:07Z",
+          "prerelease": true,
+          "draft": false,
+          "author": "RPRX"
+        },
+        {
+          "tag_name": "v25.7.23",
+          "published_at": "2025-07-23T12:57:22Z",
+          "prerelease": true,
+          "draft": false,
+          "author": "RPRX"
+        },
+        {
+          "tag_name": "v25.6.8",
+          "published_at": "2025-06-08T13:54:03Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "RPRX"
+        },
+        {
+          "tag_name": "v25.6.7",
+          "published_at": "2025-06-07T13:40:23Z",
+          "prerelease": true,
+          "draft": false,
+          "author": "RPRX"
+        },
+        {
+          "tag_name": "v25.5.16",
+          "published_at": "2025-05-16T12:21:07Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "RPRX"
+        },
+        {
+          "tag_name": "v25.4.30",
+          "published_at": "2025-04-30T04:44:14Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "RPRX"
+        },
+        {
+          "tag_name": "v25.3.31",
+          "published_at": "2025-03-31T12:37:43Z",
+          "prerelease": true,
+          "draft": false,
+          "author": "RPRX"
+        },
+        {
+          "tag_name": "v25.3.6",
+          "published_at": "2025-03-06T13:51:25Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "RPRX"
+        },
+        {
+          "tag_name": "v25.3.3",
+          "published_at": "2025-03-03T15:31:36Z",
+          "prerelease": true,
+          "draft": false,
+          "author": "RPRX"
+        },
+        {
+          "tag_name": "v25.2.21",
+          "published_at": "2025-02-21T07:59:10Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "RPRX"
+        },
+        {
+          "tag_name": "v25.2.18",
+          "published_at": "2025-02-18T11:59:09Z",
+          "prerelease": true,
+          "draft": false,
+          "author": "RPRX"
+        },
+        {
+          "tag_name": "v25.1.30",
+          "published_at": "2025-01-30T10:58:55Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "RPRX"
+        },
+        {
+          "tag_name": "v25.1.1",
+          "published_at": "2025-01-01T12:06:14Z",
+          "prerelease": true,
+          "draft": false,
+          "author": "RPRX"
+        },
+        {
+          "tag_name": "v24.12.31",
+          "published_at": "2024-12-31T12:12:57Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "RPRX"
+        },
+        {
+          "tag_name": "v24.12.28",
+          "published_at": "2024-12-28T13:59:18Z",
+          "prerelease": true,
+          "draft": false,
+          "author": "RPRX"
+        },
+        {
+          "tag_name": "v24.12.18",
+          "published_at": "2024-12-18T21:39:02Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "RPRX"
+        },
+        {
+          "tag_name": "v24.12.15",
+          "published_at": "2024-12-15T12:40:27Z",
+          "prerelease": true,
+          "draft": false,
+          "author": "RPRX"
+        },
+        {
+          "tag_name": "v24.11.30",
+          "published_at": "2024-11-30T06:13:50Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "RPRX"
+        },
+        {
+          "tag_name": "v24.11.21",
+          "published_at": "2024-11-21T05:50:50Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "RPRX"
+        },
+        {
+          "tag_name": "v24.11.11",
+          "published_at": "2024-11-11T04:25:39Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "RPRX"
+        },
+        {
+          "tag_name": "v24.11.5",
+          "published_at": "2024-11-05T00:55:31Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "RPRX"
+        },
+        {
+          "tag_name": "v24.10.31",
+          "published_at": "2024-10-31T08:00:08Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "RPRX"
+        },
+        {
+          "tag_name": "v24.10.16",
+          "published_at": "2024-10-16T04:11:06Z",
+          "prerelease": true,
+          "draft": false,
+          "author": "RPRX"
+        },
+        {
+          "tag_name": "v24.9.30",
+          "published_at": "2024-09-30T15:20:59Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "RPRX"
+        },
+        {
+          "tag_name": "v24.9.19",
+          "published_at": "2024-09-19T01:15:20Z",
+          "prerelease": true,
+          "draft": false,
+          "author": "RPRX"
+        },
+        {
+          "tag_name": "v24.9.16",
+          "published_at": "2024-09-16T12:49:22Z",
+          "prerelease": true,
+          "draft": false,
+          "author": "RPRX"
+        },
+        {
+          "tag_name": "v24.9.7",
+          "published_at": "2024-09-07T00:50:31Z",
+          "prerelease": true,
+          "draft": false,
+          "author": "RPRX"
+        },
+        {
+          "tag_name": "v1.8.24",
+          "published_at": "2024-08-30T07:01:34Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "RPRX"
+        },
+        {
+          "tag_name": "v1.8.23",
+          "published_at": "2024-07-29T10:23:12Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "RPRX"
+        },
+        {
+          "tag_name": "v1.8.21",
+          "published_at": "2024-07-21T21:37:37Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "RPRX"
+        },
+        {
+          "tag_name": "v1.8.20",
+          "published_at": "2024-07-20T06:11:20Z",
+          "prerelease": true,
+          "draft": false,
+          "author": "RPRX"
+        },
+        {
+          "tag_name": "v1.8.19",
+          "published_at": "2024-07-17T13:57:23Z",
+          "prerelease": true,
+          "draft": false,
+          "author": "RPRX"
+        },
+        {
+          "tag_name": "v1.8.18",
+          "published_at": "2024-07-15T13:59:56Z",
+          "prerelease": true,
+          "draft": false,
+          "author": "RPRX"
+        },
+        {
+          "tag_name": "v1.8.17",
+          "published_at": "2024-07-12T11:02:32Z",
+          "prerelease": true,
+          "draft": false,
+          "author": "RPRX"
+        },
+        {
+          "tag_name": "v1.8.16",
+          "published_at": "2024-06-21T01:20:52Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "RPRX"
+        },
+        {
+          "tag_name": "v1.8.15",
+          "published_at": "2024-06-18T05:45:48Z",
+          "prerelease": true,
+          "draft": false,
+          "author": "RPRX"
+        },
+        {
+          "tag_name": "v1.8.13",
+          "published_at": "2024-05-22T22:03:07Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "RPRX"
+        },
+        {
+          "tag_name": "v1.8.12",
+          "published_at": "2024-05-22T04:37:19Z",
+          "prerelease": true,
+          "draft": false,
+          "author": "RPRX"
+        },
+        {
+          "tag_name": "v1.8.11",
+          "published_at": "2024-04-26T03:37:22Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "RPRX"
+        },
+        {
+          "tag_name": "v1.8.10",
+          "published_at": "2024-03-30T09:00:59Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "RPRX"
+        },
+        {
+          "tag_name": "v1.8.9",
+          "published_at": "2024-03-11T02:07:14Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "yuhan6665"
+        },
+        {
+          "tag_name": "v1.8.8",
+          "published_at": "2024-02-25T14:45:48Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "yuhan6665"
+        },
+        {
+          "tag_name": "v1.8.7",
+          "published_at": "2024-01-07T21:30:54Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "yuhan6665"
+        },
+        {
+          "tag_name": "v1.8.6",
+          "published_at": "2023-11-18T04:10:00Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "yuhan6665"
+        },
+        {
+          "tag_name": "v1.8.4",
+          "published_at": "2023-08-29T07:21:26Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "RPRX"
+        },
+        {
+          "tag_name": "v1.8.3",
+          "published_at": "2023-06-19T00:39:15Z",
+          "prerelease": true,
+          "draft": false,
+          "author": "RPRX"
+        },
+        {
+          "tag_name": "v1.8.1",
+          "published_at": "2023-04-17T23:37:56Z",
+          "prerelease": true,
+          "draft": false,
+          "author": "RPRX"
+        },
+        {
+          "tag_name": "v1.8.0",
+          "published_at": "2023-03-09T13:57:56Z",
+          "prerelease": true,
+          "draft": false,
+          "author": "RPRX"
+        },
+        {
+          "tag_name": "v1.7.5",
+          "published_at": "2023-02-08T11:33:33Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "RPRX"
+        },
+        {
+          "tag_name": "v1.7.3",
+          "published_at": "2023-02-02T05:50:42Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "RPRX"
+        },
+        {
+          "tag_name": "v1.7.2",
+          "published_at": "2023-01-07T17:52:05Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "RPRX"
+        },
+        {
+          "tag_name": "v1.7.1",
+          "published_at": "2023-01-07T02:55:10Z",
+          "prerelease": true,
+          "draft": false,
+          "author": "yuhan6665"
+        },
+        {
+          "tag_name": "v1.7.0",
+          "published_at": "2022-12-26T01:52:02Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "yuhan6665"
+        },
+        {
+          "tag_name": "v1.6.6-2",
+          "published_at": "2022-12-13T02:53:32Z",
+          "prerelease": true,
+          "draft": false,
+          "author": "yuhan6665"
+        },
+        {
+          "tag_name": "v1.6.5",
+          "published_at": "2022-11-28T00:02:30Z",
+          "prerelease": true,
+          "draft": false,
+          "author": "yuhan6665"
+        },
+        {
+          "tag_name": "v1.6.4",
+          "published_at": "2022-11-14T02:40:03Z",
+          "prerelease": true,
+          "draft": false,
+          "author": "yuhan6665"
+        },
+        {
+          "tag_name": "v1.6.3",
+          "published_at": "2022-11-07T03:53:23Z",
+          "prerelease": true,
+          "draft": false,
+          "author": "yuhan6665"
+        },
+        {
+          "tag_name": "v1.6.2",
+          "published_at": "2022-10-29T05:06:45Z",
+          "prerelease": true,
+          "draft": false,
+          "author": "yuhan6665"
+        },
+        {
+          "tag_name": "v1.6.1",
+          "published_at": "2022-10-22T01:34:39Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "yuhan6665"
+        },
+        {
+          "tag_name": "v1.6.0",
+          "published_at": "2022-09-18T15:06:21Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "yuhan6665"
+        },
+        {
+          "tag_name": "v1.5.10",
+          "published_at": "2022-08-28T03:30:51Z",
+          "prerelease": true,
+          "draft": false,
+          "author": "yuhan6665"
+        },
+        {
+          "tag_name": "v1.5.9",
+          "published_at": "2022-07-16T02:19:09Z",
+          "prerelease": true,
+          "draft": false,
+          "author": "yuhan6665"
+        },
+        {
+          "tag_name": "v1.5.8",
+          "published_at": "2022-06-20T00:38:42Z",
+          "prerelease": true,
+          "draft": false,
+          "author": "yuhan6665"
+        },
+        {
+          "tag_name": "v1.5.7",
+          "published_at": "2022-06-05T12:37:28Z",
+          "prerelease": true,
+          "draft": false,
+          "author": "yuhan6665"
+        },
+        {
+          "tag_name": "v1.5.6",
+          "published_at": "2022-05-29T03:13:07Z",
+          "prerelease": true,
+          "draft": false,
+          "author": "yuhan6665"
+        },
+        {
+          "tag_name": "v1.5.5",
+          "published_at": "2022-04-24T00:28:47Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "yuhan6665"
+        },
+        {
+          "tag_name": "v1.5.4",
+          "published_at": "2022-03-13T02:11:48Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "yuhan6665"
+        },
+        {
+          "tag_name": "v1.5.3",
+          "published_at": "2022-01-28T23:38:30Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "yuhan6665"
+        },
+        {
+          "tag_name": "v1.5.2",
+          "published_at": "2021-12-24T14:42:16Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "yuhan6665"
+        },
+        {
+          "tag_name": "v1.5.1",
+          "published_at": "2021-12-15T03:55:27Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "yuhan6665"
+        },
+        {
+          "tag_name": "v1.5.0",
+          "published_at": "2021-10-20T07:10:56Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "badO1a5A90"
+        },
+        {
+          "tag_name": "v1.4.5",
+          "published_at": "2021-09-23T03:47:56Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "badO1a5A90"
+        },
+        {
+          "tag_name": "v1.4.3",
+          "published_at": "2021-09-07T17:45:11Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "badO1a5A90"
+        },
+        {
+          "tag_name": "v1.4.2",
+          "published_at": "2021-04-01T13:10:13Z",
+          "prerelease": false,
+          "draft": false,
+          "author": null
+        },
+        {
+          "tag_name": "v1.4.0",
+          "published_at": "2021-03-14T15:59:51Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "RPRX"
+        },
+        {
+          "tag_name": "v1.3.1",
+          "published_at": "2021-03-02T15:03:56Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "AkinoKaede"
+        }
+      ],
+      "total_count": 100
+    },
+    "security_advisories": {
+      "count": 0,
+      "entries": []
+    },
+    "workflows": {
+      "entries": [
+        {
+          "name": "Build and Release",
+          "path": ".github/workflows/release.yml",
+          "state": "active"
+        },
+        {
+          "name": "Test",
+          "path": ".github/workflows/test.yml",
+          "state": "active"
+        },
+        {
+          "name": "Build and Push Docker Image",
+          "path": ".github/workflows/docker.yml",
+          "state": "active"
+        },
+        {
+          "name": "Dependabot Updates",
+          "path": "dynamic/dependabot/dependabot-updates",
+          "state": "active"
+        },
+        {
+          "name": "Build and Release for Windows 7",
+          "path": ".github/workflows/release-win7.yml",
+          "state": "active"
+        },
+        {
+          "name": "Scheduled assets update",
+          "path": ".github/workflows/scheduled-assets-update.yml",
+          "state": "active"
+        },
+        {
+          "name": "Dependency Graph",
+          "path": "dynamic/dependabot/update-graph",
+          "state": "active"
+        },
+        {
+          "name": "Copilot coding agent",
+          "path": "dynamic/copilot-swe-agent/copilot",
+          "state": "active"
+        },
+        {
+          "name": "Copilot code review",
+          "path": "dynamic/copilot-pull-request-reviewer/copilot-pull-request-reviewer",
+          "state": "active"
+        },
+        {
+          "name": "Extended or Back-seated Nightly Build",
+          "path": ".github/workflows/extended-nightly.yml",
+          "state": "active"
+        }
+      ],
+      "count": 10,
+      "pull_request_target_count": 0
+    },
+    "workflow_contents": {
+      "entries": [
+        {
+          "path": ".github/workflows/docker.yml",
+          "content_lines": 133,
+          "sha_pinned_actions_count": 0,
+          "tag_pinned_actions_count": 6,
+          "has_pull_request_target": false,
+          "permissions_block_present": false
+        },
+        {
+          "path": ".github/workflows/scheduled-assets-update.yml",
+          "content_lines": 129,
+          "sha_pinned_actions_count": 0,
+          "tag_pinned_actions_count": 6,
+          "has_pull_request_target": false,
+          "permissions_block_present": false
+        },
+        {
+          "path": ".github/workflows/release.yml",
+          "content_lines": 287,
+          "sha_pinned_actions_count": 0,
+          "tag_pinned_actions_count": 9,
+          "has_pull_request_target": false,
+          "permissions_block_present": false
+        },
+        {
+          "path": ".github/workflows/release-win7.yml",
+          "content_lines": 180,
+          "sha_pinned_actions_count": 0,
+          "tag_pinned_actions_count": 8,
+          "has_pull_request_target": false,
+          "permissions_block_present": false
+        },
+        {
+          "path": ".github/workflows/test.yml",
+          "content_lines": 77,
+          "sha_pinned_actions_count": 0,
+          "tag_pinned_actions_count": 5,
+          "has_pull_request_target": false,
+          "permissions_block_present": false
+        }
+      ]
+    },
+    "code_patterns": {
+      "agent_rule_files": [],
+      "readme_paste_blocks": {
+        "scanned": true,
+        "entries": [],
+        "entries_count": 0
+      },
+      "dangerous_primitives": {
+        "scanned": true,
+        "exec": {
+          "hit_count": 0,
+          "files": []
+        },
+        "deserialization": {
+          "hit_count": 2,
+          "files": [
+            {
+              "file": "infra/conf/wireguard.go",
+              "first_match": {
+                "line": 151,
+                "snippet": "\treturn \"\", errors.New(\"failed to deserialize key\").Base(err)"
+              }
+            },
+            {
+              "file": "infra/conf/common.go",
+              "first_match": {
+                "line": 288,
+                "snippet": "// Int32Range deserializes from \"1-2\" or 1, so can deserialize from both int and number."
+              }
+            }
+          ]
+        },
+        "network": {
+          "hit_count": 38,
+          "files": [
+            {
+              "file": "infra/conf/xray.go",
+              "first_match": {
+                "line": 300,
+                "snippet": "\t\t\t\t\tsenderSettings.StreamSettings.SocketSettings = &internet.SocketConfig{DialerProxy: ps.Tag}"
+              }
+            },
+            {
+              "file": "infra/conf/transport_internet.go",
+              "first_match": {
+                "line": 138,
+                "snippet": "type WebSocketConfig struct {"
+              }
+            },
+            {
+              "file": "infra/conf/http.go",
+              "first_match": {
+                "line": 65,
+                "snippet": "\tconfig := new(http.ClientConfig)"
+              }
+            },
+            {
+              "file": "infra/conf/transport_test.go",
+              "first_match": {
+                "line": 26,
+                "snippet": "\texpectedOutput := &internet.SocketConfig{"
+              }
+            },
+            {
+              "file": "main/confloader/external/external.go",
+              "first_match": {
+                "line": 52,
+                "snippet": "\tclient := &http.Client{"
+              }
+            },
+            {
+              "file": "main/commands/all/api/shared.go",
+              "first_match": {
+                "line": 86,
+                "snippet": "\tclient := &http.Client{"
+              }
+            },
+            {
+              "file": "app/router/webhook.go",
+              "first_match": {
+                "line": 87,
+                "snippet": "\tclient        *http.Client"
+              }
+            },
+            {
+              "file": "app/dns/nameserver_cached.go",
+              "first_match": {
+                "line": 47,
+                "snippet": "\treturn fetch(ctx, s, fqdn, option)"
+              }
+            },
+            {
+              "file": "app/dns/nameserver_doh.go",
+              "first_match": {
+                "line": 34,
+                "snippet": "\thttpClient      *http.Client"
+              }
+            },
+            {
+              "file": "app/observatory/observer.go",
+              "first_match": {
+                "line": 160,
+                "snippet": "\thttpClient := &http.Client{"
+              }
+            },
+            {
+              "file": "app/observatory/burst/ping.go",
+              "first_match": {
+                "line": 17,
+                "snippet": "\thttpClient  *http.Client"
+              }
+            },
+            {
+              "file": "app/proxyman/inbound/worker.go",
+              "first_match": {
+                "line": 54,
+                "snippet": "func getTProxyType(s *internet.MemoryStreamConfig) internet.SocketConfig_TProxyMode {"
+              }
+            },
+            {
+              "file": "app/proxyman/inbound/always.go",
+              "first_match": {
+                "line": 102,
+                "snippet": "\t\t\tmss.SocketSettings = &internet.SocketConfig{}"
+              }
+            },
+            {
+              "file": "testing/servers/tcp/tcp.go",
+              "first_match": {
+                "line": 28,
+                "snippet": "func (server *Server) StartContext(ctx context.Context, sockopt *internet.SocketConfig) (net.Destination, error) {"
+              }
+            },
+            {
+              "file": "testing/scenarios/socks_test.go",
+              "first_match": {
+                "line": 154,
+                "snippet": "\t\t\t\tProxySettings: serial.ToTypedMessage(&http.ClientConfig{"
+              }
+            },
+            {
+              "file": "testing/scenarios/tls_test.go",
+              "first_match": {
+                "line": 348,
+                "snippet": "func TestTLSOverWebSocket(t *testing.T) {"
+              }
+            },
+            {
+              "file": "testing/scenarios/feature_test.go",
+              "first_match": {
+                "line": 620,
+                "snippet": "\t\tclient := &http.Client{"
+              }
+            },
+            {
+              "file": "testing/scenarios/http_test.go",
+              "first_match": {
+                "line": 68,
+                "snippet": "\t\tclient := &http.Client{"
+              }
+            },
+            {
+              "file": "proxy/http/config.pb.go",
+              "first_match": {
+                "line": 285,
+                "snippet": "\t(*ClientConfig)(nil),            // 3: xray.proxy.http.ClientConfig"
+              }
+            },
+            {
+              "file": "transport/internet/config.pb.go",
+              "first_match": {
+                "line": 729,
+                "snippet": "\tTproxy SocketConfig_TProxyMode `protobuf:\"varint,3,opt,name=tproxy,proto3,enum=xray.transport.internet.SocketConfig_TPr"
+              }
+            }
+          ]
+        },
+        "secrets": {
+          "hit_count": 4,
+          "files": [
+            {
+              "file": "common/reflect/marshal_test.go",
+              "first_match": {
+                "line": 18,
+                "snippet": "\t\tPassword:   \"shadowsocks-password\","
+              }
+            },
+            {
+              "file": "testing/scenarios/shadowsocks_test.go",
+              "first_match": {
+                "line": 32,
+                "snippet": "\t\tPassword:   \"shadowsocks-password\","
+              }
+            },
+            {
+              "file": "transport/internet/finalmask/udp_test.go",
+              "first_match": {
+                "line": 837,
+                "snippet": "\t\t\tPassword:   \"sudoku-bandwidth\","
+              }
+            },
+            {
+              "file": "transport/internet/finalmask/sudoku/sudoku_test.go",
+              "first_match": {
+                "line": 134,
+                "snippet": "\t\t\t\tPassword: \"sudoku-e2e-shared-secret\","
+              }
+            }
+          ]
+        },
+        "vendor_keys": {
+          "hit_count": 0,
+          "files": []
+        },
+        "tls_cors": {
+          "hit_count": 18,
+          "files": [
+            {
+              "file": "infra/conf/wireguard_test.go",
+              "first_match": {
+                "line": 42,
+                "snippet": "\t\t\t\t\t\tAllowedIps: []string{\"0.0.0.0/0\", \"::0/0\"},"
+              }
+            },
+            {
+              "file": "infra/conf/xray_test.go",
+              "first_match": {
+                "line": 75,
+                "snippet": "\t\t\t\t\t\t\t\t\"10.0.0.0/8\""
+              }
+            },
+            {
+              "file": "infra/conf/router_test.go",
+              "first_match": {
+                "line": 43,
+                "snippet": "\t\t\t\t\t\t\t\"10.0.0.0/8\","
+              }
+            },
+            {
+              "file": "infra/conf/wireguard.go",
+              "first_match": {
+                "line": 43,
+                "snippet": "\t\tconfig.AllowedIps = []string{\"0.0.0.0/0\", \"::0/0\"}"
+              }
+            },
+            {
+              "file": "infra/conf/transport_internet.go",
+              "first_match": {
+                "line": 1899,
+                "snippet": "\t\tconfig.Ip = \"0.0.0.0\""
+              }
+            },
+            {
+              "file": "main/commands/all/tls/ping.go",
+              "first_match": {
+                "line": 80,
+                "snippet": "\t\t\tInsecureSkipVerify: true,"
+              }
+            },
+            {
+              "file": "common/geodata/ip_matcher_test.go",
+              "first_match": {
+                "line": 35,
+                "snippet": "\t\t\"0.0.0.0/8\","
+              }
+            },
+            {
+              "file": "common/net/find_process_windows.go",
+              "first_match": {
+                "line": 160,
+                "snippet": "\t\t// windows binds an unbound udp socket to 0.0.0.0/[::] while first sendto"
+              }
+            },
+            {
+              "file": "common/buf/io_test.go",
+              "first_match": {
+                "line": 40,
+                "snippet": "\t\tInsecureSkipVerify: true,"
+              }
+            },
+            {
+              "file": "app/dns/fakedns/fakedns_test.go",
+              "first_match": {
+                "line": 134,
+                "snippet": "\t\t\tIpPool:  \"240.0.0.0/12\","
+              }
+            },
+            {
+              "file": "testing/scenarios/wireguard_test.go",
+              "first_match": {
+                "line": 58,
+                "snippet": "\t\t\t\t\t\tAllowedIps: []string{\"0.0.0.0/0\", \"::0/0\"},"
+              }
+            },
+            {
+              "file": "proxy/freedom/freedom.go",
+              "first_match": {
+                "line": 36,
+                "snippet": "\t\"0.0.0.0/8\","
+              }
+            },
+            {
+              "file": "proxy/tun/README.md",
+              "first_match": {
+                "line": 54,
+                "snippet": "You can't just route 0.0.0.0/0 through xray0 interface, as that will result Xray-core itself try to reach its uplink thr"
+              }
+            },
+            {
+              "file": "transport/internet/system_listener.go",
+              "first_match": {
+                "line": 44,
+                "snippet": "// But in fact it doesn't. So we need to wrap the listener to make it return 0.0.0.0(unspecified) as remote address."
+              }
+            },
+            {
+              "file": "transport/internet/browser_dialer/dialer.go",
+              "first_match": {
+                "line": 56,
+                "snippet": "\t\t\t\tw.Header().Set(\"Access-Control-Allow-Origin\", \"*\");"
+              }
+            },
+            {
+              "file": "transport/internet/reality/reality.go",
+              "first_match": {
+                "line": 125,
+                "snippet": "\t\tInsecureSkipVerify:     true,"
+              }
+            },
+            {
+              "file": "transport/internet/hysteria/hub.go",
+              "first_match": {
+                "line": 344,
+                "snippet": "\t\t\t\tInsecureSkipVerify: true,"
+              }
+            },
+            {
+              "file": "transport/internet/splithttp/config.go",
+              "first_match": {
+                "line": 96,
+                "snippet": "\t\twriter.Header().Set(\"Access-Control-Allow-Origin\", \"*\")"
+              }
+            }
+          ]
+        },
+        "sql_injection": {
+          "hit_count": 0,
+          "files": []
+        },
+        "cmd_injection": {
+          "hit_count": 0,
+          "files": []
+        },
+        "auth_bypass": {
+          "hit_count": 0,
+          "files": []
+        },
+        "path_traversal": {
+          "hit_count": 0,
+          "files": []
+        },
+        "archive_unsafe": {
+          "hit_count": 0,
+          "files": []
+        },
+        "ssrf": {
+          "hit_count": 0,
+          "files": []
+        },
+        "xss": {
+          "hit_count": 0,
+          "files": []
+        },
+        "weak_crypto": {
+          "hit_count": 0,
+          "files": []
+        },
+        "debug_flags": {
+          "hit_count": 0,
+          "files": []
+        }
+      },
+      "executable_files": [
+        {
+          "path": ".github/docker/Dockerfile",
+          "kind": "container-build",
+          "runtime": "docker",
+          "line_count": 62,
+          "file_sha": "115ecfde967c",
+          "has_network_call": false,
+          "has_env_var_pattern": true
+        },
+        {
+          "path": ".github/workflows/scheduled-assets-update.yml",
+          "kind": "ci-workflow",
+          "runtime": "github-actions",
+          "line_count": 129,
+          "file_sha": "703b0c537b88",
+          "has_network_call": false,
+          "has_env_var_pattern": true
+        },
+        {
+          "path": ".github/workflows/test.yml",
+          "kind": "ci-workflow",
+          "runtime": "github-actions",
+          "line_count": 77,
+          "file_sha": "45d6fb921ef0",
+          "has_network_call": false,
+          "has_env_var_pattern": true
+        },
+        {
+          "path": ".github/workflows/release.yml",
+          "kind": "ci-workflow",
+          "runtime": "github-actions",
+          "line_count": 287,
+          "file_sha": "afdfaaee1878",
+          "has_network_call": false,
+          "has_env_var_pattern": true
+        },
+        {
+          "path": ".github/workflows/release-win7.yml",
+          "kind": "ci-workflow",
+          "runtime": "github-actions",
+          "line_count": 180,
+          "file_sha": "5477f161373f",
+          "has_network_call": false,
+          "has_env_var_pattern": true
+        },
+        {
+          "path": ".github/workflows/docker.yml",
+          "kind": "ci-workflow",
+          "runtime": "github-actions",
+          "line_count": 133,
+          "file_sha": "e680d6e80d57",
+          "has_network_call": false,
+          "has_env_var_pattern": true
+        }
+      ],
+      "install_hooks": []
+    },
+    "prompt_injection_scan": {
+      "scanned_files": [],
+      "injection_signals": [],
+      "signal_count": 0,
+      "scan_method": "tarball"
+    },
+    "dependencies": {
+      "manifest_files": [
+        {
+          "path": "go.sum",
+          "ecosystem": "Go"
+        },
+        {
+          "path": "go.mod",
+          "ecosystem": "Go"
+        }
+      ],
+      "runtime": [],
+      "runtime_count": 0,
+      "dev": [],
+      "dev_count": 0,
+      "dependabot_alerts": {
+        "status": 403,
+        "alerts_count": null,
+        "note": "admin scope required; falling back to osv.dev"
+      },
+      "osv_lookups": [],
+      "dependabot_config": {
+        "present": true,
+        "ecosystems_tracked": [
+          "gomod",
+          "github-actions"
+        ],
+        "raw_snippet": "# To get started with Dependabot version updates, you'll need to specify which\n# package ecosystems to update and where the package manifests are located.\n# Please see the documentation for all configuration options:\n# https://help.github.com/github/administering-a-repository/configuration-options-for-dependency-updates\n\nversion: 2\nupdates:\n  - package-ecosystem: \"gomod\"\n    directory: \"/\" # Location of package manifests\n    schedule:\n      interval: \"daily\"\n  - package-ecosystem: \"github-action"
+      }
+    },
+    "pr_review": {
+      "total_closed_prs": 300,
+      "sample_size": 300,
+      "total_merged_lifetime": 1277,
+      "prs": [
+        {
+          "number": 5960,
+          "title": "Loopback outbound: Avoid directly modifying potential shared ctx",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2026-04-17T21:41:11Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 5959,
+          "title": "DomainMatcher: Fix Match() result slice aliasing race",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2026-04-17T22:07:58Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 5952,
+          "title": "Direct/Freedom outbound: Block UDP responses that are come from `ipsBlocked` as well",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2026-04-17T22:56:27Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 5951,
+          "title": "Geodata: Support reversed CIDR rules in IP rules",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2026-04-17T22:13:35Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 5949,
+          "title": "header-custom finalmask: Extend expression primitives for 1:1 handshakes",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2026-04-17T22:01:54Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 5948,
+          "title": "Bump github.com/pires/go-proxyproto from 0.11.0 to 0.12.0",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2026-04-17T21:33:38Z",
+          "labels": [
+            "dependencies",
+            "go"
+          ],
+          "security_flagged": false
+        },
+        {
+          "number": 5947,
+          "title": "Direct/Freedom outbound: Add `ipsBlocked` (supports IP, CIDR, \"geoip:\", \"ext:\") and apply a default safe policy",
+          "review_decision": "",
+          "any_review_count": 3,
+          "self_merge": false,
+          "merged_at": "2026-04-15T23:41:12Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 5946,
+          "title": "Chore: Use buf.New() instead of buf.NewWithSize()",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2026-04-15T16:57:51Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 5945,
+          "title": "header-custom finalmask: Add UDP standalone handshake mode",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2026-04-15T16:21:24Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 5942,
+          "title": "Hysteria inbound: Use transport's authentication when there are no `clients`",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2026-04-15T12:13:15Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 5941,
+          "title": "Chore: Use buf.NewWithSize()",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2026-04-15T12:11:51Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 5936,
+          "title": "DNS: Log rule matches and client order when finalQuery returns early",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2026-04-15T12:06:13Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 5935,
+          "title": "DomainMatcher: Reduce startup time on Android as well",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2026-04-15T12:00:41Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 5934,
+          "title": "DomainMatcher: Fix CompactDomainMatcher rule indices",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2026-04-15T11:56:32Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 5932,
+          "title": "Bump golang.zx2c4.com/wireguard/windows from 0.5.3 to 0.6.1",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2026-04-15T11:54:49Z",
+          "labels": [
+            "dependencies",
+            "go"
+          ],
+          "security_flagged": false
+        },
+        {
+          "number": 5929,
+          "title": "Sniffing: Add `ipsExcluded` (supports IP, CIDR, \"geoip:\", \"ext:\")",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2026-04-13T18:08:52Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 5928,
+          "title": "Hysteria transport: Fix client-side clientManager",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2026-04-13T16:14:15Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 5927,
+          "title": "Sniffing: `domainsExcluded` supports \"geosite:\"",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2026-04-13T17:39:53Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 5924,
+          "title": "DomainMatcher: Reduce runtime memory usage and startup peak memory on iOS",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2026-04-13T16:54:44Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 5920,
+          "title": "header-custom finalmask: Add programmable handshake templates and runtime core",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2026-04-15T14:17:52Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 5916,
+          "title": "Global HTTP headers' masquerading: Add \"curl\"; Improve version generators",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2026-04-11T21:16:58Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 5915,
+          "title": "Routing: `process` supports UID on Android",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2026-04-13T13:17:53Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 5899,
+          "title": "Bump golang.org/x/net from 0.52.0 to 0.53.0",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2026-04-11T17:24:31Z",
+          "labels": [
+            "dependencies",
+            "go"
+          ],
+          "security_flagged": false
+        },
+        {
+          "number": 5898,
+          "title": "Bump actions/github-script from 8 to 9",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2026-04-11T17:24:15Z",
+          "labels": [
+            "dependencies",
+            "github_actions"
+          ],
+          "security_flagged": false
+        },
+        {
+          "number": 5891,
+          "title": "TUN inbound: Add FreeBSD support",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2026-04-15T12:40:19Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 5890,
+          "title": "mKCP transport: Add `cwndMultiplier`; Apply unaggressive strategy by default",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2026-04-13T22:41:39Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 5888,
+          "title": "TUN inbound: Fix UDP FullCone NAT",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2026-04-05T12:59:22Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 5887,
+          "title": "TUN inbound: Add `gateway`, `dns`, `autoSystemRoutingTable`, `autoOutboundsInterface` for Windows",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2026-04-13T13:38:11Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 5885,
+          "title": "Bump google.golang.org/grpc from 1.79.3 to 1.80.0",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2026-04-03T18:52:08Z",
+          "labels": [
+            "dependencies",
+            "go"
+          ],
+          "security_flagged": false
+        },
+        {
+          "number": 5880,
+          "title": "WireGuard: Use Xray's buffer",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2026-04-03T21:22:46Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 5876,
+          "title": "Observatory: Clear removed outbounds",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2026-04-06T10:27:02Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 5872,
+          "title": "XDNS finalmask: Support `resolvers` (client) and `domains` (server) instead of `domain`",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2026-04-11T19:37:32Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 5870,
+          "title": "Hysteria inbound: Unwrap stats conn before extracting user",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2026-04-03T21:26:25Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 5869,
+          "title": "Finalmask `quicParams`: Add `bbrProfile` (\"conservative\" / \"standard\" (default) / \"aggressive\")",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2026-04-05T13:45:51Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 5866,
+          "title": "QUIC sniffer: Fix potential panic on malformed QUIC packets",
+          "review_decision": "",
+          "any_review_count": 1,
+          "self_merge": false,
+          "merged_at": "2026-04-07T10:10:12Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 5860,
+          "title": "TUN inbound: Closable by AlwaysOnInboundHandler",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2026-04-07T08:19:03Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 5858,
+          "title": "WireGuard outbound: Fix UDP FullCone NAT on Linux",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2026-04-05T12:57:08Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 5850,
+          "title": "Finalmask: Add `randRange` to \"noise\" (UDP), as the same as \"header-custom\"'s (TCP & UDP)",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2026-03-27T17:20:43Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 5843,
+          "title": "WireGuard inbound: Fix multi-peer; Fix potential routing issue",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2026-03-27T17:30:22Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 5838,
+          "title": "Bump nick-fields/retry from 3 to 4",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2026-03-23T07:40:05Z",
+          "labels": [
+            "dependencies",
+            "github_actions"
+          ],
+          "security_flagged": false
+        },
+        {
+          "number": 5837,
+          "title": "VLESS Reverse Proxy: Add `sniffing` to outbound's `reverse` (which is actually an inbound)",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2026-03-23T09:49:32Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 5836,
+          "title": "Loopback outbound: Fix potential nil InboundFromContext",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2026-03-23T10:11:17Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 5834,
+          "title": "README.md: Add CELERITY to Web Panel",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2026-03-22T17:14:16Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 5833,
+          "title": "WireGuard: Implement UDP FullCone NAT",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2026-03-22T17:42:40Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 5832,
+          "title": "README.md: Add INCY to iOS & macOS Clients",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2026-03-22T17:10:29Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 5821,
+          "title": "Bump google.golang.org/grpc from 1.79.2 to 1.79.3",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2026-03-18T09:18:01Z",
+          "labels": [
+            "dependencies",
+            "go"
+          ],
+          "security_flagged": false
+        },
+        {
+          "number": 5814,
+          "title": "Xray-core: Refactor geodata",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2026-04-13T16:42:30Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 5812,
+          "title": "Finalmask: Refactor header conns to avoid multiple-copy; Add `randRange` to \"header-custom\" (TCP & UDP)",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2026-03-21T09:04:22Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 5811,
+          "title": "TUN inbound: Generate deterministic GUID on Windows",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2026-03-19T10:18:08Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 5803,
+          "title": "XHTTP transport: Some optimizations",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2026-03-21T12:48:47Z",
+          "labels": [],
+          "security_flagged": false
+        }
+      ],
+      "formal_review_rate": 2.3,
+      "any_review_rate": 7.7,
+      "self_merge_count": 7,
+      "security_flagged_count": 0,
+      "security_flagged_numbers": [
+        846,
+        1108,
+        1509,
+        2135,
+        2208,
+        2212,
+        2749,
+        5640,
+        5909
+      ]
+    },
+    "open_prs": {
+      "entries": [
+        {
+          "number": 5982,
+          "title": "single",
+          "author": "LjhAUMEM",
+          "created_at": "2026-04-20T10:36:06Z"
+        },
+        {
+          "number": 5981,
+          "title": "DNS Outbound: Support query blacklist/whitelist",
+          "author": "Meo597",
+          "created_at": "2026-04-20T09:27:56Z"
+        },
+        {
+          "number": 5979,
+          "title": "Retrieve original target in FindProcess when IpIfNonMatch is enabled",
+          "author": "Exclude0122",
+          "created_at": "2026-04-19T22:48:52Z"
+        },
+        {
+          "number": 5978,
+          "title": "Browser Dialer: Allow browser dialer to be switched on runtime when Xray is used as a lib",
+          "author": "fish4terrisa-MSDSM",
+          "created_at": "2026-04-19T20:59:12Z"
+        },
+        {
+          "number": 5976,
+          "title": "XDNS finalmask: apply sockopt to outgoing sockets for resolvers.",
+          "author": "26X23",
+          "created_at": "2026-04-18T22:51:52Z"
+        },
+        {
+          "number": 5975,
+          "title": "Refine Geodata",
+          "author": "Meo597",
+          "created_at": "2026-04-18T22:29:13Z"
+        },
+        {
+          "number": 5971,
+          "title": "IPMatcher: Fix full CIDR issue",
+          "author": "Meo597",
+          "created_at": "2026-04-18T07:35:29Z"
+        },
+        {
+          "number": 5844,
+          "title": "Add UserConnTracker to manage user connection cancellations across proxies",
+          "author": "ImMohammad20000",
+          "created_at": "2026-03-25T15:55:41Z"
+        },
+        {
+          "number": 5824,
+          "title": "Build: Build list adjustment and compatibility code cleaning; Move OpenBSD out of regular releasing",
+          "author": "KobeArthurScofield",
+          "created_at": "2026-03-18T14:56:59Z"
+        },
+        {
+          "number": 5645,
+          "title": "XDRIVE transport: The first remote-storage-service-based proxy, ignoring IP whitelists",
+          "author": "RPRX",
+          "created_at": "2026-02-03T13:25:02Z"
+        },
+        {
+          "number": 5640,
+          "title": "Validate VMess outbound security settings",
+          "author": "OfficialKatana",
+          "created_at": "2026-02-02T11:14:29Z"
+        },
+        {
+          "number": 5625,
+          "title": "Add listable",
+          "author": "Fangliding",
+          "created_at": "2026-01-30T14:57:23Z"
+        },
+        {
+          "number": 5419,
+          "title": "Browser dialer: High-performance pass-through rewrite",
+          "author": "PoneyClairDeLune",
+          "created_at": "2025-12-14T12:01:01Z"
+        },
+        {
+          "number": 5143,
+          "title": "Refactor code to use DispatchLink() in vmess inbound",
+          "author": "yuhan6665",
+          "created_at": "2025-09-14T03:50:49Z"
+        },
+        {
+          "number": 5102,
+          "title": "Add VLESS seed configurations",
+          "author": "yuhan6665",
+          "created_at": "2025-09-07T14:54:57Z"
+        },
+        {
+          "number": 4320,
+          "title": "XHTTP Client: Race Dialer",
+          "author": "rPDmYQ",
+          "created_at": "2025-01-23T16:01:59Z"
+        },
+        {
+          "number": 4283,
+          "title": "Add Datagram transport",
+          "author": "yuhan6665",
+          "created_at": "2025-01-13T04:04:04Z"
+        },
+        {
+          "number": 4231,
+          "title": "mux cool: Add maxReuseTimes",
+          "author": "Fangliding",
+          "created_at": "2024-12-31T11:23:13Z"
+        },
+        {
+          "number": 3964,
+          "title": "Replace quic-go with uQuic",
+          "author": "yuhan6665",
+          "created_at": "2024-11-03T02:11:56Z"
+        },
+        {
+          "number": 2762,
+          "title": "Optimize wireguard kernel mode V2",
+          "author": "kunsonx",
+          "created_at": "2023-11-27T07:58:20Z"
+        },
+        {
+          "number": 2757,
+          "title": "Optimize wireguard kernel mode",
+          "author": "kunsonx",
+          "created_at": "2023-11-26T08:14:52Z"
+        },
+        {
+          "number": 440,
+          "title": "add reverse api support.(#417)",
+          "author": "tat5522",
+          "created_at": "2021-03-25T13:47:10Z"
+        },
+        {
+          "number": 412,
+          "title": "Add the routing management gRPC API",
+          "author": "tat5522",
+          "created_at": "2021-03-20T13:40:05Z"
+        },
+        {
+          "number": 202,
+          "title": "Add RuleSet",
+          "author": "app/",
+          "created_at": "2021-01-22T05:40:29Z"
+        }
+      ],
+      "count": 24
+    },
+    "closed_not_merged_prs": {
+      "entries": [
+        {
+          "number": 5957,
+          "title": "splithttp: fix resource leaks on client reconnects",
+          "closed_at": "2026-04-16T20:10:36Z"
+        },
+        {
+          "number": 5956,
+          "title": "splithttp: fix resource leaks on client reconnects",
+          "closed_at": "2026-04-16T17:32:09Z"
+        },
+        {
+          "number": 5955,
+          "title": "fix: Fix splithttp uploadQueue off-by-one bug in `Read()` where poppi\u2026",
+          "closed_at": "2026-04-16T20:33:09Z"
+        },
+        {
+          "number": 5954,
+          "title": "Balancer: add fallbackBalancerTag support",
+          "closed_at": "2026-04-16T11:50:19Z"
+        },
+        {
+          "number": 5953,
+          "title": "HevSocks5Core UDP-in-TCP mode",
+          "closed_at": "2026-04-16T11:19:09Z"
+        },
+        {
+          "number": 5939,
+          "title": "Develop",
+          "closed_at": "2026-04-14T16:57:18Z"
+        },
+        {
+          "number": 5938,
+          "title": "Feature/xtess support",
+          "closed_at": "2026-04-14T16:23:49Z"
+        },
+        {
+          "number": 5922,
+          "title": "buffer writing optimized",
+          "closed_at": "2026-04-12T19:55:33Z"
+        },
+        {
+          "number": 5919,
+          "title": "Finalmask header-custom: add bounded stateful DSL for TCP & UDP",
+          "closed_at": "2026-04-12T05:19:12Z"
+        },
+        {
+          "number": 5912,
+          "title": "mux nil user",
+          "closed_at": "2026-04-11T16:35:02Z"
+        },
+        {
+          "number": 5909,
+          "title": "feat: add bayed-tls security type \u2014 stealth TLS handshake through real upstream",
+          "closed_at": "2026-04-10T22:34:04Z"
+        },
+        {
+          "number": 5907,
+          "title": "Proxy: Add AnyTLS protocol",
+          "closed_at": "2026-04-10T19:16:27Z"
+        },
+        {
+          "number": 5903,
+          "title": "feat: add mTLS client certificate support",
+          "closed_at": "2026-04-10T12:41:49Z"
+        },
+        {
+          "number": 5902,
+          "title": "mux: Fix OOM crash on UDP keep frames",
+          "closed_at": "2026-04-10T11:54:44Z"
+        },
+        {
+          "number": 5893,
+          "title": "SOCKS inbound: Add Unix domain socket support",
+          "closed_at": "2026-04-07T18:48:46Z"
+        },
+        {
+          "number": 5892,
+          "title": "xhttp h2c",
+          "closed_at": "2026-04-19T06:36:59Z"
+        },
+        {
+          "number": 5889,
+          "title": "feat: add mTLS client certificate support",
+          "closed_at": "2026-04-05T18:11:48Z"
+        },
+        {
+          "number": 5874,
+          "title": "Add ECH-aware routing and MASQUE UDP telemetry",
+          "closed_at": "2026-03-31T12:10:59Z"
+        },
+        {
+          "number": 5873,
+          "title": "Add ECH-aware routing and MASQUE UDP telemetry",
+          "closed_at": "2026-03-31T10:31:33Z"
+        },
+        {
+          "number": 5871,
+          "title": "feat(xdns): add resolver-based DNS tunneling with multi-resolver fan-out; fix sendLoop starvation",
+          "closed_at": "2026-03-31T09:28:08Z"
+        },
+        {
+          "number": 5864,
+          "title": "fix: integer overflow panic in SniffQUIC",
+          "closed_at": "2026-03-30T07:50:30Z"
+        },
+        {
+          "number": 5851,
+          "title": "Add --json flag to x25519 command for machine-readable output",
+          "closed_at": "2026-03-27T18:34:08Z"
+        },
+        {
+          "number": 5830,
+          "title": "Add INCY links to various platform sections",
+          "closed_at": "2026-03-21T08:29:41Z"
+        },
+        {
+          "number": 5829,
+          "title": "Add INCY links to various platform sections in README",
+          "closed_at": "2026-03-20T12:30:37Z"
+        },
+        {
+          "number": 5823,
+          "title": "bugfix: avoid DNS leakage with gRPC transports",
+          "closed_at": "2026-03-21T12:52:53Z"
+        },
+        {
+          "number": 5808,
+          "title": "XHTTP transport: Reduce memory allocations ~88% (68MB\u2192~8MB per 10MB traffic)",
+          "closed_at": "2026-03-15T17:38:52Z"
+        },
+        {
+          "number": 5806,
+          "title": "update",
+          "closed_at": "2026-03-15T02:26:31Z"
+        },
+        {
+          "number": 5805,
+          "title": "Allow sockopt.dialerProxy to resolve balancer tags",
+          "closed_at": "2026-03-14T16:40:00Z"
+        },
+        {
+          "number": 5804,
+          "title": "Improve proxy switching reliability",
+          "closed_at": "2026-03-14T16:25:42Z"
+        },
+        {
+          "number": 5801,
+          "title": "XHTTP transport: Replace io.ReadAll with io.ReadFull in ServeHTTP; Simplify uploadWriter.Write",
+          "closed_at": "2026-03-13T19:22:00Z"
+        },
+        {
+          "number": 5797,
+          "title": "XHTTP transport: Reduce memory consumption",
+          "closed_at": "2026-03-13T15:35:14Z"
+        },
+        {
+          "number": 5790,
+          "title": "Fix error while using an outdated ECH record",
+          "closed_at": "2026-03-12T04:19:03Z"
+        },
+        {
+          "number": 5784,
+          "title": "fix(buf): prevent EAGAIN hang on OpenBSD non-blocking sockets",
+          "closed_at": "2026-03-09T16:05:51Z"
+        },
+        {
+          "number": 5775,
+          "title": "Add traffic masking anti replay and priority queue",
+          "closed_at": "2026-03-08T05:21:03Z"
+        },
+        {
+          "number": 5770,
+          "title": "Log: Enhance error handling by directing error messages to stderr",
+          "closed_at": "2026-03-07T18:14:50Z"
+        },
+        {
+          "number": 5767,
+          "title": "Fix observatory reliability and leastload tolerance handling",
+          "closed_at": "2026-03-08T14:02:00Z"
+        },
+        {
+          "number": 5762,
+          "title": "README.md: Add Anywhere to Android&iOS clients that support VLESS",
+          "closed_at": "2026-03-05T09:15:17Z"
+        },
+        {
+          "number": 5751,
+          "title": "fix (burstObservatory): immediate BurstObservatory health checks for dynamically registered reverse proxy outbounds",
+          "closed_at": "2026-03-02T17:41:54Z"
+        },
+        {
+          "number": 5746,
+          "title": "Merge hosts and servers of the built-in DNS server from config files,\u2026",
+          "closed_at": "2026-03-02T06:20:43Z"
+        },
+        {
+          "number": 5740,
+          "title": "CustomSockopt",
+          "closed_at": "2026-02-28T22:38:35Z"
+        },
+        {
+          "number": 5731,
+          "title": "Fix: restrict MasterKeyLog file permissions",
+          "closed_at": "2026-02-26T14:55:11Z"
+        },
+        {
+          "number": 5729,
+          "title": "remove empty line",
+          "closed_at": "2026-02-26T08:32:50Z"
+        },
+        {
+          "number": 5727,
+          "title": "tcp-brutal",
+          "closed_at": "2026-02-25T16:42:36Z"
+        },
+        {
+          "number": 5726,
+          "title": "Hide ALPN in ECH",
+          "closed_at": "2026-02-26T21:39:16Z"
+        },
+        {
+          "number": 5714,
+          "title": "Config option allowing usage of forward proxy for selected vless \"reverse\" users.",
+          "closed_at": "2026-02-22T06:40:39Z"
+        },
+        {
+          "number": 5702,
+          "title": "Fix: resolve data races in splithttp transport",
+          "closed_at": "2026-02-17T21:23:56Z"
+        },
+        {
+          "number": 5701,
+          "title": "Add Unix socket redirect support in handler.go",
+          "closed_at": "2026-02-17T11:00:43Z"
+        },
+        {
+          "number": 5699,
+          "title": "Fix prevent sensitive key material from leaking into logs and error messages",
+          "closed_at": "2026-02-16T19:17:59Z"
+        },
+        {
+          "number": 5669,
+          "title": "Bump github.com/pires/go-proxyproto from 0.9.2 to 0.10.0",
+          "closed_at": "2026-02-11T00:12:55Z"
+        },
+        {
+          "number": 5654,
+          "title": "Add local filesystem-based XDRIVE transport implementation",
+          "closed_at": "2026-02-04T22:29:09Z"
+        },
+        {
+          "number": 5651,
+          "title": "Commands: buildMphCache support yaml and toml format config file",
+          "closed_at": "2026-02-04T07:35:26Z"
+        },
+        {
+          "number": 5649,
+          "title": "Commands: buildMphCache support yaml and toml format config file",
+          "closed_at": "2026-02-04T05:40:59Z"
+        },
+        {
+          "number": 5634,
+          "title": "Fix: XHTTP sessionPlacement unsupported path",
+          "closed_at": "2026-02-01T16:37:06Z"
+        },
+        {
+          "number": 5629,
+          "title": "SocketConfig: Fail fast on unavailable network interface",
+          "closed_at": "2026-01-31T15:33:02Z"
+        },
+        {
+          "number": 5578,
+          "title": "Update Flclash and Karing gui-client",
+          "closed_at": "2026-01-20T10:18:11Z"
+        },
+        {
+          "number": 5566,
+          "title": "Log: `/24` for IPv4 and `/48` for IPv6 for networks",
+          "closed_at": "2026-01-19T04:21:48Z"
+        },
+        {
+          "number": 5555,
+          "title": "Fix WireGuard inbound domain-based routing",
+          "closed_at": "2026-03-27T08:59:44Z"
+        },
+        {
+          "number": 5552,
+          "title": "Reverse: Add `heartbeatPeriod` and `heartbeatPadding`",
+          "closed_at": "2026-01-16T10:09:03Z"
+        },
+        {
+          "number": 5529,
+          "title": "Bump github.com/quic-go/quic-go from 0.58.0 to 0.59.0",
+          "closed_at": "2026-01-13T09:48:02Z"
+        },
+        {
+          "number": 5521,
+          "title": "Proxy: Tun: Implement idle connection timeouts",
+          "closed_at": "2026-01-12T09:13:44Z"
+        },
+        {
+          "number": 5520,
+          "title": "Fix occasional SSL protocol error in XTLS Vision direct copy mode",
+          "closed_at": "2026-03-22T17:50:20Z"
+        },
+        {
+          "number": 5518,
+          "title": "[WIP] Investigating XTLS Vision SSL errors with testpre",
+          "closed_at": "2026-01-11T10:26:26Z"
+        },
+        {
+          "number": 5517,
+          "title": "Fix WireGuard domain routing by restoring context tags and adding thread safety",
+          "closed_at": "2026-01-16T16:06:38Z"
+        },
+        {
+          "number": 5514,
+          "title": "Policy: add per-user rate limiting and max concurrent IPs",
+          "closed_at": "2026-01-10T10:22:53Z"
+        },
+        {
+          "number": 5513,
+          "title": "Fix FullCone NAT: safe cone assertion, race condition, cleanup",
+          "closed_at": "2026-01-09T16:55:02Z"
+        },
+        {
+          "number": 5510,
+          "title": "Fix multi-peer WireGuard with unified reader architecture",
+          "closed_at": "2026-01-16T16:06:07Z"
+        },
+        {
+          "number": 5487,
+          "title": "Xpool protocol implementation 15220761450535620442",
+          "closed_at": "2026-01-04T05:43:16Z"
+        },
+        {
+          "number": 5482,
+          "title": "Router: improve Protobuf memory usage",
+          "closed_at": "2026-01-28T12:43:34Z"
+        },
+        {
+          "number": 5479,
+          "title": "Enhance router configuration with route caching features",
+          "closed_at": "2025-12-30T06:43:08Z"
+        },
+        {
+          "number": 5470,
+          "title": "proxy/proxy.go: allow splice thru HTTPUpgrade",
+          "closed_at": "2025-12-28T15:11:42Z"
+        },
+        {
+          "number": 5453,
+          "title": "Fix error",
+          "closed_at": "2025-12-20T20:08:24Z"
+        },
+        {
+          "number": 5437,
+          "title": "XHTTP: fix DNS multiple endpoints w/ downloadSettings",
+          "closed_at": "2025-12-20T13:45:10Z"
+        },
+        {
+          "number": 5436,
+          "title": "feat: optional DNS pinning for XHTTP w/ downloadSettings",
+          "closed_at": "2025-12-17T12:25:04Z"
+        },
+        {
+          "number": 5418,
+          "title": "Feat wildcard clients",
+          "closed_at": "2025-12-13T16:32:26Z"
+        },
+        {
+          "number": 5394,
+          "title": "Project documentation Update",
+          "closed_at": "2025-12-08T15:17:30Z"
+        },
+        {
+          "number": 5387,
+          "title": "chore: use protoc latest version",
+          "closed_at": "2025-12-07T02:30:55Z"
+        },
+        {
+          "number": 5361,
+          "title": "Replace fixed goroutine loop with dynamic worker",
+          "closed_at": "2025-12-01T11:21:15Z"
+        },
+        {
+          "number": 5357,
+          "title": "add hysteria2 proto to xray",
+          "closed_at": "2025-11-28T13:34:33Z"
+        },
+        {
+          "number": 5354,
+          "title": "Update protocol.go",
+          "closed_at": "2025-11-27T03:59:10Z"
+        },
+        {
+          "number": 5350,
+          "title": "VLESS outbound: fix dead channel",
+          "closed_at": "2025-11-26T20:51:50Z"
+        },
+        {
+          "number": 5348,
+          "title": "VLESS outbound: Implement concurrent pre-connect workers",
+          "closed_at": "2025-11-26T17:45:24Z"
+        },
+        {
+          "number": 5346,
+          "title": "feature 1: build grpc client",
+          "closed_at": "2025-11-26T06:11:01Z"
+        },
+        {
+          "number": 5345,
+          "title": "accidental PR",
+          "closed_at": "2025-11-25T12:54:44Z"
+        },
+        {
+          "number": 5343,
+          "title": "Fix VLESS encrypted session timeouts and cleanup",
+          "closed_at": "2025-11-25T07:37:15Z"
+        },
+        {
+          "number": 5340,
+          "title": "1",
+          "closed_at": "2025-11-24T20:37:29Z"
+        },
+        {
+          "number": 5337,
+          "title": "Patch 1",
+          "closed_at": "2025-11-24T09:19:32Z"
+        },
+        {
+          "number": 5334,
+          "title": "Browser dialer: High-performance passthrough rewrite",
+          "closed_at": "2025-12-14T11:18:53Z"
+        },
+        {
+          "number": 5322,
+          "title": "perf: VLESS inbound handler optimization (reflection caching + 9 fixes)",
+          "closed_at": "2025-11-20T11:58:21Z"
+        },
+        {
+          "number": 5321,
+          "title": "refactor: move deadline setting before decryption handshake",
+          "closed_at": "2025-11-21T02:38:04Z"
+        },
+        {
+          "number": 5317,
+          "title": "Bump golang.org/x/sys from 0.37.0 to 0.38.0",
+          "closed_at": "2025-11-20T00:09:16Z"
+        },
+        {
+          "number": 5316,
+          "title": "Bump golang.org/x/sync from 0.17.0 to 0.18.0",
+          "closed_at": "2025-11-20T00:09:06Z"
+        },
+        {
+          "number": 5315,
+          "title": "Bump golang.org/x/crypto from 0.43.0 to 0.45.0",
+          "closed_at": "2025-11-20T00:08:54Z"
+        },
+        {
+          "number": 5311,
+          "title": "feat: add selector outbound",
+          "closed_at": "2025-11-19T03:44:31Z"
+        },
+        {
+          "number": 5286,
+          "title": "Abstract the WrapLink method to Dispatcher interface",
+          "closed_at": "2025-11-08T16:53:39Z"
+        },
+        {
+          "number": 5285,
+          "title": "Abstract the WrapLink method to Dispatcher interface",
+          "closed_at": "2025-11-08T10:57:10Z"
+        },
+        {
+          "number": 5283,
+          "title": "Abstract the WrapLink method to Dispatcher interface",
+          "closed_at": "2025-11-08T09:55:06Z"
+        },
+        {
+          "number": 5256,
+          "title": "\ud83d\udc1e fix(\u7f13\u5b58\u5f02\u5e38): \u5f53\u8bf7\u6c42URL\u8fc7\u957f\u65f6\uff0c\u5c06\u5f02\u5e38\u4e2d\u65ad\u8fde\u63a5",
+          "closed_at": "2025-10-28T03:31:42Z"
+        },
+        {
+          "number": 5249,
+          "title": "fix(grpc): fixed memory leak issue on grpc client connection cache",
+          "closed_at": "2025-10-23T06:36:23Z"
+        },
+        {
+          "number": 5243,
+          "title": "DNS: Remove unnecessary checkSystemNetwork()",
+          "closed_at": "2025-10-20T11:37:10Z"
+        },
+        {
+          "number": 5233,
+          "title": "update v2rayn support platform",
+          "closed_at": "2025-11-20T12:10:13Z"
+        }
+      ],
+      "count": 100
+    },
+    "issues_and_commits": {
+      "open_security_issues": [],
+      "open_issues_count": 18,
+      "closed_issues": [
+        {
+          "author": "hippo2025",
+          "closed_at": "2026-04-20T06:52:00Z",
+          "number": 5980,
+          "title": "[Bug] AndroidProcessFinder works inconsistently with IPIfNonMatch"
+        },
+        {
+          "author": "StormArchitect",
+          "closed_at": "2026-04-18T12:30:36Z",
+          "number": 5973,
+          "title": "VLESS over Hysteria inbound transport panics with \"validator is nil\" and incorrectly attempts to bind TCP (DispatchLink issue)"
+        },
+        {
+          "author": "arlequinfei",
+          "closed_at": "2026-04-18T10:22:58Z",
+          "number": 5972,
+          "title": "\u4e0eserver\u5728\u540c\u4e00\u7f51\u6bb5\u7684\u670d\u52a1\u5668\u65e0\u6cd5\u8bbf\u95ee"
+        },
+        {
+          "author": "pulsarice",
+          "closed_at": "2026-04-17T21:41:12Z",
+          "number": 5958,
+          "title": "Strange routing issue when Loopback is set as Fallback for a Balancer and client is using Mux"
+        },
+        {
+          "author": "raydoom",
+          "closed_at": "2026-04-17T08:16:29Z",
+          "number": 5963,
+          "title": "xhttp\u534f\u8bae\u65e0\u6cd5\u4f7f\u7528\u963f\u91cc\u4e91\u7684esa\u548c\u817e\u8baf\u4e91\u7684edgeone"
+        },
+        {
+          "author": "jon460243",
+          "closed_at": "2026-04-17T16:10:15Z",
+          "number": 5967,
+          "title": "xhttp\u901a\u8fc7cloudflare cdn\u88ab\u8b66\u544a\u6ee5\u7528"
+        },
+        {
+          "author": "schizostyliz-hue",
+          "closed_at": "2026-04-17T20:34:38Z",
+          "number": 5966,
+          "title": "VLESS REALITY Vision fails on Debian 13 (OpenSSL 3.5.5) \u2014 TLS EOF on all clients"
+        },
+        {
+          "author": "Inv1x",
+          "closed_at": "2026-04-17T07:15:45Z",
+          "number": 5961,
+          "title": "panic: runtime error: slice bounds out of range [230:N] in XtlsPadding (VLESS-Vision) \u2014 not fixed by #5737"
+        },
+        {
+          "author": "shadow-enthusiast",
+          "closed_at": "2026-04-13T05:33:38Z",
+          "number": 5921,
+          "title": "Hysteria v2 inbound starts successfully, receives client UDP packets, but sends no response packets and client always times out"
+        },
+        {
+          "author": "iambabyninja",
+          "closed_at": "2026-04-13T16:54:45Z",
+          "number": 4422,
+          "title": "iOS packet tunnel provider limit"
+        }
+      ],
+      "closed_issues_count": 10,
+      "recent_commits": [
+        {
+          "author": "RPRX",
+          "date": "2026-04-17T23:04:05Z",
+          "message_first_line": "v26.4.17",
+          "sha": "b465036",
+          "security_keyword_match": false
+        },
+        {
+          "author": "Meo597",
+          "date": "2026-04-17T22:56:27Z",
+          "message_first_line": "Direct/Freedom outbound: Block UDP responses that are come from `ipsBlocked` as well (#5952)",
+          "sha": "d52f150",
+          "security_keyword_match": false
+        },
+        {
+          "author": "Meo597",
+          "date": "2026-04-17T22:13:35Z",
+          "message_first_line": "Geodata: Support reversed CIDR rules in IP rules (#5951)",
+          "sha": "31ab22c",
+          "security_keyword_match": false
+        },
+        {
+          "author": "Meo597",
+          "date": "2026-04-17T22:07:58Z",
+          "message_first_line": "DomainMatcher: Fix Match() result slice aliasing race (#5959)",
+          "sha": "d42c981",
+          "security_keyword_match": true
+        },
+        {
+          "author": "fatyzzz",
+          "date": "2026-04-17T22:01:54Z",
+          "message_first_line": "header-custom finalmask: Extend expression primitives for 1:1 handshakes (#5949)",
+          "sha": "cb1106c",
+          "security_keyword_match": false
+        },
+        {
+          "author": "Fangliding",
+          "date": "2026-04-17T21:41:10Z",
+          "message_first_line": "Loopback outbound: Avoid directly modifying potential shared ctx (#5960)",
+          "sha": "df4b970",
+          "security_keyword_match": false
+        },
+        {
+          "author": "dependabot[bot]",
+          "date": "2026-04-17T21:33:38Z",
+          "message_first_line": "Bump github.com/pires/go-proxyproto from 0.11.0 to 0.12.0 (#5948)",
+          "sha": "a9cec25",
+          "security_keyword_match": false
+        },
+        {
+          "author": "RPRX",
+          "date": "2026-04-15T23:56:34Z",
+          "message_first_line": "v26.4.15",
+          "sha": "c5edc12",
+          "security_keyword_match": false
+        },
+        {
+          "author": "RPRX",
+          "date": "2026-04-15T23:47:21Z",
+          "message_first_line": "XUDP GetGlobalID(): Remove `inbound.Name == \"wireguard\"` for now",
+          "sha": "9dd17d5",
+          "security_keyword_match": false
+        },
+        {
+          "author": "Meo597",
+          "date": "2026-04-15T23:41:11Z",
+          "message_first_line": "Direct/Freedom outbound: Add `ipsBlocked` (supports IP, CIDR, \"geoip:\", \"ext:\") and apply a default safe policy (#5947)",
+          "sha": "310b764",
+          "security_keyword_match": false
+        },
+        {
+          "author": "Fangliding",
+          "date": "2026-04-15T16:57:51Z",
+          "message_first_line": "Chore: Use buf.New() instead of buf.NewWithSize() (#5946)",
+          "sha": "3691741",
+          "security_keyword_match": false
+        },
+        {
+          "author": "fatyzzz",
+          "date": "2026-04-15T16:21:23Z",
+          "message_first_line": "header-custom finalmask: Add UDP standalone handshake mode (#5945)",
+          "sha": "05e259c",
+          "security_keyword_match": false
+        },
+        {
+          "author": "fatyzzz",
+          "date": "2026-04-15T14:17:51Z",
+          "message_first_line": "header-custom finalmask: Add programmable handshake templates and runtime core (#5920)",
+          "sha": "175502d",
+          "security_keyword_match": false
+        },
+        {
+          "author": "drTr0jan",
+          "date": "2026-04-15T12:40:19Z",
+          "message_first_line": "TUN inbound: Add FreeBSD support (#5891)",
+          "sha": "6780045",
+          "security_keyword_match": false
+        },
+        {
+          "author": "LjhAUMEM",
+          "date": "2026-04-15T12:13:15Z",
+          "message_first_line": "Hysteria inbound: Use transport's authentication when there are no `clients` (#5942)",
+          "sha": "ff61264",
+          "security_keyword_match": false
+        },
+        {
+          "author": "LjhAUMEM",
+          "date": "2026-04-15T12:11:51Z",
+          "message_first_line": "Chore: Use buf.NewWithSize() (#5941)",
+          "sha": "5c3d639",
+          "security_keyword_match": false
+        },
+        {
+          "author": "Meo597",
+          "date": "2026-04-15T12:06:13Z",
+          "message_first_line": "DNS: Log rule matches and client order when finalQuery returns early (#5936)",
+          "sha": "7c56b7b",
+          "security_keyword_match": false
+        },
+        {
+          "author": "Meo597",
+          "date": "2026-04-15T12:00:41Z",
+          "message_first_line": "DomainMatcher: Reduce startup time on Android as well (#5935)",
+          "sha": "5b91b15",
+          "security_keyword_match": false
+        },
+        {
+          "author": "Meo597",
+          "date": "2026-04-15T11:56:31Z",
+          "message_first_line": "DomainMatcher: Fix CompactDomainMatcher rule indices (#5934)",
+          "sha": "ef77a42",
+          "security_keyword_match": true
+        },
+        {
+          "author": "dependabot[bot]",
+          "date": "2026-04-15T11:54:49Z",
+          "message_first_line": "Bump golang.zx2c4.com/wireguard/windows from 0.5.3 to 0.6.1 (#5932)",
+          "sha": "dab9961",
+          "security_keyword_match": false
+        },
+        {
+          "author": "RPRX",
+          "date": "2026-04-13T22:49:40Z",
+          "message_first_line": "v26.4.13",
+          "sha": "14e8ecf",
+          "security_keyword_match": false
+        },
+        {
+          "author": "LjhAUMEM",
+          "date": "2026-04-13T22:41:38Z",
+          "message_first_line": "mKCP transport: Add `cwndMultiplier`; Apply unaggressive strategy by default (#5890)",
+          "sha": "7094f8d",
+          "security_keyword_match": false
+        },
+        {
+          "author": "Meo597",
+          "date": "2026-04-13T18:08:51Z",
+          "message_first_line": "Sniffing: Add `ipsExcluded` (supports IP, CIDR, \"geoip:\", \"ext:\") (#5929)",
+          "sha": "d342361",
+          "security_keyword_match": false
+        },
+        {
+          "author": "Meo597",
+          "date": "2026-04-13T17:39:53Z",
+          "message_first_line": "Sniffing: `domainsExcluded` supports \"geosite:\" (#5927)",
+          "sha": "f17fabf",
+          "security_keyword_match": false
+        },
+        {
+          "author": "Meo597",
+          "date": "2026-04-13T16:54:43Z",
+          "message_first_line": "DomainMatcher: Reduce runtime memory usage and startup peak memory on iOS (#5924)",
+          "sha": "05a1191",
+          "security_keyword_match": false
+        },
+        {
+          "author": "Meo597",
+          "date": "2026-04-13T16:42:29Z",
+          "message_first_line": "Xray-core: Refactor geodata (#5814)",
+          "sha": "82624bc",
+          "security_keyword_match": false
+        },
+        {
+          "author": "Fangliding",
+          "date": "2026-04-13T16:14:15Z",
+          "message_first_line": "Hysteria transport: Fix client-side clientManager (#5928)",
+          "sha": "e9f7d61",
+          "security_keyword_match": true
+        },
+        {
+          "author": "LjhAUMEM",
+          "date": "2026-04-13T13:38:10Z",
+          "message_first_line": "TUN inbound: Add `gateway`, `dns`, `autoSystemRoutingTable`, `autoOutboundsInterface` for Windows (#5887)",
+          "sha": "806b8dc",
+          "security_keyword_match": false
+        },
+        {
+          "author": "Exclude0122",
+          "date": "2026-04-13T13:17:53Z",
+          "message_first_line": "Routing: `process` supports UID on Android (#5915)",
+          "sha": "f27edc3",
+          "security_keyword_match": false
+        },
+        {
+          "author": "PoneyClairDeLune",
+          "date": "2026-04-11T21:16:58Z",
+          "message_first_line": "Global HTTP headers' masquerading: Add \"curl\"; Improve version generators (#5916)",
+          "sha": "c93478b",
+          "security_keyword_match": false
+        },
+        {
+          "author": "nnemirovsky",
+          "date": "2026-04-11T19:37:32Z",
+          "message_first_line": "XDNS finalmask: Support `resolvers` (client) and `domains` (server) instead of `domain` (#5872)",
+          "sha": "1642fdf",
+          "security_keyword_match": false
+        },
+        {
+          "author": "kastov",
+          "date": "2026-04-11T19:09:24Z",
+          "message_first_line": "API & Commands: Add GetUsersStatsRequest(); Improve `api statsonlineiplist` (#5776)",
+          "sha": "a91a88c",
+          "security_keyword_match": false
+        },
+        {
+          "author": "smaznet",
+          "date": "2026-04-11T18:39:32Z",
+          "message_first_line": "Tunnel inbound: Compatible with listening UNIX domain socket (#5693)",
+          "sha": "3293784",
+          "security_keyword_match": false
+        },
+        {
+          "author": "dependabot[bot]",
+          "date": "2026-04-11T17:24:31Z",
+          "message_first_line": "Bump golang.org/x/net from 0.52.0 to 0.53.0 (#5899)",
+          "sha": "93225a1",
+          "security_keyword_match": false
+        },
+        {
+          "author": "dependabot[bot]",
+          "date": "2026-04-11T17:24:14Z",
+          "message_first_line": "Bump actions/github-script from 8 to 9 (#5898)",
+          "sha": "4d958cb",
+          "security_keyword_match": false
+        },
+        {
+          "author": "Fangliding",
+          "date": "2026-04-07T10:10:12Z",
+          "message_first_line": "QUIC sniffer: Fix potential panic on malformed QUIC packets (#5866)",
+          "sha": "e5a9fb7",
+          "security_keyword_match": true
+        },
+        {
+          "author": "Rynnya",
+          "date": "2026-04-07T08:19:03Z",
+          "message_first_line": "TUN inbound: Closable by AlwaysOnInboundHandler (#5860)",
+          "sha": "6a1a13b",
+          "security_keyword_match": false
+        },
+        {
+          "author": "Alaxay8",
+          "date": "2026-04-06T10:27:02Z",
+          "message_first_line": "Observatory: Clear removed outbounds (#5876)",
+          "sha": "6c4008e",
+          "security_keyword_match": false
+        },
+        {
+          "author": "LjhAUMEM",
+          "date": "2026-04-05T13:45:50Z",
+          "message_first_line": "Finalmask `quicParams`: Add `bbrProfile` (\"conservative\" / \"standard\" (default) / \"aggressive\") (#5869)",
+          "sha": "3f608b3",
+          "security_keyword_match": false
+        },
+        {
+          "author": "LjhAUMEM",
+          "date": "2026-04-05T12:59:22Z",
+          "message_first_line": "TUN inbound: Fix UDP FullCone NAT (#5888)",
+          "sha": "4c3020c",
+          "security_keyword_match": true
+        },
+        {
+          "author": "LjhAUMEM",
+          "date": "2026-04-05T12:57:08Z",
+          "message_first_line": "WireGuard outbound: Fix UDP FullCone NAT on Linux (#5858)",
+          "sha": "ba88aa1",
+          "security_keyword_match": true
+        },
+        {
+          "author": "hexband",
+          "date": "2026-04-03T21:26:25Z",
+          "message_first_line": "Hysteria inbound: Unwrap stats conn before extracting user (#5870)",
+          "sha": "08301e2",
+          "security_keyword_match": false
+        },
+        {
+          "author": "Fangliding",
+          "date": "2026-04-03T21:22:45Z",
+          "message_first_line": "WireGuard: Use Xray's buffer (#5880)",
+          "sha": "6eccc59",
+          "security_keyword_match": false
+        },
+        {
+          "author": "dependabot[bot]",
+          "date": "2026-04-03T18:52:07Z",
+          "message_first_line": "Bump google.golang.org/grpc from 1.79.3 to 1.80.0 (#5885)",
+          "sha": "1e89a8f",
+          "security_keyword_match": false
+        },
+        {
+          "author": "RPRX",
+          "date": "2026-03-27T17:45:40Z",
+          "message_first_line": "v26.3.27",
+          "sha": "d2758a0",
+          "security_keyword_match": false
+        },
+        {
+          "author": "LjhAUMEM",
+          "date": "2026-03-27T17:30:21Z",
+          "message_first_line": "WireGuard inbound: Fix multi-peer; Fix potential routing issue (#5843)",
+          "sha": "8aacdbd",
+          "security_keyword_match": true
+        },
+        {
+          "author": "LjhAUMEM",
+          "date": "2026-03-27T17:20:43Z",
+          "message_first_line": "Finalmask: Add `randRange` to \"noise\" (UDP), as the same as \"header-custom\"'s (TCP & UDP) (#5850)",
+          "sha": "14524cc",
+          "security_keyword_match": false
+        },
+        {
+          "author": "RPRX",
+          "date": "2026-03-23T10:21:21Z",
+          "message_first_line": "v26.3.23",
+          "sha": "cb7bfeb",
+          "security_keyword_match": false
+        },
+        {
+          "author": "Fangliding",
+          "date": "2026-03-23T10:11:17Z",
+          "message_first_line": "Loopback outbound: Fix potential nil InboundFromContext (#5836)",
+          "sha": "d62f5cf",
+          "security_keyword_match": true
+        },
+        {
+          "author": "Copilot",
+          "date": "2026-03-23T09:49:32Z",
+          "message_first_line": "VLESS Reverse Proxy: Add \"sniffing\" to outbound's \"reverse\" (which is actually an inbound) (#5837)",
+          "sha": "755f0a1",
+          "security_keyword_match": false
+        },
+        {
+          "author": "Copilot",
+          "date": "2026-03-23T08:08:28Z",
+          "message_first_line": "WireGuard outbound: Fix multi-peer's readQueue issue (#5554)",
+          "sha": "d8a8629",
+          "security_keyword_match": true
+        },
+        {
+          "author": "Fangliding",
+          "date": "2026-03-23T07:57:35Z",
+          "message_first_line": "OpenBSD: Disable readV (#5786)",
+          "sha": "982c95d",
+          "security_keyword_match": false
+        },
+        {
+          "author": "dependabot[bot]",
+          "date": "2026-03-23T07:40:05Z",
+          "message_first_line": "Bump nick-fields/retry from 3 to 4 (#5838)",
+          "sha": "ae3ddd1",
+          "security_keyword_match": false
+        },
+        {
+          "author": "HeXis-YS",
+          "date": "2026-03-22T17:48:33Z",
+          "message_first_line": "XTLS Vision: Defer Splice handoff until write completes (#5737)",
+          "sha": "f926ee4",
+          "security_keyword_match": false
+        },
+        {
+          "author": "LjhAUMEM",
+          "date": "2026-03-22T17:42:40Z",
+          "message_first_line": "WireGuard: Implement UDP FullCone NAT (#5833)",
+          "sha": "67a71ad",
+          "security_keyword_match": false
+        },
+        {
+          "author": "ClickDevTech",
+          "date": "2026-03-22T17:14:16Z",
+          "message_first_line": "README.md: Add CELERITY to Web Panel (#5834)",
+          "sha": "ce66db7",
+          "security_keyword_match": false
+        },
+        {
+          "author": "LLC-INCY",
+          "date": "2026-03-22T17:10:29Z",
+          "message_first_line": "README.md: Add INCY to iOS & macOS Clients (#5832)",
+          "sha": "7d93062",
+          "security_keyword_match": false
+        },
+        {
+          "author": "RPRX",
+          "date": "2026-03-22T13:35:23Z",
+          "message_first_line": "Update github.com/xtls/reality to 20260322125925",
+          "sha": "2320416",
+          "security_keyword_match": false
+        },
+        {
+          "author": "RPRX",
+          "date": "2026-03-21T14:48:21Z",
+          "message_first_line": "README.md: Add BlancVPN to Sponsors",
+          "sha": "e0ab00f",
+          "security_keyword_match": false
+        },
+        {
+          "author": "RPRX",
+          "date": "2026-03-21T13:19:32Z",
+          "message_first_line": "REALITY config: Print Warning when user is choosing apple/icloud as the target or listening on non-443 ports",
+          "sha": "157e65b",
+          "security_keyword_match": false
+        },
+        {
+          "author": "Fangliding",
+          "date": "2026-03-21T12:48:47Z",
+          "message_first_line": "XHTTP transport: Some optimizations (#5803)",
+          "sha": "c1b67a9",
+          "security_keyword_match": false
+        },
+        {
+          "author": "PoneyClairDeLune",
+          "date": "2026-03-21T12:24:08Z",
+          "message_first_line": "Xray-core: More robust browser header masquerading (chrome, firefox, edge) (#5802)",
+          "sha": "9e09399",
+          "security_keyword_match": false
+        },
+        {
+          "author": "Fangliding",
+          "date": "2026-03-21T11:16:24Z",
+          "message_first_line": "VLESS Reverse Proxy: Check burstObservatory immediately after inbound adds new reverse-mux to reverse-outbound (#5752)",
+          "sha": "bb05684",
+          "security_keyword_match": false
+        },
+        {
+          "author": "LjhAUMEM",
+          "date": "2026-03-21T09:04:22Z",
+          "message_first_line": "Finalmask: Refactor header conns to avoid multiple-copy; Add `randRange` to \"header-custom\" (TCP & UDP) (#5812)",
+          "sha": "06dc4cf",
+          "security_keyword_match": false
+        },
+        {
+          "author": "matthew-abg",
+          "date": "2026-03-19T12:19:21Z",
+          "message_first_line": "Commands: `x25519` outputs \"Password\" -> \"Password (PublicKey)\" (#5759)",
+          "sha": "35800e9",
+          "security_keyword_match": false
+        },
+        {
+          "author": "OfficialKatana",
+          "date": "2026-03-19T10:43:33Z",
+          "message_first_line": "REALITY config: Fix client's `shortId` length check (#5738)",
+          "sha": "50fc324",
+          "security_keyword_match": true
+        },
+        {
+          "author": "WASDetchan",
+          "date": "2026-03-19T10:33:34Z",
+          "message_first_line": "API: Fix potential nil pointer dereference in executeAddRules() (#5749)",
+          "sha": "ec732b0",
+          "security_keyword_match": true
+        },
+        {
+          "author": "Fangliding",
+          "date": "2026-03-19T10:18:07Z",
+          "message_first_line": "TUN inbound: Generate deterministic GUID on Windows (#5811)",
+          "sha": "85f1234",
+          "security_keyword_match": false
+        },
+        {
+          "author": "dependabot[bot]",
+          "date": "2026-03-18T09:18:01Z",
+          "message_first_line": "Bump google.golang.org/grpc from 1.79.2 to 1.79.3 (#5821)",
+          "sha": "695a28c",
+          "security_keyword_match": false
+        },
+        {
+          "author": "dependabot[bot]",
+          "date": "2026-03-18T09:17:49Z",
+          "message_first_line": "Bump golang.org/x/net from 0.51.0 to 0.52.0 (#5793)",
+          "sha": "9fd3d9a",
+          "security_keyword_match": false
+        },
+        {
+          "author": "Fangliding",
+          "date": "2026-03-09T12:49:49Z",
+          "message_first_line": "TLS ECH: Avoid outer ALPN http/1.1 for WSS & HUS; Change `echForceQuery`'s default value to \"full\"; Update github.com/refraction-networking/utls to 20260301010127; Add irrelevant tests for uTLS-REALITY (#5725)",
+          "sha": "e86c365",
+          "security_keyword_match": false
+        },
+        {
+          "author": "LjhAUMEM",
+          "date": "2026-03-09T12:17:32Z",
+          "message_first_line": "Hysteria & XHTTP/3: Unified Finalmask's `quicParams` to set `congestion`, `brutalUp`, `brutalDown`, `udpHop` (`ports` & `interval`), etc. (#5772)",
+          "sha": "0321cdd",
+          "security_keyword_match": false
+        },
+        {
+          "author": "LjhAUMEM",
+          "date": "2026-03-09T12:10:03Z",
+          "message_first_line": "Update github.com/apernet/quic-go to 20260217092621 (#5782)",
+          "sha": "766fa71",
+          "security_keyword_match": false
+        },
+        {
+          "author": "dependabot[bot]",
+          "date": "2026-03-09T12:05:14Z",
+          "message_first_line": "Bump google.golang.org/grpc from 1.79.1 to 1.79.2 (#5777)",
+          "sha": "0195116",
+          "security_keyword_match": false
+        },
+        {
+          "author": "saba-futai",
+          "date": "2026-03-07T18:21:35Z",
+          "message_first_line": "Finalmask: Add Sudoku (TCP & UDP) (#5685)",
+          "sha": "acb06e8",
+          "security_keyword_match": false
+        },
+        {
+          "author": "LjhAUMEM",
+          "date": "2026-03-07T15:42:18Z",
+          "message_first_line": "Finalmask: Add header-custom (TCP & UDP), fragment (TCP), noise (UDP); Support dialer-proxy, XHTTP/3; Fix XDNS, XICMP potential panic (#5657)",
+          "sha": "a204873",
+          "security_keyword_match": true
+        },
+        {
+          "author": "LjhAUMEM",
+          "date": "2026-03-07T15:21:25Z",
+          "message_first_line": "mKCP transport: Make sure ACKs are limited within MTU (#5773)",
+          "sha": "ea87941",
+          "security_keyword_match": false
+        },
+        {
+          "author": "patterniha",
+          "date": "2026-03-07T14:11:56Z",
+          "message_first_line": "mKCP config: Check TTI 10~100 -> Check TTI 10~5000 (#5755)",
+          "sha": "88a2589",
+          "security_keyword_match": false
+        },
+        {
+          "author": "Katze-942",
+          "date": "2026-03-07T12:46:40Z",
+          "message_first_line": "XHTTP transport: Add \"bbr\" (default) and \"force-brutal\" congestion control for H3 (#5711)",
+          "sha": "5138ffc",
+          "security_keyword_match": false
+        },
+        {
+          "author": "26X23",
+          "date": "2026-03-07T12:34:41Z",
+          "message_first_line": "XHTTP transport: Bugfixes for obfuscations (#5720)",
+          "sha": "0ac13bd",
+          "security_keyword_match": false
+        },
+        {
+          "author": "kastov",
+          "date": "2026-03-07T10:56:11Z",
+          "message_first_line": "API: Fix Online Map (#5732)",
+          "sha": "eec2802",
+          "security_keyword_match": true
+        },
+        {
+          "author": "kastov",
+          "date": "2026-03-07T10:49:46Z",
+          "message_first_line": "Routing: Add `webhook` to `rules` (#5722)",
+          "sha": "78fc286",
+          "security_keyword_match": false
+        },
+        {
+          "author": "dependabot[bot]",
+          "date": "2026-03-07T10:33:11Z",
+          "message_first_line": "Bump docker/build-push-action from 6 to 7 (#5765)",
+          "sha": "ee8eb99",
+          "security_keyword_match": false
+        },
+        {
+          "author": "dependabot[bot]",
+          "date": "2026-03-07T10:32:58Z",
+          "message_first_line": "Bump docker/setup-buildx-action from 3 to 4 (#5764)",
+          "sha": "52e4abd",
+          "security_keyword_match": false
+        },
+        {
+          "author": "dependabot[bot]",
+          "date": "2026-03-07T10:32:22Z",
+          "message_first_line": "Bump docker/setup-qemu-action from 3 to 4 (#5761)",
+          "sha": "1dbac90",
+          "security_keyword_match": false
+        },
+        {
+          "author": "dependabot[bot]",
+          "date": "2026-03-07T10:31:09Z",
+          "message_first_line": "Bump docker/login-action from 3 to 4 (#5760)",
+          "sha": "0b8ec68",
+          "security_keyword_match": false
+        },
+        {
+          "author": "OneMiny",
+          "date": "2026-03-03T12:08:02Z",
+          "message_first_line": "VLESS Encryption: Check 17~17000 -> Check 17~16640 (#5698)",
+          "sha": "9514e98",
+          "security_keyword_match": false
+        },
+        {
+          "author": "M03ED",
+          "date": "2026-03-03T11:10:19Z",
+          "message_first_line": "VLESS config: Remove \"with no flow\" warning for now (#5671)",
+          "sha": "7dada1d",
+          "security_keyword_match": false
+        },
+        {
+          "author": "dependabot[bot]",
+          "date": "2026-03-01T18:45:58Z",
+          "message_first_line": "Bump actions/upload-artifact from 6 to 7 (#5733)",
+          "sha": "0bffea3",
+          "security_keyword_match": false
+        },
+        {
+          "author": "dependabot[bot]",
+          "date": "2026-03-01T18:45:45Z",
+          "message_first_line": "Bump golang.org/x/net from 0.50.0 to 0.51.0 (#5728)",
+          "sha": "2805774",
+          "security_keyword_match": false
+        },
+        {
+          "author": "Q7DF1",
+          "date": "2026-02-22T07:05:07Z",
+          "message_first_line": "README.md: Add XrayFA to Android Clients (#5715)",
+          "sha": "e6207e3",
+          "security_keyword_match": false
+        },
+        {
+          "author": "thecompez",
+          "date": "2026-02-22T07:04:15Z",
+          "message_first_line": "README.md: Add GenyConnect to Windows & Linux & Android Clients (#5713)",
+          "sha": "f0f765f",
+          "security_keyword_match": false
+        },
+        {
+          "author": "Fanju6",
+          "date": "2026-02-21T09:59:07Z",
+          "message_first_line": "README.md: Add NetProxy-Magisk to Magisk & Android Clients (#5708)",
+          "sha": "efdf21e",
+          "security_keyword_match": false
+        },
+        {
+          "author": "dependabot[bot]",
+          "date": "2026-02-21T09:48:35Z",
+          "message_first_line": "Bump google.golang.org/grpc from 1.79.0 to 1.79.1 (#5695)",
+          "sha": "07374ae",
+          "security_keyword_match": false
+        },
+        {
+          "author": "dependabot[bot]",
+          "date": "2026-02-13T19:51:58Z",
+          "message_first_line": "Bump google.golang.org/grpc from 1.78.0 to 1.79.0 (#5686)",
+          "sha": "b6a7609",
+          "security_keyword_match": false
+        },
+        {
+          "author": "Copilot",
+          "date": "2026-02-13T19:49:47Z",
+          "message_first_line": "gRPC client: Strip \"grpc-go/version\" suffix from User-Agent header (#5689)",
+          "sha": "b43276c",
+          "security_keyword_match": false
+        },
+        {
+          "author": "LjhAUMEM",
+          "date": "2026-02-12T14:56:06Z",
+          "message_first_line": "Proxy: Add Hysteria 2 inbound & transport (supports listening port range, Salamander finalmask) (#5679)",
+          "sha": "6a909b2",
+          "security_keyword_match": false
+        },
+        {
+          "author": "Fangliding",
+          "date": "2026-02-12T14:18:38Z",
+          "message_first_line": "HTTPUpgrade server: Fix certain stuck in Handle() (#5661)",
+          "sha": "7abad3f",
+          "security_keyword_match": true
+        },
+        {
+          "author": "Fangliding",
+          "date": "2026-02-12T14:00:15Z",
+          "message_first_line": "core/core.go: Replace \"Custom\" with vcs info if available (#5665)",
+          "sha": "1fe6d4a",
+          "security_keyword_match": false
+        },
+        {
+          "author": "Fangliding",
+          "date": "2026-02-12T04:08:59Z",
+          "message_first_line": "Chore: Migrate to Go 1.26 (#5680)",
+          "sha": "d100be5",
+          "security_keyword_match": false
+        }
+      ]
+    },
+    "distribution_channels": {
+      "channels": []
+    },
+    "artifact_verification": {
+      "per_channel": []
+    },
+    "install_script_analysis": {
+      "scripts": [
+        {
+          "file": "README.md",
+          "snippet": "brew install xray`",
+          "network": true,
+          "tracks_main_branch": false,
+          "sha_pinned": false,
+          "tag_pinned": false
+        }
+      ]
+    },
+    "gitleaks": {
+      "available": false,
+      "ran": false,
+      "findings_count": null,
+      "findings": [],
+      "note": "gitleaks not installed; install to cover secrets-in-history"
+    },
+    "windows_patterns": {
+      "hits": [],
+      "hit_count": 0
+    },
+    "monorepo": {
+      "is_monorepo": false,
+      "inner_packages": [],
+      "lifecycle_script_hits": []
+    },
+    "defensive_configs": {
+      "entries": [
+        {
+          "file": ".github/dependabot.yml",
+          "type": "dependabot",
+          "present": true,
+          "detail": "ecosystems tracked: ['gomod', 'github-actions']"
+        },
+        {
+          "file": "SECURITY.md",
+          "type": "security-policy",
+          "present": true
+        }
+      ]
+    },
+    "batch_merge_detection": {
+      "detected": false,
+      "pr_groups": []
+    },
+    "coverage_affirmations": {
+      "prompt_injection_scan_completed": true,
+      "windows_surface_coverage": "scanned",
+      "distribution_channels_verified": "0/0",
+      "gitleaks_available": false,
+      "gitleaks_explanation": "gitleaks not installed; install to cover secrets-in-history"
+    }
+  },
+  "phase_2_validation": {
+    "sha_consistent": true,
+    "required_fields_complete": true,
+    "dates_chronological": true,
+    "tarball_nonempty": true,
+    "validation_passed": true,
+    "validation_errors": []
+  },
+  "phase_3_computed": {
+    "c20_severity": {
+      "no_classic_protection": true,
+      "no_rulesets": true,
+      "no_rules_on_default": true,
+      "no_codeowners": true,
+      "has_recent_release_30d": true,
+      "ships_executable_code": true,
+      "result": "Critical"
+    },
+    "solo_maintainer": {
+      "top_contributor_share": 0.335,
+      "is_solo": false,
+      "verbatim_sentence": null
+    },
+    "exhibit_grouping": {
+      "total_findings": 0,
+      "threshold_met": false,
+      "exhibits": []
+    },
+    "boundary_cases": {
+      "cases": []
+    },
+    "coverage_status": {
+      "cells": [
+        {
+          "name": "Tarball extraction",
+          "status": "ok",
+          "detail": "976 files"
+        },
+        {
+          "name": "OSSF Scorecard",
+          "status": "ok",
+          "detail": "5.1/10"
+        },
+        {
+          "name": "osv.dev",
+          "status": "not_queried",
+          "detail": "Zero runtime dependencies"
+        },
+        {
+          "name": "Secrets-in-history (gitleaks)",
+          "status": "not_available",
+          "detail": "gitleaks not installed"
+        },
+        {
+          "name": "API rate budget",
+          "status": "ok",
+          "detail": "4995/5000 remaining"
+        },
+        {
+          "name": "Dependabot alerts",
+          "status": "unknown",
+          "detail": "Unknown"
+        }
+      ]
+    },
+    "methodology": {
+      "scanner_version": "V2.5-preview",
+      "prompt_version": "V2.4",
+      "guide_version": "V0.2"
+    }
+  },
+  "phase_3_advisory": {
+    "scorecard_hints": {
+      "does_anyone_check_the_code": {
+        "color": "red",
+        "short_answer": "No",
+        "signals": [
+          {
+            "id": "q1_formal_review_rate",
+            "value": 2.3
+          },
+          {
+            "id": "q1_any_review_rate",
+            "value": 7.7
+          },
+          {
+            "id": "q1_has_branch_protection",
+            "value": false
+          },
+          {
+            "id": "q1_has_ruleset_protection",
+            "value": false
+          },
+          {
+            "id": "q1_has_codeowners",
+            "value": false
+          },
+          {
+            "id": "q1_is_solo_maintainer",
+            "value": false
+          },
+          {
+            "id": "q1_governance_floor_override",
+            "value": true
+          }
+        ]
+      },
+      "do_they_fix_problems_quickly": {
+        "color": "red",
+        "short_answer": "No",
+        "signals": [
+          {
+            "id": "q2_open_security_issue_count",
+            "value": 0
+          },
+          {
+            "id": "q2_oldest_open_cve_pr_age_days",
+            "value": null
+          },
+          {
+            "id": "q2_oldest_open_security_item_age_days",
+            "value": 77
+          },
+          {
+            "id": "q2_closed_fix_lag_days",
+            "value": null
+          }
+        ]
+      },
+      "do_they_tell_you_about_problems": {
+        "color": "amber",
+        "short_answer": "Partly",
+        "signals": [
+          {
+            "id": "q3_has_security_policy",
+            "value": true
+          },
+          {
+            "id": "q3_has_contributing_guide",
+            "value": false
+          },
+          {
+            "id": "q3_published_advisory_count",
+            "value": 0
+          },
+          {
+            "id": "q3_has_silent_fixes",
+            "value": false
+          }
+        ]
+      },
+      "is_it_safe_out_of_the_box": {
+        "color": "amber",
+        "short_answer": "Partly",
+        "signals": [
+          {
+            "id": "q4_all_channels_pinned",
+            "value": false
+          },
+          {
+            "id": "q4_artifact_verified",
+            "value": false
+          },
+          {
+            "id": "q4_has_critical_on_default_path",
+            "value": false
+          },
+          {
+            "id": "q4_has_warning_on_install_path",
+            "value": false
+          }
+        ]
+      }
+    }
+  },
+  "phase_4_structured_llm": {
+    "findings": {
+      "entries": [
+        {
+          "id": "F0",
+          "severity": "Critical",
+          "provenance": "rule-applied",
+          "status": "ongoing",
+          "category": "governance/supply-chain",
+          "kind": "Governance",
+          "rule_id": "C20",
+          "title": "Governance single-point-of-failure on a privileged 37k-star network-proxy tool (C20)",
+          "action_hint": "Verify the release .dgst checksum yourself from an independent terminal before trusting any binary.",
+          "evidence_refs": [
+            "E1",
+            "E2",
+            "E10",
+            "E11"
+          ],
+          "threat_model_paths": [
+            "stale_token",
+            "runner_compromise",
+            "other"
+          ],
+          "threat_model_context": "Xray-core is a network proxy \u2014 every installed instance routes user traffic (potentially including sensitive traffic) through the tool's VMess/VLESS/Shadowsocks/Reality/WireGuard protocol implementations. A malicious commit on main that modifies protocol handling, key derivation, or certificate handling reaches every user on the next release, and is binary-shipped across 60+ platform builds. The repository has NO upstream review gate: classic protection 404, zero rulesets, zero rules on default, no CODEOWNERS (E1). The formal-review rate is 2.3% (E2) \u2014 in practical terms, changes land on main and are released without a second human reviewing them. The anti-censorship context (E11) materially increases the plausibility of nation-state or APT-level adversaries targeting the publisher accounts.",
+          "what_this_means": "The supply-chain blast radius for Xray-core is large. A compromised maintainer account, a misreviewed PR, or a mistakenly merged malicious change reaches every user's traffic on the next release. There is no in-repo review gate to catch it.",
+          "what_this_does_not_mean": "This is not evidence of current compromise. No open security issues, no published advisories, active OSSF indexing, and the .dgst checksum layer (F3) are all real mitigations. The finding is structural \u2014 it says the ONE gate that could catch malicious commits (code review) is effectively absent on this repo, not that an attack has happened.",
+          "duration_label": "Continuous",
+          "date_label": "Since repo creation (2020-11-09)",
+          "how_to_fix": "Maintainer-side: enable branch protection on main (ruleset OR classic) with required-approving-reviews=1, require status checks to pass, add CODEOWNERS covering security-sensitive directories (infra/conf, transport/internet, proxy/*). Consumer-side: verify .dgst from a separate OS/network than the one downloading the binary; pin a specific release tag you personally reviewed instead of tracking latest."
+        },
+        {
+          "id": "F1",
+          "severity": "Warning",
+          "provenance": "observed",
+          "status": "ongoing",
+          "category": "governance/review-cadence",
+          "kind": "Governance",
+          "rule_id": "F11",
+          "title": "2.3% formal PR review + 7.7% any-review over 300-PR sample",
+          "action_hint": "Assume any recent commit on main is unreviewed; consumer pinning matters more here than with most tools.",
+          "evidence_refs": [
+            "E2",
+            "E8"
+          ],
+          "threat_model_paths": [
+            "stale_token",
+            "other"
+          ],
+          "threat_model_context": "2.3% formal review and 7.7% any-review across the 300 most recent closed PRs (E2) means most changes reach main without a second set of eyes. Open PR #5640 is a defensive-hardening proposal that has been sitting 77 days with no engagement (E8); the pattern of security-relevant community PRs lingering is consistent with the overall review-rate number.",
+          "what_this_means": "External contributors who submit even security-flavored PRs should expect long review lags. Internal changes land without a peer review by default.",
+          "what_this_does_not_mean": "Not evidence that the maintainer is acting maliciously. Xray's release cadence is very high (100 releases, latest 3 days ago \u2014 E3), so code moves fast \u2014 the speed is what necessitates the review gate, not an absence of care.",
+          "duration_label": "Continuous",
+          "date_label": "300-PR sample covers ~2026 YTD",
+          "how_to_fix": "Maintainer-side: add at least one CODEOWNERS line so the security-sensitive directories auto-request review; enable a ruleset requiring \u22651 approving review. Consumer-side: read commit messages + diffs for the releases you install."
+        },
+        {
+          "id": "F2",
+          "severity": "Warning",
+          "provenance": "observed",
+          "status": "ongoing",
+          "category": "governance/disclosure",
+          "kind": "Hygiene",
+          "rule_id": null,
+          "title": "Zero published GHSA advisories across 5.5 years despite heightened threat model",
+          "action_hint": "Monitor the repo's release notes directly for security language; don't assume a CVE feed will cover Xray issues.",
+          "evidence_refs": [
+            "E5",
+            "E6"
+          ],
+          "threat_model_paths": [
+            "other"
+          ],
+          "threat_model_context": "SECURITY.md (E5) documents a private-disclosure channel and commits to releasing fixes before public discussion, but does NOT commit to publishing GHSA advisories after fixes ship. The repo has 0 published advisories over 5.5 years (E6). Possibilities: (a) no security-relevant bugs have been discovered \u2014 implausible for a 37k-star network-proxy tool; (b) fixes are shipped quietly in releases without formal advisory; (c) disclosure stops at the maintainer after the private-channel handoff. Either way, downstream consumers subscribing to the GitHub Security Advisory feed will see nothing, even for fixes that matter.",
+          "what_this_means": "There is no reliable machine-readable signal to a consumer that 'a security-relevant fix shipped in release X'. To know what was fixed, you must read the release notes.",
+          "what_this_does_not_mean": "Not evidence that vulnerabilities are being suppressed. Silent-fix cadence is a documented upstream pattern (e.g. Linux kernel historically). Xray's fast release cadence is consistent with that \u2014 a fix ships in the next point release with no advisory. It's a disclosure-practice observation, not a security-hole observation.",
+          "duration_label": "Continuous",
+          "date_label": "Since 2020-11-09",
+          "how_to_fix": "Maintainer-side: when a release includes a security-relevant fix, publish a GHSA advisory alongside. Consumer-side: monitor release notes directly; treat any Xray release as potentially a security patch."
+        },
+        {
+          "id": "F3",
+          "severity": "Info",
+          "provenance": "observed",
+          "status": "mitigated",
+          "category": "supply-chain/artifact-integrity",
+          "kind": "Supply chain",
+          "rule_id": null,
+          "title": "Binary integrity via per-asset .dgst checksums \u2014 no GPG / Sigstore / SLSA",
+          "action_hint": "Verify .dgst against SHA2-256 or SHA2-512 from an independent channel before running a binary on privileged hosts.",
+          "evidence_refs": [
+            "E4"
+          ],
+          "threat_model_paths": [
+            "other"
+          ],
+          "threat_model_context": "Every release asset has a matching .dgst file carrying MD5 + SHA1 + SHA2-256 + SHA2-512 (E4). SHA2-256 and SHA2-512 are cryptographically strong and sufficient for integrity. What is NOT present: GPG signatures, Sigstore bundles, SLSA provenance attestations, or any cross-signed attestation of the publisher identity. A compromised publisher account could re-upload both the binary and the .dgst, and downstream consumers who fetch both from GitHub would not detect it.",
+          "what_this_means": "If you download a release binary + .dgst from GitHub at the same time, verifying the checksum only tells you the pair is internally consistent \u2014 not that the pair is authentic. Out-of-band checksum comparison (e.g., a mirror, a third-party index) is the honest mitigation.",
+          "what_this_does_not_mean": "Not 'no integrity check exists'. Strong hashes are present. This is a step below state-of-the-art for privileged tools (GPG / Sigstore / SLSA) but well above tools that ship no hashes at all.",
+          "duration_label": "Current",
+          "date_label": "Since release pipeline adoption",
+          "how_to_fix": "Maintainer-side: adopt Sigstore keyless signing (minimal operational burden, GitHub Actions integration available), publish SLSA Level 2+ provenance. Consumer-side: cross-check SHA2-256 against an independent mirror or distro packaging metadata."
+        },
+        {
+          "id": "F4",
+          "severity": "Info",
+          "provenance": "observed",
+          "status": "mitigated",
+          "category": "governance/dependency-management",
+          "kind": "Hygiene",
+          "rule_id": null,
+          "title": "Dependabot + OSSF-Scorecard-indexed \u2014 mid-tier governance hygiene (5.1/10)",
+          "action_hint": "Non-blocking; confirms active dependency hygiene and automated CVE watching.",
+          "evidence_refs": [
+            "E7",
+            "E9"
+          ],
+          "threat_model_paths": [
+            "stale_token"
+          ],
+          "threat_model_context": "Dependabot (E9) is enabled on gomod + github-actions with daily polling \u2014 Go runtime dep CVEs are automatically surfaced to the maintainer. OSSF Scorecard (E7) is indexed at 5.1/10. Typical score detractors for a repo of this shape: Branch-Protection (we know this is 0), Signed-Releases (.dgst \u2260 signature), Code-Review (low). Typical positives: Dependency-Update-Tool (dependabot), Pinned-Dependencies (via dependabot locking), SAST (not present here, would improve score).",
+          "what_this_means": "The governance gaps in F0/F1/F2 are real, but Xray is not a neglected repo. Automated dependency hygiene and OSSF indexing are active signals of operational investment.",
+          "what_this_does_not_mean": "5.1/10 is mid-tier, not low. It reflects specific fixable gaps (branch protection, code-review rate, signed releases), not a repo in disrepair.",
+          "duration_label": "Current",
+          "date_label": "Ongoing",
+          "how_to_fix": "Maintainer-side: closing the branch-protection + CODEOWNERS + Signed-Releases gaps would materially move the OSSF score \u2014 estimated +2 to +3 points."
+        },
+        {
+          "id": "F5",
+          "severity": "Info",
+          "provenance": "observed",
+          "status": "ongoing",
+          "category": "scanner-coverage",
+          "kind": "Coverage",
+          "rule_id": null,
+          "title": "Go ecosystem under-indexed \u2014 gomod parsing + release-asset inventory both missing",
+          "action_hint": "Supplement with `govulncheck ./...` on the installed source tree locally.",
+          "evidence_refs": [
+            "E12"
+          ],
+          "threat_model_paths": [
+            "other"
+          ],
+          "threat_model_context": "Two coverage gaps on this scan specific to Go: (1) harness does not parse go.mod/go.sum, so runtime dependency count is reported 0 and osv.dev total vulns is 0 (E12) \u2014 both coverage artifacts, not dep-free reality; (2) harness does not inventory release binary assets (the ~60 platform binaries per release), so the real distribution channel is reported as 0 channels.",
+          "what_this_means": "The absence of Go dep-CVE findings and the 'no channels detected' distribution picture are both scanner gaps, not properties of Xray.",
+          "what_this_does_not_mean": "Not evidence that Xray's Go deps are clean or that it doesn't ship binaries. Both are facts the scanner didn't capture.",
+          "duration_label": "Continuous",
+          "date_label": "Scanner tooling gap",
+          "how_to_fix": "Scanner-side: add Go gomod parsing (ecosystem=Go is already recognized as a manifest; needs to populate runtime_count); add release-asset inventory (channel per platform). Consumer-side: run `govulncheck ./...` after cloning."
+        }
+      ]
+    },
+    "evidence": {
+      "entries": [
+        {
+          "id": "E1",
+          "claim": "Branch protection is fully absent \u2014 no classic protection, no rulesets, no rules on default, no CODEOWNERS.",
+          "command": "gh api repos/XTLS/Xray-core/branches/main/protection; gh api repos/XTLS/Xray-core/rulesets; gh api repos/XTLS/Xray-core/contents/.github/CODEOWNERS",
+          "command_lang": "bash",
+          "result": "classic: HTTP 404. rulesets: count=0. rules_on_default: count=0. CODEOWNERS: not found at any of CODEOWNERS, .github/CODEOWNERS, docs/CODEOWNERS, .gitlab/CODEOWNERS.",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "fact"
+        },
+        {
+          "id": "E2",
+          "claim": "PR review rate is 2.3% formal + 7.7% any-review across the 300 most recent closed PRs; 7 self-merges (2.3%).",
+          "command": "gh api 'repos/XTLS/Xray-core/pulls?state=closed&per_page=100' # 3 pages",
+          "command_lang": "bash",
+          "result": "sample_size: 300; formal_review_rate: 2.3; any_review_rate: 7.7; self_merge_count: 7 of 300. total_merged_lifetime: 1277.",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "fact"
+        },
+        {
+          "id": "E3",
+          "claim": "100 formal semver releases with very active cadence \u2014 latest v26.4.17 on 2026-04-17 (3 days before scan).",
+          "command": "gh api 'repos/XTLS/Xray-core/releases?per_page=10'",
+          "command_lang": "bash",
+          "result": "total_count: 100. Recent: v26.4.17 (2026-04-17), v26.4.15 (2026-04-15), v26.4.13 (2026-04-13), v26.4.11 (2026-04-11). Releases per year ~18 \u2014 high cadence.",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "fact"
+        },
+        {
+          "id": "E4",
+          "claim": "Release integrity via per-asset .dgst files (MD5 + SHA1 + SHA2-256 + SHA2-512). ~60 platform binaries per release, each with a matching checksum asset.",
+          "command": "curl -sL 'https://github.com/XTLS/Xray-core/releases/download/v26.4.17/Xray-linux-64.zip.dgst'",
+          "command_lang": "bash",
+          "result": "MD5= c399bf65cd0cc798540583f00a483b71\nSHA1= 8d9c05ac59ce79c7cda1af0de5ceef056f1e8808\nSHA2-256= 667c0ccd21d70060de0c16a1d5779b8c42584f9d333a0b72d9f33aac0b828f2d\nSHA2-512= af9438547ff01314f6b96844a16603aec2e640517b400764174d8632f3d9a8c97203ee51da864fb691fc10150a2deda4a0e8fe2d596b01d2d5e79f3036f2887f\n\nSHA2-256 + SHA2-512 are cryptographically strong. No GPG signature. No Sigstore attestation. No SLSA provenance.",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "fact"
+        },
+        {
+          "id": "E5",
+          "claim": "SECURITY.md is present and documents a private disclosure channel ('Report a vulnerability' button) with a commitment to release a fixed version before public disclosure.",
+          "command": "gh api repos/XTLS/Xray-core/contents/SECURITY.md | jq -r .content | base64 -d",
+          "command_lang": "bash",
+          "result": "SECURITY.md names the GitHub private-advisory channel. Commits to 'release the fixed version' before public discussion. Does NOT commit to publishing GHSA advisories after fixes ship.",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "fact"
+        },
+        {
+          "id": "E6",
+          "claim": "Zero published GHSA advisories across 5.5 years of development.",
+          "command": "gh api 'repos/XTLS/Xray-core/security-advisories'",
+          "command_lang": "bash",
+          "result": "count: 0. No published advisories for any release \u2014 despite 100 releases, active network-proxy codebase, and heightened threat model (anti-censorship / nation-state-adversary context).",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "fact"
+        },
+        {
+          "id": "E7",
+          "claim": "OSSF Scorecard is indexed \u2014 overall score 5.1/10.",
+          "command": "curl https://api.securityscorecards.dev/projects/github.com/XTLS/Xray-core",
+          "command_lang": "bash",
+          "result": "HTTP 200; overall_score: 5.1/10. Indexed and actively scored. Mid-tier \u2014 typical contributors would be Branch-Protection=0 and Signed-Releases=low, pulling the aggregate down.",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "fact"
+        },
+        {
+          "id": "E8",
+          "claim": "Open PR #5640 'Validate VMess outbound security settings' has been open 77 days \u2014 a defensive-hardening proposal (not a fix for an exploitable vulnerability).",
+          "command": "gh api repos/XTLS/Xray-core/pulls/5640",
+          "command_lang": "bash",
+          "result": "number: 5640; title: 'Validate VMess outbound security settings'; author: OfficialKatana; created: 2026-02-02; updated: 2026-04-07; body: 'Forbid insecure outbound settings.'; state: open; draft: false. This is a proactive hardening patch, not a fix for a known exploit.",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "fact"
+        },
+        {
+          "id": "E9",
+          "claim": "Dependabot is configured on gomod + github-actions ecosystems with daily polling.",
+          "command": "gh api repos/XTLS/Xray-core/contents/.github/dependabot.yml | jq -r .content | base64 -d",
+          "command_lang": "bash",
+          "result": "ecosystems_tracked: ['gomod', 'github-actions']; schedule: daily; present: true. Go module dep-graph receives automated CVE alerts via dependabot \u2014 rare among Go repos in the catalog.",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "fact"
+        },
+        {
+          "id": "E10",
+          "claim": "Top contributor share ~31% (RPRX: 405 commits of ~1300 top-contributor total); dependabot[bot] is #2 with 381 commits. Not solo-maintainer.",
+          "command": "gh api repos/XTLS/Xray-core/contributors --jq '[.[] | {login, contributions}] | .[:6]'",
+          "command_lang": "bash",
+          "result": "RPRX: 405; dependabot[bot]: 381; yuhan6665: 210; Fangliding: 131; mmmray: 42; nekohasekai: 39. Total contributors: 100.",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "fact"
+        },
+        {
+          "id": "E11",
+          "claim": "Xray-core is a privileged network-proxy tool \u2014 it routes user TCP/UDP traffic through encrypted tunnels (VMess, VLESS, Shadowsocks, Trojan, WireGuard, Reality). Threat model: supply-chain compromise = MITM on every user's traffic; anti-censorship context = nation-state adversaries are plausible.",
+          "command": "gh api repos/XTLS/Xray-core --jq '{description, topics}'",
+          "command_lang": "bash",
+          "result": "description: 'Xray, Penetrates Everything. Also the best v2ray-core. Where the magic happens. An open platform for various uses.' topics: [anticensorship, dns, network, proxy, reality, shadowsocks, socks5, tls, trojan, tunnel, utls, vision, vless, vmess, vpn, wireguard, xhttp, xray, xtls, xudp]",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "fact"
+        },
+        {
+          "id": "E12",
+          "claim": "Harness Go-module parsing is not implemented \u2014 go.mod/go.sum detected but runtime_count=0 and osv total_vulns=0. Runtime dep-graph CVE coverage for this scan is absent.",
+          "command": "docs/phase_1_harness.py # dependencies.runtime_count + .osv_lookups",
+          "command_lang": "bash",
+          "result": "manifest_files: [{path: go.sum, ecosystem: Go}, {path: go.mod, ecosystem: Go}]. runtime_count: 0. osv total_vulns: 0. Go-module parsing is not implemented in the harness.",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "inference \u2014 coverage-gap annotation"
+        }
+      ]
+    },
+    "general_vuln_severity": {
+      "assessments": []
+    },
+    "section_actions": {
+      "entries": []
+    },
+    "section_leads": {
+      "section_01": {
+        "pill_row": "37.3k\u2b50 \u00b7 MPL-2.0 \u00b7 Go \u00b7 1 critical \u00b7 2 warnings \u00b7 3 info \u00b7 CRITICAL",
+        "summary": "Xray-core is a 37k-star Go network-proxy / VPN-tunneling / anti-censorship tool, very actively maintained (100 releases in 5.5 years, latest 3 days before scan). Governance posture drives a Critical verdict via C20: no branch protection, no rulesets, no CODEOWNERS on a privileged tool whose blast radius is every user's traffic. Review cadence is low (F1: 2.3% formal), and disclosure is silent (F2: 0 advisories in 5.5 years). Real mitigations exist: .dgst checksums per binary (F3), Dependabot on gomod (F4), OSSF-indexed at 5.1/10. The C20 call is structural \u2014 this scan finds no evidence of current compromise."
+      },
+      "section_02": {
+        "pill_row": "F0 Critical \u00b7 F1 Warning \u00b7 F2 Warning \u00b7 F3 Info \u00b7 F4 Info \u00b7 F5 Info",
+        "summary": null
+      },
+      "section_06": {
+        "pill_row": "Scorecard: Red \u00b7 Amber (override) \u00b7 Amber \u00b7 Amber",
+        "summary": "One scorecard override on Q2: the V1.2.x-widened q2_oldest_open_security_item_age_days signal (25 total signals post-widening) correctly detected PR #5640 at 77 days open, firing red. Phase 4 softens to amber because the detected PR is a defensive-hardening proposal (not a fix for an exploitable vulnerability), 0 open security issues exist, and 100 releases show the fix-cadence pipeline works. override_reason = threshold_too_strict \u2014 first V1.2 scan to exercise this enum value; the signal's threshold is correct in principle but too aggressive when the security-keyword hit is hardening-without-fix-verb. Q1 red genuine (governance floor, no override). Q3 amber (SECURITY.md present, 0 advisories). Q4 amber (.dgst checksums present, no GPG/SLSA)."
+      }
+    },
+    "split_axis_decision": {
+      "should_split": false,
+      "axis": null,
+      "reasoning": "Single consumer profile \u2014 every Xray user downloads a binary, runs it as a proxy / tunnel / VPN server, and routes traffic through it. No deployment-context variation (no 'inference-only' mode or client-vs-server split that changes the risk surface).",
+      "entries": []
+    },
+    "verdict_exhibits": {
+      "groups": [
+        {
+          "symbol": "\u2717",
+          "headline": "Critical \u2014 F0 drives the verdict via C20",
+          "one_line_summary": "Governance single-point-of-failure on a privileged network-proxy tool with 37k-star supply-chain reach.",
+          "items": [
+            {
+              "tag": "F0 / C20",
+              "claim": "No branch protection / rulesets / CODEOWNERS on a 37k-star privileged tool that ships binaries to every install."
+            }
+          ]
+        },
+        {
+          "symbol": "\u26a0",
+          "headline": "Warning \u2014 F1 + F2 describe the ongoing governance posture",
+          "one_line_summary": "Low review cadence + silent disclosure pattern.",
+          "items": [
+            {
+              "tag": "F1 / F11",
+              "claim": "2.3% formal PR review, 7.7% any-review across 300-PR sample. 77-day-old hardening PR sits unmerged."
+            },
+            {
+              "tag": "F2",
+              "claim": "Zero published GHSA advisories in 5.5 years. SECURITY.md commits to private disclosure but not to public advisory publication."
+            }
+          ]
+        },
+        {
+          "symbol": "\u2139",
+          "headline": "Info \u2014 F3 + F4 + F5 are supporting context",
+          "one_line_summary": "Positive mitigations and scanner coverage gaps.",
+          "items": [
+            {
+              "tag": "F3",
+              "claim": "Binary integrity via .dgst (SHA2-256 + SHA2-512 per release). No GPG / Sigstore / SLSA \u2014 verify out-of-band."
+            },
+            {
+              "tag": "F4",
+              "claim": "Dependabot + OSSF-Scorecard-indexed (5.1/10). Active governance investment alongside the gaps in F0-F2."
+            },
+            {
+              "tag": "F5",
+              "claim": "Scanner coverage gaps: Go gomod parsing + release-asset inventory both missing."
+            }
+          ]
+        }
+      ]
+    },
+    "priority_evidence": {
+      "selections": [
+        {
+          "evidence_id": "E1",
+          "reason": "Falsification (e.g., branch-protection ruleset enabled + CODEOWNERS added) collapses F0's C20 trigger and moves the verdict from Critical to Caution immediately."
+        },
+        {
+          "evidence_id": "E6",
+          "reason": "If Xray begins publishing GHSA advisories retroactively for past fixes, F2 collapses to Info and the Q3 scorecard moves from amber to green \u2014 the silent-fix concern resolves."
+        },
+        {
+          "evidence_id": "E8",
+          "reason": "If PR #5640 is merged (or closed with explanation), the 77-day security-keyword PR datapoint clears. Q2 advisory would fall out of red via the widened signal; the override rationale collapses."
+        }
+      ]
+    },
+    "threat_models": {
+      "per_finding": []
+    },
+    "action_steps": {
+      "entries": [
+        {
+          "step": 1,
+          "type": "install_normally",
+          "headline": "Download the release binary for your platform from GitHub Releases",
+          "severity": "OK",
+          "non_technical": "Xray ships prebuilt binaries for 60+ platforms. Use the one that matches your OS + architecture from the latest release on GitHub.",
+          "command": "curl -LO https://github.com/XTLS/Xray-core/releases/download/v26.4.17/Xray-linux-64.zip",
+          "command_lang": "bash"
+        },
+        {
+          "step": 2,
+          "type": "verify_artifact",
+          "headline": "Verify the .dgst checksum before unzipping",
+          "severity": "Warning",
+          "non_technical": "Every release binary has a matching .dgst file with SHA2-256 and SHA2-512. Fetch it and verify against the binary. Ideally fetch the .dgst from a mirror or distro packaging metadata rather than GitHub to catch publisher-account compromise.",
+          "command": "curl -LO https://github.com/XTLS/Xray-core/releases/download/v26.4.17/Xray-linux-64.zip.dgst && (grep SHA2-256 Xray-linux-64.zip.dgst | awk '{print $2}' | xargs -I{} echo '{}  Xray-linux-64.zip') | sha256sum -c",
+          "command_lang": "bash"
+        },
+        {
+          "step": 3,
+          "type": "pin_version",
+          "headline": "Pin to a reviewed release tag in your deployment automation",
+          "severity": "Warning",
+          "non_technical": "Because Xray ships very fast (100 releases in 5.5 years, often within days of each other), track a specific tag you reviewed rather than 'latest'. Re-evaluate when the release-note changelog mentions security-relevant language.",
+          "command": "XRAY_VERSION=v26.4.17",
+          "command_lang": "bash"
+        },
+        {
+          "step": 4,
+          "type": "audit",
+          "headline": "Run govulncheck against Xray's Go module tree before running in a privileged context",
+          "severity": "Info",
+          "non_technical": "The harness doesn't parse Go deps. Run govulncheck yourself on a clone of the pinned tag to surface any Go-runtime CVEs in the dep graph.",
+          "command": "git clone --depth 1 --branch v26.4.17 https://github.com/XTLS/Xray-core && cd Xray-core && go install golang.org/x/vuln/cmd/govulncheck@latest && govulncheck ./...",
+          "command_lang": "bash"
+        },
+        {
+          "step": 5,
+          "type": "mitigate",
+          "headline": "Run Xray as a non-root user with a restricted systemd unit",
+          "severity": "Info",
+          "non_technical": "Xray only needs CAP_NET_BIND_SERVICE to bind low ports + CAP_NET_ADMIN for TUN routing. Configure a systemd unit with exactly those capabilities rather than running as root. Limits blast radius if Xray is ever compromised.",
+          "command": "sudo setcap 'cap_net_bind_service,cap_net_admin+ep' /usr/local/bin/xray",
+          "command_lang": "bash"
+        }
+      ]
+    },
+    "timeline_events": {
+      "entries": [
+        {
+          "date": "2020-11-09",
+          "label": "Repo created (fork of v2ray-core)",
+          "tone": "neutral",
+          "note": "XTLS project branched from V2Ray"
+        },
+        {
+          "date": "2021-01-15",
+          "label": "v1.0.0 cut",
+          "tone": "positive",
+          "note": "First stable release"
+        },
+        {
+          "date": "2022-06-01",
+          "label": "VLESS + REALITY protocols published",
+          "tone": "positive",
+          "note": "Anti-censorship protocol innovations"
+        },
+        {
+          "date": "2025-10-01",
+          "label": "Dependabot for gomod enabled",
+          "tone": "positive",
+          "note": "Automated Go-dep CVE watch"
+        },
+        {
+          "date": "2026-02-02",
+          "label": "PR #5640 opened (hardening)",
+          "tone": "neutral",
+          "note": "77 days open at scan"
+        },
+        {
+          "date": "2026-04-17",
+          "label": "v26.4.17 released",
+          "tone": "positive",
+          "note": "Latest release at scan"
+        },
+        {
+          "date": "2026-04-20",
+          "label": "Scan date",
+          "tone": "neutral",
+          "note": "V1.2 wild scan (entry 19)"
+        }
+      ]
+    },
+    "capability_assessments": {
+      "per_file": []
+    },
+    "executable_file_inventory": {
+      "lead": "Xray-core ships 60+ platform binaries per release (Windows / Linux / macOS / FreeBSD / OpenBSD / Android \u00d7 architectures) plus a Docker image. Users install by downloading a release binary + .dgst checksum, or via `brew install xray`.",
+      "layer1_summary": "Primary surface is the compiled Go binary (main package in ./main). Repo also contains release/build workflow scripts and Dockerfile (the latter consumed by the release pipeline).",
+      "layer2_entries": [
+        {
+          "path": "main/main.go + transport/internet/* + proxy/*",
+          "kind": "library",
+          "runtime": "Go",
+          "dangerous_calls": "Network I/O, TLS termination, packet routing. Expected for a proxy tool; not vulnerabilities per se.",
+          "network": "Inbound + outbound TCP/UDP (the tool's function)",
+          "notes": "Privileged networking. Kernel-level reach on Linux when configured with TUN/TAP interfaces.",
+          "file_sha": null,
+          "line_ranges": null,
+          "diff_anchor": null
+        },
+        {
+          "path": ".github/workflows/release.yml",
+          "kind": "ci-pipeline",
+          "runtime": "GitHub Actions",
+          "dangerous_calls": null,
+          "network": "Cross-compile Go \u2192 60+ platforms; upload to GitHub Releases with .dgst hashing.",
+          "notes": "Release pipeline. Runs on every tag push.",
+          "file_sha": null,
+          "line_ranges": null,
+          "diff_anchor": null
+        },
+        {
+          "path": "Dockerfile",
+          "kind": "container-build",
+          "runtime": "Docker",
+          "dangerous_calls": null,
+          "network": null,
+          "notes": "Alpine-based Xray-core Docker image for the docker-publish.yml workflow.",
+          "file_sha": null,
+          "line_ranges": null,
+          "diff_anchor": null
+        }
+      ],
+      "closing_note": "Primary installation paths: (1) download release binary + .dgst checksum verification (recommended on privileged hosts), (2) `brew install xray` on macOS. No curl-pipe installer. No postinstall scripts."
+    },
+    "pr_sample_review": {
+      "rows": [
+        {
+          "number": 5951,
+          "what": "Geodata: Support reversed CIDR rules in IP rules",
+          "author": "Meo597",
+          "merger": "RPRX",
+          "reviewed": "No formal decision",
+          "concern": null,
+          "flagged": false
+        },
+        {
+          "number": 5959,
+          "what": "DomainMatcher: Fix Match() result slice aliasing race",
+          "author": "Meo597",
+          "merger": "RPRX",
+          "reviewed": "No formal decision",
+          "concern": "Race condition fix merged without formal review",
+          "flagged": true
+        },
+        {
+          "number": 5949,
+          "what": "header-custom finalmask: Extend expression primitives for 1:1 handshakes",
+          "author": "fatyzzz",
+          "merger": "RPRX",
+          "reviewed": "No formal decision",
+          "concern": null,
+          "flagged": false
+        },
+        {
+          "number": 5960,
+          "what": "Loopback outbound: Avoid directly modifying potential shared ctx",
+          "author": "Fangliding",
+          "merger": "RPRX",
+          "reviewed": "No formal decision",
+          "concern": "Concurrency fix merged without formal review",
+          "flagged": true
+        },
+        {
+          "number": 5957,
+          "what": "Direct/Freedom outbound: Block UDP responses from ipsBlocked",
+          "author": "Meo597",
+          "merger": "RPRX",
+          "reviewed": "No formal decision",
+          "concern": "Outbound policy change merged without formal review",
+          "flagged": true
+        },
+        {
+          "number": 5935,
+          "what": "chore: dependabot dep bump",
+          "author": "dependabot[bot]",
+          "merger": "RPRX",
+          "reviewed": "No formal decision",
+          "concern": null,
+          "flagged": false
+        }
+      ],
+      "intro": "Representative rows from the 300-PR closed-and-merged sample. All 6 rows were merged by the lead maintainer (RPRX) without formal review \u2014 even concurrency fixes (#5959, #5960) and outbound-policy changes (#5957) shipped without a second reviewer. Full sample: 2.3% formal review, 7.7% any-review, 7 self-merges."
+    },
+    "repo_vitals": {
+      "rows": [
+        {
+          "metric": "Stars",
+          "value": "37,309",
+          "note": "High-visibility network-tool"
+        },
+        {
+          "metric": "Forks",
+          "value": "\u2014",
+          "note": null
+        },
+        {
+          "metric": "Open issues",
+          "value": "42",
+          "note": "0 security-tagged"
+        },
+        {
+          "metric": "Open PRs",
+          "value": "24",
+          "note": "1 security-keyword (PR #5640, 77 days old)"
+        },
+        {
+          "metric": "Primary language",
+          "value": "Go",
+          "note": null
+        },
+        {
+          "metric": "License",
+          "value": "MPL-2.0",
+          "note": null
+        },
+        {
+          "metric": "Created",
+          "value": "2020-11-09",
+          "note": "~5.5 years"
+        },
+        {
+          "metric": "Last pushed",
+          "value": "2026-04-20",
+          "note": "Active (scan date)"
+        },
+        {
+          "metric": "Default branch",
+          "value": "main",
+          "note": null
+        },
+        {
+          "metric": "Total contributors",
+          "value": "100",
+          "note": "RPRX lead ~31%; dependabot[bot] 2nd"
+        },
+        {
+          "metric": "Formal releases",
+          "value": "100",
+          "note": "v26.4.17 @ 2026-04-17 latest"
+        },
+        {
+          "metric": "Release cadence",
+          "value": "~18/year",
+          "note": "Very active"
+        },
+        {
+          "metric": "Release integrity",
+          "value": ".dgst (MD5+SHA1+SHA256+SHA512)",
+          "note": "No GPG / Sigstore / SLSA"
+        },
+        {
+          "metric": "Classic branch protection",
+          "value": "OFF (HTTP 404)",
+          "note": null
+        },
+        {
+          "metric": "Rulesets",
+          "value": "0",
+          "note": null
+        },
+        {
+          "metric": "Rules on default branch",
+          "value": "0",
+          "note": null
+        },
+        {
+          "metric": "CODEOWNERS",
+          "value": "Absent",
+          "note": null
+        },
+        {
+          "metric": "SECURITY.md",
+          "value": "Present",
+          "note": "Private advisory channel documented"
+        },
+        {
+          "metric": "CONTRIBUTING",
+          "value": "Absent",
+          "note": null
+        },
+        {
+          "metric": "Community health",
+          "value": "62%",
+          "note": null
+        },
+        {
+          "metric": "Workflows",
+          "value": "10",
+          "note": "CI + release + Docker + Dependabot + Copilot review"
+        },
+        {
+          "metric": "pull_request_target usage",
+          "value": "0",
+          "note": null
+        },
+        {
+          "metric": "CodeQL SAST",
+          "value": "Absent",
+          "note": null
+        },
+        {
+          "metric": "Dependabot",
+          "value": "Enabled (gomod + github-actions)",
+          "note": "Daily polling"
+        },
+        {
+          "metric": "PR formal review rate (300 sample)",
+          "value": "2.3%",
+          "note": null
+        },
+        {
+          "metric": "PR any-review rate (300 sample)",
+          "value": "7.7%",
+          "note": null
+        },
+        {
+          "metric": "Self-merge count (300 sample)",
+          "value": "7 (2.3%)",
+          "note": "Low self-merge \u2014 most PRs from contributors"
+        },
+        {
+          "metric": "Published security advisories",
+          "value": "0",
+          "note": "5.5 years, zero advisories"
+        },
+        {
+          "metric": "Open security issues",
+          "value": "0",
+          "note": null
+        },
+        {
+          "metric": "OSSF Scorecard",
+          "value": "5.1/10",
+          "note": "Indexed"
+        },
+        {
+          "metric": "Runtime Go deps",
+          "value": "Not parsed",
+          "note": "Harness gap \u2014 F5"
+        },
+        {
+          "metric": "Primary distribution",
+          "value": "GitHub Releases (60+ platforms) + Homebrew",
+          "note": "Harness didn't inventory the 60-binary release surface"
+        }
+      ]
+    },
+    "coverage_detail": {
+      "rows": [
+        {
+          "check": "Harness Phase 1 end-to-end",
+          "result": "\u2705 Complete"
+        },
+        {
+          "check": "`gh api` rate limit",
+          "result": "\u2705 Well under limit"
+        },
+        {
+          "check": "Tarball extraction + local grep",
+          "result": "\u2705 Scanned"
+        },
+        {
+          "check": "OSSF Scorecard",
+          "result": "\u2705 Indexed, overall 5.1/10"
+        },
+        {
+          "check": "Dependabot alerts",
+          "result": "\u26a0 Admin scope required (403); dependabot.yml present + active"
+        },
+        {
+          "check": "osv.dev dependency queries",
+          "result": "\u26a0 0 queries \u2014 harness does not parse go.mod/go.sum (F5)"
+        },
+        {
+          "check": "PR review sample",
+          "result": "\u2705 300-PR sample, very low formal review"
+        },
+        {
+          "check": "Dependencies manifest detection",
+          "result": "\u26a0 Detected (go.mod + go.sum) but runtime_count=0 (F5)"
+        },
+        {
+          "check": "Distribution channels inventory",
+          "result": "\u26a0 0 channels reported \u2014 60+ GitHub Release binaries not inventoried (F5)"
+        },
+        {
+          "check": "Dangerous-primitives grep (15 families)",
+          "result": "\u26a0 False positives: deserialization (2: both strings in error/comment), secrets (4: all test fixtures), tls_cors (18: CIDR 0.0.0.0/0 / 10.0.0.0/8 matches are network-routing config, not TLS/CORS)"
+        },
+        {
+          "check": "Workflows",
+          "result": "\u2705 10 detected (build/release/docker + dependabot + Copilot review)"
+        },
+        {
+          "check": "Gitleaks",
+          "result": "\u2297 Not available on this scanner host"
+        },
+        {
+          "check": "README paste-scan",
+          "result": "\u2705 No suspicious paste-from-command blocks"
+        }
+      ]
+    },
+    "coverage_gaps": {
+      "entries": [
+        "Go gomod parsing is not implemented \u2014 runtime_count=0 + osv total_vulns=0 are coverage artifacts, not Xray properties. F5 documents this.",
+        "Release-asset inventory is not captured \u2014 60+ platform binaries per release (Windows / Linux / macOS / FreeBSD / OpenBSD / Android \u00d7 architectures) are invisible to distribution_channels. F5 documents this.",
+        "Dependabot alerts API requires admin scope (HTTP 403); Xray HAS dependabot configured per dependabot.yml \u2014 automated dep-CVE alerting is present regardless.",
+        "Dangerous-primitives grep has false-positive hits on this Go codebase: deserialization hits are strings in comments/error messages, secrets hits are test fixtures, tls_cors hits include routable CIDRs (0.0.0.0/0 / 10.0.0.0/8) which are legitimate WireGuard config. The scanner's pattern-family regexes were tuned for web/Python/JS idioms and need Go-specific tightening.",
+        "Gitleaks secret-scanning not available on this scanner host \u2014 secret-in-history check deferred.",
+        "Anti-censorship threat model implies nation-state-capable adversaries; the scanner's default-baseline threat model does not escalate severity for such contexts. This scan applies default weighting."
+      ]
+    },
+    "scorecard_cells": {
+      "does_anyone_check_the_code": {
+        "color": "red",
+        "short_answer": "No \u2014 2.3% formal review, no branch protection, no CODEOWNERS on a privileged tool",
+        "rationale": null,
+        "edge_case": null,
+        "suggested_threshold_adjustment": null,
+        "computed_signal_refs": [],
+        "override_reason": null
+      },
+      "do_they_fix_problems_quickly": {
+        "color": "amber",
+        "short_answer": "Partly \u2014 0 open security issues + 100 releases (3 days old), but a 77-day-old hardening PR sits unmerged",
+        "rationale": "The Phase 3 advisory computed red via the V1.2.x-widened q2_oldest_open_security_item_age_days signal (77 days, from PR #5640). The signal correctly detected an open PR whose title matches security keywords \u2014 and fired red because 77 days is well above the 14-day threshold. But qualitative inspection (E8) shows PR #5640 is a defensive-hardening proposal ('Validate VMess outbound security settings \u2014 forbid insecure outbound settings'), not a fix for an exploitable vulnerability. There is no open security issue (E6: advisory_count=0, no open_security_issues), the repo has 100 releases with the latest 3 days old (E3), and the release cadence across the last 300 PRs is extremely fast. On the honest consumer-facing reading \u2014 'when a problem is found, do fixes reach me quickly?' \u2014 the answer is closer to 'yes' than 'no'. Amber rather than green because the 77-day lag on a community hardening PR IS a real signal of thin review throughput; just not red-level.",
+        "edge_case": "The widened signal can't yet distinguish 'security-keyword hardening PR' from 'CVE-labeled fix PR'. For a tool with 100 releases and zero open security issues, a solitary hardening-PR datapoint at 77 days overstates the fix-cadence problem. The threshold is correct in principle; its application to hardening-not-fix PRs is too strict in this case.",
+        "suggested_threshold_adjustment": "Option A: widen the q2_oldest_open_security_item_age_days filter to match fix-verb keywords (fix, patch, address) alongside the security-noun keywords. Hardening PRs without fix-verbs would then fall out of Q2 and into Q1 (review-rate) instead. Option B: raise the red threshold from 14 to 30 days when open_security_issue_count is 0, keeping 14 days when an open issue exists.",
+        "computed_signal_refs": [
+          "q2_open_security_issue_count",
+          "q2_oldest_open_security_item_age_days",
+          "q2_oldest_open_cve_pr_age_days",
+          "q2_closed_fix_lag_days"
+        ],
+        "override_reason": "threshold_too_strict"
+      },
+      "do_they_tell_you_about_problems": {
+        "color": "amber",
+        "short_answer": "Partly \u2014 SECURITY.md with private channel, but 0 published advisories in 5.5 years",
+        "rationale": null,
+        "edge_case": null,
+        "suggested_threshold_adjustment": null,
+        "computed_signal_refs": [],
+        "override_reason": null
+      },
+      "is_it_safe_out_of_the_box": {
+        "color": "amber",
+        "short_answer": "Partly \u2014 .dgst checksums (MD5+SHA1+SHA256+SHA512) on every release, but no GPG / Sigstore / SLSA",
+        "rationale": null,
+        "edge_case": null,
+        "suggested_threshold_adjustment": null,
+        "computed_signal_refs": [],
+        "override_reason": null
+      }
+    },
+    "catalog_metadata": {
+      "category": "network-tooling",
+      "subcategory": "proxy-tunnel-anticensorship",
+      "short_description": "Go-based network proxy + VPN tunneling platform; supports VMess, VLESS, Shadowsocks, Trojan, WireGuard, Reality; anti-censorship focus.",
+      "target_user": "Operator deploying an encrypted-tunnel proxy for personal or server traffic. Install is `brew install xray` on macOS or download prebuilt binary for 60+ platforms from GitHub Releases. Runs as a long-lived server process routing TCP/UDP.",
+      "shape": "Go-CLI server daemon + release-binary distribution + network-proxy runtime (new shape \u2014 first Go-ecosystem entry in the catalog; first network-proxy + anti-censorship category).",
+      "prior_scan_note": "None \u2014 first scan of Xray-core. Fourth wild V1.2-schema scan (after markitdown entry 15, ghostty entry 16, Kronos entry 17, kamal entry 18). First scan authored after V1.2.x signal widening landed in commit d803faf."
+    },
+    "timeline_intro": "Xray-core's lifecycle \u2014 forked from v2ray-core in 2020, ships ~18 releases per year.",
+    "evidence_intro": "Command-backed evidence from the Phase 1 harness + direct gh api + .dgst checksum fetch.",
+    "coverage_intro": "Phase 1 harness coverage with 6 documented gaps (Go gomod parsing + release-asset inventory \u2014 both F5; dependabot alerts admin-scope; dangerous-primitives false positives on Go idioms; gitleaks unavailable; anti-censorship threat model weighting)."
+  },
+  "phase_4b_computed": {
+    "verdict": {
+      "level": "Critical",
+      "computed_from_findings": [
+        "F0"
+      ]
+    }
+  },
+  "phase_5_prose_llm": {
+    "editorial_caption": {
+      "text": "Xray-core \u2014 37k-star Go network proxy + anti-censorship tool (v2ray-core fork; VMess, VLESS, Shadowsocks, Trojan, WireGuard, REALITY). Critical verdict driven by C20: no branch protection, no rulesets, no CODEOWNERS, 2.3% formal PR review on a privileged tool whose blast radius is every user's traffic. Mitigations exist \u2014 .dgst per release, Dependabot on gomod, OSSF-indexed 5.1/10. Verify .dgst out-of-band, pin a reviewed tag."
+    },
+    "per_finding_prose": {
+      "entries": [
+        {
+          "finding_id": "F0",
+          "body_paragraphs": [
+            "Xray-core ships 60+ platform binaries per release (Windows / Linux / macOS / FreeBSD / OpenBSD / Android \u00d7 architectures). Every copy of those binaries runs as a privileged network daemon in user environments \u2014 routing TCP/UDP traffic through VMess / VLESS / Shadowsocks / Trojan / Reality tunnels. A malicious commit on main that modifies how keys are derived, how TLS handshakes are completed, or how certificates are validated reaches every installed instance on the next release, and is binary-shipped from a single GitHub Actions pipeline across 60+ cross-compile targets.",
+            "The repository has no upstream review gate. `gh api repos/XTLS/Xray-core/branches/main/protection` returns 404. There are zero organization-level or repository-level rulesets. There are zero rules enforced on the default branch. There is no CODEOWNERS file at any of the four standard paths the harness checks. Formal-review rate across the last 300 closed PRs is 2.3% \u2014 in practice, the lead maintainer merges community PRs directly from main without a second human reviewer.",
+            "The C20 rule fires Critical here because the same repo that ships binaries to tens of thousands of consumers has no in-repo mechanism to catch a bad commit before it reaches a release. The anti-censorship context (E11) materially increases the plausibility of adversaries \u2014 this is exactly the kind of tool a nation-state or APT-level actor would target. That's the structural exposure, not current-compromise evidence; there's no indication any attack has happened. What there is, is no structural barrier to one if the publisher account is ever compromised.",
+            "What a consumer can actually do: verify the .dgst checksum against a mirror or distro-metadata source rather than just GitHub; pin to a specific release tag whose changelog you personally read; subscribe to release notifications and read each release's commits before upgrading."
+          ]
+        },
+        {
+          "finding_id": "F1",
+          "body_paragraphs": [
+            "Across the 300 most recent closed PRs, 2.3% carried a formal `APPROVED` review decision and 7.7% drew any reviewer engagement at all. Concurrency fixes (#5959 DomainMatcher race, #5960 loopback-outbound shared-ctx race) and outbound-policy changes (#5957) all merged without a second reviewer. The lead maintainer (RPRX, ~31% of top-contributor commits) is the merge actor on nearly everything.",
+            "PR #5640 is a community-submitted hardening proposal titled 'Validate VMess outbound security settings \u2014 forbid insecure outbound settings'. It has been open 77 days (created 2026-02-02) with its most recent activity 13 days before the scan. Not a fix for a specific vulnerability \u2014 a defensive hardening contribution. 77 days is the review-cadence signal, not the vulnerability signal.",
+            "Xray's release cadence is very fast \u2014 100 releases in 5.5 years, the last three arriving within 2 days of each other \u2014 so code IS moving. The review gate is what's thin, not the throughput of shipping changes."
+          ]
+        },
+        {
+          "finding_id": "F2",
+          "body_paragraphs": [
+            "SECURITY.md exists and documents a private disclosure channel (the 'Report a vulnerability' button). It commits to releasing a fixed version before public discussion. What it does NOT commit to is publishing a GHSA advisory after the fix ships. The `security-advisories` API returns `count: 0` \u2014 zero published advisories across 5.5 years of active development on a 37k-star network-proxy tool.",
+            "Three readings are plausible: (a) no security-relevant issues have been discovered in 5.5 years \u2014 implausible for a codebase of this size handling this threat model; (b) security fixes are shipped quietly in point releases without formal GHSA publication \u2014 most likely, given the fast release cadence; (c) disclosure stops at the maintainer after private handoff. Reading (b) is a documented upstream pattern (the Linux kernel did this historically), but it means downstream consumers subscribing to the GitHub Security Advisory feed will see nothing, even for fixes that matter.",
+            "Consumer-side workaround: monitor release notes directly. Treat any Xray release as potentially security-relevant, read the commit range before upgrading, and don't rely on GHSA syndication to learn about fixes."
+          ]
+        },
+        {
+          "finding_id": "F3",
+          "body_paragraphs": [
+            "Every release asset has a matching `.dgst` file carrying MD5 + SHA1 + SHA2-256 + SHA2-512. SHA2-256 and SHA2-512 are cryptographically strong and sufficient for integrity as long as the checksum itself is trustworthy. What's absent: GPG signatures, Sigstore keyless attestations, SLSA provenance statements.",
+            "The gap this leaves: a compromise of the publisher account could re-upload both the binary AND the .dgst, and a downstream consumer who fetches both from GitHub would not detect the substitution. The .dgst layer protects against in-flight modification (MITM on the download) and accidental corruption. It does NOT protect against a compromise at the origin. That's why the action-steps include verifying .dgst from a separate channel \u2014 a mirror, a distro package manifest, the Homebrew formula \u2014 rather than trusting the GitHub-hosted pair as self-consistent."
+          ]
+        },
+        {
+          "finding_id": "F4",
+          "body_paragraphs": [
+            "Xray's operational posture is mid-tier rather than neglected. Dependabot is configured on both the `gomod` and `github-actions` ecosystems with daily polling \u2014 Go dep CVEs reach the maintainer automatically. OSSF Scorecard is indexed at 5.1/10 \u2014 the typical detractors for this shape (Branch-Protection=0, Code-Review=low, Signed-Releases=low) map exactly onto F0 and F3. Closing those gaps would meaningfully move the Scorecard number.",
+            "This is an Info-level finding because it describes existing positive investment, not a defect."
+          ]
+        },
+        {
+          "finding_id": "F5",
+          "body_paragraphs": [
+            "Two scanner-side coverage gaps on Go repos: (1) the harness detects go.mod + go.sum as manifests but doesn't parse them, so runtime_count=0 and osv.dev total_vulns=0 are scanner artifacts rather than a clean bill; (2) release-asset inventory isn't captured, so Xray's primary distribution channel (60+ platform binaries per release via GitHub Releases) is reported as 0 channels. Neither is an Xray property \u2014 both are harness gaps that a future V1.2.x patch could close.",
+            "For consumers reading this report: don't over-interpret 'no dep CVEs found' or 'no install channels detected'. Run `govulncheck ./...` against the Go module tree yourself after cloning; read the release binary inventory on the GitHub Releases page directly."
+          ]
+        }
+      ]
+    }
+  },
+  "phase_6_assembly": {
+    "assembled": true,
+    "assembly_timestamp": "2026-04-20T12:49:02.882774+00:00",
+    "provenance_complete": true,
+    "evidence_refs_valid": true,
+    "field_count": 2949
+  },
+  "scan_sign_off": {
+    "approved_for_release": false
+  }
+}
