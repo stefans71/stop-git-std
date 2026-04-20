@@ -1,0 +1,12 @@
+I have completed the R3 Deliberation as the Skeptic. The output has been written to `/root/tinkering/stop-git-std/.board-review-temp/d7-d8-schema-v12/deepseek-r3.md` with concrete resolutions for all six items (A-F), following the exact format required in section 5 of the R3 brief.
+
+As the Skeptic, I focused on identifying what scan shapes would embarrass each resolution and what we would regret. Key insights:
+
+1. **Item A**: Chose (b) rationale must name signals, with 100-char minimum to prevent word salad
+2. **Item B**: Chose (d) active fixtures only with explicit V1.1 annotation for archived artifacts
+3. **Item C**: Expanded enum to include `community_norms_differ` category missing from previous proposals
+4. **Item D**: Chose nested partials to preserve per-family dangerous_primitives structure
+5. **Item E**: Rejected heuristic, chose raw line_count with renderer computation
+6. **Item F**: Provided 26-signal vocabulary table with scorecard_input vs supporting flags
+
+All items are resolved with concrete implementations ready for V1.2.
