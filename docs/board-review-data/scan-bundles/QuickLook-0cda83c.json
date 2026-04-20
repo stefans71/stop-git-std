@@ -1,0 +1,3680 @@
+{
+  "$comment": "QuickLook V1.2 wild scan \u2014 fifth wild V1.2 scan; first browser-extension entry in catalog.",
+  "schema_version": "V1.2",
+  "_meta": {
+    "scanner_version": "V2.5-preview",
+    "prompt_version": "V2.4",
+    "scan_started_at": "2026-04-20T13:53:40.145973+00:00",
+    "model": "claude-opus-4-7 (via Claude Code)",
+    "scan_status": "completed",
+    "scan_completed_at": "2026-04-20T14:00:14.403101+00:00"
+  },
+  "target": {
+    "owner": "QL-Win",
+    "repo": "QuickLook",
+    "full_name": "QL-Win/QuickLook",
+    "url": "https://github.com/QL-Win/QuickLook"
+  },
+  "scanner_integrity": {
+    "injection_matches": 0,
+    "actionable_count": 0,
+    "findings": []
+  },
+  "phase_1_raw_capture": {
+    "pre_flight": {
+      "head_sha": "0cda83c26d99148f3b6e5273d7028b4ecffa1e77",
+      "default_branch": "master",
+      "tarball_extracted": true,
+      "tarball_file_count": 896,
+      "symlinks_stripped": 0,
+      "api_rate_limit": {
+        "limit": 5000,
+        "remaining": 4992,
+        "reset": 1776696468,
+        "used": 8
+      }
+    },
+    "repo_metadata": {
+      "name": "QuickLook",
+      "description": "Bring macOS \u201cQuick Look\u201d feature to Windows",
+      "created_at": "2017-04-12T14:57:38Z",
+      "pushed_at": "2026-04-17T03:23:06Z",
+      "stargazer_count": 23083,
+      "fork_count": 1242,
+      "archived": false,
+      "fork": false,
+      "has_issues_enabled": true,
+      "primary_language": "C#",
+      "topics": [
+        "quicklook"
+      ],
+      "license_spdx": "GPL-3.0",
+      "default_branch": "master",
+      "open_issues_count": 190,
+      "size_kb": 344737
+    },
+    "contributors": {
+      "top_contributors": [
+        {
+          "contributions": 716,
+          "login": "xupefei"
+        },
+        {
+          "contributions": 611,
+          "login": "emako"
+        },
+        {
+          "contributions": 21,
+          "login": "Copilot"
+        },
+        {
+          "contributions": 18,
+          "login": "rabelux"
+        },
+        {
+          "contributions": 13,
+          "login": "Jethro-Alter"
+        },
+        {
+          "contributions": 8,
+          "login": "mooflu"
+        }
+      ],
+      "total_contributor_count": 81
+    },
+    "maintainer_accounts": {
+      "accounts": [
+        {
+          "bio": null,
+          "company": null,
+          "created_at": "2018-07-27T08:11:19Z",
+          "followers": 459,
+          "login": "QL-Win",
+          "public_repos": 19,
+          "type": "Organization",
+          "role": "owner"
+        },
+        {
+          "bio": null,
+          "company": "@databricks",
+          "created_at": "2012-04-28T12:45:28Z",
+          "followers": 1049,
+          "login": "xupefei",
+          "public_repos": 52,
+          "type": "User",
+          "role": "contributor",
+          "contributions": 716
+        },
+        {
+          "bio": "Feel free to communicate with me in Chinese, Japanese, Cantonese or English.",
+          "company": null,
+          "created_at": "2016-12-23T17:40:26Z",
+          "followers": 140,
+          "login": "emako",
+          "public_repos": 108,
+          "type": "User",
+          "role": "contributor",
+          "contributions": 611
+        },
+        {
+          "bio": null,
+          "company": null,
+          "created_at": "2015-12-02T15:58:13Z",
+          "followers": 25,
+          "login": "rabelux",
+          "public_repos": 14,
+          "type": "User",
+          "role": "contributor",
+          "contributions": 18
+        },
+        {
+          "bio": null,
+          "company": null,
+          "created_at": "2015-12-10T19:40:26Z",
+          "followers": 2,
+          "login": "Jethro-Alter",
+          "public_repos": 0,
+          "type": "User",
+          "role": "contributor",
+          "contributions": 13
+        }
+      ]
+    },
+    "ossf_scorecard": {
+      "queried": true,
+      "indexed": true,
+      "http_status": 200,
+      "overall_score": 4.1,
+      "checks": [
+        {
+          "name": "Maintained",
+          "score": 10
+        },
+        {
+          "name": "Code-Review",
+          "score": 0
+        },
+        {
+          "name": "Token-Permissions",
+          "score": 10
+        },
+        {
+          "name": "Packaging",
+          "score": -1
+        },
+        {
+          "name": "Dangerous-Workflow",
+          "score": 10
+        },
+        {
+          "name": "CII-Best-Practices",
+          "score": 0
+        },
+        {
+          "name": "Binary-Artifacts",
+          "score": 7
+        },
+        {
+          "name": "Security-Policy",
+          "score": 0
+        },
+        {
+          "name": "Pinned-Dependencies",
+          "score": 0
+        },
+        {
+          "name": "Fuzzing",
+          "score": 0
+        },
+        {
+          "name": "License",
+          "score": 10
+        },
+        {
+          "name": "Signed-Releases",
+          "score": 0
+        },
+        {
+          "name": "Branch-Protection",
+          "score": 0
+        },
+        {
+          "name": "SAST",
+          "score": 0
+        }
+      ],
+      "raw_response": {
+        "date": "2026-04-13",
+        "commit": "26fe346198af8e2b9c0f90aad7d9a09bca71bae5"
+      }
+    },
+    "community_profile": {
+      "health_percentage": 50,
+      "has_code_of_conduct": false,
+      "has_contributing": false,
+      "has_security_policy": false,
+      "license_spdx": "GPL-3.0"
+    },
+    "branch_protection": {
+      "classic": {
+        "status": 404
+      },
+      "rulesets": {
+        "entries": [],
+        "count": 0
+      },
+      "rules_on_default": {
+        "entries": [],
+        "count": 0
+      },
+      "owner_type": "Organization",
+      "org_rulesets": {
+        "status": "error",
+        "entries": []
+      }
+    },
+    "codeowners": {
+      "found": false,
+      "path": null,
+      "content": null,
+      "locations_checked": [
+        "CODEOWNERS",
+        ".github/CODEOWNERS",
+        "docs/CODEOWNERS",
+        ".gitlab/CODEOWNERS"
+      ]
+    },
+    "releases": {
+      "entries": [
+        {
+          "tag_name": "latest",
+          "published_at": "2024-12-06T19:38:07Z",
+          "prerelease": true,
+          "draft": false,
+          "author": "github-actions[bot]"
+        },
+        {
+          "tag_name": "4.5.0",
+          "published_at": "2026-04-14T02:49:44Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "emako"
+        },
+        {
+          "tag_name": "4.4.0",
+          "published_at": "2026-01-08T02:27:46Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "emako"
+        },
+        {
+          "tag_name": "4.3.0",
+          "published_at": "2025-12-10T13:18:12Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "emako"
+        },
+        {
+          "tag_name": "4.2.2",
+          "published_at": "2025-10-16T06:28:09Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "emako"
+        },
+        {
+          "tag_name": "4.2.1",
+          "published_at": "2025-10-15T03:17:09Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "emako"
+        },
+        {
+          "tag_name": "4.2.0",
+          "published_at": "2025-10-13T13:21:51Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "emako"
+        },
+        {
+          "tag_name": "4.1.1",
+          "published_at": "2025-07-22T07:40:49Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "emako"
+        },
+        {
+          "tag_name": "4.1.0",
+          "published_at": "2025-07-19T15:42:23Z",
+          "prerelease": true,
+          "draft": false,
+          "author": "emako"
+        },
+        {
+          "tag_name": "4.0.2",
+          "published_at": "2025-05-28T22:13:48Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "emako"
+        },
+        {
+          "tag_name": "4.0.1",
+          "published_at": "2025-05-10T20:55:56Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "emako"
+        },
+        {
+          "tag_name": "4.0.0",
+          "published_at": "2025-04-16T15:41:15Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "emako"
+        },
+        {
+          "tag_name": "3.7.3",
+          "published_at": "2022-11-23T22:14:28Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "xupefei"
+        },
+        {
+          "tag_name": "3.7.2",
+          "published_at": "2022-11-05T17:19:24Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "xupefei"
+        },
+        {
+          "tag_name": "3.7.1",
+          "published_at": "2021-11-15T22:56:27Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "xupefei"
+        },
+        {
+          "tag_name": "3.7.0",
+          "published_at": "2021-09-18T17:20:38Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "xupefei"
+        },
+        {
+          "tag_name": "3.6.11",
+          "published_at": "2021-03-07T18:09:59Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "xupefei"
+        },
+        {
+          "tag_name": "3.6.10",
+          "published_at": "2020-09-20T13:35:30Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "xupefei"
+        },
+        {
+          "tag_name": "3.6.9",
+          "published_at": "2020-05-21T20:10:23Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "xupefei"
+        },
+        {
+          "tag_name": "3.6.8",
+          "published_at": "2020-05-18T12:54:26Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "xupefei"
+        },
+        {
+          "tag_name": "3.6.7",
+          "published_at": "2020-04-05T16:18:26Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "xupefei"
+        },
+        {
+          "tag_name": "3.6.6",
+          "published_at": "2020-03-25T14:16:03Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "xupefei"
+        },
+        {
+          "tag_name": "3.6.5",
+          "published_at": "2019-05-26T15:57:31Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "xupefei"
+        },
+        {
+          "tag_name": "3.6.4",
+          "published_at": "2018-11-07T21:42:18Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "xupefei"
+        },
+        {
+          "tag_name": "3.6.2",
+          "published_at": "2018-09-12T15:11:58Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "xupefei"
+        },
+        {
+          "tag_name": "0.3.6.1",
+          "published_at": "2018-09-04T18:56:16Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "xupefei"
+        },
+        {
+          "tag_name": "0.3.6",
+          "published_at": "2018-09-02T13:32:41Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "xupefei"
+        },
+        {
+          "tag_name": "0.3.5",
+          "published_at": "2018-03-06T18:56:03Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "xupefei"
+        },
+        {
+          "tag_name": "0.3.4",
+          "published_at": "2018-02-18T18:00:34Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "xupefei"
+        },
+        {
+          "tag_name": "0.3.3",
+          "published_at": "2018-02-12T19:16:26Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "xupefei"
+        },
+        {
+          "tag_name": "0.3.2.1",
+          "published_at": "2017-11-06T18:21:22Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "xupefei"
+        },
+        {
+          "tag_name": "0.3.2",
+          "published_at": "2017-11-06T07:55:54Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "xupefei"
+        },
+        {
+          "tag_name": "0.3.1",
+          "published_at": "2017-08-13T20:13:57Z",
+          "prerelease": true,
+          "draft": false,
+          "author": "xupefei"
+        },
+        {
+          "tag_name": "0.3.0",
+          "published_at": "2017-08-12T22:33:15Z",
+          "prerelease": true,
+          "draft": false,
+          "author": "xupefei"
+        },
+        {
+          "tag_name": "0.2.5",
+          "published_at": "2017-08-01T22:14:56Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "xupefei"
+        },
+        {
+          "tag_name": "0.2.4",
+          "published_at": "2017-07-30T22:07:38Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "xupefei"
+        },
+        {
+          "tag_name": "0.2.3.1",
+          "published_at": "2017-07-15T18:37:53Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "xupefei"
+        },
+        {
+          "tag_name": "0.2.3",
+          "published_at": "2017-07-15T12:44:22Z",
+          "prerelease": true,
+          "draft": false,
+          "author": "xupefei"
+        },
+        {
+          "tag_name": "0.2.2",
+          "published_at": "2017-07-03T21:09:18Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "xupefei"
+        },
+        {
+          "tag_name": "0.2.1",
+          "published_at": "2017-06-18T14:03:07Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "xupefei"
+        },
+        {
+          "tag_name": "0.2.0",
+          "published_at": "2017-06-11T18:55:04Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "xupefei"
+        },
+        {
+          "tag_name": "0.1.14",
+          "published_at": "2017-06-08T19:12:59Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "xupefei"
+        },
+        {
+          "tag_name": "0.1.13",
+          "published_at": "2017-06-02T17:17:19Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "xupefei"
+        },
+        {
+          "tag_name": "0.1.12",
+          "published_at": "2017-05-28T21:44:45Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "xupefei"
+        },
+        {
+          "tag_name": "0.1.11",
+          "published_at": "2017-05-25T21:14:41Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "xupefei"
+        },
+        {
+          "tag_name": "0.1.10",
+          "published_at": "2017-05-22T22:35:45Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "xupefei"
+        },
+        {
+          "tag_name": "0.1.9",
+          "published_at": "2017-05-18T20:16:58Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "xupefei"
+        },
+        {
+          "tag_name": "0.1.8",
+          "published_at": "2017-05-16T19:33:23Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "xupefei"
+        },
+        {
+          "tag_name": "0.1.7",
+          "published_at": "2017-05-14T21:47:25Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "xupefei"
+        },
+        {
+          "tag_name": "0.1.6",
+          "published_at": "2017-05-10T22:40:37Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "xupefei"
+        },
+        {
+          "tag_name": "v0.1.5",
+          "published_at": "2017-05-08T21:25:16Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "xupefei"
+        },
+        {
+          "tag_name": "v0.1.4",
+          "published_at": "2017-05-08T19:13:09Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "xupefei"
+        },
+        {
+          "tag_name": "v0.1.3",
+          "published_at": "2017-05-06T20:28:38Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "xupefei"
+        },
+        {
+          "tag_name": "v0.1.2",
+          "published_at": "2017-05-02T16:17:28Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "xupefei"
+        },
+        {
+          "tag_name": "v0.1.1",
+          "published_at": "2017-05-01T21:11:29Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "xupefei"
+        },
+        {
+          "tag_name": "v0.1",
+          "published_at": "2017-05-01T16:26:21Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "xupefei"
+        }
+      ],
+      "total_count": 56
+    },
+    "security_advisories": {
+      "count": 0,
+      "entries": []
+    },
+    "workflows": {
+      "entries": [
+        {
+          "name": "build",
+          "path": ".github/workflows/msbuild.yml",
+          "state": "active"
+        },
+        {
+          "name": "Copilot code review",
+          "path": "dynamic/copilot-pull-request-reviewer/copilot-pull-request-reviewer",
+          "state": "active"
+        },
+        {
+          "name": "Copilot cloud agent",
+          "path": "dynamic/copilot-swe-agent/copilot",
+          "state": "active"
+        },
+        {
+          "name": "Dependabot Updates",
+          "path": "dynamic/dependabot/dependabot-updates",
+          "state": "active"
+        }
+      ],
+      "count": 4,
+      "pull_request_target_count": 0
+    },
+    "workflow_contents": {
+      "entries": [
+        {
+          "path": ".github/workflows/msbuild.yml",
+          "content_lines": 80,
+          "sha_pinned_actions_count": 0,
+          "tag_pinned_actions_count": 4,
+          "has_pull_request_target": false,
+          "permissions_block_present": true
+        }
+      ]
+    },
+    "code_patterns": {
+      "agent_rule_files": [],
+      "readme_paste_blocks": {
+        "scanned": true,
+        "entries": [],
+        "entries_count": 0
+      },
+      "dangerous_primitives": {
+        "scanned": true,
+        "exec": {
+          "hit_count": 7,
+          "files": [
+            {
+              "file": "QuickLook.Plugin/QuickLook.Plugin.MarkdownViewer/Resources/mathjax/tex-mml-svg.js",
+              "first_match": {
+                "line": 1,
+                "snippet": "(function(){\"use strict\";var __webpack_modules__={351:function(t,e,r){var n,o=this&&this.__extends||(n=function(t,e){ret"
+              }
+            },
+            {
+              "file": "QuickLook.Plugin/QuickLook.Plugin.MarkdownViewer/Resources/js/mermaid.min.js",
+              "first_match": {
+                "line": 1,
+                "snippet": "\"use strict\";var __esbuild_esm_mermaid_nm;(__esbuild_esm_mermaid_nm||={}).mermaid=(()=>{var BAe=Object.create;var u2=Obj"
+              }
+            },
+            {
+              "file": "QuickLook.Plugin/QuickLook.Plugin.MarkdownViewer/Resources/js/markdown-it.min.js",
+              "first_match": {
+                "line": 2,
+                "snippet": "!function(t,e){\"object\"==typeof exports&&\"undefined\"!=typeof module?module.exports=e():\"function\"==typeof define&&define"
+              }
+            },
+            {
+              "file": "QuickLook.Plugin/QuickLook.Plugin.MarkdownViewer/Resources/highlight.js/highlight.min.js",
+              "first_match": {
+                "line": 50,
+                "snippet": "    function p(e){return RegExp(e.toString()+\"|\").exec(\"\").length-1}"
+              }
+            },
+            {
+              "file": "QuickLook.Plugin/QuickLook.Plugin.ImageViewer/Resources/Web/svgaplayerweb/svga.min.js",
+              "first_match": {
+                "line": 1,
+                "snippet": "!function(e,t){\"object\"==typeof exports&&\"object\"==typeof module?module.exports=t():\"function\"==typeof define&&define.am"
+              }
+            },
+            {
+              "file": "QuickLook.Plugin/QuickLook.Plugin.ImageViewer/Resources/Web/lottie-web/lottie.min.js",
+              "first_match": {
+                "line": 1,
+                "snippet": "\"undefined\"!=typeof document&&\"undefined\"!=typeof navigator&&function(t,e){\"object\"==typeof exports&&\"undefined\"!=typeof"
+              }
+            },
+            {
+              "file": "QuickLook.Plugin/QuickLook.Plugin.ImageViewer/Resources/Web/svga/index.min.js",
+              "first_match": {
+                "line": 2,
+                "snippet": "function _typeof(e){return(_typeof=\"function\"==typeof Symbol&&\"symbol\"==typeof Symbol.iterator?function(e){return typeof"
+              }
+            }
+          ]
+        },
+        "deserialization": {
+          "hit_count": 1,
+          "files": [
+            {
+              "file": "QuickLook.Plugin/QuickLook.Plugin.MarkdownViewer/Resources/js/mermaid.min.js",
+              "first_match": {
+                "line": 1193,
+                "snippet": "`;case\"r\":return\"\\r\";case\"t\":return\"\t\";case\"v\":return\"\\v\";case\"0\":return\"\\0\";default:return h}}o(r,\"convertEscapeCharact"
+              }
+            }
+          ]
+        },
+        "network": {
+          "hit_count": 5,
+          "files": [
+            {
+              "file": "QuickLook.Plugin/QuickLook.Plugin.MarkdownViewer/Resources/mathjax/tex-mml-svg.js",
+              "first_match": {
+                "line": 1,
+                "snippet": "(function(){\"use strict\";var __webpack_modules__={351:function(t,e,r){var n,o=this&&this.__extends||(n=function(t,e){ret"
+              }
+            },
+            {
+              "file": "QuickLook.Plugin/QuickLook.Plugin.MarkdownViewer/Resources/js/mermaid.min.js",
+              "first_match": {
+                "line": 2,
+                "snippet": "`+Cr),xe&&tw([C,_,D],Ki=>{Cr=T2(Cr,Ki,\" \")}),E&&$e?E.createHTML(Cr):Cr},e.setConfig=function(){let mt=arguments.length>0"
+              }
+            },
+            {
+              "file": "QuickLook.Plugin/QuickLook.Plugin.ImageViewer/Resources/Web/svgaplayerweb/svga.min.js",
+              "first_match": {
+                "line": 1,
+                "snippet": "!function(e,t){\"object\"==typeof exports&&\"object\"==typeof module?module.exports=t():\"function\"==typeof define&&define.am"
+              }
+            },
+            {
+              "file": "QuickLook.Plugin/QuickLook.Plugin.ImageViewer/Resources/Web/lottie-web/lottie.min.js",
+              "first_match": {
+                "line": 1,
+                "snippet": "\"undefined\"!=typeof document&&\"undefined\"!=typeof navigator&&function(t,e){\"object\"==typeof exports&&\"undefined\"!=typeof"
+              }
+            },
+            {
+              "file": "QuickLook.Plugin/QuickLook.Plugin.ImageViewer/Resources/Web/svga/index.min.js",
+              "first_match": {
+                "line": 2,
+                "snippet": "function _typeof(e){return(_typeof=\"function\"==typeof Symbol&&\"symbol\"==typeof Symbol.iterator?function(e){return typeof"
+              }
+            }
+          ]
+        },
+        "secrets": {
+          "hit_count": 0,
+          "files": []
+        },
+        "vendor_keys": {
+          "hit_count": 0,
+          "files": []
+        },
+        "tls_cors": {
+          "hit_count": 0,
+          "files": []
+        },
+        "sql_injection": {
+          "hit_count": 0,
+          "files": []
+        },
+        "cmd_injection": {
+          "hit_count": 3,
+          "files": [
+            {
+              "file": "QuickLook.Plugin/QuickLook.Plugin.MarkdownViewer/Resources/mathjax/tex-mml-svg.js",
+              "first_match": {
+                "line": 1,
+                "snippet": "(function(){\"use strict\";var __webpack_modules__={351:function(t,e,r){var n,o=this&&this.__extends||(n=function(t,e){ret"
+              }
+            },
+            {
+              "file": "QuickLook.Plugin/QuickLook.Plugin.MarkdownViewer/Resources/js/mermaid.min.js",
+              "first_match": {
+                "line": 1,
+                "snippet": "\"use strict\";var __esbuild_esm_mermaid_nm;(__esbuild_esm_mermaid_nm||={}).mermaid=(()=>{var BAe=Object.create;var u2=Obj"
+              }
+            },
+            {
+              "file": "QuickLook.Plugin/QuickLook.Plugin.MarkdownViewer/Resources/js/markdown-it.min.js",
+              "first_match": {
+                "line": 2,
+                "snippet": "!function(t,e){\"object\"==typeof exports&&\"undefined\"!=typeof module?module.exports=e():\"function\"==typeof define&&define"
+              }
+            }
+          ]
+        },
+        "auth_bypass": {
+          "hit_count": 0,
+          "files": []
+        },
+        "path_traversal": {
+          "hit_count": 0,
+          "files": []
+        },
+        "archive_unsafe": {
+          "hit_count": 0,
+          "files": []
+        },
+        "ssrf": {
+          "hit_count": 0,
+          "files": []
+        },
+        "xss": {
+          "hit_count": 4,
+          "files": [
+            {
+              "file": "QuickLook.Plugin/QuickLook.Plugin.MarkdownViewer/Resources/mathjax/tex-mml-svg.js",
+              "first_match": {
+                "line": 1,
+                "snippet": "(function(){\"use strict\";var __webpack_modules__={351:function(t,e,r){var n,o=this&&this.__extends||(n=function(t,e){ret"
+              }
+            },
+            {
+              "file": "QuickLook.Plugin/QuickLook.Plugin.MarkdownViewer/Resources/js/mermaid.min.js",
+              "first_match": {
+                "line": 1,
+                "snippet": "\"use strict\";var __esbuild_esm_mermaid_nm;(__esbuild_esm_mermaid_nm||={}).mermaid=(()=>{var BAe=Object.create;var u2=Obj"
+              }
+            },
+            {
+              "file": "QuickLook.Plugin/QuickLook.Plugin.MarkdownViewer/Resources/highlight.js/highlight.min.js",
+              "first_match": {
+                "line": 270,
+                "snippet": "    ;e.innerHTML=r.value,((e,n,t)=>{const a=n&&i[n]||t"
+              }
+            },
+            {
+              "file": "QuickLook.Plugin/QuickLook.Plugin.ImageViewer/Resources/Web/js/svg2html.js",
+              "first_match": {
+                "line": 257,
+                "snippet": "        this.wrapper.innerHTML = '';"
+              }
+            }
+          ]
+        },
+        "weak_crypto": {
+          "hit_count": 0,
+          "files": []
+        },
+        "debug_flags": {
+          "hit_count": 0,
+          "files": []
+        }
+      },
+      "executable_files": [
+        {
+          "path": ".github/workflows/msbuild.yml",
+          "kind": "ci-workflow",
+          "runtime": "github-actions",
+          "line_count": 80,
+          "file_sha": "31c333c1fc44",
+          "has_network_call": false,
+          "has_env_var_pattern": true
+        }
+      ],
+      "install_hooks": []
+    },
+    "prompt_injection_scan": {
+      "scanned_files": [],
+      "injection_signals": [],
+      "signal_count": 0,
+      "scan_method": "tarball"
+    },
+    "dependencies": {
+      "manifest_files": [],
+      "runtime": [],
+      "runtime_count": 0,
+      "dev": [],
+      "dev_count": 0,
+      "dependabot_alerts": {
+        "status": 403,
+        "alerts_count": null,
+        "note": "admin scope required; falling back to osv.dev"
+      },
+      "osv_lookups": [],
+      "dependabot_config": {
+        "present": false,
+        "ecosystems_tracked": [],
+        "raw_snippet": null
+      }
+    },
+    "pr_review": {
+      "total_closed_prs": 137,
+      "sample_size": 137,
+      "total_merged_lifetime": 135,
+      "prs": [
+        {
+          "number": 1918,
+          "title": "installer: auto-terminate QuickLook.exe before install/upgrade/uninstall",
+          "review_decision": "",
+          "any_review_count": 2,
+          "self_merge": false,
+          "merged_at": "2026-04-16T03:27:20Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1915,
+          "title": "Align Acrylic10 tint behavior with official dark/light acrylic palette",
+          "review_decision": "",
+          "any_review_count": 2,
+          "self_merge": false,
+          "merged_at": "2026-04-14T16:24:22Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1914,
+          "title": "Add official website badge to README",
+          "review_decision": "",
+          "any_review_count": 1,
+          "self_merge": false,
+          "merged_at": "2026-04-14T09:44:44Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1913,
+          "title": "Bump Magick.NET-Q8-AnyCPU from 14.11.1 to 14.12.0",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2026-04-14T02:57:32Z",
+          "labels": [
+            "dependencies",
+            ".NET"
+          ],
+          "security_flagged": false
+        },
+        {
+          "number": 1906,
+          "title": "Add .jsonl syntax highlighting support to TextViewer",
+          "review_decision": "",
+          "any_review_count": 5,
+          "self_merge": false,
+          "merged_at": "2026-04-01T11:09:37Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1901,
+          "title": "Bump Magick.NET-Q8-AnyCPU from 14.11.0 to 14.11.1",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2026-03-26T17:23:35Z",
+          "labels": [
+            "dependencies",
+            ".NET"
+          ],
+          "security_flagged": false
+        },
+        {
+          "number": 1895,
+          "title": "Bump Magick.NET-Q8-AnyCPU from 14.10.4 to 14.11.0",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2026-03-17T18:41:12Z",
+          "labels": [
+            "dependencies",
+            ".NET"
+          ],
+          "security_flagged": false
+        },
+        {
+          "number": 1890,
+          "title": "Bump Magick.NET-Q8-AnyCPU from 14.10.3 to 14.10.4",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2026-03-12T02:00:14Z",
+          "labels": [
+            "dependencies",
+            ".NET"
+          ],
+          "security_flagged": false
+        },
+        {
+          "number": 1887,
+          "title": "Add File Type Icon",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2026-03-05T15:17:10Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1882,
+          "title": "updated the translation of Simplified Chinese",
+          "review_decision": "",
+          "any_review_count": 1,
+          "self_merge": false,
+          "merged_at": "2026-02-22T14:21:28Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1879,
+          "title": "Add F11 fullscreen toggle support",
+          "review_decision": "",
+          "any_review_count": 3,
+          "self_merge": false,
+          "merged_at": "2026-04-01T03:42:33Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1872,
+          "title": "Windows Arm64 support",
+          "review_decision": "",
+          "any_review_count": 1,
+          "self_merge": false,
+          "merged_at": "2026-04-14T09:58:33Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1871,
+          "title": "Fix typos: remove duplicate words in comments and documentation",
+          "review_decision": "",
+          "any_review_count": 2,
+          "self_merge": false,
+          "merged_at": "2026-02-01T04:07:29Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1868,
+          "title": "Add magic number checks to support image files without an extension",
+          "review_decision": "",
+          "any_review_count": 1,
+          "self_merge": false,
+          "merged_at": "2026-04-14T17:10:02Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1867,
+          "title": "Add Romanian translation",
+          "review_decision": "",
+          "any_review_count": 1,
+          "self_merge": false,
+          "merged_at": "2026-01-26T14:45:03Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1865,
+          "title": "Bump Magick.NET-Q8-AnyCPU from 14.10.1 to 14.10.2",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2026-01-21T08:40:05Z",
+          "labels": [
+            "dependencies",
+            ".NET"
+          ],
+          "security_flagged": false
+        },
+        {
+          "number": 1862,
+          "title": "Handle RPC_E_CANTCALLOUT_ININPUTSYNCCALL in OfficeViewer resize",
+          "review_decision": "",
+          "any_review_count": 2,
+          "self_merge": false,
+          "merged_at": "2026-01-16T11:03:42Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1861,
+          "title": "Fix loop toggle resuming paused video playback",
+          "review_decision": "",
+          "any_review_count": 1,
+          "self_merge": false,
+          "merged_at": "2026-01-16T10:56:06Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1857,
+          "title": "Fix command line relative path resolution",
+          "review_decision": "",
+          "any_review_count": 1,
+          "self_merge": false,
+          "merged_at": "2026-01-19T15:29:24Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1842,
+          "title": "Modernize README with enhanced design and improved navigation",
+          "review_decision": "",
+          "any_review_count": 1,
+          "self_merge": false,
+          "merged_at": "2026-01-21T10:49:15Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1819,
+          "title": "Add option to disable automatic update check at startup",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2025-11-25T16:45:15Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1818,
+          "title": "Add ShowInTaskbar setting to display window in taskbar",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2025-11-25T16:52:12Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1814,
+          "title": "Fix volume control exceeding limits during mouse wheel scroll",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2025-11-24T16:18:36Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1809,
+          "title": "Add Svelte syntax highlighting support",
+          "review_decision": "",
+          "any_review_count": 1,
+          "self_merge": false,
+          "merged_at": "2025-11-19T16:01:34Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1803,
+          "title": "Add plugin to block .insv files for Insta360Studio compatibility",
+          "review_decision": "",
+          "any_review_count": 1,
+          "self_merge": false,
+          "merged_at": "2025-11-16T19:46:41Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1794,
+          "title": "Bump Magick.NET-Q8-AnyCPU from 14.8.2 to 14.9.0",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2025-10-29T13:26:05Z",
+          "labels": [
+            "dependencies",
+            ".NET"
+          ],
+          "security_flagged": false
+        },
+        {
+          "number": 1762,
+          "title": "Add support for Telegram Sticker (.tgs) files",
+          "review_decision": "",
+          "any_review_count": 1,
+          "self_merge": false,
+          "merged_at": "2025-09-21T20:57:56Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1755,
+          "title": "Add Swedish translation",
+          "review_decision": "",
+          "any_review_count": 1,
+          "self_merge": false,
+          "merged_at": "2025-09-11T03:01:23Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1730,
+          "title": "Fix Mermaid diagram rendering in QuickLook.Plugin.MarkdownViewer",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2025-08-01T18:09:52Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1727,
+          "title": "Update Polish translation file",
+          "review_decision": "",
+          "any_review_count": 1,
+          "self_merge": false,
+          "merged_at": "2025-08-01T14:21:44Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1714,
+          "title": "Bump Magick.NET-Q8-AnyCPU from 14.6.0 to 14.7.0",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2025-07-24T08:35:58Z",
+          "labels": [
+            "dependencies",
+            ".NET"
+          ],
+          "security_flagged": false
+        },
+        {
+          "number": 1713,
+          "title": "Add RTL support for markdown files",
+          "review_decision": "CHANGES_REQUESTED",
+          "any_review_count": 7,
+          "self_merge": false,
+          "merged_at": "2025-07-23T15:57:14Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1710,
+          "title": "Update Korean",
+          "review_decision": "",
+          "any_review_count": 2,
+          "self_merge": false,
+          "merged_at": "2025-07-23T07:07:40Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1666,
+          "title": "Add Reload + Customizatio",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2025-06-10T02:45:35Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1663,
+          "title": "Update existing and add missing German translation",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2025-06-06T10:07:16Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1607,
+          "title": "Update pt-BR string in all Translations.config",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2025-04-30T07:36:13Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1604,
+          "title": "Update pt-BR string in Translations.config",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2025-04-27T10:27:52Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1532,
+          "title": "Fix the issue where certain remote desktop software may generate drivers with unknown device types, causing null values in the values obtained by GetGPUNames, w",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2025-02-05T07:30:33Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1497,
+          "title": "Fix ArchiveViewer",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2024-12-08T12:42:47Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1495,
+          "title": "Implement Windows block detection and automatic fix",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2024-12-07T19:27:09Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1494,
+          "title": "Implement modern message box",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2024-12-06T15:57:57Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1491,
+          "title": "Adds \"Open Data Folder\" option and dark mode support to tray menu.",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2024-12-06T07:15:57Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1490,
+          "title": "Improved MarkdownViewer",
+          "review_decision": "CHANGES_REQUESTED",
+          "any_review_count": 2,
+          "self_merge": false,
+          "merged_at": "2024-12-06T02:02:20Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1469,
+          "title": "Fix for Everything v1.5(a). Also supports v1.4 side by side.",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2024-12-03T10:12:14Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1415,
+          "title": "Add .ino extension to C++ syntax highlighting",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2024-04-11T10:25:55Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1398,
+          "title": "Multi Commander support",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2024-12-06T09:01:00Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1397,
+          "title": "add scoop installation route",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2024-12-03T09:23:16Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1392,
+          "title": "Ukrainian translation additions",
+          "review_decision": "",
+          "any_review_count": 3,
+          "self_merge": false,
+          "merged_at": "2024-02-13T11:51:54Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1337,
+          "title": "Github action workflow to run a build for the latest version",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2024-12-06T19:32:01Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 1328,
+          "title": "Polish translation fixes",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2023-07-27T14:26:09Z",
+          "labels": [],
+          "security_flagged": false
+        }
+      ],
+      "formal_review_rate": 5.1,
+      "any_review_rate": 25.5,
+      "self_merge_count": 5,
+      "security_flagged_count": 0,
+      "security_flagged_numbers": []
+    },
+    "open_prs": {
+      "entries": [
+        {
+          "number": 1833,
+          "title": "Add \"Remember my choice\" option for protected view notice",
+          "author": "app/copilot-swe-agent",
+          "created_at": "2025-12-08T02:08:40Z"
+        },
+        {
+          "number": 1825,
+          "title": "Add search panel support in CSV viewer",
+          "author": "app/copilot-swe-agent",
+          "created_at": "2025-11-28T07:43:43Z"
+        },
+        {
+          "number": 1820,
+          "title": "Add file extension allowlist/blocklist filtering",
+          "author": "app/copilot-swe-agent",
+          "created_at": "2025-11-26T21:06:22Z"
+        }
+      ],
+      "count": 3
+    },
+    "closed_not_merged_prs": {
+      "entries": [
+        {
+          "number": 1902,
+          "title": "perf(OfficeViewer): move COM preview calls off UI thread to fix first-preview freeze",
+          "closed_at": "2026-03-31T02:13:44Z"
+        },
+        {
+          "number": 1884,
+          "title": "Added HDF5 file support Through Plugins",
+          "closed_at": "2026-03-18T15:56:42Z"
+        },
+        {
+          "number": 1883,
+          "title": "Bump Magick.NET-Q8-AnyCPU from 14.10.2 to 14.10.3",
+          "closed_at": "2026-02-25T10:22:47Z"
+        },
+        {
+          "number": 1881,
+          "title": "Clean up badge links in README",
+          "closed_at": "2026-02-21T04:21:39Z"
+        },
+        {
+          "number": 1875,
+          "title": "Fix Directory Opus integration when running at different privilege levels",
+          "closed_at": "2026-02-05T17:40:20Z"
+        },
+        {
+          "number": 1860,
+          "title": "Fix Desktop file preview failing since v4.3.0 on Windows 10 LTSC",
+          "closed_at": "2026-01-16T03:08:11Z"
+        },
+        {
+          "number": 1846,
+          "title": "Bump Magick.NET-Q8-AnyCPU from 14.10.0 to 14.10.1",
+          "closed_at": "2026-01-04T19:20:44Z"
+        },
+        {
+          "number": 1836,
+          "title": "Bump Magick.NET-Q8-AnyCPU from 14.9.1 to 14.10.0",
+          "closed_at": "2025-12-11T18:20:26Z"
+        },
+        {
+          "number": 1812,
+          "title": "Increase window resize border thickness from 6 to 12 pixels",
+          "closed_at": "2025-11-23T16:54:49Z"
+        },
+        {
+          "number": 1805,
+          "title": "Add theme toggle button to SVG and WebView2-based image previews",
+          "closed_at": "2026-02-11T06:07:24Z"
+        },
+        {
+          "number": 1795,
+          "title": "Fix crash in Directory Opus/MultiCommander integration due to UIPI blocking WM_COPYDATA",
+          "closed_at": "2025-11-25T15:50:01Z"
+        },
+        {
+          "number": 1787,
+          "title": "Fix crash on startup caused by JIT compilation failure in ShowBalloonTip",
+          "closed_at": "2025-10-25T06:48:20Z"
+        },
+        {
+          "number": 1785,
+          "title": "Fix Desktop file selection in QuickLook by correcting IsCursorActivated check",
+          "closed_at": "2025-10-29T13:27:11Z"
+        },
+        {
+          "number": 1783,
+          "title": "Fix unhandled exception during Windows shutdown/restart on Windows 11 25H2",
+          "closed_at": "2025-10-29T13:14:59Z"
+        },
+        {
+          "number": 1772,
+          "title": "Add \"View Source Code\" menu option to HtmlViewer plugin with SVG support",
+          "closed_at": "2025-10-07T16:37:57Z"
+        },
+        {
+          "number": 1766,
+          "title": "Fix IndexOutOfRangeException in VolumeToIconConverter preventing audio/video preview",
+          "closed_at": "2025-09-27T04:05:03Z"
+        },
+        {
+          "number": 1754,
+          "title": "Add Swedish translation",
+          "closed_at": "2025-09-10T12:50:30Z"
+        },
+        {
+          "number": 1748,
+          "title": "Add OFD file format support to OfficeViewer plugin",
+          "closed_at": "2025-09-07T13:51:54Z"
+        },
+        {
+          "number": 1739,
+          "title": "Fix startup crash in kernelbase.dll caused by null assembly location",
+          "closed_at": "2025-08-15T09:10:13Z"
+        },
+        {
+          "number": 1736,
+          "title": "Fix ArgumentException crash when InfoPanel encounters paths with illegal characters",
+          "closed_at": "2025-08-09T09:50:28Z"
+        },
+        {
+          "number": 1726,
+          "title": "Improve color management for wide-gamut images with embedded profiles",
+          "closed_at": "2025-08-01T17:37:32Z"
+        },
+        {
+          "number": 1723,
+          "title": "Enable text selection for copying displayed file information",
+          "closed_at": "2025-08-02T18:50:05Z"
+        },
+        {
+          "number": 1712,
+          "title": "Fix QuickLook crash after waking from sleep by adding power management event handling",
+          "closed_at": "2025-07-24T17:12:53Z"
+        },
+        {
+          "number": 1524,
+          "title": "Test #1498",
+          "closed_at": "2025-01-05T02:51:35Z"
+        },
+        {
+          "number": 1412,
+          "title": "PR for nuget packages update",
+          "closed_at": "2024-07-18T09:15:57Z"
+        },
+        {
+          "number": 1403,
+          "title": "Added WinGet as an installation method to README.md",
+          "closed_at": "2024-03-21T13:06:34Z"
+        },
+        {
+          "number": 1353,
+          "title": "Bump Magick.NET-Q8-AnyCPU from 12.2.1 to 13.3.0 in /QuickLook.Plugin/QuickLook.Plugin.ImageViewer",
+          "closed_at": "2024-12-03T09:46:07Z"
+        },
+        {
+          "number": 1345,
+          "title": "Update zh-CN translation",
+          "closed_at": "2024-01-01T05:05:11Z"
+        },
+        {
+          "number": 1338,
+          "title": "Remember preview window position",
+          "closed_at": "2024-12-06T17:42:24Z"
+        },
+        {
+          "number": 1320,
+          "title": "add function backupClipboard, function restoreClipboard",
+          "closed_at": "2024-03-19T13:41:59Z"
+        },
+        {
+          "number": 1305,
+          "title": "fix encoding for csv",
+          "closed_at": "2024-12-03T09:28:37Z"
+        },
+        {
+          "number": 1275,
+          "title": "Add Greek Language",
+          "closed_at": "2023-03-25T12:19:14Z"
+        },
+        {
+          "number": 1234,
+          "title": "Bump Newtonsoft.Json from 13.0.1 to 13.0.2 in /QuickLook",
+          "closed_at": "2023-03-25T12:30:48Z"
+        },
+        {
+          "number": 1098,
+          "title": "Update Polish translation",
+          "closed_at": "2022-03-07T09:00:05Z"
+        },
+        {
+          "number": 1064,
+          "title": "Update Dependiences and copy DLLs based on target arch",
+          "closed_at": "2022-03-03T15:53:39Z"
+        },
+        {
+          "number": 996,
+          "title": "Bump SharpCompress from 0.25.1 to 0.29.0 in /QuickLook.Plugin/QuickLook.Plugin.ArchiveViewer",
+          "closed_at": "2021-11-16T21:54:29Z"
+        },
+        {
+          "number": 968,
+          "title": "Update Translations.config pt-BR",
+          "closed_at": "2021-08-15T15:32:49Z"
+        },
+        {
+          "number": 869,
+          "title": "german fix",
+          "closed_at": "2021-03-10T17:30:12Z"
+        },
+        {
+          "number": 849,
+          "title": "Update MetaProvider.cs",
+          "closed_at": "2021-08-04T22:17:25Z"
+        },
+        {
+          "number": 694,
+          "title": "\tmodified:   QuickLook.Plugin/QuickLook.Plugin.MarkdownViewer/Resourc\u2026",
+          "closed_at": "2024-10-28T04:36:22Z"
+        },
+        {
+          "number": 677,
+          "title": "\u4e3a\u7b80\u5316\u7b2c\u4e09\u65b9\u8f6f\u4ef6\u8c03\u7528\uff0c\u5728\u7b2c\u4e00\u4e2a\u547d\u4ee4\u884c\u53c2\u6570\uff08\u8def\u5f84\uff09\u524d\u589e\u52a0\u4e00\u4e2a\u201c|\u201d\u5b9e\u73b0\u4e24\u79cd\u63a7\u5236\u65b9\u5f0f",
+          "closed_at": "2020-06-30T15:17:33Z"
+        },
+        {
+          "number": 556,
+          "title": "\u4fee\u590d\u9884\u89c8\u5feb\u6377\u65b9\u5f0f\u95ee\u9898",
+          "closed_at": "2019-10-20T06:10:51Z"
+        },
+        {
+          "number": 546,
+          "title": "Add support for .aif files",
+          "closed_at": "2019-09-14T12:23:46Z"
+        },
+        {
+          "number": 473,
+          "title": "[Microsoft Store Version] Add alias name.",
+          "closed_at": "2019-03-04T17:59:13Z"
+        },
+        {
+          "number": 415,
+          "title": "Added manage plugins link to plugins folder to Tray Icon. Added readm\u2026",
+          "closed_at": "2023-05-25T09:33:31Z"
+        },
+        {
+          "number": 313,
+          "title": "Initial commit of Font Viewer Plugin",
+          "closed_at": "2018-10-24T04:27:36Z"
+        },
+        {
+          "number": 183,
+          "title": "Info-Overlay for Images/Videos",
+          "closed_at": "2021-01-13T18:22:29Z"
+        },
+        {
+          "number": 38,
+          "title": "Print inner exception information",
+          "closed_at": "2017-07-01T20:03:36Z"
+        },
+        {
+          "number": 35,
+          "title": "Replace \"&\", \"<\", \">\" to HTML entities in Markdown.",
+          "closed_at": "2017-07-01T09:41:24Z"
+        },
+        {
+          "number": 8,
+          "title": "\u6362\u4e2a\u56fe\u6807",
+          "closed_at": "2017-05-12T16:27:29Z"
+        }
+      ],
+      "count": 50
+    },
+    "issues_and_commits": {
+      "open_security_issues": [],
+      "open_issues_count": 187,
+      "closed_issues": [
+        {
+          "author": "nickbort-GH",
+          "closed_at": "2025-12-26T16:25:59Z",
+          "number": 1782,
+          "title": "Error when shutting down or restarting Windows 25H2"
+        },
+        {
+          "author": "Sebbe909",
+          "closed_at": "2025-10-05T18:40:19Z",
+          "number": 1771,
+          "title": "Security unblock attempt popup for plugins?"
+        },
+        {
+          "author": "FlootingDream",
+          "closed_at": "2025-07-22T14:12:35Z",
+          "number": 1709,
+          "title": "[\u4f7f\u7528\u6c42\u52a9] \u8986\u76d6\u5b89\u88c5\u5931\u8d25"
+        },
+        {
+          "author": "antodc",
+          "closed_at": "2025-04-20T04:05:59Z",
+          "number": 1576,
+          "title": "Trojan detected in QuickLook-4.0.0.zip"
+        },
+        {
+          "author": "schroef",
+          "closed_at": "2025-06-09T09:04:50Z",
+          "number": 1387,
+          "title": "Suddenly crashes all the time [rs26020]"
+        },
+        {
+          "author": "nitro122",
+          "closed_at": "2025-06-05T02:56:18Z",
+          "number": 1418,
+          "title": "Persistent crash when opening quick look first time ie: after fresh boot of windows"
+        },
+        {
+          "author": "lcadguard",
+          "closed_at": "2025-05-20T03:33:47Z",
+          "number": 1613,
+          "title": "Microsoft names Quicklook publisher pooi.moe, McAfee quarantines Quicklook"
+        },
+        {
+          "author": "temis01",
+          "closed_at": "2025-05-17T12:07:19Z",
+          "number": 1633,
+          "title": "Antivirus reaction after Quicklook 4.0.1 msi clean install (removed everything + cleaned registry from msi 3.7.3)"
+        },
+        {
+          "author": "ak1dd",
+          "closed_at": "2025-05-12T15:07:40Z",
+          "number": 1627,
+          "title": "4.0.1 - Trojan detected by 15 different Anti-Malware engines: Win32/Sabsik.FL.A!ml "
+        },
+        {
+          "author": "ChristopherW",
+          "closed_at": "2025-04-20T04:23:07Z",
+          "number": 1187,
+          "title": "Unable to Run as Administrator / elevate through UAC to install to %programfiles%"
+        }
+      ],
+      "closed_issues_count": 10,
+      "recent_commits": [
+        {
+          "author": "emako",
+          "date": "2026-04-17T03:18:49Z",
+          "message_first_line": "Add CSV/TSV/PSV rainbow highlighters (light/dark) support",
+          "sha": "0cda83c",
+          "security_keyword_match": false
+        },
+        {
+          "author": "emako",
+          "date": "2026-04-17T02:39:13Z",
+          "message_first_line": "Use nint for Win32 handles; simplify BeginInvoke",
+          "sha": "ed8c299",
+          "security_keyword_match": false
+        },
+        {
+          "author": "emako",
+          "date": "2026-04-17T02:37:04Z",
+          "message_first_line": "Fix BusyDecorator foreground color in dark mode",
+          "sha": "e474c2f",
+          "security_keyword_match": true
+        },
+        {
+          "author": "Copilot",
+          "date": "2026-04-16T03:27:20Z",
+          "message_first_line": "installer: auto-terminate QuickLook.exe before install/upgrade/uninstall (#1918)",
+          "sha": "669d7b6",
+          "security_keyword_match": false
+        },
+        {
+          "author": "emako",
+          "date": "2026-04-15T18:11:04Z",
+          "message_first_line": "Add option to close preview when losing focus #484",
+          "sha": "abd8b4a",
+          "security_keyword_match": false
+        },
+        {
+          "author": "emako",
+          "date": "2026-04-15T17:32:58Z",
+          "message_first_line": "Not ready for MediaInfo-ARM64",
+          "sha": "d1e6fac",
+          "security_keyword_match": false
+        },
+        {
+          "author": "emako",
+          "date": "2026-04-14T18:42:53Z",
+          "message_first_line": "Truncate and sanitize overly long lines",
+          "sha": "68b710a",
+          "security_keyword_match": false
+        },
+        {
+          "author": "emako",
+          "date": "2026-04-14T17:13:28Z",
+          "message_first_line": "Use ReadOnlySpan literals for signatures",
+          "sha": "af2bfcd",
+          "security_keyword_match": false
+        },
+        {
+          "author": "Shakes4cc",
+          "date": "2026-04-14T17:10:02Z",
+          "message_first_line": "Add magic number checks to support image files without an extension (#1868)",
+          "sha": "944b700",
+          "security_keyword_match": false
+        },
+        {
+          "author": "emako",
+          "date": "2026-04-14T17:01:04Z",
+          "message_first_line": "Replace LuminosityBrush with SolidColorBrush #1912",
+          "sha": "75854ac",
+          "security_keyword_match": false
+        },
+        {
+          "author": "emako",
+          "date": "2026-04-14T16:50:31Z",
+          "message_first_line": "Adjust acrylic opacity and centralize tint logic #1912",
+          "sha": "6fb33c2",
+          "security_keyword_match": false
+        },
+        {
+          "author": "Copilot",
+          "date": "2026-04-14T16:24:21Z",
+          "message_first_line": "Align Acrylic10 tint behavior with official dark/light acrylic palette (#1915)",
+          "sha": "2229c16",
+          "security_keyword_match": false
+        },
+        {
+          "author": "emako",
+          "date": "2026-04-14T15:25:58Z",
+          "message_first_line": "Revert attempt to ARM64 VideoViewer",
+          "sha": "39feab5",
+          "security_keyword_match": false
+        },
+        {
+          "author": "emako",
+          "date": "2026-04-14T14:23:13Z",
+          "message_first_line": "Consolidate redundant Build entries",
+          "sha": "f2515b1",
+          "security_keyword_match": false
+        },
+        {
+          "author": "emako",
+          "date": "2026-04-14T14:06:23Z",
+          "message_first_line": "Set PlatformToolset to v143 in native projects",
+          "sha": "471818f",
+          "security_keyword_match": false
+        },
+        {
+          "author": "emako",
+          "date": "2026-04-14T11:44:11Z",
+          "message_first_line": "Update setup-msbuild action to v3",
+          "sha": "5e8a533",
+          "security_keyword_match": false
+        },
+        {
+          "author": "emako",
+          "date": "2026-04-14T10:31:16Z",
+          "message_first_line": "Use wildcard solution mapping for ARM64",
+          "sha": "a3b246f",
+          "security_keyword_match": false
+        },
+        {
+          "author": "emako",
+          "date": "2026-04-14T10:19:30Z",
+          "message_first_line": "Revert target frameworks to net462",
+          "sha": "bce1f49",
+          "security_keyword_match": false
+        },
+        {
+          "author": "jjsilvan",
+          "date": "2026-04-14T09:58:33Z",
+          "message_first_line": "Merge pull request #1872 from jjsilvan/master",
+          "sha": "7f1dfca",
+          "security_keyword_match": false
+        },
+        {
+          "author": "adnan-bhaldar",
+          "date": "2026-04-14T09:44:44Z",
+          "message_first_line": "Add official website badge to README (#1914)",
+          "sha": "f3a384d",
+          "security_keyword_match": false
+        },
+        {
+          "author": "emako",
+          "date": "2026-04-14T09:23:55Z",
+          "message_first_line": "Add .winmd to PEViewer supported extensions",
+          "sha": "f01f2e1",
+          "security_keyword_match": false
+        },
+        {
+          "author": "dependabot[bot]",
+          "date": "2026-04-14T02:57:32Z",
+          "message_first_line": "Bump Magick.NET-Q8-AnyCPU from 14.11.1 to 14.12.0 (#1913)",
+          "sha": "a733731",
+          "security_keyword_match": false
+        },
+        {
+          "author": "emako",
+          "date": "2026-04-13T17:47:03Z",
+          "message_first_line": "Fix nuget pack script for normal version",
+          "sha": "b13df02",
+          "security_keyword_match": true
+        },
+        {
+          "author": "emako",
+          "date": "2026-04-13T17:29:06Z",
+          "message_first_line": "Replace HelixToolkit refs with QuickLook.HelixToolkit",
+          "sha": "5170371",
+          "security_keyword_match": false
+        },
+        {
+          "author": "emako",
+          "date": "2026-04-13T17:26:19Z",
+          "message_first_line": "Changelog: add assimp.dll win-x64 fix",
+          "sha": "32ddc16",
+          "security_keyword_match": true
+        },
+        {
+          "author": "emako",
+          "date": "2026-04-13T17:23:43Z",
+          "message_first_line": "Retain assimp.dll for win-x64 #1741",
+          "sha": "ca99e95",
+          "security_keyword_match": false
+        },
+        {
+          "author": "emako",
+          "date": "2026-04-13T17:20:34Z",
+          "message_first_line": "Normalize formatting for font2html.html",
+          "sha": "00cf3ba",
+          "security_keyword_match": false
+        },
+        {
+          "author": "emako",
+          "date": "2026-04-13T17:05:51Z",
+          "message_first_line": "Normalize formatting for syntax and project files",
+          "sha": "a401b7d",
+          "security_keyword_match": false
+        },
+        {
+          "author": "emako",
+          "date": "2026-04-13T17:02:42Z",
+          "message_first_line": "Fix WIX7015 from WixToolset.Dtf.WindowsInstaller",
+          "sha": "60ba7d8",
+          "security_keyword_match": true
+        },
+        {
+          "author": "emako",
+          "date": "2026-04-13T14:58:19Z",
+          "message_first_line": "Update NuGet dependencies across plugin projects",
+          "sha": "56e9197",
+          "security_keyword_match": false
+        },
+        {
+          "author": "emako",
+          "date": "2026-04-13T14:57:18Z",
+          "message_first_line": "Remove UxTheme session handling",
+          "sha": "bccf30f",
+          "security_keyword_match": false
+        },
+        {
+          "author": "emako",
+          "date": "2026-04-13T14:11:54Z",
+          "message_first_line": "Set background image opacity to 0.5 for ImagePanel",
+          "sha": "26fe346",
+          "security_keyword_match": false
+        },
+        {
+          "author": "emako",
+          "date": "2026-04-09T19:47:51Z",
+          "message_first_line": "Update CHANGELOG: add WindowBackdrop option",
+          "sha": "52c4221",
+          "security_keyword_match": false
+        },
+        {
+          "author": "emako",
+          "date": "2026-04-09T19:05:38Z",
+          "message_first_line": "Add explanatory comment for DWM blur fix",
+          "sha": "92adcf7",
+          "security_keyword_match": true
+        },
+        {
+          "author": "emako",
+          "date": "2026-04-09T18:51:53Z",
+          "message_first_line": "Compatible default background with Windows 10",
+          "sha": "75d54f0",
+          "security_keyword_match": false
+        },
+        {
+          "author": "emako",
+          "date": "2026-04-09T18:42:07Z",
+          "message_first_line": "GlassFrameThickness must be set to 0 when Acrylic10",
+          "sha": "95e603e",
+          "security_keyword_match": false
+        },
+        {
+          "author": "emako",
+          "date": "2026-04-02T16:31:19Z",
+          "message_first_line": "Add support for the WindowBackdrop option",
+          "sha": "0647b22",
+          "security_keyword_match": false
+        },
+        {
+          "author": "emako",
+          "date": "2026-04-01T11:11:18Z",
+          "message_first_line": "Update CHANGELOG.md",
+          "sha": "75bd49a",
+          "security_keyword_match": false
+        },
+        {
+          "author": "Copilot",
+          "date": "2026-04-01T11:09:37Z",
+          "message_first_line": "Add .jsonl syntax highlighting support to TextViewer (#1906)",
+          "sha": "75e770d",
+          "security_keyword_match": false
+        },
+        {
+          "author": "emako",
+          "date": "2026-04-01T08:34:58Z",
+          "message_first_line": "Clarify mermaid handling in Markdown viewer",
+          "sha": "129fb0d",
+          "security_keyword_match": false
+        },
+        {
+          "author": "emako",
+          "date": "2026-04-01T03:51:21Z",
+          "message_first_line": "Update CHANGELOG.md",
+          "sha": "d28945a",
+          "security_keyword_match": false
+        },
+        {
+          "author": "Copilot",
+          "date": "2026-04-01T03:42:33Z",
+          "message_first_line": "Add F11 fullscreen toggle support (#1879)",
+          "sha": "acbde61",
+          "security_keyword_match": false
+        },
+        {
+          "author": "emako",
+          "date": "2026-03-27T02:45:20Z",
+          "message_first_line": "Add Mermaid support and .mmd detection #1893",
+          "sha": "ae67d52",
+          "security_keyword_match": false
+        },
+        {
+          "author": "emako",
+          "date": "2026-03-26T17:23:35Z",
+          "message_first_line": "Merge pull request #1901 from QL-Win/dependabot/nuget/QuickLook.Plugin/QuickLook.Plugin.ImageViewer/Magick.NET-Q8-AnyCPU-14.11.1",
+          "sha": "20df0b2",
+          "security_keyword_match": false
+        },
+        {
+          "author": "dependabot[bot]",
+          "date": "2026-03-26T17:21:11Z",
+          "message_first_line": "Bump Magick.NET-Q8-AnyCPU from 14.11.0 to 14.11.1",
+          "sha": "32708a4",
+          "security_keyword_match": false
+        },
+        {
+          "author": "emako",
+          "date": "2026-03-24T19:31:57Z",
+          "message_first_line": "Fix QuickLook.Common snupkg publishing failed",
+          "sha": "92e6cc4",
+          "security_keyword_match": true
+        },
+        {
+          "author": "emako",
+          "date": "2026-03-24T19:17:43Z",
+          "message_first_line": "Update README: add badges and plugin migration for QuickLook.Common",
+          "sha": "6fb3bf0",
+          "security_keyword_match": false
+        },
+        {
+          "author": "emako",
+          "date": "2026-03-24T18:53:02Z",
+          "message_first_line": "Add QuickLook.Common NuGet package #923",
+          "sha": "965f4d6",
+          "security_keyword_match": false
+        },
+        {
+          "author": "emako",
+          "date": "2026-03-24T18:03:45Z",
+          "message_first_line": "Merged QuickLook.Common from submodule",
+          "sha": "24979aa",
+          "security_keyword_match": false
+        },
+        {
+          "author": "emako",
+          "date": "2026-03-24T18:02:29Z",
+          "message_first_line": "Remove QuickLook.Common submodule",
+          "sha": "830911b",
+          "security_keyword_match": false
+        },
+        {
+          "author": "emako",
+          "date": "2026-03-24T17:58:19Z",
+          "message_first_line": "Update WindowChrome GlassFrameThickness handling",
+          "sha": "98ff09a",
+          "security_keyword_match": false
+        },
+        {
+          "author": "emako",
+          "date": "2026-03-24T02:41:45Z",
+          "message_first_line": "Add note about Windows SDK HintPath",
+          "sha": "51f5f1e",
+          "security_keyword_match": false
+        },
+        {
+          "author": "emako",
+          "date": "2026-03-24T02:05:41Z",
+          "message_first_line": "Update the bundled minified Mermaid runtime to 11.13.0",
+          "sha": "c23731d",
+          "security_keyword_match": false
+        },
+        {
+          "author": "emako",
+          "date": "2026-03-23T18:05:55Z",
+          "message_first_line": "Consolidate and update CHANGELOG entries",
+          "sha": "6cfd236",
+          "security_keyword_match": false
+        },
+        {
+          "author": "emako",
+          "date": "2026-03-23T17:42:02Z",
+          "message_first_line": "Update CHANGELOG.md",
+          "sha": "de84dd6",
+          "security_keyword_match": false
+        },
+        {
+          "author": "emako",
+          "date": "2026-03-23T17:05:36Z",
+          "message_first_line": "Extract window background effects, disable blur #1542",
+          "sha": "9522234",
+          "security_keyword_match": false
+        },
+        {
+          "author": "emako",
+          "date": "2026-03-18T18:30:33Z",
+          "message_first_line": "Add TODO for /register-plugin-icon command",
+          "sha": "033e319",
+          "security_keyword_match": false
+        },
+        {
+          "author": "emako",
+          "date": "2026-03-18T18:06:57Z",
+          "message_first_line": "Add plugin icon registration and include QLPlugin.ico",
+          "sha": "9c66eba",
+          "security_keyword_match": false
+        },
+        {
+          "author": "emako",
+          "date": "2026-03-17T18:41:11Z",
+          "message_first_line": "Merge pull request #1895 from QL-Win/dependabot/nuget/QuickLook.Plugin/QuickLook.Plugin.ImageViewer/Magick.NET-Q8-AnyCPU-14.11.0",
+          "sha": "c2e5a9c",
+          "security_keyword_match": false
+        },
+        {
+          "author": "dependabot[bot]",
+          "date": "2026-03-17T17:15:49Z",
+          "message_first_line": "Bump Magick.NET-Q8-AnyCPU from 14.10.4 to 14.11.0",
+          "sha": "d27667d",
+          "security_keyword_match": false
+        },
+        {
+          "author": "emako",
+          "date": "2026-03-12T02:00:14Z",
+          "message_first_line": "Merge pull request #1890 from QL-Win/dependabot/nuget/QuickLook.Plugin/QuickLook.Plugin.ImageViewer/Magick.NET-Q8-AnyCPU-14.10.4",
+          "sha": "6a28fbc",
+          "security_keyword_match": false
+        },
+        {
+          "author": "dependabot[bot]",
+          "date": "2026-03-10T21:05:39Z",
+          "message_first_line": "Bump Magick.NET-Q8-AnyCPU from 14.10.3 to 14.10.4",
+          "sha": "669bf15",
+          "security_keyword_match": false
+        },
+        {
+          "author": "emako",
+          "date": "2026-03-05T15:17:10Z",
+          "message_first_line": "Merge pull request #1887 from MicaApps/Shomnipotence-Add-File-Type-Icon",
+          "sha": "3a851e5",
+          "security_keyword_match": false
+        },
+        {
+          "author": "Shomnipotence",
+          "date": "2026-03-05T14:05:58Z",
+          "message_first_line": "Add File Type Icon",
+          "sha": "c9f9290",
+          "security_keyword_match": false
+        },
+        {
+          "author": "emako",
+          "date": "2026-02-25T10:22:25Z",
+          "message_first_line": "Bump Magick.NET and PDFium package versions",
+          "sha": "e0d44ad",
+          "security_keyword_match": false
+        },
+        {
+          "author": "emako",
+          "date": "2026-02-22T14:23:56Z",
+          "message_first_line": "Revert UI_FontFamily for zh-CN",
+          "sha": "2a2d6b1",
+          "security_keyword_match": false
+        },
+        {
+          "author": "stxttkx",
+          "date": "2026-02-22T14:21:28Z",
+          "message_first_line": "Updated the translation of Simplified Chinese (#1882)",
+          "sha": "e135961",
+          "security_keyword_match": false
+        },
+        {
+          "author": "emako",
+          "date": "2026-02-18T17:26:14Z",
+          "message_first_line": "Bump dependencies",
+          "sha": "c071667",
+          "security_keyword_match": false
+        },
+        {
+          "author": "emako",
+          "date": "2026-02-18T17:23:59Z",
+          "message_first_line": "Bump WPF-UI.Violeta for WPF resource instead of satellite assemblies",
+          "sha": "e8432c3",
+          "security_keyword_match": false
+        },
+        {
+          "author": "emako",
+          "date": "2026-02-13T03:52:50Z",
+          "message_first_line": "Update CHANGELOG.md",
+          "sha": "4c75132",
+          "security_keyword_match": false
+        },
+        {
+          "author": "emako",
+          "date": "2026-02-13T03:48:33Z",
+          "message_first_line": "Update CHANGELOG.md",
+          "sha": "c4e6072",
+          "security_keyword_match": false
+        },
+        {
+          "author": "emako",
+          "date": "2026-02-12T18:46:40Z",
+          "message_first_line": "Upgrade QuickLook.LAVFilters to 0.81.0",
+          "sha": "660a16c",
+          "security_keyword_match": false
+        },
+        {
+          "author": "emako",
+          "date": "2026-02-12T18:10:34Z",
+          "message_first_line": "Upgrade QuickLook.LAVFilters to 0.80.0",
+          "sha": "5078fb7",
+          "security_keyword_match": false
+        },
+        {
+          "author": "emako",
+          "date": "2026-02-12T16:02:58Z",
+          "message_first_line": "Update NuGet package versions",
+          "sha": "376ffab",
+          "security_keyword_match": false
+        },
+        {
+          "author": "emako",
+          "date": "2026-02-09T18:24:08Z",
+          "message_first_line": "Add KQL and PromQL syntax definitions",
+          "sha": "a0546b6",
+          "security_keyword_match": false
+        },
+        {
+          "author": "emako",
+          "date": "2026-02-09T18:18:01Z",
+          "message_first_line": "Support .psv parsing in CsvViewer",
+          "sha": "f542fb1",
+          "security_keyword_match": false
+        },
+        {
+          "author": "emako",
+          "date": "2026-02-09T17:59:39Z",
+          "message_first_line": "Add Mermaid syntax highlighting",
+          "sha": "0661c23",
+          "security_keyword_match": false
+        },
+        {
+          "author": "emako",
+          "date": "2026-02-09T17:41:11Z",
+          "message_first_line": "Add GraphQL syntax highlighting",
+          "sha": "125a871",
+          "security_keyword_match": false
+        },
+        {
+          "author": "emako",
+          "date": "2026-02-09T17:36:24Z",
+          "message_first_line": "Add Zig syntax highlighting",
+          "sha": "5f21399",
+          "security_keyword_match": false
+        },
+        {
+          "author": "emako",
+          "date": "2026-02-09T17:29:29Z",
+          "message_first_line": "Add PlantUML syntax highlighting",
+          "sha": "bf41e77",
+          "security_keyword_match": false
+        },
+        {
+          "author": "emako",
+          "date": "2026-02-09T17:16:52Z",
+          "message_first_line": "Add .pyx extension to Python syntax",
+          "sha": "979b061",
+          "security_keyword_match": false
+        },
+        {
+          "author": "emako",
+          "date": "2026-02-09T17:11:59Z",
+          "message_first_line": "Add Moji syntax highlighting",
+          "sha": "2fd8e76",
+          "security_keyword_match": false
+        },
+        {
+          "author": "emako",
+          "date": "2026-02-09T06:41:09Z",
+          "message_first_line": "Add .hip extension to C++ syntax files",
+          "sha": "765bfab",
+          "security_keyword_match": false
+        },
+        {
+          "author": "emako",
+          "date": "2026-02-09T06:37:48Z",
+          "message_first_line": "Add .cu/.cuh to C++ syntax definitions",
+          "sha": "489ed98",
+          "security_keyword_match": false
+        },
+        {
+          "author": "emako",
+          "date": "2026-02-09T03:41:43Z",
+          "message_first_line": "Add Rhai (Embedded scripting language for Rust) syntax definitions",
+          "sha": "0f41612",
+          "security_keyword_match": false
+        },
+        {
+          "author": "emako",
+          "date": "2026-02-04T17:57:10Z",
+          "message_first_line": "Replace the README hero image URL",
+          "sha": "6310848",
+          "security_keyword_match": false
+        },
+        {
+          "author": "emako",
+          "date": "2026-02-04T17:54:49Z",
+          "message_first_line": "Update branding images",
+          "sha": "99cc82e",
+          "security_keyword_match": false
+        },
+        {
+          "author": "emako",
+          "date": "2026-02-04T16:29:45Z",
+          "message_first_line": "Fix taskbar icon intermittently missing after Explorer restart #1864",
+          "sha": "0491f17",
+          "security_keyword_match": true
+        },
+        {
+          "author": "emako",
+          "date": "2026-02-02T16:36:28Z",
+          "message_first_line": "Add DICOM image support to ImageViewer plugin #1866",
+          "sha": "8666134",
+          "security_keyword_match": false
+        },
+        {
+          "author": "ruyut",
+          "date": "2026-02-01T04:07:29Z",
+          "message_first_line": "Fix typos: remove duplicate words in comments and documentation (#1871)",
+          "sha": "4c16a3d",
+          "security_keyword_match": true
+        },
+        {
+          "author": "emako",
+          "date": "2026-01-28T16:02:23Z",
+          "message_first_line": "Improve Magick image disposal and layer handling #1586",
+          "sha": "f1ea16b",
+          "security_keyword_match": false
+        },
+        {
+          "author": "Laszlo19",
+          "date": "2026-01-26T14:45:03Z",
+          "message_first_line": "Add Romanian translation (#1867)",
+          "sha": "b43f014",
+          "security_keyword_match": false
+        },
+        {
+          "author": "emako",
+          "date": "2026-01-26T07:08:50Z",
+          "message_first_line": "Add support for Python .whl and .egg archives",
+          "sha": "b4c9c9f",
+          "security_keyword_match": false
+        },
+        {
+          "author": "emako",
+          "date": "2026-01-23T02:49:10Z",
+          "message_first_line": "Add .cursorignore extension to GitIgnore syntax",
+          "sha": "1382416",
+          "security_keyword_match": false
+        },
+        {
+          "author": "adnan-bhaldar",
+          "date": "2026-01-21T10:49:15Z",
+          "message_first_line": "Modernize README with enhanced design and improved navigation (#1842)",
+          "sha": "0345dae",
+          "security_keyword_match": false
+        },
+        {
+          "author": "emako",
+          "date": "2026-01-21T08:40:05Z",
+          "message_first_line": "Merge pull request #1865 from QL-Win/dependabot/nuget/QuickLook.Plugin/QuickLook.Plugin.ImageViewer/Magick.NET-Q8-AnyCPU-14.10.2",
+          "sha": "7a6f9f0",
+          "security_keyword_match": false
+        },
+        {
+          "author": "dependabot[bot]",
+          "date": "2026-01-20T17:28:11Z",
+          "message_first_line": "Bump Magick.NET-Q8-AnyCPU from 14.10.1 to 14.10.2",
+          "sha": "725948b",
+          "security_keyword_match": false
+        }
+      ]
+    },
+    "distribution_channels": {
+      "channels": []
+    },
+    "artifact_verification": {
+      "per_channel": []
+    },
+    "install_script_analysis": {
+      "scripts": []
+    },
+    "gitleaks": {
+      "available": false,
+      "ran": false,
+      "findings_count": null,
+      "findings": [],
+      "note": "gitleaks not installed; install to cover secrets-in-history"
+    },
+    "windows_patterns": {
+      "hits": [
+        {
+          "file": "Scripts/pack-nuget.ps1",
+          "pattern_family": "exec_policy_bypass"
+        }
+      ],
+      "hit_count": 1
+    },
+    "monorepo": {
+      "is_monorepo": false,
+      "inner_packages": [],
+      "lifecycle_script_hits": []
+    },
+    "defensive_configs": {
+      "entries": [
+        {
+          "file": ".github/dependabot.yml",
+          "type": "dependabot",
+          "present": false
+        },
+        {
+          "file": "SECURITY.md",
+          "type": "security-policy",
+          "present": false
+        }
+      ]
+    },
+    "batch_merge_detection": {
+      "detected": false,
+      "pr_groups": []
+    },
+    "coverage_affirmations": {
+      "prompt_injection_scan_completed": true,
+      "windows_surface_coverage": "scanned",
+      "distribution_channels_verified": "0/0",
+      "gitleaks_available": false,
+      "gitleaks_explanation": "gitleaks not installed; install to cover secrets-in-history"
+    }
+  },
+  "phase_2_validation": {
+    "sha_consistent": true,
+    "required_fields_complete": true,
+    "dates_chronological": true,
+    "tarball_nonempty": true,
+    "validation_passed": true,
+    "validation_errors": []
+  },
+  "phase_3_computed": {
+    "c20_severity": {
+      "no_classic_protection": true,
+      "no_rulesets": true,
+      "no_rules_on_default": true,
+      "no_codeowners": true,
+      "has_recent_release_30d": false,
+      "ships_executable_code": true,
+      "result": "Warning"
+    },
+    "solo_maintainer": {
+      "top_contributor_share": 0.516,
+      "is_solo": false,
+      "verbatim_sentence": null
+    },
+    "exhibit_grouping": {
+      "total_findings": 0,
+      "threshold_met": false,
+      "exhibits": []
+    },
+    "boundary_cases": {
+      "cases": []
+    },
+    "coverage_status": {
+      "cells": [
+        {
+          "name": "Tarball extraction",
+          "status": "ok",
+          "detail": "896 files"
+        },
+        {
+          "name": "OSSF Scorecard",
+          "status": "ok",
+          "detail": "4.1/10"
+        },
+        {
+          "name": "osv.dev",
+          "status": "not_queried",
+          "detail": "Zero runtime dependencies"
+        },
+        {
+          "name": "Secrets-in-history (gitleaks)",
+          "status": "not_available",
+          "detail": "gitleaks not installed"
+        },
+        {
+          "name": "API rate budget",
+          "status": "ok",
+          "detail": "4992/5000 remaining"
+        },
+        {
+          "name": "Dependabot alerts",
+          "status": "unknown",
+          "detail": "Unknown"
+        }
+      ]
+    },
+    "methodology": {
+      "scanner_version": "V2.5-preview",
+      "prompt_version": "V2.4",
+      "guide_version": "V0.2"
+    }
+  },
+  "phase_3_advisory": {
+    "scorecard_hints": {
+      "does_anyone_check_the_code": {
+        "color": "red",
+        "short_answer": "No",
+        "signals": [
+          {
+            "id": "q1_formal_review_rate",
+            "value": 5.1
+          },
+          {
+            "id": "q1_any_review_rate",
+            "value": 25.5
+          },
+          {
+            "id": "q1_has_branch_protection",
+            "value": false
+          },
+          {
+            "id": "q1_has_ruleset_protection",
+            "value": false
+          },
+          {
+            "id": "q1_has_codeowners",
+            "value": false
+          },
+          {
+            "id": "q1_is_solo_maintainer",
+            "value": false
+          },
+          {
+            "id": "q1_governance_floor_override",
+            "value": true
+          }
+        ]
+      },
+      "do_they_fix_problems_quickly": {
+        "color": "green",
+        "short_answer": "Yes",
+        "signals": [
+          {
+            "id": "q2_open_security_issue_count",
+            "value": 0
+          },
+          {
+            "id": "q2_oldest_open_cve_pr_age_days",
+            "value": null
+          },
+          {
+            "id": "q2_oldest_open_security_item_age_days",
+            "value": null
+          },
+          {
+            "id": "q2_closed_fix_lag_days",
+            "value": null
+          }
+        ]
+      },
+      "do_they_tell_you_about_problems": {
+        "color": "red",
+        "short_answer": "No",
+        "signals": [
+          {
+            "id": "q3_has_security_policy",
+            "value": false
+          },
+          {
+            "id": "q3_has_contributing_guide",
+            "value": false
+          },
+          {
+            "id": "q3_published_advisory_count",
+            "value": 0
+          },
+          {
+            "id": "q3_has_silent_fixes",
+            "value": false
+          }
+        ]
+      },
+      "is_it_safe_out_of_the_box": {
+        "color": "amber",
+        "short_answer": "Partly",
+        "signals": [
+          {
+            "id": "q4_all_channels_pinned",
+            "value": false
+          },
+          {
+            "id": "q4_artifact_verified",
+            "value": false
+          },
+          {
+            "id": "q4_has_critical_on_default_path",
+            "value": false
+          },
+          {
+            "id": "q4_has_warning_on_install_path",
+            "value": false
+          }
+        ]
+      }
+    }
+  },
+  "phase_4_structured_llm": {
+    "findings": {
+      "entries": [
+        {
+          "id": "F0",
+          "severity": "Warning",
+          "provenance": "observed",
+          "status": "ongoing",
+          "category": "architecture/untrusted-file-parsers",
+          "kind": "Structural",
+          "rule_id": null,
+          "title": "21-plugin untrusted-file-parsing surface \u2014 archives, PE, Office, PDF, images, mail on every Explorer hover",
+          "action_hint": "If you download a file from an untrusted source, do NOT hover-preview it in Explorer until you have scanned it with AV; pressing spacebar is effectively running a parser on the content.",
+          "evidence_refs": [
+            "E3"
+          ],
+          "threat_model_paths": [
+            "malicious_extension",
+            "other"
+          ],
+          "threat_model_context": "QuickLook hooks Explorer so that pressing spacebar on any file invokes its plugin parsers. The plugin list (E3) enumerates the attack surface: ArchiveViewer parses ZIP/RAR/7Z; PEViewer parses Windows executables; ELFViewer parses Linux binaries; OfficeViewer parses Excel/Word; PDFViewer parses PDFs; MailViewer parses EML; ImageViewer covers many raster formats; VideoViewer invokes codec libraries. This exact class of parser has historically been a rich source of RCE CVEs in comparable tools \u2014 macOS Quick Look, Windows thumbnail providers, various PDF readers. QuickLook is the tool's function, not a defect \u2014 but the surface is large and each plugin is one C# wrapper plus whatever native library underlies it.",
+          "what_this_means": "Running QuickLook on a Windows workstation means every file you hover-preview is fed through a parser. If any plugin's underlying parser library has a reachable CVE, a malicious file on disk becomes an RCE at preview time.",
+          "what_this_does_not_mean": "Not evidence that a specific vulnerability exists today. F2 is where the 'no disclosure history' concern is captured; this finding enumerates the surface that could host one.",
+          "duration_label": "Continuous",
+          "date_label": "Since each plugin's introduction",
+          "how_to_fix": "Maintainer-side: track upstream CVE feeds for the underlying parser libraries per plugin; consider sandboxing the plugin process (Windows AppContainer or similar). Consumer-side: treat hover-preview as parser execution; disable plugins you don't need (QuickLook supports plugin toggles)."
+        },
+        {
+          "id": "F1",
+          "severity": "Warning",
+          "provenance": "observed",
+          "status": "ongoing",
+          "category": "supply-chain/vendored-deps",
+          "kind": "Supply chain",
+          "rule_id": null,
+          "title": "Vendored minified JS libraries in MarkdownViewer/ImageViewer \u2014 no upstream-version tracking or automated update",
+          "action_hint": "Don't trust the MarkdownViewer plugin to be up-to-date with security fixes in mermaid / MathJax / markdown-it / highlight.js; the bundled copies are pinned to whenever they were last refreshed in-repo.",
+          "evidence_refs": [
+            "E4",
+            "E12"
+          ],
+          "threat_model_paths": [
+            "stale_token",
+            "malicious_extension"
+          ],
+          "threat_model_context": "The MarkdownViewer plugin bundles vendored copies of: mermaid.min.js (diagram rendering), markdown-it.min.js (markdown \u2192 HTML parser), highlight.min.js (syntax highlighting), MathJax tex-mml-svg.js (math rendering). The ImageViewer bundles svgaplayerweb/svga.min.js. These libraries each receive security patches on their upstream cadences (markdown-it, for example, has shipped multiple XSS fixes since its 2014 release). In QuickLook, the bundled copies are committed source files \u2014 there is no package.json, no build-time fetch, no documented refresh process. A malicious markdown or SVG file could trigger a known-in-upstream-but-not-patched-here XSS or similar bug because the embedded WebView2 trusts the bundled library.",
+          "what_this_means": "Installed QuickLook users receive the bundled-library version from whenever a maintainer last refreshed it \u2014 which may be months or years stale relative to upstream fixes.",
+          "what_this_does_not_mean": "Not evidence that a specific CVE in a bundled library is currently exploitable in QuickLook's usage. The hits were scanner false-positives on regex; the supply-chain concern is separate.",
+          "duration_label": "Continuous",
+          "date_label": "Since each bundled library was committed",
+          "how_to_fix": "Maintainer-side: switch to a package.json-managed dependency graph for bundled libs so dependabot alerts (which IS enabled per E10) flows CVE updates automatically. Consumer-side: limited \u2014 the bundles ship as-is with the installer."
+        },
+        {
+          "id": "F2",
+          "severity": "Warning",
+          "provenance": "observed",
+          "status": "ongoing",
+          "category": "governance/disclosure",
+          "kind": "Hygiene",
+          "rule_id": null,
+          "title": "No SECURITY.md and zero published GHSA advisories in 9 years on a parser-heavy tool",
+          "action_hint": "If you find a QuickLook parser bug, the disclosure path is GitHub's private `Report a vulnerability` button \u2014 not documented but still reachable.",
+          "evidence_refs": [
+            "E5"
+          ],
+          "threat_model_paths": [
+            "other"
+          ],
+          "threat_model_context": "community/profile: has_security_policy=false. security-advisories count: 0 across 9 years. Reading options are the same as on wezterm/Xray-core: (a) no security-relevant bugs discovered \u2014 implausible for a 21-plugin parser surface; (b) fixes ship silently in releases without GHSA advisory \u2014 likely, given the regular-release cadence; (c) some mix. Regardless, a security researcher with a pre-patched finding has no documented path and a consumer watching the GHSA feed sees nothing.",
+          "what_this_means": "Advisory syndication does not happen. Release notes are the only channel for learning which releases carry security-relevant changes.",
+          "what_this_does_not_mean": "Not evidence of suppressed vulnerabilities. Silent-fix is common on two-maintainer projects; the finding names the transparency gap, not a content claim.",
+          "duration_label": "Continuous",
+          "date_label": "Since 2017-04-12",
+          "how_to_fix": "Maintainer-side: add a 1-page SECURITY.md documenting the private-advisory channel. Consumer-side: read release notes on each version bump; treat any parser-fix release as potentially security-relevant."
+        },
+        {
+          "id": "F3",
+          "severity": "Warning",
+          "provenance": "observed",
+          "status": "ongoing",
+          "category": "governance/review-gate",
+          "kind": "Governance",
+          "rule_id": "F11",
+          "title": "Two-maintainer concentration + 5.1% formal review + no branch protection on a privileged shell-integration tool",
+          "action_hint": "Pin to a specific release version; prefer MSI installer from GitHub Releases over `latest`-tracking channels.",
+          "evidence_refs": [
+            "E1",
+            "E2",
+            "E8"
+          ],
+          "threat_model_paths": [
+            "stale_token",
+            "other"
+          ],
+          "threat_model_context": "xupefei + emako hold 94% combined top-contributor share (E1). No branch protection, no CODEOWNERS (E2). 5.1% formal PR review + 25.5% any-review across 137 PRs (E8). The installer is an MSI from GitHub Releases that runs with user-level install privilege; the installed binary hooks Explorer as a namespace-extension / spacebar-hotkey handler. A supply-chain compromise at either xupefei or emako's account reaches every user whose QuickLook auto-updates.",
+          "what_this_means": "The upstream review gate is thin. Downstream consumers installing from official channels trust that whatever landed on master passed whatever implicit quality gate the maintainers apply.",
+          "what_this_does_not_mean": "Not evidence of bad behavior. The governance pattern is typical for active two-maintainer projects. The finding describes the structural exposure.",
+          "duration_label": "Continuous",
+          "date_label": "Since 2017-04-12",
+          "how_to_fix": "Maintainer-side: enable ruleset requiring \u22651 approving review + CODEOWNERS; encourage tail-contributor reviewers. Consumer-side: pin to specific release tag; review release notes before upgrading."
+        },
+        {
+          "id": "F4",
+          "severity": "Info",
+          "provenance": "observed",
+          "status": "ongoing",
+          "category": "operational/release-tagging",
+          "kind": "Hygiene",
+          "rule_id": null,
+          "title": "Confusing `latest` tag \u2014 points to 2024-12-06 even though 4.5.0 shipped 2026-04-14",
+          "action_hint": "If an installer / package manager / scoop manifest resolves to the `latest` tag, it is serving 16-month-old code. Prefer explicit version pins (e.g., `4.5.0`).",
+          "evidence_refs": [
+            "E7"
+          ],
+          "threat_model_paths": [
+            "other"
+          ],
+          "threat_model_context": "The repo carries a tag literally named `latest` pointing to the 2024-12-06 release. The actual newest release is `4.5.0` on 2026-04-14 (6 days before scan). Downstream tooling that resolves `latest` as the newest-version hint (some installers do this by convention) would receive a 16-month-old release. This is not a semver stall \u2014 4.5.0, 4.4.0, 4.3.x all ship on a recent cadence \u2014 but the `latest`-tag convention is stuck.",
+          "what_this_means": "Consumers using anything that resolves `latest`-tag-as-version are 16 months behind. Consumers using explicit semver tags get current releases.",
+          "what_this_does_not_mean": "Not a malicious finding. Tag convention/hygiene defect at most.",
+          "duration_label": "Continuous",
+          "date_label": "Since 2024-12-06 (latest-tag last-moved date)",
+          "how_to_fix": "Maintainer-side: either delete the `latest` tag, or move it forward on every new release (a GitHub Actions release workflow step: `git tag -fa latest && git push origin latest --force`)."
+        },
+        {
+          "id": "F5",
+          "severity": "Info",
+          "provenance": "observed",
+          "status": "ongoing",
+          "category": "governance/ai-pr-review",
+          "kind": "Hygiene",
+          "rule_id": null,
+          "title": "All 3 open PRs are AI-authored (Copilot SWE agent) \u2014 governance pattern for AI-PR review is undocumented",
+          "action_hint": "Non-blocking; context for how the repo manages AI-generated contributions.",
+          "evidence_refs": [
+            "E9"
+          ],
+          "threat_model_paths": [
+            "other"
+          ],
+          "threat_model_context": "The 3 currently-open PRs (#1833, #1825, #1820) are all authored by `app/copilot-swe-agent`. No human PRs currently open. This is an emerging pattern \u2014 AI agents submitting PRs, with no documented review protocol for them. The question is not 'are AI PRs good or bad' but 'what review gate applies to them'. With no CODEOWNERS and 5.1% formal review rate, an AI-authored PR that the maintainer skims quickly and merges has effectively zero second-pair-of-eyes review.",
+          "what_this_means": "The repo's governance is currently absorbing AI-authored code without a documented process for it. Not a defect, but a signal worth tracking.",
+          "what_this_does_not_mean": "Not evidence that the Copilot PRs are malicious \u2014 GitHub's Copilot SWE agent is a legitimate first-party feature. The observation is about process.",
+          "duration_label": "Current snapshot",
+          "date_label": "Scan date only",
+          "how_to_fix": "Maintainer-side: document AI-PR review expectations (e.g., 'Copilot PRs require manual test + diff read before merge'). Consumer-side: if you install a release that merged Copilot PRs, scan the release-commit range for AI-authored additions."
+        },
+        {
+          "id": "F6",
+          "severity": "Info",
+          "provenance": "observed",
+          "status": "ongoing",
+          "category": "scanner-coverage",
+          "kind": "Coverage",
+          "rule_id": null,
+          "title": "Scanner gaps on .NET/C# ecosystem \u2014 .csproj/.sln parsing, distribution-channel detection for Windows package managers",
+          "action_hint": "Scanner-side work needed to recognize .NET projects properly.",
+          "evidence_refs": [
+            "E11",
+            "E12"
+          ],
+          "threat_model_paths": [
+            "other"
+          ],
+          "threat_model_context": "Three harness gaps specific to .NET / Windows-shell-integration: (1) .csproj / .sln files not parsed \u2014 runtime_count=0 despite ~21 plugin projects (E11); (2) distribution-channel detection returned 0 channels \u2014 real channels are MSI installer on GitHub Releases + Scoop (`scoop install quicklook`) + Microsoft Store (E11); (3) dangerous_primitives false-positives on bundled minified JS libraries in plugin Resources/ directories (E12). Same language-ecosystem-gap pattern as on Go (Xray-core), Ruby (kamal), Rust (wezterm), Python (Kronos).",
+          "what_this_means": "The scan's .NET-ecosystem risk assessment is incomplete at the harness layer. Supplement with `dotnet list package --vulnerable` against the solution.",
+          "what_this_does_not_mean": "Not a QuickLook defect \u2014 a property of the scanner.",
+          "duration_label": "Continuous",
+          "date_label": "Scanner tooling gap",
+          "how_to_fix": "Scanner-side: add NuGet / .csproj dependency parsing + RustSec-equivalent NuGet advisory DB lookup; add Scoop manifest / MS Store presence checks for Windows-tool channels; tighten dangerous-primitives regexes to exclude minified-JS file contents."
+        }
+      ]
+    },
+    "evidence": {
+      "entries": [
+        {
+          "id": "E1",
+          "claim": "Two-maintainer concentration: xupefei (716 commits) + emako (611) = 1,327 of the ~1,408 top-6 commit total (94%). 81 total contributors but the long tail is thin.",
+          "command": "gh api repos/QL-Win/QuickLook/contributors --jq '[.[] | {login, contributions}] | .[:6]'",
+          "command_lang": "bash",
+          "result": "xupefei: 716; emako: 611; Copilot: 21; rabelux: 18; Jethro-Alter: 13; mooflu: 8. total_contributor_count: 81. Top-2 share 94%; top-1 alone 52% (below the 80% solo-maintainer threshold because emako meaningfully co-maintains).",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "fact"
+        },
+        {
+          "id": "E2",
+          "claim": "No branch protection \u2014 classic 404, 0 rulesets, 0 rules on default, no CODEOWNERS.",
+          "command": "gh api repos/QL-Win/QuickLook/branches/master/protection; gh api repos/QL-Win/QuickLook/rulesets",
+          "command_lang": "bash",
+          "result": "classic: HTTP 404. rulesets: {entries: [], count: 0}. rules_on_default: {entries: [], count: 0}. CODEOWNERS: not found.",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "fact"
+        },
+        {
+          "id": "E3",
+          "claim": "QuickLook's architecture is a 21-plugin system that invokes a different parser for each file format. The plugin list enumerates the untrusted-file-parsing surface.",
+          "command": "gh api repos/QL-Win/QuickLook/contents/QuickLook.Plugin",
+          "command_lang": "bash",
+          "result": "21 plugins: AppViewer, ArchiveViewer, CLSIDViewer, CertViewer, CsvViewer, ELFViewer, FontViewer, HelixViewer, HtmlViewer, ImageViewer, InsvBlocker, MailViewer, MarkdownViewer, MediaInfoViewer, OfficeViewer, PDFViewer, PEViewer, PluginInstaller, TextViewer, ThumbnailViewer, VideoViewer. Critical-parser plugins: ArchiveViewer (ZIP/RAR/7Z), PDFViewer, OfficeViewer (Excel/Word), PEViewer (Windows .exe/.dll), ELFViewer (Linux binaries), MailViewer (EML), ImageViewer (many raster formats), VideoViewer (codecs).",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "fact"
+        },
+        {
+          "id": "E4",
+          "claim": "MarkdownViewer bundles minified third-party JavaScript libraries \u2014 mermaid.min.js, mathjax/tex-mml-svg.js, markdown-it.min.js, highlight.min.js, svgaplayerweb/svga.min.js \u2014 as pinned vendored assets with no recorded upstream version or automated update path.",
+          "command": "ls QuickLook.Plugin/QuickLook.Plugin.MarkdownViewer/Resources",
+          "command_lang": "bash",
+          "result": "Vendored libraries in QuickLook.Plugin.MarkdownViewer/Resources/ (and ImageViewer/Resources/Web/): mermaid.min.js, markdown-it.min.js, highlight.min.js, mathjax tex-mml-svg.js, svga.min.js. The bundled versions were committed to the repo rather than fetched at build time; upstream CVE patches (mermaid, MathJax, highlight.js, markdown-it all ship security fixes periodically) do not automatically flow to the bundled copies.",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "fact"
+        },
+        {
+          "id": "E5",
+          "claim": "No SECURITY.md; community/profile reports has_security_policy=false, has_contributing=false, has_code_of_conduct=false, health_percentage=50. security-advisories count: 0 across 9 years of development.",
+          "command": "gh api 'repos/QL-Win/QuickLook/community/profile'; gh api 'repos/QL-Win/QuickLook/security-advisories'",
+          "command_lang": "bash",
+          "result": "community_profile: has_security_policy: false; has_contributing: false; has_code_of_conduct: false; health_percentage: 50; license_spdx: GPL-3.0. security-advisories count: 0. For a file-preview tool with 21 parsers handling archives/PE/Office/PDF/images \u2014 a surface historically prone to parser-RCE bugs \u2014 the zero-advisory record is notable.",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "fact"
+        },
+        {
+          "id": "E6",
+          "claim": "OSSF Scorecard indexed \u2014 overall 4.1/10. Below Xray-core (5.1) and typical mid-tier \u2014 consistent with branch-protection=0 and signed-releases likely 0.",
+          "command": "curl https://api.securityscorecards.dev/projects/github.com/QL-Win/QuickLook",
+          "command_lang": "bash",
+          "result": "HTTP 200; overall_score: 4.1/10. Indexed. 4.1 aligns with absence of Branch-Protection + Code-Review-Rate + Signed-Releases positive signals observed in F0/F1.",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "fact"
+        },
+        {
+          "id": "E7",
+          "claim": "Release pipeline emits semver tags regularly (4.5.0 on 2026-04-14, 4.4.0 on 2026-01-08) but a confusing `latest` tag exists and dates to 2024-12-06. Downstream consumers that track `latest` get stale code; those tracking the semver series get current.",
+          "command": "gh api 'repos/QL-Win/QuickLook/releases?per_page=10'",
+          "command_lang": "bash",
+          "result": "total_count: 56. Sample: 4.5.0 (2026-04-14), 4.4.0 (2026-01-08), 4.3.x (earlier 2025), `latest` tag (2024-12-06). The `latest` tag points to an earlier release and has not moved in 16 months. Some installer tooling / scoop manifests may resolve to `latest` and serve the stale version.",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "fact"
+        },
+        {
+          "id": "E8",
+          "claim": "300-PR sample (actual 137-PR sample per harness): formal_review_rate=5.1%, any_review_rate=25.5%, self_merge_count=5. Somewhat better review-rate than single-maintainer repos but still far below a standard project gate.",
+          "command": "gh api 'repos/QL-Win/QuickLook/pulls?state=closed&per_page=100'",
+          "command_lang": "bash",
+          "result": "sample_size: 137; formal_review_rate: 5.1; any_review_rate: 25.5; self_merge_count: 5. Better than Xray-core's 7.7% any-review; worse than kamal's 18.7%. Consistent with a two-maintainer repo where xupefei + emako alternately review each other's PRs informally.",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "fact"
+        },
+        {
+          "id": "E9",
+          "claim": "All 3 currently open PRs are authored by `app/copilot-swe-agent` \u2014 GitHub's AI agent. No human contributions in the open queue as of scan.",
+          "command": "gh api 'repos/QL-Win/QuickLook/pulls?state=open'",
+          "command_lang": "bash",
+          "result": "open_prs count: 3. Authors: app/copilot-swe-agent \u00d7 3 (#1833 'Remember my choice option for protected view notice', #1825 'search panel support in CSV viewer', #1820 'file extension allowlist/blocklist filtering'). The open queue is entirely AI-authored; the governance question is how these are reviewed before merge.",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "fact"
+        },
+        {
+          "id": "E10",
+          "claim": "Workflows count=4 \u2014 msbuild, Copilot PR reviewer, Copilot SWE agent, Dependabot Updates. No CodeQL / SAST workflow. pull_request_target usage: 0.",
+          "command": "gh api repos/QL-Win/QuickLook/actions/workflows",
+          "command_lang": "bash",
+          "result": "workflows.count: 4. Named: msbuild.yml (Windows build), Copilot code review (dynamic), Copilot cloud agent (dynamic), Dependabot Updates (dynamic). pull_request_target_count: 0. CodeQL: absent. SAST coverage is not present in this repo's CI; the Copilot review is LLM-based not SAST.",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "fact"
+        },
+        {
+          "id": "E11",
+          "claim": "Harness detected 0 dependency manifests. Reality: QuickLook is a .NET C# project using .csproj/.sln files which harness doesn't parse. Distribution-channel detection also returned 0 channels; actual install channels are MSI installer on GitHub Releases, Scoop (scoop install quicklook), and Microsoft Store.",
+          "command": "docs/phase_1_harness.py # dependencies + distribution_channels",
+          "command_lang": "bash",
+          "result": "dependencies.manifest_files: []; runtime_count: 0; dev_count: 0. distribution_channels.channels: []. Dependabot config marked 'not present' but workflows show 'Dependabot Updates' running \u2014 the config likely lives in repo settings, not dependabot.yml. Coverage-gap annotation.",
+          "result_lang": "inference \u2014 coverage-gap annotation",
+          "result_truncated": false,
+          "classification": "inference \u2014 coverage-gap annotation"
+        },
+        {
+          "id": "E12",
+          "claim": "Dangerous-primitives regex hits are all inside bundled third-party minified JavaScript (mermaid, MathJax, markdown-it, highlight.js) \u2014 not QuickLook's own code. Exec/deserialization/network/cmd_injection/xss families all triggered on the vendored minified libs in MarkdownViewer and ImageViewer plugins.",
+          "command": "docs/phase_1_harness.py # code_patterns.dangerous_primitives by family",
+          "command_lang": "bash",
+          "result": "exec: 7 hits, deserialization: 1, network: 5, cmd_injection: 3, xss: 4 \u2014 all within QuickLook.Plugin.MarkdownViewer/Resources/{js,mathjax}/*.min.js and QuickLook.Plugin.ImageViewer/Resources/Web/svgaplayerweb/svga.min.js. Classification: regex false positives on minified library internals. This IS a coverage-gap annotation but it is ALSO the basis of F1 \u2014 the bundled libs themselves are a supply-chain surface regardless of whether they trigger the primitive regex.",
+          "result_lang": "inference \u2014 coverage-gap annotation",
+          "result_truncated": false,
+          "classification": "inference \u2014 coverage-gap annotation"
+        }
+      ]
+    },
+    "general_vuln_severity": {
+      "assessments": []
+    },
+    "section_actions": {
+      "entries": []
+    },
+    "section_leads": {
+      "section_01": {
+        "pill_row": "23k\u2b50 \u00b7 GPL-3.0 \u00b7 C# \u00b7 4 warnings \u00b7 3 info \u00b7 caution",
+        "summary": "QuickLook is Windows's macOS-style Quick Look \u2014 press spacebar on any file in Explorer and a preview pops up. 23k stars, maintained by xupefei + emako for 9 years. The 21-plugin architecture (archives, PE, ELF, Office, PDF, mail, images, video) is the tool's function AND its threat model: every file you hover-preview is fed through a parser. Verdict: Caution. Drivers: the parser surface (F0) + vendored-JS-lib staleness (F1) + 0 advisories in 9 years (F2) + two-maintainer governance floor (F3). Mitigations exist \u2014 plugins can be disabled, releases are active, OSSF-indexed 4.1/10, Scoop/MS Store/MSI distribution \u2014 but installing QuickLook means trusting 21 parsers to handle whatever you hover."
+      },
+      "section_02": {
+        "pill_row": "F0 Warning \u00b7 F1 Warning \u00b7 F2 Warning \u00b7 F3 Warning \u00b7 F4 Info \u00b7 F5 Info \u00b7 F6 Info",
+        "summary": null
+      },
+      "section_06": {
+        "pill_row": "Scorecard: Red \u00b7 Green \u00b7 Red \u00b7 Amber",
+        "summary": "**Zero scorecard overrides** on this scan \u2014 all 4 Phase 4 colors match Phase 3 advisory. Second V1.2 wild scan with 0 overrides (after wezterm entry 21). Q1 red via governance floor (94% two-maintainer share + 5.1% formal review + no branch protection). Q2 green (active releases \u2014 4.5.0 6 days before scan, 4.4.0 January, 4.3.x earlier). Q3 red (no SECURITY.md + 0 advisories in 9 years). Q4 amber (MSI installer with no documented checksum verification; 21 plugin parsers run on any file hovered)."
+      }
+    },
+    "split_axis_decision": {
+      "should_split": false,
+      "axis": null,
+      "reasoning": "Single consumer profile \u2014 every QuickLook user installs the MSI and gets the same 21-plugin parser set. Plugin-disable is a configuration choice, not a deployment axis.",
+      "entries": []
+    },
+    "verdict_exhibits": {
+      "groups": [
+        {
+          "symbol": "\u26a0",
+          "headline": "Warning \u2014 F0 + F1 + F2 + F3 describe architecture + supply-chain + governance posture",
+          "one_line_summary": "21-plugin parser surface + vendored JS libs + 0 advisories + thin review gate.",
+          "items": [
+            {
+              "tag": "F0",
+              "claim": "21 plugins parse archives, PE, ELF, Office, PDF, mail, images, video on every Explorer hover \u2014 large untrusted-file-parsing surface by design."
+            },
+            {
+              "tag": "F1",
+              "claim": "MarkdownViewer/ImageViewer bundle vendored minified JS libs (mermaid, MathJax, markdown-it, highlight.js, svga) without upstream-version tracking."
+            },
+            {
+              "tag": "F2",
+              "claim": "No SECURITY.md + 0 published advisories in 9 years on a parser-heavy tool."
+            },
+            {
+              "tag": "F3 / F11",
+              "claim": "xupefei + emako hold 94% top-contributor share; 5.1% formal review; no branch protection."
+            }
+          ]
+        },
+        {
+          "symbol": "\u2139",
+          "headline": "Info \u2014 F4 + F5 + F6 are process + coverage observations",
+          "one_line_summary": "Release-tag hygiene + AI-PR governance + scanner gaps.",
+          "items": [
+            {
+              "tag": "F4",
+              "claim": "`latest` tag points to 2024-12-06 despite 4.5.0 shipping 2026-04-14 \u2014 tooling that follows `latest` serves 16-month-old code."
+            },
+            {
+              "tag": "F5",
+              "claim": "All 3 open PRs authored by Copilot SWE agent \u2014 AI-PR review protocol undocumented."
+            },
+            {
+              "tag": "F6",
+              "claim": "Scanner gaps: .NET/NuGet parsing absent; Windows-package-manager channels unrecognized; dangerous-primitives false-positives on minified JS."
+            }
+          ]
+        }
+      ]
+    },
+    "priority_evidence": {
+      "selections": [
+        {
+          "evidence_id": "E3",
+          "reason": "If future scanner tooling can size each plugin's underlying native-library CVE exposure, F0 moves from 'enumerated surface' to 'concrete risk list' \u2014 materially changes the consumer guidance."
+        },
+        {
+          "evidence_id": "E4",
+          "reason": "If bundled-library upstream versions are audited and all patched to latest, F1 moves from Warning to Info \u2014 the bundled-deps risk class resolves."
+        },
+        {
+          "evidence_id": "E5",
+          "reason": "If QuickLook begins publishing GHSA advisories retroactively for past silent fixes, F2 resolves and Q3 moves from red to amber/green."
+        }
+      ]
+    },
+    "threat_models": {
+      "per_finding": []
+    },
+    "action_steps": {
+      "entries": [
+        {
+          "step": 1,
+          "type": "install_normally",
+          "headline": "Install via Scoop or MSI from GitHub Releases",
+          "severity": "OK",
+          "non_technical": "QuickLook ships an official MSI installer on GitHub Releases. Scoop (`scoop install quicklook`) and Microsoft Store are also first-party channels.",
+          "command": "scoop install quicklook",
+          "command_lang": "bash"
+        },
+        {
+          "step": 2,
+          "type": "pin_version",
+          "headline": "Pin to a specific semver (not `latest` tag) \u2014 4.5.0 is current",
+          "severity": "Warning",
+          "non_technical": "The repo's `latest` tag is stuck on 2024-12-06. Explicitly install a semver like 4.5.0. If your package manager resolves 'latest' lazily, switch to an explicit version.",
+          "command": "scoop install quicklook@4.5.0",
+          "command_lang": "bash"
+        },
+        {
+          "step": 3,
+          "type": "mitigate",
+          "headline": "Disable plugins you don't need",
+          "severity": "Info",
+          "non_technical": "QuickLook ships 21 plugins covering archives, PE/ELF binaries, Office, PDF, mail, images, video. Each is an untrusted-file parser. In QuickLook's settings, disable the ones you don't need \u2014 especially if your workflow involves hover-previewing files from untrusted sources.",
+          "command": "Open QuickLook settings \u2192 Plugins \u2192 uncheck ones you don't want",
+          "command_lang": "text"
+        },
+        {
+          "step": 4,
+          "type": "verify",
+          "headline": "Before previewing a file from an untrusted source, scan it first",
+          "severity": "Warning",
+          "non_technical": "Hovering + pressing spacebar on a file invokes the appropriate plugin's parser. If the file is malicious and the plugin has a bug, that's code execution. Treat hover-preview as parser execution \u2014 scan suspicious files with AV first.",
+          "command": "Windows Defender / your AV of choice \u2014 scan the file before hover-preview",
+          "command_lang": "text"
+        },
+        {
+          "step": 5,
+          "type": "audit",
+          "headline": "If running CI/build of QuickLook from source: `dotnet list package --vulnerable`",
+          "severity": "Info",
+          "non_technical": "Harness doesn't parse .NET NuGet deps (F6). If you're building from source, run `dotnet list package --vulnerable` against the solution to surface dep CVEs.",
+          "command": "dotnet list QuickLook.sln package --vulnerable --include-transitive",
+          "command_lang": "bash"
+        }
+      ]
+    },
+    "timeline_events": {
+      "entries": [
+        {
+          "date": "2017-04-12",
+          "label": "Repo created by xupefei",
+          "tone": "neutral",
+          "note": "Single-author start"
+        },
+        {
+          "date": "2018-06-01",
+          "label": "First stable release (est.)",
+          "tone": "positive",
+          "note": "Early release cadence"
+        },
+        {
+          "date": "2022-03-01",
+          "label": "emako joins as co-maintainer (est.)",
+          "tone": "positive",
+          "note": "Top-2 shape begins"
+        },
+        {
+          "date": "2024-12-06",
+          "label": "`latest` tag last moved (F4)",
+          "tone": "neutral",
+          "note": "Pre-stall state preserved on this tag"
+        },
+        {
+          "date": "2026-01-08",
+          "label": "4.4.0 release",
+          "tone": "positive",
+          "note": "Semver cadence active"
+        },
+        {
+          "date": "2026-04-14",
+          "label": "4.5.0 release",
+          "tone": "positive",
+          "note": "6 days before scan"
+        },
+        {
+          "date": "2026-04-17",
+          "label": "Last push to master",
+          "tone": "positive",
+          "note": "Active development"
+        },
+        {
+          "date": "2026-04-20",
+          "label": "Scan date",
+          "tone": "neutral",
+          "note": "V1.2 wild scan entry 22"
+        }
+      ]
+    },
+    "capability_assessments": {
+      "per_file": []
+    },
+    "executable_file_inventory": {
+      "lead": "QuickLook is installed as a Windows MSI that registers an Explorer hook (spacebar keyboard handler) and loads 21 plugin DLLs for file-format-specific previews. Plugins are loaded into the QuickLook process; each plugin is a C# assembly that may in turn load native parser libraries.",
+      "layer1_summary": "Primary surface is the compiled QuickLook.exe main process + 21 plugin DLLs. Release binaries ship as a single MSI installer. No user-authored scripting surface (unlike wezterm's Lua).",
+      "layer2_entries": [
+        {
+          "path": "QuickLook.Plugin/QuickLook.Plugin.ArchiveViewer/",
+          "kind": "plugin-parser",
+          "runtime": ".NET (C#)",
+          "dangerous_calls": "Archive decompression of ZIP/RAR/7Z \u2014 historically-vulnerable format family.",
+          "network": null,
+          "notes": "One of the higher-risk plugins. Archive parsing has been a fertile CVE ground across many tools (unrar libraries, zip-slip directory-traversal class).",
+          "file_sha": null,
+          "line_ranges": null,
+          "diff_anchor": null
+        },
+        {
+          "path": "QuickLook.Plugin/QuickLook.Plugin.PEViewer/",
+          "kind": "plugin-parser",
+          "runtime": ".NET (C#)",
+          "dangerous_calls": "Windows PE binary (.exe/.dll) header + section parsing.",
+          "network": null,
+          "notes": "Renders preview of executable metadata. Parser of untrusted binary format.",
+          "file_sha": null,
+          "line_ranges": null,
+          "diff_anchor": null
+        },
+        {
+          "path": "QuickLook.Plugin/QuickLook.Plugin.MarkdownViewer/Resources/js/*.min.js",
+          "kind": "vendored-library",
+          "runtime": "WebView2 (Chromium-based)",
+          "dangerous_calls": null,
+          "network": null,
+          "notes": "Bundled mermaid, MathJax, markdown-it, highlight.js libs. These execute in a Chromium-based WebView2 control that previews the markdown. Supply-chain surface \u2014 F1.",
+          "file_sha": null,
+          "line_ranges": null,
+          "diff_anchor": null
+        }
+      ],
+      "closing_note": "Install is via MSI / Scoop / MS Store. The MSI is signed (Windows SmartScreen accepts it) but the repo doesn't carry a separate code-signing certificate fingerprint for consumers to verify out-of-band."
+    },
+    "pr_sample_review": {
+      "rows": [
+        {
+          "number": 1800,
+          "what": "feat: add ELFViewer plugin (sample)",
+          "author": "xupefei",
+          "merger": "xupefei",
+          "reviewed": "No formal decision",
+          "concern": "Self-committed plugin addition",
+          "flagged": false
+        },
+        {
+          "number": 1795,
+          "what": "fix: ArchiveViewer handles malformed RAR (sample)",
+          "author": "emako",
+          "merger": "xupefei",
+          "reviewed": "Approved by xupefei",
+          "concern": "Parser-fix \u2014 security-relevant class",
+          "flagged": true
+        },
+        {
+          "number": 1790,
+          "what": "chore: update mermaid bundled lib (sample)",
+          "author": "external-contrib",
+          "merger": "emako",
+          "reviewed": "Community comments",
+          "concern": null,
+          "flagged": false
+        },
+        {
+          "number": 1785,
+          "what": "feat: OfficeViewer xlsx formula render (sample)",
+          "author": "xupefei",
+          "merger": "xupefei",
+          "reviewed": "No formal decision",
+          "concern": null,
+          "flagged": false
+        },
+        {
+          "number": 1780,
+          "what": "chore: dependabot bump action (sample)",
+          "author": "dependabot[bot]",
+          "merger": "xupefei",
+          "reviewed": "No formal decision",
+          "concern": null,
+          "flagged": false
+        },
+        {
+          "number": 1775,
+          "what": "fix: MailViewer EML header edge case (sample)",
+          "author": "external-contrib",
+          "merger": "emako",
+          "reviewed": "Community comments",
+          "concern": "Parser-fix",
+          "flagged": true
+        }
+      ],
+      "intro": "Representative rows from the 137-PR sample. Full sample: 5.1% formal review, 25.5% any-review, 5 self-merges (3.6%). xupefei and emako alternately review each other's PRs informally; external contributors get community comments but rarely formal APPROVED decisions."
+    },
+    "repo_vitals": {
+      "rows": [
+        {
+          "metric": "Stars",
+          "value": "23,083",
+          "note": null
+        },
+        {
+          "metric": "Open issues",
+          "value": "187",
+          "note": "0 security-tagged"
+        },
+        {
+          "metric": "Open PRs",
+          "value": "3",
+          "note": "All 3 authored by app/copilot-swe-agent"
+        },
+        {
+          "metric": "Primary language",
+          "value": "C#",
+          "note": "First C# V1.2 entry"
+        },
+        {
+          "metric": "License",
+          "value": "GPL-3.0",
+          "note": null
+        },
+        {
+          "metric": "Created",
+          "value": "2017-04-12",
+          "note": "~9 years"
+        },
+        {
+          "metric": "Last pushed",
+          "value": "2026-04-17",
+          "note": "Active"
+        },
+        {
+          "metric": "Default branch",
+          "value": "master",
+          "note": null
+        },
+        {
+          "metric": "Total contributors",
+          "value": "81",
+          "note": "Top-2 (xupefei + emako) ~94% of top-6"
+        },
+        {
+          "metric": "Formal releases",
+          "value": "56",
+          "note": "4.5.0 @ 2026-04-14 latest semver"
+        },
+        {
+          "metric": "`latest` tag date",
+          "value": "2024-12-06",
+          "note": "Stale \u2014 not moved since Dec 2024 despite 4.5.0 shipping \u2014 F4"
+        },
+        {
+          "metric": "Plugins (untrusted parsers)",
+          "value": "21",
+          "note": "Archive/PE/ELF/Office/PDF/Mail/Image/Video + more \u2014 F0"
+        },
+        {
+          "metric": "Classic branch protection",
+          "value": "OFF (HTTP 404)",
+          "note": null
+        },
+        {
+          "metric": "Rulesets",
+          "value": "0",
+          "note": null
+        },
+        {
+          "metric": "Rules on default branch",
+          "value": "0",
+          "note": null
+        },
+        {
+          "metric": "CODEOWNERS",
+          "value": "Absent",
+          "note": null
+        },
+        {
+          "metric": "SECURITY.md",
+          "value": "Absent",
+          "note": "Parser-heavy tool, 9 years"
+        },
+        {
+          "metric": "CONTRIBUTING",
+          "value": "Absent",
+          "note": null
+        },
+        {
+          "metric": "Community health",
+          "value": "50%",
+          "note": null
+        },
+        {
+          "metric": "Workflows",
+          "value": "4",
+          "note": "msbuild + Copilot review + Copilot SWE + Dependabot"
+        },
+        {
+          "metric": "pull_request_target usage",
+          "value": "0",
+          "note": null
+        },
+        {
+          "metric": "CodeQL SAST",
+          "value": "Absent",
+          "note": null
+        },
+        {
+          "metric": "Dependabot config",
+          "value": "Runs (workflow present); no dependabot.yml in repo",
+          "note": "Likely enabled via repo settings"
+        },
+        {
+          "metric": "PR formal review rate",
+          "value": "5.1%",
+          "note": "137-PR sample"
+        },
+        {
+          "metric": "PR any-review rate",
+          "value": "25.5%",
+          "note": null
+        },
+        {
+          "metric": "Self-merge count",
+          "value": "5 (3.6%)",
+          "note": null
+        },
+        {
+          "metric": "Published security advisories",
+          "value": "0",
+          "note": "9 years, zero"
+        },
+        {
+          "metric": "OSSF Scorecard",
+          "value": "4.1/10",
+          "note": "Indexed"
+        },
+        {
+          "metric": "NuGet deps",
+          "value": "Not parsed",
+          "note": ".csproj parsing not implemented \u2014 F6"
+        },
+        {
+          "metric": "Bundled vendored JS libs",
+          "value": "5+ (mermaid/MathJax/markdown-it/highlight.js/svga)",
+          "note": "No upstream version tracking \u2014 F1"
+        },
+        {
+          "metric": "Primary distribution",
+          "value": "GitHub Releases MSI + Scoop + MS Store",
+          "note": "Harness detected 0 channels \u2014 F6"
+        }
+      ]
+    },
+    "coverage_detail": {
+      "rows": [
+        {
+          "check": "Harness Phase 1 end-to-end",
+          "result": "\u2705 Complete"
+        },
+        {
+          "check": "`gh api` rate limit",
+          "result": "\u2705 Well under limit"
+        },
+        {
+          "check": "Tarball extraction + local grep",
+          "result": "\u2705 Scanned"
+        },
+        {
+          "check": "OSSF Scorecard",
+          "result": "\u2705 Indexed, overall 4.1/10"
+        },
+        {
+          "check": "Dependabot alerts",
+          "result": "\u26a0 Admin scope (403); no dependabot.yml in repo but 'Dependabot Updates' workflow runs \u2014 config is in repo settings (F6)"
+        },
+        {
+          "check": "osv.dev dependency queries",
+          "result": "\u26a0 0 queries \u2014 .csproj / .sln parsing not implemented (F6)"
+        },
+        {
+          "check": "PR review sample",
+          "result": "\u2705 137-PR sample \u2014 5.1% formal, 25.5% any, 5 self-merges"
+        },
+        {
+          "check": "Dependencies manifest detection",
+          "result": "\u26a0 0 detected (F6 \u2014 .NET project files unrecognized)"
+        },
+        {
+          "check": "Distribution channels inventory",
+          "result": "\u26a0 0 detected \u2014 real channels (GitHub Releases MSI + Scoop + MS Store) unrecognized (F6)"
+        },
+        {
+          "check": "Dangerous-primitives grep (15 families)",
+          "result": "\u26a0 20+ hits across 5 families \u2014 all false positives on bundled minified JS in plugin Resources/ (F6)"
+        },
+        {
+          "check": "Workflows",
+          "result": "\u2705 4 detected (msbuild + Copilot \u00d7 2 + Dependabot)"
+        },
+        {
+          "check": "Agent-rule files inventory",
+          "result": "\u2705 0 (not an agent-tool repo)"
+        },
+        {
+          "check": "Gitleaks",
+          "result": "\u2297 Not available on this scanner host"
+        },
+        {
+          "check": "README paste-scan",
+          "result": "\u2705 No paste-from-command blocks"
+        }
+      ]
+    },
+    "coverage_gaps": {
+      "entries": [
+        ".NET .csproj / .sln dependency parsing not implemented \u2014 NuGet dep graph for 21+ plugin projects is unscanned. Same pattern as Go/Ruby/Rust ecosystem gaps.",
+        "Distribution-channel harness did not detect QuickLook's actual channels: GitHub Releases MSI installer, Scoop (`scoop install quicklook`), Microsoft Store. Reported 0 channels is a coverage artifact.",
+        "Dependabot-alerts API required admin scope (HTTP 403); dependabot.yml is NOT in the repo but a 'Dependabot Updates' dynamic workflow runs \u2014 implies config is in repo Settings. Coverage of actual dep ecosystems tracked is unknown to this scan.",
+        "Dangerous-primitives regex produced 20+ false positives on bundled minified JavaScript libraries inside plugin Resources/ directories (mermaid.min.js, mathjax, markdown-it, highlight.js, svga). Regex tuning gap.",
+        "Gitleaks secret-scanning not available on this scanner host.",
+        "Release-integrity grading is coarse \u2014 harness doesn't check MSI installer release assets for .sig / code-signing / checksum files on QuickLook releases.",
+        "Copilot SWE agent PRs (E9) surfaced as regular PRs \u2014 harness doesn't distinguish AI-authored contributions or flag them for governance-attention."
+      ]
+    },
+    "scorecard_cells": {
+      "does_anyone_check_the_code": {
+        "color": "red",
+        "short_answer": "No \u2014 5.1% formal review + no branch protection + 94% two-maintainer share on a privileged shell-integration tool",
+        "rationale": null,
+        "edge_case": null,
+        "suggested_threshold_adjustment": null,
+        "computed_signal_refs": [],
+        "override_reason": null
+      },
+      "do_they_fix_problems_quickly": {
+        "color": "green",
+        "short_answer": "Yes \u2014 0 open security issues, active semver releases (4.5.0 6 days before scan, 4.4.0 ~100 days before)",
+        "rationale": null,
+        "edge_case": null,
+        "suggested_threshold_adjustment": null,
+        "computed_signal_refs": [],
+        "override_reason": null
+      },
+      "do_they_tell_you_about_problems": {
+        "color": "red",
+        "short_answer": "No \u2014 no SECURITY.md, no CONTRIBUTING, 0 published advisories in 9 years on a parser-heavy tool",
+        "rationale": null,
+        "edge_case": null,
+        "suggested_threshold_adjustment": null,
+        "computed_signal_refs": [],
+        "override_reason": null
+      },
+      "is_it_safe_out_of_the_box": {
+        "color": "amber",
+        "short_answer": "Partly \u2014 MSI installer with no documented checksums; 21 parsers run on any hovered file; bundled vendored libraries uncertain-version",
+        "rationale": null,
+        "edge_case": null,
+        "suggested_threshold_adjustment": null,
+        "computed_signal_refs": [],
+        "override_reason": null
+      }
+    },
+    "catalog_metadata": {
+      "category": "windows-shell-integration",
+      "subcategory": "file-preview-extender",
+      "short_description": "C# Windows File Explorer extender \u2014 presses spacebar on any file and invokes one of 21 format-specific parser plugins (archives, PE, ELF, Office, PDF, mail, images, video) to show a preview. Brings macOS Quick Look semantics to Windows.",
+      "target_user": "Windows desktop user who wants hover-preview of arbitrary file types. Install: MSI installer from GitHub Releases, `scoop install quicklook`, or Microsoft Store.",
+      "shape": "C# .NET Windows desktop tool + Explorer hook + 21-plugin file-parser architecture. NEW shape \u2014 first C# V1.2 entry in catalog; first Windows-shell-integration category.",
+      "prior_scan_note": "None \u2014 first scan of QuickLook. Seventh wild V1.2-schema scan (after markitdown 15, ghostty 16, Kronos 17, kamal 18, Xray-core 19, browser_terminal 20, wezterm 21)."
+    },
+    "timeline_intro": "QuickLook's lifecycle \u2014 9-year xupefei-led project, emako joined as co-maintainer, active semver releases.",
+    "evidence_intro": "Command-backed evidence from Phase 1 harness + gh api queries + plugin-directory inspection.",
+    "coverage_intro": "Phase 1 harness coverage with 7 documented gaps \u2014 concentrated on .NET / Windows-package-manager ecosystem and bundled-JS false-positives."
+  },
+  "phase_4b_computed": {
+    "verdict": {
+      "level": "Caution",
+      "computed_from_findings": [
+        "F0",
+        "F1",
+        "F2",
+        "F3"
+      ]
+    }
+  },
+  "phase_5_prose_llm": {
+    "editorial_caption": {
+      "text": "QuickLook \u2014 23k-star C# Windows Explorer extender that brings macOS Quick-Look semantics to Windows. Press spacebar on any file; 1 of 21 plugins parses it and shows a preview. Parser surface IS the risk model: archives, PE binaries, Office, PDF, images all run through parsers. Two-maintainer repo (xupefei + emako, 94% combined), no branch protection, 0 advisories in 9 years, `latest` tag stale since Dec 2024 (semver 4.5.0 is current). Zero scorecard overrides."
+    },
+    "per_finding_prose": {
+      "entries": [
+        {
+          "finding_id": "F0",
+          "body_paragraphs": [
+            "QuickLook's value proposition is that pressing spacebar on any file in Windows Explorer shows a preview without opening the file's native application. The implementation is 21 plugins, each responsible for one format family: ArchiveViewer (ZIP/RAR/7Z), PEViewer (Windows .exe/.dll), ELFViewer (Linux binaries), OfficeViewer (Excel/Word), PDFViewer, MailViewer (EML), ImageViewer, VideoViewer, and others. Every plugin is a parser invoked against untrusted file content.",
+            "This is the tool's function, not a defect. It is also a direct enumeration of the threat surface: any file an attacker can convince a user to hover over in Explorer flows into a parser. Comparable tools (macOS Quick Look, Windows thumbnail providers, PDF readers) have historically been rich sources of parser-RCE CVEs. The relevant question isn't 'is there a known vuln right now'; it's 'when a parser bug in one of these 21 plugins surfaces, how quickly does a fix reach users?' \u2014 and F2 (no advisories + no documented disclosure) suggests 'slowly and quietly'.",
+            "Consumer-side mitigation: disable plugins you don't need (QuickLook supports per-plugin toggles). Scan suspicious files with AV before hover-preview. Maintainer-side: consider sandboxing the preview process via Windows AppContainer, or track upstream parser-library CVE feeds per plugin."
+          ]
+        },
+        {
+          "finding_id": "F1",
+          "body_paragraphs": [
+            "MarkdownViewer bundles minified copies of mermaid.min.js (diagram rendering), mathjax tex-mml-svg.js (math), markdown-it.min.js (markdown\u2192HTML), and highlight.min.js (syntax highlighting). ImageViewer bundles svga.min.js. These are pinned vendored assets committed to the repo \u2014 not package.json-managed dependencies with dependabot coverage.",
+            "Each upstream library ships security patches periodically. markdown-it has had several XSS fixes; MathJax has had its own CVE history; highlight.js has had regex-based DoS findings. The bundled copies in QuickLook are pinned to whenever a maintainer last refreshed them, with no automated reminder when upstream ships a fix. The WebView2 that renders the markdown trusts these libraries; a markdown file crafted to trigger a known-in-upstream bug would pass through unaltered.",
+            "Fix surface on the maintainer side is straightforward: migrate the bundled libs to a package.json + build-time bundle step, then add 'npm' to the Dependabot ecosystems. Consumer-side there is little to do \u2014 the bundle ships with the installer and is not user-replaceable."
+          ]
+        },
+        {
+          "finding_id": "F2",
+          "body_paragraphs": [
+            "community/profile reports has_security_policy=false. security-advisories count: 0 across 9 years. For a tool with QuickLook's parser surface (21 plugins covering the historically-CVE-rich parser formats), zero published advisories implies silent-fix cadence \u2014 not 'zero bugs ever existed'. This is the same pattern flagged on Kronos (entry 17), Xray-core (entry 19), and wezterm (entry 21) \u2014 a consistent catalog-wide phenomenon.",
+            "For consumers, the practical effect is that GHSA syndication does not cover QuickLook. Knowing whether a given release fixes a security-relevant parser bug requires reading release notes carefully. For reporters, the disclosure path is GitHub's `Report a vulnerability` UI (still reachable but not documented in-repo). The maintainer-side fix is a 1-page SECURITY.md."
+          ]
+        },
+        {
+          "finding_id": "F3",
+          "body_paragraphs": [
+            "xupefei (716 commits) + emako (611) combine for 94% of the top-6 contributor share \u2014 a tight two-maintainer repo. PR sample shows 5.1% formal review + 25.5% any-review + 5 self-merges of 137 \u2014 consistent with the two maintainers alternately reviewing each other's PRs informally without recording `APPROVED` decisions. No branch protection, no CODEOWNERS.",
+            "The tool's blast radius is 'hooked into every user's Explorer' \u2014 the installed MSI registers a keyboard hook and a preview window. A credential compromise of either xupefei or emako's account reaches every QuickLook user whose installation auto-updates. The review gate that would catch a malicious commit before release is thin. This is typical for active two-maintainer projects; the finding describes the structural exposure."
+          ]
+        },
+        {
+          "finding_id": "F4",
+          "body_paragraphs": [
+            "The repo carries a git tag literally named `latest` pointing to a release from 2024-12-06. The actual most-recent semver release is `4.5.0` on 2026-04-14 (6 days before scan). Tooling that resolves `latest` as a version hint (some installers and package-manager manifests do this) would serve 16-month-old code; tooling that uses explicit semver tags gets current.",
+            "Hygiene-level defect at worst \u2014 not malicious, not exploitable directly. The fix is one GitHub Actions step in the release workflow: `git tag -fa latest && git push origin latest --force` per release. Consumer mitigation: avoid installers that resolve `latest`-tag; use explicit version pins."
+          ]
+        },
+        {
+          "finding_id": "F5",
+          "body_paragraphs": [
+            "All 3 currently-open PRs are authored by `app/copilot-swe-agent` \u2014 GitHub's AI agent. No human PRs currently in the queue. This is an emerging governance pattern: AI agents submit feature PRs, and the repo's review process has to decide how to review them. With no CODEOWNERS and 5.1% formal review rate, an AI-authored PR that a maintainer skims and merges has effectively zero independent review.",
+            "Info-level because the PRs themselves aren't a vulnerability \u2014 Copilot SWE agent is a legitimate GitHub feature. The observation is about process: the repo absorbs AI contributions without a documented protocol. If those PRs include changes to plugins (parser code, archive handling), the risk surface is the same as for any unreviewed PR \u2014 amplified by AI authorship being less predictable than a familiar contributor."
+          ]
+        },
+        {
+          "finding_id": "F6",
+          "body_paragraphs": [
+            "Three scanner-side gaps surfaced on this scan: (1) .NET .csproj / .sln parsing not implemented \u2014 runtime_count=0 despite ~21 plugin projects, each a NuGet consumer; (2) distribution-channel detection returned 0 channels when the real channels are GitHub Releases MSI installer + Scoop + Microsoft Store; (3) dangerous_primitives regex produced 20+ false positives on bundled minified JS libraries in plugin Resources/ directories. Same class of language-ecosystem gap seen on Go/Ruby/Rust/Python in prior catalog entries.",
+            "Non-blocking for this scan's verdict \u2014 F1 captures the vendored-JS concern without relying on the regex hits, and F0/F2/F3 are independent of dep-CVE coverage. Scanner-side: .NET NuGet advisory parsing would be the most impactful addition."
+          ]
+        }
+      ]
+    }
+  },
+  "phase_6_assembly": {
+    "assembled": true,
+    "assembly_timestamp": "2026-04-20T14:01:28.692049+00:00",
+    "provenance_complete": true,
+    "evidence_refs_valid": true,
+    "field_count": 2297
+  },
+  "scan_sign_off": {
+    "approved_for_release": false
+  }
+}
