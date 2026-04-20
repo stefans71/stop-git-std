@@ -81,6 +81,8 @@ OVERRIDE_REASON_ENUM: frozenset[str] = frozenset({
     "threshold_too_lenient",
     "missing_qualitative_context",
     "rubric_literal_vs_intent",
+    "signal_vocabulary_gap",
+    "harness_coverage_gap",
     "other",
 })
 

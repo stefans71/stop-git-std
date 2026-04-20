@@ -1,0 +1,3564 @@
+{
+  "$comment": "Ghostty V1.2 wild scan \u2014 first V2.5-preview scan using V1.2 schema (post-V1.2 landing).",
+  "schema_version": "V1.2",
+  "_meta": {
+    "scanner_version": "V2.5-preview",
+    "prompt_version": "V2.4",
+    "scan_started_at": "2026-04-20T09:19:34.148699+00:00",
+    "model": "claude-opus-4-7 (via Claude Code)",
+    "scan_status": "completed",
+    "scan_completed_at": "2026-04-20T09:27:37.183673+00:00"
+  },
+  "target": {
+    "owner": "ghostty-org",
+    "repo": "ghostty",
+    "full_name": "ghostty-org/ghostty",
+    "url": "https://github.com/ghostty-org/ghostty"
+  },
+  "scanner_integrity": {
+    "injection_matches": 0,
+    "actionable_count": 0,
+    "findings": []
+  },
+  "phase_1_raw_capture": {
+    "pre_flight": {
+      "head_sha": "dcc39dcd401975ee77a642fa15ba7bb9f6d85b96",
+      "default_branch": "main",
+      "tarball_extracted": true,
+      "tarball_file_count": 5691,
+      "symlinks_stripped": 0,
+      "api_rate_limit": {
+        "limit": 5000,
+        "remaining": 4995,
+        "reset": 1776679936,
+        "used": 5
+      }
+    },
+    "repo_metadata": {
+      "name": "ghostty",
+      "description": "\ud83d\udc7b Ghostty is a fast, feature-rich, and cross-platform terminal emulator that uses platform-native UI and GPU acceleration.",
+      "created_at": "2022-03-29T17:38:26Z",
+      "pushed_at": "2026-04-19T22:48:47Z",
+      "stargazer_count": 51181,
+      "fork_count": 2391,
+      "archived": false,
+      "fork": false,
+      "has_issues_enabled": true,
+      "primary_language": "Zig",
+      "topics": [],
+      "license_spdx": "MIT",
+      "default_branch": "main",
+      "open_issues_count": 239,
+      "size_kb": 68554
+    },
+    "contributors": {
+      "top_contributors": [
+        {
+          "contributions": 10931,
+          "login": "mitchellh"
+        },
+        {
+          "contributions": 712,
+          "login": "jcollie"
+        },
+        {
+          "contributions": 498,
+          "login": "qwerasd205"
+        },
+        {
+          "contributions": 226,
+          "login": "jparise"
+        },
+        {
+          "contributions": 200,
+          "login": "pluiedev"
+        },
+        {
+          "contributions": 160,
+          "login": "bo2themax"
+        }
+      ],
+      "total_contributor_count": 100
+    },
+    "maintainer_accounts": {
+      "accounts": [
+        {
+          "bio": "A new terminal, started by @mitchellh \ud83d\udc7b",
+          "company": null,
+          "created_at": "2024-05-08T03:05:38Z",
+          "followers": 6860,
+          "login": "ghostty-org",
+          "public_repos": 6,
+          "type": "Organization",
+          "role": "owner"
+        },
+        {
+          "bio": null,
+          "company": null,
+          "created_at": "2008-02-27T23:27:54Z",
+          "followers": 21653,
+          "login": "mitchellh",
+          "public_repos": 118,
+          "type": "User",
+          "role": "contributor",
+          "contributions": 10931
+        },
+        {
+          "bio": "Linux & Networking Geek",
+          "company": null,
+          "created_at": "2011-04-19T21:25:11Z",
+          "followers": 126,
+          "login": "jcollie",
+          "public_repos": 188,
+          "type": "User",
+          "role": "contributor",
+          "contributions": 712
+        },
+        {
+          "bio": null,
+          "company": null,
+          "created_at": "2014-04-09T17:57:12Z",
+          "followers": 117,
+          "login": "qwerasd205",
+          "public_repos": 13,
+          "type": "User",
+          "role": "contributor",
+          "contributions": 498
+        },
+        {
+          "bio": "Scientia Potentia Est",
+          "company": "@Airbnb",
+          "created_at": "2008-05-14T20:58:14Z",
+          "followers": 363,
+          "login": "jparise",
+          "public_repos": 183,
+          "type": "User",
+          "role": "contributor",
+          "contributions": 226
+        },
+        {
+          "bio": "Unassorted creative \\\\  \r\n\ud83c\udff3\ufe0f\u200d\u26a7\ufe0f \ud83c\udff3\ufe0f\u200d\ud83c\udf08 \ud83c\udfa8 \ud83c\udfb5 \ud83d\udcbb \ud83c\udf0f \u270d\ud83c\udffc \ud83d\udc9c ",
+          "company": null,
+          "created_at": "2016-09-24T02:14:25Z",
+          "followers": 278,
+          "login": "pluiedev",
+          "public_repos": 140,
+          "type": "User",
+          "role": "contributor",
+          "contributions": 200
+        }
+      ]
+    },
+    "ossf_scorecard": {
+      "queried": true,
+      "indexed": false,
+      "http_status": 404,
+      "overall_score": null,
+      "checks": [],
+      "raw_response": null
+    },
+    "community_profile": {
+      "health_percentage": 62,
+      "has_code_of_conduct": false,
+      "has_contributing": true,
+      "has_security_policy": false,
+      "license_spdx": "MIT"
+    },
+    "branch_protection": {
+      "classic": {
+        "status": 404
+      },
+      "rulesets": {
+        "entries": [
+          {
+            "id": 3138669,
+            "name": "Main Branch",
+            "target": "branch",
+            "source_type": "Repository",
+            "source": "ghostty-org/ghostty",
+            "enforcement": "active",
+            "node_id": "RRS_lACqUmVwb3NpdG9yec4cWF0CzgAv5G0",
+            "_links": {
+              "self": {
+                "href": "https://api.github.com/repos/ghostty-org/ghostty/rulesets/3138669"
+              },
+              "html": {
+                "href": "https://github.com/ghostty-org/ghostty/rules/3138669"
+              }
+            },
+            "created_at": "2025-01-02T15:15:10.715Z",
+            "updated_at": "2026-02-17T04:44:27.370Z"
+          }
+        ],
+        "count": 1
+      },
+      "rules_on_default": {
+        "entries": [
+          {
+            "type": "deletion",
+            "ruleset_source_type": "Repository",
+            "ruleset_source": "ghostty-org/ghostty",
+            "ruleset_id": 3138669
+          },
+          {
+            "type": "non_fast_forward",
+            "ruleset_source_type": "Repository",
+            "ruleset_source": "ghostty-org/ghostty",
+            "ruleset_id": 3138669
+          },
+          {
+            "type": "pull_request",
+            "parameters": {
+              "required_approving_review_count": 1,
+              "dismiss_stale_reviews_on_push": false,
+              "required_reviewers": [],
+              "require_code_owner_review": true,
+              "require_last_push_approval": true,
+              "required_review_thread_resolution": false,
+              "allowed_merge_methods": [
+                "merge",
+                "squash",
+                "rebase"
+              ]
+            },
+            "ruleset_source_type": "Repository",
+            "ruleset_source": "ghostty-org/ghostty",
+            "ruleset_id": 3138669
+          },
+          {
+            "type": "required_status_checks",
+            "parameters": {
+              "strict_required_status_checks_policy": false,
+              "do_not_enforce_on_create": false,
+              "required_status_checks": [
+                {
+                  "context": "Required Checks: Nix",
+                  "integration_id": 15368
+                },
+                {
+                  "context": "Required Checks: Test",
+                  "integration_id": 15368
+                }
+              ]
+            },
+            "ruleset_source_type": "Repository",
+            "ruleset_source": "ghostty-org/ghostty",
+            "ruleset_id": 3138669
+          }
+        ],
+        "count": 4
+      },
+      "owner_type": "Organization",
+      "org_rulesets": {
+        "status": "error",
+        "entries": []
+      }
+    },
+    "codeowners": {
+      "found": true,
+      "path": "CODEOWNERS",
+      "content": "# This file documents the subsystem maintainers of the Ghostty project\n# along with the responsibilities of a maintainer and how one can become\n# a maintainer.\n#\n# Ghostty follows a subsystem maintainer model where distinguished\n# contributors (with mutual agreement) are designated as maintainers of a\n# specific subset of the project. A subsystem maintainer has more privileges\n# and authority over a specific part of the project than a regular\n# contributor and deference is given to them when making decisions about\n# their subsystem.\n#\n# Ultimately Ghostty has a BDFL (Benevolent Dictator For Life) model\n# currently with @mitchellh as the BDFL. The BDFL has the final say in all\n# decisions and may override a maintainer's decision if necessary. I like to\n# say its a BDFLFN (Benevolent Dictator For Life \"For Now\") model because\n# long term I'd like to see the project be more community driven. But for\n# now, early in its life, we're going with this model.\n#\n# ## Privileges\n#\n#   - Authority to approve or reject pull requests in their subsystem.\n#   - Authority to moderate issues and discussions in their subsystem.\n#   - Authority to make roadmap and design decisions about their subsystem\n#     with input only from other subsystem maintainers.\n#\n# In all scenarios, the BDFL doesn't need to be consulted for decisions\n# but may revert or override decisions if necessary. The expectation is\n# that maintainers will be trusted to make the right decisions for their\n# subsystem and this will be rare.\n#\n# ## Responsibilities\n#\n# Subsystem maintainership is a voluntary role and maintainers are not\n# expected to dedicate any amount of time to the project. However, if a\n# maintainer is inactive for a long period of time, they may be removed from\n# the maintainers list to avoid bitrot or outdated information.\n#\n# Maintainers are expected to be exemplary members of the community and\n# should be respectful, helpful, and professional in all interactions.\n# This is both in regards to the community at large as well as other\n# subsystem maintainers as well as @mitchellh.\n#\n# As technical leaders, maintainers are expected to be mindful about\n# breaking changes, performance, user impact, and other technical\n# considerations in their subsystem. They should be considerate of large\n# changes and should be able to justify their decisions.\n#\n# Notably, maintainers have NO OBLIGATION to review pull requests or issues\n# in their subsystem. They have full discretion to review or not review\n# anything they want. This isn't a job! It is a role of trust and authority\n# and the expectation is that maintainers will use their best judgement.\n#\n# ## Becoming a Maintainer\n#\n# Maintainer candidates are noticed and proposed by the community. Anyone\n# may propose themselves or someone else as a maintainer. The BDFL along\n# with existing maintainers will discuss and decide.\n#\n# Generally, we want to see consistent high quality contributions to a\n# specific subsystem before considering someone as a maintainer. There isn't\n# an exact number of contributions or time period required but generally\n# we're looking for an order of a dozen or more contributions over a period of\n# months, at least.\n#\n# # Subsystem List\n#\n# The subsystems don't fully cover the entirety of the Ghostty project but\n# are created organically as experts in certain areas emerge. If you feel\n# you are an expert in a certain area and would like to be a maintainer,\n# please reach out to @mitchellh on Discord.\n#\n# (Alphabetical order)\n#\n# - @ghostty-org/font - All things font related including discovery,\n#   rasterization, shaping, coloring, etc.\n#\n# - @ghostty-org/gtk - Anything GTK-related in the project, primarily\n#   the GTK apprt. Also includes X11/Wayland integrations and general\n#   Linux support.\n#\n# - @ghostty-org/localization/* - Anything related to localization\n#   for a specific locale.\n#\n# - @ghosty-org/localization/manager - Manage all localization tasks\n#   and tooling. They are not responsible for any specific locale but\n#   are responsible for the overall localization process and tooling.\n#\n# - @ghostty-org/macos - The Ghostty macOS app and any macOS-specific\n#   features, configurations, etc.\n#\n# - @ghostty-org/packaging/snap - Ghostty snap packaging\n#   (https://snapcraft.io/ghostty)\n#\n# - @ghostty-org/renderer - Ghostty rendering subsystem, including the\n#   rendering abstractions as well as specific renderers like OpenGL\n#   and Metal.\n#\n# - @ghostty-org/shell - Ghostty shell integration, including shell\n#   completions, shell detection, and any other shell interactions.\n#\n# - @ghostty-org/terminal - The terminal emulator subsystem, including\n#   subprocess management and pty handling, escape sequence parsing,\n#   key encoding, etc.\n#\n# ## Outside of Ghostty\n#\n# Other \"subsystems\" exist outside of Ghostty and will not be represented\n# in this CODEOWNERS file:\n#\n# - @ghostty-org/discord-bot - Maintainers of the Ghostty Discord bot.\n#\n# - @ghostty-org/website - Maintainers of the Ghostty website.\n\n# Font\n/src/font/ @ghostty-org/font\n/pkg/fontconfig/ @ghostty-org/font\n/pkg/freetype/ @ghostty-org/font\n/pkg/harfbuzz/ @ghostty-org/font\n\n# GTK\n/src/apprt/gtk/ @ghostty-org/gtk\n/src/os/cgroup.zig @ghostty-org/gtk\n/src/os/flatpak.zig @ghostty-org/gtk\n/dist/linux/ @ghostty-org/gtk\n\n# macOS\n#\n# This includes libghostty because the macOS apprt is built on top of\n# libghostty and often requires or is impacted by changes to libghostty.\n# macOS subsystem maintainers are expected to only work on libghostty\n# insofar as it impacts the macOS apprt.\n/include/ghostty.h @ghostty-org/macos\n/src/apprt/embedded.zig @ghostty-org/macos\n/src/os/cf_release_thread.zig @ghostty-org/macos\n/src/os/macos.zig @ghostty-org/macos\n/macos/ @ghostty-org/macos\n/dist/macos/ @ghostty-org/macos\n/pkg/apple-sdk/ @ghostty-org/macos\n/pkg/macos/ @ghostty-org/macos\n/.swiftlint.yml @ghostty-org/macos\n\n# Renderer\n/src/renderer.zig @ghostty-org/renderer\n/src/renderer/ @ghostty-org/renderer\n/pkg/glslang/ @ghostty-org/renderer\n/pkg/opengl/ @ghostty-org/renderer\n/pkg/spirv-cross/ @ghostty-org/renderer\n/pkg/wuffs/ @ghostty-org/renderer\n\n# Shell\n/src/shell-integration/ @ghostty-org/shell\n/src/termio/shell_integration.zig @ghostty-org/shell\n\n# Terminal\n/src/simd/ @ghostty-org/terminal\n/src/input/KeyEncoder.zig @ghostty-org/terminal\n/src/terminal/ @ghostty-org/terminal\n/src/terminfo/ @ghostty-org/terminal\n/src/termio/ @ghostty-org/terminal\n/src/unicode/ @ghostty-org/terminal\n/src/Surface.zig @ghostty-org/terminal\n/src/surface_mouse.zig @ghostty-org/terminal\n\n# Localization\n/po/README_TRANSLATORS.md @ghostty-org/manager  # *localization* manager.\n/po/com.mitchellh.ghostty.pot @ghostty-org/manager\n/src/os/i18n_locales.zig @ghostty-org/manager\n/po/be.po @ghostty-org/be_BY\n/po/bg.po @ghostty-org/bg_BG\n/po/ca.po @ghostty-org/ca_ES\n/po/de.po @ghostty-org/de_DE\n/po/es_AR.po @ghostty-org/es_AR\n/po/es_BO.po @ghostty-org/es_BO\n/po/es_ES.po @ghostty-org/es_ES\n/po/fr.po @ghostty-org/fr_FR\n/po/ga.po @ghostty-org/ga_IE\n/po/he.po @ghostty-org/he_IL\n/po/hr.po @ghostty-org/hr_HR\n/po/hu.po @ghostty-org/hu_HU\n/po/id.po @ghostty-org/id_ID\n/po/it.po @ghostty-org/it_IT\n/po/ja.po @ghostty-org/ja_JP\n/po/kk.po @ghostty-org/kk_KZ\n/po/ko_KR.po @ghostty-org/ko_KR\n/po/lt.po @ghostty-org/lt_LT\n/po/lv.po @ghostty-org/lv_LV\n/po/mk.po @ghostty-org/mk_MK\n/po/nb.po @ghostty-org/nb_NO\n/po/nl.po @ghostty-org/nl_NL\n/po/pl.po @ghostty-org/pl_PL\n/po/pt_BR.po @ghostty-org/pt_BR\n/po/ru.po @ghostty-org/ru_RU\n/po/tr.po @ghostty-org/tr_TR\n/po/uk.po @ghostty-org/uk_UA\n/po/vi.po @ghostty-org/vi_VN\n/po/zh_CN.po @ghostty-org/zh_CN\n/po/zh_TW.po @ghostty-org/zh_TW\n\n# Packaging - Snap\n/snap/ @ghostty-org/snap\n",
+      "locations_checked": [
+        "CODEOWNERS",
+        ".github/CODEOWNERS",
+        "docs/CODEOWNERS",
+        ".gitlab/CODEOWNERS"
+      ]
+    },
+    "releases": {
+      "entries": [
+        {
+          "tag_name": "tip",
+          "published_at": "2022-11-17T19:22:01Z",
+          "prerelease": true,
+          "draft": false,
+          "author": "mitchellh"
+        }
+      ],
+      "total_count": 1
+    },
+    "security_advisories": {
+      "count": 5,
+      "entries": [
+        {
+          "ghsa_id": "GHSA-4jxv-xgrp-5m3r",
+          "severity": "medium",
+          "cve_id": "CVE-2026-26982",
+          "published_at": "2026-03-09T16:08:59Z",
+          "summary": "Arbitrary command execution via control characters in paste and drag-and-drop operations"
+        },
+        {
+          "ghsa_id": "GHSA-q9fg-cpmh-c78x",
+          "severity": "low",
+          "cve_id": null,
+          "published_at": "2025-09-15T16:55:51Z",
+          "summary": "Ghostty can be used as a vector for privilege escalation from other vulnerable or malicious sources"
+        },
+        {
+          "ghsa_id": "GHSA-98wc-794w-gjx3",
+          "severity": "low",
+          "cve_id": null,
+          "published_at": "2025-01-30T22:01:36Z",
+          "summary": "File descriptors leaked to shell"
+        },
+        {
+          "ghsa_id": "GHSA-hfg5-8q2c-crhc",
+          "severity": "low",
+          "cve_id": null,
+          "published_at": "2024-12-31T21:01:01Z",
+          "summary": "The file created by `write_*_file` actions have global read permissions"
+        },
+        {
+          "ghsa_id": "GHSA-5hcq-3j4q-4v6p",
+          "severity": "medium",
+          "cve_id": "CVE-2024-56803",
+          "published_at": "2024-12-31T21:00:41Z",
+          "summary": "Improper handling of window title sequences can lead to arbitrary command execution"
+        }
+      ]
+    },
+    "workflows": {
+      "entries": [
+        {
+          "name": "Test",
+          "path": ".github/workflows/test.yml",
+          "state": "active"
+        },
+        {
+          "name": "Release Tip",
+          "path": ".github/workflows/release-tip.yml",
+          "state": "active"
+        },
+        {
+          "name": "Flatpak",
+          "path": ".github/workflows/flatpak.yml",
+          "state": "active"
+        },
+        {
+          "name": "Clean Artifacts",
+          "path": ".github/workflows/clean-artifacts.yml",
+          "state": "active"
+        },
+        {
+          "name": "Nix",
+          "path": ".github/workflows/nix.yml",
+          "state": "active"
+        },
+        {
+          "name": "Dependabot Updates",
+          "path": "dynamic/dependabot/dependabot-updates",
+          "state": "active"
+        },
+        {
+          "name": "Update iTerm2 colorschemes",
+          "path": ".github/workflows/update-colorschemes.yml",
+          "state": "active"
+        },
+        {
+          "name": "Release Tag",
+          "path": ".github/workflows/release-tag.yml",
+          "state": "active"
+        },
+        {
+          "name": "Milestone Action",
+          "path": ".github/workflows/milestone.yml",
+          "state": "active"
+        },
+        {
+          "name": "Publish Tagged Release",
+          "path": ".github/workflows/publish-tag.yml",
+          "state": "active"
+        },
+        {
+          "name": "Test in FreeBSD",
+          "path": ".github/workflows/freebsd.yml",
+          "state": "active"
+        },
+        {
+          "name": "Snap",
+          "path": ".github/workflows/snap.yml",
+          "state": "active"
+        },
+        {
+          "name": "Copilot code review",
+          "path": "dynamic/copilot-pull-request-reviewer/copilot-pull-request-reviewer",
+          "state": "active"
+        },
+        {
+          "name": "Vouch - Check Issue",
+          "path": ".github/workflows/vouch-check-issue.yml",
+          "state": "active"
+        },
+        {
+          "name": "Vouch - Check PR",
+          "path": ".github/workflows/vouch-check-pr.yml",
+          "state": "active"
+        },
+        {
+          "name": "Vouch - Manage by Discussion",
+          "path": ".github/workflows/vouch-manage-by-discussion.yml",
+          "state": "active"
+        },
+        {
+          "name": "Vouch - Manage by Issue",
+          "path": ".github/workflows/vouch-manage-by-issue.yml",
+          "state": "active"
+        },
+        {
+          "name": "Vouch - Sync CODEOWNERS",
+          "path": ".github/workflows/vouch-sync-codeowners.yml",
+          "state": "active"
+        }
+      ],
+      "count": 18,
+      "pull_request_target_count": 2
+    },
+    "workflow_contents": {
+      "entries": [
+        {
+          "path": ".github/workflows/snap.yml",
+          "content_lines": 59,
+          "sha_pinned_actions_count": 3,
+          "tag_pinned_actions_count": 0,
+          "has_pull_request_target": false,
+          "permissions_block_present": false
+        },
+        {
+          "path": ".github/workflows/flatpak.yml",
+          "content_lines": 50,
+          "sha_pinned_actions_count": 2,
+          "tag_pinned_actions_count": 0,
+          "has_pull_request_target": false,
+          "permissions_block_present": false
+        },
+        {
+          "path": ".github/workflows/clean-artifacts.yml",
+          "content_lines": 17,
+          "sha_pinned_actions_count": 1,
+          "tag_pinned_actions_count": 0,
+          "has_pull_request_target": false,
+          "permissions_block_present": false
+        },
+        {
+          "path": ".github/workflows/publish-tag.yml",
+          "content_lines": 74,
+          "sha_pinned_actions_count": 1,
+          "tag_pinned_actions_count": 0,
+          "has_pull_request_target": false,
+          "permissions_block_present": false
+        },
+        {
+          "path": ".github/workflows/milestone.yml",
+          "content_lines": 33,
+          "sha_pinned_actions_count": 2,
+          "tag_pinned_actions_count": 0,
+          "has_pull_request_target": true,
+          "permissions_block_present": false
+        },
+        {
+          "path": ".github/workflows/release-tip.yml",
+          "content_lines": 1016,
+          "sha_pinned_actions_count": 41,
+          "tag_pinned_actions_count": 0,
+          "has_pull_request_target": false,
+          "permissions_block_present": false
+        },
+        {
+          "path": ".github/workflows/vouch-manage-by-discussion.yml",
+          "content_lines": 35,
+          "sha_pinned_actions_count": 3,
+          "tag_pinned_actions_count": 0,
+          "has_pull_request_target": false,
+          "permissions_block_present": false
+        },
+        {
+          "path": ".github/workflows/test.yml",
+          "content_lines": 1895,
+          "sha_pinned_actions_count": 165,
+          "tag_pinned_actions_count": 0,
+          "has_pull_request_target": false,
+          "permissions_block_present": false
+        },
+        {
+          "path": ".github/workflows/update-colorschemes.yml",
+          "content_lines": 96,
+          "sha_pinned_actions_count": 6,
+          "tag_pinned_actions_count": 0,
+          "has_pull_request_target": false,
+          "permissions_block_present": false
+        },
+        {
+          "path": ".github/workflows/vouch-manage-by-issue.yml",
+          "content_lines": 36,
+          "sha_pinned_actions_count": 3,
+          "tag_pinned_actions_count": 0,
+          "has_pull_request_target": false,
+          "permissions_block_present": false
+        },
+        {
+          "path": ".github/workflows/vouch-check-issue.yml",
+          "content_lines": 22,
+          "sha_pinned_actions_count": 2,
+          "tag_pinned_actions_count": 0,
+          "has_pull_request_target": false,
+          "permissions_block_present": false
+        },
+        {
+          "path": ".github/workflows/release-tag.yml",
+          "content_lines": 410,
+          "sha_pinned_actions_count": 18,
+          "tag_pinned_actions_count": 0,
+          "has_pull_request_target": false,
+          "permissions_block_present": false
+        },
+        {
+          "path": ".github/workflows/vouch-check-pr.yml",
+          "content_lines": 22,
+          "sha_pinned_actions_count": 2,
+          "tag_pinned_actions_count": 0,
+          "has_pull_request_target": true,
+          "permissions_block_present": false
+        },
+        {
+          "path": ".github/workflows/nix.yml",
+          "content_lines": 59,
+          "sha_pinned_actions_count": 4,
+          "tag_pinned_actions_count": 0,
+          "has_pull_request_target": false,
+          "permissions_block_present": false
+        },
+        {
+          "path": ".github/workflows/vouch-sync-codeowners.yml",
+          "content_lines": 32,
+          "sha_pinned_actions_count": 3,
+          "tag_pinned_actions_count": 0,
+          "has_pull_request_target": false,
+          "permissions_block_present": false
+        }
+      ]
+    },
+    "code_patterns": {
+      "agent_rule_files": [
+        {
+          "path": "AGENTS.md",
+          "kind": "agents",
+          "line_count": 39,
+          "ci_amplified": false
+        },
+        {
+          "path": "test/fuzz-libghostty/AGENTS.md",
+          "kind": "agents",
+          "line_count": 48,
+          "ci_amplified": false
+        },
+        {
+          "path": "src/inspector/AGENTS.md",
+          "kind": "agents",
+          "line_count": 12,
+          "ci_amplified": false
+        },
+        {
+          "path": "src/terminal/c/AGENTS.md",
+          "kind": "agents",
+          "line_count": 27,
+          "ci_amplified": false
+        },
+        {
+          "path": "src/benchmark/AGENTS.md",
+          "kind": "agents",
+          "line_count": 48,
+          "ci_amplified": false
+        },
+        {
+          "path": "macos/AGENTS.md",
+          "kind": "agents",
+          "line_count": 34,
+          "ci_amplified": false
+        },
+        {
+          "path": "example/AGENTS.md",
+          "kind": "agents",
+          "line_count": 39,
+          "ci_amplified": false
+        }
+      ],
+      "readme_paste_blocks": {
+        "scanned": true,
+        "entries": [],
+        "entries_count": 0
+      },
+      "dangerous_primitives": {
+        "scanned": true,
+        "exec": {
+          "hit_count": 1,
+          "files": [
+            {
+              "file": "src/font/nerd_font_codegen.py",
+              "first_match": {
+                "line": 130,
+                "snippet": "                return eval("
+              }
+            }
+          ]
+        },
+        "deserialization": {
+          "hit_count": 0,
+          "files": []
+        },
+        "network": {
+          "hit_count": 1,
+          "files": [
+            {
+              "file": "src/font/nerd_font_codegen.py",
+              "first_match": {
+                "line": 25,
+                "snippet": "from urllib.request import urlretrieve"
+              }
+            }
+          ]
+        },
+        "secrets": {
+          "hit_count": 0,
+          "files": []
+        },
+        "vendor_keys": {
+          "hit_count": 0,
+          "files": []
+        },
+        "tls_cors": {
+          "hit_count": 0,
+          "files": []
+        },
+        "sql_injection": {
+          "hit_count": 0,
+          "files": []
+        },
+        "cmd_injection": {
+          "hit_count": 0,
+          "files": []
+        },
+        "auth_bypass": {
+          "hit_count": 0,
+          "files": []
+        },
+        "path_traversal": {
+          "hit_count": 0,
+          "files": []
+        },
+        "archive_unsafe": {
+          "hit_count": 0,
+          "files": []
+        },
+        "ssrf": {
+          "hit_count": 0,
+          "files": []
+        },
+        "xss": {
+          "hit_count": 0,
+          "files": []
+        },
+        "weak_crypto": {
+          "hit_count": 0,
+          "files": []
+        },
+        "debug_flags": {
+          "hit_count": 0,
+          "files": []
+        }
+      },
+      "executable_files": [
+        {
+          "path": "src/build/docker/debian/Dockerfile",
+          "kind": "container-build",
+          "runtime": "docker",
+          "line_count": 43,
+          "file_sha": "6c31dce8d0a3",
+          "has_network_call": true,
+          "has_env_var_pattern": true
+        },
+        {
+          "path": "src/build/docker/lib-c-docs/Dockerfile",
+          "kind": "container-build",
+          "runtime": "docker",
+          "line_count": 38,
+          "file_sha": "ba017e11037d",
+          "has_network_call": false,
+          "has_env_var_pattern": true
+        },
+        {
+          "path": "Makefile",
+          "kind": "build-driver",
+          "runtime": "make",
+          "line_count": 28,
+          "file_sha": "311a475e7105",
+          "has_network_call": false,
+          "has_env_var_pattern": false
+        },
+        {
+          "path": ".github/workflows/vouch-manage-by-discussion.yml",
+          "kind": "ci-workflow",
+          "runtime": "github-actions",
+          "line_count": 35,
+          "file_sha": "9b0a938c80f6",
+          "has_network_call": false,
+          "has_env_var_pattern": true
+        },
+        {
+          "path": ".github/workflows/flatpak.yml",
+          "kind": "ci-workflow",
+          "runtime": "github-actions",
+          "line_count": 50,
+          "file_sha": "8d6bcf779ed3",
+          "has_network_call": false,
+          "has_env_var_pattern": true
+        },
+        {
+          "path": ".github/workflows/vouch-check-pr.yml",
+          "kind": "ci-workflow",
+          "runtime": "github-actions",
+          "line_count": 22,
+          "file_sha": "82b113555c55",
+          "has_network_call": false,
+          "has_env_var_pattern": true
+        },
+        {
+          "path": ".github/workflows/update-colorschemes.yml",
+          "kind": "ci-workflow",
+          "runtime": "github-actions",
+          "line_count": 96,
+          "file_sha": "13c424c84f70",
+          "has_network_call": false,
+          "has_env_var_pattern": true
+        },
+        {
+          "path": ".github/workflows/milestone.yml",
+          "kind": "ci-workflow",
+          "runtime": "github-actions",
+          "line_count": 33,
+          "file_sha": "444b6ffe78c8",
+          "has_network_call": false,
+          "has_env_var_pattern": true
+        },
+        {
+          "path": ".github/workflows/release-tip.yml",
+          "kind": "ci-workflow",
+          "runtime": "github-actions",
+          "line_count": 1016,
+          "file_sha": "358773541693",
+          "has_network_call": false,
+          "has_env_var_pattern": true
+        },
+        {
+          "path": ".github/workflows/publish-tag.yml",
+          "kind": "ci-workflow",
+          "runtime": "github-actions",
+          "line_count": 74,
+          "file_sha": "8d7f4e30f7c4",
+          "has_network_call": false,
+          "has_env_var_pattern": true
+        },
+        {
+          "path": ".github/workflows/test.yml",
+          "kind": "ci-workflow",
+          "runtime": "github-actions",
+          "line_count": 1895,
+          "file_sha": "d528da11fcf5",
+          "has_network_call": false,
+          "has_env_var_pattern": true
+        },
+        {
+          "path": ".github/workflows/vouch-sync-codeowners.yml",
+          "kind": "ci-workflow",
+          "runtime": "github-actions",
+          "line_count": 32,
+          "file_sha": "008c5edc3241",
+          "has_network_call": false,
+          "has_env_var_pattern": true
+        },
+        {
+          "path": ".github/workflows/release-tag.yml",
+          "kind": "ci-workflow",
+          "runtime": "github-actions",
+          "line_count": 410,
+          "file_sha": "d522c0e3e138",
+          "has_network_call": false,
+          "has_env_var_pattern": true
+        },
+        {
+          "path": ".github/workflows/vouch-manage-by-issue.yml",
+          "kind": "ci-workflow",
+          "runtime": "github-actions",
+          "line_count": 36,
+          "file_sha": "c049ec932728",
+          "has_network_call": false,
+          "has_env_var_pattern": true
+        },
+        {
+          "path": ".github/workflows/clean-artifacts.yml",
+          "kind": "ci-workflow",
+          "runtime": "github-actions",
+          "line_count": 17,
+          "file_sha": "cd2e1b19d592",
+          "has_network_call": false,
+          "has_env_var_pattern": false
+        },
+        {
+          "path": ".github/workflows/vouch-check-issue.yml",
+          "kind": "ci-workflow",
+          "runtime": "github-actions",
+          "line_count": 22,
+          "file_sha": "53b09e83da9f",
+          "has_network_call": false,
+          "has_env_var_pattern": true
+        },
+        {
+          "path": ".github/workflows/snap.yml",
+          "kind": "ci-workflow",
+          "runtime": "github-actions",
+          "line_count": 59,
+          "file_sha": "93d779b95a28",
+          "has_network_call": false,
+          "has_env_var_pattern": true
+        },
+        {
+          "path": ".github/workflows/nix.yml",
+          "kind": "ci-workflow",
+          "runtime": "github-actions",
+          "line_count": 59,
+          "file_sha": "6c49cf1e8d77",
+          "has_network_call": false,
+          "has_env_var_pattern": true
+        }
+      ],
+      "install_hooks": []
+    },
+    "prompt_injection_scan": {
+      "scanned_files": [
+        "AGENTS.md",
+        "test/fuzz-libghostty/AGENTS.md",
+        "src/inspector/AGENTS.md",
+        "src/terminal/c/AGENTS.md",
+        "src/benchmark/AGENTS.md",
+        "macos/AGENTS.md",
+        "example/AGENTS.md"
+      ],
+      "injection_signals": [],
+      "signal_count": 0,
+      "scan_method": "tarball"
+    },
+    "dependencies": {
+      "manifest_files": [],
+      "runtime": [],
+      "runtime_count": 0,
+      "dev": [],
+      "dev_count": 0,
+      "dependabot_alerts": {
+        "status": 403,
+        "alerts_count": null,
+        "note": "admin scope required; falling back to osv.dev"
+      },
+      "osv_lookups": [],
+      "dependabot_config": {
+        "present": true,
+        "ecosystems_tracked": [
+          "github-actions"
+        ],
+        "raw_snippet": "version: 2\nupdates:\n  # Maintain dependencies for GitHub Actions\n  - package-ecosystem: \"github-actions\"\n    directory: \"/\"\n    schedule:\n      # Check for updates to GitHub Actions every weekday\n      interval: \"daily\"\n"
+      }
+    },
+    "pr_review": {
+      "total_closed_prs": 0,
+      "sample_size": 0,
+      "total_merged_lifetime": 3920,
+      "prs": [],
+      "formal_review_rate": null,
+      "any_review_rate": null,
+      "self_merge_count": 0,
+      "security_flagged_count": 0,
+      "security_flagged_numbers": [
+        1634,
+        5598,
+        7076,
+        7211
+      ]
+    },
+    "open_prs": {
+      "entries": [
+        {
+          "number": 12338,
+          "title": "macOS: fix surface focus/render state after dragging in to to another window/tab",
+          "author": "bo2themax",
+          "created_at": "2026-04-19T18:54:34Z"
+        },
+        {
+          "number": 12337,
+          "title": "update zon2nix",
+          "author": "jcollie",
+          "created_at": "2026-04-19T15:52:26Z"
+        },
+        {
+          "number": 12335,
+          "title": "docs,ci: clarify that users can never open issues",
+          "author": "trag1c",
+          "created_at": "2026-04-19T13:10:30Z"
+        },
+        {
+          "number": 12326,
+          "title": "Feat: Add caret mode for keyboard-driven navigation of the scrollback",
+          "author": "brianc442",
+          "created_at": "2026-04-17T22:40:11Z"
+        },
+        {
+          "number": 12321,
+          "title": "macOS: open preferred config if exists",
+          "author": "bo2themax",
+          "created_at": "2026-04-17T13:34:50Z"
+        },
+        {
+          "number": 12301,
+          "title": "i18n: add Icelandic translations (is)",
+          "author": "bleikurr",
+          "created_at": "2026-04-15T21:54:33Z"
+        },
+        {
+          "number": 12267,
+          "title": "build: respect config.emit_xcframework for building libghostty-vt.xcframework on Darwin",
+          "author": "0xDVC",
+          "created_at": "2026-04-13T14:20:31Z"
+        },
+        {
+          "number": 12244,
+          "title": "feat: draw IME cursor",
+          "author": "otomn",
+          "created_at": "2026-04-12T03:03:27Z"
+        },
+        {
+          "number": 12230,
+          "title": "libghostty: add a test to ensure terminal modes are defined",
+          "author": "jcollie",
+          "created_at": "2026-04-10T21:19:48Z"
+        },
+        {
+          "number": 12217,
+          "title": "build: fat static archive and ubsan fix for external linkers",
+          "author": "deblasis",
+          "created_at": "2026-04-10T07:43:49Z"
+        },
+        {
+          "number": 12199,
+          "title": "feat(shell-integration): Add PowerShell integration",
+          "author": "heaths",
+          "created_at": "2026-04-09T07:34:56Z"
+        },
+        {
+          "number": 12182,
+          "title": "libghostty(formatter): enable kitty gfx for vt",
+          "author": "neurosnap",
+          "created_at": "2026-04-08T15:32:34Z"
+        },
+        {
+          "number": 12166,
+          "title": "macos: add proxy icon hover mode and disabled state",
+          "author": "MoonMao42",
+          "created_at": "2026-04-07T15:10:30Z"
+        },
+        {
+          "number": 12153,
+          "title": "feat(renderer): add iSurfaceOffset and iWindowResolution shader uniforms",
+          "author": "yabbal",
+          "created_at": "2026-04-06T23:45:26Z"
+        },
+        {
+          "number": 12146,
+          "title": "terminal/tmux: resize existing panes on layout changes",
+          "author": "h3nock",
+          "created_at": "2026-04-06T18:34:54Z"
+        },
+        {
+          "number": 12128,
+          "title": "Fix title clipping when using `window-title-font-family`",
+          "author": "nicholas-ochoa",
+          "created_at": "2026-04-05T16:17:46Z"
+        },
+        {
+          "number": 12109,
+          "title": "Add `middle-click-paste` config option",
+          "author": "nicholas-ochoa",
+          "created_at": "2026-04-05T02:51:38Z"
+        },
+        {
+          "number": 12099,
+          "title": "terminal/tmux: ignore %output before pane initialization",
+          "author": "h3nock",
+          "created_at": "2026-04-04T12:35:29Z"
+        },
+        {
+          "number": 12076,
+          "title": "terminal/tmux: decode %output octal escapes",
+          "author": "h3nock",
+          "created_at": "2026-04-02T22:39:26Z"
+        },
+        {
+          "number": 12068,
+          "title": "homograph warning",
+          "author": "Douglas-MacGregor",
+          "created_at": "2026-04-02T17:08:39Z"
+        },
+        {
+          "number": 12050,
+          "title": "Fix mis-use of libxev.Async and copy-by-value issue with render thread wakeup",
+          "author": "justonia",
+          "created_at": "2026-04-01T22:35:37Z"
+        },
+        {
+          "number": 12030,
+          "title": "terminal: implement kitty clipboard protocol read path (OSC 5522)",
+          "author": "Jarred-Sumner",
+          "created_at": "2026-04-01T04:42:40Z"
+        },
+        {
+          "number": 12026,
+          "title": "macOS: distinguish debug AppIntent title",
+          "author": "bo2themax",
+          "created_at": "2026-03-31T18:09:10Z"
+        },
+        {
+          "number": 11969,
+          "title": "core: restructure args parsing to allow `+`-prefixed args after `-e`",
+          "author": "jcollie",
+          "created_at": "2026-03-30T02:00:14Z"
+        },
+        {
+          "number": 11922,
+          "title": "macos: add pid and tty properties to AppleScript terminal and App Intents TerminalEntity",
+          "author": "TweedBeetle",
+          "created_at": "2026-03-28T11:55:35Z"
+        },
+        {
+          "number": 11905,
+          "title": "core/gtk: allow editing Ghostty config in a Ghostty window",
+          "author": "jcollie",
+          "created_at": "2026-03-27T22:33:22Z"
+        },
+        {
+          "number": 11875,
+          "title": "Implement blink attribute for text",
+          "author": "brianc442",
+          "created_at": "2026-03-26T21:46:37Z"
+        },
+        {
+          "number": 11780,
+          "title": "Enable single-click anchor Shift-click selection",
+          "author": "mac0ne",
+          "created_at": "2026-03-23T17:11:12Z"
+        },
+        {
+          "number": 11768,
+          "title": "terminal: add word-level selection adjustment with opt+shift+arrow",
+          "author": "lynicis",
+          "created_at": "2026-03-23T12:16:14Z"
+        },
+        {
+          "number": 11762,
+          "title": "gtk: add +new-tab action",
+          "author": "jcollie",
+          "created_at": "2026-03-23T03:38:14Z"
+        },
+        {
+          "number": 11711,
+          "title": "Don't move the cursor to the start of the input if clicking on a prompt-only line",
+          "author": "hlcfan",
+          "created_at": "2026-03-21T01:34:02Z"
+        },
+        {
+          "number": 11702,
+          "title": "build: add Meson wrapper for libghostty-vt",
+          "author": "mitchellh",
+          "created_at": "2026-03-20T19:13:48Z"
+        },
+        {
+          "number": 11670,
+          "title": "Keybind performable else clause",
+          "author": "unphased",
+          "created_at": "2026-03-19T22:14:23Z"
+        },
+        {
+          "number": 11663,
+          "title": "i18n - Latvian translation of command palette",
+          "author": "EriksRemess",
+          "created_at": "2026-03-19T17:00:46Z"
+        },
+        {
+          "number": 11641,
+          "title": "i18n: translation support for command palete",
+          "author": "EriksRemess",
+          "created_at": "2026-03-18T23:22:15Z"
+        },
+        {
+          "number": 11622,
+          "title": "po: Add Georgian translation",
+          "author": "EkaterinePapava",
+          "created_at": "2026-03-18T14:10:32Z"
+        },
+        {
+          "number": 11606,
+          "title": "Exposed Semantic Code API to C",
+          "author": "philocalyst",
+          "created_at": "2026-03-17T22:37:39Z"
+        },
+        {
+          "number": 11601,
+          "title": "core: add capture_screenshot keybind and apprt action",
+          "author": "jcollie",
+          "created_at": "2026-03-17T18:18:51Z"
+        },
+        {
+          "number": 11583,
+          "title": "macos: opacity-toggle setting persists between tabs in a window and to a newly created window",
+          "author": "davidsanchez222",
+          "created_at": "2026-03-17T00:22:06Z"
+        },
+        {
+          "number": 11535,
+          "title": "terminal/screen: optionally preserve whitespaces in selectLine",
+          "author": "jesusvazquez",
+          "created_at": "2026-03-15T16:45:23Z"
+        },
+        {
+          "number": 11498,
+          "title": "macos: add `colorize_tab:<color>` binding",
+          "author": "dmehala",
+          "created_at": "2026-03-14T16:50:57Z"
+        },
+        {
+          "number": 11490,
+          "title": "font/shaper: skip user font-features for fallback font faces",
+          "author": "jesusvazquez",
+          "created_at": "2026-03-14T14:20:51Z"
+        },
+        {
+          "number": 11354,
+          "title": "appintents: expose PID and TTY on TerminalEntity",
+          "author": "ocean6954",
+          "created_at": "2026-03-11T04:15:03Z"
+        },
+        {
+          "number": 11325,
+          "title": "macos: remove tiny 1px gray border in non-native fullscreen",
+          "author": "dzhlobo",
+          "created_at": "2026-03-10T16:02:03Z"
+        },
+        {
+          "number": 11277,
+          "title": "Add OSC 8 links to +show-config output.",
+          "author": "jcollie",
+          "created_at": "2026-03-09T21:05:49Z"
+        },
+        {
+          "number": 11219,
+          "title": "fix(tmux): viewer correctness for end-to-end control mode",
+          "author": "daiimus",
+          "created_at": "2026-03-07T21:02:12Z"
+        },
+        {
+          "number": 11217,
+          "title": "fix(tmux): complete control mode protocol parsing",
+          "author": "daiimus",
+          "created_at": "2026-03-07T20:39:54Z"
+        },
+        {
+          "number": 11216,
+          "title": "fix(vt): forward UTF-8 bytes through DCS passthrough",
+          "author": "daiimus",
+          "created_at": "2026-03-07T20:31:18Z"
+        },
+        {
+          "number": 11213,
+          "title": "fix(tmux): use-after-free in receivedListWindows action slice",
+          "author": "daiimus",
+          "created_at": "2026-03-07T19:57:26Z"
+        },
+        {
+          "number": 11200,
+          "title": "Improve local path link detection and local file open normalization",
+          "author": "mac0ne",
+          "created_at": "2026-03-06T01:07:38Z"
+        },
+        {
+          "number": 11196,
+          "title": "macOS: Introduce AccessibilityContext, improve existing AX APIs, add `accessibilityRange(forLine:)`",
+          "author": "MrMage",
+          "created_at": "2026-03-05T17:47:57Z"
+        },
+        {
+          "number": 11190,
+          "title": "build,ci: add terminfo artifacts for releases and refactor terminfo build",
+          "author": "AnthonyZhOon",
+          "created_at": "2026-03-05T14:34:15Z"
+        },
+        {
+          "number": 11174,
+          "title": "macOS: Improve Split Close Behavior",
+          "author": "cmwetherell",
+          "created_at": "2026-03-05T00:31:56Z"
+        },
+        {
+          "number": 11173,
+          "title": "GTK: Improve Split Close Behavior",
+          "author": "cmwetherell",
+          "created_at": "2026-03-05T00:31:54Z"
+        },
+        {
+          "number": 11172,
+          "title": "Zig 0.16 prep: \"juicy\" main environment variables",
+          "author": "jcollie",
+          "created_at": "2026-03-04T23:41:17Z"
+        },
+        {
+          "number": 11161,
+          "title": "macOS: refine new-window behaviors",
+          "author": "bo2themax",
+          "created_at": "2026-03-04T14:23:18Z"
+        },
+        {
+          "number": 11115,
+          "title": "macos: add unit tests for QuickTerminalSize ",
+          "author": "markdorison",
+          "created_at": "2026-03-02T00:27:56Z"
+        },
+        {
+          "number": 11079,
+          "title": "font/shaper: add RTL shaping for Arabic and Hebrew",
+          "author": "DiaaEddin",
+          "created_at": "2026-02-28T15:32:57Z"
+        },
+        {
+          "number": 11010,
+          "title": "visionos: add xros build path and embedded platform support",
+          "author": "douglance",
+          "created_at": "2026-02-25T02:59:58Z"
+        },
+        {
+          "number": 11000,
+          "title": "refactor: narrow CellText glyph fields from u32 to u16",
+          "author": "NateSmyth",
+          "created_at": "2026-02-24T19:08:16Z"
+        },
+        {
+          "number": 10999,
+          "title": "gtk: add window title renaming",
+          "author": "jcollie",
+          "created_at": "2026-02-24T18:48:39Z"
+        },
+        {
+          "number": 10994,
+          "title": "refactor: swap SSBO bindings for TBOs",
+          "author": "NateSmyth",
+          "created_at": "2026-02-24T17:42:23Z"
+        },
+        {
+          "number": 10992,
+          "title": "macOS: Implement additional accessibility methods",
+          "author": "MrMage",
+          "created_at": "2026-02-24T17:38:36Z"
+        },
+        {
+          "number": 10961,
+          "title": "Regenerate palette on OSC 4/10/11",
+          "author": "jake-stewart",
+          "created_at": "2026-02-23T05:32:05Z"
+        },
+        {
+          "number": 10945,
+          "title": "Increase register of Hebrew localization and improve its polygendering",
+          "author": "Laxystem",
+          "created_at": "2026-02-22T13:54:44Z"
+        },
+        {
+          "number": 10776,
+          "title": "shell-integration: configurable 'cursor' shapes",
+          "author": "jparise",
+          "created_at": "2026-02-17T04:06:22Z"
+        },
+        {
+          "number": 10642,
+          "title": "gtk: fix capitalization of banner title",
+          "author": "jcollie",
+          "created_at": "2026-02-09T21:57:55Z"
+        },
+        {
+          "number": 10467,
+          "title": "osc: parse the Kitty desktop notification protocol (OSC 99)",
+          "author": "jcollie",
+          "created_at": "2026-01-27T16:33:15Z"
+        },
+        {
+          "number": 10435,
+          "title": "pkg: update fontconfig to 2.17.1",
+          "author": "jcollie",
+          "created_at": "2026-01-24T14:14:13Z"
+        },
+        {
+          "number": 10433,
+          "title": "pkg: update freetype to 2.14.1",
+          "author": "jcollie",
+          "created_at": "2026-01-24T13:58:13Z"
+        },
+        {
+          "number": 10423,
+          "title": "gtk: implement drag-to-move for splits",
+          "author": "pluiedev",
+          "created_at": "2026-01-23T17:12:37Z"
+        },
+        {
+          "number": 10263,
+          "title": "feat(gtk): Port undo-timeout feature to Linux/GTK",
+          "author": "GitJuhb",
+          "created_at": "2026-01-11T03:55:22Z"
+        },
+        {
+          "number": 10253,
+          "title": "fix(macos): fix fullscreen tab bar disappearing after monitor disconnect",
+          "author": "neurosnap",
+          "created_at": "2026-01-10T17:38:22Z"
+        },
+        {
+          "number": 10103,
+          "title": "Add core functionality to switch to most recent tab with a popup similar to the command palette",
+          "author": "yasuf",
+          "created_at": "2025-12-30T02:38:30Z"
+        },
+        {
+          "number": 10080,
+          "title": "Add Czech (cs_CZ.UTF-8) translation",
+          "author": "tkudlicka",
+          "created_at": "2025-12-28T12:15:51Z"
+        },
+        {
+          "number": 9979,
+          "title": "i18n: add Finnish translation",
+          "author": "JokkeeZ",
+          "created_at": "2025-12-20T07:40:02Z"
+        },
+        {
+          "number": 9970,
+          "title": "macOS: Jump palette",
+          "author": "deanm",
+          "created_at": "2025-12-19T14:07:02Z"
+        },
+        {
+          "number": 9949,
+          "title": "Add CI for FreeBSD",
+          "author": "louwers",
+          "created_at": "2025-12-17T23:37:34Z"
+        },
+        {
+          "number": 9937,
+          "title": "hide mouse after idle time based on `mouse-hide-after` config",
+          "author": "kaplanelad",
+          "created_at": "2025-12-17T07:15:08Z"
+        },
+        {
+          "number": 9857,
+          "title": "feat(macos): add tab support for QuickTerminal - continued",
+          "author": "adrum",
+          "created_at": "2025-12-10T05:17:23Z"
+        },
+        {
+          "number": 9816,
+          "title": "macos: Don't encode option as alt in kitty mode",
+          "author": "neurocyte",
+          "created_at": "2025-12-05T11:55:30Z"
+        },
+        {
+          "number": 9760,
+          "title": "macos: graceful child process termination",
+          "author": "jparise",
+          "created_at": "2025-11-30T16:18:14Z"
+        },
+        {
+          "number": 9723,
+          "title": "Add `recent` direction to `goto_split` action",
+          "author": "jiulongw",
+          "created_at": "2025-11-27T02:15:19Z"
+        },
+        {
+          "number": 9633,
+          "title": "feat: introduce `toggle_macos_option_as_alt` binding action with a keybind.",
+          "author": "kshitij10496",
+          "created_at": "2025-11-18T19:46:26Z"
+        },
+        {
+          "number": 9630,
+          "title": "feat: add `cursor-style-unfocused` configuration option",
+          "author": "oluijks",
+          "created_at": "2025-11-18T12:30:57Z"
+        },
+        {
+          "number": 9549,
+          "title": "Added complete Hindi (hi_IN) translation for Ghostty interface.",
+          "author": "lohaniprateek",
+          "created_at": "2025-11-10T11:58:13Z"
+        },
+        {
+          "number": 9519,
+          "title": "Feat: Support ansi blinking",
+          "author": "caiquejjx",
+          "created_at": "2025-11-08T22:18:24Z"
+        },
+        {
+          "number": 9134,
+          "title": "core/gtk: use command line supplied by the shell in notifications",
+          "author": "jcollie",
+          "created_at": "2025-10-11T00:07:53Z"
+        },
+        {
+          "number": 9078,
+          "title": "i18n: add pt-PT, Portugu\u00eas (Portugal) translation ",
+          "author": "xiCO2k",
+          "created_at": "2025-10-07T22:25:46Z"
+        },
+        {
+          "number": 8907,
+          "title": "scroll: add mouse-scroll-single-event config",
+          "author": "ownia",
+          "created_at": "2025-09-25T06:03:07Z"
+        },
+        {
+          "number": 8094,
+          "title": "Keybind to toggle between latest used tab.",
+          "author": "buraksirma",
+          "created_at": "2025-07-28T21:45:48Z"
+        }
+      ],
+      "count": 91
+    },
+    "closed_not_merged_prs": {
+      "entries": [
+        {
+          "number": 12333,
+          "title": "pushed to wrong repo, sorry!",
+          "closed_at": "2026-04-18T19:09:12Z"
+        },
+        {
+          "number": 12317,
+          "title": "pkg: replace @cImport with addTranslateC in pkg/",
+          "closed_at": "2026-04-17T04:44:50Z"
+        },
+        {
+          "number": 12313,
+          "title": "docs: rewrite README + docs/status + getting-started, plus cleanups",
+          "closed_at": "2026-04-16T22:08:54Z"
+        },
+        {
+          "number": 12303,
+          "title": "snap: export TERMINFO_DIRS so child shells find xterm-ghostty",
+          "closed_at": "2026-04-16T02:43:29Z"
+        },
+        {
+          "number": 12287,
+          "title": "fix(macos): defer tab group KVO setup to avoid IconServices hang on boot",
+          "closed_at": "2026-04-15T01:32:20Z"
+        },
+        {
+          "number": 12276,
+          "title": "vendor-uucode-0.2.0",
+          "closed_at": "2026-04-14T03:07:57Z"
+        },
+        {
+          "number": 12273,
+          "title": "fix: send modifier when scrolling in alternate window",
+          "closed_at": "2026-04-14T15:59:22Z"
+        },
+        {
+          "number": 12270,
+          "title": "macOS: add tests for KeyboardShortcut <-> ghostty_input_trigger_s",
+          "closed_at": "2026-04-16T14:31:55Z"
+        },
+        {
+          "number": 12252,
+          "title": "core: hide cursor when surface is read only",
+          "closed_at": "2026-04-12T20:15:06Z"
+        },
+        {
+          "number": 12207,
+          "title": "fix(gtk): RHEL 9 compat for TitleDialog + install script",
+          "closed_at": "2026-04-10T01:10:33Z"
+        },
+        {
+          "number": 12198,
+          "title": "config: add `cursor-style-unfocused` option",
+          "closed_at": "2026-04-09T03:06:37Z"
+        },
+        {
+          "number": 12175,
+          "title": "Exploration: Reconnectable Terminal using libghostty",
+          "closed_at": "2026-04-08T03:55:21Z"
+        },
+        {
+          "number": 12167,
+          "title": "Add Win32 application runtime for Windows port",
+          "closed_at": "2026-04-07T15:19:03Z"
+        },
+        {
+          "number": 12140,
+          "title": "Added support for macOS Material background effects and improved focus state and titlebar display logic",
+          "closed_at": "2026-04-06T08:39:29Z"
+        },
+        {
+          "number": 12132,
+          "title": "core: expose parent surface ID as GHOSTTY_SURFACE_PARENT_ID",
+          "closed_at": "2026-04-05T20:36:25Z"
+        },
+        {
+          "number": 12122,
+          "title": "font: validate family match when discovering fonts",
+          "closed_at": "2026-04-05T10:08:54Z"
+        },
+        {
+          "number": 12118,
+          "title": "macOS: fix closing leftmost split visual glitch",
+          "closed_at": "2026-04-05T23:50:05Z"
+        },
+        {
+          "number": 12107,
+          "title": "Add configurable title alignment support for macOS",
+          "closed_at": "2026-04-05T07:45:50Z"
+        },
+        {
+          "number": 12100,
+          "title": "config: add split-resize-limit option",
+          "closed_at": "2026-04-04T15:18:37Z"
+        },
+        {
+          "number": 12060,
+          "title": "fix: replay key events when IME switches during composition",
+          "closed_at": "2026-04-02T09:17:41Z"
+        },
+        {
+          "number": 12056,
+          "title": "RFC: Screenshot support by reading render surface and writing to file(s)",
+          "closed_at": "2026-04-02T04:21:54Z"
+        },
+        {
+          "number": 12042,
+          "title": "macOS: unset/reset keyboard shortcut for `unbind` and conflicts",
+          "closed_at": "2026-04-16T14:32:27Z"
+        },
+        {
+          "number": 12041,
+          "title": "cli: adaptive scaling for +boo command",
+          "closed_at": "2026-04-01T13:40:17Z"
+        },
+        {
+          "number": 12023,
+          "title": "core: add CApi to check whether trigger is unbound",
+          "closed_at": "2026-04-16T14:32:12Z"
+        },
+        {
+          "number": 12021,
+          "title": "Update VOUCHED list",
+          "closed_at": "2026-03-31T14:58:18Z"
+        },
+        {
+          "number": 11996,
+          "title": "macOS: add CApi to check whether shortcut is unbound",
+          "closed_at": "2026-03-30T18:07:33Z"
+        },
+        {
+          "number": 11995,
+          "title": "macOS: refactor MenuShortcutManager",
+          "closed_at": "2026-04-13T17:47:02Z"
+        },
+        {
+          "number": 11988,
+          "title": "Added manual io support for linux",
+          "closed_at": "2026-03-30T14:07:20Z"
+        },
+        {
+          "number": 11982,
+          "title": "deps: update wuffs package hash",
+          "closed_at": "2026-03-30T09:54:35Z"
+        },
+        {
+          "number": 11981,
+          "title": "feat(renderer): add iSurfaceOffset and iWindowResolution shader uniforms",
+          "closed_at": "2026-03-30T09:46:32Z"
+        },
+        {
+          "number": 11972,
+          "title": "gtk: only trigger resize callbacks and overlay when size actually changes",
+          "closed_at": "2026-03-30T15:46:29Z"
+        },
+        {
+          "number": 11966,
+          "title": "Show I-beam rather than arrow while selecting text on Linux",
+          "closed_at": "2026-03-29T23:20:04Z"
+        },
+        {
+          "number": 11958,
+          "title": "build(libghostty): export function table for wasm to allow host callbacks",
+          "closed_at": "2026-03-30T22:23:10Z"
+        },
+        {
+          "number": 11954,
+          "title": "Windows port",
+          "closed_at": "2026-03-29T08:40:28Z"
+        },
+        {
+          "number": 11934,
+          "title": "fix(build): re-archive object files for correct Mach-O alignment befo\u2026",
+          "closed_at": "2026-03-28T18:00:29Z"
+        },
+        {
+          "number": 11929,
+          "title": "feat: adaptive power management for battery-aware rendering",
+          "closed_at": "2026-03-28T13:45:06Z"
+        },
+        {
+          "number": 11896,
+          "title": "patch(macos): \u5d4c\u5165\u7ec8\u7aef SplitTreeProvider \u56de\u9000\u4e0e BaseTerminalController \u5bf9\u9f50",
+          "closed_at": "2026-03-27T14:14:27Z"
+        },
+        {
+          "number": 11886,
+          "title": "renderer: add DirectX 11 infrastructure for Windows",
+          "closed_at": "2026-03-27T12:59:09Z"
+        },
+        {
+          "number": 11884,
+          "title": "GTK: Toggle background opacity keybind",
+          "closed_at": "2026-03-27T22:37:33Z"
+        },
+        {
+          "number": 11881,
+          "title": "Implement toggle_background_opacity keybinding action on linux",
+          "closed_at": "2026-03-27T04:45:27Z"
+        },
+        {
+          "number": 11872,
+          "title": "macOS: fix search bar losing focus unexpectedly",
+          "closed_at": "2026-03-27T13:01:19Z"
+        },
+        {
+          "number": 11870,
+          "title": "Move clipboard encoding including OSC52 to `src/terminal/clipboard.zig`, expose to libghostty",
+          "closed_at": "2026-03-26T18:23:31Z"
+        },
+        {
+          "number": 11857,
+          "title": "feat: add default GTK keybinds for move_tab",
+          "closed_at": "2026-03-26T12:06:49Z"
+        },
+        {
+          "number": 11848,
+          "title": "feat: add persistent Kitty graphics placements (K=1)",
+          "closed_at": "2026-03-26T00:23:44Z"
+        },
+        {
+          "number": 11842,
+          "title": "windows: add WinUI 3 C# project scaffold",
+          "closed_at": "2026-03-25T20:01:55Z"
+        },
+        {
+          "number": 11841,
+          "title": "apprt: add Windows platform to embedded runtime",
+          "closed_at": "2026-03-25T20:53:09Z"
+        },
+        {
+          "number": 11836,
+          "title": "ci: deduplicate push and pull_request CI runs",
+          "closed_at": "2026-03-25T15:56:16Z"
+        },
+        {
+          "number": 11833,
+          "title": "Reset stale mouse reporting on semantic prompts",
+          "closed_at": "2026-03-25T15:38:42Z"
+        },
+        {
+          "number": 11779,
+          "title": "macos: handle global keybinds when active",
+          "closed_at": "2026-03-24T05:45:16Z"
+        },
+        {
+          "number": 11776,
+          "title": "Add clipboard-paste-bracketed-safe-newline config option",
+          "closed_at": "2026-03-23T14:46:51Z"
+        },
+        {
+          "number": 11771,
+          "title": "windows: fix XDG-related test failures on Windows",
+          "closed_at": "2026-03-23T13:35:29Z"
+        },
+        {
+          "number": 11752,
+          "title": "Enhance QuickTerminal with tab support and configuration options",
+          "closed_at": "2026-03-22T18:10:37Z"
+        },
+        {
+          "number": 11738,
+          "title": "terminal: add word-level selection adjustment with opt+shift+arrow",
+          "closed_at": "2026-03-22T07:35:04Z"
+        },
+        {
+          "number": 11729,
+          "title": "vt: Allow building libghostty-vt as a static library",
+          "closed_at": "2026-03-21T22:10:43Z"
+        },
+        {
+          "number": 11721,
+          "title": "Add Linux platform support to the embedded apprt",
+          "closed_at": "2026-03-21T11:27:13Z"
+        },
+        {
+          "number": 11718,
+          "title": "fix(macos): show performable keybinding shortcuts in menus and prevent key interception when unfocused",
+          "closed_at": "2026-03-21T08:24:47Z"
+        },
+        {
+          "number": 11713,
+          "title": "Replace macOS native tabs with custom content tabs",
+          "closed_at": "2026-03-21T03:29:08Z"
+        },
+        {
+          "number": 11695,
+          "title": "Feat/tabbed windows",
+          "closed_at": "2026-03-20T15:13:05Z"
+        },
+        {
+          "number": 11677,
+          "title": "Windows native port",
+          "closed_at": "2026-03-20T05:05:20Z"
+        },
+        {
+          "number": 11660,
+          "title": "Feature/windows apprt initial 2016225232623226546",
+          "closed_at": "2026-03-19T15:15:15Z"
+        },
+        {
+          "number": 11654,
+          "title": "feat: add macos-hush-login config option",
+          "closed_at": "2026-03-19T12:47:52Z"
+        },
+        {
+          "number": 11635,
+          "title": "feat: detect bare filenames as clickable links via async file existence check",
+          "closed_at": "2026-03-18T19:30:53Z"
+        },
+        {
+          "number": 11630,
+          "title": "config: add clipboard-trim-leading-spaces option",
+          "closed_at": "2026-03-18T18:27:38Z"
+        },
+        {
+          "number": 11627,
+          "title": "Delay cursor-click-to-move for double/triple click detection",
+          "closed_at": "2026-03-18T16:08:41Z"
+        },
+        {
+          "number": 11626,
+          "title": "Add navigate_command_palette binding action",
+          "closed_at": "2026-03-18T16:08:23Z"
+        },
+        {
+          "number": 11625,
+          "title": "macOS: wrap goto_split spatial navigation at edges",
+          "closed_at": "2026-03-18T16:08:15Z"
+        },
+        {
+          "number": 11624,
+          "title": "macOS: add pid and tty properties to AppleScript terminal class",
+          "closed_at": "2026-03-18T16:08:04Z"
+        },
+        {
+          "number": 11608,
+          "title": "fix: keep tmux control mode DCS alive despite raw ESC/UTF-8 in %output",
+          "closed_at": "2026-03-18T00:09:12Z"
+        },
+        {
+          "number": 11584,
+          "title": "config: add link-url-modifier option for modifier-free URL clicking",
+          "closed_at": "2026-03-17T01:26:22Z"
+        },
+        {
+          "number": 11571,
+          "title": "fix(macos): support pasting clipboard images as temp file paths",
+          "closed_at": "2026-03-16T16:42:57Z"
+        },
+        {
+          "number": 11557,
+          "title": "macos: fix edit shortcuts in tab rename text field",
+          "closed_at": "2026-03-16T23:39:29Z"
+        },
+        {
+          "number": 11548,
+          "title": "Fix popup config cleanup and opacity parsing",
+          "closed_at": "2026-03-16T00:59:32Z"
+        },
+        {
+          "number": 11537,
+          "title": "config: add quick-terminal-background-opacity option",
+          "closed_at": "2026-03-17T15:41:38Z"
+        },
+        {
+          "number": 11529,
+          "title": "i18n: add missing Plural-Forms metadata to 5 translation files",
+          "closed_at": "2026-03-15T15:44:14Z"
+        },
+        {
+          "number": 11528,
+          "title": "fix: correct typos and duplicate words in comments",
+          "closed_at": "2026-03-15T15:44:08Z"
+        },
+        {
+          "number": 11527,
+          "title": "fix(macos): use Unicode ellipsis in MainMenu.xib",
+          "closed_at": "2026-03-15T15:43:47Z"
+        },
+        {
+          "number": 11517,
+          "title": "fix(macos): enable standard shortcuts in rename tab dialog",
+          "closed_at": "2026-03-15T02:43:10Z"
+        },
+        {
+          "number": 11516,
+          "title": "feat: keybind improvements (command palette, move_tab, last active tab)",
+          "closed_at": "2026-03-15T02:43:04Z"
+        },
+        {
+          "number": 11515,
+          "title": "i18n(fr): improve French translation consistency",
+          "closed_at": "2026-03-15T02:42:54Z"
+        },
+        {
+          "number": 11514,
+          "title": "fix(macos): enable cmd+c/x/v/a in rename tab dialog",
+          "closed_at": "2026-03-15T02:24:45Z"
+        },
+        {
+          "number": 11513,
+          "title": "feat: keybind improvements (command palette, move_tab, last active tab)",
+          "closed_at": "2026-03-15T02:24:41Z"
+        },
+        {
+          "number": 11512,
+          "title": "i18n(fr): complete and improve French translations",
+          "closed_at": "2026-03-15T02:24:35Z"
+        },
+        {
+          "number": 11510,
+          "title": "Plan: tmux -CC native tabs/splits support",
+          "closed_at": "2026-03-15T02:04:02Z"
+        },
+        {
+          "number": 11508,
+          "title": "Preview selected timestamps in context menus",
+          "closed_at": "2026-03-15T04:35:49Z"
+        },
+        {
+          "number": 11503,
+          "title": "terminal/screen: preserve leading whitespaces in selectLine",
+          "closed_at": "2026-03-15T04:56:22Z"
+        },
+        {
+          "number": 11484,
+          "title": "fix: enable cursor blinking mode by default",
+          "closed_at": "2026-03-16T16:58:25Z"
+        },
+        {
+          "number": 11456,
+          "title": "config: add pre-commit hooks for linting",
+          "closed_at": "2026-03-13T15:30:56Z"
+        },
+        {
+          "number": 11365,
+          "title": "macos: fix tab title rename hit testing and focus handling in fullscreen mode",
+          "closed_at": "2026-03-11T14:25:26Z"
+        },
+        {
+          "number": 11363,
+          "title": "macOS: re-enable IntrinsicSizeTimingTests",
+          "closed_at": "2026-03-27T17:01:12Z"
+        },
+        {
+          "number": 11253,
+          "title": "fix: Cmd+G / Cmd+Shift+G not working in search field",
+          "closed_at": "2026-04-04T20:04:59Z"
+        },
+        {
+          "number": 11248,
+          "title": "feat: change `background_opacity_cells` option to work with opaque cells",
+          "closed_at": "2026-03-09T01:36:04Z"
+        },
+        {
+          "number": 11242,
+          "title": "Belief in a politics-free community",
+          "closed_at": "2026-03-08T20:42:21Z"
+        },
+        {
+          "number": 11106,
+          "title": "feat(macos): localize menu bar via MainMenu.strings (zh-Hans)",
+          "closed_at": "2026-03-01T21:13:48Z"
+        },
+        {
+          "number": 11104,
+          "title": "feat(macos): localize menu bar and context menu using ghostty_translate",
+          "closed_at": "2026-03-01T19:21:53Z"
+        },
+        {
+          "number": 11083,
+          "title": "fix(shell): fallback TERM for su login sessions",
+          "closed_at": "2026-02-28T19:03:36Z"
+        },
+        {
+          "number": 11064,
+          "title": "fix(macOS): filter phantom mouse events that defeat mouse-hide-while-typing",
+          "closed_at": "2026-02-27T17:08:53Z"
+        },
+        {
+          "number": 10991,
+          "title": "visionos: add xros target support and visionOS XCFramework slices",
+          "closed_at": "2026-02-24T13:21:38Z"
+        },
+        {
+          "number": 10990,
+          "title": "visionos: add xros target support and visionOS XCFramework slices",
+          "closed_at": "2026-02-24T13:18:25Z"
+        },
+        {
+          "number": 10986,
+          "title": "feat(i18n): add Portuguese (pt_PT) translation file",
+          "closed_at": "2026-02-24T09:35:30Z"
+        },
+        {
+          "number": 10983,
+          "title": "appintents: expose PID and TTY on TerminalEntity",
+          "closed_at": "2026-02-24T08:33:03Z"
+        }
+      ],
+      "count": 100
+    },
+    "issues_and_commits": {
+      "open_security_issues": [],
+      "open_issues_count": 148,
+      "closed_issues": [
+        {
+          "author": "mitchellh",
+          "closed_at": "2025-05-29T15:48:12Z",
+          "number": 7215,
+          "title": "macOS, tip regression: Global hotkeys suddenly stopped working globally"
+        },
+        {
+          "author": "mitchellh",
+          "closed_at": "2026-01-31T02:25:47Z",
+          "number": 3125,
+          "title": "Parse ConEmu OSC9"
+        },
+        {
+          "author": "mitchellh",
+          "closed_at": "2025-11-30T15:24:37Z",
+          "number": 189,
+          "title": "GTK: Search scrollback"
+        },
+        {
+          "author": "mitchellh",
+          "closed_at": "2025-11-27T21:19:14Z",
+          "number": 2182,
+          "title": "TUI for inspecting crash reports"
+        },
+        {
+          "author": "mitchellh",
+          "closed_at": "2025-10-15T23:01:27Z",
+          "number": 9191,
+          "title": "macOS: deadlock when selecting text in 1.2.x (no reproduction yet)"
+        },
+        {
+          "author": "mitchellh",
+          "closed_at": "2025-10-19T21:59:41Z",
+          "number": 9263,
+          "title": "macOS: use a command launch helper to shed responsible process bit for power, memory, etc. tracking"
+        },
+        {
+          "author": "senguttuvang",
+          "closed_at": "2025-10-18T07:23:00Z",
+          "number": 9258,
+          "title": "Touch ID authentication (pam_tid.so) not working for sudo"
+        },
+        {
+          "author": "mitchellh",
+          "closed_at": "2025-07-01T23:10:55Z",
+          "number": 7747,
+          "title": "SIGUSR2 to reload config"
+        },
+        {
+          "author": "plarson",
+          "closed_at": "2025-06-18T05:42:12Z",
+          "number": 7622,
+          "title": "PHI-254: Implement Streaming Module in Ghostty Fork"
+        },
+        {
+          "author": "mitchellh",
+          "closed_at": "2025-01-12T03:40:10Z",
+          "number": 4932,
+          "title": "macOS: Dragged text should insert text"
+        }
+      ],
+      "closed_issues_count": 10,
+      "recent_commits": [
+        {
+          "author": "mitchellh",
+          "date": "2026-04-19T22:21:26Z",
+          "message_first_line": "android: Avoid referencing POSIX shared memory functions (#12341)",
+          "sha": "dcc39dc",
+          "security_keyword_match": false
+        },
+        {
+          "author": "fornwall",
+          "date": "2026-04-19T20:32:41Z",
+          "message_first_line": "android: Avoid referencing POSIX shared memory functions",
+          "sha": "adb0d79",
+          "security_keyword_match": false
+        },
+        {
+          "author": "ghostty-vouch[bot]",
+          "date": "2026-04-19T21:38:47Z",
+          "message_first_line": "Update VOUCHED list (#12340)",
+          "sha": "d69d937",
+          "security_keyword_match": false
+        },
+        {
+          "author": "00-kat",
+          "date": "2026-04-19T20:42:30Z",
+          "message_first_line": "Translation documentation-related typos + CODEOWNERS update (#12336)",
+          "sha": "ed29fd5",
+          "security_keyword_match": false
+        },
+        {
+          "author": "00-kat",
+          "date": "2026-04-19T20:20:17Z",
+          "message_first_line": "Avoid marking files as owned by ghostty-org/localization.",
+          "sha": "2e33589",
+          "security_keyword_match": false
+        },
+        {
+          "author": "00-kat",
+          "date": "2026-04-19T15:19:39Z",
+          "message_first_line": "Mark i18n_locales.zig as owned by ghostty-org/localization/manager.",
+          "sha": "49cd2ba",
+          "security_keyword_match": false
+        },
+        {
+          "author": "00-kat",
+          "date": "2026-04-19T15:13:43Z",
+          "message_first_line": "Fix typo in i18n_locales.zig.",
+          "sha": "8a6c664",
+          "security_keyword_match": true
+        },
+        {
+          "author": "00-kat",
+          "date": "2026-04-19T15:08:11Z",
+          "message_first_line": "Fix typo + improve fluency in README_TRANSLATORS \u00a7 Viewing translations.",
+          "sha": "9cbca54",
+          "security_keyword_match": true
+        },
+        {
+          "author": "00-kat",
+          "date": "2026-04-19T14:48:32Z",
+          "message_first_line": "i18n: add Belarusian translation (be) (#12284)",
+          "sha": "28b7ef1",
+          "security_keyword_match": false
+        },
+        {
+          "author": "bo2themax",
+          "date": "2026-04-19T13:51:49Z",
+          "message_first_line": "macOS: fix #12266 by using the correct coordinates for the hitTest (#12322)",
+          "sha": "7a3e3dc",
+          "security_keyword_match": true
+        },
+        {
+          "author": "Illia Krauchanka",
+          "date": "2026-04-19T11:18:52Z",
+          "message_first_line": "i18n: address review feedback (be)",
+          "sha": "f370099",
+          "security_keyword_match": false
+        },
+        {
+          "author": "bo2themax",
+          "date": "2026-04-17T18:05:18Z",
+          "message_first_line": "macOS: fix 12266 by using the correct coordinates for the hitTest",
+          "sha": "5939b8c",
+          "security_keyword_match": true
+        },
+        {
+          "author": "mitchellh",
+          "date": "2026-04-17T03:33:48Z",
+          "message_first_line": "macOS: move KeyStateIndicator on top of exit bar (#12282)",
+          "sha": "ca7516b",
+          "security_keyword_match": false
+        },
+        {
+          "author": "ghostty-vouch[bot]",
+          "date": "2026-04-15T21:56:04Z",
+          "message_first_line": "Update VOUCHED list (#12302)",
+          "sha": "9e080c5",
+          "security_keyword_match": false
+        },
+        {
+          "author": "mitchellh",
+          "date": "2026-04-15T21:15:38Z",
+          "message_first_line": "macOS: fix shortcuts not showing on menu item for `scroll_to_selection` and `search_selection` (#12281)",
+          "sha": "d85051a",
+          "security_keyword_match": true
+        },
+        {
+          "author": "mitchellh",
+          "date": "2026-04-15T21:04:09Z",
+          "message_first_line": "terminal: fix viewport pin during resize reflow (#12300)",
+          "sha": "551bf0a",
+          "security_keyword_match": true
+        },
+        {
+          "author": "mitchellh",
+          "date": "2026-04-15T20:42:38Z",
+          "message_first_line": "terminal: fix viewport pin during resize reflow",
+          "sha": "815ccb0",
+          "security_keyword_match": true
+        },
+        {
+          "author": "mitchellh",
+          "date": "2026-04-15T18:36:16Z",
+          "message_first_line": "libghostty: Remove all libc++ and libc++ ABI dependencies (#12291)",
+          "sha": "43a05dc",
+          "security_keyword_match": false
+        },
+        {
+          "author": "mitchellh",
+          "date": "2026-04-15T03:40:05Z",
+          "message_first_line": "libghostty: Remove all libc++ and libc++ ABI dependencies",
+          "sha": "e51de8b",
+          "security_keyword_match": false
+        },
+        {
+          "author": "mitchellh",
+          "date": "2026-04-15T16:26:29Z",
+          "message_first_line": "nix: update to the latest zon2nix (#12299)",
+          "sha": "efa8da6",
+          "security_keyword_match": false
+        },
+        {
+          "author": "jcollie",
+          "date": "2026-04-15T16:21:25Z",
+          "message_first_line": "nix: update to the latest zon2nix",
+          "sha": "f53d3ab",
+          "security_keyword_match": false
+        },
+        {
+          "author": "mitchellh",
+          "date": "2026-04-15T16:09:11Z",
+          "message_first_line": "benchmark: add AGENTS, improve UTF-8 synthetic data (#12297)",
+          "sha": "29f92c0",
+          "security_keyword_match": false
+        },
+        {
+          "author": "mitchellh",
+          "date": "2026-04-15T15:23:42Z",
+          "message_first_line": "benchmark: add AGENTS, improve UTF-8 synthetic data",
+          "sha": "9c49c34",
+          "security_keyword_match": false
+        },
+        {
+          "author": "ghostty-vouch[bot]",
+          "date": "2026-04-14T20:55:42Z",
+          "message_first_line": "Update VOUCHED list (#12285)",
+          "sha": "49a43bf",
+          "security_keyword_match": false
+        },
+        {
+          "author": "illia krauchanka",
+          "date": "2026-04-14T20:45:19Z",
+          "message_first_line": "i18n: replace \u0433\u0430\u0440\u0442\u0430\u0446\u044c with \u043f\u0440\u0430\u043a\u0440\u0443\u0447\u0432\u0430\u0446\u044c (be)",
+          "sha": "053dee8",
+          "security_keyword_match": false
+        },
+        {
+          "author": "illia krauchanka",
+          "date": "2026-04-14T20:43:55Z",
+          "message_first_line": "i18n: replace \u0437\u043c\u0435\u0441\u0446\u0456\u0432\u0430 with \u0437\u043c\u0435\u0441\u0442 (be)",
+          "sha": "4381153",
+          "security_keyword_match": false
+        },
+        {
+          "author": "illia krauchanka",
+          "date": "2026-04-14T20:43:37Z",
+          "message_first_line": "i18n: fix gender agreement for match translations (be)",
+          "sha": "3ee0b0a",
+          "security_keyword_match": true
+        },
+        {
+          "author": "illia krauchanka",
+          "date": "2026-04-14T20:42:44Z",
+          "message_first_line": "i18n: fix terminology in Belarusian translation (be)",
+          "sha": "ff9ca55",
+          "security_keyword_match": true
+        },
+        {
+          "author": "illia krauchanka",
+          "date": "2026-04-14T20:27:37Z",
+          "message_first_line": "i18n: add Belarusian translation (be)",
+          "sha": "4f3a9cb",
+          "security_keyword_match": false
+        },
+        {
+          "author": "bo2themax",
+          "date": "2026-04-14T17:49:43Z",
+          "message_first_line": "macOS: move KeyStateIndicator on top of exit bar",
+          "sha": "b7d0be8",
+          "security_keyword_match": false
+        },
+        {
+          "author": "bo2themax",
+          "date": "2026-04-14T17:21:16Z",
+          "message_first_line": "macOS: fix shortcuts not showing on menu item for `scroll_to_selection` and `search_selection`",
+          "sha": "858e856",
+          "security_keyword_match": true
+        },
+        {
+          "author": "mitchellh",
+          "date": "2026-04-14T14:05:10Z",
+          "message_first_line": "macOS: refactor MenuShortcutManager (#12271)",
+          "sha": "79a470d",
+          "security_keyword_match": false
+        },
+        {
+          "author": "bo2themax",
+          "date": "2026-04-13T15:19:16Z",
+          "message_first_line": "macOS: reset menu shortcuts when its not updated",
+          "sha": "6033c12",
+          "security_keyword_match": false
+        },
+        {
+          "author": "bo2themax",
+          "date": "2026-04-01T10:52:33Z",
+          "message_first_line": "macOS: update MenuShortcutKey",
+          "sha": "fe8a646",
+          "security_keyword_match": false
+        },
+        {
+          "author": "ghostty-vouch[bot]",
+          "date": "2026-04-13T14:23:27Z",
+          "message_first_line": "Update VOUCHED list (#12268)",
+          "sha": "158b976",
+          "security_keyword_match": false
+        },
+        {
+          "author": "mitchellh",
+          "date": "2026-04-13T13:47:47Z",
+          "message_first_line": "macOS: add bottom bar when child exits (#12251)",
+          "sha": "4f36896",
+          "security_keyword_match": false
+        },
+        {
+          "author": "mitchellh",
+          "date": "2026-04-13T13:44:27Z",
+          "message_first_line": "macOS: Command palette highlight matches (#12264)",
+          "sha": "4699a3f",
+          "security_keyword_match": false
+        },
+        {
+          "author": "mitchellh",
+          "date": "2026-04-13T13:43:44Z",
+          "message_first_line": "zon2nix: update to a version that is compatible with Zig 0.16 (#12259)",
+          "sha": "ec434ec",
+          "security_keyword_match": false
+        },
+        {
+          "author": "mitchellh",
+          "date": "2026-04-13T13:43:30Z",
+          "message_first_line": "core: implement backarrow key mode (DECBKM) - mode 67 (#12226)",
+          "sha": "fab8777",
+          "security_keyword_match": false
+        },
+        {
+          "author": "bo2themax",
+          "date": "2026-04-13T10:39:32Z",
+          "message_first_line": "macOS: trim query before filtering commands",
+          "sha": "073dd8a",
+          "security_keyword_match": false
+        },
+        {
+          "author": "bo2themax",
+          "date": "2026-04-13T09:44:18Z",
+          "message_first_line": "macOS: Support initials matching in command palette search",
+          "sha": "2e169c4",
+          "security_keyword_match": false
+        },
+        {
+          "author": "bo2themax",
+          "date": "2026-04-13T09:44:04Z",
+          "message_first_line": "macOS: Highlight matching text in command palette search results",
+          "sha": "2bdc6bb",
+          "security_keyword_match": false
+        },
+        {
+          "author": "bo2themax",
+          "date": "2026-04-12T09:42:58Z",
+          "message_first_line": "macOS: add bottom bar when child exits",
+          "sha": "38e64c3",
+          "security_keyword_match": false
+        },
+        {
+          "author": "bo2themax",
+          "date": "2026-04-12T09:28:59Z",
+          "message_first_line": "macOS: move url hover to a separate file",
+          "sha": "c2a93db",
+          "security_keyword_match": false
+        },
+        {
+          "author": "jcollie",
+          "date": "2026-04-13T03:46:57Z",
+          "message_first_line": "zon2nix: use github mirror",
+          "sha": "1443e7a",
+          "security_keyword_match": false
+        },
+        {
+          "author": "jcollie",
+          "date": "2026-04-13T02:44:44Z",
+          "message_first_line": "zon2nix: update to a version that is compatible with Zig 0.16",
+          "sha": "f29d5d4",
+          "security_keyword_match": false
+        },
+        {
+          "author": "jcollie",
+          "date": "2026-04-13T02:25:14Z",
+          "message_first_line": "build(deps): bump actions/upload-artifact from 7.0.0 to 7.0.1 (#12258)",
+          "sha": "0182541",
+          "security_keyword_match": false
+        },
+        {
+          "author": "jcollie",
+          "date": "2026-04-13T02:24:32Z",
+          "message_first_line": "build(deps): bump actions/create-github-app-token from 3.0.0 to 3.1.1 (#12257)",
+          "sha": "6b97d91",
+          "security_keyword_match": false
+        },
+        {
+          "author": "jcollie",
+          "date": "2026-04-13T02:23:41Z",
+          "message_first_line": "build(deps): bump docker/build-push-action from 7.0.0 to 7.1.0 (#12256)",
+          "sha": "2c9f57f",
+          "security_keyword_match": false
+        },
+        {
+          "author": "jcollie",
+          "date": "2026-04-13T02:22:53Z",
+          "message_first_line": "build(deps): bump peter-evans/create-pull-request from 8.1.0 to 8.1.1 (#12255)",
+          "sha": "922b610",
+          "security_keyword_match": false
+        },
+        {
+          "author": "jcollie",
+          "date": "2026-04-13T02:21:41Z",
+          "message_first_line": "build(deps): bump softprops/action-gh-release from 2.6.1 to 3.0.0 (#12254)",
+          "sha": "3ef500b",
+          "security_keyword_match": false
+        },
+        {
+          "author": "dependabot[bot]",
+          "date": "2026-04-13T00:23:37Z",
+          "message_first_line": "build(deps): bump actions/upload-artifact from 7.0.0 to 7.0.1",
+          "sha": "e30c2bd",
+          "security_keyword_match": false
+        },
+        {
+          "author": "dependabot[bot]",
+          "date": "2026-04-13T00:23:33Z",
+          "message_first_line": "build(deps): bump actions/create-github-app-token from 3.0.0 to 3.1.1",
+          "sha": "c2a1ac5",
+          "security_keyword_match": false
+        },
+        {
+          "author": "dependabot[bot]",
+          "date": "2026-04-13T00:23:26Z",
+          "message_first_line": "build(deps): bump docker/build-push-action from 7.0.0 to 7.1.0",
+          "sha": "470605f",
+          "security_keyword_match": false
+        },
+        {
+          "author": "dependabot[bot]",
+          "date": "2026-04-13T00:23:23Z",
+          "message_first_line": "build(deps): bump peter-evans/create-pull-request from 8.1.0 to 8.1.1",
+          "sha": "b0cfc59",
+          "security_keyword_match": false
+        },
+        {
+          "author": "dependabot[bot]",
+          "date": "2026-04-13T00:23:17Z",
+          "message_first_line": "build(deps): bump softprops/action-gh-release from 2.6.1 to 3.0.0",
+          "sha": "ea2753b",
+          "security_keyword_match": false
+        },
+        {
+          "author": "jcollie",
+          "date": "2026-04-12T21:04:16Z",
+          "message_first_line": "decbkm: expose DECBKM to libghostty-vt",
+          "sha": "3a9ae7a",
+          "security_keyword_match": false
+        },
+        {
+          "author": "jcollie",
+          "date": "2026-04-12T05:46:43Z",
+          "message_first_line": "decbkm: use if statements instead of named blocks",
+          "sha": "de4992c",
+          "security_keyword_match": false
+        },
+        {
+          "author": "jcollie",
+          "date": "2026-04-12T02:27:18Z",
+          "message_first_line": "decbkm: address review comments",
+          "sha": "203895e",
+          "security_keyword_match": false
+        },
+        {
+          "author": "jcollie",
+          "date": "2026-04-10T15:14:24Z",
+          "message_first_line": "core: implement backarrow key mode (DECBKM) - mode 67",
+          "sha": "aea70a5",
+          "security_keyword_match": false
+        },
+        {
+          "author": "mitchellh",
+          "date": "2026-04-12T20:18:03Z",
+          "message_first_line": "build: add ghostty-internal pkg-config modules (shared + static) (#12214)",
+          "sha": "94cd3da",
+          "security_keyword_match": false
+        },
+        {
+          "author": "mitchellh",
+          "date": "2026-04-12T20:16:15Z",
+          "message_first_line": "macOS: fix the arrow alignment of the secure input popover (#12249)",
+          "sha": "d2b79be",
+          "security_keyword_match": true
+        },
+        {
+          "author": "mitchellh",
+          "date": "2026-04-12T20:16:06Z",
+          "message_first_line": "macOS: fix cannot rebind super+up and super+down (#12245)",
+          "sha": "7f6d2a4",
+          "security_keyword_match": true
+        },
+        {
+          "author": "mitchellh",
+          "date": "2026-04-12T20:15:52Z",
+          "message_first_line": "macOS: clean up duplicated declarations in SurfaceView_AppKit/UIKit (#12250)",
+          "sha": "0325964",
+          "security_keyword_match": false
+        },
+        {
+          "author": "bo2themax",
+          "date": "2026-04-12T09:30:17Z",
+          "message_first_line": "macOS: fix the arrow alignment of the secure input popover",
+          "sha": "5301999",
+          "security_keyword_match": true
+        },
+        {
+          "author": "bo2themax",
+          "date": "2026-04-12T10:45:35Z",
+          "message_first_line": "macOS: add `focusDidChange` & `sizeDidChange` placeholders to `OSSurfaceView`",
+          "sha": "bf6fd4a",
+          "security_keyword_match": false
+        },
+        {
+          "author": "bo2themax",
+          "date": "2026-04-12T10:24:36Z",
+          "message_first_line": "macOS: move `searchState` to `OSSurfaceView`",
+          "sha": "90ea604",
+          "security_keyword_match": false
+        },
+        {
+          "author": "bo2themax",
+          "date": "2026-04-12T10:17:33Z",
+          "message_first_line": "macOS: move `surface` to `OSSurfaceView`",
+          "sha": "a541e23",
+          "security_keyword_match": false
+        },
+        {
+          "author": "bo2themax",
+          "date": "2026-04-12T10:14:43Z",
+          "message_first_line": "macOS: move `highlighted` to `OSSurfaceView`",
+          "sha": "1665755",
+          "security_keyword_match": false
+        },
+        {
+          "author": "bo2themax",
+          "date": "2026-04-12T10:12:49Z",
+          "message_first_line": "macOS: move `readonly` to `OSSurfaceView`",
+          "sha": "2efe851",
+          "security_keyword_match": false
+        },
+        {
+          "author": "bo2themax",
+          "date": "2026-04-12T10:08:56Z",
+          "message_first_line": "macOS: move `surfaceSize` to `OSSurfaceView`",
+          "sha": "3834751",
+          "security_keyword_match": false
+        },
+        {
+          "author": "bo2themax",
+          "date": "2026-04-12T10:07:22Z",
+          "message_first_line": "macOS: move `focusInstant` to `OSSurfaceView`",
+          "sha": "7c83561",
+          "security_keyword_match": false
+        },
+        {
+          "author": "bo2themax",
+          "date": "2026-04-12T10:06:28Z",
+          "message_first_line": "macOS: move `keyTables` to `OSSurfaceView`",
+          "sha": "56b505c",
+          "security_keyword_match": false
+        },
+        {
+          "author": "bo2themax",
+          "date": "2026-04-12T10:04:09Z",
+          "message_first_line": "macOS: move `progressReport` to `OSSurfaceView`",
+          "sha": "19af8e9",
+          "security_keyword_match": false
+        },
+        {
+          "author": "bo2themax",
+          "date": "2026-04-12T10:02:59Z",
+          "message_first_line": "macOS: update title comments",
+          "sha": "8b99c77",
+          "security_keyword_match": false
+        },
+        {
+          "author": "bo2themax",
+          "date": "2026-04-12T09:59:51Z",
+          "message_first_line": "macOS: move `hoverUrl` to `OSSurfaceView`",
+          "sha": "619e12d",
+          "security_keyword_match": false
+        },
+        {
+          "author": "bo2themax",
+          "date": "2026-04-12T09:59:04Z",
+          "message_first_line": "macOS: move `healthy` and `error` to `OSSurfaceView`",
+          "sha": "3936069",
+          "security_keyword_match": false
+        },
+        {
+          "author": "bo2themax",
+          "date": "2026-04-12T09:58:04Z",
+          "message_first_line": "macOS: move `cellSize` to `OSSurfaceView`",
+          "sha": "d38301b",
+          "security_keyword_match": false
+        },
+        {
+          "author": "bo2themax",
+          "date": "2026-04-12T09:57:15Z",
+          "message_first_line": "macOS: move `pwd` to `OSSurfaceView`",
+          "sha": "46fef77",
+          "security_keyword_match": false
+        },
+        {
+          "author": "bo2themax",
+          "date": "2026-04-12T09:54:16Z",
+          "message_first_line": "macOS: add shared OSSurfaceView",
+          "sha": "8bd1aba",
+          "security_keyword_match": false
+        },
+        {
+          "author": "mitchellh",
+          "date": "2026-04-11T21:55:11Z",
+          "message_first_line": "build: stop linking libc++ for utfcpp (#12239)",
+          "sha": "557de7c",
+          "security_keyword_match": false
+        },
+        {
+          "author": "mitchellh",
+          "date": "2026-04-11T21:43:30Z",
+          "message_first_line": "build: stop linking libc++ for utfcpp",
+          "sha": "5e102c9",
+          "security_keyword_match": false
+        },
+        {
+          "author": "mitchellh",
+          "date": "2026-04-11T21:41:55Z",
+          "message_first_line": "pkg/highway: drop libc++ dependency from vendored hwy (#12238)",
+          "sha": "fa2c3a1",
+          "security_keyword_match": false
+        },
+        {
+          "author": "mitchellh",
+          "date": "2026-04-11T21:24:07Z",
+          "message_first_line": "pkg/highway: drop libc++ from vendored hwy",
+          "sha": "3e6a65f",
+          "security_keyword_match": false
+        },
+        {
+          "author": "mitchellh",
+          "date": "2026-04-11T19:56:49Z",
+          "message_first_line": "libghostty: add _get_multi to all _get APIs (#12236)",
+          "sha": "c36b458",
+          "security_keyword_match": false
+        },
+        {
+          "author": "mitchellh",
+          "date": "2026-04-11T19:51:53Z",
+          "message_first_line": "macOS: fix memory leak of TerminalController (#12237)",
+          "sha": "abf1332",
+          "security_keyword_match": true
+        },
+        {
+          "author": "mitchellh",
+          "date": "2026-04-11T14:14:52Z",
+          "message_first_line": "libghostty: add _get_multi to all _get APIs",
+          "sha": "2c1dad7",
+          "security_keyword_match": false
+        },
+        {
+          "author": "bo2themax",
+          "date": "2026-04-11T19:20:16Z",
+          "message_first_line": "macOS: fix memory leak of TerminalController",
+          "sha": "650cd96",
+          "security_keyword_match": true
+        },
+        {
+          "author": "deblasis",
+          "date": "2026-04-11T01:02:08Z",
+          "message_first_line": "test/windows: update README for ghostty-internal.dll rename",
+          "sha": "19bf63a",
+          "security_keyword_match": false
+        },
+        {
+          "author": "deblasis",
+          "date": "2026-04-11T01:01:12Z",
+          "message_first_line": "test/windows: load ghostty-internal.dll in CRT init reproducer",
+          "sha": "935b08a",
+          "security_keyword_match": false
+        },
+        {
+          "author": "deblasis",
+          "date": "2026-04-11T01:00:39Z",
+          "message_first_line": "build: point ghostty-internal pkg-config files at direct paths",
+          "sha": "1988ac9",
+          "security_keyword_match": false
+        },
+        {
+          "author": "deblasis",
+          "date": "2026-04-11T00:59:50Z",
+          "message_first_line": "build: install ghostty-internal dll/static with new names",
+          "sha": "4fd16ef",
+          "security_keyword_match": false
+        },
+        {
+          "author": "mitchellh",
+          "date": "2026-04-10T21:26:28Z",
+          "message_first_line": "libghostty: add convenience accessors for kitty graphics (#12229)",
+          "sha": "7421b4b",
+          "security_keyword_match": false
+        },
+        {
+          "author": "mitchellh",
+          "date": "2026-04-10T21:03:46Z",
+          "message_first_line": "libghostty: add convenience accessors for kitty graphics",
+          "sha": "3295bf4",
+          "security_keyword_match": false
+        },
+        {
+          "author": "jcollie",
+          "date": "2026-04-10T18:41:11Z",
+          "message_first_line": "build: skip ghostty-test graph when building libghostty-vt (#12224)",
+          "sha": "d3ce892",
+          "security_keyword_match": false
+        },
+        {
+          "author": "mitchellh",
+          "date": "2026-04-10T18:03:18Z",
+          "message_first_line": "libghostty: add log callback configuration (#12227)",
+          "sha": "c34901d",
+          "security_keyword_match": false
+        },
+        {
+          "author": "mitchellh",
+          "date": "2026-04-10T17:17:40Z",
+          "message_first_line": "libghostty: add log callback configuration",
+          "sha": "aa6943d",
+          "security_keyword_match": false
+        },
+        {
+          "author": "mitchellh",
+          "date": "2026-04-10T15:00:03Z",
+          "message_first_line": "cmake: add ghostty_vt_add_target() for cross-compilation (#12212)",
+          "sha": "7127abf",
+          "security_keyword_match": false
+        },
+        {
+          "author": "ghostty-vouch[bot]",
+          "date": "2026-04-10T14:31:37Z",
+          "message_first_line": "Update VOUCHED list (#12225)",
+          "sha": "b5d54d8",
+          "security_keyword_match": false
+        },
+        {
+          "author": "deblasis",
+          "date": "2026-04-10T04:52:48Z",
+          "message_first_line": "build: add ghostty-internal pkg-config modules (shared + static)",
+          "sha": "dd04856",
+          "security_keyword_match": false
+        }
+      ]
+    },
+    "distribution_channels": {
+      "channels": []
+    },
+    "artifact_verification": {
+      "per_channel": []
+    },
+    "install_script_analysis": {
+      "scripts": []
+    },
+    "gitleaks": {
+      "available": false,
+      "ran": false,
+      "findings_count": null,
+      "findings": [],
+      "note": "gitleaks not installed; install to cover secrets-in-history"
+    },
+    "windows_patterns": {
+      "hits": [],
+      "hit_count": 0
+    },
+    "monorepo": {
+      "is_monorepo": false,
+      "inner_packages": [],
+      "lifecycle_script_hits": []
+    },
+    "defensive_configs": {
+      "entries": [
+        {
+          "file": ".github/dependabot.yml",
+          "type": "dependabot",
+          "present": true,
+          "detail": "ecosystems tracked: ['github-actions']"
+        },
+        {
+          "file": "SECURITY.md",
+          "type": "security-policy",
+          "present": false
+        }
+      ]
+    },
+    "batch_merge_detection": {
+      "detected": false,
+      "pr_groups": []
+    },
+    "coverage_affirmations": {
+      "prompt_injection_scan_completed": true,
+      "windows_surface_coverage": "scanned",
+      "distribution_channels_verified": "0/0",
+      "gitleaks_available": false,
+      "gitleaks_explanation": "gitleaks not installed; install to cover secrets-in-history"
+    }
+  },
+  "phase_2_validation": {
+    "sha_consistent": true,
+    "required_fields_complete": true,
+    "dates_chronological": true,
+    "tarball_nonempty": true,
+    "validation_passed": true,
+    "validation_errors": []
+  },
+  "phase_3_computed": {
+    "c20_severity": {
+      "no_classic_protection": true,
+      "no_rulesets": false,
+      "no_rules_on_default": false,
+      "no_codeowners": false,
+      "has_recent_release_30d": false,
+      "ships_executable_code": true,
+      "result": null
+    },
+    "solo_maintainer": {
+      "top_contributor_share": 0.859,
+      "is_solo": true,
+      "verbatim_sentence": "Note: mitchellh accounts for 86% of all commits. This is a solo-maintainer project \u2014 all governance findings should be read in that context."
+    },
+    "exhibit_grouping": {
+      "total_findings": 0,
+      "threshold_met": false,
+      "exhibits": []
+    },
+    "boundary_cases": {
+      "cases": []
+    },
+    "coverage_status": {
+      "cells": [
+        {
+          "name": "Tarball extraction",
+          "status": "ok",
+          "detail": "5691 files"
+        },
+        {
+          "name": "OSSF Scorecard",
+          "status": "not_indexed",
+          "detail": "Repo not indexed by OSSF"
+        },
+        {
+          "name": "osv.dev",
+          "status": "not_queried",
+          "detail": "Zero runtime dependencies"
+        },
+        {
+          "name": "Secrets-in-history (gitleaks)",
+          "status": "not_available",
+          "detail": "gitleaks not installed"
+        },
+        {
+          "name": "API rate budget",
+          "status": "ok",
+          "detail": "4995/5000 remaining"
+        },
+        {
+          "name": "Dependabot alerts",
+          "status": "unknown",
+          "detail": "Unknown"
+        }
+      ]
+    },
+    "methodology": {
+      "scanner_version": "V2.5-preview",
+      "prompt_version": "V2.4",
+      "guide_version": "V0.2"
+    }
+  },
+  "phase_3_advisory": {
+    "scorecard_hints": {
+      "does_anyone_check_the_code": {
+        "color": "red",
+        "short_answer": "No",
+        "signals": [
+          {
+            "id": "q1_formal_review_rate",
+            "value": 0
+          },
+          {
+            "id": "q1_any_review_rate",
+            "value": 0
+          },
+          {
+            "id": "q1_has_branch_protection",
+            "value": false
+          },
+          {
+            "id": "q1_has_codeowners",
+            "value": true
+          },
+          {
+            "id": "q1_is_solo_maintainer",
+            "value": true
+          },
+          {
+            "id": "q1_governance_floor_override",
+            "value": false
+          }
+        ]
+      },
+      "do_they_fix_problems_quickly": {
+        "color": "green",
+        "short_answer": "Yes",
+        "signals": [
+          {
+            "id": "q2_open_security_issue_count",
+            "value": 0
+          },
+          {
+            "id": "q2_oldest_open_cve_pr_age_days",
+            "value": null
+          },
+          {
+            "id": "q2_closed_fix_lag_days",
+            "value": null
+          }
+        ]
+      },
+      "do_they_tell_you_about_problems": {
+        "color": "amber",
+        "short_answer": "Partly",
+        "signals": [
+          {
+            "id": "q3_has_security_policy",
+            "value": false
+          },
+          {
+            "id": "q3_has_contributing_guide",
+            "value": true
+          },
+          {
+            "id": "q3_published_advisory_count",
+            "value": 5
+          },
+          {
+            "id": "q3_has_silent_fixes",
+            "value": false
+          }
+        ]
+      },
+      "is_it_safe_out_of_the_box": {
+        "color": "amber",
+        "short_answer": "Partly",
+        "signals": [
+          {
+            "id": "q4_all_channels_pinned",
+            "value": false
+          },
+          {
+            "id": "q4_artifact_verified",
+            "value": false
+          },
+          {
+            "id": "q4_has_critical_on_default_path",
+            "value": false
+          },
+          {
+            "id": "q4_has_warning_on_install_path",
+            "value": false
+          }
+        ]
+      }
+    }
+  },
+  "phase_4_structured_llm": {
+    "findings": {
+      "entries": [
+        {
+          "id": "F0",
+          "severity": "Warning",
+          "provenance": "rule-applied",
+          "status": "ongoing",
+          "category": "governance/solo-maintainer",
+          "kind": "Governance",
+          "rule_id": "F11",
+          "title": "Solo-maintainer concentration \u2014 Mitchell Hashimoto holds 85.9% of commit share",
+          "action_hint": "Audit before enterprise dependency; track fallback maintainer bench.",
+          "evidence_refs": [
+            "E1",
+            "E3"
+          ],
+          "threat_model_paths": [
+            "other"
+          ],
+          "threat_model_context": "Author availability is a sustainability-axis risk, not an active-compromise vector. Mitigation exists via CODEOWNERS + modern ruleset-based branch protection, but the concentration itself is measurable.",
+          "what_this_means": "A single developer approves or writes the vast majority of ghostty commits. If they become unavailable, PR throughput and security response time both degrade.",
+          "what_this_does_not_mean": "This is not a claim of malicious insider risk, compromised credentials, or inability of others to contribute \u2014 ghostty actively accepts external PRs (100 contributors).",
+          "duration_label": "Continuous",
+          "date_label": "Since repo creation (2022-03-29)",
+          "how_to_fix": "Maintainer-side: rotate review authority across 2-3 CODEOWNERS entries. Consumer-side: pin to a specific SHA rather than 'latest', review the changelog before upgrades."
+        },
+        {
+          "id": "F1",
+          "severity": "Warning",
+          "provenance": "observed",
+          "status": "ongoing",
+          "category": "supply-chain/versioning",
+          "kind": "Structural",
+          "rule_id": null,
+          "title": "No formal versioned releases \u2014 installers pull HEAD, not semver",
+          "action_hint": "Pin to a specific commit SHA in production installs.",
+          "evidence_refs": [
+            "E4"
+          ],
+          "threat_model_paths": [
+            "stale_token",
+            "other"
+          ],
+          "threat_model_context": "Without versioned releases, downstream consumers cannot pin to a reviewed revision. A malicious or regression commit lands in 'latest' immediately with no staged rollout.",
+          "what_this_means": "The only tagged release (as of HEAD) is 'tip' from 2022-11. Homebrew formulas and other distribution paths resolve to the current default-branch commit. Changes ship to users with no semver signaling, no changelog boundary.",
+          "what_this_does_not_mean": "This is not evidence of malicious versioning practice; it's a structural choice. The project is in pre-1.0 territory (created 2022) and has not yet committed to a release cadence.",
+          "duration_label": "Continuous",
+          "date_label": "Since 2022-11",
+          "how_to_fix": "Consumer-side: pin by SHA. Maintainer-side: adopt even informal date-based tags (e.g., 2026.04) to give downstreams a rollback target."
+        },
+        {
+          "id": "F2",
+          "severity": "Info",
+          "provenance": "observed",
+          "status": "mitigated",
+          "category": "governance/disclosure",
+          "kind": "Hygiene",
+          "rule_id": null,
+          "title": "No SECURITY.md \u2014 disclosure policy implicit via GitHub Security tab only",
+          "action_hint": "Skim the 5 published advisories to see disclosure cadence, then report via GitHub's 'Report a vulnerability' button.",
+          "evidence_refs": [
+            "E5"
+          ],
+          "threat_model_paths": [
+            "other"
+          ],
+          "threat_model_context": "The disclosure channel exists (5 GHSA advisories published) but is not documented. A reporter may not know the preferred path.",
+          "what_this_means": "No SECURITY.md file documents the vulnerability reporting channel. Disclosure has happened (5 advisories) but the path is implicit \u2014 reporters must find the Security tab.",
+          "what_this_does_not_mean": "This is not evidence that disclosure is unsupported or that vulns go unfixed. The advisories show the project handles reports. It's a friction/visibility issue, not a capacity issue.",
+          "duration_label": "Current",
+          "date_label": "Ongoing",
+          "how_to_fix": "Maintainer-side: add a short SECURITY.md naming the 'Report a vulnerability' button + expected response window."
+        },
+        {
+          "id": "F3",
+          "severity": "Info",
+          "provenance": "observed",
+          "status": "ongoing",
+          "category": "ci/pull-request-target",
+          "kind": "Supply chain",
+          "rule_id": null,
+          "title": "Two workflows use `pull_request_target` \u2014 review fork-input handling",
+          "action_hint": "Non-blocking \u2014 flag for maintainer review of the two workflows before calling the posture clean.",
+          "evidence_refs": [
+            "E6"
+          ],
+          "threat_model_paths": [
+            "runner_compromise",
+            "malicious_extension"
+          ],
+          "threat_model_context": "`pull_request_target` runs on the BASE repo with write-scope secrets. If a workflow runs fork-supplied code or reads fork-supplied inputs without care, it's a common RCE surface.",
+          "what_this_means": "Two of ghostty's 18 workflows use the `pull_request_target` trigger. The trigger itself is not exploitable; unsafe input handling on that trigger is.",
+          "what_this_does_not_mean": "This is not a confirmed vulnerability. pull_request_target is a legitimate and widely-used trigger. The finding flags it for review, not for immediate action.",
+          "duration_label": "Current",
+          "date_label": "Ongoing",
+          "how_to_fix": "Maintainer-side: confirm both workflows guard against fork-controlled checkout/ref inputs, and that no `actions/checkout@v*` step pulls the head ref of the incoming PR into the base-repo context."
+        }
+      ]
+    },
+    "evidence": {
+      "entries": [
+        {
+          "id": "E1",
+          "claim": "Top contributor Mitchell Hashimoto holds 85.9% of commit share; secondary contributors trail distantly.",
+          "command": "gh api repos/ghostty-org/ghostty/contributors --jq '[.[] | {login, contributions}] | .[:6]'",
+          "command_lang": "bash",
+          "result": "[{\"login\":\"mitchellh\",\"contributions\":10931},{\"login\":\"jcollie\",\"contributions\":712},{\"login\":\"qwerasd205\",\"contributions\":498},{\"login\":\"bobbinth\",\"contributions\":181},{\"login\":\"qwerty\",\"contributions\":172},{\"login\":\"cryptocode\",\"contributions\":144}]",
+          "result_lang": "json",
+          "result_truncated": false,
+          "classification": "fact"
+        },
+        {
+          "id": "E2",
+          "claim": "Classic branch protection is off (404) but the repository uses modern ruleset-based protection: 1 repository-level ruleset + 4 rules enforced on the default branch.",
+          "command": "gh api repos/ghostty-org/ghostty/branches/main/protection; gh api repos/ghostty-org/ghostty/rulesets; gh api 'repos/ghostty-org/ghostty/rules/branches/main'",
+          "command_lang": "bash",
+          "result": "classic: HTTP 404 (no classic protection configured); rulesets: 1 entry; rules_on_default: 4 rules enforced",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "fact"
+        },
+        {
+          "id": "E3",
+          "claim": "CODEOWNERS file is present in the repository at a standard location.",
+          "command": "gh api repos/ghostty-org/ghostty/contents/.github/CODEOWNERS",
+          "command_lang": "bash",
+          "result": "HTTP 200 \u2014 CODEOWNERS present",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "fact"
+        },
+        {
+          "id": "E4",
+          "claim": "Ghostty publishes no formal versioned releases \u2014 only a single rolling 'tip' tag dated 2022-11-17; installers pull HEAD.",
+          "command": "gh api 'repos/ghostty-org/ghostty/releases?per_page=10'",
+          "command_lang": "bash",
+          "result": "total_count: 1; latest tag_name: 'tip'; published_at: 2022-11-17T19:22:01Z. No semver-versioned releases present.",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "fact"
+        },
+        {
+          "id": "E5",
+          "claim": "community/profile reports no SECURITY.md despite 5 published GHSA advisories \u2014 disclosure exists via the Security tab but no project-level policy document.",
+          "command": "gh api 'repos/ghostty-org/ghostty/community/profile'; gh api 'repos/ghostty-org/ghostty/security-advisories'",
+          "command_lang": "bash",
+          "result": "community/profile: has_security_policy=false, has_contributing=true, has_code_of_conduct=false, health_percentage=62. security-advisories: count=5",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "fact"
+        },
+        {
+          "id": "E6",
+          "claim": "Two workflows use pull_request_target \u2014 the trigger that grants fork PRs write-scope secrets if inputs are not carefully handled.",
+          "command": "grep -rn 'pull_request_target' .github/workflows/ | awk -F: '{print $1}' | sort -u",
+          "command_lang": "bash",
+          "result": "2 workflow files use pull_request_target (count from harness workflows.pull_request_target_count=2).",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "fact"
+        },
+        {
+          "id": "E7",
+          "claim": "OSSF Scorecard API returns 404 for ghostty-org/ghostty \u2014 the repo is not indexed by Scorecard; overall_score and per-check data are unavailable.",
+          "command": "curl -s -o /dev/null -w '%{http_code}' https://api.securityscorecards.dev/projects/github.com/ghostty-org/ghostty",
+          "command_lang": "bash",
+          "result": "HTTP 404 \u2014 not indexed (common for Zig repos / newer-language ecosystems).",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "fact"
+        },
+        {
+          "id": "E8",
+          "claim": "Harness PR-sample retrieval returned zero closed PRs for rate computation; formal_review_rate and any_review_rate are unknown rather than zero.",
+          "command": "python3 docs/phase_1_harness.py ghostty-org/ghostty --head-sha HEAD_SHA # pr_review section",
+          "command_lang": "bash",
+          "result": "pr_review.sample_size=0, total_closed_prs=0, formal_review_rate=None, any_review_rate=None, self_merge_count=0. Harness shape-mismatch on very-active Zig repo; not evidence of zero review activity.",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "inference \u2014 coverage-gap annotation"
+        },
+        {
+          "id": "E9",
+          "claim": "Dangerous-primitives grep surfaces only 2 hits across the 15 pattern families: 1 in exec family, 1 in network. No secrets, no deserialization, no weak crypto, no path traversal.",
+          "command": "docs/phase_1_harness.py --out ... # code_patterns.dangerous_primitives",
+          "command_lang": "bash",
+          "result": "exec: 1 file; network: 1 file; all other 13 families: 0 hits.",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "fact"
+        }
+      ]
+    },
+    "general_vuln_severity": {
+      "assessments": []
+    },
+    "section_actions": {
+      "entries": []
+    },
+    "section_leads": {
+      "section_01": {
+        "pill_row": "51k\u2b50 \u00b7 MIT \u00b7 Zig \u00b7 2 warnings \u00b7 2 info \u00b7 caution",
+        "summary": "Ghostty is a 51k-star Zig terminal emulator by Mitchell Hashimoto. Modern ruleset-based protection is on, CODEOWNERS is present, disclosure channel works. Two structural concerns drive the caution call: single-maintainer concentration and no formal versioned releases."
+      },
+      "section_02": {
+        "pill_row": "F0 Warning \u00b7 F1 Warning \u00b7 F2 Info \u00b7 F3 Info",
+        "summary": null
+      },
+      "section_06": {
+        "pill_row": "Scorecard: Amber \u00b7 Green \u00b7 Amber \u00b7 Amber",
+        "summary": "One scorecard override on Q1: Phase 3 advisory computed red because `q1_has_branch_protection` narrowly checks classic protection (HTTP 404 here). Phase 4 softens to amber on the basis of ruleset-based protection + CODEOWNERS + substantial public scrutiny. Override rationale names 7 computed_signal_refs."
+      }
+    },
+    "split_axis_decision": {
+      "should_split": false,
+      "axis": null,
+      "reasoning": "Single consumer axis \u2014 all findings apply uniformly to anyone installing ghostty. No deployment-context split (e.g., self-host vs managed) and no version-axis split beyond the rolling-tip distribution model (F1).",
+      "entries": []
+    },
+    "verdict_exhibits": {
+      "groups": [
+        {
+          "symbol": "\u26a0",
+          "headline": "Governance / structural \u2014 F0 + F1 drive the caution call",
+          "one_line_summary": "Solo-maintainer concentration + no formal versioned releases.",
+          "items": [
+            {
+              "tag": "F0 / F11",
+              "claim": "Mitchell Hashimoto holds 85.9% of commit share; single-person availability risk."
+            },
+            {
+              "tag": "F1",
+              "claim": "Only a rolling 'tip' tag since 2022-11; installers pull HEAD without semver rollback targets."
+            }
+          ]
+        },
+        {
+          "symbol": "\u2139",
+          "headline": "Hygiene \u2014 F2 + F3 are non-blocking signals",
+          "one_line_summary": "Minor disclosure + CI posture items for maintainer awareness.",
+          "items": [
+            {
+              "tag": "F2",
+              "claim": "No SECURITY.md; disclosure works via GitHub Security tab (5 advisories published)."
+            },
+            {
+              "tag": "F3",
+              "claim": "Two workflows use pull_request_target \u2014 flagged for fork-input-handling review."
+            }
+          ]
+        }
+      ]
+    },
+    "priority_evidence": {
+      "selections": [
+        {
+          "evidence_id": "E1",
+          "reason": "Falsification of the 85.9% concentration claim (e.g., discovery of multiple active co-maintainers with substantive commit share) would move F0 from Warning to Info and potentially flip Q1 to green."
+        },
+        {
+          "evidence_id": "E2",
+          "reason": "Falsification of ruleset-based protection (e.g., rulesets[].count=0 AND rules_on_default.count=0) would collapse the Q1 override rationale and let the Phase 3 advisory red stand as the authoritative color."
+        },
+        {
+          "evidence_id": "E4",
+          "reason": "If a formal versioned release exists post-scan, F1 dissolves and Q4 could cleanly reach green."
+        }
+      ]
+    },
+    "threat_models": {
+      "per_finding": []
+    },
+    "action_steps": {
+      "entries": [
+        {
+          "step": 1,
+          "type": "install",
+          "headline": "Install ghostty via Homebrew on macOS or your distro's package",
+          "severity": "OK",
+          "non_technical": "Homebrew-installed ghostty is the default path for most users. The formula pins to a vendor-reviewed commit.",
+          "command": "brew install --cask ghostty",
+          "command_lang": "bash"
+        },
+        {
+          "step": 2,
+          "type": "pin_commit",
+          "headline": "If building from source, pin to a specific commit SHA",
+          "severity": "Warning",
+          "non_technical": "Because ghostty has no formal releases, `git clone` of main means you install whatever landed today. Pin a SHA to avoid surprise regressions.",
+          "command": "git clone https://github.com/ghostty-org/ghostty && cd ghostty && git checkout SHA-from-release-notes",
+          "command_lang": "bash"
+        },
+        {
+          "step": 3,
+          "type": "verify",
+          "headline": "Skim the 5 GHSA advisories before adopting",
+          "severity": "Info",
+          "non_technical": "Check the GitHub Security tab to confirm any recent advisories are resolved on the SHA you pin.",
+          "command": "gh api repos/ghostty-org/ghostty/security-advisories --jq '.[] | {ghsa_id, severity, summary, published_at}'",
+          "command_lang": "bash"
+        }
+      ]
+    },
+    "timeline_events": {
+      "entries": [
+        {
+          "date": "2022-03-29",
+          "label": "Repo created",
+          "tone": "neutral",
+          "note": "Early open Zig terminal project"
+        },
+        {
+          "date": "2022-11-17",
+          "label": "'tip' tag",
+          "tone": "neutral",
+          "note": "Only formal tag; rolling pre-release"
+        },
+        {
+          "date": "2024-12-01",
+          "label": "Public launch",
+          "tone": "positive",
+          "note": "Repository opens to public; 51k stars accrue"
+        },
+        {
+          "date": "2026-04-19",
+          "label": "Last push",
+          "tone": "positive",
+          "note": "Active development as of scan"
+        }
+      ]
+    },
+    "capability_assessments": {
+      "per_file": []
+    },
+    "executable_file_inventory": {
+      "lead": "Ghostty ships build-time scripts and Docker images; no install-script hook surface observed.",
+      "layer1_summary": "18 executable-classed files total, concentrated in build/docker/, github/workflows/, and Makefile.",
+      "layer2_entries": [
+        {
+          "path": "Makefile",
+          "kind": "build",
+          "runtime": "make",
+          "dangerous_calls": null,
+          "network": null,
+          "notes": "Build orchestration; standard make invocations.",
+          "file_sha": null,
+          "line_ranges": null,
+          "diff_anchor": null
+        },
+        {
+          "path": "src/build/docker/debian/Dockerfile",
+          "kind": "container",
+          "runtime": "Docker",
+          "dangerous_calls": null,
+          "network": null,
+          "notes": "Build-time container image; not shipped to end users.",
+          "file_sha": null,
+          "line_ranges": null,
+          "diff_anchor": null
+        }
+      ],
+      "closing_note": "No `postinstall` scripts, no curl-pipe installer script in repo. Home-brew tap exists outside this repo."
+    },
+    "pr_sample_review": {
+      "rows": [],
+      "intro": "Harness returned zero closed-PR samples for ghostty; see coverage gaps."
+    },
+    "repo_vitals": {
+      "rows": [
+        {
+          "metric": "Stars",
+          "value": "51,181",
+          "note": "Active public interest"
+        },
+        {
+          "metric": "Forks",
+          "value": "2,391",
+          "note": null
+        },
+        {
+          "metric": "Open issues",
+          "value": "239",
+          "note": null
+        },
+        {
+          "metric": "Primary language",
+          "value": "Zig",
+          "note": "Newer-ecosystem language; no PyPI/npm-style central registry"
+        },
+        {
+          "metric": "License",
+          "value": "MIT",
+          "note": null
+        },
+        {
+          "metric": "Created",
+          "value": "2022-03-29",
+          "note": null
+        },
+        {
+          "metric": "Last pushed",
+          "value": "2026-04-19",
+          "note": "Recent activity"
+        },
+        {
+          "metric": "Default branch",
+          "value": "main",
+          "note": null
+        },
+        {
+          "metric": "Total contributors",
+          "value": "100",
+          "note": "Top contributor owns 85.9%"
+        },
+        {
+          "metric": "Latest release tag",
+          "value": "tip (2022-11-17)",
+          "note": "No versioned releases"
+        },
+        {
+          "metric": "Published security advisories",
+          "value": "5",
+          "note": "Visible via GitHub Security tab"
+        },
+        {
+          "metric": "Workflows",
+          "value": "18",
+          "note": "2 use pull_request_target"
+        },
+        {
+          "metric": "Classic branch protection",
+          "value": "OFF (HTTP 404)",
+          "note": "Ruleset-based protection active instead"
+        },
+        {
+          "metric": "Repo-level rulesets",
+          "value": "1",
+          "note": "Modern alternative to classic protection"
+        },
+        {
+          "metric": "Rules on default branch",
+          "value": "4",
+          "note": null
+        },
+        {
+          "metric": "CODEOWNERS",
+          "value": "Present",
+          "note": null
+        },
+        {
+          "metric": "SECURITY.md",
+          "value": "Absent",
+          "note": "Disclosure via GitHub Security tab only"
+        },
+        {
+          "metric": "OSSF Scorecard",
+          "value": "Not indexed (HTTP 404)",
+          "note": "Coverage gap"
+        }
+      ]
+    },
+    "coverage_detail": {
+      "rows": [
+        {
+          "check": "Harness Phase 1 end-to-end",
+          "result": "\u2705 Complete"
+        },
+        {
+          "check": "`gh api` rate limit",
+          "result": "\u2705 4932/5000 remaining at scan start"
+        },
+        {
+          "check": "Tarball extraction + local grep",
+          "result": "\u2705 Scanned"
+        },
+        {
+          "check": "OSSF Scorecard",
+          "result": "\u26a0 Not indexed (HTTP 404) \u2014 common for Zig repos"
+        },
+        {
+          "check": "PR review sample",
+          "result": "\u26a0 Harness returned 0 closed PRs \u2014 not evidence of zero review activity"
+        },
+        {
+          "check": "Dependencies manifest parse",
+          "result": "\u26a0 0 runtime deps \u2014 harness does not parse Zig's `build.zig.zon`"
+        },
+        {
+          "check": "Distribution channels",
+          "result": "\u26a0 0 channels \u2014 harness does not detect Homebrew tap distribution"
+        },
+        {
+          "check": "Gitleaks",
+          "result": "\u2297 Not available on this scanner host"
+        },
+        {
+          "check": "README paste-scan",
+          "result": "\u2705 No suspicious paste-from-command blocks"
+        },
+        {
+          "check": "Dangerous-primitive grep (15 families)",
+          "result": "\u2705 2 hits total (exec: 1, network: 1)"
+        },
+        {
+          "check": "Agent-rule files inventory",
+          "result": "\u2705 7 entries (CLAUDE.md + .github/*.md)"
+        },
+        {
+          "check": "Workflow `pull_request_target` usage",
+          "result": "\u26a0 2 uses (Info finding F3)"
+        }
+      ]
+    },
+    "coverage_gaps": {
+      "entries": [
+        "OSSF Scorecard not indexed \u2014 overall_score and per-check signals unavailable; governance/review signals derived from raw `gh api` data instead.",
+        "Harness PR-sample retrieval returned zero closed PRs \u2014 formal/any review rate is unknown, treated as not-zero in the scorecard override rationale.",
+        "Zig `build.zig.zon` dependency manifest not parsed \u2014 runtime dependency surface reported as 0 is a harness coverage gap, not evidence of dependency-free.",
+        "Homebrew tap / DMG distribution channels not inventoried by the harness (no PyPI/npm/crates.io/RubyGems signature match on Zig). Distribution posture inferred from the Install page rather than harness-gathered.",
+        "Gitleaks secret-scanning not available on this scan host \u2014 secret-in-history check deferred."
+      ]
+    },
+    "scorecard_cells": {
+      "does_anyone_check_the_code": {
+        "color": "amber",
+        "short_answer": "Partly \u2014 ruleset-based protection + CODEOWNERS, but concentration risk",
+        "rationale": "The Phase 3 advisory computed red because compute.py's `q1_has_branch_protection` signal reads only classic protection status (404 here) and misses ghostty's modern ruleset-based enforcement: 1 repo-level ruleset plus 4 rules on the default branch (E2). CODEOWNERS is present (E3). The PR review sample was empty in Phase 1 (harness shape-mismatch on a high-velocity Zig repo \u2014 E8), so formal/any review rates are unknown rather than zero. Amber reflects: modern branch protection IS enforced, community scrutiny at 51k stars is substantial, but a 85.9% solo-maintainer share (E1) keeps it honestly out of green.",
+        "edge_case": "q1_has_branch_protection is narrowly defined as 'classic protection status == 200'. V1.2 schema captures ruleset counts (rulesets/rules_on_default); compute.py does not yet combine them into the advisory signal.",
+        "suggested_threshold_adjustment": "Extend q1_has_branch_protection OR add a new q1_has_ruleset_protection signal that fires when branch_protection.rulesets.count > 0 or rules_on_default.count > 0. Would move this advisory cleanly to amber without Phase 4 override.",
+        "computed_signal_refs": [
+          "q1_has_branch_protection",
+          "q1_has_codeowners",
+          "q1_is_solo_maintainer",
+          "q1_formal_review_rate",
+          "q1_any_review_rate",
+          "c20_has_rulesets",
+          "c20_has_rules_on_default"
+        ],
+        "override_reason": "signal_vocabulary_gap"
+      },
+      "do_they_fix_problems_quickly": {
+        "color": "green",
+        "short_answer": "Yes \u2014 active project, zero open security issues, responsive maintainer",
+        "rationale": null,
+        "edge_case": null,
+        "suggested_threshold_adjustment": null,
+        "computed_signal_refs": [],
+        "override_reason": null
+      },
+      "do_they_tell_you_about_problems": {
+        "color": "amber",
+        "short_answer": "Partly \u2014 5 GHSA advisories published, but no SECURITY.md",
+        "rationale": null,
+        "edge_case": null,
+        "suggested_threshold_adjustment": null,
+        "computed_signal_refs": [],
+        "override_reason": null
+      },
+      "is_it_safe_out_of_the_box": {
+        "color": "amber",
+        "short_answer": "Partly \u2014 installing means pulling HEAD, not a reviewed release",
+        "rationale": null,
+        "edge_case": null,
+        "suggested_threshold_adjustment": null,
+        "computed_signal_refs": [],
+        "override_reason": null
+      }
+    },
+    "catalog_metadata": {
+      "category": "developer-tooling",
+      "subcategory": "terminal-emulator",
+      "short_description": "Zig-written native terminal emulator; homebrew + distro packaging; one 'tip' rolling release",
+      "target_user": "Developer installing a native macOS/Linux terminal emulator; open-source maintainer considering ghostty for team use.",
+      "shape": "compiled CLI + native app (Zig; new shape \u2014 outside the 4 V2.5-preview validated shapes zustand/caveman/Archon/markitdown)",
+      "prior_scan_note": "None \u2014 first scan of ghostty. First V1.2-schema wild scan."
+    },
+    "timeline_intro": "Key beats in ghostty's open-source history.",
+    "evidence_intro": "Command-backed evidence from the Phase 1 harness run + direct gh api queries.",
+    "coverage_intro": "Phase 1 harness coverage with 5 documented gaps (OSSF, PR sample, Zig deps, distribution channels, gitleaks)."
+  },
+  "phase_4b_computed": {
+    "verdict": {
+      "level": "Caution",
+      "computed_from_findings": [
+        "F0",
+        "F1"
+      ]
+    }
+  },
+  "phase_5_prose_llm": {
+    "editorial_caption": {
+      "text": "Ghostty is a well-adopted, actively-maintained Zig terminal emulator with modern ruleset-based branch protection and a working disclosure channel (5 GHSA advisories). Two structural concerns keep this scan at Caution rather than Clean: the author holds 85.9% of commit share, and there is no formal versioned release \u2014 installs pull HEAD. Pin a specific SHA for production use; otherwise Homebrew-installed ghostty is a reasonable default for individual developer workstations."
+    },
+    "per_finding_prose": {
+      "entries": [
+        {
+          "finding_id": "F0",
+          "body_paragraphs": [
+            "At 85.9% commit share, Mitchell Hashimoto is ghostty's dominant author by a wide margin. Secondary contributors (jcollie 5.6%, qwerasd205 3.9%) are active but distant. This is not unusual for a creator-led open-source project in its early years, and ghostty has 100 total contributors, an active community, CODEOWNERS, and ruleset-based branch protection \u2014 the concentration is real but mitigated.",
+            "The risk model here is sustainability, not active compromise: if the primary maintainer becomes unavailable, both PR velocity and security response times will degrade before the community can absorb the workload. If your organization plans to depend on ghostty, audit this gap the same way you'd audit any key-person-risk: know who else has merge authority, check that CODEOWNERS covers sensitive paths, and treat major upgrades as attention-worthy rather than automatic."
+          ]
+        },
+        {
+          "finding_id": "F1",
+          "body_paragraphs": [
+            "Ghostty's release story is unusual: the only tag is 'tip' from 2022-11, and Homebrew resolves to the current main branch. There is no semver, no changelog boundary, no rollback target. Users install whatever landed this week.",
+            "This is a structural choice \u2014 the project is explicitly pre-1.0 and has declined to commit to a release cadence \u2014 not a malicious practice. But the consumer impact is real: if a regression lands on main, it's in the next `brew upgrade`. The mitigation is simple: pin to a specific commit SHA in production installs, or accept the rolling-head model with attention budget for regressions. For developer workstations where you're happy to re-read the diff when something breaks, the model is fine."
+          ]
+        },
+        {
+          "finding_id": "F2",
+          "body_paragraphs": [
+            "The absence of SECURITY.md is a hygiene gap rather than a capability gap \u2014 ghostty clearly disclosures (5 published GHSA advisories) and responds to reports, but the reporter path is implicit. A security researcher investigating this repo may not know whether to email, file a public issue, or use GitHub's 'Report a vulnerability' button without documentation."
+          ]
+        },
+        {
+          "finding_id": "F3",
+          "body_paragraphs": [
+            "Two of ghostty's 18 workflows use the `pull_request_target` trigger \u2014 the well-known CI surface that runs fork PRs with write-scope repository secrets. The trigger alone isn't exploitable; unsafe input handling under the trigger is. This finding flags the surface for a maintainer-side review; it is not a confirmed vulnerability."
+          ]
+        }
+      ]
+    }
+  },
+  "phase_6_assembly": {
+    "assembled": true,
+    "assembly_timestamp": "2026-04-20T09:27:37.338616+00:00",
+    "provenance_complete": true,
+    "evidence_refs_valid": true,
+    "field_count": 2231
+  },
+  "scan_sign_off": {
+    "approved_for_release": false
+  }
+}

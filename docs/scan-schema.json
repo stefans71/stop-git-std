@@ -547,12 +547,14 @@
 
     "override_reason_enum": {
       "type": "string",
-      "description": "Frozen 5-value enum per V1.2 board review Item C. Categorizes why Phase 4 color diverges from Phase 3 advisory color.",
+      "description": "7-value enum. Categorizes why Phase 4 color diverges from Phase 3 advisory color. Initial 5 values frozen per V1.2 board review Item C. signal_vocabulary_gap + harness_coverage_gap added per V13-1 owner directive 2026-04-20 (see docs/v13-1-override-telemetry-analysis.md).",
       "enum": [
         "threshold_too_strict",
         "threshold_too_lenient",
         "missing_qualitative_context",
         "rubric_literal_vs_intent",
+        "signal_vocabulary_gap",
+        "harness_coverage_gap",
         "other"
       ]
     },

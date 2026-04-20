@@ -390,19 +390,33 @@ The following are the V1.2 implementation deliverables. Each is within reach of 
 
 ## 8. Deferred ledger (post-V1.2 items + triggers)
 
-| ID | Item | Trigger |
-|---|---|---|
-| V13-1 | Override-pattern telemetry log (CSV of `cell, advisory_color, llm_color, rationale_first_line, override_reason`) | 3 V1.2 scans shipped |
-| V13-2 | Renderer Phase-1 richness expansion (surface `dangerous_primitives` per-family, self_merge_count, dependabot_config schedule) | V1.2 round-trip + determinism pass clean |
-| V13-3 | 11-scan comparator calibration analysis | V1.2 schema frozen + telemetry exists + ≥11 V1.2 scans collected |
-| V13-4 | `community_norms_differ` enum expansion | ≥3 V1.2 overrides with `missing_qualitative_context` + community-norms rationale |
-| V13-5 | SD2 auto_load_tier C3 rebinding (`domain=='agent'`) | Own review cycle |
-| V13-6 | markitdown-as-4th-fixture decision | Markitdown re-scanned under V1.2 |
-| V13-7 | OQ-9 sidecar access reconsideration if harness gathers data not representable in schema | Harness feature add that fails B1 round-trip |
-| V12x-1 | Add `has_issues_enabled`, `primary_language`, `topics`, `fork_count` to harness gathering | Any-time V1.2.x patch |
-| V12x-2 | Rename `q4_has_critical_on_default_path` / `q4_has_warning_on_install_path` to `q4_*_finding_tagged` | If circular-derivation ordering fails in Phase 4 authoring |
-| V12x-3 | Add `c_top_contributor_share` unthresholded signal | Telemetry shows operators citing raw top-contributor-share in overrides |
-| V12x-4 | Add more supporting signals (`has_license_file`, `has_readme`, etc.) | Telemetry shows uncategorizable overrides citing missing signals |
+| ID | Item | Trigger | Status |
+|---|---|---|---|
+| V13-1 | Override-pattern telemetry log (CSV of `cell, advisory_color, llm_color, rationale_first_line, override_reason`) | 3 V1.2 scans shipped | **RESOLVED 2026-04-20 by owner directive** — see §8.1 below |
+| V13-2 | Renderer Phase-1 richness expansion (surface `dangerous_primitives` per-family, self_merge_count, dependabot_config schedule) | V1.2 round-trip + determinism pass clean | open |
+| V13-3 | 11-scan comparator calibration analysis | V1.2 schema frozen + telemetry exists + ≥11 V1.2 scans collected | open (3/11) |
+| V13-4 | `community_norms_differ` enum expansion | ≥3 V1.2 overrides with `missing_qualitative_context` + community-norms rationale | open (0 observed; V13-1 split may absorb this) |
+| V13-5 | SD2 auto_load_tier C3 rebinding (`domain=='agent'`) | Own review cycle | open |
+| V13-6 | markitdown-as-4th-fixture decision | Markitdown re-scanned under V1.2 | open |
+| V13-7 | OQ-9 sidecar access reconsideration if harness gathers data not representable in schema | Harness feature add that fails B1 round-trip | open |
+| V12x-1 | Add `has_issues_enabled`, `primary_language`, `topics`, `fork_count` to harness gathering | Any-time V1.2.x patch | partial (fields added to harness mid-V1.2) |
+| V12x-2 | Rename `q4_has_critical_on_default_path` / `q4_has_warning_on_install_path` to `q4_*_finding_tagged` | If circular-derivation ordering fails in Phase 4 authoring | open |
+| V12x-3 | Add `c_top_contributor_share` unthresholded signal | Telemetry shows operators citing raw top-contributor-share in overrides | open |
+| V12x-4 | Add more supporting signals (`has_license_file`, `has_readme`, etc.) | Telemetry shows uncategorizable overrides citing missing signals | open |
+
+### 8.1 V13-1 resolution (2026-04-20, owner directive)
+
+**Data:** 3 V1.2 wild scans shipped 2026-04-20 (ghostty entry 16 / Kronos entry 17 / kamal entry 18), producing 4 overrides across 12 scorecard cells (33% override rate). Distribution: Q1 × 2 (de-escalate), Q2 × 1 (escalate), Q4 × 1 (escalate), Q3 × 0. **All 4 overrides cited `missing_qualitative_context`** (100% concentration). Other 4 enum values unexercised.
+
+**Analysis:** Full writeup at `docs/v13-1-override-telemetry-analysis.md`. Each override's Phase 4 rationale mapped to a distinct fix surface — 3 of 4 to `docs/compute.py` (new/widened signal needed), 1 of 4 to `docs/phase_1_harness.py` (dangerous-primitives regex missed `pickle.load`).
+
+**Owner directive:** Expand `override_reason_enum` from 5 to 7 values by adding `signal_vocabulary_gap` (compute.py fix surface) + `harness_coverage_gap` (phase_1_harness.py fix surface). Retain `missing_qualitative_context` for genuinely-judgment cases.
+
+**Migration:** 3 existing overrides relabeled to `signal_vocabulary_gap` (ghostty Q1, kamal Q1, Kronos Q2), 1 to `harness_coverage_gap` (Kronos Q4). Additive change — all existing validation continues to pass.
+
+**Escalation triggers preserved:** If a future scan produces an override fitting none of the 3 labels cleanly, fitting multiple labels with genuine ambiguity, OR if a post-hoc Skeptic review flags the relabeling as inconsistent with DeepSeek's original R3 dissent on `community_norms_differ`, revisit via board review. V13-4 (`community_norms_differ`) remains open with a note that V13-1's split may absorb it.
+
+**Files changed:** `docs/scan-schema.json` (+2 enum values), `docs/compute.py` (+2 frozenset entries), `tests/test_validator_v12_override.py` (+2 positive tests, enum-size test renamed), 4 scan bundles (override_reason relabeled), 3 rendered reports (rerendered from updated bundles), `docs/scanner-catalog.md` (entries 16/17/18 prose updated).
 
 ---
 

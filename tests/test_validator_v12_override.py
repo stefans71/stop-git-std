@@ -144,12 +144,50 @@ class TestSignalIDVocabulary:
                 f"signal ID {sid!r} violates question-scoped naming convention"
             )
 
-    def test_override_reason_enum_is_5_values(self, compute):
+    def test_override_reason_enum_is_7_values(self, compute):
+        """V13-1 owner directive 2026-04-20 expanded enum from 5 to 7.
+
+        Original 5 frozen per V1.2 board Item C; signal_vocabulary_gap +
+        harness_coverage_gap added after 3/3 V1.2 wild scans showed 100%
+        of observed overrides cited missing_qualitative_context — split
+        needed by fix surface (compute.py vs phase_1_harness.py vs
+        inherent-judgment).
+        """
         assert isinstance(compute.OVERRIDE_REASON_ENUM, frozenset)
         assert compute.OVERRIDE_REASON_ENUM == frozenset({
             "threshold_too_strict",
             "threshold_too_lenient",
             "missing_qualitative_context",
             "rubric_literal_vs_intent",
+            "signal_vocabulary_gap",
+            "harness_coverage_gap",
             "other",
         })
+
+    def test_signal_vocabulary_gap_override_passes(self, validator, compute):
+        """V13-1: signal_vocabulary_gap is the fix-surface=compute.py label."""
+        cell = {
+            "color": "amber",
+            "rationale": "Advisory flagged red because q1_has_branch_protection reads only classic status; the repo uses ruleset-based protection which isn't encoded as a signal yet — compute.py fix needed.",
+            "computed_signal_refs": ["q1_has_branch_protection", "q1_has_codeowners"],
+            "override_reason": "signal_vocabulary_gap",
+        }
+        hint = {"color": "red"}
+        errors = validator.validate_override_rationale(
+            cell, hint, compute.SIGNAL_IDS, compute.OVERRIDE_REASON_ENUM
+        )
+        assert errors == []
+
+    def test_harness_coverage_gap_override_passes(self, validator, compute):
+        """V13-1: harness_coverage_gap is the fix-surface=phase_1_harness.py label."""
+        cell = {
+            "color": "red",
+            "rationale": "Advisory computed amber because q4_has_critical_on_default_path returned False; the harness's dangerous_primitives regex didn't match pickle.load — phase_1_harness.py fix needed.",
+            "computed_signal_refs": ["q4_has_critical_on_default_path", "q4_all_channels_pinned"],
+            "override_reason": "harness_coverage_gap",
+        }
+        hint = {"color": "amber"}
+        errors = validator.validate_override_rationale(
+            cell, hint, compute.SIGNAL_IDS, compute.OVERRIDE_REASON_ENUM
+        )
+        assert errors == []

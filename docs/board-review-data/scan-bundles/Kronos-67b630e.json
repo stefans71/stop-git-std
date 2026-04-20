@@ -1590,7 +1590,7 @@
       },
       "section_06": {
         "pill_row": "Scorecard: Red \u00b7 Red \u00b7 Red \u00b7 Red",
-        "summary": "All four scorecard cells land at red. Q1 and Q3 align with the Phase 3 advisory and need no override. Q2 and Q4 are ESCALATE overrides: Phase 3 compute returned amber on both because its signals are sparse (open_security_issue_count=1 alone is thin for Q2; q4_has_critical_on_default_path=False missed the pickle path entirely). Phase 4 sees the qualitative context \u2014 disclosed 95-day RCE, 48-CVE dep graph, no-release install model \u2014 and escalates both to red with override_reason=missing_qualitative_context."
+        "summary": "All four scorecard cells land at red. Q1 and Q3 align with the Phase 3 advisory and need no override. Q2 and Q4 are ESCALATE overrides: Phase 3 compute returned amber on both because its signals are sparse (open_security_issue_count=1 alone is thin for Q2; q4_has_critical_on_default_path=False missed the pickle path entirely). Phase 4 sees the qualitative context \u2014 disclosed 95-day RCE, 48-CVE dep graph, no-release install model \u2014 and escalates Q2 to red (override_reason=signal_vocabulary_gap \u2014 the compute signal's domain doesn't include open issues) and Q4 to red (override_reason=harness_coverage_gap \u2014 the dangerous_primitives regex missed the pickle.load in finetune/dataset.py:42)."
       }
     },
     "split_axis_decision": {
@@ -2154,7 +2154,7 @@
           "q3_has_silent_fixes",
           "q3_published_advisory_count"
         ],
-        "override_reason": "missing_qualitative_context"
+        "override_reason": "signal_vocabulary_gap"
       },
       "do_they_tell_you_about_problems": {
         "color": "red",
@@ -2178,7 +2178,7 @@
           "q4_has_warning_on_install_path",
           "q2_open_security_issue_count"
         ],
-        "override_reason": "missing_qualitative_context"
+        "override_reason": "harness_coverage_gap"
       }
     },
     "catalog_metadata": {

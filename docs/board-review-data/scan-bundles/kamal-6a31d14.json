@@ -3885,7 +3885,7 @@
           "c20_has_rules_on_default",
           "c20_has_recent_release_30d"
         ],
-        "override_reason": "missing_qualitative_context"
+        "override_reason": "signal_vocabulary_gap"
       },
       "do_they_fix_problems_quickly": {
         "color": "green",
