@@ -1,0 +1,879 @@
+sudo: unable to resolve host hostdzire: Name or service not known
+Reading additional input from stdin...
+OpenAI Codex v0.118.0 (research preview)
+--------
+workdir: /tmp
+model: gpt-5.4
+provider: openai
+approval: never
+sandbox: danger-full-access
+reasoning effort: none
+reasoning summaries: none
+session id: 019dad39-1dc3-7b71-bb4a-daa0f05a425d
+--------
+user
+You are the CODE REVIEWER on V13-3 V1.2.x landing. This is your SECOND pass — you issued a BLOCK verdict at /root/tinkering/stop-git-std/.board-review-temp/v13-3-comparator-calibration/codex-code-review.md citing 3 FIX NOW items:
+
+1. C5 not integrated into any non-test call site (advertised auto-fire not live)
+2. derive_tool_loads_user_files() has unused install_paths parameter
+3. Docstring said returns False if either input missing, but code returns True if either matches
+
+Plus 2 NITs:
+- Kronos threshold mismatch question
+- phase-1-checklist.md drift (bare deserialize in A2 row)
+
+Changes applied in this second-pass diff:
+/tmp/v13-3-implementation.diff
+
+Key additions:
+- compute_q4_autofires_from_phase_1(phase_1_raw_capture) — new wrapper in compute.py that wires C5 auto-fire into advisory path. Future scan drivers call this BEFORE compute_scorecard_cells() and pass the result into has_critical_on_default_path kwarg.
+- New TestV13_3_ComputeQ4AutofiresFromPhase1 test class (6 tests) exercising the wrapper on freerouting-shaped, WLED-shaped, null, and negative cases.
+- derive_tool_loads_user_files() install_paths parameter REMOVED from signature.
+- derive_tool_loads_user_files() docstring REWRITTEN to accurately describe OR logic.
+- derive_q4_critical_on_default_path_from_deserialization() docstring REWRITTEN: removed the overstating claim about hit-level pattern verification; added explicit cross-module-contract note about relying on Phase 1 language qualification; clarified Kronos-threshold question (single pickle.load site is below default threshold=3; collapse depends on broader V1.2.x pickle.loads? regex widening, not this helper).
+- phase-1-checklist.md A2 row UPDATED to drop bare deserialize reference and note V13-3 C2 language-qualifier.
+
+Read the diff and verify each of your prior FIX NOW + NIT items is resolved. Write your verdict to /root/tinkering/stop-git-std/.board-review-temp/v13-3-comparator-calibration/codex-code-review-r2.md with the same structure as your first review.
+
+Accepted verdicts: SIGN OFF / SIGN OFF W/ NOTES / BLOCK (only if NEW issues found).
+
+Word cap 1000.
+warning: Codex could not find system bubblewrap on PATH. Please install bubblewrap with your package manager. Codex will use the vendored bubblewrap in the meantime.
+codex
+I’m reviewing the second-pass diff against the five items from my first pass, then I’ll write the updated verdict file in the same structure as the prior review.
+exec
+/bin/bash -lc "sed -n '1,260p' /tmp/v13-3-implementation.diff" in /tmp
+ succeeded in 0ms:
+diff --git a/docs/compute.py b/docs/compute.py
+index 9c25c09..b93bdf5 100644
+--- a/docs/compute.py
++++ b/docs/compute.py
+@@ -425,6 +425,163 @@ def derive_q2_oldest_open_security_item_age_days(
+     return max(ages) if ages else None
+ 
+ 
++# V1.2.x (V13-3 C18, owner directive 2026-04-20): derivation helper for the
++# "tool loads user files" judgment. Canonical storage of this heuristic lives
++# in compute.py per V13-1 precedent (derive_q1_has_ruleset_protection,
++# derive_q2_oldest_open_security_item_age_days). Scan drivers MUST NOT
++# reimplement this logic ad hoc.
++# Verb-then-noun-within-few-words pattern. Captures phrases like
++# "opens a board file", "parses a document", "loads a pretrained model",
++# "reads a binsnapshot" — i.e. the tool consuming user-provided input as a
++# default operation, typed in either plural-verb (opens/parses/loads/reads)
++# or singular-verb (open/parse/load/read) form.
++_FILE_LOADING_README_PATTERNS = re.compile(
++    r"\b(opens?|parses?|loads?|reads?|imports?)\b"
++    r"(?:\s+\w+){0,4}\s+"
++    r"\b(files?|documents?|designs?|boards?|models?|presets?|configs?|"
++    r"datasets?|checkpoints?|pdfs?|docx|epub|binsnapshots?|snapshots?|"
++    r"binaries?|archives?)\b",
++    re.IGNORECASE,
++)
++
++_FILE_LOADING_TOPICS = frozenset({
++    # Tools that inherently consume user files / designs / datasets
++    "document-conversion", "document-parser", "pdf", "docx",
++    "eda", "cad", "pcb", "routing",
++    "ml", "machine-learning", "deep-learning", "foundation-model",
++    "dataset", "checkpoint", "pretrained",
++    "file-parser", "format-converter",
++})
++
++
++def derive_tool_loads_user_files(
++    readme_text: str | None,
++    repo_metadata: dict | None,
++) -> bool:
++    """V1.2.x (V13-3 C18): True when repo README or topic list indicates the
++    tool consumes user-provided files as a default operation.
++
++    Logic is OR over two independent evidence sources:
++      - README text (phase_1_raw_capture source) matches verb-then-noun phrases
++        like "opens a board file", "parses a document", "loads a pretrained
++        model" — see _FILE_LOADING_README_PATTERNS.
++      - repo_metadata.topics[] contains a file-consuming category from
++        _FILE_LOADING_TOPICS (document-conversion, eda, pcb, ml, dataset, etc.)
++
++    Returns True if EITHER source matches; False only when both are absent or
++    neither yields a match.
++
++    Used as a precondition for V13-3 Q4 auto-fire from deserialization hits:
++    if a repo both exposes unsafe deserialization AND is documented as loading
++    user files, the default-path critical condition is true.
++
++    Not a regex on code — this is a README/metadata-level judgment helper.
++    """
++    if readme_text and _FILE_LOADING_README_PATTERNS.search(readme_text):
++        return True
++
++    if repo_metadata:
++        topics = repo_metadata.get("topics") or []
++        if any(t in _FILE_LOADING_TOPICS for t in topics):
++            return True
++
++    return False
++
++
++def derive_q4_critical_on_default_path_from_deserialization(
++    dangerous_primitives: dict | None,
++    readme_text: str | None = None,
++    repo_metadata: dict | None = None,
++    threshold: int = 3,
++) -> bool:
++    """V1.2.x (V13-3 C5, owner directive 2026-04-20): auto-fire Q4
++    has_critical_on_default_path when a repo exposes unsafe deserialization
++    primitives AND is documented as loading user files.
++
++    Condition (all must be true):
++      - `dangerous_primitives.deserialization.hit_count >= threshold` (default 3)
++      - `derive_tool_loads_user_files()` returns True
++
++    Cross-module contract: this function reads only the aggregate `hit_count`,
++    not individual hit snippets. It relies on Phase 1 (`phase_1_harness.py`
++    STEP_A_PATTERNS) having already language-qualified the deserialization
++    family — specifically, the V13-3 C2 change dropped the bare `deserialize`
++    keyword so that ArduinoJson-class `deserializeJson(...)` and serde-style
++    `deserialize()` no longer count toward hit_count. If that harness-side
++    qualification is weakened in future, this helper's precision degrades
++    correspondingly.
++
++    Would have auto-resolved freerouting entry 24 Q4 (30 ObjectInputStream
++    hits in BasicBoard.java + pcb topic → True) per dry-run at
++    `docs/v13-3-fp-dry-run.md`. Does NOT fire on WLED entry 25 because
++    post-C2 ArduinoJson hit_count = 0. Kronos entry 17 (single pickle.load
++    site) is below the default threshold and would not fire from
++    deserialization alone — collapse of that override depends on the broader
++    V1.2.x pickle.loads? regex widening landed earlier, not on this helper.
++
++    Returns False if deserialization field missing, hit_count below threshold,
++    or tool-loads-user-files false.
++    """
++    if not dangerous_primitives:
++        return False
++    deser = dangerous_primitives.get("deserialization") or {}
++    hit_count = deser.get("hit_count") or 0
++    if hit_count < threshold:
++        return False
++
++    loads_user_files = derive_tool_loads_user_files(
++        readme_text=readme_text,
++        repo_metadata=repo_metadata,
++    )
++    return loads_user_files
++
++
++def compute_q4_autofires_from_phase_1(phase_1_raw_capture: dict | None) -> dict:
++    """V1.2.x (V13-3 C5 integration, owner directive OD-4 + Codex code-review
++    gate 2026-04-20): wire the Q4 auto-fires from Phase 1 raw capture into the
++    scorecard_cells input path.
++
++    Call sites: scan drivers (e.g., each scan's `build_form.py`) invoke this
++    BEFORE `compute_scorecard_cells()` and pass the returned
++    `has_critical_on_default_path` as the corresponding kwarg. This makes the
++    C5 auto-fire live in advisory production — Phase 4 still retains override
++    authority per V1.2 scorecard authority boundary (D-7 board outcome).
++
++    Returns a dict with the auto-fire signals derivable from phase_1_raw_capture:
++      - has_critical_on_default_path (bool): True when V13-3 C5 fires
++      - reasons (list[str]): which derivation paths contributed to the True
++        verdict (e.g., ["deserialization_c5"])
++
++    Reads from phase_1_raw_capture:
++      - code_patterns.dangerous_primitives (C5 input)
++      - repo_metadata (C18 topic signal)
++      - README is NOT currently stored in phase_1_raw_capture; the C18
++        README-text signal is therefore not exercised by this wrapper.
++        Callers that have README text in hand may call
++        `derive_q4_critical_on_default_path_from_deserialization` directly.
++
++    Conservative by design: if phase_1_raw_capture is missing/empty, returns
++    {has_critical_on_default_path: False, reasons: []}.
++    """
++    result = {"has_critical_on_default_path": False, "reasons": []}
++    if not phase_1_raw_capture:
++        return result
++
++    code_patterns = phase_1_raw_capture.get("code_patterns") or {}
++    dangerous_primitives = code_patterns.get("dangerous_primitives") or {}
++    repo_metadata = phase_1_raw_capture.get("repo_metadata") or {}
++
++    if derive_q4_critical_on_default_path_from_deserialization(
++        dangerous_primitives=dangerous_primitives,
++        readme_text=None,  # not currently stored in phase_1_raw_capture
++        repo_metadata=repo_metadata,
++    ):
++        result["has_critical_on_default_path"] = True
++        result["reasons"].append("deserialization_c5")
++
++    return result
++
++
+ def compute_solo_maintainer(contributors: list) -> dict:
+     """F11: If top contributor has >80% of commits, flag as solo-maintainer.
+     Returns dict with share, boolean, and verbatim sentence."""
+diff --git a/docs/phase-1-checklist.md b/docs/phase-1-checklist.md
+index b43a306..c43bd11 100644
+--- a/docs/phase-1-checklist.md
++++ b/docs/phase-1-checklist.md
+@@ -170,7 +170,7 @@ Each pattern family returns `{hit_count, files[]}`. A hit opens a Step-B targete
+ | # | Pattern family | Grep target | Form sub-field |
+ |---|---|---|---|
+ | A1 | Code execution | `eval\(, Function\(, vm.runIn, exec\(, execSync, spawnSync, child_process, subprocess.(call\|Popen\|run), os.system, shell=True, Runtime.getRuntime().exec` | `code_patterns.dangerous_primitives.exec[]` |
+-| A2 | Deserialization | `pickle.loads, yaml.load\(, unserialize\(, ObjectInputStream, deserialize, Marshal.load` | `code_patterns.dangerous_primitives.deserialization[]` |
++| A2 | Deserialization | `pickle.loads?, yaml.load\(, unserialize\(, ObjectInputStream, Marshal.load, marshal.loads?, joblib.load, dill.loads?` (V13-3 C2: bare `deserialize` keyword dropped — was a false-positive source on ArduinoJson `deserializeJson` / serde `deserialize` in C/C++/Rust. Unsafe-specific method names preserved.) | `code_patterns.dangerous_primitives.deserialization[]` |
+ | A3 | Network / fetch | `fetch\(, XMLHttpRequest, axios., got\(, http.(get\|post\|request), requests.(get\|post\|put\|delete), urllib.request, net.(connect\|Socket), http.Client, WebSocket, url.URL\(, RestTemplate` | `code_patterns.dangerous_primitives.network[]` |
+ | A4 | Secrets / credentials | `(api[_-]?key\|secret\|token\|password\|passwd\|pwd\|auth)\s*[:=]\s*["'][A-Za-z0-9_\-\.]{16,}` and vendor-prefix regex (sk-, ghp_, xox, AIza, AKIA) | `code_patterns.dangerous_primitives.secrets[]` |
+ | A5 | CORS / bind-all / TLS-disabled | `Access-Control-Allow-Origin.*\*`, `0\.0\.0\.0`, `rejectUnauthorized: false`, `verify=False`, `CURLOPT_SSL_VERIFYPEER.*false`, `InsecureSkipVerify: true` | `code_patterns.dangerous_primitives.tls_cors[]` |
+diff --git a/tests/test_compute.py b/tests/test_compute.py
+index 0ceb376..2f6076a 100644
+--- a/tests/test_compute.py
++++ b/tests/test_compute.py
+@@ -598,6 +598,184 @@ class TestV13_1_Q2WidenedEvidence:
+         assert r["do_they_fix_problems_quickly"]["color"] == "green"
+ 
+ 
++class TestV13_3_DeriveToolLoadsUserFiles:
++    """V1.2.x (V13-3 C18, owner directive 2026-04-20): canonical helper for
++    'tool loads user files' judgment. Used as precondition for C5 Q4 auto-fire.
++    """
++
++    def test_readme_with_open_a_file_phrase_fires(self):
++        readme = "freerouting opens a file from disk when the user imports a design..."
++        assert derive_tool_loads_user_files(readme, None) is True
++
++    def test_readme_with_load_design_phrase_fires(self):
++        readme = "Load a design board for autorouting. Specctra DSN format supported."
++        assert derive_tool_loads_user_files(readme, None) is True
++
++    def test_readme_with_parse_document_phrase_fires(self):
++        readme = "markitdown parses a document into Markdown. Supports .pdf, .docx, .epub."
++        assert derive_tool_loads_user_files(readme, None) is True
++
++    def test_readme_with_load_pickle_in_ml_context_fires(self):
++        readme = "Kronos loads a pretrained model checkpoint from Hugging Face."
++        assert derive_tool_loads_user_files(readme, None) is True
++
++    def test_topic_document_conversion_fires(self):
++        repo_meta = {"topics": ["document-conversion", "pdf", "markdown"]}
++        assert derive_tool_loads_user_files(None, repo_meta) is True
++
++    def test_topic_eda_fires(self):
++        repo_meta = {"topics": ["eda", "pcb", "autorouter"]}
++        assert derive_tool_loads_user_files(None, repo_meta) is True
++
++    def test_topic_ml_fires(self):
++        repo_meta = {"topics": ["foundation-model", "pretrained", "pytorch"]}
++        assert derive_tool_loads_user_files(None, repo_meta) is True
++
++    def test_no_readme_and_no_metadata_returns_false(self):
++        assert derive_tool_loads_user_files(None, None) is False
++
++    def test_readme_without_matching_phrase_returns_false(self):
++        readme = "kanata is a keyboard remapping daemon with Lisp-style config."
++        assert derive_tool_loads_user_files(readme, None) is False
++
++    def test_irrelevant_topics_return_false(self):
++        repo_meta = {"topics": ["terminal-emulator", "rust", "gpu-accelerated"]}
++        assert derive_tool_loads_user_files(None, repo_meta) is False
++
++
++class TestV13_3_Q4AutoFireFromDeserialization:
++    """V1.2.x (V13-3 C5): auto-fire q4_has_critical_on_default_path when unsafe
++    deserialization hits are present AND tool loads user files. Would have
++    collapsed Kronos + freerouting Q4 overrides without Phase 4 authoring.
++    """
++
++    def test_freerouting_pattern_auto_fires(self):
++        """35 ObjectInputStream hits + README mentions opening files → True."""
++        dp = {"deserialization": {"hit_count": 35, "files": []}}
++        readme = "freerouting opens a board file and auto-routes traces between components."
++        assert derive_q4_critical_on_default_path_from_deserialization(
++            dp, readme_text=readme
++        ) is True
++
++    def test_kronos_pattern_auto_fires(self):
++        """pickle.load hit + ML topic → True. Would collapse Kronos Q4 override."""
++        dp = {"deserialization": {"hit_count": 3, "files": []}}
++        repo_meta = {"topics": ["foundation-model", "pretrained"]}
++        assert derive_q4_critical_on_default_path_from_deserialization(
++            dp, repo_metadata=repo_meta
++        ) is True
++
++    def test_wled_arduinojson_does_not_fire(self):
++        """WLED had 19 ArduinoJson deserializeJson hits — suppressed by V13-3 C2
++        language qualifier, so hit_count=0 here. Simulates post-C2 state."""
++        dp = {"deserialization": {"hit_count": 0, "files": []}}
+
+exec
+/bin/bash -lc "sed -n '1,220p' /root/tinkering/stop-git-std/.board-review-temp/v13-3-comparator-calibration/codex-code-review.md" in /tmp
+ succeeded in 0ms:
+# V13-3 V1.2.x Implementation — Codex Code Review
+
+## Overall verdict
+BLOCK
+
+## BS-1 (threshold mechanics)
+The threshold mechanic inside the new helper is internally consistent: `derive_q4_critical_on_default_path_from_deserialization()` fires only when `dangerous_primitives.deserialization.hit_count >= threshold`, with default `threshold=3` (diff lines 70-110). The added tests cover the boundary at 2 vs 3 and custom-threshold override (diff lines 226-240 of the `tests/test_compute.py` hunk), so the default-N behavior is regression-tested.
+
+The C2 regex change is also directionally correct. Dropping bare `deserialize` from `STEP_A_PATTERNS["deserialization"]` (diff lines 131-137) suppresses the documented ArduinoJson / serde-style FP class while preserving the unsafe-specific families actually relied on by C5: `pickle`, `ObjectInputStream`, `Marshal`, `yaml.load`, `unserialize`, `marshal`, `joblib`, `dill`. The new harness tests do cover both the ArduinoJson suppression and preservation of unsafe-specific matches (see `tests/test_phase_1_harness.py`, present in tree and passing locally).
+
+Residual note: the helper docstring overstates what it verifies. It says the hits “contain at least one unsafe-specific pattern match” (diff lines 80-85), but the function itself only checks `hit_count`; it relies entirely on Phase 1 to have already language-qualified the family. That is acceptable if treated as a cross-module contract, but the contract should be stated more precisely.
+
+## BS-3 (circular logic)
+No new circular-logic defect is introduced by the helper itself. `compute_scorecard_cells()` remains advisory-only, and Q4 still prioritizes the incoming `has_critical_on_default_path` boolean over the amber path ([docs/compute.py](/root/tinkering/stop-git-std/docs/compute.py:280)). Under the V1.2 authority boundary, Phase 4 can still override the advisory either upward or downward.
+
+The actual problem is different: the staged diff does not wire the new derivation into any advisory production path. I found no call site for `derive_q4_critical_on_default_path_from_deserialization()` outside its unit tests. So the documented C5 “auto-fire” contract is not yet live; Phase 4 cannot “override” an advisory signal that is never set. This is an implementation-completeness blocker, not a circularity blocker.
+
+## FP coverage (regression tests)
+Pass on criterion 3. `test_phase_1_harness.py` does regression-test the ArduinoJson suppression and unsafe-specific retention:
+
+- `test_v13_3_c2_arduinojson_deserializejson_suppressed` asserts `deserializeJson` / `deserializeSegment` no longer count as deserialization hits.
+- `test_v13_3_c2_unsafe_specific_still_matches` asserts the unsafe-specific patterns still match.
+
+These tests are present in the current tree and match the stated C2 objective. I also ran `pytest -q tests/test_compute.py tests/test_phase_1_harness.py`; result: 110 passed.
+
+## Helper quality (derive_tool_loads_user_files)
+Mostly good: deterministic, pure, and testable. It reads only explicit arguments and has no hidden state. The test set covers README-positive, topic-positive, and negative cases, which is the right shape for a canonical compute helper.
+
+Two issues:
+
+- FIX NOW: the new `install_paths` parameter is unused (diff lines 38-42). That is not harmful today, but it creates a misleading API surface because the doc/design discussion frames install-path evidence as relevant. Either use it now or remove it until needed.
+- NIT: the docstring says “returns False if either input is missing” (diff lines 56-57), but the implementation returns `True` if either README or topics match. The code is reasonable; the docstring is wrong.
+
+## Other findings
+FIX NOW: C5 is not actually integrated. The diff adds `derive_q4_critical_on_default_path_from_deserialization()` and tests it in isolation (diff lines 70-110, 194-240), but no staged change feeds its result into the scorecard advisory path or scan/form construction. `rg` found no non-test call site. Per CONSOLIDATION §9.1 / §9.3, this means the advertised “Q4 auto-fire” has not landed yet.
+
+QUESTION: the review brief names Kronos as a would-collapse case, but the helper’s threshold default is 3 while the historical Kronos case was a single `pickle.load` site. That can still be consistent if the intended claim is “future rescan with widened regex + other hits/topic evidence reaches threshold,” but the current helper/test pair does not demonstrate that end-to-end production path.
+
+NIT: the phase-1 checklist text still describes the old deserialization family including bare `deserialize`; that documentation drift is outside the staged diff but should be reconciled soon.
+
+## Recommendation
+apply listed FIX NOW items first
+
+codex
+I have the prior review and the first half of the patch. I’m pulling the rest of the test hunk and then checking whether the new wrapper is actually integrated beyond isolated tests, since that was the main blocker.
+exec
+/bin/bash -lc "sed -n '261,520p' /tmp/v13-3-implementation.diff" in /tmp
+ succeeded in 0ms:
++        readme = "WLED is a firmware for addressable LEDs over WiFi."
++        repo_meta = {"topics": ["esp32", "led", "firmware"]}
++        assert derive_q4_critical_on_default_path_from_deserialization(
++            dp, readme_text=readme, repo_metadata=repo_meta
++        ) is False
++
++    def test_below_threshold_does_not_fire(self):
++        """2 hits + loads-files → False (below default threshold of 3)."""
++        dp = {"deserialization": {"hit_count": 2, "files": []}}
++        readme = "Opens a file and does something."
++        assert derive_q4_critical_on_default_path_from_deserialization(
++            dp, readme_text=readme
++        ) is False
++
++    def test_above_threshold_but_no_user_files_does_not_fire(self):
++        """10 hits but README/topics don't indicate file loading → False.
++        Avoids firing on internal deserialization."""
++        dp = {"deserialization": {"hit_count": 10, "files": []}}
++        assert derive_q4_critical_on_default_path_from_deserialization(
++            dp, readme_text="An internal RPC library for service-to-service calls."
++        ) is False
++
++    def test_missing_dangerous_primitives_returns_false(self):
++        assert derive_q4_critical_on_default_path_from_deserialization(
++            None, readme_text="opens a file"
++        ) is False
++
++    def test_custom_threshold_respected(self):
++        """Caller can override threshold; default is 3."""
++        dp = {"deserialization": {"hit_count": 5, "files": []}}
++        readme = "opens a file"
++        assert derive_q4_critical_on_default_path_from_deserialization(
++            dp, readme_text=readme, threshold=10
++        ) is False
++        assert derive_q4_critical_on_default_path_from_deserialization(
++            dp, readme_text=readme, threshold=3
++        ) is True
++
++
++class TestV13_3_ComputeQ4AutofiresFromPhase1:
++    """V1.2.x (V13-3 C5 integration per Codex code-review gate 2026-04-20):
++    wrapper that reads phase_1_raw_capture and returns auto-fire results
++    suitable for forwarding into compute_scorecard_cells kwargs. Makes the C5
++    auto-fire LIVE in advisory production (not just a unit-tested helper).
++    """
++
++    def test_freerouting_shape_fires(self):
++        """Phase-1-shaped input with 35 ObjectInputStream hits + pcb topic →
++        auto-fire. Would collapse freerouting Q4 override."""
++        p1 = {
++            "code_patterns": {
++                "dangerous_primitives": {
++                    "deserialization": {"hit_count": 35, "files": []},
++                }
++            },
++            "repo_metadata": {"topics": ["pcb", "autorouter", "eda"]},
++        }
++        r = compute_q4_autofires_from_phase_1(p1)
++        assert r["has_critical_on_default_path"] is True
++        assert "deserialization_c5" in r["reasons"]
++
++    def test_wled_shape_does_not_fire(self):
++        """Phase-1-shaped input with post-C2 hit_count=0 (ArduinoJson
++        suppressed) + firmware topics (not in _FILE_LOADING_TOPICS) → no fire.
++        Confirms WLED class does not auto-fire."""
++        p1 = {
++            "code_patterns": {
++                "dangerous_primitives": {
++                    "deserialization": {"hit_count": 0, "files": []},
++                }
++            },
++            "repo_metadata": {"topics": ["esp32", "led", "firmware"]},
++        }
++        r = compute_q4_autofires_from_phase_1(p1)
++        assert r["has_critical_on_default_path"] is False
++        assert r["reasons"] == []
++
++    def test_missing_phase_1_returns_false(self):
++        r = compute_q4_autofires_from_phase_1(None)
++        assert r == {"has_critical_on_default_path": False, "reasons": []}
++
++    def test_missing_code_patterns_returns_false(self):
++        p1 = {"repo_metadata": {"topics": ["pcb"]}}
++        r = compute_q4_autofires_from_phase_1(p1)
++        assert r["has_critical_on_default_path"] is False
++
++    def test_missing_dangerous_primitives_returns_false(self):
++        p1 = {"code_patterns": {}, "repo_metadata": {"topics": ["pcb"]}}
++        r = compute_q4_autofires_from_phase_1(p1)
++        assert r["has_critical_on_default_path"] is False
++
++    def test_deserialization_without_loads_user_files_does_not_fire(self):
++        """20 hits but no matching README/topics → no fire. Avoids firing on
++        internal-RPC-only deserialization where file-loading condition is
++        absent."""
++        p1 = {
++            "code_patterns": {
++                "dangerous_primitives": {
++                    "deserialization": {"hit_count": 20, "files": []},
++                }
++            },
++            "repo_metadata": {"topics": ["rpc", "grpc"]},
++        }
++        r = compute_q4_autofires_from_phase_1(p1)
++        assert r["has_critical_on_default_path"] is False
++
++
+ if __name__ == "__main__":
+     import pytest
+     sys.exit(pytest.main([__file__, "-v"]))
+
+exec
+/bin/bash -lc "rg -n \"compute_q4_autofires_from_phase_1|derive_q4_critical_on_default_path_from_deserialization|derive_tool_loads_user_files\" /root/tinkering/stop-git-std -g '"'!**/.git/**'"'" in /tmp
+ succeeded in 0ms:
+/root/tinkering/stop-git-std/CLAUDE.md:105:**V13-3 CLOSED 2026-04-20** — 042026-v13-3-comparator-calibration board review, 2/3 R3 AGREE + owner directive OD-4 (Codex R3 unavailable, R2 positions consistent with R3 resolutions; Codex assigned code-review gate on staged V1.2.x implementation diff). **V1.2.x landed:** C2 language-qualifier regex (drops bare `deserialize` keyword — suppresses WLED-class ArduinoJson FPs), C5 Q4 auto-fire from unsafe-deserialization hits + tool-loads-user-files condition, C18 `derive_tool_loads_user_files()` canonical helper, C20 dry-run FP test at `docs/v13-3-fp-dry-run.md` (0 FPs on 11 bundles). **Frozen analysis:** `docs/v13-3-analysis.md`. **V1.3 deferred:** C6 firmware CORS compound, C7 reverse-eng shape with REJECT fallback, C9 prune `missing_qualitative_context` with historical-hold, C17 multi-ecosystem manifest parsing, V13-4 `community_norms_differ` enum (N=15 or first Q3 override fire). **Follow-up cadence:** G4-broadened — N=25 OR any of 6 taxonomy-strain events. Full record at `docs/External-Board-Reviews/042026-v13-3-comparator-calibration/CONSOLIDATION.md`.
+/root/tinkering/stop-git-std/tests/test_compute.py:608:        assert derive_tool_loads_user_files(readme, None) is True
+/root/tinkering/stop-git-std/tests/test_compute.py:612:        assert derive_tool_loads_user_files(readme, None) is True
+/root/tinkering/stop-git-std/tests/test_compute.py:616:        assert derive_tool_loads_user_files(readme, None) is True
+/root/tinkering/stop-git-std/tests/test_compute.py:620:        assert derive_tool_loads_user_files(readme, None) is True
+/root/tinkering/stop-git-std/tests/test_compute.py:624:        assert derive_tool_loads_user_files(None, repo_meta) is True
+/root/tinkering/stop-git-std/tests/test_compute.py:628:        assert derive_tool_loads_user_files(None, repo_meta) is True
+/root/tinkering/stop-git-std/tests/test_compute.py:632:        assert derive_tool_loads_user_files(None, repo_meta) is True
+/root/tinkering/stop-git-std/tests/test_compute.py:635:        assert derive_tool_loads_user_files(None, None) is False
+/root/tinkering/stop-git-std/tests/test_compute.py:639:        assert derive_tool_loads_user_files(readme, None) is False
+/root/tinkering/stop-git-std/tests/test_compute.py:643:        assert derive_tool_loads_user_files(None, repo_meta) is False
+/root/tinkering/stop-git-std/tests/test_compute.py:656:        assert derive_q4_critical_on_default_path_from_deserialization(
+/root/tinkering/stop-git-std/tests/test_compute.py:664:        assert derive_q4_critical_on_default_path_from_deserialization(
+/root/tinkering/stop-git-std/tests/test_compute.py:674:        assert derive_q4_critical_on_default_path_from_deserialization(
+/root/tinkering/stop-git-std/tests/test_compute.py:682:        assert derive_q4_critical_on_default_path_from_deserialization(
+/root/tinkering/stop-git-std/tests/test_compute.py:690:        assert derive_q4_critical_on_default_path_from_deserialization(
+/root/tinkering/stop-git-std/tests/test_compute.py:695:        assert derive_q4_critical_on_default_path_from_deserialization(
+/root/tinkering/stop-git-std/tests/test_compute.py:703:        assert derive_q4_critical_on_default_path_from_deserialization(
+/root/tinkering/stop-git-std/tests/test_compute.py:706:        assert derive_q4_critical_on_default_path_from_deserialization(
+/root/tinkering/stop-git-std/tests/test_compute.py:729:        r = compute_q4_autofires_from_phase_1(p1)
+/root/tinkering/stop-git-std/tests/test_compute.py:745:        r = compute_q4_autofires_from_phase_1(p1)
+/root/tinkering/stop-git-std/tests/test_compute.py:750:        r = compute_q4_autofires_from_phase_1(None)
+/root/tinkering/stop-git-std/tests/test_compute.py:755:        r = compute_q4_autofires_from_phase_1(p1)
+/root/tinkering/stop-git-std/tests/test_compute.py:760:        r = compute_q4_autofires_from_phase_1(p1)
+/root/tinkering/stop-git-std/tests/test_compute.py:775:        r = compute_q4_autofires_from_phase_1(p1)
+/root/tinkering/stop-git-std/docs/compute.py:457:def derive_tool_loads_user_files(
+/root/tinkering/stop-git-std/docs/compute.py:491:def derive_q4_critical_on_default_path_from_deserialization(
+/root/tinkering/stop-git-std/docs/compute.py:503:      - `derive_tool_loads_user_files()` returns True
+/root/tinkering/stop-git-std/docs/compute.py:532:    loads_user_files = derive_tool_loads_user_files(
+/root/tinkering/stop-git-std/docs/compute.py:539:def compute_q4_autofires_from_phase_1(phase_1_raw_capture: dict | None) -> dict:
+/root/tinkering/stop-git-std/docs/compute.py:561:        `derive_q4_critical_on_default_path_from_deserialization` directly.
+/root/tinkering/stop-git-std/docs/compute.py:574:    if derive_q4_critical_on_default_path_from_deserialization(
+/root/tinkering/stop-git-std/docs/v12-wild-scan-telemetry.md:294:- **2026-04-20 (V13-3 CLOSE)** — 042026-v13-3-comparator-calibration board review closed with 2/3 R3 AGREE + owner directive OD-4 (Codex R3 unavailable, R2 positions consistent with all R3 resolutions; Codex assigned code-review gate on staged V1.2.x implementation diff). **V1.2.x landed:** C2 (language-qualifier regex — drops bare `deserialize` keyword; suppresses ArduinoJson FP class), C5 (Q4 auto-fire from unsafe-deserialization hits + tool-loads-user-files condition), C18 (`derive_tool_loads_user_files()` canonical helper), C20 (dry-run FP test at `docs/v13-3-fp-dry-run.md` — 0 FPs on 11 bundles). **V1.3 deferred:** C6 (firmware CORS compound signal), C7 (reverse-eng shape signal with REJECT fallback), C9 (prune `missing_qualitative_context` with historical-hold), C17 (multi-ecosystem manifest parsing), V13-4 (`community_norms_differ` enum addition at N=15 or first Q3 override fire). **Frozen analysis:** `docs/v13-3-analysis.md`. **Follow-up cadence:** G4-broadened — N=25 OR any of 6 taxonomy-strain events. Full CONSOLIDATION at `docs/External-Board-Reviews/042026-v13-3-comparator-calibration/CONSOLIDATION.md`.
+/root/tinkering/stop-git-std/docs/v13-3-fp-dry-run.md:3:**Purpose:** V13-3 C20 landing gate (per 042026-v13-3-comparator-calibration board review). Apply the proposed C2 (language-qualifier regex) + C5 (Q4 auto-fire) + C18 (`derive_tool_loads_user_files` helper) to the 11 historical V1.2 scan bundles. Verify zero false-positive auto-fires on the existing corpus before the V1.2.x landing commits.
+/root/tinkering/stop-git-std/docs/v13-3-fp-dry-run.md:16:2. **C18 derivation:** Apply `derive_tool_loads_user_files(readme_text=None, repo_metadata=<bundle-meta>)`. Bundle-stored README text is NOT available (harness does not persist full README); topic-list is the available input.
+/root/tinkering/stop-git-std/docs/v13-3-fp-dry-run.md:17:3. **C5 derivation:** Apply `derive_q4_critical_on_default_path_from_deserialization(simulated_dp, repo_metadata=...)` with post-C2 hit_count as input.
+/root/tinkering/stop-git-std/docs/v13-3-fp-dry-run.md:59:Post-C2 hit_count = 30. Topics include `pcb`, `pcb-design`, `autorouter` — `derive_tool_loads_user_files` returns True. Threshold (default 3) satisfied. **C5 auto-fire activates → `q4_has_critical_on_default_path = True` without Phase 4 authoring.**
+/root/tinkering/stop-git-std/docs/v13-3-analysis.md:103:- **C18 LAND:** `derive_tool_loads_user_files(readme_text, repo_metadata, install_paths)` helper in `docs/compute.py`. Canonical storage per V13-1 precedent (`derive_q1_has_ruleset_protection`, `derive_q2_oldest_open_security_item_age_days`). Scan drivers MUST NOT reimplement this logic.
+/root/tinkering/stop-git-std/docs/External-Board-Reviews/042026-v13-3-comparator-calibration/CONSOLIDATION.md:65:- **C18** (`derive_tool_loads_user_files()` helper in `docs/compute.py`)
+/root/tinkering/stop-git-std/docs/External-Board-Reviews/042026-v13-3-comparator-calibration/CONSOLIDATION.md:129:| **C18** | Canonical storage of "tool loads user files" derivation in compute.py | **FIX NOW** — C5 prerequisite; `derive_tool_loads_user_files()` helper |
+/root/tinkering/stop-git-std/docs/External-Board-Reviews/042026-v13-3-comparator-calibration/CONSOLIDATION.md:178:| **Codex R1 OQ-1** | Canonical storage of "tool loads user files" derivation | C18 | **Applied** — `derive_tool_loads_user_files()` in compute.py |
+/root/tinkering/stop-git-std/docs/External-Board-Reviews/042026-v13-3-comparator-calibration/CONSOLIDATION.md:267:   - `derive_tool_loads_user_files(readme_text, repo_metadata, install_paths) -> bool` helper (C18). Reads README for keywords like "open file", "load", "import", "parse" plus repo topic analysis.
+/root/tinkering/stop-git-std/docs/External-Board-Reviews/042026-v13-3-comparator-calibration/CONSOLIDATION.md:268:   - New computed signal `q4_critical_on_default_path_from_deserialization` firing when (deserialization.python.pickle OR deserialization.java.objectinputstream OR deserialization.ruby.marshal).hit_count ≥ 3 AND `derive_tool_loads_user_files()` returns True.
+/root/tinkering/stop-git-std/docs/External-Board-Reviews/042026-v13-3-comparator-calibration/CONSOLIDATION.md:296:- **Derivation helper:** is `derive_tool_loads_user_files()` testable and deterministic?
+/root/tinkering/stop-git-std/docs/External-Board-Reviews/042026-v13-3-comparator-calibration/pragmatist-r2.md:69:**Rationale:** The V13-1 precedent (`derive_q1_has_ruleset_protection`, `derive_q2_oldest_open_security_item_age_days`) is the right model. A `derive_tool_loads_user_files()` helper in compute.py keeps the judgment out of scan drivers and makes it testable.
+/root/tinkering/stop-git-std/docs/External-Board-Reviews/042026-v13-3-comparator-calibration/r3-brief.md:83:> - C18: `derive_tool_loads_user_files()` helper in `docs/compute.py`
+/root/tinkering/stop-git-std/docs/External-Board-Reviews/042026-v13-3-comparator-calibration/r2-brief.md:176:Proposed classification: **FIX NOW conditional on V3Q2=B1**. The derivation must be in `docs/compute.py` (a helper like `derive_tool_loads_user_files(repo_metadata, readme, install_paths) -> bool`), not in scan drivers. Aligns with the V13-1 precedent where `derive_q1_has_ruleset_protection()` and `derive_q2_oldest_open_security_item_age_days()` are in `docs/compute.py`.
+/root/tinkering/stop-git-std/docs/External-Board-Reviews/042026-v13-3-comparator-calibration/codex-r2-raw.log:479:Proposed classification: **FIX NOW conditional on V3Q2=B1**. The derivation must be in `docs/compute.py` (a helper like `derive_tool_loads_user_files(repo_metadata, readme, install_paths) -> bool`), not in scan drivers. Aligns with the V13-1 precedent where `derive_q1_has_ruleset_protection()` and `derive_q2_oldest_open_security_item_age_days()` are in `docs/compute.py`.
+
+codex
+The wrapper exists and its tests are present, but I still don’t see any non-test caller. I’m running the targeted tests once, then I’ll write the review with that still treated as unresolved unless I find a real integration site.
+exec
+/bin/bash -lc "sed -n '440,590p' /root/tinkering/stop-git-std/docs/compute.py" in /root/tinkering/stop-git-std
+ succeeded in 0ms:
+    r"(?:\s+\w+){0,4}\s+"
+    r"\b(files?|documents?|designs?|boards?|models?|presets?|configs?|"
+    r"datasets?|checkpoints?|pdfs?|docx|epub|binsnapshots?|snapshots?|"
+    r"binaries?|archives?)\b",
+    re.IGNORECASE,
+)
+
+_FILE_LOADING_TOPICS = frozenset({
+    # Tools that inherently consume user files / designs / datasets
+    "document-conversion", "document-parser", "pdf", "docx",
+    "eda", "cad", "pcb", "routing",
+    "ml", "machine-learning", "deep-learning", "foundation-model",
+    "dataset", "checkpoint", "pretrained",
+    "file-parser", "format-converter",
+})
+
+
+def derive_tool_loads_user_files(
+    readme_text: str | None,
+    repo_metadata: dict | None,
+) -> bool:
+    """V1.2.x (V13-3 C18): True when repo README or topic list indicates the
+    tool consumes user-provided files as a default operation.
+
+    Logic is OR over two independent evidence sources:
+      - README text (phase_1_raw_capture source) matches verb-then-noun phrases
+        like "opens a board file", "parses a document", "loads a pretrained
+        model" — see _FILE_LOADING_README_PATTERNS.
+      - repo_metadata.topics[] contains a file-consuming category from
+        _FILE_LOADING_TOPICS (document-conversion, eda, pcb, ml, dataset, etc.)
+
+    Returns True if EITHER source matches; False only when both are absent or
+    neither yields a match.
+
+    Used as a precondition for V13-3 Q4 auto-fire from deserialization hits:
+    if a repo both exposes unsafe deserialization AND is documented as loading
+    user files, the default-path critical condition is true.
+
+    Not a regex on code — this is a README/metadata-level judgment helper.
+    """
+    if readme_text and _FILE_LOADING_README_PATTERNS.search(readme_text):
+        return True
+
+    if repo_metadata:
+        topics = repo_metadata.get("topics") or []
+        if any(t in _FILE_LOADING_TOPICS for t in topics):
+            return True
+
+    return False
+
+
+def derive_q4_critical_on_default_path_from_deserialization(
+    dangerous_primitives: dict | None,
+    readme_text: str | None = None,
+    repo_metadata: dict | None = None,
+    threshold: int = 3,
+) -> bool:
+    """V1.2.x (V13-3 C5, owner directive 2026-04-20): auto-fire Q4
+    has_critical_on_default_path when a repo exposes unsafe deserialization
+    primitives AND is documented as loading user files.
+
+    Condition (all must be true):
+      - `dangerous_primitives.deserialization.hit_count >= threshold` (default 3)
+      - `derive_tool_loads_user_files()` returns True
+
+    Cross-module contract: this function reads only the aggregate `hit_count`,
+    not individual hit snippets. It relies on Phase 1 (`phase_1_harness.py`
+    STEP_A_PATTERNS) having already language-qualified the deserialization
+    family — specifically, the V13-3 C2 change dropped the bare `deserialize`
+    keyword so that ArduinoJson-class `deserializeJson(...)` and serde-style
+    `deserialize()` no longer count toward hit_count. If that harness-side
+    qualification is weakened in future, this helper's precision degrades
+    correspondingly.
+
+    Would have auto-resolved freerouting entry 24 Q4 (30 ObjectInputStream
+    hits in BasicBoard.java + pcb topic → True) per dry-run at
+    `docs/v13-3-fp-dry-run.md`. Does NOT fire on WLED entry 25 because
+    post-C2 ArduinoJson hit_count = 0. Kronos entry 17 (single pickle.load
+    site) is below the default threshold and would not fire from
+    deserialization alone — collapse of that override depends on the broader
+    V1.2.x pickle.loads? regex widening landed earlier, not on this helper.
+
+    Returns False if deserialization field missing, hit_count below threshold,
+    or tool-loads-user-files false.
+    """
+    if not dangerous_primitives:
+        return False
+    deser = dangerous_primitives.get("deserialization") or {}
+    hit_count = deser.get("hit_count") or 0
+    if hit_count < threshold:
+        return False
+
+    loads_user_files = derive_tool_loads_user_files(
+        readme_text=readme_text,
+        repo_metadata=repo_metadata,
+    )
+    return loads_user_files
+
+
+def compute_q4_autofires_from_phase_1(phase_1_raw_capture: dict | None) -> dict:
+    """V1.2.x (V13-3 C5 integration, owner directive OD-4 + Codex code-review
+    gate 2026-04-20): wire the Q4 auto-fires from Phase 1 raw capture into the
+    scorecard_cells input path.
+
+    Call sites: scan drivers (e.g., each scan's `build_form.py`) invoke this
+    BEFORE `compute_scorecard_cells()` and pass the returned
+    `has_critical_on_default_path` as the corresponding kwarg. This makes the
+    C5 auto-fire live in advisory production — Phase 4 still retains override
+    authority per V1.2 scorecard authority boundary (D-7 board outcome).
+
+    Returns a dict with the auto-fire signals derivable from phase_1_raw_capture:
+      - has_critical_on_default_path (bool): True when V13-3 C5 fires
+      - reasons (list[str]): which derivation paths contributed to the True
+        verdict (e.g., ["deserialization_c5"])
+
+    Reads from phase_1_raw_capture:
+      - code_patterns.dangerous_primitives (C5 input)
+      - repo_metadata (C18 topic signal)
+      - README is NOT currently stored in phase_1_raw_capture; the C18
+        README-text signal is therefore not exercised by this wrapper.
+        Callers that have README text in hand may call
+        `derive_q4_critical_on_default_path_from_deserialization` directly.
+
+    Conservative by design: if phase_1_raw_capture is missing/empty, returns
+    {has_critical_on_default_path: False, reasons: []}.
+    """
+    result = {"has_critical_on_default_path": False, "reasons": []}
+    if not phase_1_raw_capture:
+        return result
+
+    code_patterns = phase_1_raw_capture.get("code_patterns") or {}
+    dangerous_primitives = code_patterns.get("dangerous_primitives") or {}
+    repo_metadata = phase_1_raw_capture.get("repo_metadata") or {}
+
+    if derive_q4_critical_on_default_path_from_deserialization(
+        dangerous_primitives=dangerous_primitives,
+        readme_text=None,  # not currently stored in phase_1_raw_capture
+        repo_metadata=repo_metadata,
+    ):
+        result["has_critical_on_default_path"] = True
+        result["reasons"].append("deserialization_c5")
+
+    return result
+
+
+def compute_solo_maintainer(contributors: list) -> dict:
+    """F11: If top contributor has >80% of commits, flag as solo-maintainer.
+    Returns dict with share, boolean, and verbatim sentence."""
+    if not contributors:
+        return {"top_contributor_share": None, "is_solo": False, "verbatim_sentence": None}
+
+
+exec
+/bin/bash -lc 'pytest -q /root/tinkering/stop-git-std/tests/test_compute.py' in /root/tinkering/stop-git-std
+ succeeded in 386ms:
+........................................................................ [ 90%]
+........                                                                 [100%]
+=============================== warnings summary ===============================
+../../../usr/local/lib/python3.10/dist-packages/_pytest/cacheprovider.py:475
+  /usr/local/lib/python3.10/dist-packages/_pytest/cacheprovider.py:475: PytestCacheWarning: cache could not write path /root/tinkering/stop-git-std/.pytest_cache/v/cache/nodeids: [Errno 13] Permission denied: '/root/tinkering/stop-git-std/.pytest_cache/v/cache/nodeids'
+    config.cache.set("cache/nodeids", sorted(self.cached_nodeids))
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+80 passed, 1 warning in 0.10s
+
+codex
+I’ve verified the helper/doc fixes and the checklist drift fix. The remaining question is unchanged from the first pass: the code now provides a wrapper, but the advisory path is still not live because nothing outside tests calls it.
+apply patch
+patch: completed
+/root/tinkering/stop-git-std/.board-review-temp/v13-3-comparator-calibration/codex-code-review-r2.md
+diff --git a/.board-review-temp/v13-3-comparator-calibration/codex-code-review-r2.md b/.board-review-temp/v13-3-comparator-calibration/codex-code-review-r2.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..6017b1e7ee72e3c6d8bb2267a2c2c6871bd56d32
+--- /dev/null
++++ b/.board-review-temp/v13-3-comparator-calibration/codex-code-review-r2.md
+@@ -0,0 +1,47 @@
++# V13-3 V1.2.x Implementation — Codex Code Review
++
++## Overall verdict
++BLOCK
++
++## BS-1 (threshold mechanics)
++The threshold mechanic remains internally consistent. `derive_q4_critical_on_default_path_from_deserialization()` still gates on `dangerous_primitives.deserialization.hit_count >= threshold`, default `threshold=3`, and the new wrapper `compute_q4_autofires_from_phase_1()` preserves that behavior rather than altering it. The added tests cover freerouting-shaped positive, WLED-shaped negative, null/missing inputs, and no-file-loading negative cases; targeted compute tests pass locally (`pytest -q tests/test_compute.py`: 80 passed).
++
++The prior docstring precision concern is resolved. The helper docstring no longer claims it verifies unsafe-specific pattern matches itself; it now states the actual cross-module contract: this helper consumes only aggregate `hit_count` and relies on Phase 1 language qualification.
++
++Residual note only: the wrapper currently exercises only the `repo_metadata.topics` branch because README text is not stored in `phase_1_raw_capture`. That is accurately documented in the wrapper docstring, so this is not a correctness defect in the staged diff.
++
++## BS-3 (circular logic)
++No circular-logic defect was introduced. Q4 still depends on the explicit `has_critical_on_default_path` input to `compute_scorecard_cells()`, and the new wrapper is structurally the right place to derive that advisory signal from Phase 1 raw capture before scorecard computation.
++
++However, the original implementation-completeness blocker is still present: I still found no non-test call site for `compute_q4_autofires_from_phase_1()` or the lower-level derivation helper anywhere in the repository. `rg` finds definitions and tests, but no scan driver / `build_form.py` / advisory production path invoking the wrapper. The wrapper docstring says future callers should invoke it before `compute_scorecard_cells()`, but that is still a prospective integration note, not a landed integration.
++
++So the advertised C5 “auto-fire live in advisory production” contract is still not satisfied by this diff. The new wrapper is necessary, but not sufficient.
++
++## FP coverage (regression tests)
++Pass on the regression-test criterion. The staged tests are materially stronger than in the first pass:
++
++- `TestV13_3_Q4AutoFireFromDeserialization` covers freerouting-shaped, Kronos-shaped, WLED-shaped, below-threshold, missing-input, and custom-threshold behavior.
++- `TestV13_3_ComputeQ4AutofiresFromPhase1` covers the new Phase-1-shaped wrapper on positive and negative cases.
++
++These tests demonstrate the helper and wrapper behavior in isolation. They do not change the integration finding above.
++
++## Helper quality (derive_tool_loads_user_files)
++Resolved.
++
++- The unused `install_paths` parameter has been removed from the function signature.
++- The docstring now correctly describes OR logic and no longer contradicts the implementation.
++
++The helper remains deterministic, pure, and testable.
++
++## Other findings
++Resolved from first pass:
++
++- The Kronos threshold question is now clarified in the `derive_q4_critical_on_default_path_from_deserialization()` docstring: a single `pickle.load` site is below the default threshold, and any broader collapse claim depends on earlier regex widening rather than this helper alone.
++- `docs/phase-1-checklist.md` A2 row has been updated to remove the stale bare-`deserialize` reference and document the V13-3 C2 language qualifier.
++
++Still FIX NOW:
++
++- C5 is still not integrated into any non-test advisory production path. Adding `compute_q4_autofires_from_phase_1()` does not by itself make the auto-fire live; a real caller must invoke it and forward `has_critical_on_default_path` into `compute_scorecard_cells()`.
++
++## Recommendation
++apply listed FIX NOW item first
+
+diff --git a/.board-review-temp/v13-3-comparator-calibration/codex-code-review-r2.md b/.board-review-temp/v13-3-comparator-calibration/codex-code-review-r2.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..6017b1e7ee72e3c6d8bb2267a2c2c6871bd56d32
+--- /dev/null
++++ b/.board-review-temp/v13-3-comparator-calibration/codex-code-review-r2.md
+@@ -0,0 +1,47 @@
++# V13-3 V1.2.x Implementation — Codex Code Review
++
++## Overall verdict
++BLOCK
++
++## BS-1 (threshold mechanics)
++The threshold mechanic remains internally consistent. `derive_q4_critical_on_default_path_from_deserialization()` still gates on `dangerous_primitives.deserialization.hit_count >= threshold`, default `threshold=3`, and the new wrapper `compute_q4_autofires_from_phase_1()` preserves that behavior rather than altering it. The added tests cover freerouting-shaped positive, WLED-shaped negative, null/missing inputs, and no-file-loading negative cases; targeted compute tests pass locally (`pytest -q tests/test_compute.py`: 80 passed).
++
++The prior docstring precision concern is resolved. The helper docstring no longer claims it verifies unsafe-specific pattern matches itself; it now states the actual cross-module contract: this helper consumes only aggregate `hit_count` and relies on Phase 1 language qualification.
++
++Residual note only: the wrapper currently exercises only the `repo_metadata.topics` branch because README text is not stored in `phase_1_raw_capture`. That is accurately documented in the wrapper docstring, so this is not a correctness defect in the staged diff.
++
++## BS-3 (circular logic)
++No circular-logic defect was introduced. Q4 still depends on the explicit `has_critical_on_default_path` input to `compute_scorecard_cells()`, and the new wrapper is structurally the right place to derive that advisory signal from Phase 1 raw capture before scorecard computation.
++
++However, the original implementation-completeness blocker is still present: I still found no non-test call site for `compute_q4_autofires_from_phase_1()` or the lower-level derivation helper anywhere in the repository. `rg` finds definitions and tests, but no scan driver / `build_form.py` / advisory production path invoking the wrapper. The wrapper docstring says future callers should invoke it before `compute_scorecard_cells()`, but that is still a prospective integration note, not a landed integration.
++
++So the advertised C5 “auto-fire live in advisory production” contract is still not satisfied by this diff. The new wrapper is necessary, but not sufficient.
++
++## FP coverage (regression tests)
++Pass on the regression-test criterion. The staged tests are materially stronger than in the first pass:
++
++- `TestV13_3_Q4AutoFireFromDeserialization` covers freerouting-shaped, Kronos-shaped, WLED-shaped, below-threshold, missing-input, and custom-threshold behavior.
++- `TestV13_3_ComputeQ4AutofiresFromPhase1` covers the new Phase-1-shaped wrapper on positive and negative cases.
++
++These tests demonstrate the helper and wrapper behavior in isolation. They do not change the integration finding above.
++
++## Helper quality (derive_tool_loads_user_files)
++Resolved.
++
++- The unused `install_paths` parameter has been removed from the function signature.
++- The docstring now correctly describes OR logic and no longer contradicts the implementation.
++
++The helper remains deterministic, pure, and testable.
++
++## Other findings
++Resolved from first pass:
++
++- The Kronos threshold question is now clarified in the `derive_q4_critical_on_default_path_from_deserialization()` docstring: a single `pickle.load` site is below the default threshold, and any broader collapse claim depends on earlier regex widening rather than this helper alone.
++- `docs/phase-1-checklist.md` A2 row has been updated to remove the stale bare-`deserialize` reference and document the V13-3 C2 language qualifier.
++
++Still FIX NOW:
++
++- C5 is still not integrated into any non-test advisory production path. Adding `compute_q4_autofires_from_phase_1()` does not by itself make the auto-fire live; a real caller must invoke it and forward `has_critical_on_default_path` into `compute_scorecard_cells()`.
++
++## Recommendation
++apply listed FIX NOW item first
+
+codex
+Review written to [/root/tinkering/stop-git-std/.board-review-temp/v13-3-comparator-calibration/codex-code-review-r2.md](/root/tinkering/stop-git-std/.board-review-temp/v13-3-comparator-calibration/codex-code-review-r2.md).
+
+Verdict remains `BLOCK`. Four of the five prior items are resolved:
+- `install_paths` removed
+- OR-logic docstring fixed
+- cross-module-contract docstring clarified
+- `phase-1-checklist.md` drift fixed
+
+The remaining blocker is unchanged: `compute_q4_autofires_from_phase_1()` exists and is tested, but I found no non-test call site wiring it into an actual advisory production path before `compute_scorecard_cells()`. I also ran `pytest -q tests/test_compute.py`; result was `80 passed`.
+diff --git a/.board-review-temp/v13-3-comparator-calibration/codex-code-review-r2.md b/.board-review-temp/v13-3-comparator-calibration/codex-code-review-r2.md
+new file mode 100644
+index 0000000000000000000000000000000000000000..6017b1e7ee72e3c6d8bb2267a2c2c6871bd56d32
+--- /dev/null
++++ b/.board-review-temp/v13-3-comparator-calibration/codex-code-review-r2.md
+@@ -0,0 +1,47 @@
++# V13-3 V1.2.x Implementation — Codex Code Review
++
++## Overall verdict
++BLOCK
++
++## BS-1 (threshold mechanics)
++The threshold mechanic remains internally consistent. `derive_q4_critical_on_default_path_from_deserialization()` still gates on `dangerous_primitives.deserialization.hit_count >= threshold`, default `threshold=3`, and the new wrapper `compute_q4_autofires_from_phase_1()` preserves that behavior rather than altering it. The added tests cover freerouting-shaped positive, WLED-shaped negative, null/missing inputs, and no-file-loading negative cases; targeted compute tests pass locally (`pytest -q tests/test_compute.py`: 80 passed).
++
++The prior docstring precision concern is resolved. The helper docstring no longer claims it verifies unsafe-specific pattern matches itself; it now states the actual cross-module contract: this helper consumes only aggregate `hit_count` and relies on Phase 1 language qualification.
++
++Residual note only: the wrapper currently exercises only the `repo_metadata.topics` branch because README text is not stored in `phase_1_raw_capture`. That is accurately documented in the wrapper docstring, so this is not a correctness defect in the staged diff.
++
++## BS-3 (circular logic)
++No circular-logic defect was introduced. Q4 still depends on the explicit `has_critical_on_default_path` input to `compute_scorecard_cells()`, and the new wrapper is structurally the right place to derive that advisory signal from Phase 1 raw capture before scorecard computation.
++
++However, the original implementation-completeness blocker is still present: I still found no non-test call site for `compute_q4_autofires_from_phase_1()` or the lower-level derivation helper anywhere in the repository. `rg` finds definitions and tests, but no scan driver / `build_form.py` / advisory production path invoking the wrapper. The wrapper docstring says future callers should invoke it before `compute_scorecard_cells()`, but that is still a prospective integration note, not a landed integration.
++
++So the advertised C5 “auto-fire live in advisory production” contract is still not satisfied by this diff. The new wrapper is necessary, but not sufficient.
++
++## FP coverage (regression tests)
++Pass on the regression-test criterion. The staged tests are materially stronger than in the first pass:
++
++- `TestV13_3_Q4AutoFireFromDeserialization` covers freerouting-shaped, Kronos-shaped, WLED-shaped, below-threshold, missing-input, and custom-threshold behavior.
++- `TestV13_3_ComputeQ4AutofiresFromPhase1` covers the new Phase-1-shaped wrapper on positive and negative cases.
++
++These tests demonstrate the helper and wrapper behavior in isolation. They do not change the integration finding above.
++
++## Helper quality (derive_tool_loads_user_files)
++Resolved.
++
++- The unused `install_paths` parameter has been removed from the function signature.
++- The docstring now correctly describes OR logic and no longer contradicts the implementation.
++
++The helper remains deterministic, pure, and testable.
++
++## Other findings
++Resolved from first pass:
++
++- The Kronos threshold question is now clarified in the `derive_q4_critical_on_default_path_from_deserialization()` docstring: a single `pickle.load` site is below the default threshold, and any broader collapse claim depends on earlier regex widening rather than this helper alone.
++- `docs/phase-1-checklist.md` A2 row has been updated to remove the stale bare-`deserialize` reference and document the V13-3 C2 language qualifier.
++
++Still FIX NOW:
++
++- C5 is still not integrated into any non-test advisory production path. Adding `compute_q4_autofires_from_phase_1()` does not by itself make the auto-fire live; a real caller must invoke it and forward `has_critical_on_default_path` into `compute_scorecard_cells()`.
++
++## Recommendation
++apply listed FIX NOW item first
+
+tokens used
+15,626
+Review written to [/root/tinkering/stop-git-std/.board-review-temp/v13-3-comparator-calibration/codex-code-review-r2.md](/root/tinkering/stop-git-std/.board-review-temp/v13-3-comparator-calibration/codex-code-review-r2.md).
+
+Verdict remains `BLOCK`. Four of the five prior items are resolved:
+- `install_paths` removed
+- OR-logic docstring fixed
+- cross-module-contract docstring clarified
+- `phase-1-checklist.md` drift fixed
+
+The remaining blocker is unchanged: `compute_q4_autofires_from_phase_1()` exists and is tested, but I found no non-test call site wiring it into an actual advisory production path before `compute_scorecard_cells()`. I also ran `pytest -q tests/test_compute.py`; result was `80 passed`.
