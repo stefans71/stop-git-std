@@ -384,11 +384,11 @@ The CSS includes the single-pass scan-line animation (a thin cyan line that swee
 > - Do NOT use for catalog scans or user-facing production scans. Use Workflow V2.4 (§8.5–8.6).
 > - Preview pipeline; output not yet considered catalog-grade until Step G passes.
 > - Only validated against 3 shapes: JS library (`tests/fixtures/zustand-form.json`), curl-pipe installer (`tests/fixtures/caveman-form.json`), agentic platform monorepo (`tests/fixtures/archon-subset-form.json`). CLI-binary (fd), Claude-Code-skills (gstack), web-app (postiz-app), and Python-platform (hermes-agent) shapes are NOT yet fixtured.
-> - **Last reviewed: 2026-04-19.** See `docs/External-Board-Reviews/041826-step-f-alignment-validation/CONSOLIDATION.md` and `docs/External-Board-Reviews/041826-step-g-kickoff/CONSOLIDATION.md` (this commit) for most recent board status.
+> - **Last reviewed: 2026-04-19.** Step G execution approach unanimously approved by board review `docs/External-Board-Reviews/041926-step-g-execution/CONSOLIDATION.md` (HEAD `e297161`). Prior gates: `041826-step-f-alignment-validation/` + `041826-step-g-kickoff/`.
 
 #### 8.8.1 Status
 
-The deterministic renderer shipped in commits `402f933` (Step F HTML renderer + 2 fixtures) + `ce698d4` (Step F R3 XSS/CSS/parity fixes). The Jinja2 architecture validates clean against back-authored fixtures (zustand, caveman, archon-subset) with 263/263 tests passing and validator `--report` + `--parity` clean. **End-to-end validation on a live scan (fresh `gh api` capture → pipeline → MD+HTML) is open as Step G of the renderer plan.**
+The deterministic renderer shipped in commits `402f933` (Step F HTML renderer + 2 fixtures) + `ce698d4` (Step F R3 XSS/CSS/parity fixes). The Jinja2 architecture validates clean against back-authored fixtures (zustand, caveman, archon-subset) with 279/279 tests passing and validator `--report` + `--parity` clean. All 4 Step G pre-reqs cleared (U-1, U-3/FX-4, U-5/PD3, U-10). Step G execution approach approved by board review `041926-step-g-execution` with 9 fix artifacts + 15 carry-forward dispositions + graduated failure rubric. **End-to-end validation on a live scan (fresh `gh api` capture → pipeline → MD+HTML) remains the open execution step.**
 
 #### 8.8.2 Workflow
 
@@ -399,12 +399,21 @@ The deterministic renderer shipped in commits `402f933` (Step F HTML renderer + 
    python3 docs/render-md.py   form.json --out docs/GitHub-Scanner-<repo>.md
    python3 docs/render-html.py form.json --out docs/GitHub-Scanner-<repo>.html
    ```
-4. **Phase 5** — validator gate. Requires:
+4. **Phase 5** — validator gate. `--parity` and `--bundle` modes return exit 0 even when warnings exist, so the operator MUST inspect warning count explicitly, not rely on exit code alone:
    - `python3 docs/validate-scanner-report.py --report <.html>` exits 0 on HTML
    - `python3 docs/validate-scanner-report.py --markdown <.md>` exits 0 on MD
-   - `python3 docs/validate-scanner-report.py --parity <.md> <.html>` zero errors **and** zero warnings
+   - `python3 docs/validate-scanner-report.py --parity <.md> <.html> 2>&1 | tee parity-output.txt` — exit 0 required AND `grep -c '^WARNING:' parity-output.txt` must equal `0`
+   - `python3 docs/validate-scanner-report.py --bundle <findings-bundle.md> 2>&1 | tee bundle-output.txt` — exit 0 required AND `grep -c '^WARNING:' bundle-output.txt` must equal `0`
 
-#### 8.8.3 Phase-to-prompt mapping (how to populate `form.json` from the findings-bundle + prompt output-format spec)
+**Execution ordering — pilot-and-checkpoint.** Run the first target (zustand) end-to-end through all pre-flight, authoring, render, and gate checks. **Hard checkpoint before continuing.** Checkpoint criteria:
+
+- Zustand passes all 7 gates cleanly → continue to caveman, then Archon sequentially in the same session.
+- Zustand fails on pipeline-correctness gates (1–3 or 5) → STOP; do not spend caveman + Archon on a broken pipeline; trigger rollback per §8.8.6.
+- Zustand fails on authoring-only gates (4 or 6) → one retry permitted on zustand. If retry passes, continue to caveman + Archon. If retry fails on gate 6, assess shape-specific vs rubric-level per §8.8.6.
+
+Rationale: parallel runs would confound the diagnosis space; continuous-uninterrupted could waste caveman + Archon targets if zustand reveals a systemic defect.
+
+#### 8.8.3 Phase-to-prompt mapping + operator checklist
 
 The prompt (`repo-deep-dive-prompt.md`) has two halves: investigation instructions (lines 1–1090) and output-format spec (lines ~1106–1490). The table below shows which form.json phase block each half feeds, and which prompt section drives it.
 
@@ -419,53 +428,119 @@ The prompt (`repo-deep-dive-prompt.md`) has two halves: investigation instructio
 | `phase_6_assembly` | Final JSON merge, provenance tags | N/A (assembly step — Python) | `phase_6_assembly` |
 | `scan_sign_off` | Human or operator-agent approval marker | Operator decision | `scan_sign_off` |
 
-**Operator checklist** (converting a V2.4 findings-bundle.md into a V2.5-preview form.json):
+**Operator checklist** (converting a V2.4 findings-bundle.md into a V2.5-preview form.json). Three phases: pre-flight, authoring, post-render. Pre-flight and post-render steps are NOT optional for Step G.
 
-1. Start with `tests/fixtures/zustand-form.json` as a template (copy + blank out repo-specific fields).
+**Pre-flight** (before any live bundle or form authoring begins):
+
+- **Step -2: Provenance entry.** Per `tests/fixtures/provenance.json` `ordering_constraints`: create the provenance entry for the live Step G form BEFORE authoring begins, not retroactively. Tag as `step-g-live-pipeline`, distinct from `back-authored` or `authored-from-scan-data` template fixtures.
+- **Step -1: V2.4 comparator cleanliness.** Run `validate-scanner-report.py --parity <V2.4.md> <V2.4.html>` on each of the 3 V2.4 catalog comparator pairs (zustand-v3, caveman, Archon). Each must report exit 0 AND zero `WARNING:` lines per §8.8.2 step 4 inspection. If any comparator reports warnings, STOP — the structural-parity anchor is contaminated; re-scan the comparator or document as "comparator-tainted, Step G-deferred for this shape" before proceeding.
+- **Step 0: Adversarial bundle validator smoke test.** Before authoring any live bundle, author 4 synthetic bundles (each mutates a clean corpus bundle) and verify `--bundle` behavior:
+  1. Inject a synthesis verb ("suggests", "indicates", "plausibly") into an evidence block under `## Evidence`. Expected: **exit 1** + flags interpretive-verb-in-evidence.
+  2. Inject an orphan F-ID (`F99`) into `## Pattern recognition` that is never declared in `## FINDINGS SUMMARY`. Expected: **exit 1** + flags orphan-F-ID.
+  3. Delete the `## FINDINGS SUMMARY` section entirely. Expected: **exit 1** + flags missing-required-section.
+  4. **Compact-bundle baseline:** `## FINDINGS SUMMARY` contains ZERO F-IDs but valid prose (the zustand-v3 compact style). Expected: **exit 0** with informational note, NOT a failure. Confirms validator distinguishes empty-but-valid from missing.
+
+  Each failure-case must hard-fail with nonzero exit AND a specific message. Compact-bundle case must pass. If any test behaves unexpectedly, STOP — bundle validator is not acceptance-ready.
+
+**Authoring** (per target):
+
+1. Start with `tests/fixtures/zustand-form.json` as a template (copy + blank out repo-specific fields). **Note:** `zustand-form.json` is tagged `authored-from-scan-data` in `provenance.json`; it is a template-for-shape, NOT evidence of pipeline correctness.
 2. Populate `target.{owner,repo,full_name,url}` + `_meta.{prompt_version,scan_started_at,scanner_version}` + `phase_1_raw_capture.pre_flight.head_sha` (full 40-char).
 3. Fill `phase_1_raw_capture.*` from the `gh api` call outputs your V2.4 scan already captured.
-4. Run `phase_3_computed` by invoking `docs/compute.py` functions on Phase 1 data (or mirror their logic).
-5. Translate the findings-bundle's evidence + synthesis sections into `phase_4_structured_llm.findings.entries[]` + `phase_4_structured_llm.verdict_exhibits.groups[]` + supporting structured fields. One finding in the bundle = one entry in the schema.
-6. Author the 4 prose fields (`phase_5_prose_llm.*`) using the bundle's finding summary prose.
-7. Validate the form: `python3 -c "import json; from jsonschema import Draft202012Validator; schema=json.load(open('docs/scan-schema.json')); form=json.load(open('form.json')); errors=list(Draft202012Validator(schema).iter_errors(form)); print('✓' if not errors else f'✗ {len(errors)} errors: {[e.message[:100] for e in errors[:5]]}')"`
-8. Render + validate + parity-check (Phase 4+5 above).
+4. **Step 3b — Phase 3 computed fields MUST invoke `python3 docs/compute.py` directly.** "Mirror the logic manually" is **disallowed** for Step G. Required invocations per the 8 automatable operations (verdict, scorecard cells, solo-maintainer, exhibit grouping, boundary-case, coverage status, methodology boilerplate, F5 silent/unadvertised). Capture emitted values as artifacts at `.board-review-temp/step-g-execution/compute-output-<target>.json` for audit. `phase_3_computed.*` and `phase_4b_computed.verdict.level` in the live `form.json` MUST equal these emitted values byte-for-byte.
+5. **Step 3c — Bundle-complete gate.** Before beginning `form.json` authoring, confirm ALL of:
+   1. `findings-bundle.md` contains all 6 required sections (`## Scan metadata`, `## Evidence`, `## Pattern recognition`, `## FINDINGS SUMMARY`, `## Verdict`, `## Scorecard`).
+   2. `validate-scanner-report.py --bundle <findings-bundle.md>` returns exit 0 + zero `WARNING:` lines (per §8.8.2 step 4 inspection).
+   3. Bundle file saved + committed to `docs/board-review-data/scan-bundles/<repo>-<sha>.md` per §12 durability rule.
 
-Step 4 is the biggest lift — the Python compute functions exist in `docs/compute.py` but the pipeline harness calling them from a filled Phase 1 is not yet built; operators do this manually for Step G.
+   Only after 5.1–5.3 succeed may `form.json` authoring begin. No mid-bundle drafting of `form.json`.
+6. Translate the findings-bundle's evidence + synthesis sections into `phase_4_structured_llm.findings.entries[]` + `phase_4_structured_llm.verdict_exhibits.groups[]` + supporting structured fields. One finding in the bundle = one entry in the schema. Phase 3 computed values from Step 3b are authoritative — do NOT re-derive them.
+7. Author the 4 prose fields (`phase_5_prose_llm.*`) using the bundle's finding summary prose.
+8. Validate the form against the schema: `python3 -c "import json; from jsonschema import Draft202012Validator; schema=json.load(open('docs/scan-schema.json')); form=json.load(open('form.json')); errors=list(Draft202012Validator(schema).iter_errors(form)); print('✓' if not errors else f'✗ {len(errors)} errors: {[e.message[:100] for e in errors[:5]]}')"`
+9. Render via §8.8.2 step 3 command.
+
+**Post-render** (per target):
+
+- **Step 10 — Phase-boundary contamination check, all 3 targets, semantic criteria, STOP on contamination.** For each `form.json`: confirm `phase_4_structured_llm.findings.entries[].*` structured fields (severity, evidence_refs, action_steps) contain only structured content appropriate to the field type; **no narrative sentences or synthesis claims in Phase 4 structured fields.** Prose must live in `phase_5_prose_llm.*`. This check runs on EVERY target, not first-only — boundary contamination is shape-sensitive. If contamination is found in ANY target, **STOP execution** and fix the authoring rubric/prompt before proceeding. Contamination indicates a systemic LLM prompt issue; proceeding would waste subsequent targets on the same defect.
+- **Step 11 — Gate acceptance.** Run §8.8.5 gates 1–7. All gates must pass per the §8.8.6 disposition rules.
+- **Note on authoring determinism:** Step G does NOT require that the same bundle produce byte-identical `form.json` across re-authoring attempts by the same or different LLM. This is deferred property D-3 on the post-Step-G ledger. Gate 5 tests render-determinism given a fixed `form.json`, not authoring-determinism.
+
+Automation note: Step 3b's compute.py invocation is manual for Step G — the pipeline harness calling compute.py from a filled Phase 1 is deferred item D-2 on the post-Step-G ledger.
 
 #### 8.8.4 Invariants preserved from V2.4
 
 - **MD-canonical rule** — HTML may not add findings absent from MD. Enforced by the shared form.json contract and the `--parity` validator gate.
-- **Facts / inference / synthesis separation** — enforced by schema phase boundaries (Phase 1 = facts, Phase 3 = compute-derived, Phase 4 = structured LLM inference/synthesis, Phase 5 = prose LLM synthesis).
+- **Facts / inference / synthesis separation** — enforced by schema phase boundaries (Phase 1 = facts, Phase 3 = compute-derived, Phase 4 = structured LLM inference/synthesis, Phase 5 = prose LLM synthesis). Phase-boundary contamination check (§8.8.3 Step 10) catches leaks into Phase 4 structured fields.
 - **`head-sha.txt` first durable artifact.** Same as V2.4.
-- **Validator is the gate.** Same as V2.4, plus the `--parity` zero-errors-zero-warnings requirement for Step G acceptance.
+- **Validator is the gate.** Same as V2.4, plus the `--parity` zero-errors-zero-warnings requirement for Step G acceptance. Operator parses warning count explicitly (§8.8.2 step 4); exit code alone is insufficient.
 
 #### 8.8.5 Step G success criterion
 
-**Validator-clean is necessary but NOT sufficient.** A V2.5-preview scan passes Step G only if ALL of:
+**Validator-clean is necessary but NOT sufficient.** A V2.5-preview scan passes Step G for a target only if ALL 7 gates pass:
+
 1. `form.json` validates clean against V1.1 schema (zero errors).
 2. Both rendered outputs pass `validate-scanner-report.py --report` (exit 0).
-3. `--parity <md> <html>` reports zero errors **and** zero warnings.
+3. `--parity <md> <html>` reports zero errors **AND** zero `WARNING:` lines (operator must inspect stdout per §8.8.2 step 4; exit code alone is insufficient).
 4. Evidence refs resolve (no dead `E*` or `EB-*` references in findings).
 5. Re-rendering the same `form.json` produces byte-identical MD + HTML (determinism test: `diff <(render) <(render)` = empty).
-6. **Rendered output is reviewed against the V2.4 scan of the same repo (where one exists in the catalog) for structural parity.** Missing sections, altered finding severities, silent evidence truncation, or shape mismatches fail Step G regardless of validator cleanliness.
+6. **Structural parity against V2.4 comparator — explicit zero-tolerance checklist.** For each target, compare V2.5-preview rendered MD against the V2.4 catalog comparator MD at the same SHA. ALL of the following must be exact match; any mismatch = gate-6 failure:
+   - **6.1 Finding inventory** — every F-ID in V2.4 comparator maps to exactly one entry in `phase_4_structured_llm.findings.entries[]`. No extras. No missing.
+   - **6.2 Severity per F-ID** — each F-ID's `severity` matches V2.4 comparator's severity for the same F-ID. Zero inversions, zero downgrades, zero upgrades. **Execution-record requirement:** document the mapping in `.board-review-temp/step-g-execution/severity-mapping-<target>.md` as a table with one row per finding: `<F-ID> | <V2.4 severity> | <V2.5-preview severity> | match?`. Operator attests match explicitly; auditable trail preserves the comparison.
+   - **6.3 Scorecard cells** — all 4 canonical questions present + all 4 cell colors match V2.4 comparator cell-by-cell (red/amber/green).
+   - **6.4 Verdict level** — `phase_4b_computed.verdict.level` (Critical / Caution / Clean) matches V2.4 comparator's verdict level.
+   - **6.5 Split-axis** — if comparator is a split verdict, `phase_4_structured_llm.verdict_split.axis` must match (`deployment` vs `version`, etc.). If comparator is not split, V2.5-preview must not be split.
+   - **6.6 Evidence linkage** — every non-OK finding has non-empty `evidence_refs`; every ref resolves to a declared entry in `phase_4_structured_llm.evidence.entries[]`.
+   - **Archon-specific comparator clarification:** The comparator for Archon is `docs/GitHub-Scanner-Archon.md` (full 11 findings), NOT `tests/fixtures/archon-subset-form.json` (4 findings, renderer-validation scope only).
+   - **Evidence-card count** is informational only, not a gate. V2.4 catalog scans use varying depth (zustand-v3 bullets, caveman + Archon tables) — this is rendering variation, not drift.
+7. **Phase-boundary contamination check** (§8.8.3 Step 10) passes for every target — no narrative sentences or synthesis claims in Phase 4 structured fields. STOP condition applies if contamination is found on any target.
 
-#### 8.8.6 Rollback contract (if Step G fails)
+#### 8.8.6 Failure disposition — graduated rubric
 
-If Step G reveals schema defects, renderer regressions, or structural-parity failures:
+**Not all failures are equal.** Pipeline-correctness failures require full rollback; authoring-quality failures are graded and retryable. The verdict stays strict: **Step G is NOT "passed" until all 3 targets clear all 7 gates** (including gate 6 after permitted retries).
+
+| Failure pattern | Disposition |
+|---|---|
+| Validator gates 1–3 fail on ANY target | **Full rollback** — §8.8 quarantined, failed forms tagged `step-g-failed-artifact`, V2.4 remains only production path. Pipeline-correctness failure. |
+| Determinism gate 5 fails on ANY target | **Full rollback** — indicates renderer bug in `render-md.py`/`render-html.py`. Pipeline-correctness failure. |
+| Evidence refs gate 4 fails on 1 target | **Target-local authoring error.** One retry for that target (re-author affected findings). If retry fails → target fails Step G; proceed to other targets; graduate per gate-6 rules. |
+| Gate 6 (structural parity) fails on 1 target, others clean, **after one retry** | **Overall Step G = FAIL**, treated as **isolated target failure, not full rollback.** Failing shape tagged `step-g-failed-artifact` in `provenance.json`; retain passing targets as diagnostic evidence; V2.5-preview **NOT promoted as Step-G-passed until all 3 shapes pass**. NO full quarantine unless repeated or systemic. |
+| Gate 6 fails on 2+ of 3 targets (including retries) | **Full rollback** — authoring-quality failure at scale indicates schema or rubric-level defect. |
+| Gate 7 (phase-boundary contamination) triggers on ANY target | **STOP immediately.** Fix authoring rubric/prompt before proceeding. Contamination indicates systemic LLM prompt issue. |
+| ANY gate fails ambiguously mid-run (rubric interpretation dispute) | **HALT immediately.** Do not claim pass/fail. Escalate to board mini-review before continuing. |
+| Schema-validation failure (form.json invalid against V1.1) | **Target-local authoring error** — one retry; behaves like gate 4. |
+
+**Key principles:**
+
+- Gates 1–3, 5 = **pipeline correctness** → full rollback on any failure.
+- Gate 4 + schema validation = **authoring error, target-local, retryable**.
+- Gate 6 = **authoring quality, graded** — isolated miss after retry = Step G fails overall but isolated disposition (no quarantine); scaled miss = systemic, full rollback.
+- Gate 7 = **systemic prompt health** → STOP on any target's contamination.
+- Ambiguity = halt, not pass.
+
+**Rollback operational consequences** (when full rollback is triggered):
+
 1. Workflow V2.4 (§8.5–8.6) continues as the ONLY production/default path. Existing catalog scans are unaffected.
-2. The V2.5-preview subsection (this §8.8) is either **reverted out of the main Operator Guide flow** (removed from §8) or **quarantined into an appendix** at the end of this guide. Operator-entry points (CLAUDE.md wizard Q3a, §8 TOC) remove the V2.5-preview option until schema/renderer fixes are validated in a fresh board review.
-3. Failed Step G `form.json` files are tagged (in `tests/fixtures/provenance.json` when that file lands per U-3/FX-4) as `step-g-failed-artifact` and kept as test artifacts, NOT as operator exemplars. Future operators should not mirror them.
+2. The V2.5-preview subsection (this §8.8) is either **reverted out of the main Operator Guide flow** (removed from §8) or **quarantined into an appendix** at the end of this guide. Operator-entry points (CLAUDE.md wizard Q3a, §8 TOC) remove the V2.5-preview option until schema/renderer fixes validate in a fresh board review.
+3. Failed Step G `form.json` files are tagged in `tests/fixtures/provenance.json` as `step-g-failed-artifact` and kept as test artifacts, NOT as operator exemplars.
 4. `github-scan-package-V2/` is NOT mutated during rollback. The package is a V2.4 distributable; V2.5 inclusion is a separate post-Step-G release cycle.
 5. Schema revision (to V1.2 or later) happens in a separate work cycle; this §8.8 is held DEPRECATED during that cycle.
 
-#### 8.8.7 Known limitations pre-Step-G
+#### 8.8.7 Known limitations + post-Step-G commitments
 
-- Only 3 shapes have V1.1 fixtures (JS library, curl-pipe installer, agentic platform monorepo). CLI binary, Claude Code skills, web app, and Python platform shapes are NOT exercised.
+**Limitations pre-Step-G:**
+
+- Only 3 shapes have V1.1 fixtures (JS library, curl-pipe installer, agentic platform monorepo). CLI binary, Claude Code skills, web app, and Python platform shapes are NOT exercised. Shape-specific schema gaps for fd/gstack/postiz/hermes-agent cannot be detected by this Step G; tracked as D-5 on the post-Step-G ledger.
 - The JSON-first pipeline has NOT produced a scan from live `gh api` data — only back-authored reconstructions of goldens. Step G is the first live run.
-- Phases 4–6 automation (structured LLM, prose LLM, assembly) is not built. Step G uses LLM-in-the-loop for those phases.
-- `docs/scan-schema.json` V1.1 is **not yet** the complete canonical formalization of the full prompt output-format spec. Notable gaps: Scanner Integrity section 00 hit-level file/line/raw-content structure; Section 08 methodology fields beyond the currently modeled version marker. Schema hardening is on the defer ledger post-Step-G.
-- Fixture provenance tagging (U-3/FX-4 per board) will land in a follow-up commit at `tests/fixtures/provenance.json`. Fixtures in this commit are not yet machine-tagged.
-- PD3 bundle/citation validator shipped 2026-04-19 as `--bundle` mode in `docs/validate-scanner-report.py` (U-5 per board). Required gate before first live Step G scan; see §9.2.1 for invocation.
+- Phases 4–6 automation (structured LLM, prose LLM, assembly) is not built. Step G uses LLM-in-the-loop for those phases. Full automation is deferred item D-2.
+- **Schema hardening — explicit watchpoint, not merely deferred.** `docs/scan-schema.json` V1.1 does not fully formalize the prompt output-format spec. Notable gaps: Scanner Integrity section 00 hit-level file/line/raw-content structure; Section 08 methodology fields beyond version marker. **Any need to invent ad hoc fields, overload existing fields, or carry semantics outside schema-defined locations upgrades this from DEFER to FIX NOW and HALTS execution.** Schema revision requires a separate board review cycle.
+- Fresh-HEAD live scan validation is a production-promotion pre-req, not a Step G acceptance pre-req (D-1). Step G runs at pinned V2.4 catalog SHAs for apples-to-apples structural-parity comparison.
+- LLM non-determinism on form.json re-authoring (same bundle, different LLM or session → potentially different schema-valid form.json) is deferred property D-3. Gate 5 tests render-determinism given a fixed `form.json`, not authoring-determinism.
+- Fixture provenance tagging (U-3/FX-4 per board) landed in commit `3c09afb` at `tests/fixtures/provenance.json`. Live Step G forms must be tagged there BEFORE authoring begins (see §8.8.3 Step -2).
+- PD3 bundle/citation validator shipped 2026-04-19 as `--bundle` mode in `docs/validate-scanner-report.py` (U-5 per board, commit `885bdcf`). Required gate before first live Step G scan; see §9.2.1 for invocation.
+
+**Post-Step-G commitments (not deferred indefinitely):**
+
+- **D-6 Automated severity distribution comparison script — POST-STEP-G IMMEDIATE FOLLOW-UP.** Manual check in gate 6.2 is sufficient for the 3-target Step G scope. Automation must be built before the first production V2.5-preview scan beyond the 3 validation shapes. The manual check does not scale to broader deployment; the script is the natural next step post-Step-G success and is NOT indefinitely deferred.
 
 ---
 
