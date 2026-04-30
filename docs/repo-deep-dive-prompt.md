@@ -881,7 +881,7 @@ Every report must include a catalog metadata block near the top. This makes repo
 | Verdict | `critical`, `caution`, or `clean` (same value as the verdict banner) |
 | Scanned revision | `branch @ short_sha (release tag if applicable)` — e.g., `main @ c2ed24b (v1.6.0)` |
 | Prompt version | Version of this prompt that produced the report (e.g., `v2.1`) |
-| Prior scan | If this repo has been scanned before, link to the prior report file. If first run, state "None — first run" and note that future re-runs should diff against a dated snapshot. |
+| Prior scan | If this repo has been scanned before, link to the prior report file. If first run, state "None — first run" and note that future re-runs should diff against a dated snapshot. **Do NOT include cross-scan telemetry in this row** — no wild-scan ordinals (`Eleventh wild V1.2 scan`), no board-review trigger phrases (`FIRES V13-3 COMPARATOR-CALIBRATION TRIGGER`), no list of prior catalog entries. The reader looking at this report needs to know whether *this* repo was scanned before, not the catalog-wide history. Cross-scan history lives in `docs/scanner-catalog.md` and `docs/v12-wild-scan-telemetry.md`. |
 
 **Re-run snapshot convention:**
 When re-scanning a repo later, **do not overwrite the prior report.** Rename the existing one to `GitHub-Scanner-<REPO>-YYYY-MM-DD.md` (the date of that prior scan, not today) before generating the new report. That way `GitHub-Scanner-<REPO>.md` is always the latest, and dated snapshots are available for comparison. Record this in the new report's "Prior scan" field so future readers can find the history.
@@ -964,6 +964,22 @@ When F4 fires (current-vs-historical diverge, or deployment-profile A vs profile
 - a 1-sentence `.verdict-entry-detail`.
 
 Do NOT emit a single compound headline — the two audiences need separate reads. Do NOT omit the `Version · ` / `Deployment · ` scope-type prefix; it tells the reader what axis the split is on.
+
+**11a. Verdict-entry-headline must be action-framed, not echo the badge level (V2.4 alarm-tuning Tier 1).**
+The `.verdict-entry-headline` (and the `entries[].headline` field in V1.2 form output) carries the most-prominent line in the verdict block. It MUST be action-framed prose, not a one-word echo of the verdict badge.
+
+- ✗ FORBIDDEN: `headline = "Critical"` / `headline = "Caution"` / `headline = "Clean"` — these duplicate the badge that's already 2 lines above. The user reads "Critical / Critical / See findings below" and learns nothing new.
+- ✓ REQUIRED: action-framed sentence (≤15 words) telling the reader what to do or avoid. Examples from past scans that did this well: `"Install pinned to a tagged release, and know the trust chain terminates at the maintainer's credentials"`, `"Do not run in production until PR #1250 merges"`, `"Pin to a SHA — no formal release means installs pull HEAD"`, `"Don't install if you value your WhatsApp account"`.
+
+The badge already states the level. The headline tells the reader the *consequence* in their world.
+
+**11b. Verdict-entry-detail must be substantive, not filler (V2.4 alarm-tuning Tier 1).**
+The 1-sentence `.verdict-entry-detail` (and the `entries[].summary` field) is the line below the headline. It MUST carry concrete content: name the specific finding(s) driving the verdict, name the specific action the reader takes (PR number, SHA-pinning, alternative install path, etc.), or name the residual risk after the recommended mitigation.
+
+- ✗ FORBIDDEN: `"See findings below for details."` / `"Refer to Section 02."` / generic placeholder filler.
+- ✓ REQUIRED: ≥1 specific anchor — finding ID (F0-Fn), PR number, SHA, install command alternative, or risk class name.
+
+For SINGLE-verdict scans (no F4 split), the same rule applies via `editorial_caption.text`: the caption MUST end with an action-framing clause when verdict is Caution or Critical. Examples: `"...Pin a specific SHA for production use; otherwise Homebrew-installed ghostty is a reasonable default for individual developer workstations."` (Caution + permission-with-condition), `"...Don't install."` (Critical + plain instruction). The single-verdict template falls back to a generic "See findings below" line; the editorial caption is therefore the LLM's only seam to inject action framing for non-split scans.
 
 **12. Validator gate (hard).**
 Before handing the report to the user, run:
@@ -1101,7 +1117,9 @@ The MD file is canonical. HTML is derived from it. Every section below maps 1:1 
 
 **Investigated:** YYYY-MM-DD | **Applies to:** main @ `SHORT_SHA` · TAG_OR_NA | **Repo age:** N years | **Stars:** N | **License:** X
 
-> One-sentence editorial caption describing the repo in human terms — what it is, what it does, and the single most important thing the reader should know from this scan.
+> One-sentence editorial caption describing the repo in human terms — what it is, what it does, and the single most important thing the reader should know from this scan. When the verdict is Caution or Critical, the caption MUST end with an action-framing clause (see §11b — single-verdict case).
+>
+> **Editorial caption ban list (V2.4 alarm-tuning Tier 1):** Internal scan-system identifiers do NOT belong in user-facing prose. Forbidden in the caption: `V13-*` ledger references, schema version identifiers (`V1.2`, `V1.2.x`, `V1.1`), telemetry trigger phrases (`trigger fires`, `comparator-calibration trigger`), `override_reason` enum values (`signal_vocabulary_gap`, `harness_coverage_gap`, `missing_qualitative_context`, `threshold_too_strict`, `threshold_too_lenient`, `rubric_literal_vs_intent`), wild-scan ordinals (`Eleventh wild V1.2 scan`), board-review IDs (`042026-v13-3-comparator-calibration`). The reader has no context for any of these. They belong in `docs/v12-wild-scan-telemetry.md` and in the prior-scan ledger, not in the report itself.
 
 ---
 

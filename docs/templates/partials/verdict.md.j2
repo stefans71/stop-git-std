@@ -9,8 +9,11 @@
 ## Verdict: {{ verdict_level }}
 {% endif %}
 
+{% set scope_prefix = (axis|capitalize) ~ ' · ' %}
 {% for e in entries %}
-### {{ axis|capitalize }} · {{ e.get('audience', '') }}{% if e.get('scope_detail') %} · {{ e.scope_detail }}{% endif %} — **{{ e.get('verdict_level', verdict_level) }} — {{ e.get('headline', '') }}**
+{% set audience_raw = e.get('audience', '') %}
+{% if audience_raw.lower().startswith(scope_prefix.lower()) %}{% set audience = audience_raw[scope_prefix|length:] %}{% else %}{% set audience = audience_raw %}{% endif %}
+### {{ axis|capitalize }} · {{ audience }}{% if e.get('scope_detail') %} · {{ e.scope_detail }}{% endif %} — **{{ e.get('verdict_level', verdict_level) }} — {{ e.get('headline', '') }}**
 
 {{ e.get('summary', '') }}
 

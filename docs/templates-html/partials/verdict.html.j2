@@ -30,9 +30,12 @@
 
       <div class="verdict-split">
         {% if split.get('should_split') and entries %}
+        {% set scope_prefix = (axis|capitalize) ~ ' · ' %}
         {% for e in entries %}
+        {% set audience_raw = e.get('audience', '') %}
+        {% if audience_raw.lower().startswith(scope_prefix.lower()) %}{% set audience = audience_raw[scope_prefix|length:] %}{% else %}{% set audience = audience_raw %}{% endif %}
         <div class="verdict-entry">
-          <div class="verdict-entry-scope">{{ axis|capitalize }} &middot; {{ e.get('audience', '') }}{% if e.get('scope_detail') %} &middot; {{ e.scope_detail }}{% endif %}</div>
+          <div class="verdict-entry-scope">{{ axis|capitalize }} &middot; {{ audience }}{% if e.get('scope_detail') %} &middot; {{ e.scope_detail }}{% endif %}</div>
           {% set e_level = e.get('verdict_level', verdict_level) %}
           {% set e_color = 'good' if e_level in ('Clean', 'Good', 'Good with caveats') else ('bad' if e_level == 'Critical' else 'warn') %}
           <h2 class="verdict-entry-headline {{ e_color }}">{{ e.get('headline', '') }}</h2>
