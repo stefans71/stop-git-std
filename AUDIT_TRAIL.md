@@ -17,6 +17,53 @@ Canonical log of milestone commits with the verification state captured at commi
 
 ---
 
+## Checkpoint — 2026-04-30 (session 8 — first wild scan) — mattpocock/skills entry 27 (first Claude Code skills/plugin shape)
+
+**HEAD:** `2aa59bf` on `origin/main` (clean push pending — see verification below; tree clean).
+
+**Session 8 commits from `9b5e5d4` (session 7 close) →:**
+
+```
+2aa59bf  Catalog entry 27: mattpocock/skills — first Claude Code skills/plugin V1.2 wild scan
+```
+
+**Verification at checkpoint:**
+- 414/414 tests passing (no code touched in session 8 — data + docs only)
+- 27 catalog entries — 11 V2.4 + 16 v2.5-preview (3 Step G validation + 12 V1.2-schema wild scans entries 16–27)
+- All 4 validator gates clean on entry 27: `--report` HTML + `--markdown` MD + `--parity` zero warnings + schema validation
+- Q2 override fires `missing_qualitative_context` — first use of this enum value across all 12 V1.2 wild scans (was × 0 at n=11)
+
+**Key outputs (session 8):**
+
+Per-scan outputs (mattpocock/skills entry 27):
+- `docs/GitHub-Scanner-skills.md` + `.html`
+- `docs/board-review-data/scan-bundles/skills-b843cb5.json`
+
+Telemetry updates:
+- `docs/scanner-catalog.md` — row 27 appended; meta-counter 26 → 27 entries; override-enum tally adds first `missing_qualitative_context` fire
+- `docs/v12-wild-scan-telemetry.md` — §1 roster row added (n=11 → n=12); §10 changelog entry-27 update; status block notes V13-3 G4-broadened cadence at 12/25 + 1/6 taxonomy-strain events
+- `CLAUDE.md` — current-state paragraph rewritten for session 8 (was "session 7 / 26 entries / 11 wild scans / 9 overrides / 404/404 tests" — last was a typo); telemetry block updated to n=12; session-7 typo-fix bundled (404 → 414 tests, was already 414 in audit-trail)
+- `REPO_MAP.md` §2.2 — HEAD bumped to `2aa59bf`; session 8 commit chain added; catalog count 26 → 27; override-enum distribution updated to n=12
+
+**Telemetry-significant property of entry 27:**
+
+The Q2 override fires `missing_qualitative_context` — the V13-3 §2 inference at n=11 ("the V13-1 split was correct and complete; missing_qualitative_context catchall hasn't fired post-V13-1 relabel") was n=11-bounded. Entry 27 reopens whether `missing_qualitative_context` is a stable enum value or whether `sample_floor_degeneracy` (or similar) deserves its own enum. The override rationale (1 lifetime merged PR + 0 closed-merged security PRs → 'Yes — they fix problems quickly' over-claims at this evidence floor) is structurally distinct from `signal_vocabulary_gap` (signal didn't capture qualitative context) and `harness_coverage_gap` (harness didn't capture data) — it's "we have signals, but the data is degenerate at sample floor." V13-3 C9 (proposed prune of `missing_qualitative_context` with historical-hold) is now premature; V12x-15 candidate (Q2 sample-floor signal) added to v12-wild-scan-telemetry §8 in spirit (not yet listed as a row).
+
+**Token-burn observation (session 8):**
+
+This single scan consumed ~220k tokens — substantially more than the per-scan budget of recent V1.2 wild scans should require. Diagnosis: read full operator-guide intro + full wezterm `author_phase_4.py` + full wezterm `author_phase_5_6.py` + full compute.py twice (signature lookups that grep would have served) + repeated reads of phase_1 fields that could have been batched. Future scans should: (a) use grep for signature lookups, not full reads; (b) batch phase_1 inspection into 1-2 commands; (c) skip operator-guide re-read when CLAUDE.md context is already loaded; (d) author scripts should reference structural patterns, not be read verbatim. Logged here for session-9 baseline.
+
+**Revert paths:**
+- To revert this scan: `git revert 2aa59bf` — preserves all session-7 state; removes catalog entry 27 + telemetry row + 4 doc updates
+- Aggressive rollback to session 7 close: `git reset --hard 9b5e5d4` — destructive; removes session-8 commit only
+
+**Decision points to preserve:**
+- Q2 override `missing_qualitative_context` rationale: at sample-floor evidence (`total_merged_lifetime` < 5 AND no closed-fix-lag data), Phase 3 advisory's GREEN over-claims; honest answer is amber. Suggested threshold adjustment authored: add `total_merged_lifetime < N` sample-floor signal that returns amber rather than green for new solo projects. THIS IS A V12x-15 CANDIDATE for V1.2.x widening.
+- The mattpocock/skills install path is **two-stage** (`npx skills@latest add` routes through vercel-labs/skills npm CLI) AND **rolling** (no release tags — `@latest` resolves to HEAD on main). This is a new shape pattern in the catalog; future plugin-marketplace scans should reuse this Phase 4 framing (F1 + F3 in entry 27 form bundle).
+- Harness coverage gap on plugin-shape repos: `agent_rule_files` heuristic captured 1 of 23 markdown rule files (CLAUDE.md only, missed 22 SKILL.md). F5 in entry 27 documents this as a V1.2.x patch candidate (parallel to V13-3 C2 deserialization-regex tightening). Not promoted to V12x backlog row pending owner decision on whether plugin-shape fix belongs in V12x or V1.3 coordinated package.
+
+---
+
 ## Checkpoint — 2026-04-20 (session 7) — 2 wild scans (WLED + Baileys) + V13-3 board CLOSE + V1.2.x Priority 1 landing
 
 **HEAD:** `c0d2ba2` on `origin/main` (clean push; tree clean).
