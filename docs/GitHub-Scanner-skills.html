@@ -1,0 +1,2106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Security Investigation Report: mattpocock/skills @ b843cb5 | Generated 2026-04-30 | Prompt V2.4 (V1.1 schema) -->
+<title>Security Investigation: mattpocock/skills</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Unbounded:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; script-src 'unsafe-inline';">
+<style>
+  /* ═══════════════════════════════════════════════
+     DESIGN SYSTEM — DO NOT MODIFY
+     Dark theme, security monitoring aesthetic
+     ═══════════════════════════════════════════════ */
+  :root {
+    --bg-void: #0a0a0c;
+    --bg-surface: #131316;
+    --bg-elevated: #1a1a1f;
+    --bg-hover: #222228;
+    --border: #32323c;
+    --border-subtle: #26262e;
+    --text-primary: #f0f0f4;
+    --text-secondary: #b0b0bc;
+    --text-muted: #7e7e8e;
+    --red-glow: #ff4545;
+    --red-dim: #ff454520;
+    --red-bg: #1a0f0f;
+    --amber-glow: #ffaa2a;
+    --amber-dim: #ffaa2a20;
+    --amber-bg: #1a150e;
+    --green-glow: #22c55e;
+    --green-dim: #22c55e20;
+    --green-bg: #0e1a12;
+    --cyan-glow: #06b6d4;
+    --cyan-dim: #06b6d420;
+    --font-mono: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace;
+    --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-display: 'Unbounded', 'Inter', sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--font-sans);
+    background: var(--bg-void);
+    color: var(--text-primary);
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Noise texture + horizontal scanlines — forensic console feel */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      repeating-linear-gradient(
+        to bottom,
+        rgba(255,255,255,0.008) 0px,
+        rgba(255,255,255,0.008) 1px,
+        transparent 1px,
+        transparent 3px
+      ),
+      url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+  }
+  /* Single-pass scan line — thin cyan line sweeps once then disappears */
+  body::after {
+    content: ''; position: fixed; left: 0; right: 0; height: 2px;
+    background: linear-gradient(to right, transparent 5%, var(--cyan-glow) 30%, var(--cyan-glow) 70%, transparent 95%);
+    box-shadow: 0 0 12px var(--cyan-glow), 0 0 4px var(--cyan-glow);
+    pointer-events: none; z-index: 9998; opacity: 0.7;
+    animation: scan-sweep 3s ease-in-out 1s 1 forwards;
+  }
+  @keyframes scan-sweep {
+    0% { top: -2px; opacity: 0.7; }
+    90% { opacity: 0.5; }
+    100% { top: 100vh; opacity: 0; }
+  }
+
+  /* Scan strip — the data ribbon above the hero */
+  .scan-strip {
+    display: flex; flex-wrap: wrap; gap: 1.25rem; align-items: center;
+    padding: 0.625rem 0 0.75rem; margin-bottom: 1.5rem;
+    border-top: 1px solid var(--border-subtle);
+    border-bottom: 1px solid var(--border-subtle);
+    font-family: var(--font-mono); font-size: 0.65rem;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--text-secondary);
+  }
+  .scan-strip-item { display: inline-flex; align-items: center; gap: 0.4rem; }
+  .scan-strip-item .dot {
+    display: inline-block; width: 6px; height: 6px; border-radius: 50%;
+    box-shadow: 0 0 6px currentColor;
+  }
+  .scan-strip-item.amber, .scan-strip-item .dot.amber { color: var(--amber-glow); background: var(--amber-glow); }
+  .scan-strip-item .dot.amber { background: var(--amber-glow); box-shadow: 0 0 8px var(--amber-glow); animation: pulse 3s ease-in-out infinite; }
+  .scan-strip-item.flash {
+    color: var(--red-glow); animation: flash-blink 1.4s ease-in-out infinite;
+  }
+  @keyframes flash-blink {
+    0%, 80%, 100% { opacity: 1; }
+    85%, 95% { opacity: 0.25; }
+  }
+
+  /* Hero caption — the editorial line under the H1.
+     Readable sans-serif, slightly larger than body, no italic (readability > flavor). */
+  .hero-caption {
+    font-family: var(--font-sans); font-size: 1.0625rem; line-height: 1.55;
+    color: var(--text-primary); font-weight: 400;
+    max-width: 68ch; margin: 0.75rem 0 1.75rem;
+    letter-spacing: -0.005em;
+  }
+
+  /* ─────────────── Utility classes (replaces inline style="" attributes) ─────────────── */
+  /* Semantic value colors — use on chip-value, vital-value, td.val, etc. */
+  .val-good  { color: var(--green-glow) !important; }
+  .val-bad   { color: var(--red-glow)   !important; }
+  .val-warn  { color: var(--amber-glow) !important; }
+  .val-info  { color: var(--cyan-glow)  !important; }
+  .fw-semi   { font-weight: 600; }
+  /* Card vertical rhythm — replaces margin-bottom:12px inline on cards */
+  .stack-md  { margin-bottom: 0.75rem; }
+  .stack-sm  { margin-top: 0.75rem; }
+  /* Subdued paragraph — replaces the meta-text inline patterns */
+  .p-meta {
+    color: var(--text-secondary); margin-bottom: 1rem;
+    font-size: 0.875rem; line-height: 1.55;
+  }
+  .p-meta-tight {
+    color: var(--text-secondary); margin: 0.75rem 0 1rem;
+    font-size: 0.8125rem; line-height: 1.55;
+  }
+  /* Priority-evidence visual uplift — replaces inline border-left hack */
+  .finding-card.evidence-priority {
+    border-left: 4px solid var(--amber-glow);
+  }
+  /* Inline-flag variant — when priority-flag appears mid-sentence, not block */
+  .priority-flag.inline { display: inline-block; }
+
+  a { color: var(--cyan-glow); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* Font size controls */
+  .font-controls {
+    position: fixed; top: 16px; right: 16px; z-index: 1000;
+    display: flex; align-items: center; gap: 2px;
+    background: var(--bg-elevated); border: 1px solid var(--border);
+    border-radius: 8px; padding: 4px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5); backdrop-filter: blur(12px);
+  }
+  .font-controls button {
+    font-family: var(--font-mono); font-size: 0.875rem; font-weight: 700;
+    width: 34px; height: 34px; border: none; border-radius: 6px;
+    background: transparent; color: var(--text-secondary); cursor: pointer;
+    display: flex; align-items: center; justify-content: center; transition: all 0.15s;
+  }
+  .font-controls button:hover { background: var(--bg-hover); color: var(--text-primary); }
+  .font-controls button:active { transform: scale(0.92); }
+  .font-controls .font-size-display {
+    font-family: var(--font-mono); font-size: 0.6875rem; color: var(--text-muted);
+    min-width: 38px; text-align: center; letter-spacing: 0.05em; user-select: none;
+  }
+
+  .page { max-width: 960px; margin: 0 auto; padding: 0 20px; }
+
+  /* Hero */
+  .hero { padding: 64px 0 48px; border-bottom: 1px solid var(--border); position: relative; }
+  .hero::after {
+    content: ''; position: absolute; bottom: -1px; left: 0; right: 0; height: 120px;
+    background: linear-gradient(to top, var(--bg-void), transparent); pointer-events: none;
+  }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-family: var(--font-mono); font-size: 0.6875rem; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--text-muted); margin-bottom: 20px;
+    padding: 6px 12px; border: 1px solid var(--border); border-radius: 6px; background: var(--bg-surface);
+  }
+  .hero-badge .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--text-muted); /* Neutral default — LLM must set .red, .green, or .amber */
+  }
+  .hero-badge .dot.red { background: var(--red-glow); box-shadow: 0 0 8px var(--red-glow); animation: pulse 2s ease-in-out infinite; }
+  .hero-badge .dot.green { background: var(--green-glow); box-shadow: 0 0 8px var(--green-glow); }
+  .hero-badge .dot.amber { background: var(--amber-glow); box-shadow: 0 0 8px var(--amber-glow); animation: pulse 3s ease-in-out infinite; }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+  .hero h1 {
+    font-family: var(--font-display); font-size: clamp(1.8rem, 4vw, 3.4rem);
+    font-weight: 800; letter-spacing: -0.04em; line-height: 1.05; margin-bottom: 16px;
+  }
+  .hero h1 .slash {
+    color: var(--text-muted); font-weight: 300;
+    margin: 0 0.1em; font-size: 0.85em;
+  }
+  .hero h1 span { color: var(--red-glow); }
+  .hero h1 span.green { color: var(--green-glow); }
+  .hero h1 span.amber { color: var(--amber-glow); }
+  .hero .meta { font-size: 0.875rem; color: var(--text-primary); display: flex; flex-wrap: wrap; gap: 16px; }
+  .hero .meta-item { display: flex; align-items: center; gap: 6px; }
+  .hero .meta-item .label { color: var(--text-secondary); font-size: 0.75rem; }
+
+  /* Verdict */
+  .verdict-section { padding: 48px 0 40px; }
+  .verdict-banner {
+    border-radius: 0; padding: 2.25rem 2.75rem 2rem 4.5rem;
+    position: relative; overflow: hidden;
+    border-left-width: 6px; border-left-style: solid;
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%);
+  }
+  .verdict-banner.critical { background: linear-gradient(135deg, #1f0a0a 0%, #0a0a0c 100%); border: 1px solid #ff454540; border-left-color: var(--red-glow); }
+  .verdict-banner.caution { background: linear-gradient(135deg, #1f1810 0%, #0a0a0c 100%); border: 1px solid #ffaa2a40; border-left-color: var(--amber-glow); }
+  .verdict-banner.clean { background: linear-gradient(135deg, #0a1f14 0%, #0a0a0c 100%); border: 1px solid #22c55e40; border-left-color: var(--green-glow); }
+  /* Radial wash */
+  .verdict-banner::before {
+    content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+    pointer-events: none;
+  }
+  .verdict-banner.critical::before { background: radial-gradient(circle at 20% 30%, #ff454510, transparent 55%); }
+  .verdict-banner.caution::before { background: radial-gradient(circle at 20% 30%, #ffaa2a12, transparent 55%); }
+  .verdict-banner.clean::before { background: radial-gradient(circle at 20% 30%, #22c55e10, transparent 55%); }
+  /* Vertical scan-ID bar on the left */
+  .verdict-banner::after {
+    content: attr(data-dossier); position: absolute;
+    left: 1.4rem; top: 2.1rem; bottom: 2rem;
+    writing-mode: vertical-rl; transform: rotate(180deg);
+    font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.25em;
+    color: var(--text-muted); text-transform: uppercase;
+    display: flex; align-items: center;
+    opacity: 0.55;
+  }
+  .verdict-banner .verdict-label {
+    font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.22em;
+    text-transform: uppercase; margin-bottom: 1rem; position: relative;
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    padding: 0.25rem 0.625rem; border-radius: 0.125rem;
+    background: rgba(255,170,42,0.08); border: 1px solid rgba(255,170,42,0.25);
+  }
+  .verdict-banner.critical .verdict-label { color: var(--red-glow); background: rgba(255,69,69,0.08); border-color: rgba(255,69,69,0.25); }
+  .verdict-banner.caution .verdict-label { color: var(--amber-glow); }
+  .verdict-banner.clean .verdict-label { color: var(--green-glow); background: rgba(34,197,94,0.08); border-color: rgba(34,197,94,0.25); }
+  .verdict-banner h2 {
+    font-family: var(--font-display);
+    font-size: clamp(1.5rem, 3.2vw, 2.2rem); font-weight: 600; line-height: 1.18;
+    letter-spacing: -0.025em; margin-bottom: 1rem; position: relative; color: #ff8c00;
+    max-width: 56ch;
+  }
+  .verdict-banner.clean h2 { color: var(--green-glow); }
+  .verdict-banner.critical h2 { color: var(--red-glow); }
+
+  /* Split-verdict layout — two audience blocks separated by a divider */
+  .verdict-split {
+    display: grid; grid-template-columns: 1fr auto 1fr; gap: 1.75rem;
+    margin-bottom: 1.25rem; align-items: stretch;
+  }
+  @media (max-width: 820px) {
+    .verdict-split { grid-template-columns: 1fr; gap: 1rem; }
+  }
+  .verdict-entry { display: flex; flex-direction: column; gap: 0.5rem; }
+  .verdict-entry-scope {
+    font-family: var(--font-mono); font-size: 0.65rem; letter-spacing: 0.2em;
+    text-transform: uppercase; color: var(--text-muted);
+    padding-bottom: 0.375rem; border-bottom: 1px solid var(--border-subtle);
+  }
+  .verdict-entry-headline {
+    font-family: var(--font-display); font-weight: 600;
+    font-size: clamp(1.35rem, 2.5vw, 1.85rem); line-height: 1.15;
+    letter-spacing: -0.02em; margin: 0;
+  }
+  .verdict-entry-headline.good { color: #8dd492; }
+  .verdict-entry-headline.warn { color: var(--amber-glow); }
+  .verdict-entry-headline.bad  { color: var(--red-glow); }
+  .verdict-entry-detail {
+    font-family: var(--font-sans); font-size: 0.8125rem; line-height: 1.55;
+    color: var(--text-secondary); margin-top: 0.25rem;
+  }
+  .verdict-split-divider {
+    width: 1px; background: linear-gradient(to bottom, transparent, var(--border), transparent);
+  }
+  @media (max-width: 820px) {
+    .verdict-split-divider { width: 100%; height: 1px; background: var(--border-subtle); }
+  }
+
+  /* Rolled verdict exhibits — 3 themed panels that replace the 10-bullet glaze list */
+  .verdict-exhibits { display: grid; gap: 0.875rem; margin-top: 0.5rem; }
+  .exhibit {
+    position: relative; overflow: hidden; border-radius: 10px;
+    border: 1px solid var(--border-subtle);
+  }
+  .exhibit.vuln    { background: linear-gradient(135deg, #1a1008 0%, #0f0a0a 100%); border-color: #ffaa2a30; }
+  .exhibit.govern  { background: linear-gradient(135deg, #100c1a 0%, #0a0a0f 100%); border-color: #ff808040; }
+  .exhibit.signals { background: linear-gradient(135deg, #0a1812 0%, #0a0f0a 100%); border-color: #22c55e30; }
+  /* Left accent bar */
+  .exhibit::before {
+    content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
+  }
+  .exhibit.vuln::before    { background: var(--amber-glow); }
+  .exhibit.govern::before  { background: var(--red-glow); }
+  .exhibit.signals::before { background: var(--green-glow); }
+  /* Summary row (collapsed state) */
+  .exhibit > summary {
+    list-style: none; cursor: pointer;
+    padding: 0.875rem 1rem 0.875rem 1.5rem;
+    display: flex; align-items: center; gap: 0.75rem;
+    position: relative;
+  }
+  .exhibit > summary::-webkit-details-marker { display: none; }
+  .exhibit > summary::after {
+    content: '\25B6'; margin-left: auto; font-size: 0.7rem;
+    color: var(--text-muted); transition: transform 0.2s;
+  }
+  .exhibit[open] > summary::after { transform: rotate(90deg); }
+  .exhibit-glyph {
+    width: 1.75rem; height: 1.75rem; border-radius: 50%;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 0.85rem; font-weight: 700; flex-shrink: 0;
+  }
+  .exhibit.vuln .exhibit-glyph    { background: rgba(255,170,42,0.18); color: var(--amber-glow); }
+  .exhibit.govern .exhibit-glyph  { background: rgba(255,69,69,0.18);  color: var(--red-glow); }
+  .exhibit.signals .exhibit-glyph { background: rgba(34,197,94,0.18);  color: var(--green-glow); }
+  .exhibit-title {
+    font-family: var(--font-display); font-size: 1.05rem; font-weight: 600;
+    letter-spacing: -0.01em; line-height: 1.25;
+  }
+  .exhibit-count {
+    margin-left: 0.5rem; font-family: var(--font-mono); font-size: 0.7rem;
+    letter-spacing: 0.12em; color: var(--text-muted); text-transform: uppercase;
+  }
+  .exhibit-summary-line {
+    font-family: var(--font-sans); font-size: 0.82rem; color: var(--text-secondary);
+    margin-left: 0.5rem; line-height: 1.45; font-weight: 400;
+  }
+  @media (max-width: 720px) {
+    .exhibit-summary-line { display: block; margin-left: 2.5rem; margin-top: 0.25rem; }
+  }
+  /* Expanded content — zebra-striped items */
+  .exhibit-body {
+    border-top: 1px solid var(--border-subtle);
+    padding: 0; background: rgba(0,0,0,0.15);
+  }
+  .exhibit-item {
+    display: grid; grid-template-columns: 1.5rem 1fr; gap: 0.75rem;
+    padding: 0.75rem 1rem 0.75rem 1.5rem;
+    font-size: 0.88rem; line-height: 1.55; color: var(--text-primary);
+    border-bottom: 1px solid var(--border-subtle);
+  }
+  .exhibit-item:last-child { border-bottom: none; }
+  /* Zebra striping — every other row gets a subtle background shift */
+  .exhibit-item:nth-child(even) { background: rgba(255,255,255,0.015); }
+  .exhibit-item-glyph {
+    font-family: var(--font-mono); font-weight: 700; font-size: 0.8rem;
+    text-align: center; padding-top: 0.15rem;
+  }
+  .exhibit.vuln .exhibit-item-glyph    { color: var(--amber-glow); }
+  .exhibit.govern .exhibit-item-glyph  { color: var(--red-glow); }
+  .exhibit.signals .exhibit-item-glyph { color: var(--green-glow); }
+  .exhibit-item-tag {
+    font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--text-muted); display: block;
+    margin-bottom: 0.15rem;
+  }
+
+  /* Verdict bullet list */
+  .verdict-bullets { list-style: none; padding: 0; margin: 0; position: relative; }
+  .verdict-bullets li {
+    display: flex; align-items: flex-start; gap: 12px; font-size: 0.9375rem;
+    color: var(--text-primary); line-height: 1.6; padding: 8px 0; border-bottom: 1px solid #ffffff08;
+  }
+  .verdict-bullets li:last-child { border-bottom: none; }
+  .verdict-bullets .bullet-icon {
+    flex-shrink: 0; width: 22px; height: 22px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center; font-size: 0.6875rem; margin-top: 2px;
+  }
+  .verdict-bullets .bullet-icon.red { background: var(--red-dim); color: var(--red-glow); box-shadow: 0 0 6px var(--red-dim); }
+  .verdict-bullets .bullet-icon.amber { background: var(--amber-dim); color: var(--amber-glow); box-shadow: 0 0 6px var(--amber-dim); }
+  .verdict-bullets .bullet-icon.green { background: var(--green-dim); color: var(--green-glow); box-shadow: 0 0 6px var(--green-dim); }
+
+  /* Scorecard */
+  .scorecard-section { padding: 0 0 48px; }
+  .scorecard-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px;
+    background: var(--border); border-radius: 12px; overflow: hidden;
+  }
+  .score-cell { background: var(--bg-surface); padding: 24px 20px; text-align: center; transition: background 0.2s; }
+  .score-cell:hover { background: var(--bg-elevated); }
+  .score-cell .score-icon {
+    width: 32px; height: 32px; margin: 0 auto 12px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center; font-size: 1rem;
+  }
+  .score-cell .score-icon.red { background: var(--red-dim); color: var(--red-glow); }
+  .score-cell .score-icon.amber { background: var(--amber-dim); color: var(--amber-glow); }
+  .score-cell .score-icon.green { background: var(--green-dim); color: var(--green-glow); }
+  .score-cell .score-label {
+    font-family: var(--font-mono); font-size: 0.625rem; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--text-muted); margin-bottom: 6px;
+  }
+  .score-cell .score-value { font-size: 1.125rem; font-weight: 700; line-height: 1.2; }
+  .score-cell .score-value.red { color: var(--red-glow); }
+  .score-cell .score-value.amber { color: var(--amber-glow); }
+  .score-cell .score-value.green { color: var(--green-glow); }
+
+  /* Collapsible sections */
+  details summary { cursor: pointer; list-style: none; }
+  details summary::-webkit-details-marker { display: none; }
+  .collapsible-section > summary { padding: 48px 0 0; border-top: 1px solid var(--border-subtle); }
+  .collapsible-section > summary .section-header { margin-bottom: 0; display: flex; align-items: center; gap: 12px; }
+  .collapsible-section[open] > summary .section-header { margin-bottom: 28px; }
+  .collapsible-section .section-body { padding-bottom: 0; }
+  .collapsible-section > summary .section-header::after {
+    content: '\25B6'; font-size: 0.625rem; color: var(--text-muted); transition: transform 0.2s; margin-left: auto;
+  }
+  .collapsible-section[open] > summary .section-header::after { transform: rotate(90deg); }
+  .section-header .section-number {
+    font-family: var(--font-mono); font-size: 0.6875rem; letter-spacing: 0.1em; color: var(--text-muted);
+    width: 28px; height: 28px; border-radius: 6px; border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .section-header h2 {
+    font-family: var(--font-display); font-size: 1.4rem; font-weight: 600;
+    letter-spacing: -0.02em; line-height: 1.15;
+    color: var(--cyan-glow);
+  }
+  /* Slightly emphasize the section number too so the landmark row reads as a unit */
+  .section-header .section-number {
+    color: var(--cyan-glow); opacity: 0.75;
+  }
+
+  /* Finding cards */
+  .finding-card {
+    background: var(--bg-surface); border: 1px solid var(--border); border-radius: 10px;
+    margin-bottom: 12px; overflow: hidden; transition: border-color 0.2s;
+  }
+  .finding-card:hover { border-color: #3a3a44; }
+  .finding-card.critical { border-left: 3px solid var(--red-glow); }
+  .finding-card.warning { border-left: 3px solid var(--amber-glow); }
+  .finding-card.info { border-left: 3px solid var(--cyan-glow); }
+  .finding-card.ok { border-left: 3px solid var(--green-glow); }
+  @keyframes border-pulse {
+    0%, 100% { border-left-color: var(--red-glow); box-shadow: -2px 0 8px var(--red-dim); }
+    50% { border-left-color: #ff454580; box-shadow: -2px 0 4px transparent; }
+  }
+  .finding-card.critical { animation: border-pulse 3s ease-in-out infinite; }
+
+  .finding-header {
+    padding: 16px 20px 12px; display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 16px;
+  }
+  .finding-header .tag {
+    font-family: var(--font-mono); font-size: 0.625rem; letter-spacing: 0.08em;
+    text-transform: uppercase; padding: 3px 8px; border-radius: 4px; font-weight: 600; flex-shrink: 0;
+  }
+  .tag.critical-tag { background: var(--red-dim); color: var(--red-glow); }
+  .tag.warning-tag { background: var(--amber-dim); color: var(--amber-glow); }
+  .tag.info-tag { background: var(--cyan-dim); color: var(--cyan-glow); }
+  .tag.ok-tag { background: var(--green-dim); color: var(--green-glow); }
+  .finding-header .finding-date { font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-secondary); }
+  .finding-header .finding-duration {
+    font-family: var(--font-mono); font-size: 0.6875rem; font-weight: 600;
+    color: var(--amber-glow); background: var(--amber-dim); border: 1px solid #ffaa2a30;
+    padding: 3px 10px; border-radius: 4px;
+  }
+  .finding-header h3 {
+    width: 100%; font-family: var(--font-display); font-size: 1.125rem;
+    font-weight: 600; line-height: 1.3; letter-spacing: -0.015em; margin-top: 4px;
+  }
+
+  /* Finding collapsible */
+  .finding-card summary { list-style: none; cursor: pointer; }
+  .finding-card summary::-webkit-details-marker { display: none; }
+  .finding-card summary .finding-header { position: relative; padding-right: 40px; }
+  .finding-card summary .finding-header::after {
+    content: '\25B6'; font-size: 0.625rem; color: var(--text-muted);
+    transition: transform 0.2s; position: absolute; right: 20px; top: 20px;
+  }
+  .finding-card details[open] > summary .finding-header::after { transform: rotate(90deg); }
+
+  .finding-body { padding: 0 20px 16px; }
+  .finding-body p { font-size: 0.875rem; color: var(--text-primary); line-height: 1.7; margin-bottom: 12px; }
+  .finding-meta {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 8px; margin-top: 12px;
+  }
+  .meta-chip {
+    font-size: 0.75rem; padding: 8px 12px; border-radius: 6px;
+    background: var(--bg-elevated); border: 1px solid var(--border-subtle);
+    display: flex; flex-direction: column; gap: 2px;
+  }
+  .meta-chip .chip-label {
+    font-family: var(--font-mono); font-size: 0.625rem; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--text-secondary);
+  }
+  .meta-chip .chip-value { color: var(--text-primary); font-weight: 500; }
+
+  /* Sub-finding (nested under parent finding) */
+  .sub-finding {
+    margin: 16px 0 8px; padding: 16px; border-left: 2px solid var(--amber-glow);
+    background: var(--bg-elevated); border-radius: 0 8px 8px 0;
+  }
+  .sub-finding .sub-finding-label {
+    font-family: var(--font-mono); font-size: 0.625rem; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--amber-glow); margin-bottom: 8px;
+  }
+  .sub-finding h4 { font-size: 1rem; font-weight: 700; line-height: 1.4; margin-bottom: 10px; }
+  .sub-finding p { font-size: 0.875rem; color: var(--text-primary); line-height: 1.7; margin-bottom: 12px; }
+
+  /* PR Table */
+  .pr-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.8125rem; }
+  th {
+    font-family: var(--font-mono); font-size: 0.625rem; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--text-secondary); text-align: left;
+    padding: 12px 16px; background: var(--bg-surface); border-bottom: 1px solid var(--border);
+    position: sticky; top: 0; white-space: nowrap;
+  }
+  td { padding: 14px 16px; border-bottom: 1px solid var(--border-subtle); color: var(--text-primary); vertical-align: top; }
+  tr:hover td { background: var(--bg-surface); }
+  td:first-child { font-family: var(--font-mono); font-weight: 600; color: var(--cyan-glow); white-space: nowrap; }
+  .td-concern { color: var(--amber-glow); font-weight: 500; }
+  .td-reviewed-no { color: var(--red-glow); font-family: var(--font-mono); font-weight: 600; }
+  .td-reviewed-yes { color: var(--green-glow); font-family: var(--font-mono); font-weight: 600; }
+  .td-reviewed-rejected { color: var(--amber-glow); font-family: var(--font-mono); font-weight: 600; }
+  .td-merge-fast { font-family: var(--font-mono); color: var(--red-glow); font-weight: 600; }
+  .td-person { font-weight: 500; color: var(--text-primary); }
+
+  /* Timeline */
+  .timeline { position: relative; padding-left: 28px; }
+  .timeline::before {
+    content: ''; position: absolute; left: 7px; top: 8px; bottom: 8px; width: 1px;
+    background: linear-gradient(to bottom, var(--border), var(--red-glow), var(--border));
+  }
+  .tl-item { position: relative; margin-bottom: 20px; padding-left: 8px; }
+  .tl-item::before {
+    content: ''; position: absolute; left: -24px; top: 7px; width: 9px; height: 9px;
+    border-radius: 50%; background: var(--text-muted); border: 2px solid var(--bg-void);
+  }
+  .tl-item.bad::before { background: var(--red-glow); box-shadow: 0 0 6px var(--red-dim); }
+  .tl-item.good::before { background: var(--green-glow); }
+  .tl-item.neutral::before { background: var(--amber-glow); }
+  .tl-date { font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-secondary); font-weight: 600; }
+  .tl-desc { font-size: 0.875rem; color: var(--text-primary); margin-top: 2px; line-height: 1.6; }
+
+  /* Vitals */
+  .vitals-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1px; background: var(--border); border-radius: 10px; overflow: hidden;
+  }
+  .vital-cell { background: var(--bg-surface); padding: 18px 20px; }
+  .vital-cell .vital-label {
+    font-family: var(--font-mono); font-size: 0.625rem; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--text-muted); margin-bottom: 4px;
+  }
+  .vital-cell .vital-value { font-size: 1rem; font-weight: 700; margin-bottom: 4px; }
+  .vital-cell .vital-note { font-size: 0.75rem; color: var(--text-secondary); line-height: 1.5; }
+  .vital-cell .vital-explainer {
+    font-size: 0.7rem; color: var(--text-muted); line-height: 1.5;
+    margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--border-subtle);
+  }
+  .vital-cell .vital-explainer a {
+    color: var(--cyan-glow); text-decoration: none;
+  }
+  .vital-cell .vital-explainer a:hover { text-decoration: underline; }
+
+  /* Action cards */
+  .action-card { padding: 24px; border-radius: 10px; margin-bottom: 12px; }
+  .action-card.stop { background: var(--red-bg); border: 1px solid #ff454530; }
+  .action-card.wait { background: var(--amber-bg); border: 1px solid #ffaa2a30; }
+  .action-card.info-action { background: var(--bg-surface); border: 1px solid var(--border); }
+  .action-card.ok-action { background: var(--green-bg); border: 1px solid #22c55e30; }
+  .action-card h3 { font-size: 0.9375rem; font-weight: 700; margin-bottom: 8px; }
+  .action-card p { font-size: 0.875rem; color: var(--text-primary); line-height: 1.7; }
+
+  /* Code blocks inside action cards */
+  .action-card pre {
+    background: var(--bg-void); border: 1px solid var(--border); border-radius: 8px;
+    padding: 16px; margin: 12px 0; overflow-x: auto;
+    font-family: var(--font-mono); font-size: 0.8125rem; color: var(--cyan-glow); line-height: 1.6;
+  }
+
+  /* Catalog metadata block — sits between hero and verdict
+     Font sizes use rem so the font +/- controls (which mutate root font-size) scale them. */
+  .catalog-meta {
+    background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: 10px;
+    padding: 1.125rem 1.375rem; margin-bottom: 1rem;
+  }
+  .catalog-meta .catalog-label {
+    font-family: var(--font-mono); font-size: 0.65rem; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--text-secondary); margin-bottom: 0.625rem;
+  }
+  .catalog-meta table { width: 100%; }
+  .catalog-meta td { padding: 0.375rem 0.75rem 0.375rem 0; border: none; font-size: 0.82rem; vertical-align: top; }
+  .catalog-meta td.key {
+    font-family: var(--font-mono); color: var(--text-secondary);
+    white-space: nowrap; width: 1%; font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.06em;
+  }
+  .catalog-meta td.val { color: var(--text-primary); }
+  .catalog-meta td.val a { color: var(--cyan-glow); text-decoration: none; }
+  .catalog-meta td.val a:hover { text-decoration: underline; }
+
+  /* ─────────────── UX-FIX CSS (section status pills, finding status chips,
+     timeline glyphs, evidence priority markers) ─────────────── */
+
+  /* Section status pills — shown on the collapsed <summary> row so readers know
+     at a glance whether a section needs attention. */
+  .section-status {
+    display: inline-flex; gap: 0.5rem; margin-left: auto; padding-right: 2.5rem;
+    font-size: 0.72rem; font-family: var(--font-mono); align-items: center;
+    flex-wrap: wrap;
+  }
+  .section-status .pill {
+    display: inline-flex; align-items: center; gap: 0.25rem;
+    padding: 0.1875rem 0.5rem; border-radius: 0.625rem; border: 1px solid;
+    letter-spacing: 0.04em; white-space: nowrap;
+  }
+  .section-status .pill.red {
+    color: var(--red-glow); border-color: var(--red-dim);
+    background: rgba(255, 69, 69, 0.1);
+  }
+  .section-status .pill.amber {
+    color: var(--amber-glow); border-color: var(--amber-dim);
+    background: rgba(255, 170, 42, 0.1);
+  }
+  .section-status .pill.green {
+    color: var(--green-glow); border-color: var(--green-dim);
+    background: rgba(34, 197, 94, 0.1);
+  }
+  .section-status .pill.info {
+    color: var(--cyan-glow); border-color: var(--cyan-dim);
+    background: rgba(6, 182, 212, 0.1);
+  }
+  .section-status .pill.muted {
+    color: var(--text-secondary); border-color: var(--border-subtle);
+    background: var(--bg-elevated);
+  }
+  .section-status .pill.urgent {
+    animation: urgent-pulse 1.8s ease-in-out infinite;
+  }
+  @keyframes urgent-pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(255, 69, 69, 0.4); }
+    50% { box-shadow: 0 0 0 0.5rem rgba(255, 69, 69, 0); }
+  }
+  /* Hide status pills when section is open — they're redundant with the content */
+  .collapsible-section[open] > summary .section-status { opacity: 0.5; }
+
+  /* Section subtitle — a one-line orientation under the H2, visible both open
+     and collapsed. Gives readers the "why should I look at this" answer. */
+  .section-subtitle {
+    font-family: var(--font-sans); font-size: 0.9375rem; color: var(--text-secondary);
+    font-weight: 400; margin-top: 0.5rem; line-height: 1.55;
+    max-width: 68ch; letter-spacing: -0.003em;
+  }
+  .section-subtitle .emph { color: var(--text-primary); font-weight: 600; }
+  .section-subtitle .hot { color: var(--amber-glow); font-weight: 600; }
+  .section-subtitle .cold { color: var(--green-glow); font-weight: 600; }
+
+  /* Section-level "Your action" line — every section that flags concerns
+     must answer "what do I do about this?" for the reader. */
+  .section-action {
+    display: block; margin-top: 0.5rem; padding: 0.5rem 0.75rem;
+    background: var(--bg-elevated); border-radius: 0.375rem;
+    border-left: 3px solid var(--amber-glow);
+    font-size: 0.85rem; color: var(--text-primary); line-height: 1.55;
+  }
+  .section-action.ok { border-left-color: var(--green-glow); }
+  .section-action.info { border-left-color: var(--cyan-glow); }
+  .section-action .lbl {
+    font-family: var(--font-mono); font-weight: 700;
+    font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--amber-glow); margin-right: 0.5rem;
+  }
+  .section-action.ok .lbl { color: var(--green-glow); }
+  .section-action.info .lbl { color: var(--cyan-glow); }
+
+  /* Finding-card status chip — distinguishes Active vs Resolved vs Ongoing.
+     Shown on every finding and evidence card next to the severity tag. */
+  .status-chip {
+    display: inline-flex; align-items: center; gap: 0.25rem;
+    padding: 0.1875rem 0.5rem; border-radius: 0.625rem; border: 1px solid;
+    font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.04em;
+    white-space: nowrap; margin-left: 0.375rem;
+  }
+  .status-chip.resolved {
+    color: var(--green-glow); border-color: var(--green-dim);
+    background: rgba(34, 197, 94, 0.12);
+  }
+  .status-chip.active {
+    color: var(--red-glow); border-color: var(--red-dim);
+    background: rgba(255, 69, 69, 0.12);
+  }
+  .status-chip.ongoing {
+    color: var(--amber-glow); border-color: var(--amber-dim);
+    background: rgba(255, 170, 42, 0.12);
+  }
+  .status-chip.mitigated {
+    color: var(--cyan-glow); border-color: var(--cyan-dim);
+    background: rgba(6, 182, 212, 0.12);
+  }
+  .status-chip.informational {
+    color: var(--text-secondary); border-color: var(--border-subtle);
+    background: var(--bg-elevated);
+  }
+
+  /* Action-needed hint on finding cards — one sentence that says "what the reader should do" */
+  .action-hint {
+    margin-top: 0.5rem; font-size: 0.78rem; color: var(--text-secondary);
+    line-height: 1.55;
+  }
+  .action-hint::before {
+    content: "→ "; color: var(--amber-glow); font-style: normal; font-weight: 600;
+  }
+  .action-hint.ok::before { color: var(--green-glow); }
+  .action-hint.warn::before { color: var(--amber-glow); }
+
+  /* Executable File Inventory — differentiate verdict on the tag clearly.
+     The card border already carries severity via .finding-card.warning/.ok/.info;
+     this makes the header tag match so the reader doesn't have to decode borders. */
+  .inv-verdict {
+    display: inline-flex; align-items: center; gap: 0.25rem;
+    padding: 0.1875rem 0.5rem; border-radius: 0.625rem; margin-left: 0.375rem;
+    font-family: var(--font-mono); font-size: 0.65rem; letter-spacing: 0.04em;
+    text-transform: uppercase; border: 1px solid;
+  }
+  .inv-verdict.warn {
+    color: var(--amber-glow); border-color: var(--amber-dim);
+    background: rgba(255, 170, 42, 0.12);
+  }
+  .inv-verdict.ok {
+    color: var(--green-glow); border-color: var(--green-dim);
+    background: rgba(34, 197, 94, 0.12);
+  }
+  .inv-verdict.info {
+    color: var(--cyan-glow); border-color: var(--cyan-dim);
+    background: rgba(6, 182, 212, 0.12);
+  }
+
+  /* Inventory one-line summary block — V2.2 F12 format */
+  .inventory-summary {
+    margin-bottom: 1.25rem; padding: 0.875rem 1rem;
+    background: var(--bg-elevated); border-radius: 0.5rem;
+    border-left: 3px solid var(--cyan-glow); font-size: 0.85rem;
+  }
+  .inventory-summary-title {
+    font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--text-secondary); margin-bottom: 0.5rem;
+  }
+  .inventory-summary ul { list-style: none; padding: 0; margin: 0; }
+  .inventory-summary li {
+    padding: 0.25rem 0; line-height: 1.55; display: flex; gap: 0.5rem; align-items: flex-start;
+  }
+  .inventory-summary li .glyph {
+    flex: 0 0 1.125rem; font-family: var(--font-mono); font-weight: 700;
+    text-align: center;
+  }
+  .inventory-summary li.warn .glyph { color: var(--amber-glow); }
+  .inventory-summary li.ok .glyph { color: var(--green-glow); }
+  .inventory-summary li.info .glyph { color: var(--cyan-glow); }
+
+  /* Timeline severity glyphs — per-item worry indicator beyond just dot color */
+  .tl-item .tl-severity-label {
+    display: inline-block; font-family: var(--font-mono); font-weight: 700;
+    font-size: 0.68rem; letter-spacing: 0.05em; margin-right: 0.375rem;
+    padding: 0.125rem 0.375rem; border-radius: 0.25rem;
+  }
+  .tl-item.bad .tl-severity-label {
+    color: var(--red-glow); background: rgba(255, 69, 69, 0.12);
+  }
+  .tl-item.good .tl-severity-label {
+    color: var(--green-glow); background: rgba(34, 197, 94, 0.12);
+  }
+  .tl-item.neutral .tl-severity-label {
+    color: var(--amber-glow); background: rgba(255, 170, 42, 0.12);
+  }
+
+  /* Evidence priority banner — "read this first" marker on the most important evidence */
+  .evidence-priority {
+    position: relative; border-left-width: 4px !important;
+  }
+  .evidence-priority .priority-flag {
+    display: inline-block; margin-left: 0.5rem; padding: 0.1875rem 0.5rem;
+    background: var(--amber-glow); color: var(--bg-void);
+    border-radius: 0.25rem; font-family: var(--font-mono);
+    font-size: 0.62rem; font-weight: 700; letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .evidence-group-label {
+    margin: 1.5rem 0 0.75rem; font-family: var(--font-mono);
+    font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--text-secondary); padding: 0.5rem 0.75rem;
+    background: var(--bg-elevated); border-radius: 0.375rem;
+    border-left: 3px solid var(--border);
+  }
+  .evidence-group-label.warns { border-left-color: var(--amber-glow); color: var(--amber-glow); }
+  .evidence-group-label.positives { border-left-color: var(--green-glow); color: var(--green-glow); }
+  .evidence-group-label.context { border-left-color: var(--cyan-glow); color: var(--cyan-glow); }
+
+  /* Evidence Appendix — <pre> blocks for command and multi-line result */
+  .evidence-row { margin-bottom: 10px; }
+  .evidence-row .evidence-label {
+    font-family: var(--font-mono); font-size: 0.625rem; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--text-secondary); margin-bottom: 4px;
+  }
+  .evidence-pre {
+    background: var(--bg-void); border: 1px solid var(--border); border-radius: 6px;
+    padding: 12px 14px; margin: 0; overflow-x: auto; white-space: pre-wrap; word-break: break-word;
+    font-family: var(--font-mono); font-size: 0.75rem; color: var(--cyan-glow); line-height: 1.55;
+    max-height: 320px; overflow-y: auto;
+  }
+  .evidence-pre.result { color: var(--text-primary); }
+  .evidence-classification {
+    font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-primary);
+    padding: 8px 12px; background: var(--bg-elevated);
+    border: 1px solid var(--border-subtle); border-radius: 6px;
+  }
+  .evidence-classification.inference { color: var(--amber-glow); }
+  .evidence-classification.fact { color: var(--green-glow); }
+
+  /* Footer */
+  .footer {
+    padding: 40px 0; border-top: 1px solid var(--border-subtle);
+    text-align: center; font-size: 0.75rem; color: var(--text-muted);
+  }
+  .footer a { color: var(--text-secondary); }
+
+  /* Responsive */
+  @media (max-width: 700px) {
+    .scorecard-grid { grid-template-columns: repeat(2, 1fr); }
+    .finding-meta { grid-template-columns: 1fr; }
+    .hero { padding: 40px 0 32px; }
+    .collapsible-section > summary { padding-top: 32px; }
+    table { font-size: 0.75rem; }
+    th, td { padding: 10px 12px; }
+    .vitals-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 420px) {
+    .scorecard-grid { grid-template-columns: 1fr; }
+  }
+
+</style>
+</head>
+<body>
+
+<div class="font-controls">
+  <button onclick="adjustFont(-1)" title="Decrease font size" aria-label="Decrease font size">A&minus;</button>
+  <span class="font-size-display" id="fontDisplay">100%</span>
+  <button onclick="adjustFont(1)" title="Increase font size" aria-label="Increase font size">A+</button>
+</div>
+<script>
+  let fontScale = 100;
+  function adjustFont(dir) {
+    fontScale = Math.min(150, Math.max(75, fontScale + dir * 10));
+    document.documentElement.style.fontSize = fontScale + '%';
+    document.getElementById('fontDisplay').textContent = fontScale + '%';
+  }
+</script>
+
+<div class="page">
+
+  <div class="hero">
+    <div class="scan-strip">
+      <span class="scan-strip-item"><span class="dot amber"></span>Security Investigation</span>
+      <span class="scan-strip-item">Dossier &middot; skills</span>
+      <span class="scan-strip-item">Rev &middot; b843cb5</span>
+      <span class="scan-strip-item">V2.4 &middot; 2026-04-30T14:46:59.786005+00:00</span>
+      <span class="scan-strip-item flash">&bull; Live</span>
+    </div>
+    <h1>mattpocock<span class="slash">/</span><span class="amber">skills</span></h1>
+    <div class="hero-caption">mattpocock/skills — 47.9k-star Claude Code skill collection (22 SKILL.md, 1,815 lines), 3 months old, solo-maintained. Zero releases (rolling install), zero branch protection, no SECURITY.md (PR proposing one was closed without merging). Install delegates to vercel-labs/skills npm CLI. Skill content sampled is benign and consent-driven — risk is structural (solo + rolling + no second-human gate). Caution.</div>
+    <div class="meta">
+      <div class="meta-item"><span class="label">Investigated</span> 2026-04-30</div>
+      <div class="meta-item"><span class="label">Applies to</span> main @ b843cb5</div>
+      <div class="meta-item"><span class="label">Repo age</span> 0 years</div>
+      <div class="meta-item"><span class="label">Stars</span> 47,917</div>
+      <div class="meta-item"><span class="label">License</span> MIT</div>
+    </div>
+  </div>
+
+  <div class="catalog-meta">
+    <div class="catalog-label">Catalog metadata</div>
+    <table>
+      <tr><td class="key">Report file</td><td class="val"><code>GitHub-Scanner-skills.html</code> (+ <code>.md</code> companion)</td></tr>
+      <tr><td class="key">Repo</td><td class="val"><a href="https://github.com/mattpocock/skills">github.com/mattpocock/skills</a></td></tr>
+      <tr><td class="key">Short description</td><td class="val">Curated collection of 22 agent skills (slash commands) for Claude Code, written in Markdown. Consumed via Claude Code plugin marketplace or `npx skills@latest add mattpocock/skills`. By Matt Pocock (Total TypeScript).</td></tr>
+      <tr><td class="key">Category</td><td class="val">developer-tooling</td></tr>
+      <tr><td class="key">Subcategory</td><td class="val">claude-code-skills</td></tr>
+      <tr><td class="key">Verdict</td><td class="val val-warn fw-semi">Caution</td></tr>
+      <tr><td class="key">Scanned revision</td><td class="val">main @ b843cb5 (untagged)</td></tr>
+      <tr><td class="key">Prompt version</td><td class="val">V2.4</td></tr>
+      <tr><td class="key">Prior scan</td><td class="val">First scan of mattpocock/skills. 12th wild V1.2-schema scan (after markitdown 15, ghostty 16, Kronos 17, kamal 18, Xray-core 19, browser_terminal 20, wezterm 21, QuickLook 22, kanata 23, freerouting 24, WLED 25, Baileys 26).</td></tr>
+    </table>
+  </div>
+
+  <div class="verdict-section">
+    <div class="verdict-banner caution" data-dossier="DOSSIER · SKILLS · B843CB5 · 2026-04-30 · V2.4">
+      <div class="verdict-label">&#x25CF; Caution</div>
+
+      <div class="verdict-split">
+        <div class="verdict-entry">
+          <div class="verdict-entry-scope">skills &middot; 2026-04-30</div>
+          <h2 class="verdict-entry-headline warn">Caution</h2>
+          <div class="verdict-entry-detail">See findings below for details.</div>
+        </div>
+      </div>
+
+      <div class="verdict-exhibits">
+        <details class="exhibit vuln">
+          <summary>
+            <span class="exhibit-glyph">⚠</span>
+            <span>
+              <span class="exhibit-title">Caution — F0..F4 cluster around the same root: solo-maintainer-no-protections + rolling supply chain</span>
+              <span class="exhibit-count">&middot; 5 findings</span>
+              <span class="exhibit-summary-line">47.9k stars + 3 months old + zero governance protections + rolling install path through a third-party npm CLI = trust-the-maintainer-and-the-CLI posture.</span>
+            </span>
+          </summary>
+          <div class="exhibit-body">
+            <div class="exhibit-item">
+              <span class="exhibit-item-glyph">01</span>
+              <span>
+                <span class="exhibit-item-tag">F0 / F11</span>
+                mattpocock holds 87.3% commit share + 1 owner-test account = effective bus-factor 1; all 7 governance signals negative.
+              </span>
+            </div>
+            <div class="exhibit-item">
+              <span class="exhibit-item-glyph">02</span>
+              <span>
+                <span class="exhibit-item-tag">F1</span>
+                Zero releases — install resolves to whatever HEAD points at on main at install time. Rolling distribution.
+              </span>
+            </div>
+            <div class="exhibit-item">
+              <span class="exhibit-item-glyph">03</span>
+              <span>
+                <span class="exhibit-item-tag">F2</span>
+                No SECURITY.md (PR #67 closed without merging); no documented disclosure channel.
+              </span>
+            </div>
+            <div class="exhibit-item">
+              <span class="exhibit-item-glyph">04</span>
+              <span>
+                <span class="exhibit-item-tag">F3</span>
+                Two-stage supply chain — `npx skills@latest add` extends trust to vercel-labs/skills npm CLI.
+              </span>
+            </div>
+            <div class="exhibit-item">
+              <span class="exhibit-item-glyph">05</span>
+              <span>
+                <span class="exhibit-item-tag">F4</span>
+                22 SKILL.md files (1,815 lines) form the post-install prompt surface; instructions Claude executes with user&#39;s repo permissions.
+              </span>
+            </div>
+          </div>
+        </details>
+        <details class="exhibit vuln">
+          <summary>
+            <span class="exhibit-glyph">ℹ</span>
+            <span>
+              <span class="exhibit-title">Info — F5 is scanner coverage, not a property of the repo</span>
+              <span class="exhibit-count">&middot; 1 findings</span>
+              <span class="exhibit-summary-line">Harness scanned 1/23 markdown rule files for prompt injection.</span>
+            </span>
+          </summary>
+          <div class="exhibit-body">
+            <div class="exhibit-item">
+              <span class="exhibit-item-glyph">01</span>
+              <span>
+                <span class="exhibit-item-tag">F5</span>
+                agent_rule_files heuristic missed the 22 SKILL.md files; only top-level CLAUDE.md scanned. V1.2.x patch candidate.
+              </span>
+            </div>
+          </div>
+        </details>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="scorecard-section">
+    <div class="scorecard-grid">
+      <div class="score-cell">
+        <div class="score-icon red">❌</div>
+        <div class="score-label">Does anyone check the code?</div>
+        <div class="score-value red">No — solo maintainer (87.3% commit share + 1 owner-test account), 0% formal review on the 1 lifetime merged PR, no branch protection, no CODEOWNERS, no rulesets</div>
+      </div>
+      <div class="score-cell">
+        <div class="score-icon amber">⚠</div>
+        <div class="score-label">Do they fix problems quickly?</div>
+        <div class="score-value amber">Unknown — 3-month-old repo with 1 lifetime merged PR and 0 closed-merged security PRs to grade response cadence on; no overdue items either</div>
+      </div>
+      <div class="score-cell">
+        <div class="score-icon red">❌</div>
+        <div class="score-label">Do they tell you about problems?</div>
+        <div class="score-value red">No — no SECURITY.md (PR #67 proposing one was closed without merging), 0 published GHSA advisories, no documented disclosure channel</div>
+      </div>
+      <div class="score-cell">
+        <div class="score-icon amber">⚠</div>
+        <div class="score-label">Is it safe out of the box?</div>
+        <div class="score-value amber">Partly — README explains what the install does and lists the skills that will be activated, but install delegates trust to vercel-labs/skills npm package and 22 SKILL.md files are unsigned and unverifiable post-install</div>
+      </div>
+    </div>
+  </div>
+
+  <details class="collapsible-section" open>
+    <summary>
+      <div class="section-header">
+        <span class="section-number">01</span>
+        <h2>What Should I Do?</h2>
+        <span class="section-status">
+          <span class="pill amber">47.9k⭐ · MIT · Markdown-canonical · 5 warnings · 1 info · caution</span>
+        </span>
+      </div>
+      <div class="section-subtitle">mattpocock/skills is a 3-month-old, 47.9k-star curated collection of 22 Claude Code skills, distributed as a plugin (`.claude-plugin/plugin.json`) and via `npx skills@latest add mattpocock/skills` (which routes through the vercel-labs/skills npm CLI). The repo is solo-maintained (mattpocock 87.3% commit share + a maintainer-owned test account; total contributor count: 2). Governance posture is minimal: no branch protection, no CODEOWNERS, no SECURITY.md (a PR proposing one was closed without merging), no published advisories, no Dependabot config, 1 GitHub Actions workflow (Copilot review bot). The verdict is Caution rather than Critical because (a) the underlying content is markdown — fully auditable; (b) several skills are explicitly defensive (e.g., `/git-guardrails-claude-code` blocks dangerous git commands); (c) mattpocock&#39;s public reputation (Total TypeScript, 11.9k followers, 218 public repos) is itself a meaningful trust signal. The Caution applies to the install path and post-install update model, not to the current skill content.</div>
+    </summary>
+    <div class="section-body">
+      <div class="action-card ok-action">
+        <h3>Step 1: Install via the documented quickstart, OR clone and link locally for tighter trust scope</h3>
+        <p><strong>Non-technical:</strong> Two equivalent paths. (1) `npx skills@latest add mattpocock/skills` — fastest, but trusts both mattpocock and vercel-labs/skills (the npm CLI that drives the install). (2) `git clone` + `bash scripts/link-skills.sh` — same end result, but stays within mattpocock&#39;s trust scope only. Pick whichever matches your trust model.</p>
+        <pre>npx skills@latest add mattpocock/skills  # OR: git clone https://github.com/mattpocock/skills &amp;&amp; cd skills &amp;&amp; bash scripts/link-skills.sh</pre>
+      </div>
+      <div class="action-card info-action">
+        <h3>Step 2: Read the SKILL.md before invoking the skill</h3>
+        <p><strong>Non-technical:</strong> Each skill is a markdown file under skills/&lt;bucket&gt;/&lt;name&gt;/SKILL.md. When you run a slash command, Claude reads that file as instructions. Treat skill content like code — read it once, decide if you trust it, then invoke.</p>
+        <pre>ls ~/.claude/skills/  # see installed skills; cat ~/.claude/skills/tdd/SKILL.md  # read one before /tdd</pre>
+      </div>
+      <div class="action-card info-action">
+        <h3>Step 3: Run /setup-matt-pocock-skills before first use of the engineering skills</h3>
+        <p><strong>Non-technical:</strong> The README directs users to run /setup-matt-pocock-skills as the first step. It will ask you about your issue tracker, label vocabulary, and where docs/CONTEXT.md live, then write a config block to AGENTS.md/CLAUDE.md and per-section files under docs/agents/. Read what it proposes before confirming.</p>
+        <pre># In Claude Code
+/setup-matt-pocock-skills</pre>
+      </div>
+      <div class="action-card wait">
+        <h3>Step 4: Pin to a specific commit if you want a stable surface (rolling install otherwise)</h3>
+        <p><strong>Non-technical:</strong> There are no release tags. `npx skills@latest add mattpocock/skills` resolves to whatever HEAD points at on `main` at install time. If you want the same skill set tomorrow that you have today, install once and don&#39;t re-run with @latest. Or fork the repo and pin your fork.</p>
+        <pre>git clone --depth 1 https://github.com/mattpocock/skills.git &amp;&amp; cd skills &amp;&amp; git rev-parse HEAD  # record the SHA you trust</pre>
+      </div>
+      <div class="action-card info-action">
+        <h3>Step 5: Disclose vulnerabilities privately via GitHub&#39;s &#39;Report a vulnerability&#39; UI</h3>
+        <p><strong>Non-technical:</strong> There is no SECURITY.md and no documented disclosure channel. If you find a security issue, use GitHub&#39;s built-in private vulnerability reporting at github.com/mattpocock/skills/security/advisories/new (untested but standard). Don&#39;t post publicly.</p>
+        <pre>open https://github.com/mattpocock/skills/security/advisories/new</pre>
+      </div>
+    </div>
+  </details>
+
+  <details class="collapsible-section">
+    <summary>
+      <div class="section-header">
+        <span class="section-number">02</span>
+        <h2>What We Found</h2>
+        <span class="section-status">
+<span class="pill amber">&#x26A0; 5 Warning</span><span class="pill info">&#x2139; 1 Info</span>        </span>
+      </div>
+      <div class="section-subtitle">
+        6 findings total.      </div>
+    </summary>
+    <div class="section-body">
+      <div class="finding-card warning">
+        <details>
+          <summary>
+            <div class="finding-header">
+              <span class="tag warning-tag">Warning</span>
+              <span class="status-chip informational">Ongoing</span>
+<span class="finding-date">Since repo creation (2026-02-03)</span><span class="finding-duration">Continuous</span>              <h3>F0 &mdash; Solo-maintainer (87.3% share, 1 active human + 1 owner-test account) with zero governance protections on a 47.9k-star skill registry</h3>
+              <div class="action-hint warn">Inspect the skill content you intend to install before linking; pin to a specific commit if you want a stable surface.</div>
+            </div>
+          </summary>
+          <div class="finding-body">
+            <p>mattpocock holds 87.3% of top-contributor commit share (55 commits to TESTPERSONAL&#39;s 8). The TESTPERSONAL account is almost certainly maintainer-owned: created 2014, no bio, no company, 9 followers, 0 public repos — the profile of a personal test/dev account, not an independent reviewer. Effective bus-factor is 1.</p>
+            <p>All 7 C20 governance signals are negative: classic branch protection HTTP 404, 0 rulesets, 0 rules-on-default-branch, no CODEOWNERS at any standard location, owner is a User account (not an Org → org rulesets n/a), and OSSF Scorecard has not indexed the repo. There is no structural second-human gate between mattpocock pushing to `main` and a user&#39;s `~/.claude/skills/` receiving that content via `npx skills@latest add` or the plugin marketplace.</p>
+            <p>Why Warning, not Critical: the C20 rule reserves Critical for solo-maintainer + no-protection + recent-release on a privileged tool, and there are no formal release tags here at all. The blast radius is real (47.9k stars, rolling distribution) but the canonical mitigation — pin to a release tag — doesn&#39;t apply because tags don&#39;t exist. Mattpocock&#39;s public reputation (Total TypeScript founder, 11.9k followers, 218 public repos, ex-Vercel) is itself a meaningful trust signal. The finding is structural, not a judgment about the maintainer.</p>
+            <p><strong>How to fix.</strong> Maintainer-side: enable a branch protection ruleset on `main` requiring ≥1 approving review; add a CODEOWNERS file (even self-listed); publish a SECURITY.md naming a disclosure channel. Consumer-side: `git clone` and inspect `skills/&lt;bucket&gt;/&lt;name&gt;/SKILL.md` before linking; or pin to a specific commit SHA via the install command rather than `@latest`.</p>
+          </div>
+        </details>
+      </div>
+      <div class="finding-card warning">
+        <details>
+          <summary>
+            <div class="finding-header">
+              <span class="tag warning-tag">Warning</span>
+              <span class="status-chip informational">Ongoing</span>
+<span class="finding-date">Since repo creation (2026-02-03)</span><span class="finding-duration">Continuous</span>              <h3>F1 &mdash; Zero formal releases — install path resolves to whatever HEAD points at on main at install time</h3>
+              <div class="action-hint warn">If you want a stable skill set, install once and don&#39;t re-run with `@latest`; or fork and pin.</div>
+            </div>
+          </summary>
+          <div class="finding-body">
+            <p>The repo has zero GitHub Releases and zero semantic version tags. Both documented install paths consume the latest commit on `main` at install time: `npx skills@latest add mattpocock/skills` resolves through the vercel-labs/skills CLI to whatever HEAD points at, and the Claude Code plugin marketplace (via `.claude-plugin/plugin.json`) reads the manifest from `main` at activation time.</p>
+            <p>This is the rolling-distribution pattern. Whatever you install today differs from whatever you install tomorrow if main has moved. A malicious commit to `main` reaches users at the next install boundary (or the next plugin auto-update, if that exists in the marketplace). Many Claude Code skill sets follow this pattern — it isn&#39;t unique to mattpocock/skills — but it&#39;s worth being explicit about.</p>
+            <p>Consumer-side mitigation: install once, then don&#39;t blindly re-run with `@latest`. If you need a stable surface, fork the repo and pin your fork to a SHA you&#39;ve reviewed. Maintainer-side mitigation is more interesting: cutting a `v0.1.0` tag and documenting `@v0.1.0` install would let trust-conscious users opt into a pinned surface without restructuring the rolling default.</p>
+            <p><strong>How to fix.</strong> Maintainer-side: cut versioned release tags (e.g. `v0.1.0`) and document `npx skills@latest add mattpocock/skills@v0.1.0` (if the upstream `skills` CLI supports SHA/tag pinning). Consumer-side: install once, then don&#39;t blindly re-run install commands; or fork and maintain your own pinned copy.</p>
+          </div>
+        </details>
+      </div>
+      <div class="finding-card warning">
+        <details>
+          <summary>
+            <div class="finding-header">
+              <span class="tag warning-tag">Warning</span>
+              <span class="status-chip informational">Ongoing</span>
+<span class="finding-date">Since repo creation (2026-02-03)</span><span class="finding-duration">Continuous</span>              <h3>F2 &mdash; No SECURITY.md (an external PR proposing one was closed without merging) — disclosure path is informal</h3>
+              <div class="action-hint warn">If you find a security issue, message mattpocock directly via X/Twitter or the Total TypeScript team, since there is no documented private channel.</div>
+            </div>
+          </summary>
+          <div class="finding-body">
+            <p>PR #67 (`Create SECURITY.md for security policy`) was opened by an external contributor on 2026-04-26 and closed without merging two days later. The body was a one-line description; the PR added 21 lines and 0 deletions across 1 file. It was closed as part of a maintainer-curated batch on 2026-04-28 affecting 6+ unrelated PRs (a SECURITY policy, a typo fix, a lockfile fix, several feature additions). The pattern reads as &#39;tidy up the PR queue&#39;, not as &#39;reject this disclosure mechanism deliberately&#39;.</p>
+            <p>But the operational effect is the same either way: there is no SECURITY.md and no documented private disclosure channel. community/profile.has_security_policy is false; published GHSA advisories: 0. A reporter who finds a security-relevant issue has no signposted path. GitHub&#39;s built-in `Report a vulnerability` UI may still work as an implicit fallback (untested), but it isn&#39;t advertised.</p>
+            <p>The closest analogue is the `.out-of-scope/` directory, which documents non-security scope decisions in prose form (e.g. why mainstream-only issue trackers, why question-limits on grilling) — a positive transparency signal, but not a security-disclosure surface. Adding a 1-page SECURITY.md (PR #67 was already drafted) closes this in minutes.</p>
+            <p><strong>How to fix.</strong> Maintainer-side: add a 1-page SECURITY.md naming a private disclosure channel (email, GitHub private advisory, or a Total TypeScript team alias) and a response-time expectation. Reviewing PR #67 as a starting point would close this in minutes. Consumer-side: if you find something, use GitHub&#39;s private-advisory UI or DM the maintainer; do not post publicly.</p>
+          </div>
+        </details>
+      </div>
+      <div class="finding-card warning">
+        <details>
+          <summary>
+            <div class="finding-header">
+              <span class="tag warning-tag">Warning</span>
+              <span class="status-chip informational">Ongoing</span>
+<span class="finding-date">Since README quickstart adopted</span><span class="finding-duration">Continuous</span>              <h3>F3 &mdash; Two-stage supply chain — install via `npx skills@latest` extends trust to vercel-labs/skills (a separate npm-published CLI)</h3>
+              <div class="action-hint warn">When you run the documented install command, you are also implicitly trusting whoever publishes the npm `skills` package.</div>
+            </div>
+          </summary>
+          <div class="finding-body">
+            <p>The README&#39;s documented quickstart is `npx skills@latest add mattpocock/skills`. That command pulls the npm package `skills@1.5.3`, published by vercel-labs/skills — a separate GitHub repository, separate maintainer surface, separate npm trust scope. The vercel-labs CLI then fetches mattpocock/skills content and writes it into `~/.claude/skills/`. The trust chain is: npm registry → vercel-labs/skills publishers → vercel-labs/skills CLI logic → mattpocock/skills content.</p>
+            <p>A compromise at any layer of that chain could redirect, modify, or exfiltrate during install. Vercel is a well-known platform vendor with reasonable supply-chain hygiene, but the framing matters: a single-line install command quietly extends trust to two maintainer groups, not one. The Claude Code plugin marketplace path (via `.claude-plugin/plugin.json`) is an alternative with its own (Anthropic-mediated) trust assumptions.</p>
+            <p>The simplest mitigation stays within mattpocock&#39;s trust scope: clone the repo and run `bash scripts/link-skills.sh` (which symlinks SKILL.md files into `~/.claude/skills/`). No npm registry, no vercel-labs CLI, no plugin marketplace — just git + ln. Maintainer-side: documenting this clone+link path alongside the npx path lets users self-select their trust boundary.</p>
+            <p><strong>How to fix.</strong> Consumer-side: skip the npx step. Clone mattpocock/skills directly, run `scripts/link-skills.sh` (which symlinks SKILL.md files into `~/.claude/skills/`), and you stay within mattpocock&#39;s trust scope. Maintainer-side: optionally document the clone+link path alongside the npx path so users can pick their trust boundary.</p>
+          </div>
+        </details>
+      </div>
+      <div class="finding-card warning">
+        <details>
+          <summary>
+            <div class="finding-header">
+              <span class="tag warning-tag">Warning</span>
+              <span class="status-chip informational">Ongoing</span>
+<span class="finding-date">Since the first SKILL.md was added (2026-02-03)</span><span class="finding-duration">Continuous</span>              <h3>F4 &mdash; 22 SKILL.md files (1,815 lines) form the post-install prompt surface — instructions Claude executes with full repo permissions</h3>
+              <div class="action-hint warn">Read each SKILL.md before invoking the skill; treat installed skills as code, not as documentation.</div>
+            </div>
+          </summary>
+          <div class="finding-body">
+            <p>Once installed, the 22 skills become slash-commands invokable from Claude Code. When invoked, each skill loads its SKILL.md as Claude instructions and Claude executes them against the user&#39;s working repo with normal Claude Code permissions. Several skills explicitly modify environment: `/setup-pre-commit` writes to `package.json`, `.husky/`, and installs npm devDependencies; `/git-guardrails-claude-code` writes to `~/.claude/settings.json` to install hook scripts; `/setup-matt-pocock-skills` writes config blocks to `AGENTS.md`/`CLAUDE.md` plus per-section files under `docs/agents/`.</p>
+            <p>The risk is not &#39;malicious now&#39; — the SKILL.md content sampled (setup-pre-commit, git-guardrails-claude-code, setup-matt-pocock-skills, tdd) is consent-driven and consistent with stated purpose. Several skills are explicitly defensive: `/git-guardrails-claude-code` blocks `git push`, `git reset --hard`, `git clean -f`, etc. before they execute. The risk is &#39;a future malicious commit reaches users on the next install / auto-update&#39;.</p>
+            <p>Consumer-side mitigation is straightforward but requires intent: before linking, `cat skills/&lt;bucket&gt;/&lt;name&gt;/SKILL.md` for each skill you intend to use. Treat skill-update events as code-review events, not as silent updates. Every SKILL.md is plain markdown — fully auditable, not obfuscated. Maintainer-side: a CHANGELOG.md at the skill level (or commit messages with `[skill: ...]` prefixes) would help downstream auditability without adding tooling.</p>
+            <p><strong>How to fix.</strong> Consumer-side: before linking, `cat skills/&lt;bucket&gt;/&lt;name&gt;/SKILL.md` for each skill you intend to use; install only the ones you&#39;ve read. Treat skill-update events as code-review events, not silent updates. Maintainer-side: a `CHANGELOG.md` at the skill level (or commit messages with `[skill: ...]` prefixes) would help downstream auditability.</p>
+          </div>
+        </details>
+      </div>
+      <div class="finding-card info">
+        <details>
+          <summary>
+            <div class="finding-header">
+              <span class="tag info-tag">Info</span>
+              <span class="status-chip informational">Ongoing</span>
+<span class="finding-date">Scanner harness gap</span><span class="finding-duration">Continuous</span>              <h3>F5 &mdash; Scanner coverage gap on plugin-shape repos — only 1 of 23 markdown rule files was scanned for prompt injection</h3>
+              <div class="action-hint warn">Non-blocking. Re-running with a SKILL.md-aware scanner would close this gap.</div>
+            </div>
+          </summary>
+          <div class="finding-body">
+            <p>The harness&#39;s `code_patterns.agent_rule_files` heuristic captured the 13-line top-level `CLAUDE.md` and stopped there. The 22 SKILL.md files (1,815 lines) under `skills/&lt;bucket&gt;/&lt;name&gt;/SKILL.md` were not enumerated. As a result `prompt_injection_scan.scanned_files` is `[&#39;CLAUDE.md&#39;]` and `signal_count: 0` — but the 0-signal result reflects 1/23 file coverage, not a clean read on the full prompt surface.</p>
+            <p>The third-party Skillsmith scanner (issue #105, closed 2026-04-30) scanned the SKILL.md content with a different ruleset and surfaced one false positive — a regex match on the phrase &#39;...the system:&#39; at end-of-line in `skills/engineering/tdd/SKILL.md` line 64, where &#39;system&#39; refers to the system under test in TDD prose. Skillsmith concluded false positive on their side, tracked auto-quarantine + pattern-tuning, and filed it informationally.</p>
+            <p>This is a property of the harness, not of mattpocock/skills. V1.2.x patch candidate: extend `code_patterns.agent_rule_files` to recursively find SKILL.md files under any `skills/` subdirectory, and feed all of them into `prompt_injection_scan.scanned_files`. Same class of fix as V13-3 C2 (deserialization language-qualifier regex) — narrow, shape-specific harness tuning.</p>
+            <p><strong>How to fix.</strong> Scanner-side: extend `code_patterns.agent_rule_files` to recursively find SKILL.md files under any `skills/` subdirectory, and feed all of them into `prompt_injection_scan.scanned_files`. This is a V1.2.x-class harness patch (similar in spirit to V13-3 C2 language qualifier). Consumer-side: read the SKILL.md files yourself, or run a SKILL.md-aware tool.</p>
+          </div>
+        </details>
+      </div>
+    </div>
+  </details>
+
+  <details class="collapsible-section">
+    <summary>
+      <div class="section-header">
+        <span class="section-number">02A</span>
+        <h2>Executable File Inventory</h2>
+        <span class="section-status">
+          <span class="pill info">&#x2139; 5 files inventoried</span>
+        </span>
+      </div>
+      <div class="section-subtitle">mattpocock/skills ships markdown-canonical skill content (22 SKILL.md files, 1,815 lines) plus 2 small shell scripts under `scripts/`. There are no compiled binaries, no native dependencies, no package manifests. The &#39;execution&#39; surface is what Claude does when a skill is invoked: skills load their SKILL.md as instructions and Claude follows them with the user&#39;s repo permissions.</div>
+    </summary>
+    <div class="section-body">
+      <p class="p-meta">One card per executable file (hooks, install/uninstall scripts, package lifecycle scripts, CI workflows, Dockerfile, session/event handlers, background processes). Each card documents 7 properties derived from grep &mdash; NOT from the file&rsquo;s self-description &mdash; plus a capability assessment of what the code could do in the worst case.</p>
+
+      <div class="inventory-summary">
+        <div class="inventory-summary-title">Quick scan (5 executables)</div>
+        <ul>
+          <li class="warn"><span class="glyph">⚠</span><span><code>skills/engineering/setup-matt-pocock-skills/SKILL.md</code> &mdash; agent-rule. Required setup skill — the README quickstart says to run `/setup-matt-pocock-skills` after install. Modifies the user&#39;s repo config files. Consent-driven; explicit confirmation step before writing.</span></li>
+          <li class="warn"><span class="glyph">⚠</span><span><code>skills/misc/git-guardrails-claude-code/SKILL.md</code> &mdash; agent-rule. This skill is itself a defensive measure — it adds hooks that block destructive git commands. Net-positive security signal; the install action modifies the user&#39;s Claude Code settings.</span></li>
+          <li class="warn"><span class="glyph">⚠</span><span><code>skills/misc/setup-pre-commit/SKILL.md</code> &mdash; agent-rule. Standard developer-tooling setup. Modifies user&#39;s package.json + adds devDeps + creates pre-commit hook.</span></li>
+          <li class="warn"><span class="glyph">⚠</span><span><code>scripts/link-skills.sh</code> &mdash; shell-script. Maintainer-side install script. Used by users who clone the repo directly and want to symlink skills locally. Defensive coding — checks for circular symlinks before writing.</span></li>
+          <li class="warn"><span class="glyph">⚠</span><span><code>skills/engineering/tdd/SKILL.md</code> &mdash; agent-rule. The skill flagged by the third-party Skillsmith scanner (issue #105) for a regex false-positive on the phrase &#39;...the system:&#39; at end-of-line. Skillsmith concluded false positive on their side. Content is benign TDD prose.</span></li>
+        </ul>
+      </div>
+
+      <div class="finding-card warning stack-md">
+        <details>
+          <summary>
+            <div class="finding-header">
+              <span class="tag warning-tag">Executable</span>
+              <span class="inv-verdict warn">⚠ Writes to AGENTS.md/CLAUDE.md at repo root; writes docs/agents/{issue-tracker,triage-labels,domain}.md. Asks user permission first. Reads .git/config and `git remote -v`.</span>
+              <h3><code>skills/engineering/setup-matt-pocock-skills/SKILL.md</code></h3>
+            </div>
+          </summary>
+          <div class="finding-body">
+            <div class="finding-meta">
+              <div class="meta-chip"><span class="chip-label">1. Trigger</span><span class="chip-value">Claude Code (Markdown → instructions)</span></div>
+              <div class="meta-chip"><span class="chip-label">2. Reads</span><span class="chip-value">Required setup skill — the README quickstart says to run `/setup-matt-pocock-skills` after install. Modifies the user&#39;s repo config files. Consent-driven; explicit confirmation step before writing.</span></div>
+              <div class="meta-chip"><span class="chip-label">3. Writes</span><span class="chip-value">None observed</span></div>
+              <div class="meta-chip"><span class="chip-label">4. Network</span><span class="chip-value">None directly; instructs Claude to use `gh` or `glab` CLI for issue-tracker setup if user picks that path.</span></div>
+              <div class="meta-chip"><span class="chip-label">5. Injection channel</span><span class="chip-value val-warn">Possible via Writes to AGENTS.md/CLAUDE.md at repo root; writes docs/agents/{issue-tracker,triage-labels,domain}.md. Asks user permission first. Reads .git/config and `git remote -v`.</span></div>
+              <div class="meta-chip"><span class="chip-label">6. Secret-leak path</span><span class="chip-value val-good">None</span></div>
+              <div class="meta-chip"><span class="chip-label">7. Privilege</span><span class="chip-value">User-level</span></div>
+            </div>
+            <div class="finding-meta stack-sm">
+              <div class="meta-chip"><span class="chip-label">Relevant lines</span><span class="chip-value">1-121</span></div>
+            </div>
+            <div class="sub-finding">
+              <div class="sub-finding-label">Capability assessment</div>
+              <p>agent-rule. Required setup skill — the README quickstart says to run `/setup-matt-pocock-skills` after install. Modifies the user&#39;s repo config files. Consent-driven; explicit confirmation step before writing.</p>
+            </div>
+          </div>
+        </details>
+      </div>
+      <div class="finding-card warning stack-md">
+        <details>
+          <summary>
+            <div class="finding-header">
+              <span class="tag warning-tag">Executable</span>
+              <span class="inv-verdict warn">⚠ Writes to ~/.claude/settings.json (PreToolUse hooks); installs an executable hook script under .claude/hooks/. Acts as a defensive measure — blocks `git push`, `git reset --hard`, `git clean -f`, etc.</span>
+              <h3><code>skills/misc/git-guardrails-claude-code/SKILL.md</code></h3>
+            </div>
+          </summary>
+          <div class="finding-body">
+            <div class="finding-meta">
+              <div class="meta-chip"><span class="chip-label">1. Trigger</span><span class="chip-value">Claude Code (Markdown → instructions)</span></div>
+              <div class="meta-chip"><span class="chip-label">2. Reads</span><span class="chip-value">This skill is itself a defensive measure — it adds hooks that block destructive git commands. Net-positive security signal; the install action modifies the user&#39;s Claude Code settings.</span></div>
+              <div class="meta-chip"><span class="chip-label">3. Writes</span><span class="chip-value">None observed</span></div>
+              <div class="meta-chip"><span class="chip-label">4. Network</span><span class="chip-value">None.</span></div>
+              <div class="meta-chip"><span class="chip-label">5. Injection channel</span><span class="chip-value val-warn">Possible via Writes to ~/.claude/settings.json (PreToolUse hooks); installs an executable hook script under .claude/hooks/. Acts as a defensive measure — blocks `git push`, `git reset --hard`, `git clean -f`, etc.</span></div>
+              <div class="meta-chip"><span class="chip-label">6. Secret-leak path</span><span class="chip-value val-good">None</span></div>
+              <div class="meta-chip"><span class="chip-label">7. Privilege</span><span class="chip-value">User-level</span></div>
+            </div>
+            <div class="finding-meta stack-sm">
+              <div class="meta-chip"><span class="chip-label">Relevant lines</span><span class="chip-value">1-95</span></div>
+            </div>
+            <div class="sub-finding">
+              <div class="sub-finding-label">Capability assessment</div>
+              <p>agent-rule. This skill is itself a defensive measure — it adds hooks that block destructive git commands. Net-positive security signal; the install action modifies the user&#39;s Claude Code settings.</p>
+            </div>
+          </div>
+        </details>
+      </div>
+      <div class="finding-card warning stack-md">
+        <details>
+          <summary>
+            <div class="finding-header">
+              <span class="tag warning-tag">Executable</span>
+              <span class="inv-verdict warn">⚠ Installs Husky + lint-staged + Prettier as devDependencies (npm/pnpm/yarn/bun); writes .husky/pre-commit; modifies package.json scripts.</span>
+              <h3><code>skills/misc/setup-pre-commit/SKILL.md</code></h3>
+            </div>
+          </summary>
+          <div class="finding-body">
+            <div class="finding-meta">
+              <div class="meta-chip"><span class="chip-label">1. Trigger</span><span class="chip-value">Claude Code (Markdown → instructions)</span></div>
+              <div class="meta-chip"><span class="chip-label">2. Reads</span><span class="chip-value">Standard developer-tooling setup. Modifies user&#39;s package.json + adds devDeps + creates pre-commit hook.</span></div>
+              <div class="meta-chip"><span class="chip-label">3. Writes</span><span class="chip-value">None observed</span></div>
+              <div class="meta-chip"><span class="chip-label">4. Network</span><span class="chip-value">Installs npm packages — outbound to npm registry.</span></div>
+              <div class="meta-chip"><span class="chip-label">5. Injection channel</span><span class="chip-value val-warn">Possible via Installs Husky + lint-staged + Prettier as devDependencies (npm/pnpm/yarn/bun); writes .husky/pre-commit; modifies package.json scripts.</span></div>
+              <div class="meta-chip"><span class="chip-label">6. Secret-leak path</span><span class="chip-value val-good">None</span></div>
+              <div class="meta-chip"><span class="chip-label">7. Privilege</span><span class="chip-value">User-level</span></div>
+            </div>
+            <div class="finding-meta stack-sm">
+              <div class="meta-chip"><span class="chip-label">Relevant lines</span><span class="chip-value">1-91</span></div>
+            </div>
+            <div class="sub-finding">
+              <div class="sub-finding-label">Capability assessment</div>
+              <p>agent-rule. Standard developer-tooling setup. Modifies user&#39;s package.json + adds devDeps + creates pre-commit hook.</p>
+            </div>
+          </div>
+        </details>
+      </div>
+      <div class="finding-card warning stack-md">
+        <details>
+          <summary>
+            <div class="finding-header">
+              <span class="tag warning-tag">Executable</span>
+              <span class="inv-verdict warn">⚠ Symlinks every SKILL.md from this repo into ~/.claude/skills/. Uses `mkdir -p` + `ln -sfn`. Has a guard against accidentally pointing back at this repo (would otherwise pollute the working copy).</span>
+              <h3><code>scripts/link-skills.sh</code></h3>
+            </div>
+          </summary>
+          <div class="finding-body">
+            <div class="finding-meta">
+              <div class="meta-chip"><span class="chip-label">1. Trigger</span><span class="chip-value">bash</span></div>
+              <div class="meta-chip"><span class="chip-label">2. Reads</span><span class="chip-value">Maintainer-side install script. Used by users who clone the repo directly and want to symlink skills locally. Defensive coding — checks for circular symlinks before writing.</span></div>
+              <div class="meta-chip"><span class="chip-label">3. Writes</span><span class="chip-value">None observed</span></div>
+              <div class="meta-chip"><span class="chip-label">4. Network</span><span class="chip-value">None.</span></div>
+              <div class="meta-chip"><span class="chip-label">5. Injection channel</span><span class="chip-value val-warn">Possible via Symlinks every SKILL.md from this repo into ~/.claude/skills/. Uses `mkdir -p` + `ln -sfn`. Has a guard against accidentally pointing back at this repo (would otherwise pollute the working copy).</span></div>
+              <div class="meta-chip"><span class="chip-label">6. Secret-leak path</span><span class="chip-value val-good">None</span></div>
+              <div class="meta-chip"><span class="chip-label">7. Privilege</span><span class="chip-value">User-level</span></div>
+            </div>
+            <div class="finding-meta stack-sm">
+              <div class="meta-chip"><span class="chip-label">Relevant lines</span><span class="chip-value">1-31</span></div>
+            </div>
+            <div class="sub-finding">
+              <div class="sub-finding-label">Capability assessment</div>
+              <p>shell-script. Maintainer-side install script. Used by users who clone the repo directly and want to symlink skills locally. Defensive coding — checks for circular symlinks before writing.</p>
+            </div>
+          </div>
+        </details>
+      </div>
+      <div class="finding-card warning stack-md">
+        <details>
+          <summary>
+            <div class="finding-header">
+              <span class="tag warning-tag">Executable</span>
+              <span class="inv-verdict warn">⚠ Instructs Claude to write tests + run them; uses red-green-refactor loop. Doesn&#39;t modify environment outside the user&#39;s chosen test directory.</span>
+              <h3><code>skills/engineering/tdd/SKILL.md</code></h3>
+            </div>
+          </summary>
+          <div class="finding-body">
+            <div class="finding-meta">
+              <div class="meta-chip"><span class="chip-label">1. Trigger</span><span class="chip-value">Claude Code (Markdown → instructions)</span></div>
+              <div class="meta-chip"><span class="chip-label">2. Reads</span><span class="chip-value">The skill flagged by the third-party Skillsmith scanner (issue #105) for a regex false-positive on the phrase &#39;...the system:&#39; at end-of-line. Skillsmith concluded false positive on their side. Content is benign TDD prose.</span></div>
+              <div class="meta-chip"><span class="chip-label">3. Writes</span><span class="chip-value">None observed</span></div>
+              <div class="meta-chip"><span class="chip-label">4. Network</span><span class="chip-value">None directly. Contains a `fetch()` example in mocking.md (line 44, false-positive on harness `network` family grep).</span></div>
+              <div class="meta-chip"><span class="chip-label">5. Injection channel</span><span class="chip-value val-warn">Possible via Instructs Claude to write tests + run them; uses red-green-refactor loop. Doesn&#39;t modify environment outside the user&#39;s chosen test directory.</span></div>
+              <div class="meta-chip"><span class="chip-label">6. Secret-leak path</span><span class="chip-value val-good">None</span></div>
+              <div class="meta-chip"><span class="chip-label">7. Privilege</span><span class="chip-value">User-level</span></div>
+            </div>
+            <div class="finding-meta stack-sm">
+              <div class="meta-chip"><span class="chip-label">Relevant lines</span><span class="chip-value">1-109</span></div>
+            </div>
+            <div class="sub-finding">
+              <div class="sub-finding-label">Capability assessment</div>
+              <p>agent-rule. The skill flagged by the third-party Skillsmith scanner (issue #105) for a regex false-positive on the phrase &#39;...the system:&#39; at end-of-line. Skillsmith concluded false positive on their side. Content is benign TDD prose.</p>
+            </div>
+          </div>
+        </details>
+      </div>
+
+      <p class="p-meta">The full set of 22 SKILL.md files is auditable via `find skills -name SKILL.md`. Treat each as code: read it before invoking the skill. Several skills (setup-matt-pocock-skills, setup-pre-commit, git-guardrails-claude-code) modify user-side files; the consent points are inside each SKILL.md.</p>
+    </div>
+  </details>
+
+  <details class="collapsible-section">
+    <summary>
+      <div class="section-header">
+        <span class="section-number">03</span>
+        <h2>Suspicious Code Changes</h2>
+        <span class="section-status">
+          <span class="pill amber">&#x26A0; 2 PRs flagged</span>
+          <span class="pill muted">5 sampled</span>
+        </span>
+      </div>
+      <div class="section-subtitle">
+        5 recent merged PRs sampled. Formal review rate: 0.0%.      </div>
+    </summary>
+    <div class="section-body">
+    <div class="pr-table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>PR</th><th>What it did</th><th>Submitted by</th>
+            <th>Merged by</th><th>Reviewed?</th><th>Concern</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><a href="https://github.com/mattpocock/skills/pull/90">#90</a></td>
+            <td>Add setup-matt-pocock-skills; rename github-triage; migrate skills to vague prose</td>
+            <td class="td-person">mattpocock</td>
+            <td class="td-person">mattpocock</td>
+            <td class="td-reviewed-yes">No formal decision; 0 reviews</td>
+            <td class="td-concern">Self-merge</td>
+          </tr>
+          <tr>
+            <td><a href="https://github.com/mattpocock/skills/pull/67">#67</a></td>
+            <td>Create SECURITY.md for security policy (CLOSED, not merged)</td>
+            <td class="td-person">external-contrib</td>
+            <td class="td-person">—</td>
+            <td class="td-reviewed-no">Closed without comment</td>
+            <td class="td-concern">Disclosure-policy PR rejected</td>
+          </tr>
+          <tr>
+            <td><a href="https://github.com/mattpocock/skills/pull/28">#28</a></td>
+            <td>[Security] Add security lens, priority ordering, and challenge behavior to grill-me skill (CLOSED, not merged)</td>
+            <td class="td-person">external-contrib</td>
+            <td class="td-person">—</td>
+            <td class="td-reviewed-no">Closed without comment</td>
+            <td class="td-concern">Security-tagged PR rejected</td>
+          </tr>
+          <tr>
+            <td><a href="https://github.com/mattpocock/skills/pull/75">#75</a></td>
+            <td>fix typo in readme (CLOSED, not merged)</td>
+            <td class="td-person">external-contrib</td>
+            <td class="td-person">—</td>
+            <td class="td-reviewed-no">Closed without comment</td>
+            <td class="td-concern">Trivial fix rejected</td>
+          </tr>
+          <tr>
+            <td><a href="https://github.com/mattpocock/skills/pull/74">#74</a></td>
+            <td>Fix npx command paths in README (CLOSED, not merged)</td>
+            <td class="td-person">external-contrib</td>
+            <td class="td-person">—</td>
+            <td class="td-reviewed-no">Closed without comment</td>
+            <td class="td-concern">Documentation fix rejected</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    </div>
+  </details>
+
+  <details class="collapsible-section">
+    <summary>
+      <div class="section-header">
+        <span class="section-number">04</span>
+        <h2>Timeline</h2>
+        <span class="section-status">
+          <span class="pill red">1 concerning</span>
+          <span class="pill amber">4 neutral</span>
+        </span>
+      </div>
+      <div class="section-subtitle">5 events across the repo&rsquo;s history.</div>
+    </summary>
+    <div class="section-body">
+    <div class="timeline">
+      <div class="tl-item neutral">
+        <div class="tl-date">2026-02-03 <span class="tl-severity-label">Repo created</span></div>
+        <div class="tl-desc">Initial commit by mattpocock; first SKILL.md added</div>
+      </div>
+      <div class="tl-item neutral">
+        <div class="tl-date">2026-04-26 <span class="tl-severity-label">SECURITY.md PR opened</span></div>
+        <div class="tl-desc">PR #67 by external contributor proposing a security policy document</div>
+      </div>
+      <div class="tl-item bad">
+        <div class="tl-date">2026-04-28 <span class="tl-severity-label">Batch close + first merge</span></div>
+        <div class="tl-desc">PR #67 + 5 other contributor PRs closed without merge; PR #90 (only ever-merged) self-merged by mattpocock — maintainer-curated cleanup day</div>
+      </div>
+      <div class="tl-item neutral">
+        <div class="tl-date">2026-04-30 <span class="tl-severity-label">Skillsmith heads-up</span></div>
+        <div class="tl-desc">Issue #105 — third-party scanner reports regex FP on TDD prose; closed same day without comment</div>
+      </div>
+      <div class="tl-item neutral">
+        <div class="tl-date">2026-04-30 <span class="tl-severity-label">Scan date</span></div>
+        <div class="tl-desc">12th wild V1.2 scan; HEAD b843cb5e</div>
+      </div>
+    </div>
+    </div>
+  </details>
+
+  <details class="collapsible-section">
+    <summary>
+      <div class="section-header">
+        <span class="section-number">05</span>
+        <h2>Repo Vitals</h2>
+        <span class="section-status">
+          <span class="pill info">39 metrics</span>
+          <span class="pill muted">Reference only</span>
+        </span>
+      </div>
+      <div class="section-subtitle">
+        Raw numbers backing everything above &mdash; open if you want to verify the specific numbers cited in findings.
+      </div>
+    </summary>
+    <div class="section-body">
+    <div class="vitals-grid">
+      <div class="vital-cell">
+        <div class="vital-label">Stars</div>
+        <div class="vital-value">47,917</div>
+        <div class="vital-note">Massively popular for a 3-month-old repo</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Forks</div>
+        <div class="vital-value">3,900</div>
+        <div class="vital-note">None</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Open issues</div>
+        <div class="vital-value">5</div>
+        <div class="vital-note">Low; quickly triaged</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Open PRs</div>
+        <div class="vital-value">0</div>
+        <div class="vital-note">Maintainer-driven curation</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Primary language</div>
+        <div class="vital-value">Shell (per GitHub) — actually Markdown-canonical</div>
+        <div class="vital-note">GitHub heuristic misclassifies the 2 install scripts as primary</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">License</div>
+        <div class="vital-value">MIT</div>
+        <div class="vital-note">None</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Created</div>
+        <div class="vital-value">2026-02-03</div>
+        <div class="vital-note">~3 months old</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Last pushed</div>
+        <div class="vital-value">2026-04-30</div>
+        <div class="vital-note">Active (scan day)</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Default branch</div>
+        <div class="vital-value">main</div>
+        <div class="vital-note">None</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Total contributors</div>
+        <div class="vital-value">2</div>
+        <div class="vital-note">Top-1 share 87.3% (mattpocock); 2nd is `TESTPERSONAL` test account</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Solo-maintainer flag</div>
+        <div class="vital-value">TRUE</div>
+        <div class="vital-note">87.3% &gt; 80% threshold</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Formal releases</div>
+        <div class="vital-value">0</div>
+        <div class="vital-note">Rolling-distribution model</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Latest release</div>
+        <div class="vital-value">—</div>
+        <div class="vital-note">No releases — F1</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Classic branch protection</div>
+        <div class="vital-value">OFF (HTTP 404)</div>
+        <div class="vital-note">None</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Rulesets</div>
+        <div class="vital-value">0</div>
+        <div class="vital-note">None</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Rules on default branch</div>
+        <div class="vital-value">0</div>
+        <div class="vital-note">None</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">CODEOWNERS</div>
+        <div class="vital-value">Absent</div>
+        <div class="vital-note">None</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">SECURITY.md</div>
+        <div class="vital-value">Absent</div>
+        <div class="vital-note">PR #67 proposing one closed without merge — F2</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">CONTRIBUTING</div>
+        <div class="vital-value">Absent</div>
+        <div class="vital-note">None</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Code of conduct</div>
+        <div class="vital-value">Absent</div>
+        <div class="vital-note">None</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Community health</div>
+        <div class="vital-value">42%</div>
+        <div class="vital-note">None</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Workflows</div>
+        <div class="vital-value">1 (Copilot reviewer bot)</div>
+        <div class="vital-note">No CI tests, no SAST, no Dependabot</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">pull_request_target usage</div>
+        <div class="vital-value">0</div>
+        <div class="vital-note">None</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">CodeQL SAST</div>
+        <div class="vital-value">Absent</div>
+        <div class="vital-note">None</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Dependabot config</div>
+        <div class="vital-value">Absent (.github/dependabot.yml missing)</div>
+        <div class="vital-note">No package manifests to scan anyway — markdown-only repo</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">PR formal review rate (lifetime sample)</div>
+        <div class="vital-value">0% (1/1 self-merged)</div>
+        <div class="vital-note">None</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">PR any-review rate (lifetime sample)</div>
+        <div class="vital-value">0%</div>
+        <div class="vital-note">None</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Self-merge count</div>
+        <div class="vital-value">1 of 1 (100%)</div>
+        <div class="vital-note">Sample size N=1 — weak signal alone</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Total merged PRs (lifetime)</div>
+        <div class="vital-value">1</div>
+        <div class="vital-note">PR #90 &#39;Add setup-matt-pocock-skills&#39;</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Closed-without-merge PRs (sample)</div>
+        <div class="vital-value">10+ (incl. #67 SECURITY.md, #28 [Security], #75 typo)</div>
+        <div class="vital-note">Maintainer-curated</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Published security advisories</div>
+        <div class="vital-value">0</div>
+        <div class="vital-note">None</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Open security issues</div>
+        <div class="vital-value">0</div>
+        <div class="vital-note">None</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">OSSF Scorecard</div>
+        <div class="vital-value">Not indexed</div>
+        <div class="vital-note">404</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">SKILL.md files</div>
+        <div class="vital-value">22 (1,815 lines total)</div>
+        <div class="vital-note">12 promoted via plugin.json; 10 in personal/+deprecated/</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">CLAUDE.md size</div>
+        <div class="vital-value">13 lines</div>
+        <div class="vital-note">Top-level repo conventions only</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Prompt-injection signals (CLAUDE.md only)</div>
+        <div class="vital-value">0</div>
+        <div class="vital-note">22 SKILL.md not scanned — F5</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Dangerous-pattern grep families</div>
+        <div class="vital-value">15 of 15 scanned, 1 hit (TDD fetch FP)</div>
+        <div class="vital-note">0 hits in deserialization/exec/secrets/cmd_injection/auth_bypass/path_traversal/etc.</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Distribution channels</div>
+        <div class="vital-value">0 detected by harness</div>
+        <div class="vital-note">Install via npx skills@latest (vercel-labs/skills) + Claude Code plugin marketplace + clone+link</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Documented install paths</div>
+        <div class="vital-value">3</div>
+        <div class="vital-note">npx, plugin marketplace, clone+link script</div>
+      </div>
+    </div>
+    </div>
+  </details>
+
+  <details class="collapsible-section">
+    <summary>
+      <div class="section-header">
+        <span class="section-number">06</span>
+        <h2>Investigation Coverage</h2>
+        <span class="section-status">
+          <span class="pill amber">6 gaps noted</span>
+        </span>
+      </div>
+      <div class="section-subtitle">How thorough was this scan?</div>
+    </summary>
+    <div class="section-body">
+    <div class="vitals-grid">
+      <div class="vital-cell">
+        <div class="vital-label">Harness Phase 1 end-to-end</div>
+        <div class="vital-value">✅ Complete (28 fields populated)</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">`gh api` rate limit</div>
+        <div class="vital-value">✅ Well under limit</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Tarball extraction + local grep</div>
+        <div class="vital-value">✅ Scanned (small repo, 87 KB)</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">OSSF Scorecard</div>
+        <div class="vital-value">⚠ Not indexed (HTTP 404)</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Dependabot alerts</div>
+        <div class="vital-value">⚠ Admin scope (403); .github/dependabot.yml absent — but no package manifests to scan in any case</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">osv.dev dependency queries</div>
+        <div class="vital-value">⊗ N/A — no manifest files (markdown-only repo)</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">PR review sample</div>
+        <div class="vital-value">⚠ Sample size N=1 lifetime merged PR; review-rate signals are degenerate</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Dependencies manifest detection</div>
+        <div class="vital-value">⊗ N/A — markdown-only repo, no package manifests</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Distribution channels inventory</div>
+        <div class="vital-value">⚠ 0 channels detected by harness; real install paths (npx via vercel-labs/skills, plugin marketplace, clone+link) require shape-specific detection</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Dangerous-primitives grep (15 families)</div>
+        <div class="vital-value">✅ All clean except 1 FP (TDD fetch() example in mocking.md)</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Workflows</div>
+        <div class="vital-value">✅ 1 detected (Copilot review bot)</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Gitleaks</div>
+        <div class="vital-value">⊗ Not available on this scanner host</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">README paste-scan</div>
+        <div class="vital-value">✅ No paste-from-command blocks</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Prompt-injection scan</div>
+        <div class="vital-value">⚠ Only CLAUDE.md (1/23 markdown rule files) scanned — F5</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">agent_rule_files enumeration</div>
+        <div class="vital-value">⚠ Only top-level CLAUDE.md captured; 22 SKILL.md files missed — F5</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Tarball extraction</div>
+        <div class="vital-value">✅ 57 files</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">osv.dev</div>
+        <div class="vital-value">ℹ Zero runtime dependencies</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Secrets-in-history (gitleaks)</div>
+        <div class="vital-value">⚠ gitleaks not installed</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">API rate budget</div>
+        <div class="vital-value">✅ 4988/5000 remaining</div>
+      </div>
+    </div>
+
+    <div class="finding-card info stack-sm">
+      <div class="finding-header">
+        <span class="tag info-tag">Gap</span>
+        <h3>Harness `code_patterns.agent_rule_files` does not recursively enumerate SKILL.md files under `skills/&lt;bucket&gt;/&lt;name&gt;/`. Only the 13-line top-level CLAUDE.md was captured. The actual prompt-injection surface (22 files, 1,815 lines) was not scanned. F5 documents this; V1.2.x patch candidate.</h3>
+      </div>
+    </div>
+    <div class="finding-card info stack-sm">
+      <div class="finding-header">
+        <span class="tag info-tag">Gap</span>
+        <h3>Distribution-channel detection found 0 channels. The actual install paths are: (1) `npx skills@latest add mattpocock/skills` via the vercel-labs/skills npm CLI; (2) Claude Code plugin marketplace via `.claude-plugin/plugin.json`; (3) `git clone` + `scripts/link-skills.sh` for local symlinks. None of these matches the harness&#39;s npm/PyPI/crates.io/RubyGems/NuGet pattern set.</h3>
+      </div>
+    </div>
+    <div class="finding-card info stack-sm">
+      <div class="finding-header">
+        <span class="tag info-tag">Gap</span>
+        <h3>OSSF Scorecard not indexed (HTTP 404) — repo too new or not picked up by OSSF&#39;s discovery. Governance signals derived from raw `gh api` data.</h3>
+      </div>
+    </div>
+    <div class="finding-card info stack-sm">
+      <div class="finding-header">
+        <span class="tag info-tag">Gap</span>
+        <h3>Dependabot-alerts API required admin scope (403). Repo has no package manifests so this is moot.</h3>
+      </div>
+    </div>
+    <div class="finding-card info stack-sm">
+      <div class="finding-header">
+        <span class="tag info-tag">Gap</span>
+        <h3>Gitleaks secret-scanning not available on this scanner host. The 0-secrets harness result reflects only the regex-based grep pass over file content, not a full git-history scan.</h3>
+      </div>
+    </div>
+    <div class="finding-card info stack-sm">
+      <div class="finding-header">
+        <span class="tag info-tag">Gap</span>
+        <h3>PR review-rate signals are degenerate at N=1 lifetime merged PR. Q2 advisory color (green) reflects &#39;no overdue items&#39; rather than &#39;demonstrated fix cadence&#39;; Phase 4 overrides Q2 to amber on this basis (see scorecard rationale).</h3>
+      </div>
+    </div>
+
+    </div>
+  </details>
+
+  <details class="collapsible-section">
+    <summary>
+      <div class="section-header">
+        <span class="section-number">07</span>
+        <h2>Evidence Appendix</h2>
+        <span class="section-status">
+          <span class="pill info">10 facts</span>
+          <span class="pill amber">3 &#9733; priority</span>
+        </span>
+      </div>
+      <div class="section-subtitle">
+        10 command-backed claims. <span class="emph">Skip ahead to items marked &#9733; START HERE</span> &mdash; those are the most consequential for the verdict.
+      </div>
+      <div class="section-action info">
+        <span class="lbl">Your action</span>
+        Use this section if you want to verify a claim yourself. Each entry shows the exact command (copy-paste into a terminal with <code>gh</code> authenticated) and the expected result.
+      </div>
+    </summary>
+    <div class="section-body">
+    <p class="p-meta">Each major claim is backed by a command and an observed result. Inferences are marked as such. The <span class="priority-flag inline">&#9733; Start here</span> items at the top are the most consequential evidence.</p>
+
+    <div class="evidence-group-label warns">&#9733; Priority evidence (read first)</div>
+    <div class="finding-card info evidence-priority stack-md">
+      <div class="finding-header">
+        <span class="tag info-tag">Evidence 2</span>
+        <span class="priority-flag">&#9733; Start here</span>
+        <h3>All 7 C20 governance signals are negative: classic branch protection HTTP 404, 0 rulesets, 0 rules-on-default-branch, no CODEOWNERS at any of 4 standard locations, owner is User (not Org → org rulesets n/a), OSSF Scorecard not indexed (404).</h3>
+      </div>
+      <div class="finding-body">
+        <div class="evidence-row">
+          <div class="evidence-label">Command</div>
+          <pre class="evidence-pre">gh api repos/mattpocock/skills/branches/main/protection; gh api repos/mattpocock/skills/rulesets</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Result observed</div>
+          <pre class="evidence-pre result">branch_protection.classic.status: 404. rulesets.count: 0. rules_on_default.count: 0. CODEOWNERS: not found at CODEOWNERS, .github/CODEOWNERS, docs/CODEOWNERS, .gitlab/CODEOWNERS. owner_type: User. OSSF Scorecard http_status: 404 (repo not indexed by OSSF).</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Classification</div>
+          <div class="evidence-classification fact">fact</div>
+        </div>
+      </div>
+    </div>
+    <div class="finding-card info evidence-priority stack-md">
+      <div class="finding-header">
+        <span class="tag info-tag">Evidence 5</span>
+        <span class="priority-flag">&#9733; Start here</span>
+        <h3>Documented install path is `npx skills@latest add mattpocock/skills`. The `skills` npm package (npm version 1.5.3) is published by vercel-labs/skills — a separate trust boundary from mattpocock/skills itself. Install is therefore two-stage: trust vercel-labs&#39;s npm CLI to install Matt&#39;s skills correctly.</h3>
+      </div>
+      <div class="finding-body">
+        <div class="evidence-row">
+          <div class="evidence-label">Command</div>
+          <pre class="evidence-pre">head -40 README.md  # quickstart section; curl -s https://registry.npmjs.org/skills/latest</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Result observed</div>
+          <pre class="evidence-pre result">README quickstart line: `npx skills@latest add mattpocock/skills`. npm package `skills@1.5.3`, repo: git+https://github.com/vercel-labs/skills.git, homepage: https://github.com/vercel-labs/skills#readme. There is also a `.claude-plugin/plugin.json` manifest at the repo root listing 12 skills, which can be consumed via Claude Code&#39;s plugin marketplace as an alternative install path.</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Classification</div>
+          <div class="evidence-classification fact">fact</div>
+        </div>
+      </div>
+    </div>
+    <div class="finding-card info evidence-priority stack-md">
+      <div class="finding-header">
+        <span class="tag info-tag">Evidence 10</span>
+        <span class="priority-flag">&#9733; Start here</span>
+        <h3>Harness coverage gap on plugin-shape repos. The harness&#39;s `code_patterns.agent_rule_files` heuristic captured only the top-level `CLAUDE.md` (13 lines) as an agent rule file, missing the 22 SKILL.md files (1,815 lines) which form the actual prompt surface for users post-install. The `prompt_injection_scan` consequently scanned 1 file out of 23.</h3>
+      </div>
+      <div class="finding-body">
+        <div class="evidence-row">
+          <div class="evidence-label">Command</div>
+          <pre class="evidence-pre">python3 -c &#39;import json; f=json.load(open(&#34;phase-1-raw.json&#34;)); print(f[&#34;phase_1_raw_capture&#34;][&#34;code_patterns&#34;][&#34;agent_rule_files&#34;]); print(f[&#34;phase_1_raw_capture&#34;][&#34;prompt_injection_scan&#34;])&#39;</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Result observed</div>
+          <pre class="evidence-pre result">agent_rule_files: [{path: &#39;CLAUDE.md&#39;, kind: &#39;claude&#39;, line_count: 13, ci_amplified: false}]. prompt_injection_scan: {scanned_files: [&#39;CLAUDE.md&#39;], injection_signals: [], signal_count: 0, scan_method: &#39;tarball&#39;}. The 22 SKILL.md files under skills/ are not enumerated as agent_rule_files. This is a scanner-coverage limitation specific to the Claude Code plugin/skills shape.</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Classification</div>
+          <div class="evidence-classification fact">fact</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="evidence-group-label context">Other evidence supporting findings</div>
+    <div class="finding-card info stack-md">
+      <div class="finding-header">
+        <span class="tag info-tag">Evidence 1</span>
+        <h3>mattpocock holds 87.3% top-contributor commit share (55 commits) on a 47.9k-star, 3-month-old repo. The only other contributor is `TESTPERSONAL` (8 commits, 0 public repos, 9 followers, no bio) — almost certainly a maintainer-owned test/dev account, not an independent reviewer.</h3>
+      </div>
+      <div class="finding-body">
+        <div class="evidence-row">
+          <div class="evidence-label">Command</div>
+          <pre class="evidence-pre">gh api repos/mattpocock/skills/contributors --jq &#39;[.[] | {login, contributions}]&#39;</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Result observed</div>
+          <pre class="evidence-pre result">[{login: &#39;mattpocock&#39;, contributions: 55}, {login: &#39;TESTPERSONAL&#39;, contributions: 8}]. total_contributor_count: 2. Top-1 share: 87.3% (above 80% solo-maintainer threshold). TESTPERSONAL profile: created 2014-02-12, no bio, no company, 9 followers, 0 public repos.</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Classification</div>
+          <div class="evidence-classification fact">fact</div>
+        </div>
+      </div>
+    </div>
+    <div class="finding-card info stack-md">
+      <div class="finding-header">
+        <span class="tag info-tag">Evidence 3</span>
+        <h3>Zero formal releases. The repo has no GitHub Releases, no semantic version tags. Users installing via the documented quickstart receive the latest commit on `main` at install time — no release-pinning is exposed by the install path.</h3>
+      </div>
+      <div class="finding-body">
+        <div class="evidence-row">
+          <div class="evidence-label">Command</div>
+          <pre class="evidence-pre">gh api repos/mattpocock/skills/releases</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Result observed</div>
+          <pre class="evidence-pre result">releases.total_count: 0. entries: []. The install model is rolling: each invocation of the install command resolves to whatever HEAD points at on `main` at that moment. There is no equivalent of pinning a release tag.</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Classification</div>
+          <div class="evidence-classification fact">fact</div>
+        </div>
+      </div>
+    </div>
+    <div class="finding-card info stack-md">
+      <div class="finding-header">
+        <span class="tag info-tag">Evidence 4</span>
+        <h3>PR #67 (&#39;Create SECURITY.md for security policy&#39;), opened by an external contributor, was closed 2026-04-28 without merging. community/profile reports has_security_policy=false. There are zero published GHSA security advisories in 3 months of repo lifetime.</h3>
+      </div>
+      <div class="finding-body">
+        <div class="evidence-row">
+          <div class="evidence-label">Command</div>
+          <pre class="evidence-pre">gh api repos/mattpocock/skills/pulls/67; gh api repos/mattpocock/skills/community/profile</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Result observed</div>
+          <pre class="evidence-pre result">PR #67 &#39;Create SECURITY.md for security policy&#39; — body: &#39;Added a security policy document outlining supported versions and vulnerability reporting.&#39; state: closed, merged: false, additions: 21, deletions: 0, files_count: 1. closed_at: 2026-04-28T09:22:13Z. community_profile.has_security_policy: false; has_contributing: false; has_code_of_conduct: false; health_percentage: 42. security_advisories.count: 0.</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Classification</div>
+          <div class="evidence-classification fact">fact</div>
+        </div>
+      </div>
+    </div>
+    <div class="finding-card info stack-md">
+      <div class="finding-header">
+        <span class="tag info-tag">Evidence 6</span>
+        <h3>The `skills/` tree contains 22 SKILL.md files totaling 1,815 lines. Each contains markdown instructions Claude executes when the skill is invoked (e.g., `/grill-me`, `/tdd`, `/diagnose`). 12 of the 22 are listed in `.claude-plugin/plugin.json`; 10 (in `personal/` + `deprecated/`) are not promoted but still present in the repo.</h3>
+      </div>
+      <div class="finding-body">
+        <div class="evidence-row">
+          <div class="evidence-label">Command</div>
+          <pre class="evidence-pre">find skills -name SKILL.md -exec wc -l {} +; cat .claude-plugin/plugin.json</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Result observed</div>
+          <pre class="evidence-pre result">22 SKILL.md files. Sizes: 7-130 lines each. Total: 1,815 lines. plugin.json lists 12 paths under `engineering/` + `productivity/`. Buckets: engineering/ (10), productivity/ (3), personal/ (2), misc/ (5), deprecated/ (4). Skills perform actions like setup-pre-commit (modifies package.json + .husky/), git-guardrails-claude-code (writes ~/.claude/settings.json hooks), setup-matt-pocock-skills (writes AGENTS.md/CLAUDE.md + docs/agents/*).</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Classification</div>
+          <div class="evidence-classification fact">fact</div>
+        </div>
+      </div>
+    </div>
+    <div class="finding-card info stack-md">
+      <div class="finding-header">
+        <span class="tag info-tag">Evidence 7</span>
+        <h3>PR review posture on lifetime sample: 1 PR ever merged (#90, self-merged by mattpocock 2026-04-28, 0 reviews). Multiple recent contributor PRs were closed without merging, including PR #67 (SECURITY.md) and PR #28 ([Security] Add security lens to grill-me skill).</h3>
+      </div>
+      <div class="finding-body">
+        <div class="evidence-row">
+          <div class="evidence-label">Command</div>
+          <pre class="evidence-pre">gh api &#39;repos/mattpocock/skills/pulls?state=closed&amp;per_page=100&#39;</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Result observed</div>
+          <pre class="evidence-pre result">total_merged_lifetime: 1. sample of merged: PR #90 &#39;Add setup-matt-pocock-skills; rename github-triage; migrate skills to vague prose&#39; — merged 2026-04-28, self_merge: true, any_review_count: 0. Closed-without-merge sample includes #28 (Security label), #61, #62, #64, #65, #66, #67 (SECURITY.md), #69, #74, #75, #81 — many closed in a single batch on 2026-04-28. Pattern is maintainer-driven curation rather than collaborative review.</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Classification</div>
+          <div class="evidence-classification fact">fact</div>
+        </div>
+      </div>
+    </div>
+    <div class="finding-card info stack-md">
+      <div class="finding-header">
+        <span class="tag info-tag">Evidence 8</span>
+        <h3>Issue #105 (closed 2026-04-30) was a heads-up from a third-party scanner (Skillsmith, skillsmith.app) reporting a regex false-positive on `skills/engineering/tdd/SKILL.md` line 64 — the phrase &#39;...the system:&#39; at end-of-line matched their chat-role-injection pattern despite the meaning being plainly programming-domain (&#39;the system under test&#39;). Matt closed the issue without comment. No prompt-injection signals in the harness scan of `CLAUDE.md`.</h3>
+      </div>
+      <div class="finding-body">
+        <div class="evidence-row">
+          <div class="evidence-label">Command</div>
+          <pre class="evidence-pre">gh api repos/mattpocock/skills/issues/105</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Result observed</div>
+          <pre class="evidence-pre result">Issue #105 title: &#39;Heads-up: Skillsmith security scanner flags TDD SKILL.md (false positive — role-injection regex)&#39;. Author: wrsmith108. State: closed. Body explains the Skillsmith regex `/(?:^|\s)(?:system|assistant|user)\s*:\s*(?:\n|$)/i` matched &#39;system:&#39; at end-of-line in TDD prose; concluded false positive on their side; tracked auto-quarantine + pattern-tuning. comments: 0 (Matt closed without commenting). harness prompt_injection_scan: scanned_files=[&#39;CLAUDE.md&#39;] (13 lines), signal_count: 0. The 22 SKILL.md files were NOT scanned by this harness (coverage gap).</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Classification</div>
+          <div class="evidence-classification fact">fact</div>
+        </div>
+      </div>
+    </div>
+    <div class="finding-card info stack-md">
+      <div class="finding-header">
+        <span class="tag info-tag">Evidence 9</span>
+        <h3>Workflow surface: 1 GitHub Actions workflow (Copilot pull-request reviewer bot, dynamic). No CI tests, no static-analysis, no Dependabot config (.github/dependabot.yml absent), no SECURITY.md, no SAST. dangerous-pattern grep found 0 hits in the deserialization/exec/secrets/cmd_injection/auth_bypass/path_traversal/etc. families. 1 hit in the `network` family — a `fetch()` example in `skills/engineering/tdd/mocking.md` documenting test mocks (false positive).</h3>
+      </div>
+      <div class="finding-body">
+        <div class="evidence-row">
+          <div class="evidence-label">Command</div>
+          <pre class="evidence-pre">gh api repos/mattpocock/skills/actions/workflows; ls .github/</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Result observed</div>
+          <pre class="evidence-pre result">workflows.count: 1 (&#39;Copilot code review&#39; — dynamic, GitHub-managed). workflow_contents.entries: [] (the Copilot bot has no checked-in YAML — it&#39;s installed via the GitHub Copilot integration). pull_request_target_count: 0. defensive_configs: dependabot.yml not present; SECURITY.md not present. dangerous_primitives.deserialization.hit_count: 0. .exec.hit_count: 0. .network.hit_count: 1 (skills/engineering/tdd/mocking.md line 44, &#39;getUser: (id) =&gt; fetch(`/users/${id}`)&#39; — TDD mocking example).</pre>
+        </div>
+        <div class="evidence-row">
+          <div class="evidence-label">Classification</div>
+          <div class="evidence-classification fact">fact</div>
+        </div>
+      </div>
+    </div>
+
+    </div>
+  </details>
+
+  <details class="collapsible-section">
+    <summary>
+      <div class="section-header">
+        <span class="section-number">08</span>
+        <h2>How This Scan Works</h2>
+        <span class="section-status">
+          <span class="pill muted">Methodology reference</span>
+        </span>
+      </div>
+      <div class="section-subtitle">
+        What we checked, what tools we used, and what this scan cannot detect.
+      </div>
+    </summary>
+    <div class="section-body">
+
+    <h3>What this scan is</h3>
+    <p>This is an <strong>LLM-driven security investigation</strong> &mdash; an AI assistant with terminal access used the <a href="https://cli.github.com/" target="_blank" rel="noopener">GitHub CLI</a> and free public APIs to investigate this repo&rsquo;s governance, code patterns, dependencies, and distribution pipeline. It then synthesized its findings into this plain-English report.</p>
+    <p class="p-meta">This is <strong>not</strong> a static analyzer, penetration test, or formal security audit. It is a trust-assessment tool that answers: &ldquo;Should I install this?&rdquo;</p>
+
+    <h3>What we checked</h3>
+    <div class="vitals-grid">
+      <div class="vital-cell">
+        <div class="vital-label">Governance &amp; Trust</div>
+        <div class="vital-note">Branch protection, rulesets, CODEOWNERS, SECURITY.md, community health, maintainer account age &amp; activity, code review rates</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Code Patterns</div>
+        <div class="vital-note">Dangerous primitives (eval, exec, fetch), hardcoded secrets, executable file inventory, install scripts, README paste-blocks</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">Supply Chain</div>
+        <div class="vital-note">Dependencies, CI/CD workflows, GitHub Actions SHA-pinning, release pipeline, artifact verification, published-vs-source comparison</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label">AI Agent Rules</div>
+        <div class="vital-note">CLAUDE.md, AGENTS.md, .cursorrules, .mcp.json &mdash; files that instruct AI coding assistants. Checked for prompt injection and behavioral manipulation</div>
+      </div>
+    </div>
+
+    <h3>External tools used</h3>
+    <div class="vitals-grid">
+      <div class="vital-cell">
+        <div class="vital-label"><a href="https://securityscorecards.dev/" target="_blank" rel="noopener">OSSF Scorecard</a></div>
+        <div class="vital-note">Independent security rating from the Open Source Security Foundation. Scores 24 practices from 0&ndash;10. Free API, no installation needed.</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label"><a href="https://osv.dev/" target="_blank" rel="noopener">osv.dev</a></div>
+        <div class="vital-note">Google-backed vulnerability database. Used as fallback when GitHub&rsquo;s Dependabot data is not accessible (requires repo admin).</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label"><a href="https://gitleaks.io/" target="_blank" rel="noopener">gitleaks</a> (optional)</div>
+        <div class="vital-note">Scans code history for leaked passwords, API keys, and tokens. Requires installation. If unavailable, this gap is noted in Coverage.</div>
+      </div>
+      <div class="vital-cell">
+        <div class="vital-label"><a href="https://cli.github.com/" target="_blank" rel="noopener">GitHub CLI</a></div>
+        <div class="vital-note">Primary data source. All repo metadata, PR history, workflow files, contributor data, and issue history come from authenticated GitHub API calls.</div>
+      </div>
+    </div>
+
+    <h3>What this scan cannot detect</h3>
+    <ul>
+      <li><strong>Transitive dependency vulnerabilities</strong> &mdash; we check direct dependencies but cannot fully resolve the dependency tree without running the package manager</li>
+      <li><strong>Runtime behavior</strong> &mdash; we see what the code <em>could</em> do, not what it <em>does</em> when running</li>
+      <li><strong>Published artifact tampering</strong> &mdash; we read the source code but cannot verify that what&rsquo;s published to npm/PyPI matches this source exactly</li>
+      <li><strong>Sophisticated backdoors</strong> &mdash; our pattern-matching catches common dangerous primitives but not logic bombs or obfuscated payloads</li>
+      <li><strong>Container image contents</strong> &mdash; we read Dockerfiles but cannot inspect built images for extra layers or embedded secrets</li>
+    </ul>
+    <p class="p-meta">For comprehensive vulnerability scanning, pair this report with tools like <a href="https://semgrep.dev/" target="_blank" rel="noopener">Semgrep</a> (code analysis), <a href="https://www.snyk.io/" target="_blank" rel="noopener">Snyk</a> (dependency scanning), or <a href="https://aquasecurity.github.io/trivy/" target="_blank" rel="noopener">Trivy</a> (container scanning).</p>
+
+    <h3>Scan methodology version</h3>
+    <p class="p-meta">Scanner prompt V2.4 &middot; Operator Guide V0.2 &middot; Validator version V2.5-preview &middot; Validator with XSS checks + verdict-severity coherence &middot; <a href="https://github.com/stefans71/stop-git-std" target="_blank" rel="noopener">stop-git-std</a></p>
+
+    </div>
+  </details>
+
+  <div class="footer">
+    Generated by <a href="https://github.com/stefans71/stop-git-std">stop-git-std</a> deep dive &middot; 2026-04-30 &middot; scanned main @ b843cb5 (untagged) &middot; scanner V2.5-preview
+    <br>This report is an automated investigation, not a professional security audit. It may miss issues. If you are making a business decision, consult a security professional.
+  </div>
+
+</div>
+</body>
+</html>

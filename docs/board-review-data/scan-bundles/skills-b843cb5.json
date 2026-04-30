@@ -1,0 +1,2155 @@
+{
+  "$comment": "mattpocock/skills V1.2 wild scan \u2014 12th wild V1.2 scan; first Claude Code skills/plugin shape (npx + plugin marketplace install path).",
+  "schema_version": "V1.2",
+  "_meta": {
+    "scanner_version": "V2.5-preview",
+    "prompt_version": "V2.4",
+    "scan_started_at": "2026-04-30T14:28:53.847607+00:00",
+    "model": "claude-opus-4-7 (via Claude Code)",
+    "scan_status": "completed",
+    "scan_completed_at": "2026-04-30T14:46:59.786005+00:00"
+  },
+  "target": {
+    "owner": "mattpocock",
+    "repo": "skills",
+    "full_name": "mattpocock/skills",
+    "url": "https://github.com/mattpocock/skills"
+  },
+  "scanner_integrity": {
+    "injection_matches": 0,
+    "actionable_count": 0,
+    "findings": []
+  },
+  "phase_1_raw_capture": {
+    "pre_flight": {
+      "head_sha": "b843cb5ea74b1fe5e58a0fc23cddef9e66076fb8",
+      "default_branch": "main",
+      "tarball_extracted": true,
+      "tarball_file_count": 57,
+      "symlinks_stripped": 0,
+      "api_rate_limit": {
+        "limit": 5000,
+        "remaining": 4988,
+        "reset": 1777560284,
+        "used": 12
+      }
+    },
+    "repo_metadata": {
+      "name": "skills",
+      "description": "Skills for Real Engineers. Straight from my .claude directory.",
+      "created_at": "2026-02-03T11:15:53Z",
+      "pushed_at": "2026-04-30T11:38:13Z",
+      "stargazer_count": 47917,
+      "fork_count": 3900,
+      "archived": false,
+      "fork": false,
+      "has_issues_enabled": true,
+      "primary_language": "Shell",
+      "topics": [],
+      "license_spdx": "MIT",
+      "default_branch": "main",
+      "open_issues_count": 5,
+      "size_kb": 87
+    },
+    "contributors": {
+      "top_contributors": [
+        {
+          "contributions": 55,
+          "login": "mattpocock"
+        },
+        {
+          "contributions": 8,
+          "login": "TESTPERSONAL"
+        }
+      ],
+      "total_contributor_count": 2
+    },
+    "maintainer_accounts": {
+      "accounts": [
+        {
+          "bio": "TypeScript wizard. Building Total TypeScript - a comprehensive, production-grade TypeScript course.\r\n\r\nEx-Vercel, Stately.",
+          "company": "Total TypeScript",
+          "created_at": "2017-05-02T09:05:18Z",
+          "followers": 11973,
+          "login": "mattpocock",
+          "public_repos": 218,
+          "type": "User",
+          "role": "owner"
+        },
+        {
+          "bio": null,
+          "company": null,
+          "created_at": "2014-02-12T18:39:02Z",
+          "followers": 9,
+          "login": "TESTPERSONAL",
+          "public_repos": 0,
+          "type": "User",
+          "role": "contributor",
+          "contributions": 8
+        }
+      ]
+    },
+    "ossf_scorecard": {
+      "queried": true,
+      "indexed": false,
+      "http_status": 404,
+      "overall_score": null,
+      "checks": [],
+      "raw_response": null
+    },
+    "community_profile": {
+      "health_percentage": 42,
+      "has_code_of_conduct": false,
+      "has_contributing": false,
+      "has_security_policy": false,
+      "license_spdx": "MIT"
+    },
+    "branch_protection": {
+      "classic": {
+        "status": 404
+      },
+      "rulesets": {
+        "entries": [],
+        "count": 0
+      },
+      "rules_on_default": {
+        "entries": [],
+        "count": 0
+      },
+      "owner_type": "User",
+      "org_rulesets": {
+        "status": "n/a",
+        "entries": [],
+        "note": "owner is not an Organization"
+      }
+    },
+    "codeowners": {
+      "found": false,
+      "path": null,
+      "content": null,
+      "locations_checked": [
+        "CODEOWNERS",
+        ".github/CODEOWNERS",
+        "docs/CODEOWNERS",
+        ".gitlab/CODEOWNERS"
+      ]
+    },
+    "releases": {
+      "entries": [],
+      "total_count": 0
+    },
+    "security_advisories": {
+      "count": 0,
+      "entries": []
+    },
+    "workflows": {
+      "entries": [
+        {
+          "name": "Copilot code review",
+          "path": "dynamic/copilot-pull-request-reviewer/copilot-pull-request-reviewer",
+          "state": "active"
+        }
+      ],
+      "count": 1,
+      "pull_request_target_count": 0
+    },
+    "workflow_contents": {
+      "entries": []
+    },
+    "code_patterns": {
+      "agent_rule_files": [
+        {
+          "path": "CLAUDE.md",
+          "kind": "claude",
+          "line_count": 13,
+          "ci_amplified": false
+        }
+      ],
+      "readme_paste_blocks": {
+        "scanned": true,
+        "entries": [],
+        "entries_count": 0
+      },
+      "dangerous_primitives": {
+        "scanned": true,
+        "exec": {
+          "hit_count": 0,
+          "files": []
+        },
+        "deserialization": {
+          "hit_count": 0,
+          "files": []
+        },
+        "network": {
+          "hit_count": 1,
+          "files": [
+            {
+              "file": "skills/engineering/tdd/mocking.md",
+              "first_match": {
+                "line": 44,
+                "snippet": "  getUser: (id) => fetch(`/users/${id}`),"
+              }
+            }
+          ]
+        },
+        "secrets": {
+          "hit_count": 0,
+          "files": []
+        },
+        "vendor_keys": {
+          "hit_count": 0,
+          "files": []
+        },
+        "tls_cors": {
+          "hit_count": 0,
+          "files": []
+        },
+        "sql_injection": {
+          "hit_count": 0,
+          "files": []
+        },
+        "cmd_injection": {
+          "hit_count": 0,
+          "files": []
+        },
+        "auth_bypass": {
+          "hit_count": 0,
+          "files": []
+        },
+        "path_traversal": {
+          "hit_count": 0,
+          "files": []
+        },
+        "archive_unsafe": {
+          "hit_count": 0,
+          "files": []
+        },
+        "ssrf": {
+          "hit_count": 0,
+          "files": []
+        },
+        "xss": {
+          "hit_count": 0,
+          "files": []
+        },
+        "weak_crypto": {
+          "hit_count": 0,
+          "files": []
+        },
+        "debug_flags": {
+          "hit_count": 0,
+          "files": []
+        }
+      },
+      "executable_files": [],
+      "install_hooks": []
+    },
+    "prompt_injection_scan": {
+      "scanned_files": [
+        "CLAUDE.md"
+      ],
+      "injection_signals": [],
+      "signal_count": 0,
+      "scan_method": "tarball"
+    },
+    "dependencies": {
+      "manifest_files": [],
+      "runtime": [],
+      "runtime_count": 0,
+      "dev": [],
+      "dev_count": 0,
+      "dependabot_alerts": {
+        "status": 403,
+        "alerts_count": null,
+        "note": "admin scope required; falling back to osv.dev"
+      },
+      "osv_lookups": [],
+      "dependabot_config": {
+        "present": false,
+        "ecosystems_tracked": [],
+        "raw_snippet": null
+      }
+    },
+    "pr_review": {
+      "total_closed_prs": 1,
+      "sample_size": 1,
+      "total_merged_lifetime": 1,
+      "prs": [
+        {
+          "number": 90,
+          "title": "Add setup-matt-pocock-skills; rename github-triage; migrate skills to vague prose",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": true,
+          "merged_at": "2026-04-28T15:46:49Z",
+          "labels": [],
+          "security_flagged": false
+        }
+      ],
+      "formal_review_rate": 0.0,
+      "any_review_rate": 0.0,
+      "self_merge_count": 1,
+      "security_flagged_count": 0,
+      "security_flagged_numbers": [
+        28,
+        67
+      ]
+    },
+    "open_prs": {
+      "entries": [],
+      "count": 0
+    },
+    "closed_not_merged_prs": {
+      "entries": [
+        {
+          "number": 81,
+          "title": "Separate content skills from backlog backend (#80)",
+          "closed_at": "2026-04-28T18:03:39Z"
+        },
+        {
+          "number": 75,
+          "title": "fix typo in readme",
+          "closed_at": "2026-04-28T09:21:24Z"
+        },
+        {
+          "number": 74,
+          "title": "Fix npx command paths in README",
+          "closed_at": "2026-04-28T09:21:33Z"
+        },
+        {
+          "number": 69,
+          "title": "Add x-twitter-scraper skill (X / Twitter via Xquik API)",
+          "closed_at": "2026-04-27T21:16:46Z"
+        },
+        {
+          "number": 67,
+          "title": "Create SECURITY.md for security policy",
+          "closed_at": "2026-04-28T09:22:13Z"
+        },
+        {
+          "number": 66,
+          "title": "feat(to-issues): attach child issues as native sub-issues via API",
+          "closed_at": "2026-04-28T09:22:12Z"
+        },
+        {
+          "number": 65,
+          "title": "fix: correct bun lockfile extension from bun.lockb to bun.lock",
+          "closed_at": "2026-04-28T09:22:12Z"
+        },
+        {
+          "number": 64,
+          "title": "Update README.md",
+          "closed_at": "2026-04-28T09:22:11Z"
+        },
+        {
+          "number": 62,
+          "title": "Add skill: max-prd-loop",
+          "closed_at": "2026-04-27T09:43:07Z"
+        },
+        {
+          "number": 61,
+          "title": "feat(to-issues): attach child issues as native sub-issues",
+          "closed_at": "2026-04-28T09:22:10Z"
+        },
+        {
+          "number": 60,
+          "title": "fix(setup-pre-commit): support both bun.lock and bun.lockb for Bun detection",
+          "closed_at": "2026-04-28T09:22:10Z"
+        },
+        {
+          "number": 59,
+          "title": "feat(to-issues): attach child issues as native sub-issues",
+          "closed_at": "2026-04-27T02:09:43Z"
+        },
+        {
+          "number": 58,
+          "title": "feat(grill-me): enforce numbered Q&A with recommended answers",
+          "closed_at": "2026-04-28T09:22:09Z"
+        },
+        {
+          "number": 57,
+          "title": "fix: support both bun.lock and bun.lockb for Bun detection",
+          "closed_at": "2026-04-28T09:22:08Z"
+        },
+        {
+          "number": 56,
+          "title": "feat: support native GitHub sub-issues for /to-issues skill",
+          "closed_at": "2026-04-28T09:22:08Z"
+        },
+        {
+          "number": 53,
+          "title": "add feature-complete skill",
+          "closed_at": "2026-04-26T16:22:54Z"
+        },
+        {
+          "number": 52,
+          "title": "Fix documentation for skills naming consistency",
+          "closed_at": "2026-04-26T12:33:25Z"
+        },
+        {
+          "number": 51,
+          "title": "Document the missing installable skills in the README",
+          "closed_at": "2026-04-26T12:33:17Z"
+        },
+        {
+          "number": 50,
+          "title": "Enhance interview instructions with assumption verification",
+          "closed_at": "2026-04-28T09:22:07Z"
+        },
+        {
+          "number": 48,
+          "title": "Fix formatting and wording in SKILL.md",
+          "closed_at": "2026-04-23T19:54:24Z"
+        },
+        {
+          "number": 46,
+          "title": "Make the write-a-skill line-limit consistent",
+          "closed_at": "2026-04-28T09:22:06Z"
+        },
+        {
+          "number": 43,
+          "title": "Task/update ideation",
+          "closed_at": "2026-04-17T21:57:36Z"
+        },
+        {
+          "number": 42,
+          "title": "Update SKILL.md",
+          "closed_at": "2026-04-28T09:22:06Z"
+        },
+        {
+          "number": 41,
+          "title": "Add marketplace.json for plugin discovery",
+          "closed_at": "2026-04-28T09:22:05Z"
+        },
+        {
+          "number": 40,
+          "title": "refactor: restructure repo as enterprise plugin marketplace",
+          "closed_at": "2026-04-16T15:30:40Z"
+        },
+        {
+          "number": 39,
+          "title": "Refine grill-me skill ",
+          "closed_at": "2026-04-28T09:22:04Z"
+        },
+        {
+          "number": 34,
+          "title": "Publish remaining local Hermes skills to wiki",
+          "closed_at": "2026-04-11T22:27:04Z"
+        },
+        {
+          "number": 32,
+          "title": "Add Claude code official marketplace and plugins support",
+          "closed_at": "2026-04-28T06:45:08Z"
+        },
+        {
+          "number": 30,
+          "title": "update skills for jira and bdd workflows",
+          "closed_at": "2026-04-01T07:54:39Z"
+        },
+        {
+          "number": 28,
+          "title": "[Security] Add security lens, priority ordering, and challenge behavior to grill-me skill",
+          "closed_at": "2026-03-31T06:54:22Z"
+        },
+        {
+          "number": 27,
+          "title": "feat: two-tier repo-aware git guardrails",
+          "closed_at": "2026-03-27T15:54:25Z"
+        },
+        {
+          "number": 26,
+          "title": "Update SKILL.md",
+          "closed_at": "2026-03-26T14:27:37Z"
+        },
+        {
+          "number": 25,
+          "title": "feat(tolling) convert from gh to az devops cli for interactions",
+          "closed_at": "2026-03-24T11:10:59Z"
+        },
+        {
+          "number": 22,
+          "title": "Improve grill-me guidance and broaden its sweet spot",
+          "closed_at": "2026-03-24T14:04:21Z"
+        },
+        {
+          "number": 8,
+          "title": "feat: add native Claude Code marketplace support",
+          "closed_at": "2026-03-19T09:53:21Z"
+        },
+        {
+          "number": 7,
+          "title": "feat: improve skill scores across 11 skills",
+          "closed_at": "2026-03-13T16:45:16Z"
+        },
+        {
+          "number": 5,
+          "title": "Add metadata and instructions for write-a-prd skill",
+          "closed_at": "2026-03-04T15:08:23Z"
+        },
+        {
+          "number": 4,
+          "title": "update write-a-prd with name and description",
+          "closed_at": "2026-03-04T14:43:57Z"
+        },
+        {
+          "number": 2,
+          "title": "Enhance SKILL.md with metadata and instructions",
+          "closed_at": "2026-03-13T16:45:18Z"
+        },
+        {
+          "number": 1,
+          "title": "Add frontmatter to skills missing YAML metadata",
+          "closed_at": "2026-03-13T16:45:21Z"
+        }
+      ],
+      "count": 40
+    },
+    "issues_and_commits": {
+      "open_security_issues": [],
+      "open_issues_count": 5,
+      "closed_issues": [
+        {
+          "author": "wrsmith108",
+          "closed_at": "2026-04-30T09:10:11Z",
+          "number": 105,
+          "title": "Heads-up: Skillsmith security scanner flags TDD SKILL.md (false positive \u2014 role-injection regex)"
+        },
+        {
+          "author": "alexeyvromanov",
+          "closed_at": "2026-04-28T14:29:41Z",
+          "number": 85,
+          "title": "PRD: Role-Based Access Control (RBAC) for Workspace Members"
+        },
+        {
+          "author": "alexeyvromanov",
+          "closed_at": "2026-04-28T14:29:41Z",
+          "number": 86,
+          "title": "PRD: Account Data Export"
+        },
+        {
+          "author": "alexeyvromanov",
+          "closed_at": "2026-04-28T14:29:39Z",
+          "number": 82,
+          "title": "Feature: Role-Based Access Control (RBAC) for Workspace Members"
+        },
+        {
+          "author": "alexeyvromanov",
+          "closed_at": "2026-04-28T13:42:23Z",
+          "number": 87,
+          "title": "PRD: Account Data Export (async JSON/CSV with 48h download link)"
+        }
+      ],
+      "closed_issues_count": 5,
+      "recent_commits": [
+        {
+          "author": "mattpocock",
+          "date": "2026-04-30T11:38:11Z",
+          "message_first_line": "Add structured sections for 'what-to-do' and 'supporting-info' in SKILL.md",
+          "sha": "b843cb5",
+          "security_keyword_match": false
+        },
+        {
+          "author": "mattpocock",
+          "date": "2026-04-30T10:46:00Z",
+          "message_first_line": "Remove disable-model-invocation flag from grill-with-docs",
+          "sha": "839025a",
+          "security_keyword_match": false
+        },
+        {
+          "author": "mattpocock",
+          "date": "2026-04-30T09:12:35Z",
+          "message_first_line": "Add verify/check mode documentation and list-skills script",
+          "sha": "3dae2b1",
+          "security_keyword_match": false
+        },
+        {
+          "author": "mattpocock",
+          "date": "2026-04-29T09:56:28Z",
+          "message_first_line": "Add out-of-scope note: issue trackers must be mainstream",
+          "sha": "f71bb97",
+          "security_keyword_match": false
+        },
+        {
+          "author": "mattpocock",
+          "date": "2026-04-29T07:21:19Z",
+          "message_first_line": "Add GitLab as a first-class issue-tracker option",
+          "sha": "4369256",
+          "security_keyword_match": false
+        },
+        {
+          "author": "mattpocock",
+          "date": "2026-04-28T18:25:12Z",
+          "message_first_line": "Add out-of-scope note for grilling question limits",
+          "sha": "b56795b",
+          "security_keyword_match": false
+        },
+        {
+          "author": "mattpocock",
+          "date": "2026-04-28T18:06:32Z",
+          "message_first_line": "Swapped 'backlog' for 'issue tracker",
+          "sha": "179a14e",
+          "security_keyword_match": false
+        },
+        {
+          "author": "mattpocock",
+          "date": "2026-04-28T15:51:49Z",
+          "message_first_line": "Enhance quickstart instructions in README; clarify setup steps for `/setup-matt-pocock-skills` and triage labels",
+          "sha": "5fed805",
+          "security_keyword_match": false
+        },
+        {
+          "author": "mattpocock",
+          "date": "2026-04-28T15:46:49Z",
+          "message_first_line": "Merge pull request #90 from mattpocock/setup-skill-and-vague-prose",
+          "sha": "0e51243",
+          "security_keyword_match": false
+        },
+        {
+          "author": "mattpocock",
+          "date": "2026-04-28T15:41:14Z",
+          "message_first_line": "Enhance user guidance in setup-matt-pocock-skills; add explanations for backlog backend, triage labels, and domain docs decisions",
+          "sha": "70653e1",
+          "security_keyword_match": false
+        },
+        {
+          "author": "mattpocock",
+          "date": "2026-04-28T15:35:22Z",
+          "message_first_line": "Remove deprecated triage-issue skill and update README to reflect changes",
+          "sha": "a32ebfb",
+          "security_keyword_match": false
+        },
+        {
+          "author": "mattpocock",
+          "date": "2026-04-28T15:33:37Z",
+          "message_first_line": "Add setup-matt-pocock-skills; rename github-triage to triage; migrate engineering skills to vague prose",
+          "sha": "7afa86d",
+          "security_keyword_match": false
+        },
+        {
+          "author": "mattpocock",
+          "date": "2026-04-28T13:42:04Z",
+          "message_first_line": "Update title in README.md",
+          "sha": "49cec7b",
+          "security_keyword_match": false
+        },
+        {
+          "author": "mattpocock",
+          "date": "2026-04-28T13:40:16Z",
+          "message_first_line": "Enhance README with skills newsletter images",
+          "sha": "d7c8dcf",
+          "security_keyword_match": false
+        },
+        {
+          "author": "mattpocock",
+          "date": "2026-04-28T11:37:23Z",
+          "message_first_line": "Enhance link-skills.sh to check for symlink conflicts and provide user guidance",
+          "sha": "073a37e",
+          "security_keyword_match": true
+        },
+        {
+          "author": "mattpocock",
+          "date": "2026-04-28T11:04:01Z",
+          "message_first_line": "Add DOMAIN-AWARENESS.md and update SKILL.md files to reference it for code exploration",
+          "sha": "f76e3ba",
+          "security_keyword_match": false
+        },
+        {
+          "author": "mattpocock",
+          "date": "2026-04-28T10:21:32Z",
+          "message_first_line": "Refine README to improve clarity and conciseness in the explanation of agent communication challenges and solutions",
+          "sha": "ecdadb4",
+          "security_keyword_match": false
+        },
+        {
+          "author": "mattpocock",
+          "date": "2026-04-28T10:20:15Z",
+          "message_first_line": "Enhance README by adding links to skill documentation and clarifying the purpose of feedback loops in AI development",
+          "sha": "20861cb",
+          "security_keyword_match": false
+        },
+        {
+          "author": "mattpocock",
+          "date": "2026-04-28T09:55:14Z",
+          "message_first_line": "Fix grammatical errors and enhance clarity in README section on agent skills",
+          "sha": "c21cf6e",
+          "security_keyword_match": true
+        },
+        {
+          "author": "mattpocock",
+          "date": "2026-04-28T09:50:40Z",
+          "message_first_line": "Enhance README with detailed explanations of common AI failure modes and solutions",
+          "sha": "1eed8a6",
+          "security_keyword_match": false
+        },
+        {
+          "author": "mattpocock",
+          "date": "2026-04-28T09:19:48Z",
+          "message_first_line": "Remove installation commands for individual skills from README",
+          "sha": "edd9893",
+          "security_keyword_match": false
+        },
+        {
+          "author": "mattpocock",
+          "date": "2026-04-28T09:18:47Z",
+          "message_first_line": "Add quickstart setup instructions to README",
+          "sha": "3911642",
+          "security_keyword_match": false
+        },
+        {
+          "author": "mattpocock",
+          "date": "2026-04-28T09:17:37Z",
+          "message_first_line": "Refactor skill references and documentation for grill-with-docs skill",
+          "sha": "fb847c6",
+          "security_keyword_match": false
+        },
+        {
+          "author": "mattpocock",
+          "date": "2026-04-28T09:11:06Z",
+          "message_first_line": "Remove deprecated skills from plugin.json",
+          "sha": "51384f4",
+          "security_keyword_match": false
+        },
+        {
+          "author": "mattpocock",
+          "date": "2026-04-28T08:44:54Z",
+          "message_first_line": "Update skill references in README files and add new skills to deprecated and personal sections",
+          "sha": "71542f9",
+          "security_keyword_match": false
+        },
+        {
+          "author": "mattpocock",
+          "date": "2026-04-28T08:42:34Z",
+          "message_first_line": "Add new skills for TDD, issue management, PRD creation, and productivity tools",
+          "sha": "62f43a1",
+          "security_keyword_match": false
+        },
+        {
+          "author": "mattpocock",
+          "date": "2026-04-28T08:23:06Z",
+          "message_first_line": "Add initial implementation of design-an-interface skill and linking script",
+          "sha": "3e3ca9b",
+          "security_keyword_match": false
+        },
+        {
+          "author": "mattpocock",
+          "date": "2026-04-28T07:00:37Z",
+          "message_first_line": "Moved to ./skills directory",
+          "sha": "383b6a0",
+          "security_keyword_match": false
+        },
+        {
+          "author": "mattpocock",
+          "date": "2026-04-28T06:58:41Z",
+          "message_first_line": "Added diagnose",
+          "sha": "e7f0b58",
+          "security_keyword_match": false
+        },
+        {
+          "author": "mattpocock",
+          "date": "2026-04-26T19:49:06Z",
+          "message_first_line": "Revise README.md to clarify the purpose of agent skills and promote newsletter subscription",
+          "sha": "90ea8ee",
+          "security_keyword_match": false
+        },
+        {
+          "author": "mattpocock",
+          "date": "2026-04-26T19:47:17Z",
+          "message_first_line": "Update definition of 'Order' in CONTEXT-FORMAT.md for clarity and consistency",
+          "sha": "77b06d1",
+          "security_keyword_match": false
+        },
+        {
+          "author": "mattpocock",
+          "date": "2026-04-24T19:26:50Z",
+          "message_first_line": "Enhance documentation in DEEPENING.md and INTERFACE-DESIGN.md for clarity and consistency; introduce LANGUAGE.md for shared vocabulary in architectural discussions.",
+          "sha": "60aa99c",
+          "security_keyword_match": false
+        },
+        {
+          "author": "mattpocock",
+          "date": "2026-04-23T10:25:36Z",
+          "message_first_line": "Added DDD-awareness to improve-codebase-architecture",
+          "sha": "949472a",
+          "security_keyword_match": false
+        },
+        {
+          "author": "TESTPERSONAL",
+          "date": "2026-04-22T15:58:03Z",
+          "message_first_line": "Update terminology in SKILL.md: replace 'grilling session' with '/domain-model session' for consistency",
+          "sha": "1186cf6",
+          "security_keyword_match": false
+        },
+        {
+          "author": "TESTPERSONAL",
+          "date": "2026-04-22T11:10:22Z",
+          "message_first_line": "Refine description in SKILL.md for clarity and conciseness",
+          "sha": "c2225f9",
+          "security_keyword_match": false
+        },
+        {
+          "author": "TESTPERSONAL",
+          "date": "2026-04-22T11:10:11Z",
+          "message_first_line": "Clarify guidance on `CONTEXT.md` updates: emphasize meaningful terms for domain experts and avoid coupling to implementation details.",
+          "sha": "3e251ea",
+          "security_keyword_match": false
+        },
+        {
+          "author": "TESTPERSONAL",
+          "date": "2026-04-17T12:11:41Z",
+          "message_first_line": "Rename skills for clarity: update 'write-a-prd' to 'to-prd' and 'prd-to-issues' to 'to-issues' in README.md",
+          "sha": "8868f54",
+          "security_keyword_match": false
+        },
+        {
+          "author": "TESTPERSONAL",
+          "date": "2026-04-17T12:10:02Z",
+          "message_first_line": "Updated write-a-prd to to-prd",
+          "sha": "aaf3050",
+          "security_keyword_match": false
+        },
+        {
+          "author": "TESTPERSONAL",
+          "date": "2026-04-17T12:02:21Z",
+          "message_first_line": "Remove prd-to-plan skill",
+          "sha": "a77fa6e",
+          "security_keyword_match": false
+        },
+        {
+          "author": "TESTPERSONAL",
+          "date": "2026-04-17T09:36:26Z",
+          "message_first_line": "Added domain-model, updates to github-triage, and caveman",
+          "sha": "ab45d5e",
+          "security_keyword_match": false
+        },
+        {
+          "author": "TESTPERSONAL",
+          "date": "2026-04-15T05:17:41Z",
+          "message_first_line": "Add AI disclaimer requirement for GitHub issue comments",
+          "sha": "1f25956",
+          "security_keyword_match": false
+        },
+        {
+          "author": "mattpocock",
+          "date": "2026-04-01T11:57:15Z",
+          "message_first_line": "Add agent brief and out-of-scope documentation for GitHub issue triage",
+          "sha": "651eab0",
+          "security_keyword_match": false
+        },
+        {
+          "author": "mattpocock",
+          "date": "2026-03-26T19:57:24Z",
+          "message_first_line": "Refactor glossary tables and enhance example dialogue in Ubiquitous Language skill",
+          "sha": "eebfb3c",
+          "security_keyword_match": false
+        },
+        {
+          "author": "mattpocock",
+          "date": "2026-03-26T19:57:17Z",
+          "message_first_line": "Merge branch 'main' of https://github.com/mattpocock/skills",
+          "sha": "98fecc7",
+          "security_keyword_match": false
+        },
+        {
+          "author": "mattpocock",
+          "date": "2026-03-26T14:28:04Z",
+          "message_first_line": "Add instruction to ask questions one at a time",
+          "sha": "a6bdfd9",
+          "security_keyword_match": false
+        },
+        {
+          "author": "mattpocock",
+          "date": "2026-03-25T20:08:57Z",
+          "message_first_line": "Add issue breakdown with blocking relationships to QA skill",
+          "sha": "6a87ed0",
+          "security_keyword_match": false
+        },
+        {
+          "author": "mattpocock",
+          "date": "2026-03-19T09:33:18Z",
+          "message_first_line": "Added recommendation to grill-me skill",
+          "sha": "fb3629d",
+          "security_keyword_match": false
+        },
+        {
+          "author": "mattpocock",
+          "date": "2026-03-18T14:17:16Z",
+          "message_first_line": "Add installation commands",
+          "sha": "1325b14",
+          "security_keyword_match": false
+        },
+        {
+          "author": "mattpocock",
+          "date": "2026-03-16T14:31:12Z",
+          "message_first_line": "Added ubiquitous language skill",
+          "sha": "d3850f1",
+          "security_keyword_match": false
+        },
+        {
+          "author": "mattpocock",
+          "date": "2026-03-13T16:43:32Z",
+          "message_first_line": "Added MIT license",
+          "sha": "2817544",
+          "security_keyword_match": false
+        },
+        {
+          "author": "mattpocock",
+          "date": "2026-03-13T16:42:53Z",
+          "message_first_line": "Added a readme",
+          "sha": "b38b53c",
+          "security_keyword_match": false
+        },
+        {
+          "author": "mattpocock",
+          "date": "2026-03-13T10:35:27Z",
+          "message_first_line": "Standardize skill metadata: remove -user suffixes and add missing frontmatter",
+          "sha": "d1beb4f",
+          "security_keyword_match": false
+        },
+        {
+          "author": "mattpocock",
+          "date": "2026-03-02T13:16:11Z",
+          "message_first_line": "Added prd-to-plan skill",
+          "sha": "4dd409d",
+          "security_keyword_match": false
+        },
+        {
+          "author": "mattpocock",
+          "date": "2026-02-25T15:51:02Z",
+          "message_first_line": "Updates",
+          "sha": "78649ba",
+          "security_keyword_match": false
+        },
+        {
+          "author": "mattpocock",
+          "date": "2026-02-20T16:44:33Z",
+          "message_first_line": "Updates",
+          "sha": "8e51ff7",
+          "security_keyword_match": false
+        },
+        {
+          "author": "mattpocock",
+          "date": "2026-02-10T14:09:43Z",
+          "message_first_line": "Updates",
+          "sha": "b81729c",
+          "security_keyword_match": false
+        },
+        {
+          "author": "mattpocock",
+          "date": "2026-02-10T14:01:12Z",
+          "message_first_line": "Added setup-git-guardrails skill",
+          "sha": "30e0fdc",
+          "security_keyword_match": false
+        },
+        {
+          "author": "mattpocock",
+          "date": "2026-02-10T10:39:16Z",
+          "message_first_line": "Updates",
+          "sha": "4458b65",
+          "security_keyword_match": false
+        },
+        {
+          "author": "mattpocock",
+          "date": "2026-02-04T14:09:07Z",
+          "message_first_line": "Added horizontal slices issue to TDD skill",
+          "sha": "b2039ab",
+          "security_keyword_match": false
+        },
+        {
+          "author": "mattpocock",
+          "date": "2026-02-04T14:06:26Z",
+          "message_first_line": "Updates",
+          "sha": "c90b246",
+          "security_keyword_match": false
+        },
+        {
+          "author": "mattpocock",
+          "date": "2026-02-03T12:06:27Z",
+          "message_first_line": "Added migrate to shoehorn script",
+          "sha": "64b2f99",
+          "security_keyword_match": false
+        },
+        {
+          "author": "mattpocock",
+          "date": "2026-02-03T12:04:06Z",
+          "message_first_line": "Updates",
+          "sha": "74dbf0d",
+          "security_keyword_match": false
+        },
+        {
+          "author": "mattpocock",
+          "date": "2026-02-03T11:15:48Z",
+          "message_first_line": "Initial commit",
+          "sha": "985d8fc",
+          "security_keyword_match": false
+        }
+      ]
+    },
+    "distribution_channels": {
+      "channels": []
+    },
+    "artifact_verification": {
+      "per_channel": []
+    },
+    "install_script_analysis": {
+      "scripts": []
+    },
+    "gitleaks": {
+      "available": false,
+      "ran": false,
+      "findings_count": null,
+      "findings": [],
+      "note": "gitleaks not installed; install to cover secrets-in-history"
+    },
+    "windows_patterns": {
+      "hits": [],
+      "hit_count": 0
+    },
+    "monorepo": {
+      "is_monorepo": false,
+      "inner_packages": [],
+      "lifecycle_script_hits": []
+    },
+    "defensive_configs": {
+      "entries": [
+        {
+          "file": ".github/dependabot.yml",
+          "type": "dependabot",
+          "present": false
+        },
+        {
+          "file": "SECURITY.md",
+          "type": "security-policy",
+          "present": false
+        }
+      ]
+    },
+    "batch_merge_detection": {
+      "detected": false,
+      "pr_groups": []
+    },
+    "coverage_affirmations": {
+      "prompt_injection_scan_completed": true,
+      "windows_surface_coverage": "scanned",
+      "distribution_channels_verified": "0/0",
+      "gitleaks_available": false,
+      "gitleaks_explanation": "gitleaks not installed; install to cover secrets-in-history"
+    }
+  },
+  "phase_2_validation": {
+    "sha_consistent": true,
+    "required_fields_complete": true,
+    "dates_chronological": true,
+    "tarball_nonempty": true,
+    "validation_passed": true,
+    "validation_errors": []
+  },
+  "phase_3_computed": {
+    "c20_severity": {
+      "no_classic_protection": true,
+      "no_rulesets": true,
+      "no_rules_on_default": true,
+      "no_codeowners": true,
+      "has_recent_release_30d": false,
+      "ships_executable_code": false,
+      "result": "Warning"
+    },
+    "solo_maintainer": {
+      "top_contributor_share": 0.873,
+      "is_solo": true,
+      "verbatim_sentence": "Note: mattpocock accounts for 87% of all commits. This is a solo-maintainer project \u2014 all governance findings should be read in that context."
+    },
+    "exhibit_grouping": {
+      "total_findings": 0,
+      "threshold_met": false,
+      "exhibits": []
+    },
+    "boundary_cases": {
+      "cases": []
+    },
+    "coverage_status": {
+      "cells": [
+        {
+          "name": "Tarball extraction",
+          "status": "ok",
+          "detail": "57 files"
+        },
+        {
+          "name": "OSSF Scorecard",
+          "status": "not_indexed",
+          "detail": "Repo not indexed by OSSF"
+        },
+        {
+          "name": "osv.dev",
+          "status": "not_queried",
+          "detail": "Zero runtime dependencies"
+        },
+        {
+          "name": "Secrets-in-history (gitleaks)",
+          "status": "not_available",
+          "detail": "gitleaks not installed"
+        },
+        {
+          "name": "API rate budget",
+          "status": "ok",
+          "detail": "4988/5000 remaining"
+        },
+        {
+          "name": "Dependabot alerts",
+          "status": "unknown",
+          "detail": "Unknown"
+        }
+      ]
+    },
+    "methodology": {
+      "scanner_version": "V2.5-preview",
+      "prompt_version": "V2.4",
+      "guide_version": "V0.2"
+    }
+  },
+  "phase_3_advisory": {
+    "scorecard_hints": {
+      "does_anyone_check_the_code": {
+        "color": "red",
+        "short_answer": "No",
+        "signals": [
+          {
+            "id": "q1_formal_review_rate",
+            "value": 0
+          },
+          {
+            "id": "q1_any_review_rate",
+            "value": 0
+          },
+          {
+            "id": "q1_has_branch_protection",
+            "value": false
+          },
+          {
+            "id": "q1_has_ruleset_protection",
+            "value": false
+          },
+          {
+            "id": "q1_has_codeowners",
+            "value": false
+          },
+          {
+            "id": "q1_is_solo_maintainer",
+            "value": true
+          },
+          {
+            "id": "q1_governance_floor_override",
+            "value": true
+          }
+        ]
+      },
+      "do_they_fix_problems_quickly": {
+        "color": "green",
+        "short_answer": "Yes",
+        "signals": [
+          {
+            "id": "q2_open_security_issue_count",
+            "value": 0
+          },
+          {
+            "id": "q2_oldest_open_cve_pr_age_days",
+            "value": null
+          },
+          {
+            "id": "q2_oldest_open_security_item_age_days",
+            "value": null
+          },
+          {
+            "id": "q2_closed_fix_lag_days",
+            "value": null
+          }
+        ]
+      },
+      "do_they_tell_you_about_problems": {
+        "color": "red",
+        "short_answer": "No",
+        "signals": [
+          {
+            "id": "q3_has_security_policy",
+            "value": false
+          },
+          {
+            "id": "q3_has_contributing_guide",
+            "value": false
+          },
+          {
+            "id": "q3_published_advisory_count",
+            "value": 0
+          },
+          {
+            "id": "q3_has_silent_fixes",
+            "value": false
+          }
+        ]
+      },
+      "is_it_safe_out_of_the_box": {
+        "color": "amber",
+        "short_answer": "Partly",
+        "signals": [
+          {
+            "id": "q4_all_channels_pinned",
+            "value": false
+          },
+          {
+            "id": "q4_artifact_verified",
+            "value": false
+          },
+          {
+            "id": "q4_has_critical_on_default_path",
+            "value": false
+          },
+          {
+            "id": "q4_has_warning_on_install_path",
+            "value": false
+          }
+        ]
+      }
+    }
+  },
+  "phase_4_structured_llm": {
+    "findings": {
+      "entries": [
+        {
+          "id": "F0",
+          "severity": "Warning",
+          "provenance": "rule-applied",
+          "status": "ongoing",
+          "category": "governance/solo-maintainer",
+          "kind": "Governance",
+          "rule_id": "F11",
+          "title": "Solo-maintainer (87.3% share, 1 active human + 1 owner-test account) with zero governance protections on a 47.9k-star skill registry",
+          "action_hint": "Inspect the skill content you intend to install before linking; pin to a specific commit if you want a stable surface.",
+          "evidence_refs": [
+            "E1",
+            "E2"
+          ],
+          "threat_model_paths": [
+            "stale_token",
+            "other"
+          ],
+          "threat_model_context": "mattpocock holds 87.3% of top-contributor commit share. The remaining 12.7% is held by `TESTPERSONAL` (0 public repos, no bio, 9 followers \u2014 almost certainly a maintainer-owned test account, not an independent reviewer). All 7 governance signals are negative: classic branch protection HTTP 404, 0 rulesets, 0 rules-on-default-branch, no CODEOWNERS, owner is a User account (not an Org \u2192 no org rulesets), and the repo is not indexed by OSSF Scorecard. The blast radius if mattpocock's account is compromised: any user who runs `npx skills@latest add mattpocock/skills` after the malicious push, or who has the plugin auto-update enabled, receives the malicious skill content directly. 47.9k stars suggests the install base is meaningful. C20 fires Warning rather than Critical because there are no formal release tags (the 'recent release' amplifier is N/A).",
+          "what_this_means": "There is no structural second-human gate between mattpocock pushing to main and a user's `~/.claude/skills/` receiving that content. The repo's governance posture is 'trust mattpocock'.",
+          "what_this_does_not_mean": "Not evidence of malicious behavior. mattpocock is a known TypeScript educator (11.9k followers, 218 public repos, ex-Vercel) with a public reputation that itself is a trust signal. The finding is structural \u2014 about the absence of a review gate, not about the maintainer.",
+          "duration_label": "Continuous",
+          "date_label": "Since repo creation (2026-02-03)",
+          "how_to_fix": "Maintainer-side: enable a branch protection ruleset on `main` requiring \u22651 approving review; add a CODEOWNERS file (even self-listed); publish a SECURITY.md naming a disclosure channel. Consumer-side: `git clone` and inspect `skills/<bucket>/<name>/SKILL.md` before linking; or pin to a specific commit SHA via the install command rather than `@latest`."
+        },
+        {
+          "id": "F1",
+          "severity": "Warning",
+          "provenance": "observed",
+          "status": "ongoing",
+          "category": "supply-chain/release-cadence",
+          "kind": "Supply-Chain",
+          "rule_id": null,
+          "title": "Zero formal releases \u2014 install path resolves to whatever HEAD points at on main at install time",
+          "action_hint": "If you want a stable skill set, install once and don't re-run with `@latest`; or fork and pin.",
+          "evidence_refs": [
+            "E3",
+            "E5"
+          ],
+          "threat_model_paths": [
+            "stale_token",
+            "other"
+          ],
+          "threat_model_context": "The repo has no GitHub Releases and no semantic version tags. The documented quickstart `npx skills@latest add mattpocock/skills` resolves to the latest commit on `main` at the moment of invocation. This is the rolling-distribution pattern: every install gets the freshest skill content, and there is no equivalent of pinning a release. A malicious commit to `main` reaches users at the next install boundary. The mitigation is implicit (user is expected to re-read skill content after each update), not enforced. Note that the `.claude-plugin/plugin.json` is also rolling \u2014 Claude Code plugin marketplace consumes the latest plugin manifest from `main`.",
+          "what_this_means": "There is no release-pinned install path. Whatever you install today differs from whatever you install tomorrow if main has moved.",
+          "what_this_does_not_mean": "Not unique to this repo \u2014 many Claude Code skill sets follow this pattern. The point is to be aware that `@latest` is a moving target.",
+          "duration_label": "Continuous",
+          "date_label": "Since repo creation (2026-02-03)",
+          "how_to_fix": "Maintainer-side: cut versioned release tags (e.g. `v0.1.0`) and document `npx skills@latest add mattpocock/skills@v0.1.0` (if the upstream `skills` CLI supports SHA/tag pinning). Consumer-side: install once, then don't blindly re-run install commands; or fork and maintain your own pinned copy."
+        },
+        {
+          "id": "F2",
+          "severity": "Warning",
+          "provenance": "observed",
+          "status": "ongoing",
+          "category": "governance/disclosure",
+          "kind": "Governance",
+          "rule_id": null,
+          "title": "No SECURITY.md (an external PR proposing one was closed without merging) \u2014 disclosure path is informal",
+          "action_hint": "If you find a security issue, message mattpocock directly via X/Twitter or the Total TypeScript team, since there is no documented private channel.",
+          "evidence_refs": [
+            "E4"
+          ],
+          "threat_model_paths": [
+            "other"
+          ],
+          "threat_model_context": "PR #67 ('Create SECURITY.md for security policy') was opened by an external contributor on 2026-04-26 and closed 2026-04-28 without being merged. The pattern is part of a batch close on that date affecting 6+ unrelated PRs (typo fixes, feature additions, lockfile fixes), suggesting maintainer-style curation rather than a deliberate rejection of disclosure mechanisms. community/profile.has_security_policy is false; there are 0 published GitHub security advisories. There is no documented private channel for vulnerability disclosure. The closest analogue is the `.out-of-scope/` directory, which documents non-security scope decisions in prose form \u2014 a positive transparency signal, but not a security-disclosure surface.",
+          "what_this_means": "If you want to report a vulnerability privately, the path is unclear. GitHub's built-in 'Report a vulnerability' UI may still work (untested), but it is not advertised.",
+          "what_this_does_not_mean": "Not evidence that vulnerabilities are being suppressed. The lack of a SECURITY.md on a 3-month-old solo-maintained project is the norm, not an outlier.",
+          "duration_label": "Continuous",
+          "date_label": "Since repo creation (2026-02-03)",
+          "how_to_fix": "Maintainer-side: add a 1-page SECURITY.md naming a private disclosure channel (email, GitHub private advisory, or a Total TypeScript team alias) and a response-time expectation. Reviewing PR #67 as a starting point would close this in minutes. Consumer-side: if you find something, use GitHub's private-advisory UI or DM the maintainer; do not post publicly."
+        },
+        {
+          "id": "F3",
+          "severity": "Warning",
+          "provenance": "observed",
+          "status": "ongoing",
+          "category": "supply-chain/install-path",
+          "kind": "Supply-Chain",
+          "rule_id": null,
+          "title": "Two-stage supply chain \u2014 install via `npx skills@latest` extends trust to vercel-labs/skills (a separate npm-published CLI)",
+          "action_hint": "When you run the documented install command, you are also implicitly trusting whoever publishes the npm `skills` package.",
+          "evidence_refs": [
+            "E5"
+          ],
+          "threat_model_paths": [
+            "stale_token",
+            "malicious_extension",
+            "other"
+          ],
+          "threat_model_context": "The README's documented quickstart is `npx skills@latest add mattpocock/skills`. This pulls the npm package `skills@1.5.3`, published by vercel-labs/skills (a separate GitHub repository, separate maintainer surface, separate npm trust scope). The vercel-labs CLI then fetches mattpocock/skills content and writes it into the user's `~/.claude/skills/`. The trust chain is therefore: (a) npm registry \u2192 (b) vercel-labs/skills npm publishers \u2192 (c) vercel-labs/skills CLI logic \u2192 (d) mattpocock/skills content. A compromise at any of (a)-(c) could redirect, modify, or exfiltrate during install. The alternative install path \u2014 Claude Code's plugin marketplace via `.claude-plugin/plugin.json` \u2014 has its own (separate) supply-chain assumptions (Anthropic-mediated). The local fallback `scripts/link-skills.sh` (clone + symlink) avoids the npm hop entirely and is safer for paranoid users.",
+          "what_this_means": "Running the documented install command means trusting two separate maintainer groups (mattpocock and vercel-labs), not just one. The vercel-labs/skills CLI is a meaningful additional surface.",
+          "what_this_does_not_mean": "Not evidence that vercel-labs is untrustworthy \u2014 Vercel is a well-known platform vendor. The point is the supply-chain extension is documented as a single-line install but has more moving parts than that suggests.",
+          "duration_label": "Continuous",
+          "date_label": "Since README quickstart adopted",
+          "how_to_fix": "Consumer-side: skip the npx step. Clone mattpocock/skills directly, run `scripts/link-skills.sh` (which symlinks SKILL.md files into `~/.claude/skills/`), and you stay within mattpocock's trust scope. Maintainer-side: optionally document the clone+link path alongside the npx path so users can pick their trust boundary."
+        },
+        {
+          "id": "F4",
+          "severity": "Warning",
+          "provenance": "observed",
+          "status": "ongoing",
+          "category": "supply-chain/post-install-execution",
+          "kind": "Supply-Chain",
+          "rule_id": null,
+          "title": "22 SKILL.md files (1,815 lines) form the post-install prompt surface \u2014 instructions Claude executes with full repo permissions",
+          "action_hint": "Read each SKILL.md before invoking the skill; treat installed skills as code, not as documentation.",
+          "evidence_refs": [
+            "E6",
+            "E10"
+          ],
+          "threat_model_paths": [
+            "other"
+          ],
+          "threat_model_context": "Once installed, the skills become slash-commands invokable from Claude Code (e.g. `/grill-me`, `/tdd`, `/diagnose`, `/setup-matt-pocock-skills`). When invoked, each skill loads its SKILL.md as Claude instructions to execute. Several skills explicitly modify the user's environment: `/setup-pre-commit` writes to package.json, `.husky/`, installs npm devDependencies; `/git-guardrails-claude-code` writes to `~/.claude/settings.json` (hooks); `/setup-matt-pocock-skills` writes to `AGENTS.md`/`CLAUDE.md` + `docs/agents/*`. The skills run with the user's normal Claude Code permissions over their working repo. A malicious commit to mattpocock/skills (or upstream of it) could replace SKILL.md content with prompt-injection-style instructions that exfiltrate code, modify files, or run subprocesses. Mitigations: skill content is markdown \u2014 fully auditable; several skills explicitly ask user permission before destructive actions; one skill (`/git-guardrails-claude-code`) is itself a defensive measure that blocks dangerous git commands. The harness scanned only the 13-line CLAUDE.md and found 0 prompt-injection signals; the 22 SKILL.md files were not recursively scanned (see F5).",
+          "what_this_means": "Installing this skill set adds 22 new privileged action paths that Claude can take in your repo. The risk is not 'malicious now' \u2014 it's 'a future malicious commit reaches you on next install'.",
+          "what_this_does_not_mean": "Not unique to mattpocock/skills \u2014 every Claude Code skill set has the same shape. And the SKILL.md content sampled (setup-pre-commit, git-guardrails-claude-code, setup-matt-pocock-skills, tdd) is consent-driven and consistent with stated purpose.",
+          "duration_label": "Continuous",
+          "date_label": "Since the first SKILL.md was added (2026-02-03)",
+          "how_to_fix": "Consumer-side: before linking, `cat skills/<bucket>/<name>/SKILL.md` for each skill you intend to use; install only the ones you've read. Treat skill-update events as code-review events, not silent updates. Maintainer-side: a `CHANGELOG.md` at the skill level (or commit messages with `[skill: ...]` prefixes) would help downstream auditability."
+        },
+        {
+          "id": "F5",
+          "severity": "Info",
+          "provenance": "observed",
+          "status": "ongoing",
+          "category": "scanner-coverage",
+          "kind": "Coverage",
+          "rule_id": null,
+          "title": "Scanner coverage gap on plugin-shape repos \u2014 only 1 of 23 markdown rule files was scanned for prompt injection",
+          "action_hint": "Non-blocking. Re-running with a SKILL.md-aware scanner would close this gap.",
+          "evidence_refs": [
+            "E10"
+          ],
+          "threat_model_paths": [
+            "other"
+          ],
+          "threat_model_context": "The harness's `code_patterns.agent_rule_files` heuristic captured the top-level `CLAUDE.md` (13 lines) as an agent rule file. The 22 SKILL.md files (1,815 lines) under `skills/<bucket>/<name>/SKILL.md` are not enumerated. Consequently `prompt_injection_scan.scanned_files` is `['CLAUDE.md']`, signal_count: 0 \u2014 the 0-signal result reflects 1/23 file coverage, not a verdict on the full prompt surface. The third-party Skillsmith scanner (issue #105) scanned the SKILL.md content with a different ruleset and surfaced one false-positive (regex match on '...the system:' end-of-line in TDD prose). This is a scanner property, not a property of mattpocock/skills.",
+          "what_this_means": "For this scan, the prompt-injection clean signal is weak \u2014 only the top-level CLAUDE.md was scrutinised. The actual surface (22 SKILL.md, 1,815 lines) was not scanned by this harness.",
+          "what_this_does_not_mean": "Not evidence of injection in the SKILL.md content. The Skillsmith scan flagged one regex false-positive and concluded the content was benign.",
+          "duration_label": "Continuous",
+          "date_label": "Scanner harness gap",
+          "how_to_fix": "Scanner-side: extend `code_patterns.agent_rule_files` to recursively find SKILL.md files under any `skills/` subdirectory, and feed all of them into `prompt_injection_scan.scanned_files`. This is a V1.2.x-class harness patch (similar in spirit to V13-3 C2 language qualifier). Consumer-side: read the SKILL.md files yourself, or run a SKILL.md-aware tool."
+        }
+      ]
+    },
+    "evidence": {
+      "entries": [
+        {
+          "id": "E1",
+          "claim": "mattpocock holds 87.3% top-contributor commit share (55 commits) on a 47.9k-star, 3-month-old repo. The only other contributor is `TESTPERSONAL` (8 commits, 0 public repos, 9 followers, no bio) \u2014 almost certainly a maintainer-owned test/dev account, not an independent reviewer.",
+          "command": "gh api repos/mattpocock/skills/contributors --jq '[.[] | {login, contributions}]'",
+          "command_lang": "bash",
+          "result": "[{login: 'mattpocock', contributions: 55}, {login: 'TESTPERSONAL', contributions: 8}]. total_contributor_count: 2. Top-1 share: 87.3% (above 80% solo-maintainer threshold). TESTPERSONAL profile: created 2014-02-12, no bio, no company, 9 followers, 0 public repos.",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "fact"
+        },
+        {
+          "id": "E2",
+          "claim": "All 7 C20 governance signals are negative: classic branch protection HTTP 404, 0 rulesets, 0 rules-on-default-branch, no CODEOWNERS at any of 4 standard locations, owner is User (not Org \u2192 org rulesets n/a), OSSF Scorecard not indexed (404).",
+          "command": "gh api repos/mattpocock/skills/branches/main/protection; gh api repos/mattpocock/skills/rulesets",
+          "command_lang": "bash",
+          "result": "branch_protection.classic.status: 404. rulesets.count: 0. rules_on_default.count: 0. CODEOWNERS: not found at CODEOWNERS, .github/CODEOWNERS, docs/CODEOWNERS, .gitlab/CODEOWNERS. owner_type: User. OSSF Scorecard http_status: 404 (repo not indexed by OSSF).",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "fact"
+        },
+        {
+          "id": "E3",
+          "claim": "Zero formal releases. The repo has no GitHub Releases, no semantic version tags. Users installing via the documented quickstart receive the latest commit on `main` at install time \u2014 no release-pinning is exposed by the install path.",
+          "command": "gh api repos/mattpocock/skills/releases",
+          "command_lang": "bash",
+          "result": "releases.total_count: 0. entries: []. The install model is rolling: each invocation of the install command resolves to whatever HEAD points at on `main` at that moment. There is no equivalent of pinning a release tag.",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "fact"
+        },
+        {
+          "id": "E4",
+          "claim": "PR #67 ('Create SECURITY.md for security policy'), opened by an external contributor, was closed 2026-04-28 without merging. community/profile reports has_security_policy=false. There are zero published GHSA security advisories in 3 months of repo lifetime.",
+          "command": "gh api repos/mattpocock/skills/pulls/67; gh api repos/mattpocock/skills/community/profile",
+          "command_lang": "bash",
+          "result": "PR #67 'Create SECURITY.md for security policy' \u2014 body: 'Added a security policy document outlining supported versions and vulnerability reporting.' state: closed, merged: false, additions: 21, deletions: 0, files_count: 1. closed_at: 2026-04-28T09:22:13Z. community_profile.has_security_policy: false; has_contributing: false; has_code_of_conduct: false; health_percentage: 42. security_advisories.count: 0.",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "fact"
+        },
+        {
+          "id": "E5",
+          "claim": "Documented install path is `npx skills@latest add mattpocock/skills`. The `skills` npm package (npm version 1.5.3) is published by vercel-labs/skills \u2014 a separate trust boundary from mattpocock/skills itself. Install is therefore two-stage: trust vercel-labs's npm CLI to install Matt's skills correctly.",
+          "command": "head -40 README.md  # quickstart section; curl -s https://registry.npmjs.org/skills/latest",
+          "command_lang": "bash",
+          "result": "README quickstart line: `npx skills@latest add mattpocock/skills`. npm package `skills@1.5.3`, repo: git+https://github.com/vercel-labs/skills.git, homepage: https://github.com/vercel-labs/skills#readme. There is also a `.claude-plugin/plugin.json` manifest at the repo root listing 12 skills, which can be consumed via Claude Code's plugin marketplace as an alternative install path.",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "fact"
+        },
+        {
+          "id": "E6",
+          "claim": "The `skills/` tree contains 22 SKILL.md files totaling 1,815 lines. Each contains markdown instructions Claude executes when the skill is invoked (e.g., `/grill-me`, `/tdd`, `/diagnose`). 12 of the 22 are listed in `.claude-plugin/plugin.json`; 10 (in `personal/` + `deprecated/`) are not promoted but still present in the repo.",
+          "command": "find skills -name SKILL.md -exec wc -l {} +; cat .claude-plugin/plugin.json",
+          "command_lang": "bash",
+          "result": "22 SKILL.md files. Sizes: 7-130 lines each. Total: 1,815 lines. plugin.json lists 12 paths under `engineering/` + `productivity/`. Buckets: engineering/ (10), productivity/ (3), personal/ (2), misc/ (5), deprecated/ (4). Skills perform actions like setup-pre-commit (modifies package.json + .husky/), git-guardrails-claude-code (writes ~/.claude/settings.json hooks), setup-matt-pocock-skills (writes AGENTS.md/CLAUDE.md + docs/agents/*).",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "fact"
+        },
+        {
+          "id": "E7",
+          "claim": "PR review posture on lifetime sample: 1 PR ever merged (#90, self-merged by mattpocock 2026-04-28, 0 reviews). Multiple recent contributor PRs were closed without merging, including PR #67 (SECURITY.md) and PR #28 ([Security] Add security lens to grill-me skill).",
+          "command": "gh api 'repos/mattpocock/skills/pulls?state=closed&per_page=100'",
+          "command_lang": "bash",
+          "result": "total_merged_lifetime: 1. sample of merged: PR #90 'Add setup-matt-pocock-skills; rename github-triage; migrate skills to vague prose' \u2014 merged 2026-04-28, self_merge: true, any_review_count: 0. Closed-without-merge sample includes #28 (Security label), #61, #62, #64, #65, #66, #67 (SECURITY.md), #69, #74, #75, #81 \u2014 many closed in a single batch on 2026-04-28. Pattern is maintainer-driven curation rather than collaborative review.",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "fact"
+        },
+        {
+          "id": "E8",
+          "claim": "Issue #105 (closed 2026-04-30) was a heads-up from a third-party scanner (Skillsmith, skillsmith.app) reporting a regex false-positive on `skills/engineering/tdd/SKILL.md` line 64 \u2014 the phrase '...the system:' at end-of-line matched their chat-role-injection pattern despite the meaning being plainly programming-domain ('the system under test'). Matt closed the issue without comment. No prompt-injection signals in the harness scan of `CLAUDE.md`.",
+          "command": "gh api repos/mattpocock/skills/issues/105",
+          "command_lang": "bash",
+          "result": "Issue #105 title: 'Heads-up: Skillsmith security scanner flags TDD SKILL.md (false positive \u2014 role-injection regex)'. Author: wrsmith108. State: closed. Body explains the Skillsmith regex `/(?:^|\\s)(?:system|assistant|user)\\s*:\\s*(?:\\n|$)/i` matched 'system:' at end-of-line in TDD prose; concluded false positive on their side; tracked auto-quarantine + pattern-tuning. comments: 0 (Matt closed without commenting). harness prompt_injection_scan: scanned_files=['CLAUDE.md'] (13 lines), signal_count: 0. The 22 SKILL.md files were NOT scanned by this harness (coverage gap).",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "fact"
+        },
+        {
+          "id": "E9",
+          "claim": "Workflow surface: 1 GitHub Actions workflow (Copilot pull-request reviewer bot, dynamic). No CI tests, no static-analysis, no Dependabot config (.github/dependabot.yml absent), no SECURITY.md, no SAST. dangerous-pattern grep found 0 hits in the deserialization/exec/secrets/cmd_injection/auth_bypass/path_traversal/etc. families. 1 hit in the `network` family \u2014 a `fetch()` example in `skills/engineering/tdd/mocking.md` documenting test mocks (false positive).",
+          "command": "gh api repos/mattpocock/skills/actions/workflows; ls .github/",
+          "command_lang": "bash",
+          "result": "workflows.count: 1 ('Copilot code review' \u2014 dynamic, GitHub-managed). workflow_contents.entries: [] (the Copilot bot has no checked-in YAML \u2014 it's installed via the GitHub Copilot integration). pull_request_target_count: 0. defensive_configs: dependabot.yml not present; SECURITY.md not present. dangerous_primitives.deserialization.hit_count: 0. .exec.hit_count: 0. .network.hit_count: 1 (skills/engineering/tdd/mocking.md line 44, 'getUser: (id) => fetch(`/users/${id}`)' \u2014 TDD mocking example).",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "fact"
+        },
+        {
+          "id": "E10",
+          "claim": "Harness coverage gap on plugin-shape repos. The harness's `code_patterns.agent_rule_files` heuristic captured only the top-level `CLAUDE.md` (13 lines) as an agent rule file, missing the 22 SKILL.md files (1,815 lines) which form the actual prompt surface for users post-install. The `prompt_injection_scan` consequently scanned 1 file out of 23.",
+          "command": "python3 -c 'import json; f=json.load(open(\"phase-1-raw.json\")); print(f[\"phase_1_raw_capture\"][\"code_patterns\"][\"agent_rule_files\"]); print(f[\"phase_1_raw_capture\"][\"prompt_injection_scan\"])'",
+          "command_lang": "bash",
+          "result": "agent_rule_files: [{path: 'CLAUDE.md', kind: 'claude', line_count: 13, ci_amplified: false}]. prompt_injection_scan: {scanned_files: ['CLAUDE.md'], injection_signals: [], signal_count: 0, scan_method: 'tarball'}. The 22 SKILL.md files under skills/ are not enumerated as agent_rule_files. This is a scanner-coverage limitation specific to the Claude Code plugin/skills shape.",
+          "result_lang": "text",
+          "result_truncated": false,
+          "classification": "fact"
+        }
+      ]
+    },
+    "general_vuln_severity": {
+      "assessments": []
+    },
+    "section_actions": {
+      "entries": []
+    },
+    "section_leads": {
+      "section_01": {
+        "pill_row": "47.9k\u2b50 \u00b7 MIT \u00b7 Markdown-canonical \u00b7 5 warnings \u00b7 1 info \u00b7 caution",
+        "summary": "mattpocock/skills is a 3-month-old, 47.9k-star curated collection of 22 Claude Code skills, distributed as a plugin (`.claude-plugin/plugin.json`) and via `npx skills@latest add mattpocock/skills` (which routes through the vercel-labs/skills npm CLI). The repo is solo-maintained (mattpocock 87.3% commit share + a maintainer-owned test account; total contributor count: 2). Governance posture is minimal: no branch protection, no CODEOWNERS, no SECURITY.md (a PR proposing one was closed without merging), no published advisories, no Dependabot config, 1 GitHub Actions workflow (Copilot review bot). The verdict is Caution rather than Critical because (a) the underlying content is markdown \u2014 fully auditable; (b) several skills are explicitly defensive (e.g., `/git-guardrails-claude-code` blocks dangerous git commands); (c) mattpocock's public reputation (Total TypeScript, 11.9k followers, 218 public repos) is itself a meaningful trust signal. The Caution applies to the install path and post-install update model, not to the current skill content."
+      },
+      "section_02": {
+        "pill_row": "F0 Warning \u00b7 F1 Warning \u00b7 F2 Warning \u00b7 F3 Warning \u00b7 F4 Warning \u00b7 F5 Info",
+        "summary": null
+      },
+      "section_06": {
+        "pill_row": "Scorecard: Red \u00b7 Amber* \u00b7 Red \u00b7 Amber",
+        "summary": "**One scorecard override** on this scan: Q2 GREEN\u2192AMBER (advisory said 'Yes' because no signal indicated an overdue fix; reality is the repo is 3 months old with 1 lifetime merged PR and 0 closed-merged security PRs to grade response cadence on; honest answer at this evidence floor is amber/insufficient-data, not green). Override reason: `missing_qualitative_context`. Q1, Q3, Q4 align with Phase 3 advisory: Q1 red (governance floor \u2014 solo + no protection + 0% review), Q3 red (no SECURITY.md + 0 advisories + closed PR #67), Q4 amber (install warns but skill content is unsigned + 22 SKILL.md unscanned). The Q2 override is the operative V1.2.x calibration signal: at sample-floor evidence (`total_merged_lifetime` < 5 AND no closed-fix-lag), the algorithm should surface amber, not green."
+      }
+    },
+    "split_axis_decision": {
+      "should_split": false,
+      "axis": null,
+      "reasoning": "Single consumer profile \u2014 every user installs the same 22 skills (or a subset they pick interactively at install) and invokes them via slash commands in Claude Code. There is no deployment-context split (server vs CLI vs library) and no version-axis split (no formal releases). The optional install paths (npx vs plugin marketplace vs clone+link) are trust-boundary alternatives for the same end state, not different consumer profiles.",
+      "entries": []
+    },
+    "verdict_exhibits": {
+      "groups": [
+        {
+          "symbol": "\u26a0",
+          "headline": "Caution \u2014 F0..F4 cluster around the same root: solo-maintainer-no-protections + rolling supply chain",
+          "one_line_summary": "47.9k stars + 3 months old + zero governance protections + rolling install path through a third-party npm CLI = trust-the-maintainer-and-the-CLI posture.",
+          "items": [
+            {
+              "tag": "F0 / F11",
+              "claim": "mattpocock holds 87.3% commit share + 1 owner-test account = effective bus-factor 1; all 7 governance signals negative."
+            },
+            {
+              "tag": "F1",
+              "claim": "Zero releases \u2014 install resolves to whatever HEAD points at on main at install time. Rolling distribution."
+            },
+            {
+              "tag": "F2",
+              "claim": "No SECURITY.md (PR #67 closed without merging); no documented disclosure channel."
+            },
+            {
+              "tag": "F3",
+              "claim": "Two-stage supply chain \u2014 `npx skills@latest add` extends trust to vercel-labs/skills npm CLI."
+            },
+            {
+              "tag": "F4",
+              "claim": "22 SKILL.md files (1,815 lines) form the post-install prompt surface; instructions Claude executes with user's repo permissions."
+            }
+          ]
+        },
+        {
+          "symbol": "\u2139",
+          "headline": "Info \u2014 F5 is scanner coverage, not a property of the repo",
+          "one_line_summary": "Harness scanned 1/23 markdown rule files for prompt injection.",
+          "items": [
+            {
+              "tag": "F5",
+              "claim": "agent_rule_files heuristic missed the 22 SKILL.md files; only top-level CLAUDE.md scanned. V1.2.x patch candidate."
+            }
+          ]
+        }
+      ]
+    },
+    "priority_evidence": {
+      "selections": [
+        {
+          "evidence_id": "E2",
+          "reason": "If mattpocock enables a branch protection ruleset on main + adds a CODEOWNERS, the F0 governance posture flips and Q1 collapses out of red without needing Phase 4 override. Single highest-value remediation."
+        },
+        {
+          "evidence_id": "E5",
+          "reason": "Documenting the clone+link install path alongside the npx path lets users self-select their trust boundary. Closes F3's framing without restructuring the install pipeline."
+        },
+        {
+          "evidence_id": "E10",
+          "reason": "Extending the harness's agent_rule_files heuristic to recursively find SKILL.md files closes F5 and produces a clean prompt-injection result on the actual surface (1,815 lines), not just the 13-line CLAUDE.md."
+        }
+      ]
+    },
+    "threat_models": {
+      "per_finding": []
+    },
+    "action_steps": {
+      "entries": [
+        {
+          "step": 1,
+          "type": "install_normally",
+          "headline": "Install via the documented quickstart, OR clone and link locally for tighter trust scope",
+          "severity": "OK",
+          "non_technical": "Two equivalent paths. (1) `npx skills@latest add mattpocock/skills` \u2014 fastest, but trusts both mattpocock and vercel-labs/skills (the npm CLI that drives the install). (2) `git clone` + `bash scripts/link-skills.sh` \u2014 same end result, but stays within mattpocock's trust scope only. Pick whichever matches your trust model.",
+          "command": "npx skills@latest add mattpocock/skills  # OR: git clone https://github.com/mattpocock/skills && cd skills && bash scripts/link-skills.sh",
+          "command_lang": "bash"
+        },
+        {
+          "step": 2,
+          "type": "verify",
+          "headline": "Read the SKILL.md before invoking the skill",
+          "severity": "Info",
+          "non_technical": "Each skill is a markdown file under skills/<bucket>/<name>/SKILL.md. When you run a slash command, Claude reads that file as instructions. Treat skill content like code \u2014 read it once, decide if you trust it, then invoke.",
+          "command": "ls ~/.claude/skills/  # see installed skills; cat ~/.claude/skills/tdd/SKILL.md  # read one before /tdd",
+          "command_lang": "bash"
+        },
+        {
+          "step": 3,
+          "type": "audit",
+          "headline": "Run /setup-matt-pocock-skills before first use of the engineering skills",
+          "severity": "Info",
+          "non_technical": "The README directs users to run /setup-matt-pocock-skills as the first step. It will ask you about your issue tracker, label vocabulary, and where docs/CONTEXT.md live, then write a config block to AGENTS.md/CLAUDE.md and per-section files under docs/agents/. Read what it proposes before confirming.",
+          "command": "# In Claude Code\n/setup-matt-pocock-skills",
+          "command_lang": "bash"
+        },
+        {
+          "step": 4,
+          "type": "mitigate",
+          "headline": "Pin to a specific commit if you want a stable surface (rolling install otherwise)",
+          "severity": "Warning",
+          "non_technical": "There are no release tags. `npx skills@latest add mattpocock/skills` resolves to whatever HEAD points at on `main` at install time. If you want the same skill set tomorrow that you have today, install once and don't re-run with @latest. Or fork the repo and pin your fork.",
+          "command": "git clone --depth 1 https://github.com/mattpocock/skills.git && cd skills && git rev-parse HEAD  # record the SHA you trust",
+          "command_lang": "bash"
+        },
+        {
+          "step": 5,
+          "type": "audit",
+          "headline": "Disclose vulnerabilities privately via GitHub's 'Report a vulnerability' UI",
+          "severity": "Info",
+          "non_technical": "There is no SECURITY.md and no documented disclosure channel. If you find a security issue, use GitHub's built-in private vulnerability reporting at github.com/mattpocock/skills/security/advisories/new (untested but standard). Don't post publicly.",
+          "command": "open https://github.com/mattpocock/skills/security/advisories/new",
+          "command_lang": "bash"
+        }
+      ]
+    },
+    "timeline_events": {
+      "entries": [
+        {
+          "date": "2026-02-03",
+          "label": "Repo created",
+          "tone": "neutral",
+          "note": "Initial commit by mattpocock; first SKILL.md added"
+        },
+        {
+          "date": "2026-04-26",
+          "label": "SECURITY.md PR opened",
+          "tone": "neutral",
+          "note": "PR #67 by external contributor proposing a security policy document"
+        },
+        {
+          "date": "2026-04-28",
+          "label": "Batch close + first merge",
+          "tone": "negative",
+          "note": "PR #67 + 5 other contributor PRs closed without merge; PR #90 (only ever-merged) self-merged by mattpocock \u2014 maintainer-curated cleanup day"
+        },
+        {
+          "date": "2026-04-30",
+          "label": "Skillsmith heads-up",
+          "tone": "neutral",
+          "note": "Issue #105 \u2014 third-party scanner reports regex FP on TDD prose; closed same day without comment"
+        },
+        {
+          "date": "2026-04-30",
+          "label": "Scan date",
+          "tone": "neutral",
+          "note": "12th wild V1.2 scan; HEAD b843cb5e"
+        }
+      ]
+    },
+    "capability_assessments": {
+      "per_file": []
+    },
+    "executable_file_inventory": {
+      "lead": "mattpocock/skills ships markdown-canonical skill content (22 SKILL.md files, 1,815 lines) plus 2 small shell scripts under `scripts/`. There are no compiled binaries, no native dependencies, no package manifests. The 'execution' surface is what Claude does when a skill is invoked: skills load their SKILL.md as instructions and Claude follows them with the user's repo permissions.",
+      "layer1_summary": "Primary surface: 22 SKILL.md files under `skills/<bucket>/<name>/`. Secondary surface: 2 install/utility scripts under `scripts/`. Tertiary surface: 1 plugin manifest (`.claude-plugin/plugin.json`) listing 12 promoted skills.",
+      "layer2_entries": [
+        {
+          "path": "skills/engineering/setup-matt-pocock-skills/SKILL.md",
+          "kind": "agent-rule",
+          "runtime": "Claude Code (Markdown \u2192 instructions)",
+          "dangerous_calls": "Writes to AGENTS.md/CLAUDE.md at repo root; writes docs/agents/{issue-tracker,triage-labels,domain}.md. Asks user permission first. Reads .git/config and `git remote -v`.",
+          "network": "None directly; instructs Claude to use `gh` or `glab` CLI for issue-tracker setup if user picks that path.",
+          "notes": "Required setup skill \u2014 the README quickstart says to run `/setup-matt-pocock-skills` after install. Modifies the user's repo config files. Consent-driven; explicit confirmation step before writing.",
+          "file_sha": null,
+          "line_ranges": "1-121",
+          "diff_anchor": null
+        },
+        {
+          "path": "skills/misc/git-guardrails-claude-code/SKILL.md",
+          "kind": "agent-rule",
+          "runtime": "Claude Code (Markdown \u2192 instructions)",
+          "dangerous_calls": "Writes to ~/.claude/settings.json (PreToolUse hooks); installs an executable hook script under .claude/hooks/. Acts as a defensive measure \u2014 blocks `git push`, `git reset --hard`, `git clean -f`, etc.",
+          "network": "None.",
+          "notes": "This skill is itself a defensive measure \u2014 it adds hooks that block destructive git commands. Net-positive security signal; the install action modifies the user's Claude Code settings.",
+          "file_sha": null,
+          "line_ranges": "1-95",
+          "diff_anchor": null
+        },
+        {
+          "path": "skills/misc/setup-pre-commit/SKILL.md",
+          "kind": "agent-rule",
+          "runtime": "Claude Code (Markdown \u2192 instructions)",
+          "dangerous_calls": "Installs Husky + lint-staged + Prettier as devDependencies (npm/pnpm/yarn/bun); writes .husky/pre-commit; modifies package.json scripts.",
+          "network": "Installs npm packages \u2014 outbound to npm registry.",
+          "notes": "Standard developer-tooling setup. Modifies user's package.json + adds devDeps + creates pre-commit hook.",
+          "file_sha": null,
+          "line_ranges": "1-91",
+          "diff_anchor": null
+        },
+        {
+          "path": "scripts/link-skills.sh",
+          "kind": "shell-script",
+          "runtime": "bash",
+          "dangerous_calls": "Symlinks every SKILL.md from this repo into ~/.claude/skills/. Uses `mkdir -p` + `ln -sfn`. Has a guard against accidentally pointing back at this repo (would otherwise pollute the working copy).",
+          "network": "None.",
+          "notes": "Maintainer-side install script. Used by users who clone the repo directly and want to symlink skills locally. Defensive coding \u2014 checks for circular symlinks before writing.",
+          "file_sha": null,
+          "line_ranges": "1-31",
+          "diff_anchor": null
+        },
+        {
+          "path": "skills/engineering/tdd/SKILL.md",
+          "kind": "agent-rule",
+          "runtime": "Claude Code (Markdown \u2192 instructions)",
+          "dangerous_calls": "Instructs Claude to write tests + run them; uses red-green-refactor loop. Doesn't modify environment outside the user's chosen test directory.",
+          "network": "None directly. Contains a `fetch()` example in mocking.md (line 44, false-positive on harness `network` family grep).",
+          "notes": "The skill flagged by the third-party Skillsmith scanner (issue #105) for a regex false-positive on the phrase '...the system:' at end-of-line. Skillsmith concluded false positive on their side. Content is benign TDD prose.",
+          "file_sha": null,
+          "line_ranges": "1-109",
+          "diff_anchor": null
+        }
+      ],
+      "closing_note": "The full set of 22 SKILL.md files is auditable via `find skills -name SKILL.md`. Treat each as code: read it before invoking the skill. Several skills (setup-matt-pocock-skills, setup-pre-commit, git-guardrails-claude-code) modify user-side files; the consent points are inside each SKILL.md."
+    },
+    "pr_sample_review": {
+      "rows": [
+        {
+          "number": 90,
+          "what": "Add setup-matt-pocock-skills; rename github-triage; migrate skills to vague prose",
+          "author": "mattpocock",
+          "merger": "mattpocock",
+          "reviewed": "No formal decision; 0 reviews",
+          "concern": "Self-merge",
+          "flagged": false
+        },
+        {
+          "number": 67,
+          "what": "Create SECURITY.md for security policy (CLOSED, not merged)",
+          "author": "external-contrib",
+          "merger": "\u2014",
+          "reviewed": "Closed without comment",
+          "concern": "Disclosure-policy PR rejected",
+          "flagged": true
+        },
+        {
+          "number": 28,
+          "what": "[Security] Add security lens, priority ordering, and challenge behavior to grill-me skill (CLOSED, not merged)",
+          "author": "external-contrib",
+          "merger": "\u2014",
+          "reviewed": "Closed without comment",
+          "concern": "Security-tagged PR rejected",
+          "flagged": true
+        },
+        {
+          "number": 75,
+          "what": "fix typo in readme (CLOSED, not merged)",
+          "author": "external-contrib",
+          "merger": "\u2014",
+          "reviewed": "Closed without comment",
+          "concern": "Trivial fix rejected",
+          "flagged": false
+        },
+        {
+          "number": 74,
+          "what": "Fix npx command paths in README (CLOSED, not merged)",
+          "author": "external-contrib",
+          "merger": "\u2014",
+          "reviewed": "Closed without comment",
+          "concern": "Documentation fix rejected",
+          "flagged": false
+        }
+      ]
+    },
+    "repo_vitals": {
+      "rows": [
+        {
+          "metric": "Stars",
+          "value": "47,917",
+          "note": "Massively popular for a 3-month-old repo"
+        },
+        {
+          "metric": "Forks",
+          "value": "3,900",
+          "note": null
+        },
+        {
+          "metric": "Open issues",
+          "value": "5",
+          "note": "Low; quickly triaged"
+        },
+        {
+          "metric": "Open PRs",
+          "value": "0",
+          "note": "Maintainer-driven curation"
+        },
+        {
+          "metric": "Primary language",
+          "value": "Shell (per GitHub) \u2014 actually Markdown-canonical",
+          "note": "GitHub heuristic misclassifies the 2 install scripts as primary"
+        },
+        {
+          "metric": "License",
+          "value": "MIT",
+          "note": null
+        },
+        {
+          "metric": "Created",
+          "value": "2026-02-03",
+          "note": "~3 months old"
+        },
+        {
+          "metric": "Last pushed",
+          "value": "2026-04-30",
+          "note": "Active (scan day)"
+        },
+        {
+          "metric": "Default branch",
+          "value": "main",
+          "note": null
+        },
+        {
+          "metric": "Total contributors",
+          "value": "2",
+          "note": "Top-1 share 87.3% (mattpocock); 2nd is `TESTPERSONAL` test account"
+        },
+        {
+          "metric": "Solo-maintainer flag",
+          "value": "TRUE",
+          "note": "87.3% > 80% threshold"
+        },
+        {
+          "metric": "Formal releases",
+          "value": "0",
+          "note": "Rolling-distribution model"
+        },
+        {
+          "metric": "Latest release",
+          "value": "\u2014",
+          "note": "No releases \u2014 F1"
+        },
+        {
+          "metric": "Classic branch protection",
+          "value": "OFF (HTTP 404)",
+          "note": null
+        },
+        {
+          "metric": "Rulesets",
+          "value": "0",
+          "note": null
+        },
+        {
+          "metric": "Rules on default branch",
+          "value": "0",
+          "note": null
+        },
+        {
+          "metric": "CODEOWNERS",
+          "value": "Absent",
+          "note": null
+        },
+        {
+          "metric": "SECURITY.md",
+          "value": "Absent",
+          "note": "PR #67 proposing one closed without merge \u2014 F2"
+        },
+        {
+          "metric": "CONTRIBUTING",
+          "value": "Absent",
+          "note": null
+        },
+        {
+          "metric": "Code of conduct",
+          "value": "Absent",
+          "note": null
+        },
+        {
+          "metric": "Community health",
+          "value": "42%",
+          "note": null
+        },
+        {
+          "metric": "Workflows",
+          "value": "1 (Copilot reviewer bot)",
+          "note": "No CI tests, no SAST, no Dependabot"
+        },
+        {
+          "metric": "pull_request_target usage",
+          "value": "0",
+          "note": null
+        },
+        {
+          "metric": "CodeQL SAST",
+          "value": "Absent",
+          "note": null
+        },
+        {
+          "metric": "Dependabot config",
+          "value": "Absent (.github/dependabot.yml missing)",
+          "note": "No package manifests to scan anyway \u2014 markdown-only repo"
+        },
+        {
+          "metric": "PR formal review rate (lifetime sample)",
+          "value": "0% (1/1 self-merged)",
+          "note": null
+        },
+        {
+          "metric": "PR any-review rate (lifetime sample)",
+          "value": "0%",
+          "note": null
+        },
+        {
+          "metric": "Self-merge count",
+          "value": "1 of 1 (100%)",
+          "note": "Sample size N=1 \u2014 weak signal alone"
+        },
+        {
+          "metric": "Total merged PRs (lifetime)",
+          "value": "1",
+          "note": "PR #90 'Add setup-matt-pocock-skills'"
+        },
+        {
+          "metric": "Closed-without-merge PRs (sample)",
+          "value": "10+ (incl. #67 SECURITY.md, #28 [Security], #75 typo)",
+          "note": "Maintainer-curated"
+        },
+        {
+          "metric": "Published security advisories",
+          "value": "0",
+          "note": null
+        },
+        {
+          "metric": "Open security issues",
+          "value": "0",
+          "note": null
+        },
+        {
+          "metric": "OSSF Scorecard",
+          "value": "Not indexed",
+          "note": "404"
+        },
+        {
+          "metric": "SKILL.md files",
+          "value": "22 (1,815 lines total)",
+          "note": "12 promoted via plugin.json; 10 in personal/+deprecated/"
+        },
+        {
+          "metric": "CLAUDE.md size",
+          "value": "13 lines",
+          "note": "Top-level repo conventions only"
+        },
+        {
+          "metric": "Prompt-injection signals (CLAUDE.md only)",
+          "value": "0",
+          "note": "22 SKILL.md not scanned \u2014 F5"
+        },
+        {
+          "metric": "Dangerous-pattern grep families",
+          "value": "15 of 15 scanned, 1 hit (TDD fetch FP)",
+          "note": "0 hits in deserialization/exec/secrets/cmd_injection/auth_bypass/path_traversal/etc."
+        },
+        {
+          "metric": "Distribution channels",
+          "value": "0 detected by harness",
+          "note": "Install via npx skills@latest (vercel-labs/skills) + Claude Code plugin marketplace + clone+link"
+        },
+        {
+          "metric": "Documented install paths",
+          "value": "3",
+          "note": "npx, plugin marketplace, clone+link script"
+        }
+      ]
+    },
+    "coverage_detail": {
+      "rows": [
+        {
+          "check": "Harness Phase 1 end-to-end",
+          "result": "\u2705 Complete (28 fields populated)"
+        },
+        {
+          "check": "`gh api` rate limit",
+          "result": "\u2705 Well under limit"
+        },
+        {
+          "check": "Tarball extraction + local grep",
+          "result": "\u2705 Scanned (small repo, 87 KB)"
+        },
+        {
+          "check": "OSSF Scorecard",
+          "result": "\u26a0 Not indexed (HTTP 404)"
+        },
+        {
+          "check": "Dependabot alerts",
+          "result": "\u26a0 Admin scope (403); .github/dependabot.yml absent \u2014 but no package manifests to scan in any case"
+        },
+        {
+          "check": "osv.dev dependency queries",
+          "result": "\u2297 N/A \u2014 no manifest files (markdown-only repo)"
+        },
+        {
+          "check": "PR review sample",
+          "result": "\u26a0 Sample size N=1 lifetime merged PR; review-rate signals are degenerate"
+        },
+        {
+          "check": "Dependencies manifest detection",
+          "result": "\u2297 N/A \u2014 markdown-only repo, no package manifests"
+        },
+        {
+          "check": "Distribution channels inventory",
+          "result": "\u26a0 0 channels detected by harness; real install paths (npx via vercel-labs/skills, plugin marketplace, clone+link) require shape-specific detection"
+        },
+        {
+          "check": "Dangerous-primitives grep (15 families)",
+          "result": "\u2705 All clean except 1 FP (TDD fetch() example in mocking.md)"
+        },
+        {
+          "check": "Workflows",
+          "result": "\u2705 1 detected (Copilot review bot)"
+        },
+        {
+          "check": "Gitleaks",
+          "result": "\u2297 Not available on this scanner host"
+        },
+        {
+          "check": "README paste-scan",
+          "result": "\u2705 No paste-from-command blocks"
+        },
+        {
+          "check": "Prompt-injection scan",
+          "result": "\u26a0 Only CLAUDE.md (1/23 markdown rule files) scanned \u2014 F5"
+        },
+        {
+          "check": "agent_rule_files enumeration",
+          "result": "\u26a0 Only top-level CLAUDE.md captured; 22 SKILL.md files missed \u2014 F5"
+        }
+      ]
+    },
+    "coverage_gaps": {
+      "entries": [
+        "Harness `code_patterns.agent_rule_files` does not recursively enumerate SKILL.md files under `skills/<bucket>/<name>/`. Only the 13-line top-level CLAUDE.md was captured. The actual prompt-injection surface (22 files, 1,815 lines) was not scanned. F5 documents this; V1.2.x patch candidate.",
+        "Distribution-channel detection found 0 channels. The actual install paths are: (1) `npx skills@latest add mattpocock/skills` via the vercel-labs/skills npm CLI; (2) Claude Code plugin marketplace via `.claude-plugin/plugin.json`; (3) `git clone` + `scripts/link-skills.sh` for local symlinks. None of these matches the harness's npm/PyPI/crates.io/RubyGems/NuGet pattern set.",
+        "OSSF Scorecard not indexed (HTTP 404) \u2014 repo too new or not picked up by OSSF's discovery. Governance signals derived from raw `gh api` data.",
+        "Dependabot-alerts API required admin scope (403). Repo has no package manifests so this is moot.",
+        "Gitleaks secret-scanning not available on this scanner host. The 0-secrets harness result reflects only the regex-based grep pass over file content, not a full git-history scan.",
+        "PR review-rate signals are degenerate at N=1 lifetime merged PR. Q2 advisory color (green) reflects 'no overdue items' rather than 'demonstrated fix cadence'; Phase 4 overrides Q2 to amber on this basis (see scorecard rationale)."
+      ]
+    },
+    "scorecard_cells": {
+      "does_anyone_check_the_code": {
+        "color": "red",
+        "short_answer": "No \u2014 solo maintainer (87.3% commit share + 1 owner-test account), 0% formal review on the 1 lifetime merged PR, no branch protection, no CODEOWNERS, no rulesets",
+        "rationale": null,
+        "edge_case": null,
+        "suggested_threshold_adjustment": null,
+        "computed_signal_refs": [],
+        "override_reason": null
+      },
+      "do_they_fix_problems_quickly": {
+        "color": "amber",
+        "short_answer": "Unknown \u2014 3-month-old repo with 1 lifetime merged PR and 0 closed-merged security PRs to grade response cadence on; no overdue items either",
+        "rationale": "Phase 3 advisory says GREEN because no signal indicates an overdue fix (0 open security issues, no oldest-CVE-PR age, no closed-fix-lag). But 'Yes \u2014 they fix problems quickly' over-claims at this evidence floor: there are no fix events to grade. The repo is 3 months old; the 1 lifetime merged PR is a feature change (#90 'Add setup-matt-pocock-skills'), not a fix. Honest answer at this sample size is amber/Unknown, not green/Yes. Override moves the cell to amber with reason `missing_qualitative_context` \u2014 the signal vocabulary correctly reports zero overdue items but does not capture 'no fix history available to assess cadence'.",
+        "edge_case": "Sample-floor degeneracy \u2014 review-rate signals at N=1 lifetime merged PR are not statistically meaningful; the green color reflects 'no overdue items' rather than 'demonstrated fix cadence'.",
+        "suggested_threshold_adjustment": "Add a 'sample-floor' signal: if `total_merged_lifetime` < N (say 5) AND no closed-fix-lag data exists, the algorithm should return amber/insufficient-data rather than green. This applies generally to new solo projects, not just this repo.",
+        "computed_signal_refs": [
+          "q2_open_security_issue_count",
+          "q2_oldest_open_cve_pr_age_days",
+          "q2_oldest_open_security_item_age_days",
+          "q2_closed_fix_lag_days"
+        ],
+        "override_reason": "missing_qualitative_context"
+      },
+      "do_they_tell_you_about_problems": {
+        "color": "red",
+        "short_answer": "No \u2014 no SECURITY.md (PR #67 proposing one was closed without merging), 0 published GHSA advisories, no documented disclosure channel",
+        "rationale": null,
+        "edge_case": null,
+        "suggested_threshold_adjustment": null,
+        "computed_signal_refs": [],
+        "override_reason": null
+      },
+      "is_it_safe_out_of_the_box": {
+        "color": "amber",
+        "short_answer": "Partly \u2014 README explains what the install does and lists the skills that will be activated, but install delegates trust to vercel-labs/skills npm package and 22 SKILL.md files are unsigned and unverifiable post-install",
+        "rationale": null,
+        "edge_case": null,
+        "suggested_threshold_adjustment": null,
+        "computed_signal_refs": [],
+        "override_reason": null
+      }
+    },
+    "catalog_metadata": {
+      "category": "developer-tooling",
+      "subcategory": "claude-code-skills",
+      "short_description": "Curated collection of 22 agent skills (slash commands) for Claude Code, written in Markdown. Consumed via Claude Code plugin marketplace or `npx skills@latest add mattpocock/skills`. By Matt Pocock (Total TypeScript).",
+      "target_user": "Developer using Claude Code who wants a curated skill set. Install via npx (delegates to vercel-labs/skills npm CLI), Claude Code plugin marketplace, or `git clone` + `scripts/link-skills.sh`. Skills become slash commands post-install.",
+      "shape": "Claude Code skills/plugin (new shape \u2014 first plugin-marketplace + npx-delegated entry in V1.2 catalog; complements the V2.4-era gstack scan as the canonical 'dense Claude Code skills' shape).",
+      "prior_scan_note": "First scan of mattpocock/skills. 12th wild V1.2-schema scan (after markitdown 15, ghostty 16, Kronos 17, kamal 18, Xray-core 19, browser_terminal 20, wezterm 21, QuickLook 22, kanata 23, freerouting 24, WLED 25, Baileys 26)."
+    }
+  },
+  "phase_4b_computed": {
+    "verdict": {
+      "level": "Caution",
+      "computed_from_findings": [
+        "F0",
+        "F1",
+        "F2",
+        "F3",
+        "F4"
+      ]
+    }
+  },
+  "phase_5_prose_llm": {
+    "editorial_caption": {
+      "text": "mattpocock/skills \u2014 47.9k-star Claude Code skill collection (22 SKILL.md, 1,815 lines), 3 months old, solo-maintained. Zero releases (rolling install), zero branch protection, no SECURITY.md (PR proposing one was closed without merging). Install delegates to vercel-labs/skills npm CLI. Skill content sampled is benign and consent-driven \u2014 risk is structural (solo + rolling + no second-human gate). Caution."
+    },
+    "per_finding_prose": {
+      "entries": [
+        {
+          "finding_id": "F0",
+          "body_paragraphs": [
+            "mattpocock holds 87.3% of top-contributor commit share (55 commits to TESTPERSONAL's 8). The TESTPERSONAL account is almost certainly maintainer-owned: created 2014, no bio, no company, 9 followers, 0 public repos \u2014 the profile of a personal test/dev account, not an independent reviewer. Effective bus-factor is 1.",
+            "All 7 C20 governance signals are negative: classic branch protection HTTP 404, 0 rulesets, 0 rules-on-default-branch, no CODEOWNERS at any standard location, owner is a User account (not an Org \u2192 org rulesets n/a), and OSSF Scorecard has not indexed the repo. There is no structural second-human gate between mattpocock pushing to `main` and a user's `~/.claude/skills/` receiving that content via `npx skills@latest add` or the plugin marketplace.",
+            "Why Warning, not Critical: the C20 rule reserves Critical for solo-maintainer + no-protection + recent-release on a privileged tool, and there are no formal release tags here at all. The blast radius is real (47.9k stars, rolling distribution) but the canonical mitigation \u2014 pin to a release tag \u2014 doesn't apply because tags don't exist. Mattpocock's public reputation (Total TypeScript founder, 11.9k followers, 218 public repos, ex-Vercel) is itself a meaningful trust signal. The finding is structural, not a judgment about the maintainer."
+          ]
+        },
+        {
+          "finding_id": "F1",
+          "body_paragraphs": [
+            "The repo has zero GitHub Releases and zero semantic version tags. Both documented install paths consume the latest commit on `main` at install time: `npx skills@latest add mattpocock/skills` resolves through the vercel-labs/skills CLI to whatever HEAD points at, and the Claude Code plugin marketplace (via `.claude-plugin/plugin.json`) reads the manifest from `main` at activation time.",
+            "This is the rolling-distribution pattern. Whatever you install today differs from whatever you install tomorrow if main has moved. A malicious commit to `main` reaches users at the next install boundary (or the next plugin auto-update, if that exists in the marketplace). Many Claude Code skill sets follow this pattern \u2014 it isn't unique to mattpocock/skills \u2014 but it's worth being explicit about.",
+            "Consumer-side mitigation: install once, then don't blindly re-run with `@latest`. If you need a stable surface, fork the repo and pin your fork to a SHA you've reviewed. Maintainer-side mitigation is more interesting: cutting a `v0.1.0` tag and documenting `@v0.1.0` install would let trust-conscious users opt into a pinned surface without restructuring the rolling default."
+          ]
+        },
+        {
+          "finding_id": "F2",
+          "body_paragraphs": [
+            "PR #67 (`Create SECURITY.md for security policy`) was opened by an external contributor on 2026-04-26 and closed without merging two days later. The body was a one-line description; the PR added 21 lines and 0 deletions across 1 file. It was closed as part of a maintainer-curated batch on 2026-04-28 affecting 6+ unrelated PRs (a SECURITY policy, a typo fix, a lockfile fix, several feature additions). The pattern reads as 'tidy up the PR queue', not as 'reject this disclosure mechanism deliberately'.",
+            "But the operational effect is the same either way: there is no SECURITY.md and no documented private disclosure channel. community/profile.has_security_policy is false; published GHSA advisories: 0. A reporter who finds a security-relevant issue has no signposted path. GitHub's built-in `Report a vulnerability` UI may still work as an implicit fallback (untested), but it isn't advertised.",
+            "The closest analogue is the `.out-of-scope/` directory, which documents non-security scope decisions in prose form (e.g. why mainstream-only issue trackers, why question-limits on grilling) \u2014 a positive transparency signal, but not a security-disclosure surface. Adding a 1-page SECURITY.md (PR #67 was already drafted) closes this in minutes."
+          ]
+        },
+        {
+          "finding_id": "F3",
+          "body_paragraphs": [
+            "The README's documented quickstart is `npx skills@latest add mattpocock/skills`. That command pulls the npm package `skills@1.5.3`, published by vercel-labs/skills \u2014 a separate GitHub repository, separate maintainer surface, separate npm trust scope. The vercel-labs CLI then fetches mattpocock/skills content and writes it into `~/.claude/skills/`. The trust chain is: npm registry \u2192 vercel-labs/skills publishers \u2192 vercel-labs/skills CLI logic \u2192 mattpocock/skills content.",
+            "A compromise at any layer of that chain could redirect, modify, or exfiltrate during install. Vercel is a well-known platform vendor with reasonable supply-chain hygiene, but the framing matters: a single-line install command quietly extends trust to two maintainer groups, not one. The Claude Code plugin marketplace path (via `.claude-plugin/plugin.json`) is an alternative with its own (Anthropic-mediated) trust assumptions.",
+            "The simplest mitigation stays within mattpocock's trust scope: clone the repo and run `bash scripts/link-skills.sh` (which symlinks SKILL.md files into `~/.claude/skills/`). No npm registry, no vercel-labs CLI, no plugin marketplace \u2014 just git + ln. Maintainer-side: documenting this clone+link path alongside the npx path lets users self-select their trust boundary."
+          ]
+        },
+        {
+          "finding_id": "F4",
+          "body_paragraphs": [
+            "Once installed, the 22 skills become slash-commands invokable from Claude Code. When invoked, each skill loads its SKILL.md as Claude instructions and Claude executes them against the user's working repo with normal Claude Code permissions. Several skills explicitly modify environment: `/setup-pre-commit` writes to `package.json`, `.husky/`, and installs npm devDependencies; `/git-guardrails-claude-code` writes to `~/.claude/settings.json` to install hook scripts; `/setup-matt-pocock-skills` writes config blocks to `AGENTS.md`/`CLAUDE.md` plus per-section files under `docs/agents/`.",
+            "The risk is not 'malicious now' \u2014 the SKILL.md content sampled (setup-pre-commit, git-guardrails-claude-code, setup-matt-pocock-skills, tdd) is consent-driven and consistent with stated purpose. Several skills are explicitly defensive: `/git-guardrails-claude-code` blocks `git push`, `git reset --hard`, `git clean -f`, etc. before they execute. The risk is 'a future malicious commit reaches users on the next install / auto-update'.",
+            "Consumer-side mitigation is straightforward but requires intent: before linking, `cat skills/<bucket>/<name>/SKILL.md` for each skill you intend to use. Treat skill-update events as code-review events, not as silent updates. Every SKILL.md is plain markdown \u2014 fully auditable, not obfuscated. Maintainer-side: a CHANGELOG.md at the skill level (or commit messages with `[skill: ...]` prefixes) would help downstream auditability without adding tooling."
+          ]
+        },
+        {
+          "finding_id": "F5",
+          "body_paragraphs": [
+            "The harness's `code_patterns.agent_rule_files` heuristic captured the 13-line top-level `CLAUDE.md` and stopped there. The 22 SKILL.md files (1,815 lines) under `skills/<bucket>/<name>/SKILL.md` were not enumerated. As a result `prompt_injection_scan.scanned_files` is `['CLAUDE.md']` and `signal_count: 0` \u2014 but the 0-signal result reflects 1/23 file coverage, not a clean read on the full prompt surface.",
+            "The third-party Skillsmith scanner (issue #105, closed 2026-04-30) scanned the SKILL.md content with a different ruleset and surfaced one false positive \u2014 a regex match on the phrase '...the system:' at end-of-line in `skills/engineering/tdd/SKILL.md` line 64, where 'system' refers to the system under test in TDD prose. Skillsmith concluded false positive on their side, tracked auto-quarantine + pattern-tuning, and filed it informationally.",
+            "This is a property of the harness, not of mattpocock/skills. V1.2.x patch candidate: extend `code_patterns.agent_rule_files` to recursively find SKILL.md files under any `skills/` subdirectory, and feed all of them into `prompt_injection_scan.scanned_files`. Same class of fix as V13-3 C2 (deserialization language-qualifier regex) \u2014 narrow, shape-specific harness tuning."
+          ]
+        }
+      ]
+    }
+  },
+  "phase_6_assembly": {
+    "assembled": true,
+    "assembly_timestamp": "2026-04-30T14:47:33.943997+00:00",
+    "provenance_complete": true,
+    "evidence_refs_valid": true,
+    "field_count": 1285
+  },
+  "scan_sign_off": {
+    "approved_for_release": false
+  }
+}
