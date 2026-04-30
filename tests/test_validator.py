@@ -25,8 +25,8 @@ exec(open(REPO_ROOT / "docs" / "validate-scanner-report.py").read())
 # Fixtures — paths to gold-standard test files
 # ---------------------------------------------------------------------------
 
-ZUSTAND_MD = REPO_ROOT / "docs" / "GitHub-Scanner-zustand.md"
-ZUSTAND_HTML = REPO_ROOT / "docs" / "GitHub-Scanner-zustand.html"
+ZUSTAND_MD = REPO_ROOT / "docs" / "scans" / "catalog" / "GitHub-Scanner-zustand.md"
+ZUSTAND_HTML = REPO_ROOT / "docs" / "scans" / "catalog" / "GitHub-Scanner-zustand.html"
 TEMPLATE_HTML = REPO_ROOT / "docs" / "GitHub-Repo-Scan-Template.html"
 
 
@@ -344,8 +344,17 @@ class TestAllBackfilledScans:
 
     def test_all_scans_pass_markdown_validation(self):
         docs_dir = REPO_ROOT / "docs"
+        catalog_dir = docs_dir / "scans" / "catalog"
+        archive_superseded = docs_dir / "archive" / "scans-superseded"
         for filename in self.SCAN_FILES:
-            path = docs_dir / filename
+            # Session-8 cleanup moved scans to docs/scans/catalog/; superseded
+            # ones (open-lovable, agency-agents, zustand-v2) live in
+            # docs/archive/scans-superseded/. Try both before falling back.
+            path = catalog_dir / filename
+            if not path.exists():
+                path = archive_superseded / filename
+            if not path.exists():
+                path = docs_dir / filename  # legacy fallback
             if path.exists():
                 errors, _ = check_markdown(path)
                 assert errors == 0, f"{filename} has {errors} validation error(s)"

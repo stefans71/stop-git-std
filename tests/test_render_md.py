@@ -3,9 +3,9 @@
 Integration tests for docs/render-md.py.
 
 Feeds the zustand investigation form fixture through the renderer and asserts
-the structure matches the golden docs/GitHub-Scanner-zustand.md. Section-level
-assertions (not full diff-match) so we can extend the fixture incrementally
-without breaking every test.
+the structure matches the golden docs/scans/catalog/GitHub-Scanner-zustand.md.
+Section-level assertions (not full diff-match) so we can extend the fixture
+incrementally without breaking every test.
 
 Run: python3 -m pytest tests/test_render_md.py -v
 """
@@ -26,7 +26,7 @@ render = _render_md.render
 
 
 FIXTURE = REPO_ROOT / "tests" / "fixtures" / "zustand-form.json"
-GOLDEN = REPO_ROOT / "docs" / "GitHub-Scanner-zustand.md"
+GOLDEN = REPO_ROOT / "docs" / "scans" / "catalog" / "GitHub-Scanner-zustand.md"
 
 
 def load_form():

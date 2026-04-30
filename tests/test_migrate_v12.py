@@ -1,7 +1,8 @@
 """V1.2 migration script tests — round-trip, idempotence, schema validity.
 
-Tests migrate-v1.1-to-v1.2.py (repo-root one-time script). Uses synthetic
-V1.1 forms to avoid mutating real fixtures.
+Tests migrate-v1.1-to-v1.2.py (one-time script archived at
+docs/archive/migrations/ post session-8 cleanup). Uses synthetic V1.1
+forms to avoid mutating real fixtures.
 """
 import importlib.util
 import json
@@ -10,7 +11,7 @@ from pathlib import Path
 import pytest
 
 _REPO_ROOT = Path(__file__).resolve().parent.parent
-_MIGRATION = _REPO_ROOT / "migrate-v1.1-to-v1.2.py"
+_MIGRATION = _REPO_ROOT / "docs" / "archive" / "migrations" / "migrate-v1.1-to-v1.2.py"
 _SCHEMA = _REPO_ROOT / "docs" / "scan-schema.json"
 
 

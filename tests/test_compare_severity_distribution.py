@@ -272,8 +272,9 @@ def test_main_writes_out_file(tmp_path):
 ])
 def test_step_g_pairs_pass_gate_6_2(v24_file, v25_file, expected_count):
     """The 3 Step G validation pairs should all pass automated gate 6.2."""
-    v24 = REPO / "docs" / v24_file
-    v25 = REPO / "docs" / v25_file
+    catalog = REPO / "docs" / "scans" / "catalog"
+    v24 = catalog / v24_file
+    v25 = catalog / v25_file
     if not v24.exists() or not v25.exists():
         pytest.skip(f"Step G artifact missing: {v24.name} or {v25.name}")
     rc = compare_mod.main(["--v24", str(v24), "--v25", str(v25)])

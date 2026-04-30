@@ -64,7 +64,7 @@ Rendering-pipeline-specific files:
 - See `docs/SCANNER-OPERATOR-GUIDE.md` §8.8 for the phase-to-prompt mapping + triple-warning gate + rollback contract.
 
 ### Delegated-mode execution (legacy alias: Path B)
-Assemble the §8.3 handoff packet and delegate to a background agent. Template prompt at `docs/board-review-data/path-b-test-prompt.md`. Adapt for the target repo + chosen reference scan + output mode + rendering pipeline. Monitor and verify when done.
+Assemble the §8.3 handoff packet and delegate to a background agent. Template prompt at `docs/delegated-scan-template.md`. Adapt for the target repo + chosen reference scan + output mode + rendering pipeline. Monitor and verify when done.
 
 **Template is the DOM contract. Every delegated-scan brief MUST include this directive verbatim:**
 
@@ -91,7 +91,7 @@ Wait for the user's choice. If they pick option 2, read the `.md` file and give 
 - **MD is canonical.** In Workflow V2.4, Phase 4a produces MD first and Phase 4b derives HTML from it. In Workflow V2.5-preview, both are rendered from the same `form.json` (MD-canonical enforced by the shared form contract). In either pipeline, HTML may not add findings absent from MD — this is the contract the `--parity` validator mode gates.
 - **Facts, inference, synthesis are separate.** In the findings-bundle: evidence sections = facts only. Pattern recognition section = inference (tagged). Findings summary = synthesis (citing evidence). See Operator Guide §7.2 + §11. In V2.5-preview the same separation is enforced by the schema's phase boundaries (`phase_1_raw_capture` = facts, `phase_3_computed` + `phase_4_structured_llm` = inference, `phase_5_prose_llm` = synthesis; `phase_4b_computed` is the Python-derived verdict).
 - **Validator is the gate.** `python3 docs/validate-scanner-report.py --report <file>` must exit 0 on both MD and HTML. V2.5-preview additionally requires `--parity` zero errors AND zero warnings before Step G acceptance.
-- **head-sha.txt is the first durable artifact.** Write it before any gh api call. On Phase 4 success, copy findings-bundle to `docs/board-review-data/scan-bundles/`.
+- **head-sha.txt is the first durable artifact.** Write it before any gh api call. On Phase 4 success, copy findings-bundle to `docs/scan-bundles/`.
 - **Update the catalog** at `docs/scanner-catalog.md` after every completed scan. Include the `rendering-pipeline` column (values: `v2.4` or `v2.5-preview`) alongside the existing `methodology-used` flag.
 
 ## Current state (summary)

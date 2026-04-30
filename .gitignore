@@ -15,12 +15,12 @@ dist
 coverage
 *.lcov
 
-# scanner board-review scratch (active session artifacts)
+# scanner board-review scratch (active session artifacts — R1/R2/R3 briefs + agent responses)
 .board-review-temp/
 
-# old pre-archive round scratch (content preserved in docs/External-Board-Reviews/)
-docs/board-review-data/renderer-r1/
-docs/board-review-data/renderer-alignment-r1/
+# per-scan authoring workspaces (build_form.py + author_phase_*.py drafts during a wild scan)
+.scan-workspaces/
+
 
 # Claude runtime locks
 .claude/scheduled_tasks.lock

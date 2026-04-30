@@ -20,7 +20,7 @@ spec.loader.exec_module(vsr)
 check_bundle = vsr.check_bundle
 parse_bundle_regions = vsr.parse_bundle_regions
 
-BUNDLES_DIR = REPO_ROOT / "docs" / "board-review-data" / "scan-bundles"
+BUNDLES_DIR = REPO_ROOT / "docs" / "scan-bundles"
 
 
 def _tmp(content: str, suffix: str = ".md") -> Path:

@@ -108,7 +108,7 @@ The handoff packet (§8.3 of the Operator Guide) consists of these files:
 Use the reusable delegated-mode prompt template:
 
 ```
-Open: docs/board-review-data/path-b-test-prompt.md
+Open: docs/delegated-scan-template.md
 ```
 
 Adapt it for your target repo:
@@ -122,7 +122,7 @@ Adapt it for your target repo:
 
 ## After the scan
 
-Your scan produces `docs/GitHub-Scanner-<repo>.{html,md}`. To use it:
+Your scan produces `docs/scans/catalog/GitHub-Scanner-<repo>.{html,md}`. To use it:
 
 **As a human reader:** open the `.html` in a browser.
 
@@ -145,8 +145,8 @@ Your scan produces `docs/GitHub-Scanner-<repo>.{html,md}`. To use it:
 | `docs/render-md.py` + `docs/render-html.py` | V2.5-preview deterministic renderers | Phase 4 (V2.5-preview only) |
 | `docs/validate-scanner-report.py` | Validator (`--report`, `--parity`, `--markdown`, `--template`) | Phase 5 — must exit 0 |
 | `docs/scanner-catalog.md` | Live scan catalog (10 V2.4 entries) | Phase 6 + Step 4 above |
-| `docs/board-review-data/path-b-test-prompt.md` | Reusable delegated-mode prompt template | Delegated mode only |
-| `docs/GitHub-Scanner-*.{html,md}` | 10 completed V2.4 scans | Step 4 — structural reference |
+| `docs/delegated-scan-template.md` | Reusable delegated-mode prompt template | Delegated mode only |
+| `docs/scans/catalog/GitHub-Scanner-*.{html,md}` | 10 completed V2.4 scans | Step 4 — structural reference |
 | `tests/fixtures/{zustand,caveman,archon-subset}-form.json` | V1.1-compliant back-authored form fixtures | V2.5-preview only — authoring reference |
 | `docs/External-Board-Reviews/` | Archived 3-model board review records | Context for major decisions |
 

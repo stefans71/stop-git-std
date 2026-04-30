@@ -144,7 +144,7 @@ find src -type l -delete
 find src -type f | wc -l
 ```
 
-**Why `/tmp`:** the tarball and intermediate evidence are not durable artifacts by default. The scan's durable outputs are the committed `docs/GitHub-Scanner-<repo>.{html,md}` pair plus `head-sha.txt` (immediately) and the bundle copy (on Phase 4 success — see §12).
+**Why `/tmp`:** the tarball and intermediate evidence are not durable artifacts by default. The scan's durable outputs are the committed `docs/scans/catalog/GitHub-Scanner-<repo>.{html,md}` pair plus `head-sha.txt` (immediately) and the bundle copy (on Phase 4 success — see §12).
 
 **Fragility acknowledgement:** a session crash between Phase 2 and Phase 4 loses the bundle because `/tmp` is volatile. The minimum durability policy in §12 addresses the SHA + final-bundle cases; mid-scan auto-resume is deferred to post-Phase-2-YAML.
 
@@ -290,7 +290,7 @@ If you catch yourself writing an interpretive verb in an evidence section, cut i
 
 ## 8. Phase 4 — Render
 
-**Goal:** produce the committed `docs/GitHub-Scanner-<repo>.md` and `.html` pair.
+**Goal:** produce the committed `docs/scans/catalog/GitHub-Scanner-<repo>.md` and `.html` pair.
 
 **Phase 4 is split into 4a (MD-first) → 4b (HTML-from-MD).** A lightweight Phase 4c exists for re-run determinism records.
 
@@ -400,8 +400,8 @@ The deterministic renderer shipped in commits `402f933` (Step F HTML renderer + 
 2. **Phase 4 (V2.5-preview)** — LLM authors `form.json` conforming to `docs/scan-schema.json` V1.1. Reference `tests/fixtures/zustand-form.json` for shape. The form represents the same data that in V2.4 goes into the bundle + MD, but in machine-readable structured form.
 3. **Phase 4 render** — deterministic:
    ```bash
-   python3 docs/render-md.py   form.json --out docs/GitHub-Scanner-<repo>.md
-   python3 docs/render-html.py form.json --out docs/GitHub-Scanner-<repo>.html
+   python3 docs/render-md.py   form.json --out docs/scans/catalog/GitHub-Scanner-<repo>.md
+   python3 docs/render-html.py form.json --out docs/scans/catalog/GitHub-Scanner-<repo>.html
    ```
 4. **Phase 5** — validator gate. `--parity` and `--bundle` modes return exit 0 even when warnings exist, so the operator MUST inspect warning count explicitly, not rely on exit code alone. The validator emits three diagnostic levels: ERROR (exit 1), WARNING (structural ambiguity, exit 0 but gate-blocking), INFO (authoring/rendering variation, exit 0 non-blocking). Warning lines are prefixed `⚠ WARNING:`; info lines are prefixed `ℹ Note:`. FN-5 grep pattern matches `WARNING:` substring (not `^WARNING:`), since warnings are indent-prefixed `  ⚠ WARNING:` in validator output:
    - `python3 docs/validate-scanner-report.py --report <.html>` exits 0 on HTML
@@ -457,7 +457,7 @@ The prompt (`repo-deep-dive-prompt.md`) has two halves: investigation instructio
 5. **Step 3c — Bundle-complete gate.** Before beginning `form.json` authoring, confirm ALL of:
    1. `findings-bundle.md` contains all 6 required sections (`## Scan metadata`, `## Evidence`, `## Pattern recognition`, `## FINDINGS SUMMARY`, `## Verdict`, `## Scorecard`).
    2. `validate-scanner-report.py --bundle <findings-bundle.md>` returns exit 0 + zero `WARNING:` lines (per §8.8.2 step 4 inspection).
-   3. Bundle file saved + committed to `docs/board-review-data/scan-bundles/<repo>-<sha>.md` per §12 durability rule.
+   3. Bundle file saved + committed to `docs/scan-bundles/<repo>-<sha>.md` per §12 durability rule.
 
    Only after 5.1–5.3 succeed may `form.json` authoring begin. No mid-bundle drafting of `form.json`.
 6. Translate the findings-bundle's evidence + synthesis sections into `phase_4_structured_llm.findings.entries[]` + `phase_4_structured_llm.verdict_exhibits.groups[]` + supporting structured fields. One finding in the bundle = one entry in the schema. Phase 3 computed values from Step 3b are authoritative — do NOT re-derive them.
@@ -496,7 +496,7 @@ Automation note: Step 3b's compute.py invocation is manual for Step G — the pi
    - **6.4 Verdict level** — `phase_4b_computed.verdict.level` (Critical / Caution / Clean) matches V2.4 comparator's verdict level.
    - **6.5 Split-axis** — if comparator is a split verdict, `phase_4_structured_llm.verdict_split.axis` must match (`deployment` vs `version`, etc.). If comparator is not split, V2.5-preview must not be split.
    - **6.6 Evidence linkage** — every non-OK finding has non-empty `evidence_refs`; every ref resolves to a declared entry in `phase_4_structured_llm.evidence.entries[]`.
-   - **Archon-specific comparator clarification:** The comparator for Archon is `docs/GitHub-Scanner-Archon.md` (full 11 findings), NOT `tests/fixtures/archon-subset-form.json` (4 findings, renderer-validation scope only).
+   - **Archon-specific comparator clarification:** The comparator for Archon is `docs/scans/catalog/GitHub-Scanner-Archon.md` (full 11 findings), NOT `tests/fixtures/archon-subset-form.json` (4 findings, renderer-validation scope only).
    - **Evidence-card count** is informational only, not a gate. V2.4 catalog scans use varying depth (zustand-v3 bullets, caveman + Archon tables) — this is rendering variation, not drift.
 7. **Phase-boundary contamination check** (§8.8.3 Step 10) passes for every target — no narrative sentences or synthesis claims in Phase 4 structured fields. STOP condition applies if contamination is found on any target.
 
@@ -549,8 +549,8 @@ Automation note: Step 3b's compute.py invocation is manual for Step G — the pi
 - **D-6 Automated severity distribution comparison script — SHIPPED 2026-04-20.** Lives at `docs/compare-severity-distribution.py`. Reads either a rendered `.md` report or a `form.json` bundle from each side; emits the severity-mapping table and exits 1 on any mismatch. Invocation:
   ```bash
   python3 docs/compare-severity-distribution.py \
-    --v24 docs/GitHub-Scanner-<target>.md \
-    --v25 docs/GitHub-Scanner-<target>-v25preview.md \
+    --v24 docs/scans/catalog/GitHub-Scanner-<target>.md \
+    --v25 docs/scans/catalog/GitHub-Scanner-<target>-v25preview.md \
     --target <target> \
     [--out .board-review-temp/step-g-execution/severity-mapping-<target>.md]
   ```
@@ -574,8 +574,8 @@ Automation note: Step 3b's compute.py invocation is manual for Step G — the pi
 **Goal:** Validator exits 0 on both the MD and the HTML. Use the correct mode flag for each format.
 
 ```bash
-python3 docs/validate-scanner-report.py --markdown docs/GitHub-Scanner-<repo>.md
-python3 docs/validate-scanner-report.py --report docs/GitHub-Scanner-<repo>.html
+python3 docs/validate-scanner-report.py --markdown docs/scans/catalog/GitHub-Scanner-<repo>.md
+python3 docs/validate-scanner-report.py --report docs/scans/catalog/GitHub-Scanner-<repo>.html
 ```
 
 - `--markdown` checks: required section headers (Verdict, Findings, Evidence, Scorecard), minimum 100 lines, severity keywords.
@@ -696,14 +696,14 @@ Yes, almost by definition. Phase 4a renders what Phase 3 proposes. The question 
 **Current policy (minimum durability):**
 
 1. **`head-sha.txt` is the first durable artifact.** Write it in Phase 1 before any other gh api call. If the scan is interrupted, this is the one thing the re-run uses to resume on the same commit.
-2. **On Phase 4 success**, copy `/tmp/scan-<repo>/findings-bundle.md` to `docs/board-review-data/scan-bundles/<repo>-<SHA>.md` (create the directory if absent). The bundle then lives alongside the committed HTML + MD pair for auditability.
+2. **On Phase 4 success**, copy `/tmp/scan-<repo>/findings-bundle.md` to `docs/scan-bundles/<repo>-<SHA>.md` (create the directory if absent). The bundle then lives alongside the committed HTML + MD pair for auditability.
 3. **Full auto-resume on crash mid-Phase-2** remains deferred to post-Phase-2-YAML.
 
 ```bash
 # At the tail of a successful Phase 4 + Phase 5:
-mkdir -p docs/board-review-data/scan-bundles
+mkdir -p docs/scan-bundles
 cp /tmp/scan-<repo>/findings-bundle.md \
-   "docs/board-review-data/scan-bundles/<repo>-${HEAD_SHA:0:7}.md"
+   "docs/scan-bundles/<repo>-${HEAD_SHA:0:7}.md"
 ```
 
 **What requires new tooling** (candidates for later YAML automation):
