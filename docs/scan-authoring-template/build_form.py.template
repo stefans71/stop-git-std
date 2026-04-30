@@ -1,0 +1,232 @@
+#!/usr/bin/env python3
+"""<REPO> V1.2 wild scan — form.json assembly driver.
+
+<Nth> wild V1.2 scan. <novelty note — first <language>, first <category>, etc>.
+
+Reads phase-1-raw.json (harness output) → runs Phase 3 compute → emits
+form.json with phase_3_computed + phase_3_advisory populated + empty
+Phase 4/5/6 skeletons ready for LLM authoring.
+
+Not a general-purpose utility; this is scan-specific.
+
+To use: copy this file into .scan-workspaces/<repo>/build_form.py, replace
+the docstring + <REPO> + the $comment field at the bottom, then run from
+the repo root: `python3 .scan-workspaces/<repo>/build_form.py`. Output:
+form.json in the same directory, schema-validated against
+docs/scan-schema.json."""
+import importlib.util
+import json
+from datetime import datetime, timezone
+from pathlib import Path
+
+REPO_ROOT = Path(__file__).resolve().parent.parent.parent
+HARNESS_JSON = Path(__file__).resolve().parent / "phase-1-raw.json"
+OUT_JSON = Path(__file__).resolve().parent / "form.json"
+
+
+def _load_compute():
+    spec = importlib.util.spec_from_file_location("_compute", REPO_ROOT / "docs" / "compute.py")
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
+def _get_scorecard_inputs(p1: dict, compute_mod) -> dict:
+    """Extract compute_scorecard_cells kwargs from phase_1 raw data.
+
+    V1.2.x (V13-1 signal widening): calls derive_q1_has_ruleset_protection
+    and derive_q2_oldest_open_security_item_age_days helpers from compute.py.
+    """
+    pr = p1.get("pr_review") or {}
+    bp = p1.get("branch_protection") or {}
+    classic_status = (bp.get("classic") or {}).get("status")
+    has_bp = classic_status == 200
+    has_ruleset_protection = compute_mod.derive_q1_has_ruleset_protection(bp)
+    has_codeowners = bool((p1.get("codeowners") or {}).get("found"))
+    contributors = (p1.get("contributors") or {}).get("top_contributors") or []
+    total_cs = sum((c.get("contributions") or 0) for c in contributors)
+    top = (contributors[0].get("contributions") or 0) if contributors else 0
+    is_solo = (top / total_cs) > 0.8 if total_cs else False
+    issues = p1.get("issues_and_commits") or {}
+    open_security_issues = issues.get("open_security_issues") or []
+    open_prs = p1.get("open_prs") or {}
+    cm = p1.get("community_profile") or {}
+    has_security = bool(cm.get("has_security_policy"))
+    has_contrib = bool(cm.get("has_contributing"))
+    advisories = p1.get("security_advisories") or {}
+    adv_count = advisories.get("count") or 0
+    dc = p1.get("distribution_channels") or {}
+    channels = dc.get("channels") or []
+    all_pinned = bool(channels) and all(c.get("pinned") for c in channels)
+    av = p1.get("artifact_verification") or {}
+    per_channel = av.get("per_channel") or []
+    artifact_verified = bool(per_channel) and all(c.get("verified") for c in per_channel)
+    oldest_security_item_age = compute_mod.derive_q2_oldest_open_security_item_age_days(
+        issues, open_prs, scan_date_iso=datetime.now(timezone.utc).date().isoformat(),
+    )
+    return {
+        "formal_review_rate": pr.get("formal_review_rate"),
+        "any_review_rate": pr.get("any_review_rate"),
+        "has_branch_protection": has_bp,
+        "has_ruleset_protection": has_ruleset_protection,
+        "has_codeowners": has_codeowners,
+        "is_solo_maintainer": is_solo,
+        "open_security_issue_count": len(open_security_issues),
+        "oldest_cve_pr_age_days": None,
+        "oldest_open_security_item_age_days": oldest_security_item_age,
+        "has_security_policy": has_security,
+        "published_advisory_count": adv_count,
+        "has_silent_fixes": False,  # Phase 4 determines
+        "all_channels_pinned": all_pinned,
+        "artifact_verified": artifact_verified,
+        "has_critical_on_default_path": False,  # Phase 4 determines
+        "has_warning_on_install_path": False,  # Phase 4 determines
+        "has_contributing_guide": has_contrib,
+        "closed_fix_lag_days": None,
+    }
+
+
+def _get_c20_inputs(p1: dict) -> dict:
+    bp = p1.get("branch_protection") or {}
+    classic_status = (bp.get("classic") or {}).get("status") or 404
+    rulesets = ((bp.get("rulesets") or {}).get("entries") or [])
+    rules = ((bp.get("rules_on_default") or {}).get("entries") or [])
+    has_codeowners = bool((p1.get("codeowners") or {}).get("found"))
+    releases = p1.get("releases") or {}
+    entries = releases.get("entries") or []
+    latest_date = entries[0].get("published_at") if entries else None
+    ef = (p1.get("code_patterns") or {}).get("executable_files") or []
+    ships_exec = len(ef) > 0
+    return {
+        "classic_protection_status": classic_status if isinstance(classic_status, int) else 404,
+        "rulesets": rulesets,
+        "rules_on_default": rules,
+        "has_codeowners": has_codeowners,
+        "latest_release_date": latest_date,
+        "ships_executable_code": ships_exec,
+        "scan_date": datetime.now(timezone.utc).date().isoformat(),
+    }
+
+
+def build():
+    compute = _load_compute()
+    harness = json.loads(HARNESS_JSON.read_text())
+    p1 = harness["phase_1_raw_capture"]
+
+    # Phase 2 validation (basic sanity)
+    pf = p1.get("pre_flight") or {}
+    rm = p1.get("repo_metadata") or {}
+    phase_2 = {
+        "sha_consistent": bool(pf.get("head_sha")),
+        "required_fields_complete": True,
+        "dates_chronological": True,
+        "tarball_nonempty": pf.get("tarball_extracted") and (pf.get("tarball_file_count") or 0) > 0,
+        "validation_passed": True,
+        "validation_errors": [],
+    }
+
+    # Phase 3 deterministic compute (7 ops; scorecard_cells DEMOTED to phase_3_advisory)
+    c20 = compute.compute_c20_severity(**_get_c20_inputs(p1))
+    solo = compute.compute_solo_maintainer((p1.get("contributors") or {}).get("top_contributors") or [])
+    # Phase 3 exhibit_grouping requires findings — skeleton only for now
+    methodology = compute.compute_methodology(
+        scanner_version="V2.5-preview",
+        prompt_version="V2.4",
+        guide_version="V0.2",
+    )
+    # coverage_status uses phase_1 raw capture as input
+    coverage = compute.compute_coverage_status(p1)
+
+    phase_3_computed = {
+        "c20_severity": c20,
+        "solo_maintainer": solo,
+        "exhibit_grouping": {"total_findings": 0, "threshold_met": False, "exhibits": []},
+        "boundary_cases": {"cases": []},
+        "coverage_status": coverage,
+        "methodology": methodology,
+    }
+
+    # V1.2 D2: scorecard cells → phase_3_advisory.scorecard_hints (advisory, non-authoritative)
+    scorecard_advisory = compute.compute_scorecard_cells(**_get_scorecard_inputs(p1, compute))
+    phase_3_advisory = {"scorecard_hints": scorecard_advisory}
+
+    # Phase 4b — verdict derived from findings (filled in Phase 4 pass)
+    phase_4b = {"verdict": {"level": None, "computed_from_findings": []}}
+
+    form = {
+        "$comment": "<REPO> V1.2 wild scan — <Nth> wild V1.2 scan; <novelty note>.",
+        "schema_version": "V1.2",
+        "_meta": {
+            **harness["_meta"],
+            "scanner_version": "V2.5-preview",
+            "prompt_version": "V2.4",
+            "model": "claude-opus-4-7 (via Claude Code)",
+            "scan_status": "in_progress",
+            "scan_started_at": harness["_meta"].get("scan_started_at"),
+        },
+        "target": harness["target"],
+        "scanner_integrity": {
+            "injection_matches": (p1.get("prompt_injection_scan") or {}).get("signal_count"),
+            "actionable_count": 0,
+            "findings": [],
+        },
+        "phase_1_raw_capture": p1,
+        "phase_2_validation": phase_2,
+        "phase_3_computed": phase_3_computed,
+        "phase_3_advisory": phase_3_advisory,
+        "phase_4_structured_llm": {
+            "findings": {"entries": []},
+            "evidence": {"entries": []},
+            "general_vuln_severity": {"assessments": []},
+            "section_actions": {"entries": []},
+            "section_leads": {},
+            "split_axis_decision": {},
+            "verdict_exhibits": {"groups": []},
+            "priority_evidence": {"selections": []},
+            "threat_models": {"per_finding": []},
+            "action_steps": {"entries": []},
+            "timeline_events": {"entries": []},
+            "capability_assessments": {"per_file": []},
+            "executable_file_inventory": {"layer2_entries": []},
+            "pr_sample_review": {"rows": []},
+            "repo_vitals": {"rows": []},
+            "coverage_detail": {"rows": []},
+            "coverage_gaps": {"entries": []},
+            "scorecard_cells": {},  # LLM will author; exercises override path
+            "catalog_metadata": {},
+        },
+        "phase_4b_computed": phase_4b,
+        "phase_5_prose_llm": {
+            "editorial_caption": {"text": None},
+            "per_finding_prose": {"entries": []},
+        },
+        "phase_6_assembly": {"assembled": False},
+        "scan_sign_off": {"approved_for_release": False},
+    }
+
+    # Drop harness-specific fields that aren't in V1.2 schema
+    for key in ["harness_version"]:
+        form["_meta"].pop(key, None)
+
+    OUT_JSON.write_text(json.dumps(form, indent=2, default=str))
+    print(f"✓ form.json written: {OUT_JSON}")
+    print(f"  phase_3_computed.c20_severity.result: {c20['result']}")
+    print(f"  phase_3_computed.solo_maintainer.is_solo: {solo['is_solo']} ({solo['top_contributor_share']:.2%})")
+    for q, adv in scorecard_advisory.items():
+        signals = adv.get("signals", [])
+        print(f"  phase_3_advisory.scorecard_hints.{q}.color = {adv['color']} ({len(signals)} signals)")
+
+    # Schema-validate
+    from jsonschema import Draft202012Validator
+    schema = json.loads((REPO_ROOT / "docs" / "scan-schema.json").read_text())
+    errors = list(Draft202012Validator(schema).iter_errors(form))
+    if errors:
+        print(f"\n✗ Schema: {len(errors)} error(s)")
+        for e in errors[:10]:
+            print(f"  - {'/'.join(str(p) for p in e.absolute_path)}: {e.message[:140]}")
+    else:
+        print("\n✓ Schema: CLEAN (phase-1/2/3 + skeleton phase-4/5/6)")
+
+
+if __name__ == "__main__":
+    build()

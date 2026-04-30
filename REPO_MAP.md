@@ -1,7 +1,7 @@
 # Repository Map — stop-git-std
 
-**Last audited:** 2026-04-19 03:47 UTC
-**HEAD at audit:** `3c09afb` (U-3/FX-4: fixture provenance landed)
+**Last audited:** 2026-04-30 (session 8 cleanup)
+**HEAD at audit:** session 8 cleanup branch (post-reorganize: `docs/scans/catalog/`, `docs/scan-bundles/`, `docs/scan-authoring-template/`, `docs/archive/`, `.scan-workspaces/`)
 **Regeneration:** this file is hand-maintained. Run `git log -1 --format='%ai' -- <path>` to verify any listed timestamp.
 
 This is the "where does everything live AND what ships" doc. If you're Claude starting a fresh session, read `CLAUDE.md` first for operating instructions, then come here for the index.
@@ -54,14 +54,14 @@ Older flat-file board records (pre-`External-Board-Reviews/` layout, kept for hi
 
 ### 1.3 Completed scans (V2.4 catalog, 10 entries)
 
-`docs/scanner-catalog.md` lists entries 1–10 (all `rendering-pipeline: v2.4`). Artifacts at `docs/GitHub-Scanner-<repo>.{html,md}`. Shape coverage: curl-pipe installer (caveman), agentic platform (Archon), JS library (zustand), Rust CLI (fd), Claude-Code skills (gstack), pre-distribution (archon-board-review), Python platform (hermes-agent), web app (postiz-app), plus zustand-v2/v3 revisions + Archon rerun record.
+`docs/scanner-catalog.md` lists entries 1–10 (all `rendering-pipeline: v2.4`). Artifacts at `docs/scans/catalog/GitHub-Scanner-<repo>.{html,md}`. Shape coverage: curl-pipe installer (caveman), agentic platform (Archon), JS library (zustand), Rust CLI (fd), Claude-Code skills (gstack), pre-distribution (archon-board-review), Python platform (hermes-agent), web app (postiz-app), plus zustand-v3 revision + Archon rerun record (zustand-v2 superseded → `docs/archive/scans-superseded/`).
 
 ### 1.4 Historical / backfilled artifacts
 
-- `docs/repo-deep-dive-prompt-V2.md` · `V2.1.md` · `V2.2.md` — prompt version archives (current is V2.4 at `docs/repo-deep-dive-prompt.md`)
+- `docs/archive/prompts/repo-deep-dive-prompt-V2.md` · `V2.1.md` · `V2.2.md` — prompt version archives (current is V2.4 at `docs/repo-deep-dive-prompt.md`)
 - `docs/CHANGELOG.md` — prompt version history (V2.1→V2.4)
-- `docs/GitHub-Repo-Scan-Form.json` — (check purpose; may be a backfilled artifact)
-- `archive/` — old TypeScript static analyzer (101 files, historical; see §3.5)
+- `docs/archive/board-review-data-pre-layout/` — older `board-review-data/` artifacts moved here in session 8 cleanup
+- `archive/` (top-level) — old TypeScript static analyzer (101 files, historical; see §3.5)
 
 ---
 
@@ -316,34 +316,39 @@ Release status key:
 
 ### 3.1 Product core (release-ready)
 
-| Path | Purpose | Status | Last touched |
-|---|---|---|---|
-| `CLAUDE.md` | Repo operator instructions (cap 250 lines) | release-ready | 2026-04-19 |
-| `REPO_MAP.md` | This file — navigation + release status + board runbook | release-ready | 2026-04-19 |
-| `AUDIT_TRAIL.md` | Checkpoint log + revert recipes | release-ready | 2026-04-19 |
-| `README.md` | Top-level repo intro | release-ready | 2026-04-17 |
-| `.gitignore` | Git hygiene | release-ready | 2026-04-13 |
-| `docs/SCANNER-OPERATOR-GUIDE.md` | V0.2 end-to-end operator process | release-ready | 2026-04-19 |
-| `docs/Scan-Readme.md` | V2.4 human-readable wizard | release-ready | 2026-04-19 |
-| `docs/repo-deep-dive-prompt.md` | V2.4 scanner prompt (investigation + output-format spec) | release-ready | 2026-04-19 |
-| `docs/GitHub-Repo-Scan-Template.html` | V2.4 HTML template with placeholders | release-ready | 2026-04-17 |
-| `docs/scanner-design-system.css` | 824-line mandatory V2.4 CSS | release-ready | 2026-04-17 |
-| `docs/validate-scanner-report.py` | Validator (`--report`, `--parity`, `--markdown`, `--template`) | release-ready | 2026-04-18 |
-| `docs/compute.py` | Python compute for Phase 3 automatable fields | release-ready | 2026-04-18 |
-| `docs/render-md.py` | V2.5-preview MD renderer (117-line Jinja2 shim) | release-ready | 2026-04-18 |
-| `docs/render-html.py` | V2.5-preview HTML renderer (135-line Jinja2 shim) | release-ready | 2026-04-18 |
-| `docs/scan-schema.json` | V1.1 investigation form schema | release-ready | 2026-04-18 |
-| `docs/templates/` | V2.5-preview MD Jinja2 partials (14 files) | release-ready | 2026-04-18 |
-| `docs/templates-html/` | V2.5-preview HTML Jinja2 partials (14 files) | release-ready | 2026-04-18 |
-| `tests/test_compute.py` | Phase 3 compute tests | release-ready | 2026-04-18 |
-| `tests/test_validator.py` | Validator unit tests | release-ready | 2026-04-18 |
-| `tests/test_render_md.py` | MD renderer structural tests | release-ready | 2026-04-18 |
-| `tests/test_render_html.py` | HTML renderer structural tests | release-ready | 2026-04-18 |
-| `tests/test_end_to_end.py` | End-to-end integration tests | release-ready | 2026-04-18 |
-| `tests/fixtures/zustand-form.json` | V1.1 fixture — JS library shape | release-ready | 2026-04-18 |
-| `tests/fixtures/caveman-form.json` | V1.1 fixture — curl-pipe installer shape | release-ready | 2026-04-18 |
-| `tests/fixtures/archon-subset-form.json` | V1.1 fixture — agentic monorepo + C3 auto_load_tier path | release-ready | 2026-04-18 |
-| `tests/fixtures/provenance.json` | Fixture provenance ledger (keyed by filename) | release-ready | 2026-04-19 |
+| Path | Purpose |
+|---|---|
+| `README.md` | Top-level OSS entry point (rewritten session 8) |
+| `CLAUDE.md` | Repo operator instructions + scan wizard |
+| `REPO_MAP.md` | This file — navigation + release status + board runbook |
+| `AUDIT_TRAIL.md` | Checkpoint log + revert recipes |
+| `WILD-SCAN-PROCESS.md` | End-to-end map of the scan flow (session 8 NEW) |
+| `.gitignore` | Git hygiene |
+| `docs/SCANNER-OPERATOR-GUIDE.md` | V0.2 end-to-end operator process |
+| `docs/Scan-Readme.md` | V2.4 human-readable wizard |
+| `docs/repo-deep-dive-prompt.md` | V2.4 scanner prompt (investigation + output-format spec) |
+| `docs/GitHub-Repo-Scan-Template.html` | V2.4 HTML DOM template |
+| `docs/scanner-design-system.css` | 824-line mandatory CSS |
+| `docs/validate-scanner-report.py` | Validator (`--report`, `--parity`, `--markdown`, `--form`, `--bundle`) |
+| `docs/compute.py` | Python compute for Phase 3 automatable fields |
+| `docs/phase_1_harness.py` | Phase 1 automated harness |
+| `docs/render-md.py` | V2.5-preview MD renderer (117-line Jinja2 shim) |
+| `docs/render-html.py` | V2.5-preview HTML renderer (135-line Jinja2 shim) |
+| `docs/compare-severity-distribution.py` | D-6 severity-distribution comparator |
+| `docs/scan-schema.json` | **V1.2** investigation form schema (V13-1 + V1.2.x signal widening) |
+| `docs/templates/` | V2.5-preview MD Jinja2 partials (14 files) |
+| `docs/templates-html/` | V2.5-preview HTML Jinja2 partials (14 files) |
+| `docs/scan-authoring-template/` | **NEW (session 8)** Per-scan Phase 4/5/6 authoring templates + README |
+| `docs/delegated-scan-template.md` | Delegated-mode scan handoff template (was `board-review-data/path-b-test-prompt.md`) |
+| `docs/board-review-pipeline-methodology.md` | Canonical 8/8/4 + 9-phase architecture record |
+| `docs/scanner-catalog.md` | Live 27-entry catalog table |
+| `docs/v12-wild-scan-telemetry.md` | Cross-scan analysis (12 V1.2 wild scans) |
+| `docs/v13-1-override-telemetry-analysis.md` · `v13-3-analysis.md` · `v13-3-fp-dry-run.md` | Frozen telemetry analyses |
+| `docs/phase-1-checklist.md` | Step→field mapping for the harness |
+| `docs/CHANGELOG.md` | Prompt version history |
+| `tests/test_*.py` (9 files) | Test suite — 414/414 passing |
+| `tests/fixtures/{zustand,caveman,archon-subset}-form.json` | Canonical V1.1/V1.2 form structural fixtures |
+| `tests/fixtures/provenance.json` | Fixture provenance ledger |
 
 ### 3.2 Package V2.4 distributable (staged)
 
@@ -366,57 +371,55 @@ Release status key:
 
 ### 3.3 Corpus (release-ready as demonstration)
 
-| Path | Purpose | Status |
-|---|---|---|
-| `docs/GitHub-Scanner-<repo>.{md,html}` (10 scans × 2 formats) | Completed V2.4 catalog scans | corpus |
-| `docs/GitHub-Scanner-Archon-rerun-record.md` | Determinism record for Archon dev-SHA bump | corpus |
-| `docs/scanner-catalog.md` | Live catalog (10 entries, rendering-pipeline column) | release-ready (mutates each scan) |
+| Path | Purpose |
+|---|---|
+| `docs/scans/catalog/GitHub-Scanner-<repo>.{md,html}` (27 scans × 2 formats; Archon-rerun-record .md only) | All catalog-referenced rendered scans |
+| `docs/scans/catalog/README.md` | Index + designates `ghostty-v12` as the gold-standard exemplar |
+| `docs/scan-bundles/<repo>-<sha>.json` | Form.json bundles (durable per-scan record) |
+| `docs/scanner-catalog.md` | Live 27-entry catalog table (mutates each scan) |
 
 ### 3.4 Governance / transparent dev (release-ready)
 
-| Path | Purpose | Status |
-|---|---|---|
-| `docs/External-Board-Reviews/README.md` | Master index of all board reviews | governance |
-| `docs/External-Board-Reviews/041626-celso/` | V2.3 pre-migration review | governance |
-| `docs/External-Board-Reviews/041826-renderer-alignment/` | Phase 7 plan A-G | governance |
-| `docs/External-Board-Reviews/041826-renderer-impl-verify/` | Step A+B + STEP-E/STEP-F verification records + INDEX | governance |
-| `docs/External-Board-Reviews/041826-fixture-enrichment/` | Step C 10-FA review | governance |
-| `docs/External-Board-Reviews/041826-step-f-alignment-validation/` | Step F R3 fixes review | governance |
-| `docs/External-Board-Reviews/041826-step-g-kickoff/` | U-1 doc integration | governance |
-| `docs/board-review-pipeline-methodology.md` | Canonical 8/8/4 + 9-phase architecture record | release-ready (referenced everywhere) |
+`docs/External-Board-Reviews/README.md` is the master index. As of session 8, it covers 11 archived reviews:
 
-### 3.5 Historical / pre-current-layout (keep in repo, release-optional)
-
-| Path | Purpose | Status |
-|---|---|---|
-| `docs/board-review-V21-consolidation.md` / `V22` / `V23` | Older board reviews, pre-`External-Board-Reviews/` layout | historical |
-| `docs/board-review-axiom-triage-consolidation.md` + R2 | AXIOM findings triage (V2.3 era) | historical |
-| `docs/board-review-operator-guide-consolidation.md` | V0.1 operator guide review | historical |
-| `docs/board-review-package-v2-consolidation.md` | V2.4 package review | historical |
-| `docs/repo-deep-dive-prompt-V2.md` / `V2.1.md` / `V2.2.md` | Prompt version archives | historical |
-| `docs/CHANGELOG.md` | Prompt version changelog | release-ready (references archives) |
-| `archive/` | Old TypeScript static analyzer (101 files, pre-pivot) | historical — release-optional as "previous iteration" evidence; can also be excluded |
-| `docs/board-review-data/` | Older bundles + path-b-test-prompt.md (23 files) | dev-only (pre-`External-Board-Reviews/` staging area) |
-| `docs/GitHub-Repo-Scan-Form.json` | Unclear purpose — pre-schema artifact | dev-only (investigate before release) |
-
-### 3.6 Scratch / runtime (excluded)
-
-| Path | Why excluded |
+| Review | Scope |
 |---|---|
-| `.board-review-temp/` | Session scratch for active board reviews. Should add to `.gitignore`. Currently untracked but visible. |
-| `docs/__pycache__/` · `tests/__pycache__/` | Python bytecode cache. Should add to `.gitignore`. |
-| `.claude/scheduled_tasks.lock` | Runtime lock. Should add to `.gitignore`. |
-| `github-repo-scanner-v2.3.tar.gz` · `.zip` | Release artifacts. Should add to `.gitignore`. |
-| `.archon/` | Archon integration data (7 files). Release-status depends on whether Archon is a shipping dependency — flag for review. |
+| `041626-celso/` | V2.3 pre-migration review |
+| `041826-renderer-alignment/` | Phase 7 plan A-G |
+| `041826-renderer-impl-verify/` | Step A+B + STEP-E/STEP-F verification records + INDEX |
+| `041826-fixture-enrichment/` | Step C 10-FA review |
+| `041826-step-f-alignment-validation/` | Step F R3 fixes review |
+| `041826-step-g-kickoff/` | U-1 doc integration |
+| `041926-step-g-execution/` | Step G acceptance approach (FN-1..FN-9 + 15 dispositions + 8 adjustments) |
+| `042026-schema-v12/` | D-7 + D-8 → V1.2 schema landing (3 rounds + owner directives) |
+| `042026-sf1-calibration/` | SF1 scorecard calibration board (4-round split-verdict) |
+| `042026-v13-3-comparator-calibration/` | n=11 V1.2 comparator-calibration analysis (3 rounds + OD-4 owner directive + Codex code-review gate) |
 
-**Recommended `.gitignore` additions:**
-```
-.board-review-temp/
-**/__pycache__/
-.claude/scheduled_tasks.lock
-*.tar.gz
-*.zip
-```
+### 3.5 Archive (`docs/archive/`) — historical, kept for reference
+
+Per session 8 cleanup, all pre-current-layout artifacts moved to `docs/archive/`. See `docs/archive/README.md` for the full map. Subdirs:
+
+| Subdir | Contents |
+|---|---|
+| `docs/archive/prompts/` | Older scanner-prompt versions (V2, V2.1, V2.2). Current is `docs/repo-deep-dive-prompt.md` (V2.4). |
+| `docs/archive/board-reviews-pre-layout/` | Pre-`External-Board-Reviews/` consolidations (V2.1/V2.2/V2.3 + AXIOM triage + V0.1 operator-guide + V2.4 package reviews). |
+| `docs/archive/board-review-temp-orphans/` | 14 R1/R2 brief + agent-response files committed to `.board-review-temp/` before that dir was added to `.gitignore`. Subdir has its own README. |
+| `docs/archive/board-review-data-pre-layout/` | Older `docs/board-review-data/` artifacts (axiom-triage-responses, V1 external board brief, V2 package audit + review brief, corrected-MD-structure analysis). |
+| `docs/archive/migrations/` | One-time migration scripts that have already executed (e.g., `migrate-v1.1-to-v1.2.py`). |
+| `docs/archive/scans-superseded/` | Scan outputs not promoted to catalog OR superseded (agency-agents, open-lovable, zustand-v2). |
+| `archive/` (top-level, distinct from `docs/archive/`) | Old TypeScript static analyzer (101 files, pre-pivot). `historical — release-optional`. |
+
+### 3.6 Scratch / runtime (gitignored)
+
+| Path | Purpose |
+|---|---|
+| `.board-review-temp/` | Active FrontierBoard review scratch (R1/R2/R3 briefs + agent responses + raw logs). Per-review subdirs; archived to `docs/External-Board-Reviews/<MMDDYY>-<topic>/` on sign-off. |
+| `.scan-workspaces/<repo>/` | **NEW (session 8)** Per-scan authoring workspaces (`build_form.py` + `author_phase_*.py` + `phase-1-raw.json` + `form.json`). Templates at `docs/scan-authoring-template/`. |
+| `**/__pycache__/` | Python bytecode cache |
+| `.claude/scheduled_tasks.lock` | Claude Code runtime lock |
+| `*.tar.gz`, `*.zip` | Release artifacts (must be regenerated, not committed) |
+| `.archon/` | Archon integration tracker (`.board-review-hash`, `.fb-upstream-hash`, `commands/`, `workflows/`). Repo-local; not core to scanner; flag for `.releaseignore` when packaging the OSS distribution. |
+| `.claude/skills/` | Repo-local Claude Code skills (1 tracked file: `board-review/SKILL.md`). Ships with repo. |
 
 ---
 

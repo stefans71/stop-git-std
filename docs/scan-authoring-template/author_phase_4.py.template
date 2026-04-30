@@ -1,0 +1,201 @@
+#!/usr/bin/env python3
+"""<REPO> V1.2 wild scan — Phase 4 authoring driver.
+
+<REPO> @ <SHA>. <one-line repo description>.
+<Nth> wild V1.2 scan; <shape novelty>.
+
+Notable:
+  - <override behavior — e.g. "Q4 signal_vocabulary_gap (3rd consecutive)"
+    or "zero scorecard overrides — all 4 cells align with Phase 3 advisory">
+  - <calibration note — useful for V13-1 / V13-3 / V12x telemetry>
+"""
+import importlib.util
+import json
+from datetime import datetime, timezone
+from pathlib import Path
+
+REPO_ROOT = Path(__file__).resolve().parent.parent.parent
+FORM_PATH = Path(__file__).resolve().parent / "form.json"
+
+
+# ---------------------------------------------------------------------------
+# Evidence — facts only. One entry per claim cited from a finding.
+# Each entry: id (E1, E2, ...), claim, command(s) used, result excerpt,
+# classification ("fact" / "inference" — usually "fact" for evidence).
+# ---------------------------------------------------------------------------
+EVIDENCE = [
+    {
+        "id": "E1",
+        "claim": "<one-sentence factual claim>",
+        "command": "<gh api / grep command that produced the result>",
+        "command_lang": "bash",
+        "result": "<verbatim or distilled output>",
+        "result_lang": "text",
+        "result_truncated": False,
+        "classification": "fact",
+    },
+    # ... more entries
+]
+
+
+# ---------------------------------------------------------------------------
+# Findings — synthesis from evidence. F0/F1/F2/... ordered by priority.
+# Each entry: id, severity (Critical/Warning/Info/OK), provenance
+# (rule-applied / observed / etc.), category, kind, title, evidence_refs,
+# threat_model_paths (enum), threat_model_context, what_this_means,
+# what_this_does_not_mean, how_to_fix.
+# ---------------------------------------------------------------------------
+FINDINGS = [
+    {
+        "id": "F0",
+        "severity": "Warning",  # Critical | Warning | Info | OK
+        "provenance": "observed",
+        "status": "ongoing",
+        "category": "<governance/solo-maintainer | supply-chain/release-cadence | etc.>",
+        "kind": "Governance",  # Governance | Supply-Chain | Hygiene | Coverage | Structural
+        "rule_id": None,  # set to "F11" if C20 fired, etc.
+        "title": "<one-line title>",
+        "action_hint": "<one-line consumer-facing hint>",
+        "evidence_refs": ["E1"],
+        "threat_model_paths": ["other"],  # enum: phishing | stale_token | session_compromise | malicious_extension | sloppy_review | runner_compromise | other
+        "threat_model_context": "<paragraph explaining the threat model>",
+        "what_this_means": "<concise consumer-facing translation>",
+        "what_this_does_not_mean": "<calibration — what NOT to read into this>",
+        "duration_label": "Continuous",
+        "date_label": "Since <date>",
+        "how_to_fix": "<maintainer-side + consumer-side actions>",
+    },
+    # ... more entries
+]
+
+
+# ---------------------------------------------------------------------------
+# Scorecard cells — Phase 4 authoritative. 4 canonical questions in a fixed
+# order. Each cell: color (red/amber/green), short_answer, rationale (only
+# when overriding Phase 3 advisory), edge_case (string note on boundary),
+# suggested_threshold_adjustment (feedback to compute.py), computed_signal_refs
+# (list of compute.SIGNAL_IDS used), override_reason (5/7-value enum, only
+# when color differs from advisory).
+# ---------------------------------------------------------------------------
+SCORECARD_CELLS = {
+    "does_anyone_check_the_code": {
+        "color": "red",
+        "short_answer": "<one-sentence answer>",
+        "rationale": None,  # required if color differs from advisory
+        "edge_case": None,
+        "suggested_threshold_adjustment": None,
+        "computed_signal_refs": [],
+        "override_reason": None,  # null if no override; else: signal_vocabulary_gap | harness_coverage_gap | threshold_too_strict | threshold_too_lenient | missing_qualitative_context | rubric_literal_vs_intent | other
+    },
+    "do_they_fix_problems_quickly": { "color": "green", "short_answer": "...", "rationale": None, "edge_case": None, "suggested_threshold_adjustment": None, "computed_signal_refs": [], "override_reason": None },
+    "do_they_tell_you_about_problems": { "color": "amber", "short_answer": "...", "rationale": None, "edge_case": None, "suggested_threshold_adjustment": None, "computed_signal_refs": [], "override_reason": None },
+    "is_it_safe_out_of_the_box": { "color": "amber", "short_answer": "...", "rationale": None, "edge_case": None, "suggested_threshold_adjustment": None, "computed_signal_refs": [], "override_reason": None },
+}
+
+
+CATALOG_METADATA = {
+    "category": "<developer-tooling | data-tooling | etc.>",
+    "subcategory": "<sub-domain>",
+    "short_description": "<2-3 sentences; under ~250 chars to stay under validator's first-1500-byte verdict-extraction window>",
+    "target_user": "<who installs this and how — under ~250 chars>",
+    "shape": "<how this shape relates to existing catalog shapes>",
+    "prior_scan_note": "First scan of <repo>. <Nth> wild V1.2-schema scan (after <list>).",
+}
+
+
+# REPO_VITALS — facts table. ~30 rows of {metric, value, note}.
+# Stars, Forks, Open issues, Open PRs, Primary language, License, Created,
+# Last pushed, Default branch, Total contributors, Solo-maintainer flag,
+# Formal releases, Latest release, Classic branch protection, Rulesets,
+# Rules on default, CODEOWNERS, SECURITY.md, CONTRIBUTING, Community health,
+# Workflows, pull_request_target usage, CodeQL SAST, Dependabot, PR review
+# rates, Self-merge count, Total merged PRs, Published advisories, Open
+# security issues, OSSF Scorecard, etc.
+REPO_VITALS = []  # [{"metric": "Stars", "value": "<n>", "note": None}, ...]
+
+COVERAGE_DETAIL_ROWS = []  # [{"check": "Harness Phase 1 end-to-end", "result": "✅ Complete"}, ...]
+
+COVERAGE_GAPS = []  # ["<harness gap noted during this scan>", ...]
+
+PR_SAMPLE_ROWS = []  # [{"number": <int>, "what": "<title>", "author": "<login>", "merger": "<login>", "reviewed": "<note>", "concern": <str|None>, "flagged": <bool>}, ...]
+
+EXECUTABLE_FILE_INVENTORY = {
+    "lead": "<paragraph: what this repo ships and how it gets executed>",
+    "layer1_summary": "<higher-level decomposition>",
+    "layer2_entries": [],  # [{"path": "...", "kind": "binary|library|...", "runtime": "...", "dangerous_calls": "...", "network": "...", "notes": "..."}]
+    "closing_note": "<install path summary + caveats>",
+}
+
+ACTION_STEPS = []  # [{"step": <n>, "type": "install_normally|verify|audit|mitigate|upgrade", "headline": "...", "severity": "OK|Info|Warning|Critical", "non_technical": "...", "command": "...", "command_lang": "bash"}, ...]
+
+TIMELINE_EVENTS = []  # [{"date": "YYYY-MM-DD", "label": "<≤40 chars>", "tone": "neutral|positive|negative", "note": "<longer detail>"}, ...]
+
+VERDICT_EXHIBITS = []  # [{"symbol": "⚠|✓|ℹ|✗", "headline": "...", "one_line_summary": "...", "items": [{"tag": "F0", "claim": "..."}]}]
+
+PRIORITY_EVIDENCE = []  # [{"evidence_id": "E1", "reason": "<why this evidence matters most>"}]
+
+SECTION_LEADS = {
+    "section_01": {"pill_row": "...", "summary": "<paragraph for §01>"},
+    "section_02": {"pill_row": "F0 Warning · ...", "summary": None},
+    "section_06": {"pill_row": "Scorecard: ...", "summary": "<paragraph for §06>"},
+}
+
+SPLIT_AXIS = {
+    "should_split": False,
+    "axis": None,  # "deployment" | "version" | etc. when should_split=True
+    "reasoning": "<why split or not>",
+    "entries": [],
+}
+
+
+def main():
+    form = json.loads(FORM_PATH.read_text())
+    p4 = form["phase_4_structured_llm"]
+
+    p4["findings"] = {"entries": FINDINGS}
+    p4["evidence"] = {"entries": EVIDENCE}
+    p4["scorecard_cells"] = SCORECARD_CELLS
+    p4["catalog_metadata"] = CATALOG_METADATA
+    p4["repo_vitals"] = {"rows": REPO_VITALS}
+    p4["coverage_detail"] = {"rows": COVERAGE_DETAIL_ROWS}
+    p4["coverage_gaps"] = {"entries": COVERAGE_GAPS}
+    p4["pr_sample_review"] = {"rows": PR_SAMPLE_ROWS}
+    p4["executable_file_inventory"] = EXECUTABLE_FILE_INVENTORY
+    p4["action_steps"] = {"entries": ACTION_STEPS}
+    p4["timeline_events"] = {"entries": TIMELINE_EVENTS}
+    p4["verdict_exhibits"] = {"groups": VERDICT_EXHIBITS}
+    p4["priority_evidence"] = {"selections": PRIORITY_EVIDENCE}
+    p4["section_leads"] = SECTION_LEADS
+    p4["split_axis_decision"] = SPLIT_AXIS
+
+    # Phase 4b verdict — derived from finding severities by compute.compute_verdict
+    spec = importlib.util.spec_from_file_location("_compute", REPO_ROOT / "docs" / "compute.py")
+    cm = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(cm)
+    verdict = cm.compute_verdict(FINDINGS)
+    form["phase_4b_computed"] = {"verdict": verdict}
+
+    form["_meta"]["scan_status"] = "validated"
+    form["_meta"]["scan_completed_at"] = datetime.now(timezone.utc).isoformat()
+
+    FORM_PATH.write_text(json.dumps(form, indent=2, default=str))
+
+    print(f"✓ form.json updated: {FORM_PATH}")
+    print(f"  findings: {len(FINDINGS)}")
+    print(f"  evidence: {len(EVIDENCE)}")
+    print(f"  verdict: {verdict.get('level')}")
+
+    # Schema validation
+    from jsonschema import Draft202012Validator
+    schema = json.loads((REPO_ROOT / "docs" / "scan-schema.json").read_text())
+    errors = list(Draft202012Validator(schema).iter_errors(form))
+    if errors:
+        print(f"\n✗ Schema: {len(errors)} error(s)")
+        for e in errors[:10]:
+            print(f"  - {'/'.join(str(p) for p in e.absolute_path)}: {e.message[:200]}")
+    else:
+        print("\n✓ Schema: CLEAN")
+
+
+if __name__ == "__main__":
+    main()
