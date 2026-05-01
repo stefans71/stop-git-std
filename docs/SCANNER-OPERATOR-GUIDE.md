@@ -62,18 +62,27 @@ The scanner is **LLM-driven**. It is not a static analyzer. All synthesis happen
 │                            artifact), download tarball, extract    │
 ├────────────────────────────────────────────────────────────────────┤
 │  PHASE 2   gather          gh api + local grep per V2.4 Steps      │
-│                            1–8 + A/B/C                              │
+│                            1–8 + A/B/C (or phase_1_harness.py)     │
 ├────────────────────────────────────────────────────────────────────┤
 │  PHASE 3   bundle          synthesise evidence into                │
-│                            /tmp/scan-<repo>/findings-bundle.md     │
+│                            /tmp/scan-<repo>/findings-bundle.md or  │
+│                            populate phase_3-5 in form.json (V2.5)  │
 ├────────────────────────────────────────────────────────────────────┤
-│  PHASE 4a  MD render       bundle → canonical MD report            │
-│  PHASE 4b  HTML render     MD → HTML (structurally derived only)   │
-│  PHASE 4c  re-run record   optional lightweight MD-only output     │
+│  PHASE 4a  MD render       form.json → long-form MD (canonical)    │
+│                            via docs/render-md.py — REQUIRED         │
+│  PHASE 4b  Simple HTML     form.json → Simple Report HTML + MD     │
+│                            via docs/render-simple.py — REQUIRED;    │
+│                            USER-FACING primary visual artifact      │
+│  PHASE 4c  long-form HTML  form.json → long-form HTML via          │
+│                            docs/render-html.py — OPTIONAL auditor   │
+│                            view; not required by default            │
+│  PHASE 4d  re-run record   optional lightweight MD-only output     │
 │                            documenting a re-scan with minor drift  │
 ├────────────────────────────────────────────────────────────────────┤
 │  PHASE 5   validate        --report mode loop until exit 0 on      │
-│                            BOTH MD and HTML                         │
+│                            BOTH long-form MD (4a) and Simple HTML  │
+│                            (4b). Long-form HTML (4c), if produced, │
+│                            also gates --report.                     │
 ├────────────────────────────────────────────────────────────────────┤
 │  PHASE 6a  catalog         required: update docs/scanner-catalog.md│
 │  PHASE 6b  memory          optional: operator-local memory update  │
@@ -290,9 +299,16 @@ If you catch yourself writing an interpretive verb in an evidence section, cut i
 
 ## 8. Phase 4 — Render
 
-**Goal:** produce the committed `docs/scans/catalog/GitHub-Scanner-<repo>.md` and `.html` pair.
+**Goal:** produce the committed user-facing pair:
+- `docs/scans/catalog/GitHub-Scanner-<repo>.md` (long-form MD, canonical, LLM-paste target) — Phase 4a, REQUIRED.
+- `docs/scans/catalog/GitHub-Scanner-<repo>-simple.html` (Simple Report, primary user-facing visual) — Phase 4b, REQUIRED.
+- Plus the Simple MD companion `GitHub-Scanner-<repo>-simple.md` (paste-ready terse variant; emitted by `render-simple.py` alongside the Simple HTML).
 
-**Phase 4 is split into 4a (MD-first) → 4b (HTML-from-MD).** A lightweight Phase 4c exists for re-run determinism records.
+**Optional:**
+- `docs/scans/catalog/GitHub-Scanner-<repo>.html` (long-form HTML, auditor view) — Phase 4c, OPTIONAL. Not required by default; produced when an auditor needs full evidence + provenance.
+- `docs/scans/catalog/GitHub-Scanner-<repo>-rerun-record.md` — Phase 4d, optional re-run determinism record.
+
+**Phase 4 contract (post-2026-05-01 Phase 7 close).** The user-facing default is {long-form MD + Simple HTML + Simple MD}. The long-form HTML stays available via `render-html.py` for auditor needs but is not required output. This contract change reflects the 2026-04-20 Phase 6 finding (5/5 cold-fork match against long-form MD validates LLM-consumer use) plus the 2026-05-01 Phase 7 Simple Report finding (single-page polished visual is the right primary user-facing artifact).
 
 ### 8.1 Execution mode: continuous (legacy alias: Path A — the only mode exercised today in V2.4)
 
@@ -354,11 +370,11 @@ This contract can be realized via two rendering pipelines (see §8.1 / §8.8):
 
 Both pipelines must produce output conforming to the prompt's output-format spec. The schema + renderers are an implementation of that spec, not a second competing spec. This guide does not duplicate the spec itself.
 
-### 8.5 Phase 4a — bundle → canonical MD
+### 8.5 Phase 4a — form.json → long-form MD (canonical)
 
-- Phase 4a is the creative/rendering step. The LLM reads the bundle, reads 1–2 shape-matched reference scans, and produces the canonical MD report.
-- All proposed verdicts, finding severities, scorecard cells, and audience-severity calls must transcribe from the bundle, not be re-derived.
-- Every claim carries an evidence citation, per §11.1.
+- Phase 4a produces the long-form MD that is the canonical artifact (gates `--report` validator; serves as LLM-paste target for "should I install this?" consumer queries; Phase 6 validated 5/5 cold-fork match).
+- **V2.5-preview (default):** `python3 docs/render-md.py form.json --out docs/scans/catalog/GitHub-Scanner-<repo>.md`. Deterministic. All verdicts, severities, scorecard cells transcribed from `phase_4_structured_llm` + `phase_4b_computed`.
+- **V2.4 (legacy):** the LLM hand-authors the long-form MD from the findings-bundle, reading 1–2 shape-matched reference scans for structure. All proposed verdicts, finding severities, scorecard cells, and audience-severity calls must transcribe from the bundle, not be re-derived. Every claim carries an evidence citation, per §11.1.
 
 ### 8.5a Template-side derivation (Phase 4, landed 2026-05-01)
 
@@ -378,17 +394,28 @@ Three sections of the rendered report — **§03 Suspicious code changes** (PR s
 
 **Phase 1.5 follow-up:** harness `pr_review.prs` does NOT populate `author` or `merger` fields on V1.2 bundles. When PR_SAMPLE_ROWS is empty, the derived table renders `?` in those columns. If author/merger matter for a specific scan, populate PR_SAMPLE_ROWS manually.
 
-### 8.6 Phase 4b — MD → HTML (structurally derived)
+### 8.5b Phase 4b — form.json → Simple Report HTML + MD (user-facing, REQUIRED)
 
-- Phase 4b is a structural derivation from the MD.
-- **HTML may not add or alter findings, verdicts, evidence text, or scorecard calls that are absent from or different in the MD.** The V2.4 prompt's §8.4 MD-canonical rule applies: if the HTML says something the MD does not, the HTML is wrong.
-- The MD must include markdown equivalents of key structural elements: section-status summary lines (as blockquotes), section-action blocks, exhibit grouping (as `<details>` blocks), evidence priority grouping (as `### ★ Priority evidence` headers), and split-verdict per-audience entries (as H3 sub-headings). The HTML adds CSS-level presentational polish (colours, animations, grid layouts) — not structural content absent from the MD.
+Phase 4b produces the **primary user-facing visual artifact** — the Simple Report HTML — plus a paste-ready Simple MD companion. Spec: `docs/simple-report-concept.md`. Renderer: `docs/render-simple.py`.
 
-**NON-NEGOTIABLE: the CSS design system.** Before writing ANY HTML body content, copy the entire contents of `docs/scanner-design-system.css` (824 lines) into the HTML's `<style>` block verbatim. Do not modify, truncate, abbreviate, or rewrite ANY part of the CSS. This file is the canonical design system — it defines the verdict banner, scorecard grid, finding cards, exhibit rollup, timeline, and all visual conventions. HTML scans that do not use this exact CSS will drift from the catalog and must be re-rendered.
+- **CLI:** `python3 docs/render-simple.py form.json --out-html docs/scans/catalog/GitHub-Scanner-<repo>-simple.html --out-md docs/scans/catalog/GitHub-Scanner-<repo>-simple.md`
+- **Inputs (mechanical from form.json):** repo identity, SHA, scan date, stars/license/language, verdict level, cell colors, top 3 findings (severity-sorted, input-order tie-break).
+- **Inputs (LLM-synthesized; already present in V2.5-preview bundles):** `phase_5_prose_llm.editorial_caption.text` (verdict 1-2 sentences), `phase_4_structured_llm.scorecard_cells.<q>.short_answer` (per-cell plain-English answer), `phase_4_structured_llm.findings.entries[i].what_this_means` (finding summary), `phase_4_structured_llm.findings.entries[0].action_hint` (action body).
+- **Self-containment:** all CSS inlined. Only external dependency is Google Fonts CDN (`fonts.googleapis.com` + `fonts.gstatic.com`), restricted via CSP meta. System font fallbacks render cleanly without CDN.
+- **CSS source:** `docs/templates-simple/simple-report.css` (251-line subset of `docs/scanner-design-system.css`). Subset retains the design-system color tokens, typography, body chrome (noise + scan-sweep), hero pattern, verdict banner, action card, footer. Drops auditor-only patterns (collapsible sections, evidence appendix, PR table, timeline, vitals grid, sub-findings, scan-strip ribbon, catalog-meta block, font-controls widget).
+- **Templates:** `docs/templates-simple/simple-report.html.j2` + `simple-report.md.j2`.
+- **V2.4 limitation:** V2.4 does NOT produce a `form.json` and therefore cannot drive `render-simple.py` directly. V2.4 scans land long-form MD + long-form HTML only. To produce a Simple Report from a V2.4 scan would require a V2.4-bundle → form.json adapter, which is in the post-Phase-7 follow-up backlog.
 
-The CSS includes the single-pass scan-line animation (a thin cyan line that sweeps once from top to bottom on page load, then disappears).
+### 8.6 Phase 4c — form.json → long-form HTML (optional auditor view)
 
-### 8.7 Phase 4c — re-run determinism record (optional, lightweight)
+Phase 4c is **OPTIONAL** since Phase 7 close 2026-05-01. The long-form HTML is the auditor archival view (full evidence + provenance). Phase 4b's Simple Report HTML is the user-facing default.
+
+- **V2.5-preview:** `python3 docs/render-html.py form.json --out docs/scans/catalog/GitHub-Scanner-<repo>.html`. Deterministic; structurally derived from the same form.json that Phase 4a + 4b consume.
+- **V2.4 (legacy):** the LLM hand-authors the long-form HTML from the canonical MD. Structural derivation only — HTML may not add or alter findings, verdicts, evidence text, or scorecard calls absent from or different in the MD. The V2.4 prompt's §8.4 MD-canonical rule applies. The MD must include markdown equivalents of key structural elements: section-status summary lines (as blockquotes), section-action blocks, exhibit grouping (as `<details>` blocks), evidence priority grouping (as `### ★ Priority evidence` headers), and split-verdict per-audience entries (as H3 sub-headings). The HTML adds CSS-level presentational polish (colours, animations, grid layouts) — not structural content absent from the MD.
+
+**When producing long-form HTML in V2.4 mode, the CSS design system is NON-NEGOTIABLE.** Before writing any HTML body content, copy the entire contents of `docs/scanner-design-system.css` (824 lines) into the HTML's `<style>` block verbatim. Do not modify, truncate, abbreviate, or rewrite ANY part of the CSS. HTML scans that do not use this exact CSS will drift from the catalog and must be re-rendered. The CSS includes the single-pass scan-line animation (a thin cyan line that sweeps once from top to bottom on page load, then disappears).
+
+### 8.7 Phase 4d — re-run determinism record (optional, lightweight)
 
 - Used when a scan has already been produced and a re-run on a new SHA or in a new session yields **identical structural findings** — only cosmetic drift (dossier SHA, dates, counts).
 - Output is an MD-only note (e.g., `GitHub-Scanner-<repo>-rerun-record.md`) listing: prior scan's SHA, new SHA, what changed, explicit "no structural drift" statement.
@@ -589,17 +616,23 @@ Automation note: Step 3b's compute.py invocation is manual for Step G — the pi
 
 ## 9. Phase 5 — Validate
 
-**Goal:** Validator exits 0 on both the MD and the HTML. Use the correct mode flag for each format.
+**Goal:** Validator exits 0 on the long-form MD (Phase 4a, REQUIRED) and Simple Report HTML (Phase 4b, REQUIRED). Long-form HTML (Phase 4c, OPTIONAL) also gates `--report` if produced.
 
 ```bash
+# Phase 4a output — long-form MD (canonical)
 python3 docs/validate-scanner-report.py --markdown docs/scans/catalog/GitHub-Scanner-<repo>.md
+
+# Phase 4b output — Simple Report HTML (user-facing)
+python3 docs/validate-scanner-report.py --report docs/scans/catalog/GitHub-Scanner-<repo>-simple.html
+
+# Phase 4c output — long-form HTML (only if produced)
 python3 docs/validate-scanner-report.py --report docs/scans/catalog/GitHub-Scanner-<repo>.html
 ```
 
 - `--markdown` checks: required section headers (Verdict, Findings, Evidence, Scorecard), minimum 100 lines, severity keywords.
 - `--report` checks: tag balance, inline styles, px font-sizes, placeholders, EXAMPLE markers, XSS vectors, untrusted-text escaping.
 
-All checks must pass.
+All produced outputs must pass.
 
 ### 9.1 Common false-positives (heuristic warnings that are NOT blockers)
 

@@ -265,11 +265,20 @@ Flags:
 - `--out-md PATH` (optional; default: derive `.md` sibling of `--out-html`) — path to write rendered MD.
 - `--no-md` — skip MD output if HTML-only is wanted.
 
-### Wizard integration
+### Wizard integration (applied 2026-05-01 in Phase 7 close)
 
-**Deferred to a separate commit after Phase 7 ships** (owner directive 2026-05-01). Phase 7 builds the renderer + templates; wizard default reordering is a user-facing workflow change that warrants its own consideration once we have rendered scans to evaluate.
+CLAUDE.md changes landed alongside the renderer per owner directive 2026-05-01:
 
-Phase 7 deliverable does NOT modify CLAUDE.md wizard Q1.
+- **Q1 output mode** — A: long-form MD + Simple Report HTML (default, user-facing); B: + long-form HTML (auditor view); C: MD only.
+- **Q3a rendering pipeline** — V2.5-preview is now the **default + recommended** pipeline (was V2.4). V2.4 marked as **legacy — does not produce Simple Report**. V2.4 cannot drive `render-simple.py` (no `form.json` produced).
+- **Post-scan options** (CLAUDE.md "After the scan completes") — option 1 "View the report" now opens the **Simple Report HTML**. Option 2 reframed as "detailed walkthrough" — read the long-form MD and walk the user through findings + safe-install conditions.
+
+The Operator Guide §4 + §8 Phase 4 contract was updated in lockstep:
+- Phase 4a: render-md.py → long-form MD (canonical, REQUIRED).
+- Phase 4b: render-simple.py → Simple Report HTML + MD (primary user-facing, REQUIRED).
+- Phase 4c: render-html.py → long-form HTML (auditor view, OPTIONAL).
+- Phase 4d: re-run determinism record (lightweight MD-only, OPTIONAL).
+- Validator gates Phase 4a + 4b; Phase 4c gates `--report` only if produced.
 
 ---
 
@@ -290,15 +299,18 @@ No `--report` validator gate yet — Simple Report is a new artifact type and th
 
 ---
 
-## 10. What this brief deliberately defers
+## 10. What this brief deliberately defers (post-Phase-7 follow-up backlog)
 
-The following are out of scope for Phase 7 (intentionally — to keep the phase landable):
+The following are out of scope for Phase 7 (intentionally — to keep the phase landable). They become the post-Phase-7 follow-up backlog:
 
-- **Inline customization** (e.g., custom branding for org-internal scans) — defer to a later phase.
+- **V2.4-bundle → form.json adapter.** V2.4 (legacy) does not produce a `form.json` and therefore cannot drive `render-simple.py`. Adding an adapter would let legacy V2.4 scans (catalog entries 1-11) generate Simple Reports retroactively. Trade-off: adapter logic must invent or hand-author the LLM-synthesized fields (editorial_caption, scorecard short_answers, finding what_this_means, action_hint) that V2.5-preview emits natively but V2.4 prose-renders elsewhere. Not Phase 7 scope; queued.
+- **Gate 6.3 backlog resolution** (7 cells × 6 V1.2 entries) — `phase_3` ↔ `phase_4` divergences from Phase 5 calibration v2 rerender. Resolution choice: (b) add `override_reason` to existing Phase 4 cells, or (c) soften calibration v2 Q3 rules. Not (a) — that would shift consumer-facing semantics that Phase 6 + 7 just validated as correct.
+- **Q3 FALLBACK regression** on 5 entries (ghostty, kamal, wezterm, freerouting, WLED) — `phase_3` advisory only; rendered MD + Simple HTML unaffected (Phase 6 finding). Address alongside gate 6.3 backlog.
+- **Full-sentence scorecard short_answers.** Current bundles produce fragmentary forms ("Partly — concentration risk"). The question-above + answer-below layout makes them readable as pairs; rewrite to full sentences ("Code reviews happen, but most commits come from one person") would be a 12-bundle re-author and is cosmetic polish, not blocking.
+- **Inline customization** (custom branding for org-internal scans) — would need separate config layer.
 - **Theme switcher (light mode)** — the dark forensic-console look is the product identity; a light theme would be an explicit alt-product decision.
 - **Print stylesheet** — readers print rarely; defer until requested.
-- **Embed-in-README badge** — defer; would need separate backend.
-- **Gate 6.3 backlog resolution** — owner directive 2026-05-01: deferred to *after* Phase 7. Not a Phase 7 blocker; the rendered Simple Report reads from existing `phase_4_structured_llm.scorecard_cells` LLM colors, so the `phase_3 ↔ phase_4` divergence does not propagate to consumer-facing output here either (same as Phase 6 finding).
+- **Embed-in-README badge** — would need separate backend.
 
 ---
 
