@@ -17,6 +17,74 @@ Canonical log of milestone commits with the verification state captured at commi
 
 ---
 
+## Checkpoint — 2026-05-01 (session 9) — Back-to-basics calibration rebuild Phases 0+1+2 (board review CLOSED + ARCHIVED)
+
+**HEAD:** TBD on Phase 2 archive commit (this commit lands `docs/External-Board-Reviews/050126-calibration-rebuild/` + master index update + plan/CLAUDE/REPO_MAP/this-AUDIT-TRAIL/auto-memory updates).
+
+**Session 9 commits from `dff3886` (session 8 close) →:**
+
+```
+TBD     Phase 2 archive — CONSOLIDATION.md + 15 round files + persistent-state updates
+f42635f Phase 2 R3 close — Q2 explicit-deferral doc fix per 3-of-3 convergent note
+9d79e23 Plan §Current state: R3 launching (thin ratification)
+cb7407c Phase 2 R2 close — design doc revised per 7 R2 owner directives
+d01bcf6 Plan §Current state: R2 launching
+91cecd5 Phase 2 R1 close — design doc revised per 7 owner directives
+c24c782 Phase 2 launch — design doc §9 sharpened (Q4 compound, Q7 decided, Q9 floor)
+66c4ace Phase 1 complete — calibration design v2 doc landed
+ccd3251 Phase 0 complete — calibration audit landed
+7f22f7d Plan: resolve last-commit SHA in § Current state block
+f0c9a96 Back-to-basics calibration rebuild plan + CLAUDE.md auto-resume pointer
+```
+
+11 session-9 commits before this archive commit. All on `main`. Pre-session-9 baseline at `dff3886`.
+
+**Verification at checkpoint:**
+- 414/414 tests passing (no code changes in any session-9 commit; all docs + plan + audit work)
+- Phase 0 audit (`docs/calibration-audit.md`, 274 lines) committed
+- Phase 1 design (`docs/calibration-design-v2.md`, twice-revised final state ~900 lines) committed
+- Phase 2 archive (`docs/External-Board-Reviews/050126-calibration-rebuild/CONSOLIDATION.md` + 15 round files) committed
+- All persistent-state docs (CLAUDE.md, REPO_MAP.md, AUDIT_TRAIL.md, plan, auto-memory) updated to reflect Phase 2 close
+
+**Key outputs (session 9):**
+
+Phase 0 (audit):
+- `docs/calibration-audit.md` — empirical baseline; 12 V1.2 wild scan cross-tab; 10 sections; key topline: Q1=red is NOT verdict-discriminating (3 of 6 OSS-default-pattern scans are Caution, 3 are Critical); Q4 IS the verdict-discriminator (5/5 Q4=red are Critical) but Phase 3 rule never reaches red (every Q4=red is a Phase 4 LLM override).
+
+Phase 1 (design):
+- `docs/calibration-design-v2.md` — twice-revised final state. 11 sections + revision-history table. Key calls: shape-as-modifier architecture; 9-category closed-enum + 3 cross-shape modifiers (`is_reverse_engineered`, `is_privileged_tool`, `is_solo_maintained`); 10 rules (RULE-1..RULE-10) with confidence labels (firm/lower/n=1-candidate/structural-guard); template-map cell short_answer language; cells-only scope (finding-severities deferred to Phase 1.5); migration plan; staged Q9 hard floor (≤5/12 + ≤3/12 stretch via harness-promotion).
+
+Phase 2 (board review):
+- 3-of-3 R3 SIGN OFF (Pragmatist clean SIGN OFF; Codex + DeepSeek SIGN OFF WITH NOTES with deferrals to Phase 3 §10)
+- DeepSeek trajectory DISSENT (R1) → SIGN OFF WITH NOTES (R2/R3)
+- 16 owner directives applied across 3 rounds (8 R1 + 7 R2 + 1 R3 pre-archive)
+- 26-item dissent audit; zero silent drops; zero preserved-live blocking dissents
+- Codex's R3 preserved Q2-doc-gap dissent raised-and-resolved-pre-archive via §5 Q2 sub-section
+- Archive at `docs/External-Board-Reviews/050126-calibration-rebuild/CONSOLIDATION.md`
+
+Telemetry/scope notes:
+- Q2 explicitly deferred (NOT a silent drop) with Phase 1.5 re-entry trigger documented (≥3 Q2 overrides in next 5 wild scans, OR Phase-1 re-render audit miscalls)
+- 3 items deferred to Phase 3 implementation (provisional-vs-stable tracking mechanism, `is_privileged_tool` boundary cases, confidence-degradation rules)
+- Owner-overrule on RULE-7/8/9 disposition: kept in design with promotion gates (DeepSeek wanted move-to-Phase-1.5-ledger). Promotion gate IS the discipline.
+
+**Revert paths:**
+- To revert Phase 2 archive only: `git revert <archive-commit>` — preserves all design + plan work; just removes the archive directory + master index row
+- To revert Phase 2 design revisions (R1+R2+R3 directives): `git revert f42635f cb7407c 91cecd5` — destructive; keeps Phase 0 audit + Phase 1 first-draft design only
+- To revert all session 9 work: `git reset --hard dff3886` — destructive; returns to session 8 close state. Loses audit + design + board review + archive.
+- Pre-session-9 tag: pre-back-to-basics tag does not exist; use SHA `dff3886` as the rollback target.
+
+**Decision points to preserve:**
+- The 16 owner directives across 3 rounds are documented in `docs/calibration-design-v2.md` §9 revision history table + `docs/External-Board-Reviews/050126-calibration-rebuild/CONSOLIDATION.md` §3.
+- 26-item dissent audit at CONSOLIDATION §4 — every R1/R2/R3 cross-agent concern accounted for. Zero silent drops invariant satisfied per FrontierBoard SOP §4.
+- Cells-only scope (Q7) was owner-decided pre-board to avoid doubling board surface area; finding-severity rule-driving is its own Phase 1.5 audit + design.
+- Q9 staged floor (≤5/12 hard + ≤3/12 stretch with prospective-only promotion semantics) — owner reframed the original ≤3/12 hard floor after 3-of-3 R1 convergence flagged it as structurally unachievable.
+- Phase 3 carry-forwards (5 items at CONSOLIDATION §5) MUST be addressed by Phase 3 implementation — they're not "nice to have," they're follow-on decisions the design intentionally left open.
+- The board's substantive contributions: Codex closed the largest single design defect (classify_shape phase boundary FIX-NOW + rule-precedence contract); DeepSeek's R1 DISSENT drove enum over-fit acknowledgment + Q9 reframing; Pragmatist's operational-detail flags (template-map fallback, operator-precedence) became hygiene fixes.
+
+**Next session (Phase 3) entry point:** `docs/back-to-basics-plan.md` §Current state. Work begins on `chore/calibration-rebuild-impl` branch from `main`. Implementation extends `compute.py` per design §10 implementation sketch + addresses CONSOLIDATION §5 carry-forwards.
+
+---
+
 ## Checkpoint — 2026-04-30 (session 8 — first wild scan) — mattpocock/skills entry 27 (first Claude Code skills/plugin shape)
 
 **HEAD:** `2aa59bf` on `origin/main` (clean push pending — see verification below; tree clean).

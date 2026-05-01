@@ -8,7 +8,7 @@ If the user opens a fresh session or says **"continue"** without other context, 
 
 If a fork is in flight when you resume, do NOT duplicate its work — wait for the completion notification. The plan's `§ Current state` block names any in-flight forks.
 
-Last back-to-basics-plan event: 2026-05-01 session 9 — Phase 0 audit fork launched; plan + CLAUDE.md pointer landing on this commit.
+**Last back-to-basics-plan event: 2026-05-01 session 9 — Phase 2 board review CLOSED + ARCHIVED.** 3-of-3 R3 SIGN OFF on calibration design v2; archive at `docs/External-Board-Reviews/050126-calibration-rebuild/CONSOLIDATION.md` (16 owner directives applied across 3 rounds; 26-item dissent audit zero silent drops). **Phase 3 implementation is the next active work** — branch `chore/calibration-rebuild-impl` (per plan §Phase 3); design at `docs/calibration-design-v2.md` is the spec; 5 Phase 3 carry-forwards from CONSOLIDATION §5 must be addressed. Recommended pause point before Phase 3 (token-heavy implementation work; natural session break).
 
 ## When the user says "scan" — start the wizard
 
