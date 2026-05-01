@@ -572,7 +572,7 @@
 
     "scorecard_hint": {
       "type": "object",
-      "description": "Phase 3 advisory scorecard hint — non-authoritative. compute.py populates this; Phase 4 may override with rationale + computed_signal_refs citing these signals by ID.",
+      "description": "Phase 3 advisory scorecard hint — non-authoritative. compute.py populates this; Phase 4 may override with rationale + computed_signal_refs citing these signals by ID. V1.2.x calibration v2 (Phase 3 of back-to-basics-plan): emits rule_id (REQUIRED for v2 outputs per directive #14 — RULE-1..RULE-10 or FALLBACK), auto_fire flag, short_answer_template_key, and template_vars. The validator enforces rule_id presence when phase_3_advisory.shape_classification is present (the v2 signal); legacy V1.2 bundles without shape_classification continue to validate without rule_id (back-compat).",
       "properties": {
         "color": {
           "oneOf": [
@@ -585,7 +585,70 @@
           "type": "array",
           "items": { "$ref": "#/$defs/advisory_signal_ref" }
         },
+        "rule_id": {
+          "type": ["string", "null"],
+          "description": "V1.2.x calibration v2: which rule fired (RULE-1..RULE-10 or FALLBACK). REQUIRED on v2 outputs per directive #14. Optional in schema for back-compat with pre-v2 V1.2 bundles; validator enforces presence when paired with shape_classification."
+        },
+        "auto_fire": {
+          "type": ["boolean", "null"],
+          "description": "V1.2.x calibration v2: True when the rule was an immediate auto-fire trip (RULE-6 + RULE-7/8/9 family), False for base-table evaluation."
+        },
+        "short_answer_template_key": {
+          "type": ["string", "null"],
+          "description": "V1.2.x calibration v2: template-map key for the short_answer text. See design §6 template-map approach. Renderer falls back to phase_4_structured_llm.scorecard_cells.<q>.short_answer when template-map miss."
+        },
+        "template_vars": {
+          "type": ["object", "null"],
+          "description": "V1.2.x calibration v2: variable bindings for the short_answer template (formal_review_rate, repo_age_days, etc.).",
+          "additionalProperties": true
+        },
         "$comment": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+
+    "shape_classification": {
+      "type": "object",
+      "description": "V1.2.x calibration v2 (Phase 3 of back-to-basics-plan): output of compute.classify_shape(). Computed by Phase 3 from phase_1_raw_capture; frozen by Phase 4 LLM (which may override `category` with explanation via override-explained mechanism). `confidence` is debug-only — no rule reads it (directive #13).",
+      "required": ["category"],
+      "properties": {
+        "category": {
+          "type": "string",
+          "enum": [
+            "library-package",
+            "cli-binary",
+            "agent-skills-collection",
+            "agentic-platform",
+            "web-application",
+            "desktop-application",
+            "embedded-firmware",
+            "install-script-fetcher",
+            "specialized-domain-tool",
+            "other"
+          ],
+          "description": "9 closed-enum shape categories per design §3 (+ 'other' catch-all)."
+        },
+        "is_reverse_engineered": {
+          "type": "boolean",
+          "description": "Cross-shape modifier: tool is a reverse-engineered platform-API client (Baileys-shape)."
+        },
+        "is_privileged_tool": {
+          "type": "boolean",
+          "description": "Cross-shape modifier: tool runs with elevated permissions (kernel/driver/firmware/terminal-emulator/browser-extension/network-proxy/shell-extender)."
+        },
+        "is_solo_maintained": {
+          "type": "boolean",
+          "description": "Cross-shape modifier: top contributor has >80% commit share."
+        },
+        "confidence": {
+          "type": "string",
+          "enum": ["high", "medium", "low"],
+          "description": "Debug-only — no rule reads this (directive #13). Tracked for audit (correlation between low-confidence classifications and override spikes)."
+        },
+        "matched_rule": {
+          "type": "string",
+          "description": "Short string explaining which heuristic branch fired (e.g. 'C/C++ primary + firmware/iot/esp topic')."
+        }
       },
       "additionalProperties": false
     },
@@ -1261,7 +1324,7 @@
     },
 
     "phase_3_advisory": {
-      "$comment": "V1.2 D2: new top-level phase for advisory-only Python output. compute.compute_scorecard_advisory() populates scorecard_hints; these are NON-authoritative. Phase 4 is the authoritative scorecard source. When Phase 4 color differs from the paired Phase 3 advisory color, validator (gate 6.3) enforces override-explained: rationale + computed_signal_refs + override_reason enum.",
+      "$comment": "V1.2 D2: new top-level phase for advisory-only Python output. compute.compute_scorecard_advisory() populates scorecard_hints; these are NON-authoritative. Phase 4 is the authoritative scorecard source. When Phase 4 color differs from the paired Phase 3 advisory color, validator (gate 6.3) enforces override-explained: rationale + computed_signal_refs + override_reason enum. V1.2.x calibration v2 (Phase 3 of back-to-basics-plan) adds shape_classification at this level — computed by classify_shape(); presence signals v2 outputs which validator gates require rule_id on every scorecard_hint.",
       "type": "object",
       "properties": {
         "$comment": { "type": "string" },
@@ -1276,6 +1339,10 @@
             "is_it_safe_out_of_the_box": { "$ref": "#/$defs/scorecard_hint" }
           },
           "additionalProperties": false
+        },
+        "shape_classification": {
+          "$ref": "#/$defs/shape_classification",
+          "$comment": "V1.2.x calibration v2: optional. Presence signals that scorecard_hints were computed by compute_scorecard_cells_v2(); validator (when present) enforces rule_id REQUIRED on every paired scorecard_hint."
         }
       },
       "additionalProperties": false
@@ -1285,6 +1352,11 @@
       "type": "object",
       "properties": {
         "$comment": { "type": "string" },
+
+        "shape_classification": {
+          "$ref": "#/$defs/shape_classification",
+          "$comment": "V1.2.x calibration v2: optional. LLM-frozen shape classification — copied from phase_3_advisory.shape_classification, or overridden by Phase 4 LLM with explanation via the existing override-explained mechanism. `confidence` is debug-only."
+        },
 
         "scorecard_cells": {
           "$comment": "V1.2 D2: authoritative scorecard cells — LLM-authored. Keyed object by canonical question ID (OQ-4 unanimous). Moved from phase_3_computed per D-7 board decision. When Phase 4 color diverges from phase_3_advisory.scorecard_hints[key].color, gate 6.3 override-explained requires: rationale ≥50 chars, computed_signal_refs non-empty with all IDs resolving against compute.SIGNAL_IDS, override_reason in 5-value enum.",
