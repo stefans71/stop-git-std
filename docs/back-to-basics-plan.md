@@ -21,7 +21,7 @@ When the user says "continue" — start at the **next concrete action** under §
 
 ## § Current state (UPDATE AT EACH COMMIT — single source of truth)
 
-- **Last commit landing this plan:** `2fc7b3d` — Back-to-basics calibration rebuild plan + CLAUDE.md auto-resume pointer (2026-05-01).
+- **Last commit landing this plan:** `f0c9a96` — Back-to-basics calibration rebuild plan + CLAUDE.md auto-resume pointer (2026-05-01). (This block was updated to reflect the actual commit SHA in a follow-up commit.)
 - **Active phase:** Phase 0 — distribution audit.
 - **Active step within phase:** Audit fork in flight. The fork was launched via the Agent tool with a self-contained prompt that reads only `docs/scanner-catalog.md` + `docs/scan-bundles/*.json` (12 V1.2 bundles) + `docs/v12-wild-scan-telemetry.md`, and writes the new `docs/calibration-audit.md`. No code changes pending in main session.
 - **Next concrete action when audit completes:** Read `docs/calibration-audit.md` (do not duplicate the fork's reads — they're slow). Surface the topline finding to the owner. Do NOT start Phase 1 design authoring until the owner has reviewed the audit and confirmed direction (or course-corrected). Then move to Phase 1: write `docs/calibration-design-v2.md` per Phase 1 deliverable list above.
