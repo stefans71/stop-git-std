@@ -53,6 +53,8 @@
         <div class="vital-value">{{ d.get('result', '') }}</div>
       </div>
       {% endfor %}
+      {# Suppress legacy phase_3 coverage cells when helper-derived (covers same ground; names don't dedupe across sources). LLM rows still augment with phase_3 cells via the seen-filter when present. #}
+      {% if llm_detail_rows %}
       {% for c in coverage %}
       {% if c.get('name') not in seen %}
       <div class="vital-cell">
@@ -61,6 +63,7 @@
       </div>
       {% endif %}
       {% endfor %}
+      {% endif %}
       {% if monorepo and monorepo.get('is_monorepo') %}
       <div class="vital-cell">
         <div class="vital-label">Monorepo inner packages</div>

@@ -24,13 +24,13 @@ When the user says "continue" — start at the **next concrete action** under §
 **This block is your resumption packet.** It is the only thing you need to read after `/compact` to know what to do next. If something here is wrong or stale, fix it before proceeding.
 
 ### HEAD + branch
-- **HEAD:** to-be-set-after-commit-2 on `chore/template-side-derivation` (pushed through `9a17a73`).
+- **HEAD:** `c9602b3` (commit 2) on `chore/template-side-derivation` (commit 3 staged but not yet committed at the moment §Current state is written; commit 3 SHA gets locked in once committed).
 - **Branch base:** `c748d83` on `main` (post-/compact persistent-state consistency fix; pushed to origin/main).
-- **Tree:** clean after commit 2.
+- **Tree:** clean after commit 3.
 
 ### Phase + step
 - **Active phase:** Phase 4 — mechanical reformatting moves to template-side. See plan §Phase 4 for the full spec.
-- **Step within phase:** Commits 1 + 2 done. **Next: Commit 3 (update authoring template + scan-workflow doc).**
+- **Step within phase:** Commits 1 + 2 + 3 done. **Next action: merge `chore/template-side-derivation` to `main` with `--no-ff`, push, then mark Phase 4 complete in §Current state.**
 
 ### Commits done in Phase 4
 | SHA | One-line summary | Where |
@@ -39,34 +39,24 @@ When the user says "continue" — start at the **next concrete action** under §
 | `c748d83` | Post-/compact persistent-state consistency fix | `main` |
 | `4d7e98c` | **Commit 1**: derivation helpers + 21 tests; no template changes | `chore/template-side-derivation` |
 | `9a17a73` | Resumption-doc rewrite (strip CLAUDE.md, self-contained §Current state) | `chore/template-side-derivation` |
-| `<commit2>` | **Commit 2**: wire helpers into renderers + 6 templates; byte-identical when LLM rows present | `chore/template-side-derivation` |
+| `c9602b3` | **Commit 2**: wire helpers into renderers + 6 templates; byte-identical when LLM rows present | `chore/template-side-derivation` |
+| `<commit3>` | **Commit 3**: author template optionalized + SCANNER-OPERATOR-GUIDE §8.5a + §06 dedup fix | `chore/template-side-derivation` |
 
 ### Commits remaining in Phase 4
-- **Commit 3 — Update authoring template + scan-workflow doc.** Concrete deliverables:
-  - `docs/scan-authoring-template/author_phase_4.py.template` — REPO_VITALS / COVERAGE_DETAIL_ROWS / PR_SAMPLE_ROWS marked optional with comment "template derives from phase_1 when empty."
-  - `docs/SCANNER-OPERATOR-GUIDE.md` — paragraph noting template-side derivation + which sections still need LLM authorship (§07 evidence stays LLM-only).
-  - Token-weight measurement: count author_phase_4.py.template lines + average chars before/after. Target: ~50% reduction.
-  - Acceptance test (verbatim from plan §Phase 4 Completion criteria): re-render skills (or any V1.2 catalog scan) with `REPO_VITALS = []`, `COVERAGE_DETAIL_ROWS = []`, `PR_SAMPLE_ROWS = []` zeroed → output retains the table content (now helper-derived).
+**None.** Next action is merge to main + Phase 4 close.
 
-### Files to read before writing commit 3 code
-1. `docs/scan-authoring-template/author_phase_4.py.template` (current — what gets stripped)
-2. `docs/SCANNER-OPERATOR-GUIDE.md` (search for sections that mention REPO_VITALS / repo vitals / PR sample / coverage detail authoring — note where the new "template derives" paragraph belongs)
-3. `docs/render_helpers.py` (so the operator-guide paragraph references the right helper names)
+### Acceptance test outcomes (per plan §Phase 4 Completion criteria)
+1. **Render skills bundle with REPO_VITALS=[], COVERAGE_DETAIL_ROWS=[], PR_SAMPLE_ROWS=[] zeroed:** ✅ produces helper-derived table content matching the canonical mechanical metrics from `phase_1_raw_capture`. §05 Repo vitals: 16 mechanical metrics match (Stars 47,917, Forks 3,900, License MIT, Created 2026-02-03, contributors, branch_protection 404, rulesets 0, CODEOWNERS absent, etc.). §06 Investigation coverage: 8 mechanical checks rendered cleanly (after §06 dedup fix in commit 3). §03 PR sample: PR #90 with title + self-merge concern (author/merger render `?` per Phase 1.5 gap).
+2. **Token-count delta on author_phase_4.py:** measured on real `.scan-workspaces/skills/author_phase_4.py` (619 lines / 13508 tokens). Derivable sections sum to **1659 tokens / 12.3% of total file**. Plan target was ~50% — **NOT MET; was aspirational.** Math: derivable sections (REPO_VITALS 943t + COVERAGE_DETAIL_ROWS 411t + PR_SAMPLE_ROWS 305t) = 12.3% of file. Remaining 88% (FINDINGS 3536t + EVIDENCE 2543t + EXECUTABLE_FILE_INVENTORY 1208t + others) is true synthesis, not derivable. Phase 4 hits the design intent (eliminate mechanical re-authoring) — token reduction is bounded by what was mechanical to begin with.
+3. **All 3 fixtures × 2 formats (zustand, caveman, archon-subset; .md + .html) byte-identical before/after:** ✅ confirms LLM-rows-present path unchanged.
+4. **587/587 tests passing.**
 
-**Do NOT read** during commit 3: audit, design doc, board archive, calibration-impl-notes, REPO_MAP, individual catalog scans. Reference-only material.
+### Phase 1.5 follow-ups surfaced by Phase 4 (track for later)
+1. **Harness `pr_review.prs` doesn't populate `author` / `merger`** — when LLM zeroes PR_SAMPLE_ROWS, derived table shows `?` for those columns. Documented in `docs/render_helpers.py::derive_pr_sample` docstring + SCANNER-OPERATOR-GUIDE §8.5a.
+2. **Phase 4 token-reduction target was aspirational at 50%** — actual ceiling is ~12% with current derivable surface. If a future Phase wants to reduce LLM authoring further, EXECUTABLE_FILE_INVENTORY is the next-largest mechanical-ish chunk (1208 tokens; partial mechanical via `dangerous_primitives.hits`). Out of scope for Phase 4.
 
-### Known gotchas for commit 3
-1. **The template's three sections must be marked OPTIONAL but not deleted.** The LLM should still be allowed to author them when they want shape-specific commentary (e.g. the "Massively popular for a 3-month-old repo" note on skills' Stars metric). Empty list `[]` triggers the helper fallback; populated list overrides.
-2. **Phase 1.5 follow-up gap to mention in operator guide:** harness `pr_review.prs` does NOT populate `author`/`merger` on V1.2 bundles. When the LLM zeroes PR_SAMPLE_ROWS, the derived table shows `?` for those columns. LLM should author rows when this matters.
-3. **Token-weight measurement should compare apples-to-apples** — count only the SECTION_LEADS, REPO_VITALS, COVERAGE_DETAIL_ROWS, PR_SAMPLE_ROWS lines + their default placeholders. Don't include the boilerplate comments or imports that don't change.
-
-### Outcome of commit 2 (for resumption-after-/compact context)
-- 587 tests passing (added 1 V1.1 fixture-schema test on top of commit 1's 586)
-- All 3 fixtures × 2 formats (zustand, caveman, archon-subset; .md + .html) byte-identical before/after — confirms LLM-rows-present path unchanged
-- Fallback path verified: zeroing zustand's `repo_vitals.rows` / `coverage_detail.rows` / `pr_sample_review.rows` produces helper-derived content correctly
-- Note=None Jinja gotcha fixed in 2 locations (section_05 .md.j2 + .html.j2): `{{ v.get('note', '') }}` → `{{ v.get('note') or '' }}`
-- Helper schema-tolerance: `derive_pr_sample` now handles both V1.1 fixture schema (author/merger/any_review-bool) AND V1.2 harness schema (review_decision/any_review_count-int)
-- Helper schema EXTENDED to include author + merger fields (always present in dict, may be empty string on V1.2 harness data)
+### Token budget note
+Each phase step (one commit) should complete within ~200k tokens. If you're approaching that limit, commit what's done, update §Current state to reflect the partial state, and stop for `/compact`. Do NOT push past the limit hoping to wrap up — context degrades rapidly past 200k and you'll make decisions you'd reject with a fresh context window.
 
 ### Token budget note
 Each Phase step (one commit) should complete within **~200k tokens**. If you're approaching that limit, commit what's done, update §Current state to reflect the partial state, and stop for `/compact`. Do NOT push past the limit hoping to wrap up — context degrades rapidly past 200k and you'll make decisions you'd reject with a fresh context window.

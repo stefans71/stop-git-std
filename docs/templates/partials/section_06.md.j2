@@ -20,11 +20,14 @@
 | {{ d.get('check', '') }} | {{ d.get('result', '') }} |
 {% set _ = seen.append(d.get('check')) %}
 {% endfor %}
+{# Suppress legacy phase_3 coverage cells when helper-derived (covers same ground; names don't dedupe across sources). LLM rows still augment with phase_3 cells via the seen-filter when present. #}
+{% if llm_detail %}
 {% for c in coverage %}
 {% if c.get('name') not in seen %}
 | {{ c.name }} | {{ status_icon.get(c.get('status', 'unknown'), '⚠') }} {{ c.get('detail', '') }} |
 {% endif %}
 {% endfor %}
+{% endif %}
 {% if monorepo and monorepo.get('is_monorepo') %}
 | Monorepo coverage | {{ monorepo.get('inner_package_count', 0) }} inner packages{% if monorepo.get('sampled_inner_packages') %} ({{ monorepo.sampled_inner_packages | length }} sampled: {{ monorepo.sampled_inner_packages | join(', ') }}){% endif %} · lifecycle hits: {{ monorepo.get('lifecycle_script_hits', 0) }} |
 {% endif %}
