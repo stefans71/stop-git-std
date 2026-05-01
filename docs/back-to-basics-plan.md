@@ -21,11 +21,11 @@ When the user says "continue" — start at the **next concrete action** under §
 
 ## § Current state (UPDATE AT EACH COMMIT — single source of truth)
 
-- **Last commit landing this plan:** TBD on this commit (Phase 0 completion + audit doc landing).
-- **Active phase:** Phase 0 — **COMPLETE**. Phase 1 not yet started; awaiting owner review of audit.
-- **Active step within phase:** N/A. Phase 0 deliverable `docs/calibration-audit.md` (274 lines, 10 sections) is committed.
-- **Next concrete action:** owner reads `docs/calibration-audit.md` (especially §9 cross-shape observations + §10 recommended rule-table changes). When owner gives thumbs-up to proceed, START PHASE 1: write `docs/calibration-design-v2.md` per Phase 1 deliverable list above. The audit's §10 rule proposals (RULE-1 through RULE-N) are the seed for the Phase 1 design — but the design is broader (shape-classifier signature, new cell language for all colors, migration plan).
-- **Blocked on:** owner review of `docs/calibration-audit.md` + green-light to start Phase 1 design.
+- **Last commit landing this plan:** TBD on the next commit (Phase 1 design landing).
+- **Active phase:** Phase 1 — **COMPLETE (design doc written)**. Phase 2 board review not yet started; awaiting owner review of the design doc.
+- **Active step within phase:** N/A. Phase 1 deliverable `docs/calibration-design-v2.md` is committed.
+- **Next concrete action:** owner reviews `docs/calibration-design-v2.md`. When owner gives thumbs-up (or course-corrects), START PHASE 2: write `.board-review-temp/calibration-rebuild/r1-brief.md` and launch the 3-model FrontierBoard (Pragmatist Sonnet via Agent tool, Codex via sudo -u llmuser, DeepSeek via qwen). Brief must inline the design doc's 9 open questions (§9) verbatim plus the empirical baseline from the audit (cite, don't duplicate).
+- **Blocked on:** owner review of `docs/calibration-design-v2.md` + green-light to convene the board.
 - **Audit topline (so a future session can resume without re-reading the audit doc):**
   - Dominant pattern: "OSS minimal-governance default" — 6 of 12 V1.2 scans hit (no protection + 0 rulesets + no CODEOWNERS + low formal review). 3 of those 6 are Caution, 3 are Critical → **Q1=red is NOT verdict-discriminating in current data.**
   - Q3 is similarly decoupled: every Q3=red scan has identical signals, but 2 of 6 Q3=red scans are Caution (skills + QuickLook — both cases where disclosure-machinery absence is proportional to project age/maturity).
