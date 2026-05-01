@@ -916,14 +916,20 @@
       "does_anyone_check_the_code": {
         "color": "red",
         "short_answer": "No",
+        "rule_id": "FALLBACK",
+        "auto_fire": false,
+        "short_answer_template_key": "q1.red.no_governance",
+        "template_vars": {
+          "formal": 0.0
+        },
         "signals": [
           {
             "id": "q1_formal_review_rate",
-            "value": 0
+            "value": 0.0
           },
           {
             "id": "q1_any_review_rate",
-            "value": 0
+            "value": 0.0
           },
           {
             "id": "q1_has_branch_protection",
@@ -940,16 +946,16 @@
           {
             "id": "q1_is_solo_maintainer",
             "value": false
-          },
-          {
-            "id": "q1_governance_floor_override",
-            "value": true
           }
         ]
       },
       "do_they_fix_problems_quickly": {
         "color": "green",
         "short_answer": "Yes",
+        "rule_id": "FALLBACK",
+        "auto_fire": false,
+        "short_answer_template_key": "q2.green.no_open",
+        "template_vars": {},
         "signals": [
           {
             "id": "q2_open_security_issue_count",
@@ -972,6 +978,10 @@
       "do_they_tell_you_about_problems": {
         "color": "red",
         "short_answer": "No",
+        "rule_id": "FALLBACK",
+        "auto_fire": false,
+        "short_answer_template_key": "q3.red.no_disclosure",
+        "template_vars": {},
         "signals": [
           {
             "id": "q3_has_security_policy",
@@ -994,6 +1004,12 @@
       "is_it_safe_out_of_the_box": {
         "color": "amber",
         "short_answer": "Partly",
+        "rule_id": "FALLBACK",
+        "auto_fire": false,
+        "short_answer_template_key": "q4.amber.install_warns",
+        "template_vars": {
+          "trust_qualifier": "install path has friction signals"
+        },
         "signals": [
           {
             "id": "q4_all_channels_pinned",
@@ -1013,6 +1029,14 @@
           }
         ]
       }
+    },
+    "shape_classification": {
+      "category": "desktop-application",
+      "is_reverse_engineered": false,
+      "is_privileged_tool": true,
+      "is_solo_maintained": false,
+      "confidence": "high",
+      "matched_rule": "desktop topic (terminal/extension/quicklook/etc.)"
     }
   },
   "phase_4_structured_llm": {

@@ -251,34 +251,34 @@ Sample: the 50 most recent merged PRs at scan time, plus flagged PRs. Dual revie
 | Metric | Value | Note |
 |--------|-------|------|
 | Stars | 37,309 | High-visibility network-tool |
-| Forks | — | None |
+| Forks | — |  |
 | Open issues | 42 | 0 security-tagged |
 | Open PRs | 24 | 1 security-keyword (PR #5640, 77 days old) |
-| Primary language | Go | None |
-| License | MPL-2.0 | None |
+| Primary language | Go |  |
+| License | MPL-2.0 |  |
 | Created | 2020-11-09 | ~5.5 years |
 | Last pushed | 2026-04-20 | Active (scan date) |
-| Default branch | main | None |
+| Default branch | main |  |
 | Total contributors | 100 | RPRX lead ~31%; dependabot[bot] 2nd |
 | Formal releases | 100 | v26.4.17 @ 2026-04-17 latest |
 | Release cadence | ~18/year | Very active |
 | Release integrity | .dgst (MD5+SHA1+SHA256+SHA512) | No GPG / Sigstore / SLSA |
-| Classic branch protection | OFF (HTTP 404) | None |
-| Rulesets | 0 | None |
-| Rules on default branch | 0 | None |
-| CODEOWNERS | Absent | None |
+| Classic branch protection | OFF (HTTP 404) |  |
+| Rulesets | 0 |  |
+| Rules on default branch | 0 |  |
+| CODEOWNERS | Absent |  |
 | SECURITY.md | Present | Private advisory channel documented |
-| CONTRIBUTING | Absent | None |
-| Community health | 62% | None |
+| CONTRIBUTING | Absent |  |
+| Community health | 62% |  |
 | Workflows | 10 | CI + release + Docker + Dependabot + Copilot review |
-| pull_request_target usage | 0 | None |
-| CodeQL SAST | Absent | None |
+| pull_request_target usage | 0 |  |
+| CodeQL SAST | Absent |  |
 | Dependabot | Enabled (gomod + github-actions) | Daily polling |
-| PR formal review rate (300 sample) | 2.3% | None |
-| PR any-review rate (300 sample) | 7.7% | None |
+| PR formal review rate (300 sample) | 2.3% |  |
+| PR any-review rate (300 sample) | 7.7% |  |
 | Self-merge count (300 sample) | 7 (2.3%) | Low self-merge — most PRs from contributors |
 | Published security advisories | 0 | 5.5 years, zero advisories |
-| Open security issues | 0 | None |
+| Open security issues | 0 |  |
 | OSSF Scorecard | 5.1/10 | Indexed |
 | Runtime Go deps | Not parsed | Harness gap — F5 |
 | Primary distribution | GitHub Releases (60+ platforms) + Homebrew | Harness didn't inventory the 60-binary release surface |

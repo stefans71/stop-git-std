@@ -2689,14 +2689,20 @@
       "does_anyone_check_the_code": {
         "color": "red",
         "short_answer": "No",
+        "rule_id": "FALLBACK",
+        "auto_fire": false,
+        "short_answer_template_key": "q1.red.no_governance",
+        "template_vars": {
+          "formal": 0.0
+        },
         "signals": [
           {
             "id": "q1_formal_review_rate",
-            "value": 0
+            "value": null
           },
           {
             "id": "q1_any_review_rate",
-            "value": 0
+            "value": null
           },
           {
             "id": "q1_has_branch_protection",
@@ -2713,16 +2719,19 @@
           {
             "id": "q1_is_solo_maintainer",
             "value": false
-          },
-          {
-            "id": "q1_governance_floor_override",
-            "value": true
           }
         ]
       },
       "do_they_fix_problems_quickly": {
         "color": "red",
         "short_answer": "No",
+        "rule_id": "FALLBACK",
+        "auto_fire": false,
+        "short_answer_template_key": "q2.red.many_open_or_old",
+        "template_vars": {
+          "open_security_issue_count": 0,
+          "cve_age": 65
+        },
         "signals": [
           {
             "id": "q2_open_security_issue_count",
@@ -2734,7 +2743,7 @@
           },
           {
             "id": "q2_oldest_open_security_item_age_days",
-            "value": 54
+            "value": 65
           },
           {
             "id": "q2_closed_fix_lag_days",
@@ -2745,6 +2754,10 @@
       "do_they_tell_you_about_problems": {
         "color": "red",
         "short_answer": "No",
+        "rule_id": "FALLBACK",
+        "auto_fire": false,
+        "short_answer_template_key": "q3.red.no_disclosure",
+        "template_vars": {},
         "signals": [
           {
             "id": "q3_has_security_policy",
@@ -2767,6 +2780,12 @@
       "is_it_safe_out_of_the_box": {
         "color": "amber",
         "short_answer": "Partly",
+        "rule_id": "FALLBACK",
+        "auto_fire": false,
+        "short_answer_template_key": "q4.amber.install_warns",
+        "template_vars": {
+          "trust_qualifier": "install path has friction signals"
+        },
         "signals": [
           {
             "id": "q4_all_channels_pinned",
@@ -2774,7 +2793,7 @@
           },
           {
             "id": "q4_artifact_verified",
-            "value": true
+            "value": false
           },
           {
             "id": "q4_has_critical_on_default_path",
@@ -2786,6 +2805,14 @@
           }
         ]
       }
+    },
+    "shape_classification": {
+      "category": "library-package",
+      "is_reverse_engineered": true,
+      "is_privileged_tool": false,
+      "is_solo_maintained": false,
+      "confidence": "medium",
+      "matched_rule": "publishable manifest, library-canonical shape"
     }
   },
   "phase_4_structured_llm": {

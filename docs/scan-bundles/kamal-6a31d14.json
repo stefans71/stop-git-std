@@ -3034,6 +3034,12 @@
       "does_anyone_check_the_code": {
         "color": "red",
         "short_answer": "No",
+        "rule_id": "FALLBACK",
+        "auto_fire": false,
+        "short_answer_template_key": "q1.red.no_governance",
+        "template_vars": {
+          "any_review_rate": 18.7
+        },
         "signals": [
           {
             "id": "q1_formal_review_rate",
@@ -3048,22 +3054,26 @@
             "value": false
           },
           {
+            "id": "q1_has_ruleset_protection",
+            "value": true
+          },
+          {
             "id": "q1_has_codeowners",
             "value": false
           },
           {
             "id": "q1_is_solo_maintainer",
             "value": false
-          },
-          {
-            "id": "q1_governance_floor_override",
-            "value": true
           }
         ]
       },
       "do_they_fix_problems_quickly": {
         "color": "green",
         "short_answer": "Yes",
+        "rule_id": "FALLBACK",
+        "auto_fire": false,
+        "short_answer_template_key": "q2.green.no_open",
+        "template_vars": {},
         "signals": [
           {
             "id": "q2_open_security_issue_count",
@@ -3074,14 +3084,22 @@
             "value": null
           },
           {
+            "id": "q2_oldest_open_security_item_age_days",
+            "value": null
+          },
+          {
             "id": "q2_closed_fix_lag_days",
             "value": null
           }
         ]
       },
       "do_they_tell_you_about_problems": {
-        "color": "amber",
-        "short_answer": "Partly",
+        "color": "red",
+        "short_answer": "No",
+        "rule_id": "FALLBACK",
+        "auto_fire": false,
+        "short_answer_template_key": "q3.red.no_disclosure",
+        "template_vars": {},
         "signals": [
           {
             "id": "q3_has_security_policy",
@@ -3089,7 +3107,7 @@
           },
           {
             "id": "q3_has_contributing_guide",
-            "value": true
+            "value": false
           },
           {
             "id": "q3_published_advisory_count",
@@ -3104,6 +3122,12 @@
       "is_it_safe_out_of_the_box": {
         "color": "amber",
         "short_answer": "Partly",
+        "rule_id": "FALLBACK",
+        "auto_fire": false,
+        "short_answer_template_key": "q4.amber.install_warns",
+        "template_vars": {
+          "trust_qualifier": "install path has friction signals"
+        },
         "signals": [
           {
             "id": "q4_all_channels_pinned",
@@ -3123,6 +3147,14 @@
           }
         ]
       }
+    },
+    "shape_classification": {
+      "category": "cli-binary",
+      "is_reverse_engineered": false,
+      "is_privileged_tool": false,
+      "is_solo_maintained": false,
+      "confidence": "high",
+      "matched_rule": "ruby + >=5 releases + publishable manifest"
     }
   },
   "phase_4_structured_llm": {

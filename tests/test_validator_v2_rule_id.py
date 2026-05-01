@@ -27,8 +27,28 @@ def _minimal_v12_form() -> dict:
     """Load a real V1.2 bundle as a baseline + return as new dict for mutation.
     Using a real bundle ensures we get all V1.2-required top-level fields
     (schema_version, _meta, target, phase_2_validation, phase_6_assembly, etc.)
-    without re-implementing the full schema in test fixtures."""
-    return json.loads(_TEMPLATE_BUNDLE.read_text())
+    without re-implementing the full schema in test fixtures.
+
+    Phase 5 (back-to-basics-plan) promoted scan-bundles to v2 (added
+    shape_classification + per-cell rule_id; advisory colors recomputed by
+    compute_scorecard_cells_v2 may differ from phase_4 LLM colors).
+    This function normalizes the loaded bundle back to a pre-v2 minimal
+    state so test scaffolding is independent of bundle migrations:
+      1. Strip shape_classification + per-cell rule_id/auto_fire/template_*
+      2. Force advisory colors to match phase_4 LLM colors (no override
+         needed → gate 6.3 passes by construction)."""
+    form = json.loads(_TEMPLATE_BUNDLE.read_text())
+    p3a = form.get("phase_3_advisory", {})
+    p3a.pop("shape_classification", None)
+    p4_cells = form.get("phase_4_structured_llm", {}).get("scorecard_cells", {})
+    for key, hint in p3a.get("scorecard_hints", {}).items():
+        hint.pop("rule_id", None)
+        hint.pop("auto_fire", None)
+        hint.pop("short_answer_template_key", None)
+        hint.pop("template_vars", None)
+        if key in p4_cells:
+            hint["color"] = p4_cells[key].get("color", hint.get("color"))
+    return form
 
 
 def _v2_shape_classification() -> dict:

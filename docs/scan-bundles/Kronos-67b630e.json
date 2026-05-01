@@ -1205,10 +1205,16 @@
       "does_anyone_check_the_code": {
         "color": "red",
         "short_answer": "No",
+        "rule_id": "FALLBACK",
+        "auto_fire": false,
+        "short_answer_template_key": "q1.red.no_governance",
+        "template_vars": {
+          "formal": 0.0
+        },
         "signals": [
           {
             "id": "q1_formal_review_rate",
-            "value": 0
+            "value": 0.0
           },
           {
             "id": "q1_any_review_rate",
@@ -1219,22 +1225,29 @@
             "value": false
           },
           {
+            "id": "q1_has_ruleset_protection",
+            "value": false
+          },
+          {
             "id": "q1_has_codeowners",
             "value": false
           },
           {
             "id": "q1_is_solo_maintainer",
             "value": false
-          },
-          {
-            "id": "q1_governance_floor_override",
-            "value": true
           }
         ]
       },
       "do_they_fix_problems_quickly": {
-        "color": "amber",
-        "short_answer": "Partly",
+        "color": "red",
+        "short_answer": "No",
+        "rule_id": "FALLBACK",
+        "auto_fire": false,
+        "short_answer_template_key": "q2.red.many_open_or_old",
+        "template_vars": {
+          "open_security_issue_count": 1,
+          "cve_age": 106
+        },
         "signals": [
           {
             "id": "q2_open_security_issue_count",
@@ -1245,6 +1258,10 @@
             "value": null
           },
           {
+            "id": "q2_oldest_open_security_item_age_days",
+            "value": 106
+          },
+          {
             "id": "q2_closed_fix_lag_days",
             "value": null
           }
@@ -1253,6 +1270,10 @@
       "do_they_tell_you_about_problems": {
         "color": "red",
         "short_answer": "No",
+        "rule_id": "FALLBACK",
+        "auto_fire": false,
+        "short_answer_template_key": "q3.red.no_disclosure",
+        "template_vars": {},
         "signals": [
           {
             "id": "q3_has_security_policy",
@@ -1275,6 +1296,12 @@
       "is_it_safe_out_of_the_box": {
         "color": "amber",
         "short_answer": "Partly",
+        "rule_id": "FALLBACK",
+        "auto_fire": false,
+        "short_answer_template_key": "q4.amber.install_warns",
+        "template_vars": {
+          "trust_qualifier": "install path has friction signals"
+        },
         "signals": [
           {
             "id": "q4_all_channels_pinned",
@@ -1294,6 +1321,14 @@
           }
         ]
       }
+    },
+    "shape_classification": {
+      "category": "specialized-domain-tool",
+      "is_reverse_engineered": false,
+      "is_privileged_tool": false,
+      "is_solo_maintained": false,
+      "confidence": "medium",
+      "matched_rule": "Python + no exec/release/publish-manifest (research/ML shape)"
     }
   },
   "phase_4_structured_llm": {

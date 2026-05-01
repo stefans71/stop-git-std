@@ -251,32 +251,32 @@ Sample: the 50 most recent merged PRs at scan time, plus flagged PRs. Dual revie
 
 | Metric | Value | Note |
 |--------|-------|------|
-| Stars | 23,083 | None |
+| Stars | 23,083 |  |
 | Open issues | 187 | 0 security-tagged |
 | Open PRs | 3 | All 3 authored by app/copilot-swe-agent |
 | Primary language | C# | First C# V1.2 entry |
-| License | GPL-3.0 | None |
+| License | GPL-3.0 |  |
 | Created | 2017-04-12 | ~9 years |
 | Last pushed | 2026-04-17 | Active |
-| Default branch | master | None |
+| Default branch | master |  |
 | Total contributors | 81 | Top-2 (xupefei + emako) ~94% of top-6 |
 | Formal releases | 56 | 4.5.0 @ 2026-04-14 latest semver |
 | `latest` tag date | 2024-12-06 | Stale — not moved since Dec 2024 despite 4.5.0 shipping — F4 |
 | Plugins (untrusted parsers) | 21 | Archive/PE/ELF/Office/PDF/Mail/Image/Video + more — F0 |
-| Classic branch protection | OFF (HTTP 404) | None |
-| Rulesets | 0 | None |
-| Rules on default branch | 0 | None |
-| CODEOWNERS | Absent | None |
+| Classic branch protection | OFF (HTTP 404) |  |
+| Rulesets | 0 |  |
+| Rules on default branch | 0 |  |
+| CODEOWNERS | Absent |  |
 | SECURITY.md | Absent | Parser-heavy tool, 9 years |
-| CONTRIBUTING | Absent | None |
-| Community health | 50% | None |
+| CONTRIBUTING | Absent |  |
+| Community health | 50% |  |
 | Workflows | 4 | msbuild + Copilot review + Copilot SWE + Dependabot |
-| pull_request_target usage | 0 | None |
-| CodeQL SAST | Absent | None |
+| pull_request_target usage | 0 |  |
+| CodeQL SAST | Absent |  |
 | Dependabot config | Runs (workflow present); no dependabot.yml in repo | Likely enabled via repo settings |
 | PR formal review rate | 5.1% | 137-PR sample |
-| PR any-review rate | 25.5% | None |
-| Self-merge count | 5 (3.6%) | None |
+| PR any-review rate | 25.5% |  |
+| Self-merge count | 5 (3.6%) |  |
 | Published security advisories | 0 | 9 years, zero |
 | OSSF Scorecard | 4.1/10 | Indexed |
 | NuGet deps | Not parsed | .csproj parsing not implemented — F6 |

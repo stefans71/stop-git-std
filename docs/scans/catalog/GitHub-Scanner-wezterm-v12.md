@@ -242,36 +242,36 @@ Sample: the 50 most recent merged PRs at scan time, plus flagged PRs. Dual revie
 | Metric | Value | Note |
 |--------|-------|------|
 | Stars | 25,643 | Widely adopted |
-| Forks | — | None |
+| Forks | — |  |
 | Open issues | 1,452 | Large backlog; 1 security-tagged (FP per E8) |
 | Open PRs | 237 | 0 security-keyword |
 | Primary language | Rust | First Rust V1.2 entry |
 | License | NOASSERTION (custom) | GitHub couldn't classify; repo has LICENSE.md |
 | Created | 2018-02-07 | ~8 years old |
 | Last pushed | 2026-04-01 | Main is active |
-| Default branch | main | None |
+| Default branch | main |  |
 | Total contributors | 100 | Top-1 share 97.2% (wez) |
 | Solo-maintainer flag | TRUE | 97.2% > 80% threshold |
 | Formal releases | 64 | Date-based tags (YYYYMMDD-HHMMSS-SHA) |
 | Latest release | 20240203-110809-5046fc22 (2024-02-03) | 807 days before scan |
 | Release cadence | STALLED 26 months | Prior cadence ~60 days |
-| Classic branch protection | OFF (HTTP 404) | None |
-| Rulesets | 0 | None |
-| Rules on default branch | 0 | None |
-| CODEOWNERS | Absent | None |
+| Classic branch protection | OFF (HTTP 404) |  |
+| Rulesets | 0 |  |
+| Rules on default branch | 0 |  |
+| CODEOWNERS | Absent |  |
 | SECURITY.md | Absent | Privileged tool |
-| CONTRIBUTING | Present | None |
-| Community health | 62% | None |
+| CONTRIBUTING | Present |  |
+| Community health | 62% |  |
 | Workflows | 30 | Multi-platform CI: Linux/macOS/Windows continuous + tag builds |
-| pull_request_target usage | 0 | None |
-| CodeQL SAST | Absent | None |
+| pull_request_target usage | 0 |  |
+| CodeQL SAST | Absent |  |
 | Dependabot | Enabled (github-actions only) | Cargo/crates.io NOT tracked — F3 |
-| PR formal review rate (300 sample) | 3.3% | None |
+| PR formal review rate (300 sample) | 3.3% |  |
 | PR any-review rate (300 sample) | 32.7% | Community comments are substantial |
 | Self-merge count (300 sample) | 6 (2.0%) | Low self-merge; wez merges external PRs |
 | Published security advisories | 0 | 8 years, zero advisories |
 | Open security issues | 1 (FP per E8) | Winget installer Defender false-positive |
-| OSSF Scorecard | Not indexed | None |
+| OSSF Scorecard | Not indexed |  |
 | Cargo workspace | 70+ sub-crates | Harness misinterpreted as 70+ channels — F5 |
 | osv.dev vulns | Not checked | Cargo parsing not implemented — F5 |
 | Primary distribution | GitHub Releases binaries + homebrew + winget + distro | Last release 2-years-old |

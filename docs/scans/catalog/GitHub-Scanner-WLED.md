@@ -311,27 +311,27 @@ Sample: the 50 most recent merged PRs at scan time, plus flagged PRs. Dual revie
 | License | EUPL-1.2 | European Union Public Licence |
 | Created | 2016-12-20 | ~9 years |
 | Last pushed | 2026-04-20 | Day of scan |
-| Default branch | main | None |
-| Repo size | ~70 MB | None |
-| Total contributors | 100 | None |
+| Default branch | main |  |
+| Repo size | ~70 MB |  |
+| Total contributors | 100 |  |
 | Top contributor | blazoncek 46.0% | Not solo; dispersed |
 | Org owner | wled (org) | Transferred from Aircoookie 2025-01-31 |
 | Solo-maintainer flag | FALSE | 46.0% < 80% threshold |
 | Formal releases | 68 | Stable v0.15.4 + v16.0.0-beta + nightly |
 | Latest stable release | v0.15.4 (2026-03-14) | 36 days before scan |
 | Latest prerelease | v16.0.0-beta (2026-04-11) | 9 days before scan |
-| Classic branch protection | OFF (HTTP 404) | None |
+| Classic branch protection | OFF (HTTP 404) |  |
 | Rulesets | 1 | Anti-destruction only — F3 |
 | Rules on default branch | 2 | deletion + non_fast_forward |
-| CODEOWNERS | Absent | None |
+| CODEOWNERS | Absent |  |
 | SECURITY.md | Absent | 9 years; F4 |
-| CONTRIBUTING | Present | None |
-| CODE_OF_CONDUCT | Present | None |
-| Community health | 75% | None |
+| CONTRIBUTING | Present |  |
+| CODE_OF_CONDUCT | Present |  |
+| Community health | 75% |  |
 | Workflows | 12 | Includes CodeQL + Copilot SWE agent + Copilot review + Dependabot |
 | pull_request_target usage | 1 | pr-merge.yaml (on closed events) — F2 |
 | SHA-pinned actions | 0 | All 8 workflows tag-pinned only |
-| Tag-pinned actions | 25 | None |
+| Tag-pinned actions | 25 |  |
 | Dependabot config (.yml) | Absent | But Dependabot workflow active (default behavior) |
 | PR formal review rate (50 sample) | 38% | Second-highest in V1.2 catalog (after kanata 44%) |
 | PR any-review rate (50 sample) | 86% | HIGHEST in V1.2 catalog |
@@ -340,7 +340,7 @@ Sample: the 50 most recent merged PRs at scan time, plus flagged PRs. Dual revie
 | Open security issues | 1 | #5340 — 76 days old (F0) |
 | Open private GHSA | GHSA-2xwq-cxqw-wfv8 (referenced in #5340) | Status unknown — F0 |
 | Python build-time deps | 29 | 73 OSV vulns across 9 packages — F5 |
-| OSSF Scorecard | Not indexed | None |
+| OSSF Scorecard | Not indexed |  |
 | Primary distribution | install.wled.me (WebSerial) + GitHub Releases .bin + WLED iOS/Android apps | Harness detected ghostly 'npm-wled' — F6 |
 
 ---

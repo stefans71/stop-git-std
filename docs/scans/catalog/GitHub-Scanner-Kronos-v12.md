@@ -262,24 +262,24 @@ Sample: the 19 most recent merged PRs at scan time, plus flagged PRs. Dual revie
 | Metric | Value | Note |
 |--------|-------|------|
 | Stars | 19,724 | High-visibility research repo |
-| Forks | — | None |
+| Forks | — |  |
 | Open issues | 172 | 1 is a security issue (#216 pickle RCE) |
-| Primary language | Python | None |
-| License | MIT | None |
+| Primary language | Python |  |
+| License | MIT |  |
 | Created | 2025-07-01 | ~10 months old at scan |
-| Last pushed | 2026-04-13 | None |
-| Default branch | master | None |
+| Last pushed | 2026-04-13 |  |
+| Default branch | master |  |
 | Total contributors | 19 | Top-1 share 59% (shiyu-coder) |
 | Formal releases | 0 | Ships from master HEAD |
 | Latest release tag | — | No tags |
 | Open PRs | 25 | Including security-relevant fixes sitting 5-7 days |
-| Classic branch protection | OFF (HTTP 404) | None |
+| Classic branch protection | OFF (HTTP 404) |  |
 | Rulesets | 0 | No modern ruleset-based protection either |
-| CODEOWNERS | Absent | None |
-| SECURITY.md | Absent | None |
-| CONTRIBUTING | Absent | None |
+| CODEOWNERS | Absent |  |
+| SECURITY.md | Absent |  |
+| CONTRIBUTING | Absent |  |
 | Published security advisories | 0 | Despite open pickle RCE in #216 |
-| Dependabot config | Absent | None |
+| Dependabot config | Absent |  |
 | Workflows | 1 | Copilot PR reviewer only; no test CI |
 | PR formal review rate | 0.0% | 0 of 19 closed PRs had formal review |
 | PR any-review rate | 5.3% | 1 of 19 PRs (PR #224) |
