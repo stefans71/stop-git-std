@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>wled/WLED — Simple Report</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:;">
+<style>
+/* ═══════════════════════════════════════════════
+   stop-git-std SIMPLE REPORT — design system subset
+   Subset of docs/scanner-design-system.css for the
+   one-page consumer-facing report. Inlined at render
+   by docs/render-simple.py. ≤ 250 lines target.
+   ═══════════════════════════════════════════════ */
+:root {
+  --bg-void: #0a0a0c;
+  --bg-surface: #131316;
+  --bg-elevated: #1a1a1f;
+  --border: #32323c;
+  --border-subtle: #26262e;
+  --text-primary: #f0f0f4;
+  --text-secondary: #b0b0bc;
+  --text-muted: #7e7e8e;
+  --red-glow: #ff4545;
+  --red-dim: #ff454520;
+  --red-bg: #1a0f0f;
+  --amber-glow: #ffaa2a;
+  --amber-dim: #ffaa2a20;
+  --amber-bg: #1a150e;
+  --green-glow: #22c55e;
+  --green-dim: #22c55e20;
+  --green-bg: #0e1a12;
+  --cyan-glow: #06b6d4;
+  --cyan-dim: #06b6d420;
+  --font-mono: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-display: 'Unbounded', 'Inter', sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-sans);
+  background: var(--bg-void);
+  color: var(--text-primary);
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+
+/* Body chrome: noise texture + scanlines + single-pass cyan scan-sweep.
+   Iconic project chrome — signals "this is a security scan." */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    repeating-linear-gradient(to bottom,
+      rgba(255,255,255,0.008) 0px,
+      rgba(255,255,255,0.008) 1px,
+      transparent 1px,
+      transparent 3px),
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9999;
+}
+body::after {
+  content: '';
+  position: fixed; left: 0; right: 0; height: 2px;
+  background: linear-gradient(to right, transparent 5%, var(--cyan-glow) 30%, var(--cyan-glow) 70%, transparent 95%);
+  box-shadow: 0 0 12px var(--cyan-glow), 0 0 4px var(--cyan-glow);
+  pointer-events: none; z-index: 9998; opacity: 0.7;
+  animation: scan-sweep 3s ease-in-out 1s 1 forwards;
+}
+@keyframes scan-sweep {
+  0% { top: -2px; opacity: 0.7; }
+  90% { opacity: 0.5; }
+  100% { top: 100vh; opacity: 0; }
+}
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+a { color: var(--cyan-glow); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+.page { max-width: 880px; margin: 0 auto; padding: 0 1.25rem; position: relative; }
+
+/* ─── Hero (slim) ───────────────────────────────────────── */
+.hero { padding: 3rem 0 1.75rem; position: relative; }
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  font-family: var(--font-mono); font-size: 0.6875rem; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--text-muted); margin-bottom: 1.25rem;
+  padding: 0.375rem 0.75rem; border: 1px solid var(--border); border-radius: 0.375rem;
+  background: var(--bg-surface);
+}
+.hero-badge .dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--text-muted);
+}
+.hero-badge .dot.red { background: var(--red-glow); box-shadow: 0 0 8px var(--red-glow); animation: pulse 2s ease-in-out infinite; }
+.hero-badge .dot.amber { background: var(--amber-glow); box-shadow: 0 0 8px var(--amber-glow); animation: pulse 3s ease-in-out infinite; }
+.hero-badge .dot.green { background: var(--green-glow); box-shadow: 0 0 8px var(--green-glow); }
+.hero h1 {
+  font-family: var(--font-display); font-size: clamp(1.75rem, 4vw, 2.875rem);
+  font-weight: 800; letter-spacing: -0.035em; line-height: 1.1; margin-bottom: 0.875rem;
+}
+.hero h1 .slash { color: var(--text-muted); font-weight: 300; margin: 0 0.1em; font-size: 0.85em; }
+.hero h1 span.bad   { color: var(--red-glow); }
+.hero h1 span.warn  { color: var(--amber-glow); }
+.hero h1 span.good  { color: var(--green-glow); }
+.hero-meta {
+  font-family: var(--font-mono); font-size: 0.78rem; color: var(--text-secondary);
+  display: flex; flex-wrap: wrap; gap: 0.5rem 1.25rem;
+}
+.hero-meta .sep { color: var(--text-muted); }
+
+/* ─── Verdict banner ───────────────────────────────────── */
+.verdict-section { padding: 1.5rem 0 2rem; }
+.verdict-banner {
+  position: relative; overflow: hidden;
+  border-radius: 0; padding: 2rem 2.25rem;
+  border: 1px solid; border-left-width: 6px;
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%);
+}
+.verdict-banner.critical { background: linear-gradient(135deg, #1f0a0a 0%, #0a0a0c 100%); border-color: #ff454540; border-left-color: var(--red-glow); }
+.verdict-banner.caution  { background: linear-gradient(135deg, #1f1810 0%, #0a0a0c 100%); border-color: #ffaa2a40; border-left-color: var(--amber-glow); }
+.verdict-banner.clean    { background: linear-gradient(135deg, #0a1f14 0%, #0a0a0c 100%); border-color: #22c55e40; border-left-color: var(--green-glow); }
+.verdict-banner::before {
+  content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+  pointer-events: none;
+}
+.verdict-banner.critical::before { background: radial-gradient(circle at 20% 30%, #ff454510, transparent 55%); }
+.verdict-banner.caution::before  { background: radial-gradient(circle at 20% 30%, #ffaa2a12, transparent 55%); }
+.verdict-banner.clean::before    { background: radial-gradient(circle at 20% 30%, #22c55e10, transparent 55%); }
+
+.verdict-label {
+  font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.22em;
+  text-transform: uppercase; margin-bottom: 1rem; position: relative;
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  padding: 0.25rem 0.625rem; border-radius: 0.125rem;
+  border: 1px solid;
+}
+.verdict-banner.critical .verdict-label { color: var(--red-glow);   background: rgba(255,69,69,0.08); border-color: rgba(255,69,69,0.25); }
+.verdict-banner.caution  .verdict-label { color: var(--amber-glow); background: rgba(255,170,42,0.08); border-color: rgba(255,170,42,0.25); }
+.verdict-banner.clean    .verdict-label { color: var(--green-glow); background: rgba(34,197,94,0.08); border-color: rgba(34,197,94,0.25); }
+
+.verdict-headline {
+  font-family: var(--font-display); font-size: clamp(1.4rem, 2.8vw, 1.95rem);
+  font-weight: 600; line-height: 1.2; letter-spacing: -0.025em;
+  margin-bottom: 0.875rem; position: relative; max-width: 56ch;
+}
+.verdict-banner.critical .verdict-headline { color: var(--red-glow); }
+.verdict-banner.caution  .verdict-headline { color: #ff8c00; }
+.verdict-banner.clean    .verdict-headline { color: var(--green-glow); }
+.verdict-summary {
+  position: relative;
+  font-size: 0.95rem; line-height: 1.6;
+  color: var(--text-primary); max-width: 64ch;
+}
+
+/* ─── Scorecard sentence rows ──────────────────────────── */
+.scorecard { padding: 0 0 2.5rem; }
+.scorecard-title, .section-title {
+  font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.18em;
+  text-transform: uppercase; color: var(--cyan-glow); margin-bottom: 1rem;
+  padding-bottom: 0.5rem; border-bottom: 1px solid var(--border-subtle);
+}
+.sc-row {
+  display: grid; grid-template-columns: 2.25rem 1fr; gap: 0.875rem;
+  padding: 0.875rem 0; border-bottom: 1px solid var(--border-subtle);
+  align-items: start;
+}
+.sc-row:last-child { border-bottom: none; }
+.sc-glyph {
+  width: 2rem; height: 2rem; border-radius: 0.5rem;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-family: var(--font-mono); font-weight: 700; font-size: 0.95rem;
+  margin-top: 0.125rem;
+}
+.sc-row.red   .sc-glyph { background: var(--red-dim);   color: var(--red-glow); }
+.sc-row.amber .sc-glyph { background: var(--amber-dim); color: var(--amber-glow); }
+.sc-row.green .sc-glyph { background: var(--green-dim); color: var(--green-glow); }
+.sc-question {
+  font-family: var(--font-display); font-size: 1.05rem; font-weight: 600;
+  letter-spacing: -0.01em; line-height: 1.3; margin-bottom: 0.25rem;
+  color: var(--text-primary);
+}
+.sc-answer {
+  font-size: 0.9375rem; line-height: 1.55; color: var(--text-secondary);
+}
+.sc-row.red   .sc-answer .lead { color: var(--red-glow);   font-weight: 600; }
+.sc-row.amber .sc-answer .lead { color: var(--amber-glow); font-weight: 600; }
+.sc-row.green .sc-answer .lead { color: var(--green-glow); font-weight: 600; }
+
+/* ─── Top-3 findings stack ─────────────────────────────── */
+.findings { padding: 0 0 2.5rem; }
+.finding-card {
+  background: var(--bg-surface); border: 1px solid var(--border);
+  border-radius: 0.625rem; padding: 1.125rem 1.25rem; margin-bottom: 0.75rem;
+}
+.finding-card.critical { border-left: 3px solid var(--red-glow); }
+.finding-card.warning  { border-left: 3px solid var(--amber-glow); }
+.finding-card.info     { border-left: 3px solid var(--cyan-glow); }
+.finding-card.ok       { border-left: 3px solid var(--green-glow); }
+.finding-tag {
+  display: inline-block; font-family: var(--font-mono);
+  font-size: 0.625rem; letter-spacing: 0.1em; text-transform: uppercase;
+  padding: 0.1875rem 0.5rem; border-radius: 0.25rem;
+  margin-bottom: 0.5rem; font-weight: 600;
+}
+.finding-card.critical .finding-tag { background: var(--red-dim);   color: var(--red-glow); }
+.finding-card.warning  .finding-tag { background: var(--amber-dim); color: var(--amber-glow); }
+.finding-card.info     .finding-tag { background: var(--cyan-dim);  color: var(--cyan-glow); }
+.finding-card.ok       .finding-tag { background: var(--green-dim); color: var(--green-glow); }
+.finding-title {
+  font-family: var(--font-display); font-size: 1.0625rem; font-weight: 600;
+  letter-spacing: -0.01em; line-height: 1.3; margin-bottom: 0.5rem;
+  color: var(--text-primary);
+}
+.finding-body {
+  font-size: 0.9rem; line-height: 1.6; color: var(--text-secondary);
+}
+
+/* ─── Action card ──────────────────────────────────────── */
+.action { padding: 0 0 2.25rem; }
+.action-card {
+  padding: 1.5rem 1.75rem; border-radius: 0.625rem; border: 1px solid;
+}
+.action-card.stop       { background: var(--red-bg);   border-color: rgba(255,69,69,0.3); }
+.action-card.wait       { background: var(--amber-bg); border-color: rgba(255,170,42,0.3); }
+.action-card.ok-action  { background: var(--green-bg); border-color: rgba(34,197,94,0.3); }
+.action-headline {
+  font-family: var(--font-display); font-size: 1.125rem; font-weight: 600;
+  letter-spacing: -0.01em; line-height: 1.25; margin-bottom: 0.5rem;
+}
+.action-card.stop      .action-headline { color: var(--red-glow); }
+.action-card.wait      .action-headline { color: var(--amber-glow); }
+.action-card.ok-action .action-headline { color: var(--green-glow); }
+.action-body {
+  font-size: 0.9375rem; line-height: 1.6; color: var(--text-primary);
+}
+
+/* ─── Footer ───────────────────────────────────────────── */
+.footer {
+  padding: 2.25rem 0 2.5rem; margin-top: 1rem;
+  border-top: 1px solid var(--border-subtle);
+  text-align: center; font-size: 0.75rem; color: var(--text-muted);
+  font-family: var(--font-mono); letter-spacing: 0.04em;
+}
+.footer a { color: var(--text-secondary); }
+.footer .sep { margin: 0 0.5rem; color: var(--text-muted); opacity: 0.6; }
+
+/* ─── Responsive ───────────────────────────────────────── */
+@media (max-width: 640px) {
+  .hero { padding: 2rem 0 1.25rem; }
+  .verdict-banner { padding: 1.5rem 1.5rem 1.5rem 1.75rem; }
+  .hero h1 { font-size: 1.875rem; }
+  .verdict-headline { font-size: 1.4rem; }
+}
+
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="hero">
+    <div class="hero-badge">
+      <span class="dot red"></span>stop-git-std · simple report
+    </div>
+    <h1>wled<span class="slash">/</span><span class="bad">WLED</span></h1>
+    <div class="hero-meta">
+      <span>scanned 2026-04-20</span>
+      <span class="sep">·</span>
+      <span>main @ 01328a6</span>
+      <span class="sep">·</span><span>17,837 stars</span>
+      <span class="sep">·</span><span>EUPL-1.2</span>
+      <span class="sep">·</span><span>C++</span>
+    </div>
+  </div>
+
+  <div class="verdict-section">
+    <div class="verdict-banner critical">
+      <div class="verdict-label">● Critical</div>
+      <h2 class="verdict-headline">Don't install this — material risks identified.</h2>
+      <div class="verdict-summary">WLED — 17.8k-star ESP32 LED firmware, wled-org-owned, 100 contributors. Critical via F0: unresolved private GHSA-2xwq-cxqw-wfv8, 74 days silent after researcher's public complaint on issue #5340; 0.15.x backport unverified. F1 Warning: default-install has no auth, CORS wildcard, unauthenticated /reset — any same-LAN page can control the device. Positives: 38%/86% review rate, CodeQL + Copilot active.</div>
+    </div>
+  </div>
+
+  <div class="scorecard">
+    <div class="scorecard-title">Trust scorecard</div>
+    <div class="sc-row red">
+      <span class="sc-glyph">✗</span>
+      <div>
+        <div class="sc-question">Does anyone check the code?</div>
+        <div class="sc-answer"><span class="lead">No</span> — anti-destruction-only ruleset (no review rule) + no CODEOWNERS, despite strong 38% formal / 86% any-review culture</div>
+      </div>
+    </div>
+    <div class="sc-row red">
+      <span class="sc-glyph">✗</span>
+      <div>
+        <div class="sc-question">Do they fix problems quickly?</div>
+        <div class="sc-answer"><span class="lead">No</span> — unresolved GHSA-2xwq-cxqw-wfv8 with 74-day maintainer silence after public complaint (issue #5340); backport status unknown</div>
+      </div>
+    </div>
+    <div class="sc-row amber">
+      <span class="sc-glyph">⚠</span>
+      <div>
+        <div class="sc-question">Do they tell you about problems?</div>
+        <div class="sc-answer"><span class="lead">Partly</span> — CONTRIBUTING + CoC present (health 75%); no SECURITY.md; private-advisory permissions misconfigured per #5340 thread; 0 advisories in 9 years</div>
+      </div>
+    </div>
+    <div class="sc-row red">
+      <span class="sc-glyph">✗</span>
+      <div>
+        <div class="sc-question">Is it safe out of the box?</div>
+        <div class="sc-answer"><span class="lead">No</span> — default-install has no authentication; CORS wildcard on all origins/methods/headers; unauthenticated /reset (F1)</div>
+      </div>
+    </div>
+  </div>
+  <div class="findings">
+    <div class="section-title">Top concerns</div>
+    <div class="finding-card critical">
+      <span class="finding-tag">Critical</span>
+      <div class="finding-title">Unresolved private GHSA-2xwq-cxqw-wfv8 — researcher publicly reports maintainer non-response; 74 days silent since last comment; backport to 0.15.x publicly unconfirmed</div>
+      <div class="finding-body">A researcher documented both (a) substantive findings (at least one 'critical' per netmindz's own words) and (b) a disclosure-handling failure.</div>
+    </div>
+    <div class="finding-card warning">
+      <span class="finding-tag">Warning</span>
+      <div class="finding-title">Default-install WLED has NO authentication — CORS wildcard on all endpoints + unauthenticated `/reset` + optional-PIN OTA make any same-LAN webpage a control surface</div>
+      <div class="finding-body">A WLED device on your home WiFi, running factory defaults, can be controlled (read config, change settings, rebooted, potentially reflashed) by any webpage that anyone on the same LAN visits.</div>
+    </div>
+    <div class="finding-card warning">
+      <span class="finding-tag">Warning</span>
+      <div class="finding-title">Nightly deployment uses `andelf/nightly-release@main` (mutable ref); 0 SHA-pinned actions across 8 workflows; PR #5386 proposes fix but unmerged 60 days</div>
+      <div class="finding-body">The nightly firmware distribution channel (install.wled.me/nightly) is structurally dependent on the personal GitHub account of `andelf`.</div>
+    </div>
+  </div>
+
+  <div class="action">
+    <div class="section-title">What should I do?</div>
+    <div class="action-card stop">
+      <div class="action-headline">Don't install this.</div>
+      <div class="action-body">Pin to a specific WLED version only after reviewing the GHSA-2xwq-cxqw-wfv8 resolution in WLED's public changelog; do not expose an unupdated WLED device to untrusted networks.</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    stop-git-std<span class="sep">·</span>scanned 2026-04-20<span class="sep">·</span><a href="https://github.com/wled/WLED">wled/WLED</a>
+  </div>
+
+</div>
+</body>
+</html>
