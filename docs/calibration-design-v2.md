@@ -463,15 +463,25 @@ If projections hold: ~50% override reduction in this phase. Closer to the ~80% t
 
 ## §9 Open Questions for Board Review
 
+8 open questions for the board to weigh in on. (Originally 9 — Q7 below was decided by owner before the board convened; included here as DECIDED with rationale, board may flag if you disagree.)
+
 1. **Shape-as-modifier architectural call** — agree with §2 reasoning, or prefer lookup-key / scoring-dimension?
+
 2. **9-category enum scope** — too granular (collapse some)? too coarse (split some)? The 12-scan classification table in §3 is the empirical grounding.
-3. **RULE-3 keep-or-drop** — owner flagged as lower-confidence (n=2 mostly covered by RULE-1). Worth keeping as documentation, or prune from design?
-4. **RULE-7/8/9 promotion gates** — owner confirmed "n≥2 confirming scans." Board: agree, or different gate (e.g., "n≥2 + harness-side detection working" — since each rule depends on a harness V12x patch)?
+
+3. **RULE-3 keep-or-drop** — owner flagged as lower-confidence (n=2, mostly covered by RULE-1). Owner is comfortable either way: "Let the board weigh in on whether to keep or prune; I'm comfortable either way since RULE-1 and RULE-2 do the heavy lifting." Board: keep, prune, or restructure (e.g., fold the agent-skills-collection branch into RULE-1)?
+
+4. **RULE-7/8/9 promotion gates — COMPOUND gate proposal.** Owner-refined position: promotion requires BOTH (a) n≥2 confirming scans AND (b) the harness-side detection signal is implemented and tested. Rationale: without the harness signal, the rule can't fire programmatically even if the empirical evidence exists — promoting the rule before the signal exists creates a rule that immediately falls through to override on every invocation, defeating the purpose. Board: agree with the compound gate, or simpler gate (just one condition), or stricter (e.g., n≥3)?
+
 5. **RULE-10 as validator warning vs verdict tier** — owner picked validator warning. Board: agree, or is the structural-protection use case strong enough to warrant a tier addition?
+
 6. **Cell short_answer template-map** — per-cell-color-shape templates as proposed, or freer-form per-rule literal strings?
-7. **Scope: cells only (Phase 1) or cells + finding severities (Phase 1+1.5)?** — see §7. Owner+board call.
-8. **Migration approach** (preserve LLM text where override fired) — agree, or fully regenerate?
-9. **Acceptance threshold for re-render** — what % override reduction counts as "calibration worked"? §8 projects ~50% with RULE-1/2/4/6; ~80% if 7/8/9 also promote. Setting an explicit gate avoids "well, it's better" hand-waving.
+
+7. **DECIDED — Scope: cells only (Phase 1).** Owner-confirmed: cell calibration in this design (Phase 1); finding-severity rule-driving deferred to a separate Phase 1.5 (its own audit + design). Reasoning: bundling them would double the board surface area for marginal gain this cycle, and finding-severity rules need their own audit before design (the audit doc covered cells only). Board: flag if you disagree with the deferral — but the default is cells-only proceeds.
+
+8. **Migration approach** (preserve LLM text where override fired; regenerate from template otherwise) — agree, or fully regenerate?
+
+9. **Acceptance threshold for re-render — HARD FLOOR proposal.** Owner-refined position: Phase 1 acceptance requires override rate to drop **below 25% of scans (≤3 of 12)**; target is **≤2 of 12**. Current state: ~83% (10 of 12 V1.2 scans have overrides). The §8 projection's ~50% override reduction with firm rules only puts us at ~5/12 — which would FAIL this floor — meaning either (a) RULE-7/8/9 must promote (compound gate from Q4 makes this multi-step), or (b) the firm rules need additional tightening, or (c) the floor is too strict. Board: is the ≤3/12 floor acceptable as the Phase 1 success bar? If not, propose alternative.
 
 ---
 
