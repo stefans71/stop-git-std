@@ -24,7 +24,7 @@ When the user says "continue" — start at the **next concrete action** under §
 **This block is your resumption packet.** It is the only thing you need to read after `/compact` to know what to do next. If something here is wrong or stale, fix it before proceeding.
 
 ### HEAD + branch
-- **HEAD:** `c625309` on `origin/main` (Phase 4 merge commit; no-ff merge of `chore/template-side-derivation`; pushed). Feature branch deleted post-merge.
+- **HEAD:** `a31ff4b` on `origin/main` (Phase 4 close pointer commit on top of merge `c625309`). Feature branch `chore/template-side-derivation` deleted post-merge (local + remote).
 - **Tree:** clean.
 
 ### Phase + step
@@ -64,19 +64,16 @@ When the user says "continue" — start at the **next concrete action** under §
 2. **Phase 4 token-reduction target was aspirational at 50%** — actual ceiling is ~12% with current derivable surface. If a future Phase wants to reduce LLM authoring further, EXECUTABLE_FILE_INVENTORY is the next-largest mechanical-ish chunk (1208 tokens; partial mechanical via `dangerous_primitives.hits`). Out of scope for Phase 4.
 
 ### Token budget note
-Each phase step (one commit) should complete within ~200k tokens. If you're approaching that limit, commit what's done, update §Current state to reflect the partial state, and stop for `/compact`. Do NOT push past the limit hoping to wrap up — context degrades rapidly past 200k and you'll make decisions you'd reject with a fresh context window.
-
-### Token budget note
 Each Phase step (one commit) should complete within **~200k tokens**. If you're approaching that limit, commit what's done, update §Current state to reflect the partial state, and stop for `/compact`. Do NOT push past the limit hoping to wrap up — context degrades rapidly past 200k and you'll make decisions you'd reject with a fresh context window.
 
-### What was finished before Phase 4 (high-level only; details in commit history)
-Phase 0 audit, Phase 1 calibration design, Phase 2 board review, Phase 3 calibration v2 implementation. All landed on origin/main. Phase 3 outcome detail in `docs/calibration-impl-notes.md`. Phase 3 commit list in `AUDIT_TRAIL.md`. **You should not need to read these to do Phase 4 work** — they are reference material, not resumption material.
+### What was finished before the current phase (high-level only; details in commit history)
+Phase 0 audit, Phase 1 calibration design, Phase 2 board review, Phase 3 calibration v2 implementation, Phase 4 template-side derivation. All landed on origin/main. Phase 3 outcome detail in `docs/calibration-impl-notes.md`. Phase 3 + Phase 4 commit lists in `AUDIT_TRAIL.md`. **You should not need to read these to do current phase work** — they are reference material, not resumption material.
 
 ---
 
 ## Phases (linear; each has explicit deliverables + commits + completion criteria)
 
-### Phase 0 — Distribution audit  *(in flight)*
+### Phase 0 — Distribution audit  *(COMPLETE)*
 
 **Goal:** empirical baseline of what the 27 catalog scans actually look like — what cell colors fire on what shapes, where overrides cluster, where the rule table is over-calling vs accurately calling.
 
