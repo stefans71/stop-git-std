@@ -659,6 +659,181 @@ class TestSection01Lead:
         assert "**Install is safe**" in block
 
 
+# ---------------------------------------------------------------------------
+# Phase 4 — derivation helpers tests (chore/template-side-derivation).
+# Verify docs/render_helpers.py produces mechanical table-row content from
+# phase_1_raw_capture. Helpers are NOT yet wired into templates here — that's
+# commit 2 of Phase 4. This commit only verifies the helpers as pure functions.
+# ---------------------------------------------------------------------------
+
+_helpers_spec = importlib.util.spec_from_file_location(
+    "render_helpers", REPO_ROOT / "docs" / "render_helpers.py"
+)
+_helpers = importlib.util.module_from_spec(_helpers_spec)
+_helpers_spec.loader.exec_module(_helpers)
+derive_repo_vitals = _helpers.derive_repo_vitals
+derive_coverage_detail = _helpers.derive_coverage_detail
+derive_pr_sample = _helpers.derive_pr_sample
+
+
+SCAN_BUNDLES_DIR = REPO_ROOT / "docs" / "scan-bundles"
+
+
+def _bundle(name):
+    """Load a V1.2 scan bundle by stem."""
+    return json.loads((SCAN_BUNDLES_DIR / f"{name}.json").read_text())
+
+
+class TestDeriveRepoVitals:
+    """derive_repo_vitals(p1) — mechanical {metric, value, note} rows."""
+
+    def test_skills_yields_core_identity_metrics(self):
+        p1 = _bundle("skills-b843cb5")["phase_1_raw_capture"]
+        rows = derive_repo_vitals(p1)
+        metrics = {r["metric"]: r["value"] for r in rows}
+        assert metrics["Stars"] == "47,917"
+        assert metrics["Forks"] == "3,900"
+        assert metrics["License"] == "MIT"
+        assert metrics["Created"] == "2026-02-03"
+        assert metrics["Default branch"] == "main"
+        assert metrics["Primary language"] == "Shell"
+
+    def test_skills_yields_governance_metrics(self):
+        p1 = _bundle("skills-b843cb5")["phase_1_raw_capture"]
+        rows = derive_repo_vitals(p1)
+        metrics = {r["metric"]: r["value"] for r in rows}
+        assert metrics["CODEOWNERS"] == "absent"
+        assert metrics["SECURITY.md"] == "absent"
+        assert metrics["Classic branch protection"] == "none (HTTP 404)"
+        assert metrics["Repository rulesets"] == "0"
+        assert metrics["Rules on default branch"] == "0"
+
+    def test_ghostty_governance_differs_from_skills(self):
+        p1 = _bundle("ghostty-dcc39dc")["phase_1_raw_capture"]
+        rows = derive_repo_vitals(p1)
+        metrics = {r["metric"]: r["value"] for r in rows}
+        assert metrics["CODEOWNERS"] == "present"
+        assert int(metrics["Repository rulesets"]) >= 1
+
+    def test_top_contributor_pct_computed(self):
+        p1 = _bundle("skills-b843cb5")["phase_1_raw_capture"]
+        rows = derive_repo_vitals(p1)
+        top = next((r for r in rows if r["metric"] == "Top contributor"), None)
+        assert top is not None
+        assert "mattpocock" in top["value"]
+        assert "87" in top["value"]
+
+    def test_note_field_is_none_for_all_derived_rows(self):
+        """Helper produces mechanical data only — no LLM commentary."""
+        p1 = _bundle("skills-b843cb5")["phase_1_raw_capture"]
+        rows = derive_repo_vitals(p1)
+        for r in rows:
+            assert r["note"] is None, f"derived row should not have a note: {r}"
+
+    def test_empty_phase_1_does_not_crash(self):
+        rows = derive_repo_vitals({})
+        assert isinstance(rows, list)
+
+    def test_pr_review_metrics_present_when_sample_nonempty(self):
+        p1 = _bundle("kamal-6a31d14")["phase_1_raw_capture"]
+        rows = derive_repo_vitals(p1)
+        metrics = {r["metric"]: r["value"] for r in rows}
+        assert "Formal review rate" in metrics
+        assert "Any-review rate" in metrics
+        assert "PR sample size" in metrics
+
+
+class TestDeriveCoverageDetail:
+    """derive_coverage_detail(p1) — mechanical {check, result} rows from harness flags."""
+
+    def test_skills_reports_tarball_extracted(self):
+        p1 = _bundle("skills-b843cb5")["phase_1_raw_capture"]
+        rows = derive_coverage_detail(p1)
+        checks = {r["check"]: r["result"] for r in rows}
+        assert "Tarball extraction + local grep" in checks
+        assert "✅" in checks["Tarball extraction + local grep"]
+
+    def test_skills_ossf_reports_not_indexed(self):
+        p1 = _bundle("skills-b843cb5")["phase_1_raw_capture"]
+        rows = derive_coverage_detail(p1)
+        checks = {r["check"]: r["result"] for r in rows}
+        assert "OSSF Scorecard" in checks
+        assert "Not indexed" in checks["OSSF Scorecard"]
+
+    def test_quicklook_ossf_indexed(self):
+        """QuickLook is one of the 2 OSSF-indexed bundles (score 4.1)."""
+        p1 = _bundle("QuickLook-0cda83c")["phase_1_raw_capture"]
+        rows = derive_coverage_detail(p1)
+        checks = {r["check"]: r["result"] for r in rows}
+        assert "OSSF Scorecard" in checks
+        assert "✅" in checks["OSSF Scorecard"]
+        assert "4.1" in checks["OSSF Scorecard"]
+
+    def test_workflows_count_emitted(self):
+        p1 = _bundle("kamal-6a31d14")["phase_1_raw_capture"]
+        rows = derive_coverage_detail(p1)
+        checks = {r["check"]: r["result"] for r in rows}
+        assert "Workflows" in checks
+
+    def test_empty_input_returns_empty_list(self):
+        assert derive_coverage_detail({}) == []
+
+
+class TestDerivePRSample:
+    """derive_pr_sample(p1) — mechanical PR sample rows from pr_review.prs."""
+
+    def test_kamal_yields_50_rows(self):
+        """kamal has 50 PRs in the harness sample."""
+        p1 = _bundle("kamal-6a31d14")["phase_1_raw_capture"]
+        rows = derive_pr_sample(p1)
+        assert len(rows) == 50
+
+    def test_skills_yields_one_row(self):
+        """skills has 1 lifetime merged PR."""
+        p1 = _bundle("skills-b843cb5")["phase_1_raw_capture"]
+        rows = derive_pr_sample(p1)
+        assert len(rows) == 1
+        assert rows[0]["number"] == 90
+        assert rows[0]["self_merge"] is True
+
+    def test_ghostty_yields_zero_rows(self):
+        """ghostty bundle has empty pr_review.prs."""
+        p1 = _bundle("ghostty-dcc39dc")["phase_1_raw_capture"]
+        rows = derive_pr_sample(p1)
+        assert rows == []
+
+    def test_row_shape_matches_template_contract(self):
+        p1 = _bundle("kamal-6a31d14")["phase_1_raw_capture"]
+        rows = derive_pr_sample(p1)
+        required_keys = {"number", "title", "author", "merger",
+                         "formal_review", "any_review",
+                         "self_merge", "security_flagged", "merged_at"}
+        for r in rows:
+            assert set(r.keys()) == required_keys, f"row shape drift: {r.keys()}"
+
+    def test_v11_fixture_schema_handled(self):
+        """V1.1 fixtures have author/merger/any_review (bool); V1.2 harness has
+        review_decision/any_review_count (int). Helper handles both."""
+        form = json.loads((REPO_ROOT / "tests" / "fixtures" / "zustand-form.json").read_text())
+        rows = derive_pr_sample(form["phase_1_raw_capture"])
+        assert len(rows) == 7
+        # V1.1 fixture has populated author/merger fields
+        assert rows[0]["author"] == "FelixEckl"
+        assert rows[0]["merger"] == "dai-shi"
+        assert isinstance(rows[0]["any_review"], bool)
+
+    def test_any_review_is_bool_not_int(self):
+        """Helper normalizes any_review_count (int) → any_review (bool)."""
+        p1 = _bundle("kamal-6a31d14")["phase_1_raw_capture"]
+        rows = derive_pr_sample(p1)
+        for r in rows:
+            assert isinstance(r["any_review"], bool)
+            assert isinstance(r["self_merge"], bool)
+
+    def test_empty_input_returns_empty_list(self):
+        assert derive_pr_sample({}) == []
+
+
 if __name__ == "__main__":
     import pytest
     sys.exit(pytest.main([__file__, "-v"]))

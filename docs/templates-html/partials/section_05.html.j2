@@ -12,7 +12,8 @@
   in the value text already (e.g. "✅ 0" or "❌ None"). We omit dynamic
   val-good/val-bad classes to avoid false inference from text-scan.
 #}
-{% set vitals = form.phase_4_structured_llm.get('repo_vitals', {}).get('rows', []) %}
+{% set llm_vitals = form.phase_4_structured_llm.get('repo_vitals', {}).get('rows', []) %}
+{% set vitals = llm_vitals if llm_vitals else derive_repo_vitals(form.get('phase_1_raw_capture', {})) %}
 {% if vitals %}
   <details class="collapsible-section">
     <summary>
@@ -34,7 +35,7 @@
       <div class="vital-cell">
         <div class="vital-label">{{ v.get('metric', '') }}</div>
         <div class="vital-value">{{ v.get('value', '') }}</div>
-        <div class="vital-note">{{ v.get('note', '') }}</div>
+        <div class="vital-note">{{ v.get('note') or '' }}</div>
       </div>
       {% endfor %}
     </div>

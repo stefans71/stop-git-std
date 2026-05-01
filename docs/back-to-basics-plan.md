@@ -21,38 +21,48 @@ When the user says "continue" — start at the **next concrete action** under §
 
 ## § Current state (UPDATE AT EACH COMMIT — single source of truth)
 
-- **Last commit landing this plan:** `6657e59` on `main` (post-merge pointer cleanup; HEAD). Phase 3 merge landed at `9d33799` (no-ff merge of `chore/calibration-rebuild-impl`; 5 P3 commits + merge commit + cleanup commit pushed to origin/main). Feature branch deleted both locally and on origin.
-- **Active phase:** Phase 3 — **COMPLETE + MERGED + PUSHED**. Calibration v2 module landed (`docs/compute.py` `classify_shape` + `evaluate_q1/q2/q3/q4` + `compute_scorecard_cells_v2`). 565/565 tests passing (414 baseline + 151 net new). All 5 CONSOLIDATION §5 carry-forwards addressed. Implementation notes consolidated at `docs/calibration-impl-notes.md` (9 sections, all spec-deviations documented). **PAUSE POINT** for owner before Phase 4 (mechanical reformatting moves to template-side).
-- **Active step within phase:** N/A. Phase 3 deliverables all merged to `main` via `9d33799`:
-  - `4d7b847` P3.a — classify_shape + cross-shape modifier helpers + cell evaluators landed (12/12 §4 gate pass)
-  - `b51b6b8` P3.b/c — cell evaluator + orchestrator tests + privileged_tool drift doc
-  - `79f084a` P3.d/e — schema additions (rule_id, shape_classification) + validator gate v2.1
-  - `1688ec5` P3.f — regression suite (42 tests pinning 12-bundle outputs) + RULE-6 third sub-condition INERT + `docs/calibration-impl-notes.md`
-  - `e45f2e1` Phase 3 close — persistent-state updates (plan + CLAUDE.md + AUDIT_TRAIL + REPO_MAP). Pre-merge feature-branch tip; reachable via `9d33799^2`.
-  - `9d33799` Merge of `chore/calibration-rebuild-impl` to `main` (no-ff).
-  - `6657e59` Post-merge pointer cleanup (corrected HEAD pointers in plan + CLAUDE.md + AUDIT_TRAIL + REPO_MAP from feature-branch tip to merge SHA).
-- **Next concrete action when work resumes:** **start PHASE 4** — mechanical reformatting moves to template-side per plan §Phase 4. Recommended branch: `chore/template-side-derivation` from `main`. Deliverables: **3 helpers** (originally planned 4 — `derive_evidence_facts` dropped per grounded verification, see §Phase 4 "Why no derive_evidence_facts" note): `derive_repo_vitals(p1)` + `derive_coverage_detail(p1)` + `derive_pr_sample(p1)` in `docs/render-md.py` + `docs/render-html.py`; templates use derived data when phase_4 doesn't override. Helpers go in `render-md.py` as module-level functions exposed via `env.globals` (same pattern as existing `short_sha`, `fmt_int`). **Commit cadence per plan §Phase 4: 3 commits** — (1) add helpers + tests in `tests/test_render_md.py` + `tests/test_render_html.py` (no template changes; renders unchanged); (2) wire helpers into 3 templates (§03, §05, §06) with phase_4-override fallback (renders unchanged when LLM rows present); (3) update `docs/scan-authoring-template/author_phase_4.py.template` (sections marked optional/minimal) + `docs/SCANNER-OPERATOR-GUIDE.md`.
-- **Phase 3 outcome — override-reduction (per `docs/calibration-impl-notes.md` §6):**
-  - Pre-redesign: ~10 overrides across 12 V1.2 scans (~83% override rate)
-  - Post-redesign: 5 cells now rule-driven (no override required):
-    - ghostty Q1: RULE-1 (CODEOWNERS + ruleset + 4 rules-on-default)
-    - WLED Q1: RULE-2 (38% formal review)
-    - kanata Q1: RULE-2 (44% formal review)
-    - skills Q3: RULE-4 (HIGHEST-VALUE rule — sample-floor 90d + 1 lifetime PR)
-    - freerouting Q4: RULE-6 (35 ObjectInputStream + pcb topic auto-fire)
-  - **~50% override reduction → hits design hard-floor target (≤5/12 ~42%).**
-  - Stretch target (≤3/12) requires RULE-7/8/9 promotion — INERT pending V12x harness work per design promotion-gate semantics.
-- **Phase 3 spec deviations (consolidated at `docs/calibration-impl-notes.md`):**
-  - Heuristic refinements during §4 gate: 4 fixes (substring traps, JS/TS library default, Python-no-fingerprint catch)
-  - `is_privileged_tool`: 6/12 fire but with set difference vs design (ghostty miss, Xray-core extra) — both calls defensible
-  - RULE-6 third sub-condition (exec + has_unverified_install_path) INERT pending V12x-11 harness work
-  - kamal Q1 RULE-1 doesn't fire (no CODEOWNERS file in bundle — audit projection vs harness data mismatch)
-  - Kronos Q4 RULE-6 doesn't fire (deserialization.hit_count=0 — harness coverage gap; Phase 1.5 follow-up)
-- **Branch:** `main` (Phase 3 merged + pushed to origin at `9d33799`). Phase 4 will use a new branch — recommended `chore/template-side-derivation` per plan §Phase 4.
-- **Audit topline (preserved from Phase 0 — unchanged):**
-  - Dominant pattern: "OSS minimal-governance default" — 6 of 12 V1.2 scans hit. Q1=red NOT verdict-discriminating.
-  - Q3 similarly decoupled (skills + QuickLook are Caution despite Q3=red).
-  - Q4 IS the verdict-discriminator (5/5 Q4=red are Critical; 5/5 Caution have Q4=amber). Calibration v2 RULE-6 now drives some Q4=red deterministically (freerouting today; Kronos pending harness fix).
+**This block is your resumption packet.** It is the only thing you need to read after `/compact` to know what to do next. If something here is wrong or stale, fix it before proceeding.
+
+### HEAD + branch
+- **HEAD:** `c9602b3` (commit 2) on `chore/template-side-derivation` (commit 3 staged but not yet committed at the moment §Current state is written; commit 3 SHA gets locked in once committed).
+- **Branch base:** `c748d83` on `main` (post-/compact persistent-state consistency fix; pushed to origin/main).
+- **Tree:** clean after commit 3.
+
+### Phase + step
+- **Active phase:** Phase 4 — mechanical reformatting moves to template-side. See plan §Phase 4 for the full spec.
+- **Step within phase:** Commits 1 + 2 + 3 done. **Next action: merge `chore/template-side-derivation` to `main` with `--no-ff`, push, then mark Phase 4 complete in §Current state.**
+
+### Commits done in Phase 4
+| SHA | One-line summary | Where |
+|---|---|---|
+| `740bed3` | Plan amendment: drop derive_evidence_facts (4→3 helpers) | `main` |
+| `c748d83` | Post-/compact persistent-state consistency fix | `main` |
+| `4d7e98c` | **Commit 1**: derivation helpers + 21 tests; no template changes | `chore/template-side-derivation` |
+| `9a17a73` | Resumption-doc rewrite (strip CLAUDE.md, self-contained §Current state) | `chore/template-side-derivation` |
+| `c9602b3` | **Commit 2**: wire helpers into renderers + 6 templates; byte-identical when LLM rows present | `chore/template-side-derivation` |
+| `<commit3>` | **Commit 3**: author template optionalized + SCANNER-OPERATOR-GUIDE §8.5a + §06 dedup fix | `chore/template-side-derivation` |
+
+### Commits remaining in Phase 4
+**None.** Next action is merge to main + Phase 4 close.
+
+### Acceptance test outcomes (per plan §Phase 4 Completion criteria)
+1. **Render skills bundle with REPO_VITALS=[], COVERAGE_DETAIL_ROWS=[], PR_SAMPLE_ROWS=[] zeroed:** ✅ produces helper-derived table content matching the canonical mechanical metrics from `phase_1_raw_capture`. §05 Repo vitals: 16 mechanical metrics match (Stars 47,917, Forks 3,900, License MIT, Created 2026-02-03, contributors, branch_protection 404, rulesets 0, CODEOWNERS absent, etc.). §06 Investigation coverage: 8 mechanical checks rendered cleanly (after §06 dedup fix in commit 3). §03 PR sample: PR #90 with title + self-merge concern (author/merger render `?` per Phase 1.5 gap).
+2. **Token-count delta on author_phase_4.py:** measured on real `.scan-workspaces/skills/author_phase_4.py` (619 lines / 13508 tokens). Derivable sections sum to **1659 tokens / 12.3% of total file**. Plan target was ~50% — **NOT MET; was aspirational.** Math: derivable sections (REPO_VITALS 943t + COVERAGE_DETAIL_ROWS 411t + PR_SAMPLE_ROWS 305t) = 12.3% of file. Remaining 88% (FINDINGS 3536t + EVIDENCE 2543t + EXECUTABLE_FILE_INVENTORY 1208t + others) is true synthesis, not derivable. Phase 4 hits the design intent (eliminate mechanical re-authoring) — token reduction is bounded by what was mechanical to begin with.
+3. **All 3 fixtures × 2 formats (zustand, caveman, archon-subset; .md + .html) byte-identical before/after:** ✅ confirms LLM-rows-present path unchanged.
+4. **587/587 tests passing.**
+
+### Phase 1.5 follow-ups surfaced by Phase 4 (track for later)
+1. **Harness `pr_review.prs` doesn't populate `author` / `merger`** — when LLM zeroes PR_SAMPLE_ROWS, derived table shows `?` for those columns. Documented in `docs/render_helpers.py::derive_pr_sample` docstring + SCANNER-OPERATOR-GUIDE §8.5a.
+2. **Phase 4 token-reduction target was aspirational at 50%** — actual ceiling is ~12% with current derivable surface. If a future Phase wants to reduce LLM authoring further, EXECUTABLE_FILE_INVENTORY is the next-largest mechanical-ish chunk (1208 tokens; partial mechanical via `dangerous_primitives.hits`). Out of scope for Phase 4.
+
+### Token budget note
+Each phase step (one commit) should complete within ~200k tokens. If you're approaching that limit, commit what's done, update §Current state to reflect the partial state, and stop for `/compact`. Do NOT push past the limit hoping to wrap up — context degrades rapidly past 200k and you'll make decisions you'd reject with a fresh context window.
+
+### Token budget note
+Each Phase step (one commit) should complete within **~200k tokens**. If you're approaching that limit, commit what's done, update §Current state to reflect the partial state, and stop for `/compact`. Do NOT push past the limit hoping to wrap up — context degrades rapidly past 200k and you'll make decisions you'd reject with a fresh context window.
+
+### What was finished before Phase 4 (high-level only; details in commit history)
+Phase 0 audit, Phase 1 calibration design, Phase 2 board review, Phase 3 calibration v2 implementation. All landed on origin/main. Phase 3 outcome detail in `docs/calibration-impl-notes.md`. Phase 3 commit list in `AUDIT_TRAIL.md`. **You should not need to read these to do Phase 4 work** — they are reference material, not resumption material.
 
 ---
 

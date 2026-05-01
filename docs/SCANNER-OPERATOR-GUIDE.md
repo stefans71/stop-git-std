@@ -360,6 +360,24 @@ Both pipelines must produce output conforming to the prompt's output-format spec
 - All proposed verdicts, finding severities, scorecard cells, and audience-severity calls must transcribe from the bundle, not be re-derived.
 - Every claim carries an evidence citation, per §11.1.
 
+### 8.5a Template-side derivation (Phase 4, landed 2026-05-01)
+
+Three sections of the rendered report — **§03 Suspicious code changes** (PR sample), **§05 Repo vitals**, and **§06 Investigation coverage** — are now derived deterministically by `docs/render-md.py` + `docs/render-html.py` from `phase_1_raw_capture` when the LLM doesn't author them.
+
+**What this means for the LLM author:**
+- In `author_phase_4.py`, the `REPO_VITALS`, `COVERAGE_DETAIL_ROWS`, and `PR_SAMPLE_ROWS` lists are **optional**. Leave them as `[]` and the renderer's helpers will fill in the mechanical metric/value pairs (Stars, Forks, License, harness flags, PR review rates, etc.) from `phase_1_raw_capture`.
+- **Override the helper** by populating the list when you want shape-specific commentary: a `note` column on a vitals row, a `concern` column on a flagged PR, or rows that come from outside the harness sample (e.g. closed-not-merged security PRs).
+- LLM-authored rows always take precedence over derived rows. Mixing isn't supported per-row — it's whole-section override.
+
+**What stays LLM-only (no derivation):**
+- §07 Evidence appendix — every entry combines multiple harness signals with bespoke framing; verified across 30+ entries on 3 V1.2 scans (skills, ghostty, Baileys); no mechanical subset exists.
+- §02 What we found, §02A Executable file inventory, §04 Timeline, §07 Evidence, §08 Methodology — all synthesis.
+- FINDINGS, EVIDENCE, SCORECARD_CELLS, EXECUTABLE_FILE_INVENTORY, TIMELINE_EVENTS, VERDICT_EXHIBITS, SECTION_LEADS, SPLIT_AXIS — all LLM-authored synthesis.
+
+**Helpers:** `docs/render_helpers.py` defines `derive_repo_vitals(p1)`, `derive_coverage_detail(p1)`, `derive_pr_sample(p1)`. Helpers are exposed via `env.globals` in both renderers.
+
+**Phase 1.5 follow-up:** harness `pr_review.prs` does NOT populate `author` or `merger` fields on V1.2 bundles. When PR_SAMPLE_ROWS is empty, the derived table renders `?` in those columns. If author/merger matter for a specific scan, populate PR_SAMPLE_ROWS manually.
+
 ### 8.6 Phase 4b — MD → HTML (structurally derived)
 
 - Phase 4b is a structural derivation from the MD.

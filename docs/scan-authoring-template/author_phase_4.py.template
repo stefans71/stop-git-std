@@ -103,21 +103,30 @@ CATALOG_METADATA = {
 }
 
 
-# REPO_VITALS — facts table. ~30 rows of {metric, value, note}.
-# Stars, Forks, Open issues, Open PRs, Primary language, License, Created,
-# Last pushed, Default branch, Total contributors, Solo-maintainer flag,
-# Formal releases, Latest release, Classic branch protection, Rulesets,
-# Rules on default, CODEOWNERS, SECURITY.md, CONTRIBUTING, Community health,
-# Workflows, pull_request_target usage, CodeQL SAST, Dependabot, PR review
-# rates, Self-merge count, Total merged PRs, Published advisories, Open
-# security issues, OSSF Scorecard, etc.
-REPO_VITALS = []  # [{"metric": "Stars", "value": "<n>", "note": None}, ...]
+# REPO_VITALS — OPTIONAL. Template derives from phase_1 when empty (Phase 4
+# template-side derivation, see docs/render_helpers.py::derive_repo_vitals).
+# Override here ONLY if you want shape-specific notes (e.g. "Massively popular
+# for a 3-month-old repo" on Stars) or want extra non-mechanical metrics.
+# Row shape: {"metric": "Stars", "value": "47,917", "note": "<insight>" | None}.
+REPO_VITALS = []
 
-COVERAGE_DETAIL_ROWS = []  # [{"check": "Harness Phase 1 end-to-end", "result": "✅ Complete"}, ...]
+# COVERAGE_DETAIL_ROWS — OPTIONAL. Template derives from phase_1 when empty
+# (see docs/render_helpers.py::derive_coverage_detail). Override here ONLY if
+# you want extra checks beyond the harness flag set.
+# Row shape: {"check": "<name>", "result": "✅ <status>"}.
+COVERAGE_DETAIL_ROWS = []
 
-COVERAGE_GAPS = []  # ["<harness gap noted during this scan>", ...]
+COVERAGE_GAPS = []  # LLM-only. ["<harness gap noted during this scan>", ...]
 
-PR_SAMPLE_ROWS = []  # [{"number": <int>, "what": "<title>", "author": "<login>", "merger": "<login>", "reviewed": "<note>", "concern": <str|None>, "flagged": <bool>}, ...]
+# PR_SAMPLE_ROWS — OPTIONAL. Template derives from phase_1.pr_review.prs when
+# empty (see docs/render_helpers.py::derive_pr_sample). Override here when you
+# want enriched columns: "what" (the PR title interpreted), "concern" (your
+# judgment), or "flagged" PRs from outside the merged sample (e.g. closed-not-
+# merged security PRs). Author/merger fields are absent in V1.2 harness data —
+# Phase 1.5 follow-up. Helper renders '?' when absent.
+# Row shape: {"number": int, "what": "<title>", "author": "<login>", "merger":
+# "<login>", "reviewed": "<note>", "concern": <str|None>, "flagged": <bool>}.
+PR_SAMPLE_ROWS = []
 
 EXECUTABLE_FILE_INVENTORY = {
     "lead": "<paragraph: what this repo ships and how it gets executed>",
