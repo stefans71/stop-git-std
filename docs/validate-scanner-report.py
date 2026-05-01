@@ -202,6 +202,41 @@ def check_form(path: Path) -> tuple:
         else:
             print(f"  ✓ gate 6.3: CLEAN — no overrides")
 
+    # 3. Gate v2.1 rule_id REQUIRED when shape_classification is present
+    # (V1.2.x calibration v2 — Phase 3 of back-to-basics-plan, directive #14)
+    # If phase_3_advisory.shape_classification is present, the bundle was
+    # produced by compute_scorecard_cells_v2() — every scorecard_hint MUST
+    # have a rule_id field (RULE-1..RULE-10 or FALLBACK). Legacy V1.2 bundles
+    # without shape_classification are exempted (back-compat).
+    p3a = form.get("phase_3_advisory") or {}
+    has_v2_shape = "shape_classification" in p3a and p3a.get("shape_classification")
+    if has_v2_shape:
+        VALID_RULE_IDS = {f"RULE-{i}" for i in range(1, 11)} | {"FALLBACK"}
+        rule_id_errors = []
+        for key in _SCORECARD_QUESTION_KEYS:
+            hint = hints.get(key) or {}
+            rid = hint.get("rule_id")
+            if rid is None:
+                rule_id_errors.append(
+                    f"  - {key}: rule_id MISSING — required when "
+                    f"phase_3_advisory.shape_classification is present (v2 output)"
+                )
+            elif rid not in VALID_RULE_IDS:
+                rule_id_errors.append(
+                    f"  - {key}: rule_id={rid!r} not in valid set "
+                    f"(RULE-1..RULE-10 or FALLBACK)"
+                )
+        if rule_id_errors:
+            errors += len(rule_id_errors)
+            print(f"  ✗ gate v2.1 (rule_id REQUIRED): {len(rule_id_errors)} error(s)")
+            for msg in rule_id_errors:
+                print(msg)
+        else:
+            print(f"  ✓ gate v2.1: CLEAN — all 4 cells have valid rule_id")
+    else:
+        # Legacy V1.2 bundle (no shape_classification) — gate v2.1 not enforced
+        pass
+
     return (errors, warnings)
 
 

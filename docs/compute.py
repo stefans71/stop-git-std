@@ -27,6 +27,7 @@ All deterministic: same input → same output, no LLM needed.
 
 import re
 from datetime import datetime, timedelta, timezone
+from typing import NamedTuple
 
 
 # ===========================================================================
@@ -849,4 +850,1096 @@ def compute_verdict(findings: list) -> dict:
     return {
         "level": verdict_map.get(max_level, "Caution"),
         "computed_from_findings": [f["id"] for f in findings if f.get("severity") == max_level]
+    }
+
+
+# ===========================================================================
+# Calibration v2 — shape classifier + rule-table cell evaluators
+# ===========================================================================
+#
+# Phase 3 of `docs/back-to-basics-plan.md`. Spec is `docs/calibration-design-v2.md`
+# (3-of-3 R3 SIGN OFF, archive at `docs/External-Board-Reviews/050126-calibration-rebuild/`).
+#
+# Architecture: shape-as-modifier. One unified rule table with shape-conditional
+# branches where rules need shape awareness. Rule evaluation order per design §2:
+#   1. Auto-fire trips (short-circuit on first match)
+#   2. Shape modifiers
+#   3. Sample-floor / context modifiers
+#   4. Base rule table (signal-driven; current calibration baseline)
+#   5. Fallback (existing compute_scorecard_cells advisory)
+# First-match-wins. No combining. rule_id REQUIRED on every CellEvaluation.
+#
+# `compute_scorecard_cells_v2()` is the new orchestrator. The legacy
+# `compute_scorecard_cells()` is retained as-is for backwards compatibility with
+# existing scan drivers; v2 is opt-in via the new entry point.
+
+# 9 closed-enum shape categories per design §3.
+SHAPE_CATEGORIES = frozenset({
+    "library-package",
+    "cli-binary",
+    "agent-skills-collection",
+    "agentic-platform",
+    "web-application",
+    "desktop-application",
+    "embedded-firmware",
+    "install-script-fetcher",
+    "specialized-domain-tool",
+    "other",
+})
+
+# Provisional categories (n=1 representation in V1.2 catalog as of 2026-05-01).
+# Promote to stable at n>=2 V1.2 scans classifying cleanly per design §3 +
+# directive #11 in CONSOLIDATION §3. Phase 3 chooses tracking mechanism — for
+# now, this is a static frozenset; future implementation can derive from the
+# catalog or maintain a separate counter.
+PROVISIONAL_CATEGORIES = frozenset({
+    "embedded-firmware",         # WLED only
+    "install-script-fetcher",    # caveman (V2.4-era; not in V1.2 catalog)
+    # Note: agent-skills-collection has skills (V1.2) + gstack (V2.4-era);
+    # specialized-domain-tool has freerouting + Kronos (n=2). Both stable.
+})
+
+# Topics that strongly indicate a desktop-application shape.
+# Excludes vpn/proxy/tunnel/anticensorship — those are CLI-server tools per the
+# Xray-core classification (network proxies run as daemons, not GUIs).
+_DESKTOP_TOPICS = frozenset({
+    "terminal", "terminal-emulator", "terminal-emulators",
+    "chrome-extension", "firefox-extension", "browser-extension",
+    "quicklook", "explorer-extension", "shell-extension",
+    "gui", "gnome", "kde", "macos-app", "windows-app",
+})
+
+# Workflow basenames that indicate desktop GUI packaging (used as a secondary
+# signal when topics are absent — e.g. ghostty's empty topic list but presence
+# of flatpak.yml + snap.yml in .github/workflows/). Exact basename match — not
+# substring — to avoid false matches like "create-snapshot.yml" containing
+# "snap" or "macos-build.yml" being treated as GUI when it's just cross-
+# platform CLI build (kanata-shape).
+_DESKTOP_WORKFLOW_BASENAMES = frozenset({
+    "flatpak.yml", "flatpak.yaml",
+    "snap.yml", "snap.yaml",
+    "appimage.yml", "appimage.yaml",
+    "dmg.yml", "dmg.yaml",
+    "msix.yml", "msix.yaml",
+    "winget.yml", "winget.yaml",
+})
+
+# Languages where the canonical published artifact is a CLI binary (Cargo bin,
+# Go binary, Ruby gem with bin entry, native compiled). Used by Step 6 cli-
+# binary heuristic to gate the trigger — JS/TS published packages are
+# library-package by default since release-asset distribution is rare in npm.
+_CLI_DEFAULT_LANGUAGES = frozenset({
+    "go", "rust", "ruby", "zig", "haskell", "ocaml", "elixir", "crystal",
+    "c", "c++",  # uncommon for CLIs at scale, but native binaries are CLI-shape
+})
+
+# Topics indicating embedded firmware / IoT.
+_FIRMWARE_TOPICS = frozenset({
+    "esp32", "esp8266", "arduino", "platformio",
+    "firmware", "embedded", "iot", "microcontroller",
+})
+
+# Topics indicating specialized-domain tools (EDA, ML, document parsing, etc.).
+_DOMAIN_TOPICS = frozenset({
+    # EDA / CAD
+    "pcb", "pcb-design", "eda", "cad", "autorouter", "autorouting",
+    "router", "routing", "dsn", "specctra",
+    # ML / data science
+    "ml", "machine-learning", "deep-learning",
+    "foundation-model", "pretrained", "huggingface", "transformers",
+    "dataset", "checkpoint", "pytorch", "tensorflow",
+    # Document / format conversion
+    "document-conversion", "document-parser", "format-converter",
+    "pdf", "docx", "epub", "markdown-converter",
+    # Bioinformatics / scientific
+    "bioinformatics", "scientific-computing", "computational-biology",
+})
+
+# Topics indicating reverse-engineered platform integrations.
+_REVERSE_ENGINEERED_TOPICS = frozenset({
+    "reverse-engineering", "reverse-engineered", "unofficial-api",
+    "whatsapp-web",  # Baileys-shape — RE'd platform clients
+})
+
+# README phrases indicating reverse-engineered scope (case-insensitive substring).
+_REVERSE_ENGINEERED_README_PHRASES = (
+    "unofficial",
+    "reverse-engineered",
+    "reverse engineered",
+    "tos may apply",
+    "terms of service may apply",
+    "this client is not affiliated",
+    "not affiliated with",
+)
+
+# Topics indicating elevated-permissions tooling (kernel, system, hardware,
+# input devices, terminal, browser-extension permissions, network sockets).
+_PRIVILEGED_TOOL_TOPICS = frozenset({
+    "kernel", "kernel-module", "driver", "system",
+    "interception-driver", "kernel-adjacent",
+    "firmware", "esp32", "esp8266", "iot", "embedded", "arduino",
+    "keyboard", "mouse", "input", "keyboard-layout", "keyboard-remapping",
+    "terminal", "terminal-emulator", "terminal-emulators", "shell",
+    "chrome-extension", "firefox-extension", "browser-extension",
+    "shell-extension", "explorer-extension", "quicklook",
+    "vpn", "proxy", "tunnel", "anticensorship",
+    "ssh", "ssh-client", "ssh-server",
+})
+
+
+class ShapeClassification(NamedTuple):
+    """Output of classify_shape() per design §3 + §4.
+
+    `category` is one of SHAPE_CATEGORIES (9 closed-enum values + 'other').
+    `confidence` is debug-only — no rule reads it (directive #13).
+      Tracked in form.json for audit (correlation between low-confidence
+      classifications and override spikes).
+    `matched_rule` is a short string explaining which heuristic branch fired
+      (e.g. "C++ + esp32 topic"). Useful for audit + debugging.
+    """
+    category: str
+    is_reverse_engineered: bool
+    is_privileged_tool: bool
+    is_solo_maintained: bool
+    confidence: str
+    matched_rule: str
+
+
+def _safe_dict(obj) -> dict:
+    """Return obj if it's a dict, else {}. Avoids None-attribute errors when
+    walking phase_1_raw_capture nested fields."""
+    return obj if isinstance(obj, dict) else {}
+
+
+def _safe_list(obj) -> list:
+    return obj if isinstance(obj, list) else []
+
+
+def _topic_set(repo_metadata: dict) -> frozenset[str]:
+    return frozenset(_safe_list(repo_metadata.get("topics")))
+
+
+def _detect_reverse_engineered(form: dict) -> bool:
+    """True when README disclaimer phrases or topics indicate reverse-engineered
+    platform-API library shape (per design §3 cross-shape modifier).
+
+    Reads phase_1_raw_capture only. Currently uses topics as the primary signal
+    since README text isn't stored in phase_1_raw_capture (the harness extracts
+    code patterns + structured metadata, not full README). README-text matching
+    is left available for callers that have README in hand."""
+    p1 = _safe_dict(form.get("phase_1_raw_capture"))
+    repo_meta = _safe_dict(p1.get("repo_metadata"))
+    topics = _topic_set(repo_meta)
+    if topics & _REVERSE_ENGINEERED_TOPICS:
+        return True
+    return False
+
+
+def _detect_privileged_tool(form: dict) -> bool:
+    """True when the tool runs with elevated permissions: kernel/driver,
+    firmware, input device, terminal emulator, browser extension, network
+    proxy/VPN, shell extender (per design §3 cross-shape modifier).
+
+    Topic-based detection from phase_1_raw_capture.repo_metadata.topics.
+    Repos with empty topics (e.g. ghostty) may miss this detector; the override
+    mechanism is the safety net for those cases.
+
+    PHASE 3 IMPLEMENTATION DRIFT (vs design §3 expected table):
+      Design §3 listed 6 expected privileged_tool=True scans on V1.2 catalog:
+        ghostty, wezterm, kanata, QuickLook, WLED, browser_terminal.
+      This implementation produces 6 TRUE on the same catalog but with set
+      difference:
+        + Xray-core fires TRUE (vpn/proxy/tunnel topics — privileged daemon)
+        - ghostty fires FALSE (empty topics; can't detect terminal-emulator
+          shape from phase_1 alone)
+      Both calls are defensible: Xray-core IS privileged (network proxy
+      daemon, often runs as root for low-port binding); ghostty IS privileged
+      (terminal emulator handles SSH keys + shell history). The design table
+      was illustrative — topic-based detection inherently can't see
+      empty-topics repos. Phase 4 LLM override handles ghostty's case.
+      Tracked here so the deviation doesn't read as a bug six months from now."""
+    p1 = _safe_dict(form.get("phase_1_raw_capture"))
+    repo_meta = _safe_dict(p1.get("repo_metadata"))
+    topics = _topic_set(repo_meta)
+    if topics & _PRIVILEGED_TOOL_TOPICS:
+        return True
+    return False
+
+
+def _has_desktop_packaging_workflows(executable_files: list) -> bool:
+    """Detect desktop-distribution CI workflows by exact basename match
+    (flatpak.yml, snap.yml, appimage.yml, dmg.yml, msix.yml, winget.yml).
+
+    Used as a secondary signal for desktop-application when topics are absent
+    (e.g. ghostty's empty topic list + presence of flatpak.yml + snap.yml).
+    Exact-basename match deliberate — substring `snap` would false-match
+    `create-snapshot.yml`, and `macos` would false-match `macos-build.yml`
+    (a normal cross-platform CLI build workflow, not a GUI packaging step)."""
+    for entry in _safe_list(executable_files):
+        if not isinstance(entry, dict):
+            continue
+        path = (entry.get("path") or "").lower()
+        basename = path.rsplit("/", 1)[-1]
+        if basename in _DESKTOP_WORKFLOW_BASENAMES:
+            return True
+    return False
+
+
+def _is_publishable_package_manifest(manifest_files: list) -> bool:
+    """True when a package-publish manifest is present (npm package.json,
+    Rust Cargo.toml, Ruby gemspec, Python pyproject.toml, Go module). False
+    when only dependency-tracking manifests are present (requirements.txt,
+    Pipfile, package-lock.json alone)."""
+    PUBLISHABLE_FILENAMES = {
+        "package.json", "pyproject.toml", "setup.py",
+        "cargo.toml", "gemfile", "*.gemspec",
+        "go.mod",
+    }
+    for entry in _safe_list(manifest_files):
+        if not isinstance(entry, dict):
+            continue
+        path = (entry.get("path") or "").lower()
+        # Match top-level publish manifests (not lockfiles, not nested deps)
+        basename = path.rsplit("/", 1)[-1]
+        if basename in {"package.json", "pyproject.toml", "setup.py",
+                        "cargo.toml", "gemfile", "go.mod"}:
+            return True
+        if basename.endswith(".gemspec"):
+            return True
+    return False
+
+
+def classify_shape(form: dict) -> ShapeClassification:
+    """Classify a scan form into a shape category + cross-shape modifiers.
+
+    Reads from form.phase_1_raw_capture ONLY (per Codex FIX-NOW directive #2).
+    Does NOT consult phase_4_structured_llm.catalog_metadata.shape — phase
+    boundary preserved.
+
+    Returns ShapeClassification with deterministic output: same form always
+    produces same classification. When no clean match, returns
+    category='other' with confidence='low'; the override mechanism handles
+    that case via Phase 4 LLM-authored cell colors with override_reason.
+    """
+    p1 = _safe_dict(form.get("phase_1_raw_capture"))
+    repo_meta = _safe_dict(p1.get("repo_metadata"))
+    code_patterns = _safe_dict(p1.get("code_patterns"))
+    deps = _safe_dict(p1.get("dependencies"))
+    install_script = _safe_dict(p1.get("install_script_analysis"))
+    releases = _safe_dict(p1.get("releases"))
+    # V1.2 bundle shape: contributors = {top_contributors: [...], total_contributor_count: N}
+    # Older shape was a bare list. Accept both for backward compatibility.
+    contributors_raw = p1.get("contributors")
+    if isinstance(contributors_raw, dict):
+        contributors = _safe_list(contributors_raw.get("top_contributors"))
+    else:
+        contributors = _safe_list(contributors_raw)
+
+    primary_lang = (repo_meta.get("primary_language") or "").lower()
+    topics = _topic_set(repo_meta)
+    agent_rule_files = _safe_list(code_patterns.get("agent_rule_files"))
+    executable_files = _safe_list(code_patterns.get("executable_files"))
+    manifest_files = _safe_list(deps.get("manifest_files"))
+    install_scripts = _safe_list(install_script.get("scripts"))
+    releases_count = (
+        releases.get("count")
+        if isinstance(releases.get("count"), int)
+        else len(_safe_list(releases.get("entries")))
+    )
+
+    # Cross-shape modifiers (computed once, returned regardless of category)
+    is_re = _detect_reverse_engineered(form)
+    is_priv = _detect_privileged_tool(form)
+    solo_meta = compute_solo_maintainer(contributors)
+    is_solo = bool(solo_meta.get("is_solo"))
+
+    def _result(category: str, confidence: str, matched_rule: str) -> ShapeClassification:
+        return ShapeClassification(
+            category=category,
+            is_reverse_engineered=is_re,
+            is_privileged_tool=is_priv,
+            is_solo_maintained=is_solo,
+            confidence=confidence,
+            matched_rule=matched_rule,
+        )
+
+    # ---------------------------------------------------------------------
+    # Step 1 — embedded-firmware (clearest topic signal: ESP/Arduino + C/C++)
+    # ---------------------------------------------------------------------
+    if (topics & _FIRMWARE_TOPICS) and primary_lang in {"c", "c++"}:
+        return _result(
+            "embedded-firmware",
+            confidence="high",
+            matched_rule="C/C++ primary + firmware/iot/esp topic",
+        )
+
+    # ---------------------------------------------------------------------
+    # Step 2 — agent-skills-collection (no-tool-fingerprint signature)
+    #
+    # The skills-collection shape has a distinctive negative footprint: no
+    # release artifacts, no package manifest, no compiled executables — but
+    # at least one agent-rule file (CLAUDE.md / AGENTS.md / SKILL.md). This
+    # disambiguates skills (no fingerprint, primary=Shell or Markdown) from
+    # tools that happen to ship AGENTS.md sub-directory contributor guides
+    # (ghostty: 7 AGENTS.md but Zig + 18 exec files + release → NOT skills).
+    # ---------------------------------------------------------------------
+    if (
+        len(agent_rule_files) >= 1
+        and len(executable_files) == 0
+        and len(manifest_files) == 0
+        and releases_count == 0
+        and primary_lang in {"shell", "markdown", ""}
+    ):
+        return _result(
+            "agent-skills-collection",
+            confidence="high",
+            matched_rule="rule-files present + no exec/manifest/release fingerprint",
+        )
+    # Markdown-canonical skills (gstack-shape; not in V1.2 catalog but covered)
+    if primary_lang == "markdown" and len(agent_rule_files) >= 3:
+        return _result(
+            "agent-skills-collection",
+            confidence="high",
+            matched_rule="Markdown primary + >=3 agent-rule files",
+        )
+
+    # ---------------------------------------------------------------------
+    # Step 3 — desktop-application via TOPIC (high-confidence, narrow)
+    # Only fires on explicit GUI/extension/shell-extension topics. Workflow-
+    # based fallback (Step 5) handles cases with empty topic lists.
+    # ---------------------------------------------------------------------
+    if topics & _DESKTOP_TOPICS:
+        return _result(
+            "desktop-application",
+            confidence="high",
+            matched_rule="desktop topic (terminal/extension/quicklook/etc.)",
+        )
+    # GUI-canonical languages — Swift / Objective-C indicate native desktop
+    # apps. C# is ambiguous (could be desktop GUI or server) — gated below
+    # on releases + no-domain-topic condition handled by Step 5b.
+    if primary_lang in {"swift", "objective-c"} and releases_count >= 5:
+        return _result(
+            "desktop-application",
+            confidence="medium",
+            matched_rule=f"{primary_lang} + release artifacts present",
+        )
+
+    # ---------------------------------------------------------------------
+    # Step 4 — specialized-domain-tool via TOPIC (must fire BEFORE workflow-
+    # fallback in Step 5; domain topics like 'pcb' are a stronger signal
+    # than 'release-tag.yml exists' for shape inference).
+    # ---------------------------------------------------------------------
+    if topics & _DOMAIN_TOPICS:
+        return _result(
+            "specialized-domain-tool",
+            confidence="high",
+            matched_rule="domain topic (EDA/ML/document-conversion/etc.)",
+        )
+
+    # ---------------------------------------------------------------------
+    # Step 4b — Python-no-fingerprint specialized-domain-tool catch
+    #
+    # Python repos with only requirements.txt (dependency-tracking, NOT
+    # publishable), no executables, no releases — most commonly research /
+    # ML / domain-specific tooling (Kronos-shape: Python ML library, Hugging
+    # Face-hosted weights, README-driven install instructions).
+    # Discriminates from library-package because pyproject.toml/setup.py
+    # would mark it as publishable; pure requirements.txt + install-script
+    # presence is a domain-tool footprint, not a library footprint.
+    # ---------------------------------------------------------------------
+    if (
+        primary_lang == "python"
+        and len(executable_files) == 0
+        and releases_count == 0
+        and not _is_publishable_package_manifest(manifest_files)
+    ):
+        return _result(
+            "specialized-domain-tool",
+            confidence="medium",
+            matched_rule="Python + no exec/release/publish-manifest (research/ML shape)",
+        )
+
+    # ---------------------------------------------------------------------
+    # Step 5 — desktop-application via WORKFLOW fallback
+    # Empty-topics repos like ghostty (Zig terminal emulator) detected via
+    # presence of GUI-distribution workflow basenames (flatpak.yml,
+    # snap.yml, etc.). Tightened to exact-basename match to avoid false
+    # positives from `create-snapshot.yml` / `macos-build.yml`.
+    # ---------------------------------------------------------------------
+    if _has_desktop_packaging_workflows(executable_files):
+        return _result(
+            "desktop-application",
+            confidence="medium",
+            matched_rule="desktop-packaging workflows (flatpak/snap/AppImage/dmg)",
+        )
+    # C# + many releases — typically desktop apps (QuickLook-class). Fires
+    # only if Step 3/4 didn't catch it via topic — defensive fallback.
+    if primary_lang == "c#" and releases_count >= 5:
+        return _result(
+            "desktop-application",
+            confidence="medium",
+            matched_rule="C# + release artifacts present",
+        )
+
+    # ---------------------------------------------------------------------
+    # Step 6 — install-script-fetcher (curl-pipe-from-main pattern)
+    # ---------------------------------------------------------------------
+    if (
+        len(install_scripts) >= 1
+        and releases_count == 0
+        and len(executable_files) == 0
+        and len(manifest_files) == 0
+    ):
+        return _result(
+            "install-script-fetcher",
+            confidence="medium",
+            matched_rule="install scripts + no releases/exec/manifest",
+        )
+
+    # ---------------------------------------------------------------------
+    # Step 7 — cli-binary (language-canonical: Go/Rust/Ruby/Zig/Haskell/etc.)
+    #
+    # Released-asset count is unreliable as a discriminator — npm/Cargo/
+    # Ruby release entries often have asset_count=0 because the binary lives
+    # at the package registry, not on GitHub release pages. The reliable
+    # signal is the language: Go/Rust/Ruby/etc. published packages with
+    # >=5 releases + Gemfile/go.mod/Cargo.toml are typically CLI binaries.
+    # JS/TS is excluded — npm publishing is library-default (Baileys-shape).
+    # ---------------------------------------------------------------------
+    if (
+        releases_count >= 5
+        and _is_publishable_package_manifest(manifest_files)
+        and primary_lang in _CLI_DEFAULT_LANGUAGES
+    ):
+        return _result(
+            "cli-binary",
+            confidence="high",
+            matched_rule=f"{primary_lang} + >=5 releases + publishable manifest",
+        )
+
+    # ---------------------------------------------------------------------
+    # Step 8 — library-package (publishable manifest, no CLI/desktop fingerprint)
+    #
+    # Languages where package-manager-distributed library is the default
+    # shape — npm/TypeScript packages especially. Catches Baileys (JS +
+    # package.json + 42 releases but no platform binaries → library).
+    # ---------------------------------------------------------------------
+    if _is_publishable_package_manifest(manifest_files):
+        return _result(
+            "library-package",
+            confidence="medium",
+            matched_rule="publishable manifest, library-canonical shape",
+        )
+
+    # ---------------------------------------------------------------------
+    # Step 8 — agentic-platform / Step 9 — web-application
+    #
+    # No V1.2 catalog scans match these cleanly (postiz-app + Archon are
+    # V2.4-era and have .md bundles, not V1.2 .json). Heuristics deferred
+    # to first hit — fall through to other for now.
+    # ---------------------------------------------------------------------
+
+    # ---------------------------------------------------------------------
+    # Step 10 — Fallback: 'other' with low confidence
+    #
+    # Per design §4: when classify_shape cannot decide cleanly, returns
+    # ('other', confidence='low'). Phase 4 LLM author override-explained
+    # mechanism handles cell colors via the existing override path. This
+    # preserves phase boundary (no fallback to phase_4_structured_llm).
+    # ---------------------------------------------------------------------
+    return _result(
+        "other",
+        confidence="low",
+        matched_rule="catch-all (no heuristic branch matched)",
+    )
+
+
+# ===========================================================================
+# Cell evaluators (RULE-1 through RULE-9; Q2 explicit-deferral per directive #16)
+# ===========================================================================
+#
+# Each evaluator returns a CellEvaluation with rule_id REQUIRED. The 4 evaluators
+# implement first-match-wins precedence per design §2:
+#   1. Auto-fire trips (short-circuit on first match)
+#   2. Shape modifiers
+#   3. Sample-floor / context modifiers
+#   4. Base rule table (current calibration baseline)
+#   5. Fallback (rule_id='FALLBACK')
+
+
+class CellEvaluation(NamedTuple):
+    """Output of evaluate_q1/q2/q3/q4 per design §10.
+
+    `rule_id` is REQUIRED — values are RULE-1 through RULE-10 or 'FALLBACK'.
+    Validator enforces presence (directive #14).
+    `auto_fire` distinguishes immediate trips (RULE-6 + RULE-7/8/9) from
+    base-table evaluation.
+    `template_vars` carry signal values for the short_answer template renderer."""
+    color: str
+    short_answer_template_key: str
+    template_vars: dict
+    rule_id: str
+    auto_fire: bool
+
+
+def evaluate_q1(signals: dict, shape: ShapeClassification) -> CellEvaluation:
+    """Q1 — 'Does anyone check the code?'
+
+    Order: RULE-1 (governance-floor softener) → RULE-2 (review-rate softener)
+    → RULE-3 (narrow tie-breaker for non-privileged solo OSS with positive
+    signals) → base-table fallback.
+    """
+    has_codeowners = bool(signals.get("has_codeowners"))
+    has_ruleset_protection = bool(signals.get("has_ruleset_protection"))
+    has_branch_protection = bool(signals.get("has_branch_protection"))
+    rules_on_default_count = int(signals.get("rules_on_default_count") or 0)
+    formal = float(signals.get("formal_review_rate") or 0)
+    any_rev = float(signals.get("any_review_rate") or 0)
+    has_codeql = bool(signals.get("has_codeql"))
+    releases_count = int(signals.get("releases_count") or 0)
+    pr_sample_size = int(signals.get("pr_sample_size") or 0)
+
+    has_any_branch_protection = has_branch_protection or has_ruleset_protection
+
+    # RULE-1 — governance-floor softener (FIRM)
+    # CODEOWNERS + ruleset + rules-on-default present → amber, not red.
+    if has_codeowners and has_ruleset_protection and rules_on_default_count > 0:
+        concentration_qualifier = (
+            "concentration risk remains" if shape.is_solo_maintained
+            else "review-rate signal alone is below threshold"
+        )
+        return CellEvaluation(
+            color="amber",
+            short_answer_template_key="q1.amber.governance_present",
+            template_vars={
+                "concentration_qualifier": concentration_qualifier,
+                "is_solo_maintained": shape.is_solo_maintained,
+            },
+            rule_id="RULE-1",
+            auto_fire=False,
+        )
+
+    # RULE-2 — review-rate softener (FIRM)
+    # Voluntary review rate above OSS-median → amber, not red.
+    if formal >= 30 or any_rev >= 60:
+        return CellEvaluation(
+            color="amber",
+            short_answer_template_key="q1.amber.review_rate_present",
+            template_vars={
+                "formal_review_rate": formal,
+                "any_review_rate": any_rev,
+                "pr_sample_size": pr_sample_size,
+            },
+            rule_id="RULE-2",
+            auto_fire=False,
+        )
+
+    # RULE-3 — narrow tie-breaker for non-privileged solo OSS with positive
+    # signals. Captures the kamal pattern (solo + non-privileged + compound
+    # positive evidence).
+    if (
+        shape.is_solo_maintained
+        and not shape.is_privileged_tool
+        and (has_codeql or releases_count >= 20)
+    ):
+        positive_signal = "CodeQL on" if has_codeql else f"{releases_count} releases"
+        return CellEvaluation(
+            color="amber",
+            short_answer_template_key="q1.amber.solo_with_positive_signals",
+            template_vars={
+                "positive_signal": positive_signal,
+                "releases_count": releases_count,
+                "has_codeql": has_codeql,
+            },
+            rule_id="RULE-3",
+            auto_fire=False,
+        )
+
+    # FALLBACK — base-table behavior matches legacy compute_scorecard_cells
+    # for the cases none of RULE-1/2/3 fired. Solo + low any-review = red;
+    # otherwise amber/red per legacy thresholds.
+    is_solo_maintainer = shape.is_solo_maintained
+    if (formal < 10 and not has_any_branch_protection and not has_codeowners):
+        return CellEvaluation(
+            color="red",
+            short_answer_template_key="q1.red.no_governance",
+            template_vars={"formal": formal},
+            rule_id="FALLBACK",
+            auto_fire=False,
+        )
+    if any_rev < 30 or (is_solo_maintainer and any_rev < 40):
+        return CellEvaluation(
+            color="red",
+            short_answer_template_key="q1.red.no_governance",
+            template_vars={"any_review_rate": any_rev},
+            rule_id="FALLBACK",
+            auto_fire=False,
+        )
+    if any_rev >= 50 or formal >= 20:
+        return CellEvaluation(
+            color="amber",
+            short_answer_template_key="q1.amber.review_rate_present",
+            template_vars={
+                "formal_review_rate": formal,
+                "any_review_rate": any_rev,
+                "pr_sample_size": pr_sample_size,
+            },
+            rule_id="FALLBACK",
+            auto_fire=False,
+        )
+    return CellEvaluation(
+        color="red",
+        short_answer_template_key="q1.red.no_governance",
+        template_vars={"formal": formal, "any_review_rate": any_rev},
+        rule_id="FALLBACK",
+        auto_fire=False,
+    )
+
+
+def evaluate_q2(signals: dict, shape: ShapeClassification) -> CellEvaluation:
+    """Q2 — 'Do they fix problems quickly?'
+
+    Per directive #16 (R3 pre-archive doc fix): NO RULE CHANGES. Q2 is
+    explicitly deferred — audit found Q2 well-calibrated, only 2 of 10 V1.2
+    overrides were Q2 (both addressed by V1.2.x signal widening). Phase 1.5
+    re-entry trigger: >=3 Q2 overrides in next 5 wild scans, OR Phase 1
+    re-render audit miscalls.
+
+    This function reproduces the legacy Q2 logic from compute_scorecard_cells
+    and emits rule_id='FALLBACK' since no Q2 rule fires by design.
+    """
+    open_security_issue_count = int(signals.get("open_security_issue_count") or 0)
+    oldest_cve_pr_age_days = signals.get("oldest_cve_pr_age_days")
+    oldest_open_security_item_age_days = signals.get("oldest_open_security_item_age_days")
+    closed_fix_lag_days = signals.get("closed_fix_lag_days")
+
+    cve_age = max(oldest_cve_pr_age_days or 0, oldest_open_security_item_age_days or 0)
+
+    if open_security_issue_count == 0 and cve_age <= 7:
+        if closed_fix_lag_days is not None and closed_fix_lag_days > 3:
+            return CellEvaluation(
+                color="amber",
+                short_answer_template_key="q2.amber.closed_fix_lag",
+                template_vars={"closed_fix_lag_days": closed_fix_lag_days},
+                rule_id="FALLBACK",
+                auto_fire=False,
+            )
+        return CellEvaluation(
+            color="green",
+            short_answer_template_key="q2.green.no_open",
+            template_vars={},
+            rule_id="FALLBACK",
+            auto_fire=False,
+        )
+    if open_security_issue_count <= 3 and cve_age <= 14:
+        return CellEvaluation(
+            color="amber",
+            short_answer_template_key="q2.amber.few_open",
+            template_vars={
+                "open_security_issue_count": open_security_issue_count,
+                "cve_age": cve_age,
+            },
+            rule_id="FALLBACK",
+            auto_fire=False,
+        )
+    return CellEvaluation(
+        color="red",
+        short_answer_template_key="q2.red.many_open_or_old",
+        template_vars={
+            "open_security_issue_count": open_security_issue_count,
+            "cve_age": cve_age,
+        },
+        rule_id="FALLBACK",
+        auto_fire=False,
+    )
+
+
+def evaluate_q3(signals: dict, shape: ShapeClassification) -> CellEvaluation:
+    """Q3 — 'Do they tell you about problems?'
+
+    Order: RULE-4 (sample-floor; HIGHEST-VALUE — fixes skills-class) →
+    RULE-5 (ruleset-as-disclosure floor; hygiene) → base-table fallback.
+    """
+    repo_age_days = int(signals.get("repo_age_days") or 0)
+    total_merged_lifetime = int(signals.get("total_merged_lifetime") or 0)
+    has_security_policy = bool(signals.get("has_security_policy"))
+    has_contributing_guide = bool(signals.get("has_contributing_guide"))
+    has_ruleset_protection = bool(signals.get("has_ruleset_protection"))
+    published_advisory_count = int(signals.get("published_advisory_count") or 0)
+    has_silent_fixes = bool(signals.get("has_silent_fixes"))
+
+    # RULE-4 — sample-floor (HIGHEST-VALUE — addresses skills-class)
+    # repo_age_days < 180 AND total_merged_lifetime < 5 → too young to grade.
+    if repo_age_days > 0 and repo_age_days < 180 and total_merged_lifetime < 5:
+        return CellEvaluation(
+            color="amber",
+            short_answer_template_key="q3.amber.sample_floor",
+            template_vars={
+                "repo_age_days": repo_age_days,
+                "total_merged_lifetime": total_merged_lifetime,
+            },
+            rule_id="RULE-4",
+            auto_fire=False,
+        )
+
+    # RULE-5 — ruleset-as-disclosure floor (HYGIENE)
+    # ruleset protection + published advisories → amber (already amber via
+    # base table; this codifies why).
+    if has_ruleset_protection and published_advisory_count > 0:
+        return CellEvaluation(
+            color="amber",
+            short_answer_template_key="q3.amber.ruleset_disclosed",
+            template_vars={"published_advisory_count": published_advisory_count},
+            rule_id="RULE-5",
+            auto_fire=False,
+        )
+
+    # FALLBACK — base-table from legacy compute_scorecard_cells
+    if has_security_policy and published_advisory_count > 0 and not has_silent_fixes:
+        return CellEvaluation(
+            color="green",
+            short_answer_template_key="q3.green.full_disclosure",
+            template_vars={"published_advisory_count": published_advisory_count},
+            rule_id="FALLBACK",
+            auto_fire=False,
+        )
+    if (
+        has_security_policy
+        or has_contributing_guide
+        or (published_advisory_count > 0 and not has_silent_fixes)
+    ):
+        return CellEvaluation(
+            color="amber",
+            short_answer_template_key="q3.amber.partial_disclosure",
+            template_vars={
+                "has_security_policy": has_security_policy,
+                "has_contributing_guide": has_contributing_guide,
+                "published_advisory_count": published_advisory_count,
+            },
+            rule_id="FALLBACK",
+            auto_fire=False,
+        )
+    return CellEvaluation(
+        color="red",
+        short_answer_template_key="q3.red.no_disclosure",
+        template_vars={},
+        rule_id="FALLBACK",
+        auto_fire=False,
+    )
+
+
+def evaluate_q4(signals: dict, shape: ShapeClassification) -> CellEvaluation:
+    """Q4 — 'Is it safe out of the box?'
+
+    Order: RULE-6 (Q4 auto-fire extension; FIRM) → RULE-7/8/9 (n=1 candidates,
+    promotion-gated; do NOT fire until both n>=2 confirming scans AND harness
+    signal landed) → base-table fallback.
+
+    RULE-7/8/9 are intentionally inert in the current implementation: the
+    promotion-gate semantics require BOTH evidence + harness work before they
+    activate. Phase 1.5 wild-scan progression triggers the promotion.
+    """
+    deser_hits = int(signals.get("deserialization_hit_count") or 0)
+    cmd_inj_hits = int(signals.get("cmd_injection_hit_count") or 0)
+    exec_hits = int(signals.get("exec_hit_count") or 0)
+    tool_loads_user_files = bool(signals.get("tool_loads_user_files"))
+    has_unverified_install_path = bool(signals.get("has_unverified_install_path"))
+    all_channels_pinned = bool(signals.get("all_channels_pinned"))
+    artifact_verified = bool(signals.get("artifact_verified"))
+    has_warning_on_install_path = bool(signals.get("has_warning_on_install_path"))
+    has_critical_on_default_path_kw = bool(signals.get("has_critical_on_default_path"))
+
+    # RULE-6 — Q4 auto-fire extension (FIRM; extends V13-3 C5)
+    #
+    # Design §5 spec'd 3 sub-conditions. Phase 3 implementation enables the
+    # first 2; the third (exec + has_unverified_install_path) is INERT
+    # pending harness work — see PHASE 3 IMPLEMENTATION DRIFT below.
+    #
+    #   - deserialization >= 3 + tool_loads_user_files (V13-3 C5; ENABLED)
+    #   - cmd_injection >= 1 + tool_loads_user_files (NEW; ENABLED)
+    #   - exec >= 1 + has_unverified_install_path (NEW; INERT pending V12x-11)
+    #
+    # PHASE 3 IMPLEMENTATION DRIFT — exec sub-condition deferred:
+    #   The third sub-condition over-fires on V1.2 catalog data because:
+    #   (a) `has_unverified_install_path` derived from artifact_verification.
+    #       verified is False on ~12/12 bundles (no SLSA provenance — common);
+    #   (b) `dangerous_primitives.exec.hit_count` >= 1 on most bundles
+    #       (exec keyword appears in many code patterns harmlessly).
+    #   Combined: rule fires on ghostty/kamal/QuickLook/wezterm/Baileys/Kronos
+    #   when none of those should auto-fire-red on Q4. The design's intent
+    #   for has_unverified_install_path was a tighter signal (curl-pipe-from-
+    #   main without checksum / no verified release channel) that the V12x-11
+    #   harness would emit. Until that lands, the exec sub-condition stays
+    #   INERT to avoid false positives. This matches the pattern used for
+    #   RULE-7/8/9 (compound promotion gate: evidence + harness signal).
+    rule_6_fires = False
+    rule_6_pattern = None
+    rule_6_top_file = None
+    rule_6_hit_count = 0
+    if deser_hits >= 3 and tool_loads_user_files:
+        rule_6_fires = True
+        rule_6_pattern = "unsafe deserialization"
+        rule_6_hit_count = deser_hits
+        rule_6_top_file = signals.get("deserialization_top_file") or ""
+    elif cmd_inj_hits >= 1 and tool_loads_user_files:
+        rule_6_fires = True
+        rule_6_pattern = "command injection"
+        rule_6_hit_count = cmd_inj_hits
+        rule_6_top_file = signals.get("cmd_injection_top_file") or ""
+    # RULE-6 third sub-condition INERT — see drift note above.
+    # When V12x-11 harness signal lands, re-enable:
+    #   elif exec_hits >= 1 and has_unverified_install_path:
+    #       rule_6_fires = True
+    #       rule_6_pattern = "exec on unverified install path"
+    #       ...
+
+    if rule_6_fires:
+        return CellEvaluation(
+            color="red",
+            short_answer_template_key="q4.red.exec_pattern",
+            template_vars={
+                "primary_pattern": rule_6_pattern,
+                "hit_count": rule_6_hit_count,
+                "top_file": rule_6_top_file,
+            },
+            rule_id="RULE-6",
+            auto_fire=True,
+        )
+
+    # RULE-7/8/9 — n=1 candidates with promotion gates. Currently INERT:
+    # design §5 promotion-gate semantics require BOTH (a) n>=2 confirming
+    # scans AND (b) the harness-side detection signal is implemented and
+    # tested. Until both land, the rules don't activate — they fall through
+    # to the base table or to Phase 4 LLM-authored override.
+    #   RULE-7: shape == embedded-firmware AND no_auth_default OR cors_wildcard
+    #   RULE-8: install-doc URL TLD-deviation (typosquat)
+    #   RULE-9: shape == library-package AND is_reverse_engineered AND ToS
+    # No-op until promotion. See Phase 1.5 wild-scan trigger.
+
+    # Caller-supplied has_critical_on_default_path (Phase 4 LLM override or
+    # legacy explicit kwarg). Treated as auto-fire for compatibility.
+    if has_critical_on_default_path_kw:
+        return CellEvaluation(
+            color="red",
+            short_answer_template_key="q4.red.exec_pattern",
+            template_vars={
+                "primary_pattern": "Critical finding on default path",
+                "hit_count": 0,
+                "top_file": "",
+            },
+            rule_id="FALLBACK",
+            auto_fire=True,
+        )
+
+    # FALLBACK — base-table from legacy compute_scorecard_cells
+    if all_channels_pinned and artifact_verified and not has_warning_on_install_path:
+        return CellEvaluation(
+            color="green",
+            short_answer_template_key="q4.green.verified",
+            template_vars={},
+            rule_id="FALLBACK",
+            auto_fire=False,
+        )
+    if (
+        has_warning_on_install_path
+        or not all_channels_pinned
+        or not artifact_verified
+    ):
+        return CellEvaluation(
+            color="amber",
+            short_answer_template_key="q4.amber.install_warns",
+            template_vars={"trust_qualifier": "install path has friction signals"},
+            rule_id="FALLBACK",
+            auto_fire=False,
+        )
+    return CellEvaluation(
+        color="amber",
+        short_answer_template_key="q4.amber.install_warns",
+        template_vars={},
+        rule_id="FALLBACK",
+        auto_fire=False,
+    )
+
+
+def compute_scorecard_cells_v2(form: dict, signals: dict | None = None) -> dict:
+    """Compute the 4 scorecard cells using the calibration v2 rule table.
+
+    Args:
+        form: full scan form (read for shape classification).
+        signals: derived signal dict that the rule evaluators consume. If None,
+            constructed from `form` heuristically (best-effort defaults).
+
+    Returns dict mirroring compute_scorecard_cells's V1.2 advisory shape, with:
+      - color: red/amber/green
+      - short_answer: one of 'No' / 'Partly' / 'Yes' (template_key→short_answer
+                      derivation deferred to renderer; this function emits the
+                      legacy short_answer for backwards compat)
+      - signals: V1.2 SIGNAL_IDS list
+      - rule_id: REQUIRED — RULE-1..RULE-10 or FALLBACK (directive #14)
+      - shape_classification: full ShapeClassification namedtuple as dict
+    """
+    shape = classify_shape(form)
+    sigs = signals or _derive_signals_from_form(form)
+
+    q1 = evaluate_q1(sigs, shape)
+    q2 = evaluate_q2(sigs, shape)
+    q3 = evaluate_q3(sigs, shape)
+    q4 = evaluate_q4(sigs, shape)
+
+    color_to_answer = {"red": "No", "amber": "Partly", "green": "Yes"}
+
+    def _cell(eval_: CellEvaluation, sig_list: list) -> dict:
+        return {
+            "color": eval_.color,
+            "short_answer": color_to_answer.get(eval_.color, "Partly"),
+            "rule_id": eval_.rule_id,
+            "auto_fire": eval_.auto_fire,
+            "short_answer_template_key": eval_.short_answer_template_key,
+            "template_vars": eval_.template_vars,
+            "signals": sig_list,
+        }
+
+    return {
+        "shape_classification": {
+            "category": shape.category,
+            "is_reverse_engineered": shape.is_reverse_engineered,
+            "is_privileged_tool": shape.is_privileged_tool,
+            "is_solo_maintained": shape.is_solo_maintained,
+            "confidence": shape.confidence,
+            "matched_rule": shape.matched_rule,
+        },
+        "does_anyone_check_the_code": _cell(q1, [
+            {"id": "q1_formal_review_rate", "value": sigs.get("formal_review_rate")},
+            {"id": "q1_any_review_rate", "value": sigs.get("any_review_rate")},
+            {"id": "q1_has_branch_protection", "value": sigs.get("has_branch_protection")},
+            {"id": "q1_has_ruleset_protection", "value": sigs.get("has_ruleset_protection")},
+            {"id": "q1_has_codeowners", "value": sigs.get("has_codeowners")},
+            {"id": "q1_is_solo_maintainer", "value": shape.is_solo_maintained},
+        ]),
+        "do_they_fix_problems_quickly": _cell(q2, [
+            {"id": "q2_open_security_issue_count", "value": sigs.get("open_security_issue_count")},
+            {"id": "q2_oldest_open_cve_pr_age_days", "value": sigs.get("oldest_cve_pr_age_days")},
+            {"id": "q2_oldest_open_security_item_age_days", "value": sigs.get("oldest_open_security_item_age_days")},
+            {"id": "q2_closed_fix_lag_days", "value": sigs.get("closed_fix_lag_days")},
+        ]),
+        "do_they_tell_you_about_problems": _cell(q3, [
+            {"id": "q3_has_security_policy", "value": sigs.get("has_security_policy")},
+            {"id": "q3_has_contributing_guide", "value": sigs.get("has_contributing_guide")},
+            {"id": "q3_published_advisory_count", "value": sigs.get("published_advisory_count")},
+            {"id": "q3_has_silent_fixes", "value": sigs.get("has_silent_fixes")},
+        ]),
+        "is_it_safe_out_of_the_box": _cell(q4, [
+            {"id": "q4_all_channels_pinned", "value": sigs.get("all_channels_pinned")},
+            {"id": "q4_artifact_verified", "value": sigs.get("artifact_verified")},
+            {"id": "q4_has_critical_on_default_path", "value": sigs.get("has_critical_on_default_path")},
+            {"id": "q4_has_warning_on_install_path", "value": sigs.get("has_warning_on_install_path")},
+        ]),
+    }
+
+
+def _derive_signals_from_form(form: dict) -> dict:
+    """Best-effort signal derivation from a form's phase_1_raw_capture +
+    phase_3_computed inputs.
+
+    Used by compute_scorecard_cells_v2 when caller doesn't supply explicit
+    signals (e.g. regression tests against catalog bundles). Real scan
+    drivers should construct the signal dict explicitly using harness
+    output + derive_* helpers."""
+    p1 = _safe_dict(form.get("phase_1_raw_capture"))
+    p3 = _safe_dict(form.get("phase_3_computed"))
+
+    pr_review = _safe_dict(p1.get("pr_review"))
+    branch_protection = _safe_dict(p1.get("branch_protection"))
+    codeowners = _safe_dict(p1.get("codeowners"))
+    code_patterns = _safe_dict(p1.get("code_patterns"))
+    dangerous = _safe_dict(code_patterns.get("dangerous_primitives"))
+    issues_and_commits = _safe_dict(p1.get("issues_and_commits"))
+    advisories = _safe_dict(p1.get("security_advisories"))
+    community = _safe_dict(p1.get("community_profile"))
+    repo_meta = _safe_dict(p1.get("repo_metadata"))
+    artifact_verification = _safe_dict(p1.get("artifact_verification"))
+    contributors_raw = p1.get("contributors")
+    if isinstance(contributors_raw, dict):
+        contributors = _safe_list(contributors_raw.get("top_contributors"))
+    else:
+        contributors = _safe_list(contributors_raw)
+
+    rules_on_default = _safe_dict(branch_protection.get("rules_on_default"))
+    classic = _safe_dict(branch_protection.get("classic"))
+
+    has_branch_protection_classic = (classic.get("status") == 200)
+    has_ruleset_protection = derive_q1_has_ruleset_protection(branch_protection)
+
+    deser = _safe_dict(dangerous.get("deserialization"))
+    cmd_inj = _safe_dict(dangerous.get("cmd_injection"))
+    exec_p = _safe_dict(dangerous.get("exec"))
+
+    solo_meta = compute_solo_maintainer(contributors)
+
+    # Phase 1 doesn't currently expose readme text; tool_loads_user_files
+    # detection from phase_1_raw_capture relies on topics.
+    tool_loads_user_files = derive_tool_loads_user_files(
+        readme_text=None, repo_metadata=repo_meta,
+    )
+
+    # repo_age_days from created_at if present
+    repo_age_days = 0
+    created_at = repo_meta.get("created_at")
+    if created_at:
+        try:
+            created = datetime.fromisoformat(created_at.replace("Z", "+00:00"))
+            now = datetime.now(timezone.utc)
+            repo_age_days = (now - created).days
+        except (ValueError, AttributeError):
+            pass
+
+    # total_merged_lifetime from pr_review or repo_metadata
+    total_merged_lifetime = (
+        pr_review.get("total_merged_lifetime")
+        or pr_review.get("merged_total")
+        or repo_meta.get("merged_pr_count_lifetime")
+        or 0
+    )
+
+    return {
+        "formal_review_rate": pr_review.get("formal_review_rate"),
+        "any_review_rate": pr_review.get("any_review_rate"),
+        "pr_sample_size": pr_review.get("sample_size"),
+        "has_branch_protection": has_branch_protection_classic,
+        "has_ruleset_protection": has_ruleset_protection,
+        "rules_on_default_count": int(rules_on_default.get("count") or 0),
+        # V1.2 bundle codeowners shape: {found: bool, path, content, locations_checked}.
+        # Older shape used `present` / `file_present`. Accept all three keys for
+        # back-compat — bundle defines the canonical shape.
+        "has_codeowners": bool(
+            codeowners.get("found")
+            or codeowners.get("present")
+            or codeowners.get("file_present")
+        ),
+        "has_codeql": bool(_safe_dict(p1.get("defensive_configs")).get("has_codeql")),
+        "releases_count": int(_safe_dict(p1.get("releases")).get("count") or 0),
+        # Q2 signals
+        "open_security_issue_count": len(_safe_list(issues_and_commits.get("open_security_issues"))),
+        "oldest_cve_pr_age_days": pr_review.get("oldest_open_cve_pr_age_days"),
+        "oldest_open_security_item_age_days": derive_q2_oldest_open_security_item_age_days(
+            issues_and_commits, _safe_dict(p1.get("open_prs")),
+        ),
+        "closed_fix_lag_days": pr_review.get("closed_fix_lag_days"),
+        # Q3 signals
+        "repo_age_days": repo_age_days,
+        "total_merged_lifetime": total_merged_lifetime,
+        "has_security_policy": bool(community.get("has_security_policy")),
+        "has_contributing_guide": bool(community.get("has_contributing_guide")),
+        "published_advisory_count": int(advisories.get("published_count") or 0),
+        "has_silent_fixes": bool(advisories.get("has_silent_fixes")),
+        # Q4 signals
+        "deserialization_hit_count": int(deser.get("hit_count") or 0),
+        "cmd_injection_hit_count": int(cmd_inj.get("hit_count") or 0),
+        "exec_hit_count": int(exec_p.get("hit_count") or 0),
+        "tool_loads_user_files": tool_loads_user_files,
+        "has_unverified_install_path": not bool(artifact_verification.get("verified")),
+        "all_channels_pinned": bool(artifact_verification.get("all_channels_pinned")),
+        "artifact_verified": bool(artifact_verification.get("verified")),
+        "has_warning_on_install_path": bool(_safe_dict(p3.get("scorecard_cells")).get("has_warning_on_install_path")),
+        "has_critical_on_default_path": bool(_safe_dict(p3.get("scorecard_cells")).get("has_critical_on_default_path")),
     }

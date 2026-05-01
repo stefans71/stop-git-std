@@ -17,6 +17,45 @@ Canonical log of milestone commits with the verification state captured at commi
 
 ---
 
+## Checkpoint — 2026-05-01 (session 10) — Phase 3 implementation COMPLETE (calibration v2 module landed)
+
+**HEAD:** `1688ec5` on `chore/calibration-rebuild-impl` (Phase 3 close). Branch is **4 commits ahead of `main`** (NOT yet pushed to origin).
+
+**Session 10 commits from `4127385` (session 9 close on origin/main) →:**
+- `4d7b847` P3.a — classify_shape + cross-shape modifier helpers + cell evaluators landed (12/12 §4 gate pass + 46 new tests at `tests/test_classify_shape.py`)
+- `b51b6b8` P3.b/c — cell evaluator + orchestrator tests + privileged_tool drift doc (54 new tests at `tests/test_calibration_rules.py`)
+- `79f084a` P3.d/e — schema additions (rule_id REQUIRED, shape_classification) + validator gate v2.1 (9 new tests at `tests/test_validator_v2_rule_id.py`)
+- `1688ec5` P3.f — regression suite + RULE-6 third sub-condition INERT + `docs/calibration-impl-notes.md` (42 new tests at `tests/test_calibration_regression.py`)
+
+**Verification state at `1688ec5`:**
+- 565/565 tests passing (414 baseline + 151 net new in Phase 3)
+- §4 12-bundle classification gate: 12/12 expected categories matched
+- Override-reduction: 5 of 10 known cells now rule-driven (~50% reduction → hits design hard-floor ≤5/12 ~42%)
+- All 5 CONSOLIDATION §5 carry-forwards addressed
+- Spec deviations consolidated at `docs/calibration-impl-notes.md` (9 sections)
+
+**Revert paths:**
+- Revert just P3.f: `git revert 1688ec5`
+- Revert P3.d/e schema + validator: `git revert 79f084a`
+- Revert P3.b/c tests: `git revert b51b6b8`
+- Revert all of Phase 3: `git revert 4d7b847..HEAD`
+- Drop branch entirely: `git checkout main && git branch -D chore/calibration-rebuild-impl`
+- Reset to session 9 close on origin: `git reset --hard 4127385`
+
+**Files touched (session 10):**
+- `docs/compute.py` — calibration v2 module added (~1050 lines net new)
+- `docs/scan-schema.json` — scorecard_hint optional fields + new shape_classification $def + optional refs
+- `docs/validate-scanner-report.py` — gate v2.1 added to check_form
+- `docs/calibration-impl-notes.md` — NEW (9 sections, all spec deviations + outcome)
+- `tests/test_classify_shape.py` — NEW (46 tests)
+- `tests/test_calibration_rules.py` — NEW (54 tests)
+- `tests/test_validator_v2_rule_id.py` — NEW (9 tests)
+- `tests/test_calibration_regression.py` — NEW (42 tests; pinned per-bundle/per-cell tuples)
+
+**No code regressions:** existing 414 tests unchanged; legacy `compute_scorecard_cells()` preserved verbatim — calibration v2 is opt-in via the new `compute_scorecard_cells_v2()` entry point.
+
+---
+
 ## Checkpoint — 2026-05-01 (session 9) — Back-to-basics calibration rebuild Phases 0+1+2 (board review CLOSED + ARCHIVED)
 
 **HEAD:** `aeb9c76` on origin/main (session 9 — Phase 2 ARCHIVED).
