@@ -24,86 +24,61 @@ When the user says "continue" — start at the **next concrete action** under §
 **This block is your resumption packet.** It is the only thing you need to read after `/compact` to know what to do next. If something here is wrong or stale, fix it before proceeding.
 
 ### HEAD + branch
-- **Branch:** `chore/calibration-rebuild-rerender` (Phase 5 work branch). About to commit Phase 5 commit 1.
-- **Pre-render tag:** `pre-calibration-rerender` set at `e6b0a3b` — rollback anchor before Phase 5 mutates committed scan outputs.
-- **`origin/main` HEAD:** `e6b0a3b`. Feature branch `chore/template-side-derivation` deleted post-merge.
+- **HEAD:** `5d4ed3b` on `origin/main` (merge of `chore/calibration-rebuild-rerender`; phase 5 close `17bd4e3` on top of count-fix `d03c04b` on top of hygiene `543a1f5` on top of commit 1 `0325204` on top of kickoff `5ae3dcd` on top of phase 4 chain to `e6b0a3b`). Feature branch `chore/calibration-rebuild-rerender` deleted local; never pushed to remote.
+- **Pre-render tag:** `pre-calibration-rerender` set at `e6b0a3b` — Phase 5 rollback anchor; preserved post-merge.
+- **Tree:** clean.
 
 ### Phase + step
-- **Active phase:** Phase 5 — re-render 12 catalog scans (entries 16-27) + diff. **OWNER SIGN-OFF GRANTED on comparison doc.** About to land Phase 5 commit 1.
-- **Final scope:** 12 entries (16-27). Iteration history:
-  - Originally specified as "all 27 catalog scans"
-  - First correction: 16 entries (12-27) — entries 1-11 V2.4 hand-authored, no V1.2 form.json
-  - Second correction: 13 entries (15-27) — entries 12-14 are V2.5-preview Step G pilots, V1.1 phase_4
-  - Final correction: **12 entries (16-27)** — entry 15 (markitdown) has empty phase_4 scorecard_cells in form.json (LLM authored to .md sidecar)
-- **Owner decision on Phase 5 gate 6.3 backlog:** **(W) Defer.** 7 cells across 6 entries (ghostty/kamal/wezterm/freerouting Q3, WLED Q1+Q3, skills Q3) have advisory/LLM mismatches without override_reason. Phase 5 completion criteria specify `--report` clean on rendered files (✅ except pre-existing skills `<bucket>` issue) and `--parity` zero-warning (✅), not `--form` clean on bundles. Backlog documented in comparison doc; resolution belongs to Phase 6.
-- **Step within phase:** Phase 5 commit 1 ready (comparison doc + 24 re-rendered scans + 12 mutated bundles + helper scripts + compute.py defensive patches + test fixture patch). Phase 5 commit 2 (CLAUDE.md/REPO_MAP) follows. Then merge to main.
+- **Phase 5 — COMPLETE + MERGED + PUSHED.** 12 V1.2 wild scans (catalog entries 16-27) re-rendered with `compute_scorecard_cells_v2()` advisory + Phase 4 template-side derivation.
+- **Next phase: Phase 6 — MD calibration verification (LLM consumer test).** Not started. See plan §Phase 6 for spec.
 
-### Acceptance test outcomes (12-entry final state)
-1. **Test suite:** ✅ 587/587 passing.
-2. **`--report` validator clean on rendered files:** ✅ 23/24 (1 pre-existing skills MD failure on literal `<bucket>` brackets — same failure at HEAD; not a Phase 5 regression).
-3. **`--parity` zero-warning:** ✅ on all 12 MD/HTML pairs.
-4. **`--form` validator on bundles:** documented as out-of-spec for Phase 5; 6 cells flagged as Phase 6 input in comparison doc per (W) defer decision.
-5. **Verdict shifts:** 0 (findings unchanged).
-6. **Cell shifts:** 10 (calibration v2 advisory differs from legacy on 10 cells across the 12 entries).
-7. **Redundant overrides cleared:** 3 (Kronos Q2, ghostty Q1, freerouting Q4 — LLM previously override-explained but new advisory matches LLM color naturally).
-
-### Phase 1.5 follow-ups surfaced by Phase 5
-1. **`docs/compute.py` defensive patches** — `_derive_signals_from_form` coerces naive datetime to UTC; `compute_solo_maintainer` None-safe on `contributions`. Bundled with Phase 5 commit 1.
-2. **Markitdown bundle** has phase_4 findings but empty scorecard_cells. Future scan-authoring template should require populating both.
-3. **Step G pilot bundles** (entries 12-14) need V1.1→V1.2 migration + Phase 4 re-authoring before they can flow through calibration v2.
-4. **Skills MD pre-existing validator failure** (literal `<bucket>` / `<name>` brackets). Validator's unclosed-tag check doesn't honor backtick code spans. Pre-existing; not a Phase 5 regression.
-5. **Gate 6.3 backlog (Phase 6 input)** — 6 cells need Phase 4 LLM re-authoring against calibrated advisory. Documented in `docs/calibration-rebuild-rerender-comparison.md` §"Phase 6 input".
-
-### Commits done in Phase 4 (all on origin/main now)
+### Phase 5 deliverables (all on origin/main now)
 | SHA | One-line summary |
 |---|---|
-| `740bed3` | Plan amendment: drop derive_evidence_facts (4→3 helpers) |
-| `c748d83` | Post-/compact persistent-state consistency fix |
-| `4d7e98c` | **Commit 1**: derivation helpers + 21 tests; no template changes |
-| `9a17a73` | Resumption-doc rewrite (strip CLAUDE.md, self-contained §Current state) |
-| `c9602b3` | **Commit 2**: wire helpers into renderers + 6 templates; byte-identical when LLM rows present |
-| `97fbdbe` | **Commit 3**: author template optionalized + SCANNER-OPERATOR-GUIDE §8.5a + §06 dedup fix |
-| `c625309` | **Merge** of `chore/template-side-derivation` to `main` (no-ff) |
+| `5ae3dcd` | Phase 5 kickoff: plan amendment (16→13 scope; later corrected to 12) + branch setup at `e6b0a3b` |
+| `0325204` | Phase 5 commit 1: comparison doc + 24 re-rendered scans + 12 mutated bundles + 3 helper scripts + compute.py defensive patches + test fixture patch |
+| `543a1f5` | Comparison doc text bugs (hardcoded "12-27" / "0 of 16" → derived from data) |
+| `d03c04b` | §Current state gate 6.3 backlog count fix (6→7 cells) |
+| `17bd4e3` | Phase 5 commit 2: comparison-doc Phase 6 priority note + REPO_MAP §2.2 + scanner-catalog header note |
+| `5d4ed3b` | **Merge** of `chore/calibration-rebuild-rerender` to `main` (no-ff) |
 
-### Next concrete action — Phase 5 commit 1
-**Re-render entries 12-27 + comparison doc + catalog updates.** Per plan §Phase 5 (16-entry scope):
+### Phase 5 outcome metrics
+- **Verdict shifts:** 0 of 12 (verdicts stable by construction — `compute_verdict(findings)` reads stored findings; findings unchanged)
+- **Advisory shifts:** 10 cells across 7 entries (calibration v2 differs from legacy advisory)
+- **Redundant overrides cleared:** 3 (Kronos Q2, ghostty Q1, freerouting Q4 — rule-driven now)
+- **Phase 3 regression-test predictions:** all 5 confirmed (ghostty Q1 RULE-1, WLED Q1 RULE-2, kanata Q1 RULE-2, skills Q3 RULE-4, freerouting Q4 RULE-6)
+- **Tests:** 587/587 passing
+- **`--report` validator on rendered files:** 23/24 clean (1 pre-existing skills `<bucket>` failure — identical at HEAD pre-Phase 5)
+- **`--parity` zero-warning:** all 12 MD/HTML pairs
 
-**Pre-flight (do first):**
-- Copy `.scan-workspaces/markitdown/form.json` → `docs/scan-bundles/markitdown-<sha>.json` (entry 15 V2.5-preview bundle wasn't yet promoted to scan-bundles).
+### Out of scope for Phase 5 (unchanged on disk)
+- Entries 1-11: V2.4 era hand-authored against V1.1 schema; no V1.2 form.json exists
+- Entries 12-14 (Step G pilots): authoritative phase_4 in `.board-review-temp/step-g-execution/*.json` (V1.1); migration + re-authoring is its own workstream
+- Entry 15 (markitdown): V1.2 form.json has empty `phase_4_structured_llm.scorecard_cells` (LLM cells were authored to a `.md` sidecar bundle); re-render would regress Q2
 
-**Inputs (16 V1.2 form.json bundles):**
-- 3 fixtures (entries 12-14): `tests/fixtures/{zustand,caveman,archon-subset}-form.json`
-- 1 wild V2.5-preview (entry 15): `docs/scan-bundles/markitdown-<sha>.json` (after pre-flight)
-- 12 wild V1.2 (entries 16-27): `docs/scan-bundles/{Baileys,Kronos,QuickLook,WLED,Xray-core,browser_terminal,freerouting,ghostty,kamal,kanata,skills,wezterm}-<sha>.json`
+### Next concrete action when work resumes (Phase 6)
 
-**Deliverables:**
-- `docs/calibration-rebuild-rerender-comparison.md` — per entry 12-27: old verdict / new verdict / cell-color delta / one-line rationale. Entries 1-11 listed in a separate "not re-rendered (V2.4 era — no V1.2 bundle)" stub.
-- Re-rendered MD + HTML for entries 12-27 → REPLACE existing files in `docs/scans/catalog/`.
-- Updated `docs/scanner-catalog.md` reflecting any verdict shifts.
+**Phase 6 — MD calibration verification (LLM consumer test).** Per plan §Phase 6:
+- **Goal:** prove the calibrated MD leads LLM consumers to accurate "should I install this?" answers — not the over-cautious failure mode identified in session 8.
+- **Branch:** `chore/calibration-md-verification` from `main` at `5d4ed3b`.
+- **Deliverables:** see plan §Phase 6 body for spec.
 
-**Pre-commit gate:** owner reviews comparison doc and signs off on each verdict shift.
+**Phase 6 priority work item — Q3 FALLBACK regression on 5 repos.**
+The Phase 5 calibration v2 rerender exposed a Q3 (`do_they_tell_you_about_problems`) FALLBACK rule that fires red on 5 repos where the legacy advisory correctly landed amber: ghostty, kamal, wezterm, freerouting, WLED. Calibration v2 Q3 rules are stricter than legacy on repos with partial disclosure signals (CONTRIBUTING or advisories present, but no SECURITY.md). Phase 6 should investigate whether `RULE-5` or a new Q3 softener is needed before proceeding to LLM-consumer-test work, since the Q3 advisory drift propagates through the rendered MD and would skew the consumer test.
 
-**Completion criteria for the phase (across both commits):** owner sign-off + 587+/587+ tests pass + validator clean on every re-rendered file + `--parity` zero-warning on every MD/HTML pair.
+**Phase 6 input — gate 6.3 backlog (7 cells across 6 entries).**
+Calibration v2 advisory recompute created `phase_3` ≠ `phase_4` mismatches without `override_reason` on these cells. Documented in `docs/calibration-rebuild-rerender-comparison.md` §"Phase 6 input — gate 6.3 backlog":
+- 16 ghostty Q3, 18 kamal Q3, 21 wezterm Q3, 24 freerouting Q3 — Q3 FALLBACK regression (advisory now stricter than LLM)
+- 25 WLED Q1 + Q3 — Q1 RULE-2 softens advisory to amber while LLM stayed red; Q3 same FALLBACK regression as above
+- 27 skills Q3 — RULE-4 softens advisory to amber while LLM stayed red
 
-### After Phase 5 commit 1 — Phase 5 commit 2
-- Update CLAUDE.md current-state paragraph to mark Phase 5 done + REPO_MAP.md catalog count if it changed.
-- Then merge `chore/calibration-rebuild-rerender` to `main`, push, update §Current state to mark Phase 5 complete, and stop. Don't start Phase 6.
-
-### Acceptance test outcomes (per plan §Phase 4 Completion criteria)
-1. **Render skills bundle with REPO_VITALS=[], COVERAGE_DETAIL_ROWS=[], PR_SAMPLE_ROWS=[] zeroed:** ✅ produces helper-derived table content matching the canonical mechanical metrics from `phase_1_raw_capture`. §05 Repo vitals: 16 mechanical metrics match (Stars 47,917, Forks 3,900, License MIT, Created 2026-02-03, contributors, branch_protection 404, rulesets 0, CODEOWNERS absent, etc.). §06 Investigation coverage: 8 mechanical checks rendered cleanly (after §06 dedup fix in commit 3). §03 PR sample: PR #90 with title + self-merge concern (author/merger render `?` per Phase 1.5 gap).
-2. **Token-count delta on author_phase_4.py:** measured on real `.scan-workspaces/skills/author_phase_4.py` (619 lines / 13508 tokens). Derivable sections sum to **1659 tokens / 12.3% of total file**. Plan target was ~50% — **NOT MET; was aspirational.** Math: derivable sections (REPO_VITALS 943t + COVERAGE_DETAIL_ROWS 411t + PR_SAMPLE_ROWS 305t) = 12.3% of file. Remaining 88% (FINDINGS 3536t + EVIDENCE 2543t + EXECUTABLE_FILE_INVENTORY 1208t + others) is true synthesis, not derivable. Phase 4 hits the design intent (eliminate mechanical re-authoring) — token reduction is bounded by what was mechanical to begin with.
-3. **All 3 fixtures × 2 formats (zustand, caveman, archon-subset; .md + .html) byte-identical before/after:** ✅ confirms LLM-rows-present path unchanged.
-4. **587/587 tests passing.**
-
-### Phase 1.5 follow-ups surfaced by Phase 4 (track for later)
-1. **Harness `pr_review.prs` doesn't populate `author` / `merger`** — when LLM zeroes PR_SAMPLE_ROWS, derived table shows `?` for those columns. Documented in `docs/render_helpers.py::derive_pr_sample` docstring + SCANNER-OPERATOR-GUIDE §8.5a.
-2. **Phase 4 token-reduction target was aspirational at 50%** — actual ceiling is ~12% with current derivable surface. If a future Phase wants to reduce LLM authoring further, EXECUTABLE_FILE_INVENTORY is the next-largest mechanical-ish chunk (1208 tokens; partial mechanical via `dangerous_primitives.hits`). Out of scope for Phase 4.
+Phase 6 work item: re-author Phase 4 LLM cells (or recalibrate the rules) for these 7 cells; update `override_reason` where the LLM still wants to disagree with the rule-driven advisory.
 
 ### Token budget note
 Each Phase step (one commit) should complete within **~200k tokens**. If you're approaching that limit, commit what's done, update §Current state to reflect the partial state, and stop for `/compact`. Do NOT push past the limit hoping to wrap up — context degrades rapidly past 200k and you'll make decisions you'd reject with a fresh context window.
 
 ### What was finished before the current phase (high-level only; details in commit history)
-Phase 0 audit, Phase 1 calibration design, Phase 2 board review, Phase 3 calibration v2 implementation, Phase 4 template-side derivation. All landed on origin/main. Phase 3 outcome detail in `docs/calibration-impl-notes.md`. Phase 3 + Phase 4 commit lists in `AUDIT_TRAIL.md`. **You should not need to read these to do current phase work** — they are reference material, not resumption material.
+Phase 0 audit, Phase 1 calibration design, Phase 2 board review, Phase 3 calibration v2 implementation, Phase 4 template-side derivation, Phase 5 calibration v2 rerender. All landed on origin/main. Phase 3 outcome detail in `docs/calibration-impl-notes.md`. Phase 3-5 commit lists in `AUDIT_TRAIL.md` (after that file's session 11 update). **You should not need to read these to do current phase work** — they are reference material, not resumption material.
 
 ---
 
