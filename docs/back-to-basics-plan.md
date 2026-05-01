@@ -24,26 +24,34 @@ When the user says "continue" — start at the **next concrete action** under §
 **This block is your resumption packet.** It is the only thing you need to read after `/compact` to know what to do next. If something here is wrong or stale, fix it before proceeding.
 
 ### HEAD + branch
-- **HEAD:** `c9602b3` (commit 2) on `chore/template-side-derivation` (commit 3 staged but not yet committed at the moment §Current state is written; commit 3 SHA gets locked in once committed).
-- **Branch base:** `c748d83` on `main` (post-/compact persistent-state consistency fix; pushed to origin/main).
-- **Tree:** clean after commit 3.
+- **HEAD:** `c625309` on `origin/main` (Phase 4 merge commit; no-ff merge of `chore/template-side-derivation`; pushed). Feature branch deleted post-merge.
+- **Tree:** clean.
 
 ### Phase + step
-- **Active phase:** Phase 4 — mechanical reformatting moves to template-side. See plan §Phase 4 for the full spec.
-- **Step within phase:** Commits 1 + 2 + 3 done. **Next action: merge `chore/template-side-derivation` to `main` with `--no-ff`, push, then mark Phase 4 complete in §Current state.**
+- **Active phase:** Phase 4 — **COMPLETE + MERGED + PUSHED**. See plan §Phase 4 for the spec; this section's "Acceptance test outcomes" block records what landed.
+- **Step within phase:** N/A. **Next phase: Phase 5 — re-render all 27 catalog scans + diff. NOT STARTED. Owner-decision pause point.**
 
-### Commits done in Phase 4
-| SHA | One-line summary | Where |
-|---|---|---|
-| `740bed3` | Plan amendment: drop derive_evidence_facts (4→3 helpers) | `main` |
-| `c748d83` | Post-/compact persistent-state consistency fix | `main` |
-| `4d7e98c` | **Commit 1**: derivation helpers + 21 tests; no template changes | `chore/template-side-derivation` |
-| `9a17a73` | Resumption-doc rewrite (strip CLAUDE.md, self-contained §Current state) | `chore/template-side-derivation` |
-| `c9602b3` | **Commit 2**: wire helpers into renderers + 6 templates; byte-identical when LLM rows present | `chore/template-side-derivation` |
-| `<commit3>` | **Commit 3**: author template optionalized + SCANNER-OPERATOR-GUIDE §8.5a + §06 dedup fix | `chore/template-side-derivation` |
+### Commits done in Phase 4 (all on origin/main now)
+| SHA | One-line summary |
+|---|---|
+| `740bed3` | Plan amendment: drop derive_evidence_facts (4→3 helpers) |
+| `c748d83` | Post-/compact persistent-state consistency fix |
+| `4d7e98c` | **Commit 1**: derivation helpers + 21 tests; no template changes |
+| `9a17a73` | Resumption-doc rewrite (strip CLAUDE.md, self-contained §Current state) |
+| `c9602b3` | **Commit 2**: wire helpers into renderers + 6 templates; byte-identical when LLM rows present |
+| `97fbdbe` | **Commit 3**: author template optionalized + SCANNER-OPERATOR-GUIDE §8.5a + §06 dedup fix |
+| `c625309` | **Merge** of `chore/template-side-derivation` to `main` (no-ff) |
 
-### Commits remaining in Phase 4
-**None.** Next action is merge to main + Phase 4 close.
+### Next concrete action when work resumes (Phase 5)
+**Phase 5 — Re-render all 27 catalog scans + diff.** Per plan §Phase 5:
+- Branch: `chore/calibration-rebuild-rerender` from `main` at `c625309`
+- Pre-render tag: `pre-calibration-rerender` (set immediately before this phase since Phase 5 mutates committed scan outputs)
+- Deliverables:
+  - `docs/calibration-rebuild-rerender-comparison.md` — per scan: old verdict / new verdict / cell-color delta / rationale (one-line per scan)
+  - Re-rendered MD + HTML for all 27 scans → committed to `docs/scans/catalog/` REPLACING existing files (per cutover; old versions in git history)
+  - Updated `docs/scanner-catalog.md` table reflecting any verdict shifts
+- Pre-commit gate: owner reviews comparison doc and signs off on each verdict shift
+- Completion criteria: owner sign-off + 587+/587+ tests pass + validator clean on every re-rendered file + `--parity` zero-warning on every MD/HTML pair
 
 ### Acceptance test outcomes (per plan §Phase 4 Completion criteria)
 1. **Render skills bundle with REPO_VITALS=[], COVERAGE_DETAIL_ROWS=[], PR_SAMPLE_ROWS=[] zeroed:** ✅ produces helper-derived table content matching the canonical mechanical metrics from `phase_1_raw_capture`. §05 Repo vitals: 16 mechanical metrics match (Stars 47,917, Forks 3,900, License MIT, Created 2026-02-03, contributors, branch_protection 404, rulesets 0, CODEOWNERS absent, etc.). §06 Investigation coverage: 8 mechanical checks rendered cleanly (after §06 dedup fix in commit 3). §03 PR sample: PR #90 with title + self-merge concern (author/merger render `?` per Phase 1.5 gap).
