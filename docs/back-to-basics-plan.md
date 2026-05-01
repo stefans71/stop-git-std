@@ -24,7 +24,7 @@ When the user says "continue" — start at the **next concrete action** under §
 **This block is your resumption packet.** It is the only thing you need to read after `/compact` to know what to do next. If something here is wrong or stale, fix it before proceeding.
 
 ### HEAD + branch
-- **HEAD:** `a31ff4b` on `origin/main` (Phase 4 close pointer commit on top of merge `c625309`). Feature branch `chore/template-side-derivation` deleted post-merge (local + remote).
+- **HEAD:** `b9723f1` on `origin/main` (§Current state hygiene fixes on top of Phase 4 close `a31ff4b` on top of merge `c625309`). Feature branch `chore/template-side-derivation` deleted post-merge (local + remote).
 - **Tree:** clean.
 
 ### Phase + step
