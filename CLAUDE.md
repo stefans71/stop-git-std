@@ -2,6 +2,14 @@
 
 An LLM-driven deep-dive investigation tool that produces security scan reports for GitHub repos. Not a static analyzer — YOU do the investigation via `gh` CLI, synthesize findings, and render HTML + MD reports.
 
+## Active work (auto-resume on "continue")
+
+If the user opens a fresh session or says **"continue"** without other context, read **`docs/back-to-basics-plan.md`** — start with its `§ Current state` block. That block is the single source of truth for: active phase, active step, next concrete action, what's blocked. The plan covers Phases 0–7 (distribution audit → calibration design → board review → implementation → re-render → MD verification → Simple Report) with explicit deliverables, branches, commits, and rollback contracts per phase.
+
+If a fork is in flight when you resume, do NOT duplicate its work — wait for the completion notification. The plan's `§ Current state` block names any in-flight forks.
+
+Last back-to-basics-plan event: 2026-05-01 session 9 — Phase 0 audit fork launched; plan + CLAUDE.md pointer landing on this commit.
+
 ## When the user says "scan" — start the wizard
 
 When the user asks to run a scan (says "scan", "scan <repo>", "investigate", "check this repo", or similar):
