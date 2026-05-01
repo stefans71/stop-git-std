@@ -21,17 +21,37 @@ When the user says "continue" — start at the **next concrete action** under §
 
 ## § Current state (UPDATE AT EACH COMMIT — single source of truth)
 
-- **Last commit landing this plan:** `aeb9c76` (Phase 2 ARCHIVED — calibration design board review CLOSED).
-- **Active phase:** Phase 2 — **COMPLETE + ARCHIVED**. 3-of-3 R3 SIGN OFF. 16 owner directives applied across 3 rounds. Archive at `docs/External-Board-Reviews/050126-calibration-rebuild/CONSOLIDATION.md` with full 26-item dissent audit (zero silent drops, zero preserved-live blocking dissents). Phase 3 not yet started; **PAUSE POINT** for owner before Phase 3 implementation work begins.
-- **Active step within phase:** N/A. Phase 2 deliverables (CONSOLIDATION.md + 15 round-output files + master index update) all committed. Plan + CLAUDE.md + REPO_MAP.md + AUDIT_TRAIL.md + auto-memory all updated to reflect Phase 2 close.
-- **Next concrete action when work resumes:** start PHASE 3 implementation. Create branch `chore/calibration-rebuild-impl` from `main`. Design spec is `docs/calibration-design-v2.md` (twice-revised final state). Address the 5 Phase 3 carry-forwards from `docs/External-Board-Reviews/050126-calibration-rebuild/CONSOLIDATION.md` §5. Phase 3 deliverables per plan §Phase 3: extend `compute.py` with `classify_shape()` + per-cell evaluators (`evaluate_q1`, `evaluate_q2`, `evaluate_q3`, `evaluate_q4`) + `compute_scorecard_cells_v2()` orchestrator; per-shape rule tables; `tests/test_classify_shape.py` + `tests/test_calibration_rules.py` + `tests/test_calibration_regression.py`; schema additions for `phase_3_advisory.scorecard_hints.<q>.rule_id` (REQUIRED) + `phase_4_structured_llm.shape_classification`. Validator must enforce `rule_id` presence on every cell. Tests must stay 414/414 + new tests +30-50.
-- **Blocked on:** owner approval to start Phase 3 (token-heavy implementation work; recommended fresh session). Push `main` to `origin` before pause.
-- **Audit topline (so a future session can resume without re-reading the audit doc):**
-  - Dominant pattern: "OSS minimal-governance default" — 6 of 12 V1.2 scans hit (no protection + 0 rulesets + no CODEOWNERS + low formal review). 3 of those 6 are Caution, 3 are Critical → **Q1=red is NOT verdict-discriminating in current data.**
-  - Q3 is similarly decoupled: every Q3=red scan has identical signals, but 2 of 6 Q3=red scans are Caution (skills + QuickLook — both cases where disclosure-machinery absence is proportional to project age/maturity).
-  - **Q4 IS the verdict-discriminator**: 5/5 Q4=red scans are Critical; 5/5 Caution scans have Q4=amber. But every Q4=red required Phase 4 LLM override because Phase 3 advisory never reaches red on Q4 (12/12 amber). The override mechanism is doing shape-aware judgment work that should be expressed as rules.
-  - Highest-leverage proposed rules from audit §10: RULE-4 (Q3=amber for `repo_age < 180d AND total_merged_lifetime < 5` — fixes skills-class), RULE-1 (Q1=amber when CODEOWNERS+ruleset+rules-on-default present — already overridden 2x), RULE-6 (extend V13-3 C5 deserialization auto-fire to cmd_injection + tool_loads_user_files — eliminates 2 of 5 Q4 overrides). Combined with shape-aware variants, override count projected to drop from ~10/12 to 1-2/12.
-- **Branch:** `main`. Phase 1 will also stay on `main` (docs only). Phase 3 onward uses `chore/calibration-rebuild-impl`.
+- **Last commit landing this plan:** `1688ec5` on `chore/calibration-rebuild-impl` (P3.f — regression suite + RULE-6 inert + impl notes). Branch is **4 commits ahead of main**.
+- **Active phase:** Phase 3 — **COMPLETE**. Calibration v2 module landed (`docs/compute.py` `classify_shape` + `evaluate_q1/q2/q3/q4` + `compute_scorecard_cells_v2`). 565/565 tests passing (414 baseline + 151 net new). All 5 CONSOLIDATION §5 carry-forwards addressed. Implementation notes consolidated at `docs/calibration-impl-notes.md` (9 sections, all spec-deviations documented). **PAUSE POINT** for owner before Phase 4 (mechanical reformatting moves to template-side).
+- **Active step within phase:** N/A. Phase 3 deliverables all committed on `chore/calibration-rebuild-impl`:
+  - `4d7b847` P3.a — classify_shape + cross-shape modifier helpers + cell evaluators landed (12/12 §4 gate pass)
+  - `b51b6b8` P3.b/c — cell evaluator + orchestrator tests + privileged_tool drift doc
+  - `79f084a` P3.d/e — schema additions (rule_id, shape_classification) + validator gate v2.1
+  - `1688ec5` P3.f — regression suite (42 tests pinning 12-bundle outputs) + RULE-6 third sub-condition INERT + `docs/calibration-impl-notes.md`
+- **Next concrete action when work resumes:** owner decision —
+  1. **Merge `chore/calibration-rebuild-impl` to `main` now**, OR keep on feature branch through Phase 4. Per design contract: `compute_scorecard_cells_v2` is opt-in (legacy `compute_scorecard_cells` preserved unchanged), so merging is low-risk and frees up the branch name. Recommended: merge.
+  2. **Then start PHASE 4** — mechanical reformatting moves to template-side per plan §Phase 4. Branch can stay `chore/calibration-rebuild-impl` (continuation) or new branch. Deliverables: `derive_repo_vitals(p1)` + `derive_coverage_detail(p1)` + `derive_pr_sample(p1)` + `derive_evidence_facts(p1)` helpers in `docs/render-md.py` + `docs/render-html.py`; templates use derived data when phase_4 doesn't override.
+- **Phase 3 outcome — override-reduction (per `docs/calibration-impl-notes.md` §6):**
+  - Pre-redesign: ~10 overrides across 12 V1.2 scans (~83% override rate)
+  - Post-redesign: 5 cells now rule-driven (no override required):
+    - ghostty Q1: RULE-1 (CODEOWNERS + ruleset + 4 rules-on-default)
+    - WLED Q1: RULE-2 (38% formal review)
+    - kanata Q1: RULE-2 (44% formal review)
+    - skills Q3: RULE-4 (HIGHEST-VALUE rule — sample-floor 90d + 1 lifetime PR)
+    - freerouting Q4: RULE-6 (35 ObjectInputStream + pcb topic auto-fire)
+  - **~50% override reduction → hits design hard-floor target (≤5/12 ~42%).**
+  - Stretch target (≤3/12) requires RULE-7/8/9 promotion — INERT pending V12x harness work per design promotion-gate semantics.
+- **Phase 3 spec deviations (consolidated at `docs/calibration-impl-notes.md`):**
+  - Heuristic refinements during §4 gate: 4 fixes (substring traps, JS/TS library default, Python-no-fingerprint catch)
+  - `is_privileged_tool`: 6/12 fire but with set difference vs design (ghostty miss, Xray-core extra) — both calls defensible
+  - RULE-6 third sub-condition (exec + has_unverified_install_path) INERT pending V12x-11 harness work
+  - kamal Q1 RULE-1 doesn't fire (no CODEOWNERS file in bundle — audit projection vs harness data mismatch)
+  - Kronos Q4 RULE-6 doesn't fire (deserialization.hit_count=0 — harness coverage gap; Phase 1.5 follow-up)
+- **Branch:** `chore/calibration-rebuild-impl` (4 commits ahead of `main`, NOT yet pushed to origin).
+- **Audit topline (preserved from Phase 0 — unchanged):**
+  - Dominant pattern: "OSS minimal-governance default" — 6 of 12 V1.2 scans hit. Q1=red NOT verdict-discriminating.
+  - Q3 similarly decoupled (skills + QuickLook are Caution despite Q3=red).
+  - Q4 IS the verdict-discriminator (5/5 Q4=red are Critical; 5/5 Caution have Q4=amber). Calibration v2 RULE-6 now drives some Q4=red deterministically (freerouting today; Kronos pending harness fix).
 
 ---
 
