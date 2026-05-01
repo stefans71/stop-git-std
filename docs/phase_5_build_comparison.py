@@ -104,7 +104,8 @@ def main():
     lines.append("")
     lines.append("**Phase 5 of `docs/back-to-basics-plan.md` — owner-review gate before Phase 5 commit 1.**")
     lines.append("")
-    lines.append(f"Bundles re-evaluated: **{len(entries)} V1.2 catalog scans (entries 12-27)**.")
+    entry_nums = sorted(e["entry_num"] for e in entries)
+    lines.append(f"Bundles re-evaluated: **{len(entries)} V1.2 catalog scans (entries {entry_nums[0]}-{entry_nums[-1]})**.")
     lines.append("")
     lines.append("Per cell, the table shows: `old_advisory→new_advisory (rule_id) | LLM=phase_4_color [override: reason if any]`. Color codes: `r`=red, `a`=amber, `g`=green, `—`=not present.")
     lines.append("")
@@ -125,11 +126,11 @@ def main():
         if c["advisory_new_color"] == c["phase_4_color"] and c["phase_4_override_reason"]
     )
 
-    lines.append(f"- **Verdict shifts:** {verdict_shifts} of 16 (verdict reads `compute_verdict(findings)`; findings unchanged in this rerender, so verdicts are stable by construction).")
+    lines.append(f"- **Verdict shifts:** {verdict_shifts} of {len(entries)} (verdict reads `compute_verdict(findings)`; findings unchanged in this rerender, so verdicts are stable by construction).")
     lines.append(f"- **Advisory shifts:** {advisory_shifts} cell(s) across {sum(1 for e in entries if any(c['advisory_old_color'] != c['advisory_new_color'] for c in e['cells'].values()))} entries — calibration v2 advisory differs from legacy advisory.")
     lines.append(f"- **Redundant overrides:** {redundant} cell(s) — Phase 4 LLM previously override-explained but new advisory now matches the LLM color naturally (rule-driven). These are calibration wins.")
     lines.append("")
-    lines.append("## Per-entry comparison (entries 12-27)")
+    lines.append(f"## Per-entry comparison (entries {entry_nums[0]}-{entry_nums[-1]})")
     lines.append("")
     lines.append("| # | Repo | Shape | Verdict (old→new) | Cell shifts (Q1 / Q2 / Q3 / Q4) | Summary |")
     lines.append("|---|---|---|---|---|---|")

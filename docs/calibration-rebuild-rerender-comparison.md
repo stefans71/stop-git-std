@@ -2,17 +2,17 @@
 
 **Phase 5 of `docs/back-to-basics-plan.md` — owner-review gate before Phase 5 commit 1.**
 
-Bundles re-evaluated: **12 V1.2 catalog scans (entries 12-27)**.
+Bundles re-evaluated: **12 V1.2 catalog scans (entries 16-27)**.
 
 Per cell, the table shows: `old_advisory→new_advisory (rule_id) | LLM=phase_4_color [override: reason if any]`. Color codes: `r`=red, `a`=amber, `g`=green, `—`=not present.
 
 ## Headline findings
 
-- **Verdict shifts:** 0 of 16 (verdict reads `compute_verdict(findings)`; findings unchanged in this rerender, so verdicts are stable by construction).
+- **Verdict shifts:** 0 of 12 (verdict reads `compute_verdict(findings)`; findings unchanged in this rerender, so verdicts are stable by construction).
 - **Advisory shifts:** 10 cell(s) across 7 entries — calibration v2 advisory differs from legacy advisory.
 - **Redundant overrides:** 3 cell(s) — Phase 4 LLM previously override-explained but new advisory now matches the LLM color naturally (rule-driven). These are calibration wins.
 
-## Per-entry comparison (entries 12-27)
+## Per-entry comparison (entries 16-27)
 
 | # | Repo | Shape | Verdict (old→new) | Cell shifts (Q1 / Q2 / Q3 / Q4) | Summary |
 |---|---|---|---|---|---|
