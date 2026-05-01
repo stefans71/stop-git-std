@@ -19,12 +19,12 @@ Canonical log of milestone commits with the verification state captured at commi
 
 ## Checkpoint — 2026-05-01 (session 9) — Back-to-basics calibration rebuild Phases 0+1+2 (board review CLOSED + ARCHIVED)
 
-**HEAD:** TBD on Phase 2 archive commit (this commit lands `docs/External-Board-Reviews/050126-calibration-rebuild/` + master index update + plan/CLAUDE/REPO_MAP/this-AUDIT-TRAIL/auto-memory updates).
+**HEAD:** `aeb9c76` on origin/main (session 9 — Phase 2 ARCHIVED).
 
 **Session 9 commits from `dff3886` (session 8 close) →:**
 
 ```
-TBD     Phase 2 archive — CONSOLIDATION.md + 15 round files + persistent-state updates
+aeb9c76 Phase 2 ARCHIVED — CONSOLIDATION.md + 15 round files + persistent-state updates
 f42635f Phase 2 R3 close — Q2 explicit-deferral doc fix per 3-of-3 convergent note
 9d79e23 Plan §Current state: R3 launching (thin ratification)
 cb7407c Phase 2 R2 close — design doc revised per 7 R2 owner directives

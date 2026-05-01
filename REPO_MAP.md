@@ -80,7 +80,7 @@ Older flat-file board records (pre-`External-Board-Reviews/` layout, kept for hi
 
 ### 2.2 Current state
 
-- **HEAD:** TBD on Phase 2 archive commit (session 9, 2026-05-01). Tree clean.
+- **HEAD:** `aeb9c76` on origin/main (session 9 close). Tree clean.
 - **Session 9 work (2026-05-01):** back-to-basics calibration rebuild. Phase 0 distribution audit + Phase 1 design + Phase 2 board review (3 rounds, 16 owner directives, 26-item dissent audit, 3-of-3 R3 SIGN OFF) + Phase 2 archive at `docs/External-Board-Reviews/050126-calibration-rebuild/`. Phase 3 implementation pending (next session). See `docs/back-to-basics-plan.md` §Current state for resume pointer.
 - **Session 8 first scan:** `2aa59bf` (catalog entry 27 mattpocock/skills — first Claude Code skills/plugin V1.2 wild scan; Caution; Q2 missing_qualitative_context override — first use of this enum value at any n).
 - **Session 7 commits** from `c6e7502` (session 6 close) →: `b3622b5` (WLED catalog entry 25 — first embedded IoT firmware scan, Q4 signal_vocabulary_gap override on CORS+no-auth) → `f4f3332` (WLED catalog hash resolution) → `2b295ef` (Baileys catalog entry 26 — first TS-primary + first reverse-engineered-API scan; **V13-3 TRIGGER FIRED at n=11**) → `c558b9f` (Baileys catalog hash resolution) → `fcc4e81` (V13-3 CLOSE: comparator-calibration board review + V1.2.x Priority 1 landings: C2 language qualifier, C5 Q4 auto-fire, C18 tool-loads-user-files helper, C20 dry-run; Q4 rubric reorder) → `c0d2ba2` (archive Codex code-review 3-pass iteration) → `9b5e5d4` (session 7 persistent-state updates).
