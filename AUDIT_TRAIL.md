@@ -19,7 +19,7 @@ Canonical log of milestone commits with the verification state captured at commi
 
 ## Checkpoint — 2026-05-01 (session 10) — Phase 3 implementation COMPLETE + MERGED to main
 
-**HEAD:** `9d33799` on `origin/main` (merge of `chore/calibration-rebuild-impl` — Phase 3 calibration v2 implementation). 5 P3 commits + 1 merge commit pushed to origin. Feature branch `chore/calibration-rebuild-impl` deleted post-merge.
+**HEAD:** `6657e59` on `origin/main` (post-merge pointer cleanup, on top of merge `9d33799`). Phase 3 merged via `9d33799` (no-ff merge of `chore/calibration-rebuild-impl`). 5 P3 commits + 1 merge commit + 1 cleanup commit pushed to origin. Feature branch `chore/calibration-rebuild-impl` deleted local + remote.
 
 **Pre-merge feature-branch tip:** `e45f2e1` (still reachable via `9d33799^2`).
 
@@ -28,6 +28,9 @@ Canonical log of milestone commits with the verification state captured at commi
 - `b51b6b8` P3.b/c — cell evaluator + orchestrator tests + privileged_tool drift doc (54 new tests at `tests/test_calibration_rules.py`)
 - `79f084a` P3.d/e — schema additions (rule_id REQUIRED, shape_classification) + validator gate v2.1 (9 new tests at `tests/test_validator_v2_rule_id.py`)
 - `1688ec5` P3.f — regression suite + RULE-6 third sub-condition INERT + `docs/calibration-impl-notes.md` (42 new tests at `tests/test_calibration_regression.py`)
+- `e45f2e1` Phase 3 close — persistent-state updates (plan + CLAUDE.md + AUDIT_TRAIL + REPO_MAP). Pre-merge tip.
+- `9d33799` Merge of `chore/calibration-rebuild-impl` to `main` (no-ff).
+- `6657e59` Post-merge pointer cleanup (HEAD pointers in plan + CLAUDE.md + AUDIT_TRAIL + REPO_MAP corrected from feature-branch tip to merge SHA).
 
 **Verification state at `1688ec5`:**
 - 565/565 tests passing (414 baseline + 151 net new in Phase 3)
@@ -37,12 +40,12 @@ Canonical log of milestone commits with the verification state captured at commi
 - Spec deviations consolidated at `docs/calibration-impl-notes.md` (9 sections)
 
 **Revert paths:**
-- Revert just P3.f: `git revert 1688ec5`
+- Revert just post-merge pointer cleanup: `git revert 6657e59` (safe — only state-doc pointers)
+- Revert just P3.f: `git revert 1688ec5` (now on main; conflicts may surface against the merge — prefer reverting the merge if you want all of P3 out)
 - Revert P3.d/e schema + validator: `git revert 79f084a`
 - Revert P3.b/c tests: `git revert b51b6b8`
-- Revert all of Phase 3: `git revert 4d7b847..HEAD`
-- Drop branch entirely: `git checkout main && git branch -D chore/calibration-rebuild-impl`
-- Reset to session 9 close on origin: `git reset --hard 4127385`
+- Revert the entire Phase 3 merge: `git revert -m 1 9d33799` (cleanest path — undoes the whole feature)
+- Reset to session 9 close on origin: `git reset --hard 4127385` (DESTRUCTIVE — confirm before running; loses the post-merge pointer-cleanup commit too)
 
 **Files touched (session 10):**
 - `docs/compute.py` — calibration v2 module added (~1050 lines net new)
@@ -53,6 +56,7 @@ Canonical log of milestone commits with the verification state captured at commi
 - `tests/test_calibration_rules.py` — NEW (54 tests)
 - `tests/test_validator_v2_rule_id.py` — NEW (9 tests)
 - `tests/test_calibration_regression.py` — NEW (42 tests; pinned per-bundle/per-cell tuples)
+- Persistent-state docs (touched in `e45f2e1` + `6657e59`): `docs/back-to-basics-plan.md` §Current state, `CLAUDE.md` Active work pointer, `AUDIT_TRAIL.md` (this file), `REPO_MAP.md` §2.2.
 
 **No code regressions:** existing 414 tests unchanged; legacy `compute_scorecard_cells()` preserved verbatim — calibration v2 is opt-in via the new `compute_scorecard_cells_v2()` entry point.
 

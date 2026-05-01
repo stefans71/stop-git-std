@@ -21,16 +21,17 @@ When the user says "continue" — start at the **next concrete action** under §
 
 ## § Current state (UPDATE AT EACH COMMIT — single source of truth)
 
-- **Last commit landing this plan:** `9d33799` on `main` (merge of `chore/calibration-rebuild-impl` — Phase 3 calibration v2 implementation; 5 commits + merge commit pushed to origin/main). Feature branch deleted.
-- **Active phase:** Phase 3 — **COMPLETE**. Calibration v2 module landed (`docs/compute.py` `classify_shape` + `evaluate_q1/q2/q3/q4` + `compute_scorecard_cells_v2`). 565/565 tests passing (414 baseline + 151 net new). All 5 CONSOLIDATION §5 carry-forwards addressed. Implementation notes consolidated at `docs/calibration-impl-notes.md` (9 sections, all spec-deviations documented). **PAUSE POINT** for owner before Phase 4 (mechanical reformatting moves to template-side).
-- **Active step within phase:** N/A. Phase 3 deliverables all committed on `chore/calibration-rebuild-impl`:
+- **Last commit landing this plan:** `6657e59` on `main` (post-merge pointer cleanup; HEAD). Phase 3 merge landed at `9d33799` (no-ff merge of `chore/calibration-rebuild-impl`; 5 P3 commits + merge commit + cleanup commit pushed to origin/main). Feature branch deleted both locally and on origin.
+- **Active phase:** Phase 3 — **COMPLETE + MERGED + PUSHED**. Calibration v2 module landed (`docs/compute.py` `classify_shape` + `evaluate_q1/q2/q3/q4` + `compute_scorecard_cells_v2`). 565/565 tests passing (414 baseline + 151 net new). All 5 CONSOLIDATION §5 carry-forwards addressed. Implementation notes consolidated at `docs/calibration-impl-notes.md` (9 sections, all spec-deviations documented). **PAUSE POINT** for owner before Phase 4 (mechanical reformatting moves to template-side).
+- **Active step within phase:** N/A. Phase 3 deliverables all merged to `main` via `9d33799`:
   - `4d7b847` P3.a — classify_shape + cross-shape modifier helpers + cell evaluators landed (12/12 §4 gate pass)
   - `b51b6b8` P3.b/c — cell evaluator + orchestrator tests + privileged_tool drift doc
   - `79f084a` P3.d/e — schema additions (rule_id, shape_classification) + validator gate v2.1
   - `1688ec5` P3.f — regression suite (42 tests pinning 12-bundle outputs) + RULE-6 third sub-condition INERT + `docs/calibration-impl-notes.md`
-- **Next concrete action when work resumes:** owner decision —
-  1. **Merge `chore/calibration-rebuild-impl` to `main` now**, OR keep on feature branch through Phase 4. Per design contract: `compute_scorecard_cells_v2` is opt-in (legacy `compute_scorecard_cells` preserved unchanged), so merging is low-risk and frees up the branch name. Recommended: merge.
-  2. **Then start PHASE 4** — mechanical reformatting moves to template-side per plan §Phase 4. Branch can stay `chore/calibration-rebuild-impl` (continuation) or new branch. Deliverables: `derive_repo_vitals(p1)` + `derive_coverage_detail(p1)` + `derive_pr_sample(p1)` + `derive_evidence_facts(p1)` helpers in `docs/render-md.py` + `docs/render-html.py`; templates use derived data when phase_4 doesn't override.
+  - `e45f2e1` Phase 3 close — persistent-state updates (plan + CLAUDE.md + AUDIT_TRAIL + REPO_MAP). Pre-merge feature-branch tip; reachable via `9d33799^2`.
+  - `9d33799` Merge of `chore/calibration-rebuild-impl` to `main` (no-ff).
+  - `6657e59` Post-merge pointer cleanup (corrected HEAD pointers in plan + CLAUDE.md + AUDIT_TRAIL + REPO_MAP from feature-branch tip to merge SHA).
+- **Next concrete action when work resumes:** **start PHASE 4** — mechanical reformatting moves to template-side per plan §Phase 4. Recommended branch: `chore/template-side-derivation` from `main`. Deliverables: `derive_repo_vitals(p1)` + `derive_coverage_detail(p1)` + `derive_pr_sample(p1)` + `derive_evidence_facts(p1)` helpers in `docs/render-md.py` + `docs/render-html.py`; templates use derived data when phase_4 doesn't override. Helpers go in `render-md.py` as module-level functions exposed via `env.globals` (same pattern as existing `short_sha`, `fmt_int`). Recommended commit cadence: one per helper (4 commits) for revert granularity if Phase 5 re-render shows regression in one section.
 - **Phase 3 outcome — override-reduction (per `docs/calibration-impl-notes.md` §6):**
   - Pre-redesign: ~10 overrides across 12 V1.2 scans (~83% override rate)
   - Post-redesign: 5 cells now rule-driven (no override required):
