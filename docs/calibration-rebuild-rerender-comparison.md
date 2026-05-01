@@ -258,7 +258,9 @@ Validator gate 6.3 (`--form` mode) requires `override_reason` + rationale + `com
 | 25 | wled/WLED (wild) | Q3 (disclose) | `red` | `FALLBACK` | `amber` | advisory `red` ≠ LLM `amber` (advisory now stricter) |
 | 27 | mattpocock/skills (wild) | Q3 (disclose) | `amber` | `RULE-4` | `red` | advisory `amber` ≠ LLM `red` (LLM stricter than rule) |
 
-Phase 6 work item: re-author Phase 4 LLM cells for these 6 cells (or whatever subset the calibrated advisory genuinely changes the right answer for) and update `override_reason` where the LLM still wants to disagree with the rule-driven advisory.
+**Phase 6 priority: Q3 FALLBACK fires red on 5 repos where legacy advisory correctly landed amber (ghostty, kamal, wezterm, freerouting, WLED). This is a regression — calibration v2 Q3 rules are stricter than legacy on repos with partial disclosure signals (CONTRIBUTING or advisories present, but no SECURITY.md). Investigate whether RULE-5 or a new Q3 softener is needed.**
+
+Phase 6 work item: re-author Phase 4 LLM cells for these 7 cells (or whatever subset the calibrated advisory genuinely changes the right answer for) and update `override_reason` where the LLM still wants to disagree with the rule-driven advisory.
 
 ## Owner sign-off
 

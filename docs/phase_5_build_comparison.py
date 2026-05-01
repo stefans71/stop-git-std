@@ -212,7 +212,9 @@ def main():
             f"| {v['entry_num']} | {v['label']} | {v['cell_label']} | `{v['advisory_new']}` | `{v['advisory_new_rule_id']}` | `{v['phase_4']}` | {direction} |"
         )
     lines.append("")
-    lines.append("Phase 6 work item: re-author Phase 4 LLM cells for these 6 cells (or whatever subset the calibrated advisory genuinely changes the right answer for) and update `override_reason` where the LLM still wants to disagree with the rule-driven advisory.")
+    lines.append("**Phase 6 priority: Q3 FALLBACK fires red on 5 repos where legacy advisory correctly landed amber (ghostty, kamal, wezterm, freerouting, WLED). This is a regression — calibration v2 Q3 rules are stricter than legacy on repos with partial disclosure signals (CONTRIBUTING or advisories present, but no SECURITY.md). Investigate whether RULE-5 or a new Q3 softener is needed.**")
+    lines.append("")
+    lines.append(f"Phase 6 work item: re-author Phase 4 LLM cells for these {len(violations)} cells (or whatever subset the calibrated advisory genuinely changes the right answer for) and update `override_reason` where the LLM still wants to disagree with the rule-driven advisory.")
     lines.append("")
     lines.append("## Owner sign-off")
     lines.append("")
