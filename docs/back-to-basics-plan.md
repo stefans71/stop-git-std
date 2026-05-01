@@ -35,7 +35,7 @@ When the user says "continue" — start at the **next concrete action** under §
   - First correction: 16 entries (12-27) — entries 1-11 V2.4 hand-authored, no V1.2 form.json
   - Second correction: 13 entries (15-27) — entries 12-14 are V2.5-preview Step G pilots, V1.1 phase_4
   - Final correction: **12 entries (16-27)** — entry 15 (markitdown) has empty phase_4 scorecard_cells in form.json (LLM authored to .md sidecar)
-- **Owner decision on Phase 5 gate 6.3 backlog:** **(W) Defer.** 6 cells across 5 entries (ghostty/kamal/wezterm/freerouting Q3, WLED Q1+Q3, skills Q3) have advisory/LLM mismatches without override_reason. Phase 5 completion criteria specify `--report` clean on rendered files (✅ except pre-existing skills `<bucket>` issue) and `--parity` zero-warning (✅), not `--form` clean on bundles. Backlog documented in comparison doc; resolution belongs to Phase 6.
+- **Owner decision on Phase 5 gate 6.3 backlog:** **(W) Defer.** 7 cells across 6 entries (ghostty/kamal/wezterm/freerouting Q3, WLED Q1+Q3, skills Q3) have advisory/LLM mismatches without override_reason. Phase 5 completion criteria specify `--report` clean on rendered files (✅ except pre-existing skills `<bucket>` issue) and `--parity` zero-warning (✅), not `--form` clean on bundles. Backlog documented in comparison doc; resolution belongs to Phase 6.
 - **Step within phase:** Phase 5 commit 1 ready (comparison doc + 24 re-rendered scans + 12 mutated bundles + helper scripts + compute.py defensive patches + test fixture patch). Phase 5 commit 2 (CLAUDE.md/REPO_MAP) follows. Then merge to main.
 
 ### Acceptance test outcomes (12-entry final state)
