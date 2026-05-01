@@ -313,6 +313,16 @@ Each rule has: ID, target cell(s), trigger condition, output color, short_answer
 - **Confidence:** firm (already produces amber in current rules; this rule documents why).
 - **Rationale:** owner noted RULE-5 is "more of a documentation exercise" — including for hygiene. Makes the trip condition explicit so future audits can reason about it.
 
+### Q2 — "Do they fix problems quickly?" (NO RULE CHANGES — explicit deferral)
+
+**Added post-R3 per 3-of-3 convergent note (SOP §4 silent-drop fix):** The Q2 cell is intentionally left untouched by this design. No new rules, no new short_answer templates, no override-mechanism changes. Rationale:
+
+- The Phase 0 audit (`docs/calibration-audit.md`) found Q2 was the cell most often correctly aligned between Phase 3 advisory and Phase 4 authoritative judgment — the existing `compute_scorecard_cells()` Q2 logic (driven by `open_security_issue_count`, `oldest_cve_pr_age_days`, `oldest_open_security_item_age_days`, `closed_fix_lag_days`) tracks the actual signal well across the 12 V1.2 wild scans.
+- Of the ~10 overrides across 12 scans, only 2 were Q2 overrides (Kronos Q2 `signal_vocabulary_gap`, Xray-core Q2 `threshold_too_strict`) — and both were addressed by V1.2.x signal widening (V13-1 enum expansion + Q2 oldest-open-security-item-age signal) rather than rule-table changes.
+- The skills-class sample-floor concern (1 lifetime PR, no fix events to grade cadence) is addressed by RULE-4 on Q3, not Q2 — RULE-4's `repo_age_days < 180 AND total_merged_lifetime < 5` trigger fires for skills' Q2-overridden case, but on Q3 not Q2 because the audit data showed Q3 was the cell that mis-fired on the OSS-default young-repo pattern.
+
+**Phase 1.5 trigger:** if a future audit (post-Phase-1 re-render) shows Q2 calibration miscalls beyond the 2 V1.2 cases above, OR if the next 5 V1.2 wild scans surface ≥3 Q2 overrides, Q2 enters scope for a separate calibration design (likely paired with the Phase 1.5 finding-severity rule-driving work). This is the explicit deferral — Q2 is NOT a silent drop; it's a deliberate scope boundary with a re-entry trigger.
+
 ### Q4 — "Is it safe out of the box?"
 
 #### RULE-6 — Q4 auto-fire extension (FIRM)
@@ -570,6 +580,18 @@ R2 verdicts: 3-of-3 SIGN OFF WITH NOTES. DeepSeek moved DISSENT → conditional 
 
 **R2-round items NOT changed** (despite agent flag):
 - DeepSeek's "3 enum categories with zero V1.2 evidence" concern (`agentic-platform`, `install-script-fetcher`, `specialized-domain-tool`) — kept; provisional-flag mechanism + n≥2 promotion is the response. (Note: `specialized-domain-tool` actually has 2 V1.2 scans — freerouting + Kronos; DeepSeek's count was off.)
+
+---
+
+### Post-R3 owner-resolved item (round 3 — applied 2026-05-01)
+
+R3 verdicts: 3-of-3 SIGN OFF (Pragmatist clean; Codex + DeepSeek with notes). DeepSeek moved DISSENT → conditional sign-off across the 3 rounds. **R3 produced one cross-agent convergent flag** (rare in a thin ratification round): all 3 agents independently noted that Q2 was implicitly deferred but never explicitly documented — Codex framed this as a SOP §4 silent-drop documentation issue. Owner directive: pre-archive doc fix.
+
+| # | Section | Change | Driver |
+|---|---|---|---|
+| 1 | §5 — new Q2 sub-section | Explicit "Q2 — NO RULE CHANGES (explicit deferral)" sub-section added before Q4. Documents rationale (audit found Q2 well-calibrated; only 2 of 10 overrides were Q2; addressed by V1.2.x signal widening rather than rule-table changes; skills sample-floor case routes through RULE-4 on Q3 not Q2). Phase 1.5 re-entry trigger documented (≥3 Q2 overrides in next 5 wild scans, or Phase-1 re-render audit miscalls) | 3-of-3 R3 convergent (Pragmatist + Codex + DeepSeek); Codex preserved as non-blocking R3 dissent for archive |
+
+This resolves Codex's R3 preserved dissent. Archive can record the dissent as "raised-and-resolved-pre-archive" rather than "preserved live."
 
 ---
 
