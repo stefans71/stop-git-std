@@ -24,32 +24,31 @@ When the user says "continue" — start at the **next concrete action** under §
 **This block is your resumption packet.** It is the only thing you need to read after `/compact` to know what to do next. If something here is wrong or stale, fix it before proceeding.
 
 ### HEAD + branch
-- **HEAD:** `092b0a3` on `origin/main` (no-ff merge of `chore/calibration-md-verification`; Phase 6 chain `3120669` ← `f2485fc` ← `69a7d5c` ← Phase 5 close `5d4ed3b` ← Phase 5 chain to `e6b0a3b`). Feature branch `chore/calibration-md-verification` deleted local; never pushed to remote.
-- **Pre-render tag:** `pre-calibration-rerender` set at `e6b0a3b` — Phase 5 rollback anchor; preserved.
+- **HEAD:** `ddda083` on `feat/simple-report` (Phase 7 commit 2 — implementation; on top of Phase 7 commit 1 concept brief `e7ce7af` ← Phase 6 merge `092b0a3` on `origin/main`). Branch local-only; awaits owner sign-off before merge.
+- **Pre-render tag:** `pre-calibration-rerender` set at `e6b0a3b` — preserved.
 - **Tree:** clean (after this §Current state commit lands).
 
 ### Phase + step
-- **Phase 6 — COMPLETE + MERGED + PUSHED.** 5 cold-fork consumer tests on rendered MD for catalog entries 16, 20, 24, 26, 27. **Result: 5 of 5 match.** Pass bar (≥4 of 5) cleared.
-- **Next phase: Phase 7 — Simple Report HTML.** **BLOCKED** — see "Phase 7 spec missing" block below.
+- **Phase 7 — COMPLETE on local branch, AWAITING OWNER SIGN-OFF FOR MERGE.** Simple Report renderer + templates + tests + 3 sample scans rendered for ghostty / Baileys / skills.
+- **Phase 7 = final phase of the back-to-basics calibration rebuild.** No Phase 8 in the current plan; once Phase 7 merges, the rebuild scope is closed and remaining work items (gate 6.3 backlog resolution, wizard option D for Simple Report, Q3 FALLBACK regression) are post-rebuild follow-ups.
 
-### Phase 6 deliverables (all on origin/main now)
+### Phase 7 deliverables (on `feat/simple-report`, NOT yet on main)
 | SHA | One-line summary |
 |---|---|
-| `f2485fc` | Phase 6 commit 1: `docs/calibration-rebuild-md-verification.md` (260 lines; per-scan detail + Q3 attribution analysis + failure-mode coverage table) |
-| `3120669` | Phase 6 commit 2: §Current state update for Phase 6 close |
-| `092b0a3` | **Merge** of `chore/calibration-md-verification` to `main` (no-ff) |
+| `e7ce7af` | Phase 7 commit 1: `docs/simple-report-concept.md` (329 lines; concept brief authored from owner-supplied design intent via path γ) |
+| `ddda083` | Phase 7 commit 2: `docs/render-simple.py` + `docs/templates-simple/{css,html.j2,md.j2}` + `tests/test_render_simple.py` (22 tests) + 3 sample scans rendered to `docs/scans/catalog/GitHub-Scanner-{ghostty,Baileys,skills}-simple.{html,md}` |
+| *(this commit)* | Phase 7 commit 3: §Current state update for Phase 7 close |
 
-### Phase 6 outcome metrics
-- **Match count:** 5 of 5 (pass bar ≥4)
-  - 16 ghostty Caution → YES-WITH-CAVEATS ✓
-  - 26 Baileys Critical → NO ✓
-  - 27 skills Caution → YES-WITH-CAVEATS ✓
-  - 20 browser_terminal Critical → NO ✓
-  - 24 freerouting Critical → NO ✓
-- **Failure modes covered:**
-  - Over-cautious skill collections (entry 27 V13-3 `missing_qualitative_context` override) — survived cold read.
-  - Under-cautious genuine criticals (Baileys, browser_terminal, freerouting) — all three returned NO with calibrated reasoning.
-- **Q3 FALLBACK regression — did it skew the test?** No. Rendered MD is sourced from `phase_4_structured_llm.scorecard_cells` (LLM-authored), NOT from `phase_3_advisory.scorecard_hints`. The Phase 5 Q3 advisory drift lives in `phase_3` only and does NOT propagate to consumer-facing MD today. The cold-fork test therefore did NOT stress-test calibration v2 Q3 rule changes — it validated that Phase 4-era LLM cells still lead consumers to the calibrated verdict. See verification doc §"Q3 FALLBACK regression — did it actually matter for this test?" for analysis + Phase 7 implications.
+### Phase 7 outcome metrics
+- **Tests:** 609 of 609 passing (was 587; 22 new in `tests/test_render_simple.py`).
+- **CSS subset size:** 251 lines vs 824 in source (`docs/scanner-design-system.css`) — ~30% size, no auditor-only patterns retained.
+- **Sample renders:** 3 representative bundles rendered cleanly to `docs/scans/catalog/` (ghostty Caution / Baileys Critical / skills Caution-with-V13-3-override).
+- **Self-containment:** validated by `TestHtmlSelfContainment` (no external `<script>`, no external `<img>`, only external `<link>` is Google Fonts CDN per concept §7).
+- **HTML/MD parity:** validated by `TestHtmlMdParity` (scorecard questions + finding titles + action body all match across both outputs).
+- **Action body source:** top finding's `action_hint` field (consumer-oriented action guidance authored by V2.4/V2.5-preview prompt). Falls back to `per_finding_prose` lead paragraph then verdict-level static text.
+
+### Phase 6 outcome metrics (carried; Phase 6 is closed)
+- 5 cold-fork consumer tests on rendered MD; **5 of 5 match** (pass bar ≥4). 16 ghostty Caution → YES-WITH-CAVEATS · 26 Baileys Critical → NO · 27 skills Caution → YES-WITH-CAVEATS · 20 browser_terminal Critical → NO · 24 freerouting Critical → NO.
 
 ### Gate 6.3 backlog — DEFERRED to post-Phase-7 (owner directive 2026-05-01)
 The gate 6.3 backlog (7 cells across 6 entries: 16 ghostty Q3, 18 kamal Q3, 21 wezterm Q3, 24 freerouting Q3, 25 WLED Q1+Q3, 27 skills Q3) is a `phase_3` ↔ `phase_4` divergence the validator's `--form` mode will eventually demand resolution on. Resolution choice is one of:
@@ -64,29 +63,36 @@ The gate 6.3 backlog (7 cells across 6 entries: 16 ghostty Q3, 18 kamal Q3, 21 w
 - Entries 12-14 (Step G pilots): authoritative phase_4 in `.board-review-temp/step-g-execution/*.json` (V1.1); migration + re-authoring is its own workstream
 - Entry 15 (markitdown): V1.2 form.json has empty `phase_4_structured_llm.scorecard_cells` (LLM cells were authored to a `.md` sidecar bundle); re-render would regress Q2
 
-### Phase 7 spec missing — BLOCKER
+### Phase 7 spec resolution (historical note)
 
-**Issue discovered 2026-05-01 post-Phase-6-merge.** Plan §Phase 7 (line 243) names `docs/simple-report-concept.md` as the source-of-truth concept brief for the Simple Report deliverables. **That file does not exist on disk and has never been committed** to this repo. Confirmed via:
-- `find` on `simple-report*` / `simple_report*` — only hit is the git tag `pre-simple-report` at `9b5e5d4` (which is the HEAD before the back-to-basics plan was even written; tag was set anticipating Phase 7 but the concept doc was never authored).
-- `git log --all -- docs/simple-report-concept.md` — empty (file never committed).
-- Grep across `docs/` for `tool-branding`, `threat-explainer-library`, `render-simple`, `templates-simple` — no hits outside the plan itself.
+**Phase 7 spec was missing at start of Phase 7** — `docs/simple-report-concept.md` did not exist when work resumed post-Phase-6-merge. Owner picked path **(γ)** 2026-05-01: provided design intent in conversation, I authored the concept brief from that intent, committed as `e7ce7af`, then proceeded to implementation.
 
-The plan §Phase 7 entry lists only the file deliverables (`docs/templates-simple/simple-report.html.j2`, `simple-report.md.j2`, `docs/render-simple.py`, `docs/threat-explainer-library.json`, `docs/tool-branding.json`) — not their structure, content, or design intent. Implementing without the concept brief would mean inventing the Simple Report design from whole cloth, not building to spec.
+Concept brief decisions on three open questions (owner directives 2026-05-01):
+1. **Editorial caption** — display verbatim (option i); do not truncate to 2 sentences.
+2. **Scorecard short_answers** — ship with current fragmentary form (option i); full-sentence rewrites are scope creep, follow-up not Phase 7.
+3. **Wizard Q1 option D Simple Report** — leave wizard alone for Phase 7 (option iii); wizard default reordering is its own commit after Phase 7 ships and we confirm Simple Report looks good on real scans.
 
-### Next concrete action when work resumes — owner decides
+### Phase 7 follow-ups (NOT in scope; queued for post-merge work)
 
-**Owner choice required before Phase 7 starts:**
-- **(α)** Author `docs/simple-report-concept.md` first (separate prep step before Phase 7 branch). This is the cleanest path — Phase 7 then reads the brief and implements to it, matching every other phase's pattern. Owner-driven content.
-- **(β)** Have me draft a `docs/simple-report-concept.md` from the breadcrumbs in the plan + `docs/calibration-design-v2.md:19` reference + `docs/calibration-impl-notes.md:172` reference + the project's existing rendering pipeline shape (V2.4 + V2.5-preview canonical DOM, design-system CSS, scanner-catalog reference scans). Owner reviews/edits before Phase 7 starts.
-- **(γ)** Skip the concept doc and have me propose a Simple Report design directly in the conversation; owner approves the proposal; we then commit the proposal as `docs/simple-report-concept.md` and start Phase 7 implementation.
+| Item | Status | Notes |
+|---|---|---|
+| Wizard Q1 option D Simple Report (CLAUDE.md amendment) | Deferred per (iii) | Standalone commit after Phase 7 ships. |
+| Gate 6.3 backlog resolution (7 cells × 6 entries) | Deferred per 2026-05-01 directive | Option (b) add `override_reason` or (c) soften Q3 rules — not (a) re-author. Scope: post-Phase-7. |
+| Q3 FALLBACK regression on 5 entries (ghostty, kamal, wezterm, freerouting, WLED) | Deferred | `phase_3` advisory only; rendered MD unaffected (Phase 6 finding). Address alongside gate 6.3 backlog. |
+| Full-sentence scorecard short_answers | Deferred per (i) | Bundle re-authoring across 12 V1.2 scans; cosmetic polish. |
+| Render Simple Report for remaining 9 of 12 V1.2 scans (Kronos, kamal, Xray-core, browser_terminal, wezterm, QuickLook, kanata, freerouting, WLED) | Pending owner decision | Phase 7 ships only the 3 representative samples. The other 9 should batch-render in a follow-up commit; trivial — same renderer, same bundles. |
 
-**Until owner picks (α) / (β) / (γ), Phase 7 is blocked.** Do NOT start branch `feat/simple-report` or write any of the deliverable files.
+### Next concrete action when work resumes (after owner sign-off)
+
+**Owner action required:** review the 3 sample scans at `docs/scans/catalog/GitHub-Scanner-{ghostty,Baileys,skills}-simple.{html,md}` (open the HTMLs in a browser to evaluate visual identity) + approve merge of `feat/simple-report` to `main` (no-ff).
+
+**After merge — back-to-basics calibration rebuild is closed.** Follow-up items above can be picked up individually as separate small commits. The plan can also be archived at that point — keep the file for history but note in this section that all 8 phases (0-7) are complete.
 
 ### Token budget note
 Each Phase step (one commit) should complete within **~200k tokens**. If you're approaching that limit, commit what's done, update §Current state to reflect the partial state, and stop for `/compact`. Do NOT push past the limit hoping to wrap up — context degrades rapidly past 200k and you'll make decisions you'd reject with a fresh context window.
 
 ### What was finished before the current phase (high-level only; details in commit history)
-Phase 0 audit, Phase 1 calibration design, Phase 2 board review, Phase 3 calibration v2 implementation, Phase 4 template-side derivation, Phase 5 calibration v2 rerender, Phase 6 MD calibration verification. **All 7 phases of the calibration rebuild that have a written spec are now landed on origin/main.** Phase 7 (Simple Report HTML) is the only phase remaining + is currently blocked on missing concept brief — see "Phase 7 spec missing" block above. Phase 3 outcome detail in `docs/calibration-impl-notes.md`. Phase 3-6 commit lists in `AUDIT_TRAIL.md` (after that file's session 11 update). **You should not need to read these to do current phase work** — they are reference material, not resumption material.
+Phase 0 audit, Phase 1 calibration design, Phase 2 board review, Phase 3 calibration v2 implementation, Phase 4 template-side derivation, Phase 5 calibration v2 rerender, Phase 6 MD calibration verification. Phase 7 Simple Report renderer + concept brief + 3 sample scans authored on `feat/simple-report` (this branch — pre-merge). Phases 0-6 landed on origin/main. Phase 7 awaits owner sign-off + merge — **after which the back-to-basics rebuild is COMPLETE.** Phase 3 outcome detail in `docs/calibration-impl-notes.md`. Phase 3-6 commit lists in `AUDIT_TRAIL.md`. Phase 7 brief: `docs/simple-report-concept.md`. **You should not need to read these to do current phase work** — they are reference material.
 
 ---
 
