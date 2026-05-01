@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{ repo_owner }}/{{ repo_name }} — Simple Report</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:;">
+<style>
+{{ css_inline }}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="hero">
+    <div class="hero-badge">
+      <span class="dot {{ verdict_dot_class }}"></span>stop-git-std · simple report
+    </div>
+    <h1>{{ repo_owner }}<span class="slash">/</span><span class="{{ verdict_color_class }}">{{ repo_name }}</span></h1>
+    <div class="hero-meta">
+      <span>scanned {{ scan_date }}</span>
+      <span class="sep">·</span>
+      <span>main @ {{ short_sha }}</span>
+      {%- if stars %}
+      <span class="sep">·</span><span>{{ stars }} stars</span>
+      {%- endif %}
+      {%- if license %}
+      <span class="sep">·</span><span>{{ license }}</span>
+      {%- endif %}
+      {%- if language %}
+      <span class="sep">·</span><span>{{ language }}</span>
+      {%- endif %}
+    </div>
+  </div>
+
+  <div class="verdict-section">
+    <div class="verdict-banner {{ verdict_banner_class }}">
+      <div class="verdict-label">● {{ verdict_label }}</div>
+      <h2 class="verdict-headline">{{ verdict_headline }}</h2>
+      <div class="verdict-summary">{{ verdict_summary }}</div>
+    </div>
+  </div>
+
+  <div class="scorecard">
+    <div class="scorecard-title">Trust scorecard</div>
+    {%- for row in scorecard_rows %}
+    <div class="sc-row {{ row.color_class }}">
+      <span class="sc-glyph">{{ row.glyph }}</span>
+      <div>
+        <div class="sc-question">{{ row.question }}</div>
+        <div class="sc-answer">{%- if row.lead %}<span class="lead">{{ row.lead }}</span>{% if row.rest %} — {{ row.rest }}{% endif %}{%- else %}{{ row.answer }}{%- endif %}</div>
+      </div>
+    </div>
+    {%- endfor %}
+  </div>
+
+  {%- if top_findings %}
+  <div class="findings">
+    <div class="section-title">Top concerns</div>
+    {%- for f in top_findings %}
+    <div class="finding-card {{ f.severity_class }}">
+      <span class="finding-tag">{{ f.severity_label }}</span>
+      <div class="finding-title">{{ f.title }}</div>
+      <div class="finding-body">{{ f.body }}</div>
+    </div>
+    {%- endfor %}
+  </div>
+  {%- endif %}
+
+  <div class="action">
+    <div class="section-title">What should I do?</div>
+    <div class="action-card {{ action_class }}">
+      <div class="action-headline">{{ action_headline }}</div>
+      <div class="action-body">{{ action_body }}</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    stop-git-std<span class="sep">·</span>scanned {{ scan_date }}<span class="sep">·</span><a href="{{ repo_url }}">{{ repo_owner }}/{{ repo_name }}</a>
+  </div>
+
+</div>
+</body>
+</html>

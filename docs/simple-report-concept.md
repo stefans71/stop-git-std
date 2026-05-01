@@ -231,7 +231,7 @@ The Simple MD is **separate from** the long-form MD that V2.4/V2.5-preview alrea
 
 ## 7. Visual & inline-CSS strategy
 
-**Self-contained HTML.** The Simple Report ships with all CSS inlined in a `<style>` block. No external font CDN load (uses system stack fallbacks: `'Unbounded'` falls back to `'Inter'` falls back to system sans). No JS. No external image references.
+**Self-contained HTML — except for typography CDN.** The Simple Report ships with all CSS inlined in a `<style>` block. No external stylesheet, no JS, no external image references. Typography (Unbounded/Inter/JetBrains Mono) loads from Google Fonts CDN — same pattern as `docs/GitHub-Repo-Scan-Template.html` (lines 33-36, with CSP meta restricting font-src to `fonts.gstatic.com`). System fallbacks (`'Inter'` → system sans) keep the report readable if fonts fail to load. **Open question for owner:** if strict "no external deps" is required, the alternative is base64-embedded font subsets (~150-400KB inline per render); ship-with-CDN is the recommended default unless the owner specifies otherwise.
 
 **CSS budget target:** ≤ 250 lines (vs 824 lines in the full design system). Achieved by:
 - Dropping all auditor-only patterns (collapsibles, evidence, vitals, timeline, PR table, etc).
@@ -267,14 +267,9 @@ Flags:
 
 ### Wizard integration
 
-CLAUDE.md wizard Q1 gains option **C "Simple"**:
+**Deferred to a separate commit after Phase 7 ships** (owner directive 2026-05-01). Phase 7 builds the renderer + templates; wizard default reordering is a user-facing workflow change that warrants its own consideration once we have rendered scans to evaluate.
 
-> A: Both MD + HTML (default) — full audit trail
-> B: HTML only
-> C: MD only — cheapest, paste into any LLM for "should I install this?" guidance
-> **D: Simple Report (HTML + MD)** — polished one-page visual + paste-ready MD; primary user-facing output
-
-Long-form HTML stays available via option A or B for auditor needs.
+Phase 7 deliverable does NOT modify CLAUDE.md wizard Q1.
 
 ---
 
