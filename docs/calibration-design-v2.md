@@ -1,6 +1,6 @@
 # Calibration Design v2 — Rule-Table Rebuild
 
-**Status:** Phase 1 deliverable. Authored 2026-05-01 in response to `docs/calibration-audit.md` + owner-confirmed direction.
+**Status:** Phase 1 deliverable. Authored 2026-05-01 in response to `docs/calibration-audit.md` + owner-confirmed direction. **Revised 2026-05-01 post-R1 owner directives** — 7 changes incorporated based on cross-agent R1 convergence + owner adjudication. See revision history at the bottom of §9.
 **Predecessor:** `docs/calibration-audit.md` (Phase 0 empirical baseline).
 **Successor:** Phase 2 board review (3-model FrontierBoard governance review on this design).
 
@@ -62,6 +62,15 @@ Each cell function (`q1_evaluate`, `q2_evaluate`, `q3_evaluate`, `q4_evaluate`) 
 
 Each rule emits `(color, rule_id, short_answer_template_key)`. The renderer fills the template from signal values. Override mechanism remains as-is for cases the rule table doesn't cover.
 
+**Rule precedence contract (added post-R1 per owner directive responding to Codex's flag):**
+
+When multiple rules could fire on the same cell, precedence is **first-match-wins in the priority order defined above**. Specifically:
+- **Auto-fire rules (step 1)** are evaluated first AND short-circuit. The first auto-fire trip returns immediately; no later rules evaluate for that cell.
+- **Among non-auto-fire rules (steps 2-4)**, the first matching rule in the order listed (shape modifiers, then sample-floor / context modifiers, then base rule table) wins. The rule's `(color, rule_id, template_key)` is the cell's value; subsequent rules don't combine, average, or override.
+- **Step 5 fallback** only fires if no earlier rule matched.
+
+No combining. No averaging. No "majority wins." This is deterministic, traceable (every cell has exactly one `rule_id` showing why it landed at that color), and easy to test (per-rule fixture-based tests with explicit expected outputs).
+
 ### Override mechanism preserved
 
 The Phase 4 LLM-authoritative override gate stays intact. Rules produce a deterministic result; if Phase 4 disagrees, it must explain via `override_reason` (existing 7-value enum). Expected behavior:
@@ -108,6 +117,14 @@ Proposed 9-category enum, derived from grouping the existing `catalog_metadata.s
 
 12/12 classify cleanly. No `other`. ✓
 
+**Enum evolution note (added post-R1 per owner directive responding to DeepSeek's over-fit flag):**
+
+The 9-category enum was derived from 12 V1.2 catalog scans — DeepSeek correctly notes this is tight evidence. Categories with n=1 representation in the current catalog (`embedded-firmware` = WLED only; `install-script-fetcher` = caveman only; `agent-skills-collection` = skills + gstack but gstack predates V1.2 schema) are **provisional** and the enum is expected to evolve as the catalog grows. Future scans that don't fit cleanly should: (a) classify as `other` with confidence="low", (b) trigger a deferred-ledger entry to revisit the enum, (c) NOT cause an emergency taxonomy change. The classifier remains deterministic; new categories require an explicit design revision, not an inference.
+
+**Browser-extension boundary clarification (added post-R1 per owner directive responding to Codex's flag):**
+
+A browser-extension repo with a native messaging host (e.g., browser_terminal) classifies as **`desktop-application`**, not a separate `browser-extension` category. Reasoning: the browser extension is the install vector, but the native messaging host runs on the user's machine outside the browser sandbox — it's the actual execution surface. The user's threat model maps to "tool runs on my desktop," which is the desktop-application shape. A pure browser-extension with no native component would still classify as `desktop-application` since the browser is part of the user's desktop, but the modifier `is_privileged_tool` should fire when extension permissions are broad.
+
 **Cross-shape modifiers (orthogonal to category):**
 
 Some risk patterns cut across shape — they're modifiers, not categories. Proposed boolean flags on the shape classification result:
@@ -144,7 +161,7 @@ def classify_shape(form: dict) -> ShapeClassification:
     """
 ```
 
-**Inputs (read-only):**
+**Inputs (read-only) — Phase 1 ONLY (revised post-R1 per Codex's FIX-NOW phase-boundary directive):**
 - `phase_1_raw_capture.repo_metadata.{primary_language, topics}`
 - `phase_1_raw_capture.distribution_channels.channels`
 - `phase_1_raw_capture.code_patterns.agent_rule_files` (count + paths)
@@ -153,7 +170,8 @@ def classify_shape(form: dict) -> ShapeClassification:
 - `phase_1_raw_capture.dependencies.manifest_files`
 - `phase_1_raw_capture.install_script_analysis.scripts`
 - `phase_1_raw_capture.code_patterns.dangerous_primitives.*` (for cross-shape modifier detection)
-- `phase_4_structured_llm.catalog_metadata.shape` (FALLBACK only — LLM-authored prose hint)
+
+**The original design had `phase_4_structured_llm.catalog_metadata.shape` as a fallback input.** Codex flagged this as a phase-boundary violation: Phase 3 is meant to be the deterministic authority; letting it fall back to Phase 4 LLM output reverses the boundary the redesign is trying to strengthen. **Owner directive:** drop the fallback entirely. If `classify_shape()` cannot decide cleanly, it returns `("other", confidence="low", matched_rule="catch-all")` and Phase 4 LLM author attention can override the cell colors via the existing override-explained mechanism (where the LLM authors `phase_4_structured_llm.scorecard_cells.<q>` with rationale + `override_reason`). This preserves the override path without making `classify_shape()` itself depend on Phase 4.
 
 **Heuristic decision tree (priority order):**
 
@@ -215,6 +233,7 @@ def classify_shape(form: dict) -> ShapeClassification:
 
 10. Fallback
    → other (with confidence="low", matched_rule="catch-all")
+   → DOES NOT consult phase_4_structured_llm.catalog_metadata.shape (per Codex FIX-NOW directive — phase-boundary preserved)
 ```
 
 **Cross-shape modifier helpers** (called inside `classify_shape()`):
@@ -258,13 +277,16 @@ Each rule has: ID, target cell(s), trigger condition, output color, short_answer
 - **Confidence:** firm (audit: WLED at 41% formal review currently sits at Q1=red — clearly miscalibrated).
 - **Rationale:** when the maintainer voluntarily reviews PRs at meaningful rate, the cell answer is "yes, in practice," not "no."
 
-#### RULE-3 — Q1 shape-aware floor (LOWER-CONFIDENCE)
+#### RULE-3 — Q1 narrow tie-breaker for non-privileged solo OSS with positive signals (REVISED post-R1)
 
-- **Trigger:** `shape.category == "agent-skills-collection" OR shape.is_solo_maintained AND shape.is_privileged_tool == False`
+**Owner directive (post-R1):** the original RULE-3 had two branches — one keyed on `shape.category == "agent-skills-collection"` and one keyed on `is_solo_maintained AND NOT is_privileged_tool`. The agent-skills-collection branch is dropped because that case is already handled by RULE-4's sample-floor on Q3, not Q1 (the audit's skills evidence drove Q3 over-call, not Q1). The remaining branch is narrowed with positive-signal evidence requirements:
+
+- **Trigger (revised, parenthesized for clarity):** `(shape.is_solo_maintained == True) AND (shape.is_privileged_tool == False) AND (signals.has_codeql == True OR signals.releases_count >= 20)`
 - **Output:** Q1 = amber (was: red on bare governance-floor trip)
-- **short_answer_template:** `q1.amber.shape_appropriate` → "Typical for {{`shape.category`}} — solo OSS without formal review gate, but {{`is_privileged_tool ? "tool surface limited" : "no kernel/sudo surface"`}}."
-- **Confidence:** **lower** — n=2 evidence (kamal already covered by RULE-1; ghostty also covered by RULE-1). Owner flagged: "include in design but flag as lower-confidence than 1 and 2."
-- **Rationale:** acknowledges that shape moderates the meaning of "no formal review." But because RULE-1 + RULE-2 cover most of the same ground, RULE-3's marginal effect may be small. Worth implementing for cases where neither RULE-1 nor RULE-2 fires but the shape clearly carries the OSS-default trust pattern.
+- **short_answer_template:** `q1.amber.solo_with_positive_signals` → "Solo-maintained but {{`positive_signal`}} indicates active engineering discipline ({{`releases_count`}} releases / CodeQL on); not a captured-by-default red signal."
+- **Confidence:** **firm** (revised from lower-confidence). The narrow trigger captures the kamal pattern (compound positive signals on a non-privileged solo tool) and any future scan with the same shape.
+- **Why this matters:** addresses Pragmatist's "Python operator-precedence ambiguity" flag (now explicitly parenthesized) AND DeepSeek's "n=2 evidence" concern (now requires positive evidence to fire, not just absence of governance). RULE-1 + RULE-2 still do the heavy lifting; RULE-3 covers the case where neither fires but a solo non-privileged repo has compound positive signals.
+- **Original concern preserved for record:** if board still wants to prune entirely (DeepSeek leaned this way in R1), owner says "I won't fight it" — but the narrow rewrite covers a real pattern gap.
 
 ### Q3 — "Do they tell you about problems?"
 
@@ -347,6 +369,13 @@ Per owner's instruction: implement as **validator-side warning**, not as a new v
 Each `(cell × color × shape × condition)` rule emits a **template key**, not the literal short_answer string. The renderer looks up the template from a new file at `docs/scorecard-templates.json` and fills in signal values.
 
 **Why template-map:** keeps the rule table compact, lets short_answer phrasing iterate without rule-table churn, makes the LLM-override path clean (override drops the template_key, replaces with custom text + rationale).
+
+**Template-map fallback behavior (added post-R1 per Pragmatist's flag):**
+
+When a rule emits a `template_key` that has no match in `docs/scorecard-templates.json`, the renderer **falls back to the existing LLM-authored `phase_4_structured_llm.scorecard_cells.<q>.short_answer`** (i.e., the current behavior — LLM-authored text). It does NOT emit blank, error, or a placeholder. This means:
+- A new rule can ship without immediately requiring a template (the LLM-authored short_answer remains until the template lands).
+- Validator should warn (not error) when a rule emits a template_key not in the templates JSON, so the gap is visible to authors but doesn't block scans.
+- If both the template_key has no match AND `phase_4_structured_llm.scorecard_cells.<q>.short_answer` is empty, then validator errors (the cell would render with no answer text).
 
 **Schema:**
 
@@ -481,7 +510,38 @@ If projections hold: ~50% override reduction in this phase. Closer to the ~80% t
 
 8. **Migration approach** (preserve LLM text where override fired; regenerate from template otherwise) — agree, or fully regenerate?
 
-9. **Acceptance threshold for re-render — HARD FLOOR proposal.** Owner-refined position: Phase 1 acceptance requires override rate to drop **below 25% of scans (≤3 of 12)**; target is **≤2 of 12**. Current state: ~83% (10 of 12 V1.2 scans have overrides). The §8 projection's ~50% override reduction with firm rules only puts us at ~5/12 — which would FAIL this floor — meaning either (a) RULE-7/8/9 must promote (compound gate from Q4 makes this multi-step), or (b) the firm rules need additional tightening, or (c) the floor is too strict. Board: is the ≤3/12 floor acceptable as the Phase 1 success bar? If not, propose alternative.
+9. **DECIDED post-R1 — Acceptance threshold for re-render: STAGED HARD FLOOR.** All 3 R1 agents independently flagged the original ≤3/12 floor as structurally unachievable with firm rules alone. Owner adjudicated: the floor was wrong to penalize the design for correctly respecting its own evidence thresholds.
+
+  **Revised position:**
+  - **Hard floor (gates Phase 1 acceptance):** override rate ≤5/12 scans (~42%) — achievable with firm rules (RULE-1, RULE-2, RULE-4, RULE-5, RULE-6) per §8 projection.
+  - **Stretch target:** ≤3/12 scans (~25%) — auto-promotes to hard floor when **any 2 of V12x-7 / V12x-11 / V12x-12 harness signals land**, which unlocks RULE-7 / RULE-8 / RULE-9 promotion per their Q4 compound gates.
+
+  This ties the tighter target to the precondition that makes it achievable, rather than setting a fixed bar the design cannot clear today. Board: react to whether this staged floor is the right reframing, or propose an alternative (e.g., Codex's "remaining override classes" framing, where the count is types not raw count).
+
+---
+
+## Revision history (post-R1 owner directives — 2026-05-01)
+
+The R1 round produced 3 SIGN OFF WITH NOTES + 1 DISSENT verdicts. All 3 agents converged on Q9 (3-of-3 flagged the hard floor as unachievable with firm rules); Codex flagged 1 FIX-NOW (classify_shape phase boundary); 2 agents flagged shape-enum over-fit risk. Owner adjudicated the following 7 directives, incorporated directly into the relevant sections above:
+
+| # | Section | Change | Driver |
+|---|---|---|---|
+| 1 | §9 Q9 | Hard floor revised from ≤3/12 to ≤5/12; stretch target ≤3/12 auto-promotes when ≥2 of V12x-7/11/12 harness signals land | 3-agent convergence |
+| 2 | §4 classify_shape inputs + §4 heuristic step 10 | Drop `phase_4_structured_llm.catalog_metadata.shape` fallback; classifier returns `("other", confidence="low")` when no clean match; Phase 4 LLM author override-explained mechanism handles uncertainty | Codex FIX-NOW |
+| 3 | §5 RULE-3 | Narrow rewrite: drop agent-skills-collection branch (covered by RULE-4 on Q3); new trigger `(is_solo_maintained) AND (NOT is_privileged_tool) AND (has_codeql OR releases_count >= 20)`. Confidence raised from lower → firm | Codex + DeepSeek + Pragmatist (operator-precedence flag) |
+| 4 | §3 enum + §3 enum evolution note | Acknowledge over-fit risk; categories with n=1 representation are provisional; future scans that don't fit cleanly classify as `other` and trigger deferred-ledger entry | DeepSeek |
+| 5 | §3 browser-extension boundary | Browser extensions with native messaging hosts classify as `desktop-application` (extension is install vector; native host is execution surface) | Codex |
+| 6 | §2 rule precedence contract | First-match-wins in priority order. Auto-fire short-circuits; among non-auto-fire, first matching rule in listed order wins. No combining, averaging, or majority | Codex (under-specified flag) |
+| 7 | §6 template-map fallback | When template_key has no match, fall back to LLM-authored `short_answer` (not blank/error). Validator warns on miss; errors only when both template-map miss AND empty short_answer | Pragmatist |
+
+**n=1 rule disposition** (DeepSeek's "move RULE-7/8/9 to Phase 1.5 deferred ledger" recommendation): owner directive — **stay in design with promotion gates**. The rules are already labeled as candidates with explicit promotion gates; keeping them in the design means they're ready to activate the moment the evidence + harness lands, rather than requiring a separate design cycle. The promotion gate IS the discipline.
+
+**Items NOT changed** (preserved as originally designed):
+- Shape-as-modifier architectural call (Q1) — 3-of-3 confirmed.
+- 9-category enum scope (Q2) — kept; over-fit risk addressed via evolution note + provisional flag, not by collapsing categories now.
+- RULE-10 as validator warning (Q5) — owner-decided pre-board; agents acknowledged.
+- Cells-only scope (Q7) — owner-decided pre-board; agents acknowledged.
+- Migration approach (Q8) — preserve LLM text where override fired; regenerate from template otherwise.
 
 ---
 
