@@ -80,7 +80,7 @@ Older flat-file board records (pre-`External-Board-Reviews/` layout, kept for hi
 
 ### 2.2 Current state
 
-- **HEAD:** `1688ec5` on `chore/calibration-rebuild-impl` (session 10 — Phase 3 close). Branch is **4 commits ahead of `main`** — NOT yet pushed to origin. Tree clean.
+- **HEAD:** `9d33799` on `origin/main` (session 10 — Phase 3 MERGED + pushed; merge of `chore/calibration-rebuild-impl`, feature branch deleted). Tree clean.
 - **Session 10 work (2026-05-01):** Phase 3 of back-to-basics-plan COMPLETE. Calibration v2 module landed in `docs/compute.py` (`classify_shape()` + `evaluate_q1/q2/q3/q4` + `compute_scorecard_cells_v2()`). 4 commits on `chore/calibration-rebuild-impl`: `4d7b847` (P3.a heuristic + 12-bundle gate) → `b51b6b8` (P3.b/c rule-eval tests) → `79f084a` (P3.d/e schema + validator gate v2.1) → `1688ec5` (P3.f regression + impl-notes). All 5 CONSOLIDATION §5 carry-forwards addressed. **Override-reduction: 5/10 cells now rule-driven (~50% reduction → hits design hard-floor ≤5/12 ~42%).** Spec deviations consolidated at `docs/calibration-impl-notes.md`. Owner-decision pending: merge to main → start Phase 4 (mechanical reformatting moves to template-side). See `docs/back-to-basics-plan.md` §Current state.
 - **Session 9 work (2026-05-01):** back-to-basics calibration rebuild. Phase 0 distribution audit + Phase 1 design + Phase 2 board review (3 rounds, 16 owner directives, 26-item dissent audit, 3-of-3 R3 SIGN OFF) + Phase 2 archive at `docs/External-Board-Reviews/050126-calibration-rebuild/`.
 - **Session 8 first scan:** `2aa59bf` (catalog entry 27 mattpocock/skills — first Claude Code skills/plugin V1.2 wild scan; Caution; Q2 missing_qualitative_context override — first use of this enum value at any n).

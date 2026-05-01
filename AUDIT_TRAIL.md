@@ -17,9 +17,11 @@ Canonical log of milestone commits with the verification state captured at commi
 
 ---
 
-## Checkpoint — 2026-05-01 (session 10) — Phase 3 implementation COMPLETE (calibration v2 module landed)
+## Checkpoint — 2026-05-01 (session 10) — Phase 3 implementation COMPLETE + MERGED to main
 
-**HEAD:** `1688ec5` on `chore/calibration-rebuild-impl` (Phase 3 close). Branch is **4 commits ahead of `main`** (NOT yet pushed to origin).
+**HEAD:** `9d33799` on `origin/main` (merge of `chore/calibration-rebuild-impl` — Phase 3 calibration v2 implementation). 5 P3 commits + 1 merge commit pushed to origin. Feature branch `chore/calibration-rebuild-impl` deleted post-merge.
+
+**Pre-merge feature-branch tip:** `e45f2e1` (still reachable via `9d33799^2`).
 
 **Session 10 commits from `4127385` (session 9 close on origin/main) →:**
 - `4d7b847` P3.a — classify_shape + cross-shape modifier helpers + cell evaluators landed (12/12 §4 gate pass + 46 new tests at `tests/test_classify_shape.py`)

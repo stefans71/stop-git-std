@@ -21,7 +21,7 @@ When the user says "continue" — start at the **next concrete action** under §
 
 ## § Current state (UPDATE AT EACH COMMIT — single source of truth)
 
-- **Last commit landing this plan:** `1688ec5` on `chore/calibration-rebuild-impl` (P3.f — regression suite + RULE-6 inert + impl notes). Branch is **4 commits ahead of main**.
+- **Last commit landing this plan:** `9d33799` on `main` (merge of `chore/calibration-rebuild-impl` — Phase 3 calibration v2 implementation; 5 commits + merge commit pushed to origin/main). Feature branch deleted.
 - **Active phase:** Phase 3 — **COMPLETE**. Calibration v2 module landed (`docs/compute.py` `classify_shape` + `evaluate_q1/q2/q3/q4` + `compute_scorecard_cells_v2`). 565/565 tests passing (414 baseline + 151 net new). All 5 CONSOLIDATION §5 carry-forwards addressed. Implementation notes consolidated at `docs/calibration-impl-notes.md` (9 sections, all spec-deviations documented). **PAUSE POINT** for owner before Phase 4 (mechanical reformatting moves to template-side).
 - **Active step within phase:** N/A. Phase 3 deliverables all committed on `chore/calibration-rebuild-impl`:
   - `4d7b847` P3.a — classify_shape + cross-shape modifier helpers + cell evaluators landed (12/12 §4 gate pass)
@@ -47,7 +47,7 @@ When the user says "continue" — start at the **next concrete action** under §
   - RULE-6 third sub-condition (exec + has_unverified_install_path) INERT pending V12x-11 harness work
   - kamal Q1 RULE-1 doesn't fire (no CODEOWNERS file in bundle — audit projection vs harness data mismatch)
   - Kronos Q4 RULE-6 doesn't fire (deserialization.hit_count=0 — harness coverage gap; Phase 1.5 follow-up)
-- **Branch:** `chore/calibration-rebuild-impl` (4 commits ahead of `main`, NOT yet pushed to origin).
+- **Branch:** `main` (Phase 3 merged + pushed to origin at `9d33799`). Phase 4 will use a new branch — recommended `chore/template-side-derivation` per plan §Phase 4.
 - **Audit topline (preserved from Phase 0 — unchanged):**
   - Dominant pattern: "OSS minimal-governance default" — 6 of 12 V1.2 scans hit. Q1=red NOT verdict-discriminating.
   - Q3 similarly decoupled (skills + QuickLook are Caution despite Q3=red).
