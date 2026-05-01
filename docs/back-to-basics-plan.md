@@ -21,12 +21,17 @@ When the user says "continue" — start at the **next concrete action** under §
 
 ## § Current state (UPDATE AT EACH COMMIT — single source of truth)
 
-- **Last commit landing this plan:** `f0c9a96` — Back-to-basics calibration rebuild plan + CLAUDE.md auto-resume pointer (2026-05-01). (This block was updated to reflect the actual commit SHA in a follow-up commit.)
-- **Active phase:** Phase 0 — distribution audit.
-- **Active step within phase:** Audit fork in flight. The fork was launched via the Agent tool with a self-contained prompt that reads only `docs/scanner-catalog.md` + `docs/scan-bundles/*.json` (12 V1.2 bundles) + `docs/v12-wild-scan-telemetry.md`, and writes the new `docs/calibration-audit.md`. No code changes pending in main session.
-- **Next concrete action when audit completes:** Read `docs/calibration-audit.md` (do not duplicate the fork's reads — they're slow). Surface the topline finding to the owner. Do NOT start Phase 1 design authoring until the owner has reviewed the audit and confirmed direction (or course-corrected). Then move to Phase 1: write `docs/calibration-design-v2.md` per Phase 1 deliverable list above.
-- **Blocked on:** audit fork completion notification (arrives automatically as a user-role message).
-- **Branch:** `main` — Phase 0 had no code changes (audit is read-only + writes a single new doc + the audit doc itself will be a small commit on main). Phase 3 onward will use `chore/calibration-rebuild-impl` (and possibly more branches).
+- **Last commit landing this plan:** TBD on this commit (Phase 0 completion + audit doc landing).
+- **Active phase:** Phase 0 — **COMPLETE**. Phase 1 not yet started; awaiting owner review of audit.
+- **Active step within phase:** N/A. Phase 0 deliverable `docs/calibration-audit.md` (274 lines, 10 sections) is committed.
+- **Next concrete action:** owner reads `docs/calibration-audit.md` (especially §9 cross-shape observations + §10 recommended rule-table changes). When owner gives thumbs-up to proceed, START PHASE 1: write `docs/calibration-design-v2.md` per Phase 1 deliverable list above. The audit's §10 rule proposals (RULE-1 through RULE-N) are the seed for the Phase 1 design — but the design is broader (shape-classifier signature, new cell language for all colors, migration plan).
+- **Blocked on:** owner review of `docs/calibration-audit.md` + green-light to start Phase 1 design.
+- **Audit topline (so a future session can resume without re-reading the audit doc):**
+  - Dominant pattern: "OSS minimal-governance default" — 6 of 12 V1.2 scans hit (no protection + 0 rulesets + no CODEOWNERS + low formal review). 3 of those 6 are Caution, 3 are Critical → **Q1=red is NOT verdict-discriminating in current data.**
+  - Q3 is similarly decoupled: every Q3=red scan has identical signals, but 2 of 6 Q3=red scans are Caution (skills + QuickLook — both cases where disclosure-machinery absence is proportional to project age/maturity).
+  - **Q4 IS the verdict-discriminator**: 5/5 Q4=red scans are Critical; 5/5 Caution scans have Q4=amber. But every Q4=red required Phase 4 LLM override because Phase 3 advisory never reaches red on Q4 (12/12 amber). The override mechanism is doing shape-aware judgment work that should be expressed as rules.
+  - Highest-leverage proposed rules from audit §10: RULE-4 (Q3=amber for `repo_age < 180d AND total_merged_lifetime < 5` — fixes skills-class), RULE-1 (Q1=amber when CODEOWNERS+ruleset+rules-on-default present — already overridden 2x), RULE-6 (extend V13-3 C5 deserialization auto-fire to cmd_injection + tool_loads_user_files — eliminates 2 of 5 Q4 overrides). Combined with shape-aware variants, override count projected to drop from ~10/12 to 1-2/12.
+- **Branch:** `main`. Phase 1 will also stay on `main` (docs only). Phase 3 onward uses `chore/calibration-rebuild-impl`.
 
 ---
 
