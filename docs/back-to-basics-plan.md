@@ -24,61 +24,60 @@ When the user says "continue" — start at the **next concrete action** under §
 **This block is your resumption packet.** It is the only thing you need to read after `/compact` to know what to do next. If something here is wrong or stale, fix it before proceeding.
 
 ### HEAD + branch
-- **HEAD:** `5d4ed3b` on `origin/main` (merge of `chore/calibration-rebuild-rerender`; phase 5 close `17bd4e3` on top of count-fix `d03c04b` on top of hygiene `543a1f5` on top of commit 1 `0325204` on top of kickoff `5ae3dcd` on top of phase 4 chain to `e6b0a3b`). Feature branch `chore/calibration-rebuild-rerender` deleted local; never pushed to remote.
-- **Pre-render tag:** `pre-calibration-rerender` set at `e6b0a3b` — Phase 5 rollback anchor; preserved post-merge.
-- **Tree:** clean.
+- **HEAD:** `f2485fc` on `chore/calibration-md-verification` (Phase 6 commit 1 — verification doc; on top of Phase 5 chain `5d4ed3b` ← `17bd4e3` ← `d03c04b` ← `543a1f5` ← `0325204` ← `5ae3dcd` ← Phase 4 chain to `e6b0a3b`). `origin/main` HEAD is `69a7d5c` (the §Current state self-update from end of Phase 5). Phase 6 branch not pushed; awaits owner sign-off before merge.
+- **Pre-render tag:** `pre-calibration-rerender` set at `e6b0a3b` — Phase 5 rollback anchor; preserved.
+- **Tree:** clean (after this §Current state commit lands).
 
 ### Phase + step
-- **Phase 5 — COMPLETE + MERGED + PUSHED.** 12 V1.2 wild scans (catalog entries 16-27) re-rendered with `compute_scorecard_cells_v2()` advisory + Phase 4 template-side derivation.
-- **Next phase: Phase 6 — MD calibration verification (LLM consumer test).** Not started. See plan §Phase 6 for spec.
+- **Phase 6 — COMPLETE on local branch, AWAITING OWNER SIGN-OFF FOR MERGE.** 5 cold-fork consumer tests run on rendered MD for catalog entries 16, 20, 24, 26, 27. **Result: 5 of 5 match.** Pass bar (≥4 of 5) cleared.
+- **Next phase: Phase 7 — Simple Report HTML on top of calibrated MD.** See plan §Phase 7 for spec. Do NOT start Phase 7 until owner has signed off on Phase 6 + merged this branch.
 
-### Phase 5 deliverables (all on origin/main now)
+### Phase 6 deliverables (on `chore/calibration-md-verification`, NOT yet on main)
 | SHA | One-line summary |
 |---|---|
-| `5ae3dcd` | Phase 5 kickoff: plan amendment (16→13 scope; later corrected to 12) + branch setup at `e6b0a3b` |
-| `0325204` | Phase 5 commit 1: comparison doc + 24 re-rendered scans + 12 mutated bundles + 3 helper scripts + compute.py defensive patches + test fixture patch |
-| `543a1f5` | Comparison doc text bugs (hardcoded "12-27" / "0 of 16" → derived from data) |
-| `d03c04b` | §Current state gate 6.3 backlog count fix (6→7 cells) |
-| `17bd4e3` | Phase 5 commit 2: comparison-doc Phase 6 priority note + REPO_MAP §2.2 + scanner-catalog header note |
-| `5d4ed3b` | **Merge** of `chore/calibration-rebuild-rerender` to `main` (no-ff) |
+| `f2485fc` | Phase 6 commit 1: `docs/calibration-rebuild-md-verification.md` (260 lines; per-scan detail + Q3 attribution analysis + failure-mode coverage table) |
+| *(this commit)* | Phase 6 commit 2: §Current state update for Phase 6 close |
 
-### Phase 5 outcome metrics
-- **Verdict shifts:** 0 of 12 (verdicts stable by construction — `compute_verdict(findings)` reads stored findings; findings unchanged)
-- **Advisory shifts:** 10 cells across 7 entries (calibration v2 differs from legacy advisory)
-- **Redundant overrides cleared:** 3 (Kronos Q2, ghostty Q1, freerouting Q4 — rule-driven now)
-- **Phase 3 regression-test predictions:** all 5 confirmed (ghostty Q1 RULE-1, WLED Q1 RULE-2, kanata Q1 RULE-2, skills Q3 RULE-4, freerouting Q4 RULE-6)
-- **Tests:** 587/587 passing
-- **`--report` validator on rendered files:** 23/24 clean (1 pre-existing skills `<bucket>` failure — identical at HEAD pre-Phase 5)
-- **`--parity` zero-warning:** all 12 MD/HTML pairs
+### Phase 6 outcome metrics
+- **Match count:** 5 of 5 (pass bar ≥4)
+  - 16 ghostty Caution → YES-WITH-CAVEATS ✓
+  - 26 Baileys Critical → NO ✓
+  - 27 skills Caution → YES-WITH-CAVEATS ✓
+  - 20 browser_terminal Critical → NO ✓
+  - 24 freerouting Critical → NO ✓
+- **Failure modes covered:**
+  - Over-cautious skill collections (entry 27 V13-3 `missing_qualitative_context` override) — survived cold read.
+  - Under-cautious genuine criticals (Baileys, browser_terminal, freerouting) — all three returned NO with calibrated reasoning.
+- **Q3 FALLBACK regression — did it skew the test?** No. Rendered MD is sourced from `phase_4_structured_llm.scorecard_cells` (LLM-authored), NOT from `phase_3_advisory.scorecard_hints`. The Phase 5 Q3 advisory drift lives in `phase_3` only and does NOT propagate to consumer-facing MD today. The cold-fork test therefore did NOT stress-test calibration v2 Q3 rule changes — it validated that Phase 4-era LLM cells still lead consumers to the calibrated verdict. See verification doc §"Q3 FALLBACK regression — did it actually matter for this test?" for analysis + Phase 7 implications.
 
-### Out of scope for Phase 5 (unchanged on disk)
+### Phase 6 carry-forward into Phase 7
+The gate 6.3 backlog (7 cells across 6 entries: 16 ghostty Q3, 18 kamal Q3, 21 wezterm Q3, 24 freerouting Q3, 25 WLED Q1+Q3, 27 skills Q3) is a `phase_3` ↔ `phase_4` divergence the validator's `--form` mode will eventually demand resolution on. Phase 7 should pick one of:
+- **(a)** re-author Phase 4 cells to align with calibration v2 advisory (and accept consumer-facing reports will shift on those 5 entries),
+- **(b)** add `override_reason` to existing Phase 4 cells to keep current MD semantics with rule-driven advisory,
+- **(c)** soften calibration v2 Q3 rules (introduce a RULE-5-style softener for repos with partial disclosure signals so advisory naturally lands amber, matching legacy + matching the LLM cells already in place).
+
+The cold-fork test does not pick between these — but the test result (5/5 match against current MD) suggests **(b)** or **(c)** are the conservative choices, since (a) would shift consumer-facing semantics that the Phase 6 test already validated as correct.
+
+### Out of scope for Phase 5 (unchanged on disk; carried from prior phase block)
 - Entries 1-11: V2.4 era hand-authored against V1.1 schema; no V1.2 form.json exists
 - Entries 12-14 (Step G pilots): authoritative phase_4 in `.board-review-temp/step-g-execution/*.json` (V1.1); migration + re-authoring is its own workstream
 - Entry 15 (markitdown): V1.2 form.json has empty `phase_4_structured_llm.scorecard_cells` (LLM cells were authored to a `.md` sidecar bundle); re-render would regress Q2
 
-### Next concrete action when work resumes (Phase 6)
+### Next concrete action when work resumes (after owner sign-off)
 
-**Phase 6 — MD calibration verification (LLM consumer test).** Per plan §Phase 6:
-- **Goal:** prove the calibrated MD leads LLM consumers to accurate "should I install this?" answers — not the over-cautious failure mode identified in session 8.
-- **Branch:** `chore/calibration-md-verification` from `main` at `5d4ed3b`.
-- **Deliverables:** see plan §Phase 6 body for spec.
+**Owner action required:** review `docs/calibration-rebuild-md-verification.md` §"Owner sign-off" + approve merge of `chore/calibration-md-verification` to `main` (no-ff).
 
-**Phase 6 priority work item — Q3 FALLBACK regression on 5 repos.**
-The Phase 5 calibration v2 rerender exposed a Q3 (`do_they_tell_you_about_problems`) FALLBACK rule that fires red on 5 repos where the legacy advisory correctly landed amber: ghostty, kamal, wezterm, freerouting, WLED. Calibration v2 Q3 rules are stricter than legacy on repos with partial disclosure signals (CONTRIBUTING or advisories present, but no SECURITY.md). Phase 6 should investigate whether `RULE-5` or a new Q3 softener is needed before proceeding to LLM-consumer-test work, since the Q3 advisory drift propagates through the rendered MD and would skew the consumer test.
-
-**Phase 6 input — gate 6.3 backlog (7 cells across 6 entries).**
-Calibration v2 advisory recompute created `phase_3` ≠ `phase_4` mismatches without `override_reason` on these cells. Documented in `docs/calibration-rebuild-rerender-comparison.md` §"Phase 6 input — gate 6.3 backlog":
-- 16 ghostty Q3, 18 kamal Q3, 21 wezterm Q3, 24 freerouting Q3 — Q3 FALLBACK regression (advisory now stricter than LLM)
-- 25 WLED Q1 + Q3 — Q1 RULE-2 softens advisory to amber while LLM stayed red; Q3 same FALLBACK regression as above
-- 27 skills Q3 — RULE-4 softens advisory to amber while LLM stayed red
-
-Phase 6 work item: re-author Phase 4 LLM cells (or recalibrate the rules) for these 7 cells; update `override_reason` where the LLM still wants to disagree with the rule-driven advisory.
+**After merge — Phase 7: Simple Report HTML.** Per plan §Phase 7:
+- **Goal:** the user-facing simple HTML output the project always anticipated, built on calibrated data.
+- **Branch:** `feat/simple-report` from `main` (post-Phase-6-merge HEAD).
+- **Deliverable:** per `docs/simple-report-concept.md` — `docs/templates-simple/simple-report.html.j2` + `docs/templates-simple/simple-report.md.j2` + `docs/render-simple.py` + `docs/threat-explainer-library.json` + `docs/tool-branding.json`. Wizard Q1 gains option C "Simple."
+- **Phase 7 carry-forward:** the Phase 6 carry-forward (gate 6.3 backlog resolution choice — re-author / override_reason / soften rules) should be addressed alongside the Simple Report work, not before it.
 
 ### Token budget note
 Each Phase step (one commit) should complete within **~200k tokens**. If you're approaching that limit, commit what's done, update §Current state to reflect the partial state, and stop for `/compact`. Do NOT push past the limit hoping to wrap up — context degrades rapidly past 200k and you'll make decisions you'd reject with a fresh context window.
 
 ### What was finished before the current phase (high-level only; details in commit history)
-Phase 0 audit, Phase 1 calibration design, Phase 2 board review, Phase 3 calibration v2 implementation, Phase 4 template-side derivation, Phase 5 calibration v2 rerender. All landed on origin/main. Phase 3 outcome detail in `docs/calibration-impl-notes.md`. Phase 3-5 commit lists in `AUDIT_TRAIL.md` (after that file's session 11 update). **You should not need to read these to do current phase work** — they are reference material, not resumption material.
+Phase 0 audit, Phase 1 calibration design, Phase 2 board review, Phase 3 calibration v2 implementation, Phase 4 template-side derivation, Phase 5 calibration v2 rerender, Phase 6 MD calibration verification (this branch — pre-merge). Phases 0-5 landed on origin/main. Phase 6 awaits owner sign-off + merge. Phase 3 outcome detail in `docs/calibration-impl-notes.md`. Phase 3-5 commit lists in `AUDIT_TRAIL.md` (after that file's session 11 update). **You should not need to read these to do current phase work** — they are reference material, not resumption material.
 
 ---
 
