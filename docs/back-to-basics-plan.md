@@ -21,11 +21,11 @@ When the user says "continue" — start at the **next concrete action** under §
 
 ## § Current state (UPDATE AT EACH COMMIT — single source of truth)
 
-- **Last commit landing this plan:** TBD on next commit (Phase 2 launch).
-- **Active phase:** Phase 2 — board review **launching**. Phase 1 design owner-reviewed + 3 sharpenings applied (Q4 compound gate, Q9 hard-floor framing, Q7 reframed as DECIDED).
-- **Active step within phase:** Writing `.board-review-temp/calibration-rebuild/r1-brief.md` + launching 3 R1 agents in parallel (Pragmatist Sonnet via Agent tool / Codex via sudo -u llmuser bash / DeepSeek via qwen). All 3 reading the brief from disk; brief references the design doc and audit doc by absolute path (agents read directly, not inlined).
-- **Next concrete action:** wait for 3 R1 agent completion notifications. When all 3 are back, consolidate into r2-brief.md (R1 outputs inlined verbatim), launch R2. Standard SOP — see `REPO_MAP.md` §2.3 board runbook.
-- **Blocked on:** R1 agent completion notifications (arrive automatically as user-role messages). Wall-clock estimate: 15-30 min for slowest agent (Codex typically).
+- **Last commit landing this plan:** `91cecd5` (Phase 2 R1 close — design doc revised per 7 owner directives).
+- **Active phase:** Phase 2 — board review **R2 launching**. R1 closed: 2 SIGN OFF WITH NOTES (Pragmatist + Codex) + 1 DISSENT (DeepSeek). 3-of-3 converged on Q9 floor (resolved by owner directive ≤5/12 + ≤3/12 staged stretch). Codex FIX-NOW on classify_shape phase boundary (resolved). 7 owner directives applied to design doc.
+- **Active step within phase:** R2 brief written at `.board-review-temp/calibration-rebuild/r2-brief.md`. Launching 3 R2 agents in parallel; agents read revised design + all 3 R1 outputs + their own R1 + R2 brief. R2 focus areas: (A) did Q9 reframing land correctly, (B) is enum evolution mechanism adequate, (C) is rule precedence contract complete.
+- **Next concrete action:** wait for 3 R2 agent completion notifications. When all 3 are back: if 3-of-3 SIGN OFF, write R3 confirmation brief (lighter — final ratification + dissent audit). If split verdicts persist, R3 carries the unresolved items.
+- **Blocked on:** R2 agent completion notifications. Wall-clock estimate: 10-20 min (R2 typically faster than R1 since agents have prior position to anchor against).
 - **Audit topline (so a future session can resume without re-reading the audit doc):**
   - Dominant pattern: "OSS minimal-governance default" — 6 of 12 V1.2 scans hit (no protection + 0 rulesets + no CODEOWNERS + low formal review). 3 of those 6 are Caution, 3 are Critical → **Q1=red is NOT verdict-discriminating in current data.**
   - Q3 is similarly decoupled: every Q3=red scan has identical signals, but 2 of 6 Q3=red scans are Caution (skills + QuickLook — both cases where disclosure-machinery absence is proportional to project age/maturity).
