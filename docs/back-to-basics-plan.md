@@ -31,7 +31,7 @@ When the user says "continue" — start at the **next concrete action** under §
   - `e45f2e1` Phase 3 close — persistent-state updates (plan + CLAUDE.md + AUDIT_TRAIL + REPO_MAP). Pre-merge feature-branch tip; reachable via `9d33799^2`.
   - `9d33799` Merge of `chore/calibration-rebuild-impl` to `main` (no-ff).
   - `6657e59` Post-merge pointer cleanup (corrected HEAD pointers in plan + CLAUDE.md + AUDIT_TRAIL + REPO_MAP from feature-branch tip to merge SHA).
-- **Next concrete action when work resumes:** **start PHASE 4** — mechanical reformatting moves to template-side per plan §Phase 4. Recommended branch: `chore/template-side-derivation` from `main`. Deliverables: `derive_repo_vitals(p1)` + `derive_coverage_detail(p1)` + `derive_pr_sample(p1)` + `derive_evidence_facts(p1)` helpers in `docs/render-md.py` + `docs/render-html.py`; templates use derived data when phase_4 doesn't override. Helpers go in `render-md.py` as module-level functions exposed via `env.globals` (same pattern as existing `short_sha`, `fmt_int`). Recommended commit cadence: one per helper (4 commits) for revert granularity if Phase 5 re-render shows regression in one section.
+- **Next concrete action when work resumes:** **start PHASE 4** — mechanical reformatting moves to template-side per plan §Phase 4. Recommended branch: `chore/template-side-derivation` from `main`. Deliverables: **3 helpers** (originally planned 4 — `derive_evidence_facts` dropped per grounded verification, see §Phase 4 "Why no derive_evidence_facts" note): `derive_repo_vitals(p1)` + `derive_coverage_detail(p1)` + `derive_pr_sample(p1)` in `docs/render-md.py` + `docs/render-html.py`; templates use derived data when phase_4 doesn't override. Helpers go in `render-md.py` as module-level functions exposed via `env.globals` (same pattern as existing `short_sha`, `fmt_int`). **Commit cadence per plan §Phase 4: 3 commits** — (1) add helpers + tests in `tests/test_render_md.py` + `tests/test_render_html.py` (no template changes; renders unchanged); (2) wire helpers into 3 templates (§03, §05, §06) with phase_4-override fallback (renders unchanged when LLM rows present); (3) update `docs/scan-authoring-template/author_phase_4.py.template` (sections marked optional/minimal) + `docs/SCANNER-OPERATOR-GUIDE.md`.
 - **Phase 3 outcome — override-reduction (per `docs/calibration-impl-notes.md` §6):**
   - Pre-redesign: ~10 overrides across 12 V1.2 scans (~83% override rate)
   - Post-redesign: 5 cells now rule-driven (no override required):
@@ -144,15 +144,17 @@ When the user says "continue" — start at the **next concrete action** under §
 
 ### Phase 4 — Implementation: mechanical reformatting moves to template-side
 
-**Goal:** stop having the LLM re-author harness data into table rows. REPO_VITALS, COVERAGE_DETAIL, PR_SAMPLE, EVIDENCE table rows all derive deterministically from `phase_1_raw_capture`.
+**Goal:** stop having the LLM re-author harness data into table rows. REPO_VITALS, COVERAGE_DETAIL, PR_SAMPLE table rows all derive deterministically from `phase_1_raw_capture`.
 
 **Deliverables:**
-- `docs/render-md.py` + `docs/render-html.py` extended with helper functions `derive_repo_vitals(p1)`, `derive_coverage_detail(p1)`, `derive_pr_sample(p1)`, `derive_evidence_facts(p1)`.
+- `docs/render-md.py` + `docs/render-html.py` extended with helper functions `derive_repo_vitals(p1)`, `derive_coverage_detail(p1)`, `derive_pr_sample(p1)`.
 - Templates updated to use derived data when phase_4 doesn't supply it (LLM still allowed to override for shape-specific row reordering or commentary).
 - `docs/scan-authoring-template/author_phase_4.py.template` updated — those sections are now optional / minimal.
 - New tests in `tests/test_render_md.py` + `tests/test_render_html.py` for the derivation helpers.
 
-**Branch:** continue on `chore/calibration-rebuild-impl` (or new branch — TBD by phase 3 outcome).
+**Why no `derive_evidence_facts`** *(grounded decision, 2026-05-01 session 11):* Original plan listed a 4th helper for "EVIDENCE table rows." Verification on disk (3 V1.2 scans: skills, ghostty-v12, Baileys; 30 evidence entries total) showed section 07 is a list of card-style entries, not a table — and every entry is LLM-authored synthesis combining multiple harness signals with bespoke framing (e.g. skills E1 "mattpocock holds 87.3% top-contributor commit share + TESTPERSONAL is almost certainly a maintainer-owned test/dev account"). Zero entries are pure boilerplate facts. Adjacent sections (02A executable file inventory) are partial mechanical / partial synthesis but not a clean fit either. Conclusion: drop the 4th helper rather than force-fit. Phase 4 ships 3 helpers + wires 3 sections (§03 PR sample, §05 repo vitals, §06 coverage detail). Section 07 stays 100% LLM-authored.
+
+**Branch:** `chore/template-side-derivation` from `main` (Phase 3 outcome was merge to main; new branch is the clean answer to the "TBD by phase 3 outcome" choice).
 
 **Commits (incremental):**
 1. Add derivation helpers + tests.
