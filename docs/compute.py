@@ -612,12 +612,12 @@ def compute_solo_maintainer(contributors: list) -> dict:
     if not contributors:
         return {"top_contributor_share": None, "is_solo": False, "verbatim_sentence": None}
 
-    total = sum(c.get("contributions", 0) for c in contributors)
+    total = sum((c.get("contributions") or 0) for c in contributors)
     if total == 0:
         return {"top_contributor_share": None, "is_solo": False, "verbatim_sentence": None}
 
-    top = max(contributors, key=lambda c: c.get("contributions", 0))
-    share = top["contributions"] / total
+    top = max(contributors, key=lambda c: c.get("contributions") or 0)
+    share = (top.get("contributions") or 0) / total
 
     if share > 0.80:
         sentence = (
@@ -1888,9 +1888,11 @@ def _derive_signals_from_form(form: dict) -> dict:
     if created_at:
         try:
             created = datetime.fromisoformat(created_at.replace("Z", "+00:00"))
+            if created.tzinfo is None:
+                created = created.replace(tzinfo=timezone.utc)
             now = datetime.now(timezone.utc)
             repo_age_days = (now - created).days
-        except (ValueError, AttributeError):
+        except (ValueError, AttributeError, TypeError):
             pass
 
     # total_merged_lifetime from pr_review or repo_metadata

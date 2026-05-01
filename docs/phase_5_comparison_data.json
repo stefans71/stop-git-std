@@ -1,0 +1,604 @@
+{
+  "entries": [
+    {
+      "entry_num": 16,
+      "label": "ghostty-org/ghostty (wild)",
+      "bundle_path": "docs/scan-bundles/ghostty-dcc39dc.json",
+      "output_basename": "GitHub-Scanner-ghostty-v12",
+      "verdict_old": "Caution",
+      "verdict_new": "Caution",
+      "shape_classification": {
+        "category": "desktop-application",
+        "is_reverse_engineered": false,
+        "is_privileged_tool": false,
+        "is_solo_maintained": true,
+        "confidence": "medium",
+        "matched_rule": "desktop-packaging workflows (flatpak/snap/AppImage/dmg)"
+      },
+      "cells": {
+        "does_anyone_check_the_code": {
+          "advisory_old_color": "red",
+          "advisory_new_color": "amber",
+          "advisory_new_rule_id": "RULE-1",
+          "phase_4_color": "amber",
+          "phase_4_override_reason": "signal_vocabulary_gap",
+          "shift_note": "advisory red\u2192amber; LLM override now redundant (rule-driven match)"
+        },
+        "do_they_fix_problems_quickly": {
+          "advisory_old_color": "green",
+          "advisory_new_color": "green",
+          "advisory_new_rule_id": "FALLBACK",
+          "phase_4_color": "green",
+          "phase_4_override_reason": null,
+          "shift_note": "unchanged advisory (green); LLM aligned (no override needed)"
+        },
+        "do_they_tell_you_about_problems": {
+          "advisory_old_color": "amber",
+          "advisory_new_color": "red",
+          "advisory_new_rule_id": "FALLBACK",
+          "phase_4_color": "amber",
+          "phase_4_override_reason": null,
+          "shift_note": "advisory amber\u2192red; LLM at amber (override now required)"
+        },
+        "is_it_safe_out_of_the_box": {
+          "advisory_old_color": "amber",
+          "advisory_new_color": "amber",
+          "advisory_new_rule_id": "FALLBACK",
+          "phase_4_color": "amber",
+          "phase_4_override_reason": null,
+          "shift_note": "unchanged advisory (amber); LLM aligned (no override needed)"
+        }
+      }
+    },
+    {
+      "entry_num": 17,
+      "label": "shiyu-coder/Kronos (wild)",
+      "bundle_path": "docs/scan-bundles/Kronos-67b630e.json",
+      "output_basename": "GitHub-Scanner-Kronos-v12",
+      "verdict_old": "Critical",
+      "verdict_new": "Critical",
+      "shape_classification": {
+        "category": "specialized-domain-tool",
+        "is_reverse_engineered": false,
+        "is_privileged_tool": false,
+        "is_solo_maintained": false,
+        "confidence": "medium",
+        "matched_rule": "Python + no exec/release/publish-manifest (research/ML shape)"
+      },
+      "cells": {
+        "does_anyone_check_the_code": {
+          "advisory_old_color": "red",
+          "advisory_new_color": "red",
+          "advisory_new_rule_id": "FALLBACK",
+          "phase_4_color": "red",
+          "phase_4_override_reason": null,
+          "shift_note": "unchanged advisory (red); LLM aligned (no override needed)"
+        },
+        "do_they_fix_problems_quickly": {
+          "advisory_old_color": "amber",
+          "advisory_new_color": "red",
+          "advisory_new_rule_id": "FALLBACK",
+          "phase_4_color": "red",
+          "phase_4_override_reason": "signal_vocabulary_gap",
+          "shift_note": "advisory amber\u2192red; LLM override now redundant (rule-driven match)"
+        },
+        "do_they_tell_you_about_problems": {
+          "advisory_old_color": "red",
+          "advisory_new_color": "red",
+          "advisory_new_rule_id": "FALLBACK",
+          "phase_4_color": "red",
+          "phase_4_override_reason": null,
+          "shift_note": "unchanged advisory (red); LLM aligned (no override needed)"
+        },
+        "is_it_safe_out_of_the_box": {
+          "advisory_old_color": "amber",
+          "advisory_new_color": "amber",
+          "advisory_new_rule_id": "FALLBACK",
+          "phase_4_color": "red",
+          "phase_4_override_reason": "harness_coverage_gap",
+          "shift_note": "unchanged advisory (amber); LLM override still required (harness_coverage_gap)"
+        }
+      }
+    },
+    {
+      "entry_num": 18,
+      "label": "basecamp/kamal (wild)",
+      "bundle_path": "docs/scan-bundles/kamal-6a31d14.json",
+      "output_basename": "GitHub-Scanner-kamal-v12",
+      "verdict_old": "Caution",
+      "verdict_new": "Caution",
+      "shape_classification": {
+        "category": "cli-binary",
+        "is_reverse_engineered": false,
+        "is_privileged_tool": false,
+        "is_solo_maintained": false,
+        "confidence": "high",
+        "matched_rule": "ruby + >=5 releases + publishable manifest"
+      },
+      "cells": {
+        "does_anyone_check_the_code": {
+          "advisory_old_color": "red",
+          "advisory_new_color": "red",
+          "advisory_new_rule_id": "FALLBACK",
+          "phase_4_color": "amber",
+          "phase_4_override_reason": "signal_vocabulary_gap",
+          "shift_note": "unchanged advisory (red); LLM override still required (signal_vocabulary_gap)"
+        },
+        "do_they_fix_problems_quickly": {
+          "advisory_old_color": "green",
+          "advisory_new_color": "green",
+          "advisory_new_rule_id": "FALLBACK",
+          "phase_4_color": "green",
+          "phase_4_override_reason": null,
+          "shift_note": "unchanged advisory (green); LLM aligned (no override needed)"
+        },
+        "do_they_tell_you_about_problems": {
+          "advisory_old_color": "amber",
+          "advisory_new_color": "red",
+          "advisory_new_rule_id": "FALLBACK",
+          "phase_4_color": "amber",
+          "phase_4_override_reason": null,
+          "shift_note": "advisory amber\u2192red; LLM at amber (override now required)"
+        },
+        "is_it_safe_out_of_the_box": {
+          "advisory_old_color": "amber",
+          "advisory_new_color": "amber",
+          "advisory_new_rule_id": "FALLBACK",
+          "phase_4_color": "amber",
+          "phase_4_override_reason": null,
+          "shift_note": "unchanged advisory (amber); LLM aligned (no override needed)"
+        }
+      }
+    },
+    {
+      "entry_num": 19,
+      "label": "XTLS/Xray-core (wild)",
+      "bundle_path": "docs/scan-bundles/Xray-core-b465036.json",
+      "output_basename": "GitHub-Scanner-Xray-core-v12",
+      "verdict_old": "Critical",
+      "verdict_new": "Critical",
+      "shape_classification": {
+        "category": "cli-binary",
+        "is_reverse_engineered": false,
+        "is_privileged_tool": true,
+        "is_solo_maintained": false,
+        "confidence": "high",
+        "matched_rule": "go + >=5 releases + publishable manifest"
+      },
+      "cells": {
+        "does_anyone_check_the_code": {
+          "advisory_old_color": "red",
+          "advisory_new_color": "red",
+          "advisory_new_rule_id": "FALLBACK",
+          "phase_4_color": "red",
+          "phase_4_override_reason": null,
+          "shift_note": "unchanged advisory (red); LLM aligned (no override needed)"
+        },
+        "do_they_fix_problems_quickly": {
+          "advisory_old_color": "red",
+          "advisory_new_color": "red",
+          "advisory_new_rule_id": "FALLBACK",
+          "phase_4_color": "amber",
+          "phase_4_override_reason": "threshold_too_strict",
+          "shift_note": "unchanged advisory (red); LLM override still required (threshold_too_strict)"
+        },
+        "do_they_tell_you_about_problems": {
+          "advisory_old_color": "amber",
+          "advisory_new_color": "amber",
+          "advisory_new_rule_id": "FALLBACK",
+          "phase_4_color": "amber",
+          "phase_4_override_reason": null,
+          "shift_note": "unchanged advisory (amber); LLM aligned (no override needed)"
+        },
+        "is_it_safe_out_of_the_box": {
+          "advisory_old_color": "amber",
+          "advisory_new_color": "amber",
+          "advisory_new_rule_id": "FALLBACK",
+          "phase_4_color": "amber",
+          "phase_4_override_reason": null,
+          "shift_note": "unchanged advisory (amber); LLM aligned (no override needed)"
+        }
+      }
+    },
+    {
+      "entry_num": 20,
+      "label": "BatteredBunny/browser_terminal (wild)",
+      "bundle_path": "docs/scan-bundles/browser_terminal-9a77c4a.json",
+      "output_basename": "GitHub-Scanner-browser_terminal-v12",
+      "verdict_old": "Critical",
+      "verdict_new": "Critical",
+      "shape_classification": {
+        "category": "desktop-application",
+        "is_reverse_engineered": false,
+        "is_privileged_tool": true,
+        "is_solo_maintained": false,
+        "confidence": "high",
+        "matched_rule": "desktop topic (terminal/extension/quicklook/etc.)"
+      },
+      "cells": {
+        "does_anyone_check_the_code": {
+          "advisory_old_color": "red",
+          "advisory_new_color": "red",
+          "advisory_new_rule_id": "FALLBACK",
+          "phase_4_color": "red",
+          "phase_4_override_reason": null,
+          "shift_note": "unchanged advisory (red); LLM aligned (no override needed)"
+        },
+        "do_they_fix_problems_quickly": {
+          "advisory_old_color": "green",
+          "advisory_new_color": "green",
+          "advisory_new_rule_id": "FALLBACK",
+          "phase_4_color": "green",
+          "phase_4_override_reason": null,
+          "shift_note": "unchanged advisory (green); LLM aligned (no override needed)"
+        },
+        "do_they_tell_you_about_problems": {
+          "advisory_old_color": "red",
+          "advisory_new_color": "red",
+          "advisory_new_rule_id": "FALLBACK",
+          "phase_4_color": "red",
+          "phase_4_override_reason": null,
+          "shift_note": "unchanged advisory (red); LLM aligned (no override needed)"
+        },
+        "is_it_safe_out_of_the_box": {
+          "advisory_old_color": "amber",
+          "advisory_new_color": "amber",
+          "advisory_new_rule_id": "FALLBACK",
+          "phase_4_color": "red",
+          "phase_4_override_reason": "harness_coverage_gap",
+          "shift_note": "unchanged advisory (amber); LLM override still required (harness_coverage_gap)"
+        }
+      }
+    },
+    {
+      "entry_num": 21,
+      "label": "wezterm/wezterm (wild)",
+      "bundle_path": "docs/scan-bundles/wezterm-577474d.json",
+      "output_basename": "GitHub-Scanner-wezterm-v12",
+      "verdict_old": "Caution",
+      "verdict_new": "Caution",
+      "shape_classification": {
+        "category": "desktop-application",
+        "is_reverse_engineered": false,
+        "is_privileged_tool": true,
+        "is_solo_maintained": true,
+        "confidence": "high",
+        "matched_rule": "desktop topic (terminal/extension/quicklook/etc.)"
+      },
+      "cells": {
+        "does_anyone_check_the_code": {
+          "advisory_old_color": "red",
+          "advisory_new_color": "red",
+          "advisory_new_rule_id": "FALLBACK",
+          "phase_4_color": "red",
+          "phase_4_override_reason": null,
+          "shift_note": "unchanged advisory (red); LLM aligned (no override needed)"
+        },
+        "do_they_fix_problems_quickly": {
+          "advisory_old_color": "red",
+          "advisory_new_color": "red",
+          "advisory_new_rule_id": "FALLBACK",
+          "phase_4_color": "red",
+          "phase_4_override_reason": null,
+          "shift_note": "unchanged advisory (red); LLM aligned (no override needed)"
+        },
+        "do_they_tell_you_about_problems": {
+          "advisory_old_color": "amber",
+          "advisory_new_color": "red",
+          "advisory_new_rule_id": "FALLBACK",
+          "phase_4_color": "amber",
+          "phase_4_override_reason": null,
+          "shift_note": "advisory amber\u2192red; LLM at amber (override now required)"
+        },
+        "is_it_safe_out_of_the_box": {
+          "advisory_old_color": "amber",
+          "advisory_new_color": "amber",
+          "advisory_new_rule_id": "FALLBACK",
+          "phase_4_color": "amber",
+          "phase_4_override_reason": null,
+          "shift_note": "unchanged advisory (amber); LLM aligned (no override needed)"
+        }
+      }
+    },
+    {
+      "entry_num": 22,
+      "label": "QL-Win/QuickLook (wild)",
+      "bundle_path": "docs/scan-bundles/QuickLook-0cda83c.json",
+      "output_basename": "GitHub-Scanner-QuickLook-v12",
+      "verdict_old": "Caution",
+      "verdict_new": "Caution",
+      "shape_classification": {
+        "category": "desktop-application",
+        "is_reverse_engineered": false,
+        "is_privileged_tool": true,
+        "is_solo_maintained": false,
+        "confidence": "high",
+        "matched_rule": "desktop topic (terminal/extension/quicklook/etc.)"
+      },
+      "cells": {
+        "does_anyone_check_the_code": {
+          "advisory_old_color": "red",
+          "advisory_new_color": "red",
+          "advisory_new_rule_id": "FALLBACK",
+          "phase_4_color": "red",
+          "phase_4_override_reason": null,
+          "shift_note": "unchanged advisory (red); LLM aligned (no override needed)"
+        },
+        "do_they_fix_problems_quickly": {
+          "advisory_old_color": "green",
+          "advisory_new_color": "green",
+          "advisory_new_rule_id": "FALLBACK",
+          "phase_4_color": "green",
+          "phase_4_override_reason": null,
+          "shift_note": "unchanged advisory (green); LLM aligned (no override needed)"
+        },
+        "do_they_tell_you_about_problems": {
+          "advisory_old_color": "red",
+          "advisory_new_color": "red",
+          "advisory_new_rule_id": "FALLBACK",
+          "phase_4_color": "red",
+          "phase_4_override_reason": null,
+          "shift_note": "unchanged advisory (red); LLM aligned (no override needed)"
+        },
+        "is_it_safe_out_of_the_box": {
+          "advisory_old_color": "amber",
+          "advisory_new_color": "amber",
+          "advisory_new_rule_id": "FALLBACK",
+          "phase_4_color": "amber",
+          "phase_4_override_reason": null,
+          "shift_note": "unchanged advisory (amber); LLM aligned (no override needed)"
+        }
+      }
+    },
+    {
+      "entry_num": 23,
+      "label": "jtroo/kanata (wild)",
+      "bundle_path": "docs/scan-bundles/kanata-1c496c0.json",
+      "output_basename": "GitHub-Scanner-kanata-v12",
+      "verdict_old": "Critical",
+      "verdict_new": "Critical",
+      "shape_classification": {
+        "category": "cli-binary",
+        "is_reverse_engineered": false,
+        "is_privileged_tool": true,
+        "is_solo_maintained": false,
+        "confidence": "high",
+        "matched_rule": "rust + >=5 releases + publishable manifest"
+      },
+      "cells": {
+        "does_anyone_check_the_code": {
+          "advisory_old_color": "amber",
+          "advisory_new_color": "amber",
+          "advisory_new_rule_id": "RULE-2",
+          "phase_4_color": "amber",
+          "phase_4_override_reason": null,
+          "shift_note": "unchanged advisory (amber); LLM aligned (no override needed)"
+        },
+        "do_they_fix_problems_quickly": {
+          "advisory_old_color": "green",
+          "advisory_new_color": "green",
+          "advisory_new_rule_id": "FALLBACK",
+          "phase_4_color": "green",
+          "phase_4_override_reason": null,
+          "shift_note": "unchanged advisory (green); LLM aligned (no override needed)"
+        },
+        "do_they_tell_you_about_problems": {
+          "advisory_old_color": "red",
+          "advisory_new_color": "red",
+          "advisory_new_rule_id": "FALLBACK",
+          "phase_4_color": "red",
+          "phase_4_override_reason": null,
+          "shift_note": "unchanged advisory (red); LLM aligned (no override needed)"
+        },
+        "is_it_safe_out_of_the_box": {
+          "advisory_old_color": "amber",
+          "advisory_new_color": "amber",
+          "advisory_new_rule_id": "FALLBACK",
+          "phase_4_color": "amber",
+          "phase_4_override_reason": null,
+          "shift_note": "unchanged advisory (amber); LLM aligned (no override needed)"
+        }
+      }
+    },
+    {
+      "entry_num": 24,
+      "label": "freerouting/freerouting (wild)",
+      "bundle_path": "docs/scan-bundles/freerouting-c5ad3c7.json",
+      "output_basename": "GitHub-Scanner-freerouting-v12",
+      "verdict_old": "Critical",
+      "verdict_new": "Critical",
+      "shape_classification": {
+        "category": "specialized-domain-tool",
+        "is_reverse_engineered": false,
+        "is_privileged_tool": false,
+        "is_solo_maintained": true,
+        "confidence": "high",
+        "matched_rule": "domain topic (EDA/ML/document-conversion/etc.)"
+      },
+      "cells": {
+        "does_anyone_check_the_code": {
+          "advisory_old_color": "red",
+          "advisory_new_color": "red",
+          "advisory_new_rule_id": "FALLBACK",
+          "phase_4_color": "red",
+          "phase_4_override_reason": null,
+          "shift_note": "unchanged advisory (red); LLM aligned (no override needed)"
+        },
+        "do_they_fix_problems_quickly": {
+          "advisory_old_color": "green",
+          "advisory_new_color": "green",
+          "advisory_new_rule_id": "FALLBACK",
+          "phase_4_color": "green",
+          "phase_4_override_reason": null,
+          "shift_note": "unchanged advisory (green); LLM aligned (no override needed)"
+        },
+        "do_they_tell_you_about_problems": {
+          "advisory_old_color": "amber",
+          "advisory_new_color": "red",
+          "advisory_new_rule_id": "FALLBACK",
+          "phase_4_color": "amber",
+          "phase_4_override_reason": null,
+          "shift_note": "advisory amber\u2192red; LLM at amber (override now required)"
+        },
+        "is_it_safe_out_of_the_box": {
+          "advisory_old_color": "amber",
+          "advisory_new_color": "red",
+          "advisory_new_rule_id": "RULE-6",
+          "phase_4_color": "red",
+          "phase_4_override_reason": "signal_vocabulary_gap",
+          "shift_note": "advisory amber\u2192red; LLM override now redundant (rule-driven match)"
+        }
+      }
+    },
+    {
+      "entry_num": 25,
+      "label": "wled/WLED (wild)",
+      "bundle_path": "docs/scan-bundles/WLED-01328a6.json",
+      "output_basename": "GitHub-Scanner-WLED",
+      "verdict_old": "Critical",
+      "verdict_new": "Critical",
+      "shape_classification": {
+        "category": "embedded-firmware",
+        "is_reverse_engineered": false,
+        "is_privileged_tool": true,
+        "is_solo_maintained": false,
+        "confidence": "high",
+        "matched_rule": "C/C++ primary + firmware/iot/esp topic"
+      },
+      "cells": {
+        "does_anyone_check_the_code": {
+          "advisory_old_color": "red",
+          "advisory_new_color": "amber",
+          "advisory_new_rule_id": "RULE-2",
+          "phase_4_color": "red",
+          "phase_4_override_reason": null,
+          "shift_note": "advisory red\u2192amber; LLM at red (override now required)"
+        },
+        "do_they_fix_problems_quickly": {
+          "advisory_old_color": "red",
+          "advisory_new_color": "red",
+          "advisory_new_rule_id": "FALLBACK",
+          "phase_4_color": "red",
+          "phase_4_override_reason": null,
+          "shift_note": "unchanged advisory (red); LLM aligned (no override needed)"
+        },
+        "do_they_tell_you_about_problems": {
+          "advisory_old_color": "amber",
+          "advisory_new_color": "red",
+          "advisory_new_rule_id": "FALLBACK",
+          "phase_4_color": "amber",
+          "phase_4_override_reason": null,
+          "shift_note": "advisory amber\u2192red; LLM at amber (override now required)"
+        },
+        "is_it_safe_out_of_the_box": {
+          "advisory_old_color": "amber",
+          "advisory_new_color": "amber",
+          "advisory_new_rule_id": "FALLBACK",
+          "phase_4_color": "red",
+          "phase_4_override_reason": "signal_vocabulary_gap",
+          "shift_note": "unchanged advisory (amber); LLM override still required (signal_vocabulary_gap)"
+        }
+      }
+    },
+    {
+      "entry_num": 26,
+      "label": "WhiskeySockets/Baileys (wild)",
+      "bundle_path": "docs/scan-bundles/Baileys-8e5093c.json",
+      "output_basename": "GitHub-Scanner-Baileys",
+      "verdict_old": "Critical",
+      "verdict_new": "Critical",
+      "shape_classification": {
+        "category": "library-package",
+        "is_reverse_engineered": true,
+        "is_privileged_tool": false,
+        "is_solo_maintained": false,
+        "confidence": "medium",
+        "matched_rule": "publishable manifest, library-canonical shape"
+      },
+      "cells": {
+        "does_anyone_check_the_code": {
+          "advisory_old_color": "red",
+          "advisory_new_color": "red",
+          "advisory_new_rule_id": "FALLBACK",
+          "phase_4_color": "red",
+          "phase_4_override_reason": null,
+          "shift_note": "unchanged advisory (red); LLM aligned (no override needed)"
+        },
+        "do_they_fix_problems_quickly": {
+          "advisory_old_color": "red",
+          "advisory_new_color": "red",
+          "advisory_new_rule_id": "FALLBACK",
+          "phase_4_color": "red",
+          "phase_4_override_reason": null,
+          "shift_note": "unchanged advisory (red); LLM aligned (no override needed)"
+        },
+        "do_they_tell_you_about_problems": {
+          "advisory_old_color": "red",
+          "advisory_new_color": "red",
+          "advisory_new_rule_id": "FALLBACK",
+          "phase_4_color": "red",
+          "phase_4_override_reason": null,
+          "shift_note": "unchanged advisory (red); LLM aligned (no override needed)"
+        },
+        "is_it_safe_out_of_the_box": {
+          "advisory_old_color": "amber",
+          "advisory_new_color": "amber",
+          "advisory_new_rule_id": "FALLBACK",
+          "phase_4_color": "red",
+          "phase_4_override_reason": "signal_vocabulary_gap",
+          "shift_note": "unchanged advisory (amber); LLM override still required (signal_vocabulary_gap)"
+        }
+      }
+    },
+    {
+      "entry_num": 27,
+      "label": "mattpocock/skills (wild)",
+      "bundle_path": "docs/scan-bundles/skills-b843cb5.json",
+      "output_basename": "GitHub-Scanner-skills",
+      "verdict_old": "Caution",
+      "verdict_new": "Caution",
+      "shape_classification": {
+        "category": "agent-skills-collection",
+        "is_reverse_engineered": false,
+        "is_privileged_tool": false,
+        "is_solo_maintained": true,
+        "confidence": "high",
+        "matched_rule": "rule-files present + no exec/manifest/release fingerprint"
+      },
+      "cells": {
+        "does_anyone_check_the_code": {
+          "advisory_old_color": "red",
+          "advisory_new_color": "red",
+          "advisory_new_rule_id": "FALLBACK",
+          "phase_4_color": "red",
+          "phase_4_override_reason": null,
+          "shift_note": "unchanged advisory (red); LLM aligned (no override needed)"
+        },
+        "do_they_fix_problems_quickly": {
+          "advisory_old_color": "green",
+          "advisory_new_color": "green",
+          "advisory_new_rule_id": "FALLBACK",
+          "phase_4_color": "amber",
+          "phase_4_override_reason": "missing_qualitative_context",
+          "shift_note": "unchanged advisory (green); LLM override still required (missing_qualitative_context)"
+        },
+        "do_they_tell_you_about_problems": {
+          "advisory_old_color": "red",
+          "advisory_new_color": "amber",
+          "advisory_new_rule_id": "RULE-4",
+          "phase_4_color": "red",
+          "phase_4_override_reason": null,
+          "shift_note": "advisory red\u2192amber; LLM at red (override now required)"
+        },
+        "is_it_safe_out_of_the_box": {
+          "advisory_old_color": "amber",
+          "advisory_new_color": "amber",
+          "advisory_new_rule_id": "FALLBACK",
+          "phase_4_color": "amber",
+          "phase_4_override_reason": null,
+          "shift_note": "unchanged advisory (amber); LLM aligned (no override needed)"
+        }
+      }
+    }
+  ]
+}

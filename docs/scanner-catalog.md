@@ -15,6 +15,8 @@ Column notes:
 - **Methodology** — legacy `methodology-used: path-a` / `path-b` flag values. Canonical current name is "execution mode" with values `continuous` / `delegated` (renamed 2026-04-19 to eliminate naming collision with rendering-pipeline axis). Old flag values preserved for historical traceability.
 - **Rendering pipeline** — `v2.4` for LLM-authored MD+HTML (all 10 entries currently). `v2.5-preview` will appear when Step G produces the first live JSON-first scan.
 
+> **Phase 5 calibration v2 rerender (2026-05-01).** Entries 16-27 (12 V1.2 wild scans) were re-rendered with `compute_scorecard_cells_v2()` advisory + Phase 4 template-side derivation. Zero verdict shifts (verdict reads stored findings; findings unchanged). 10 cell-level advisory shifts; 3 redundant overrides cleared. Entries 1-15 unchanged (V1.1-era, V2.4 hand-authored, or incomplete V1.2 bundle). See `docs/calibration-rebuild-rerender-comparison.md`.
+
 | # | Repo | HEAD SHA | Date | Verdict | Scope axis | Shape / structural pattern | Methodology | Rendering pipeline | Artifacts |
 |---|---|---|---|---|---|---|---|---|---|
 | 1 | [JuliusBrussee/caveman](https://github.com/JuliusBrussee/caveman) | `c2ed24b` | 2026-04-16 | Critical (split) | Version · + Deployment · | Curl-pipe-from-main installer; solo maintainer; 12-day-old repo with 32k stars | `methodology-used: path-a` (continuous) | `v2.4` | [html](GitHub-Scanner-caveman.html) · [md](GitHub-Scanner-caveman.md) |

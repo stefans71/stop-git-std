@@ -174,21 +174,21 @@ No `postinstall` scripts, no curl-pipe installer script in repo. Home-brew tap e
 | Metric | Value | Note |
 |--------|-------|------|
 | Stars | 51,181 | Active public interest |
-| Forks | 2,391 | None |
-| Open issues | 239 | None |
+| Forks | 2,391 |  |
+| Open issues | 239 |  |
 | Primary language | Zig | Newer-ecosystem language; no PyPI/npm-style central registry |
-| License | MIT | None |
-| Created | 2022-03-29 | None |
+| License | MIT |  |
+| Created | 2022-03-29 |  |
 | Last pushed | 2026-04-19 | Recent activity |
-| Default branch | main | None |
+| Default branch | main |  |
 | Total contributors | 100 | Top contributor owns 85.9% |
 | Latest release tag | tip (2022-11-17) | No versioned releases |
 | Published security advisories | 5 | Visible via GitHub Security tab |
 | Workflows | 18 | 2 use pull_request_target |
 | Classic branch protection | OFF (HTTP 404) | Ruleset-based protection active instead |
 | Repo-level rulesets | 1 | Modern alternative to classic protection |
-| Rules on default branch | 4 | None |
-| CODEOWNERS | Present | None |
+| Rules on default branch | 4 |  |
+| CODEOWNERS | Present |  |
 | SECURITY.md | Absent | Disclosure via GitHub Security tab only |
 | OSSF Scorecard | Not indexed (HTTP 404) | Coverage gap |
 

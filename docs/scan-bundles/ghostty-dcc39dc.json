@@ -2833,20 +2833,31 @@
   "phase_3_advisory": {
     "scorecard_hints": {
       "does_anyone_check_the_code": {
-        "color": "red",
-        "short_answer": "No",
+        "color": "amber",
+        "short_answer": "Partly",
+        "rule_id": "RULE-1",
+        "auto_fire": false,
+        "short_answer_template_key": "q1.amber.governance_present",
+        "template_vars": {
+          "concentration_qualifier": "concentration risk remains",
+          "is_solo_maintained": true
+        },
         "signals": [
           {
             "id": "q1_formal_review_rate",
-            "value": 0
+            "value": null
           },
           {
             "id": "q1_any_review_rate",
-            "value": 0
+            "value": null
           },
           {
             "id": "q1_has_branch_protection",
             "value": false
+          },
+          {
+            "id": "q1_has_ruleset_protection",
+            "value": true
           },
           {
             "id": "q1_has_codeowners",
@@ -2855,16 +2866,16 @@
           {
             "id": "q1_is_solo_maintainer",
             "value": true
-          },
-          {
-            "id": "q1_governance_floor_override",
-            "value": false
           }
         ]
       },
       "do_they_fix_problems_quickly": {
         "color": "green",
         "short_answer": "Yes",
+        "rule_id": "FALLBACK",
+        "auto_fire": false,
+        "short_answer_template_key": "q2.green.no_open",
+        "template_vars": {},
         "signals": [
           {
             "id": "q2_open_security_issue_count",
@@ -2875,14 +2886,22 @@
             "value": null
           },
           {
+            "id": "q2_oldest_open_security_item_age_days",
+            "value": null
+          },
+          {
             "id": "q2_closed_fix_lag_days",
             "value": null
           }
         ]
       },
       "do_they_tell_you_about_problems": {
-        "color": "amber",
-        "short_answer": "Partly",
+        "color": "red",
+        "short_answer": "No",
+        "rule_id": "FALLBACK",
+        "auto_fire": false,
+        "short_answer_template_key": "q3.red.no_disclosure",
+        "template_vars": {},
         "signals": [
           {
             "id": "q3_has_security_policy",
@@ -2890,11 +2909,11 @@
           },
           {
             "id": "q3_has_contributing_guide",
-            "value": true
+            "value": false
           },
           {
             "id": "q3_published_advisory_count",
-            "value": 5
+            "value": 0
           },
           {
             "id": "q3_has_silent_fixes",
@@ -2905,6 +2924,12 @@
       "is_it_safe_out_of_the_box": {
         "color": "amber",
         "short_answer": "Partly",
+        "rule_id": "FALLBACK",
+        "auto_fire": false,
+        "short_answer_template_key": "q4.amber.install_warns",
+        "template_vars": {
+          "trust_qualifier": "install path has friction signals"
+        },
         "signals": [
           {
             "id": "q4_all_channels_pinned",
@@ -2924,6 +2949,14 @@
           }
         ]
       }
+    },
+    "shape_classification": {
+      "category": "desktop-application",
+      "is_reverse_engineered": false,
+      "is_privileged_tool": false,
+      "is_solo_maintained": true,
+      "confidence": "medium",
+      "matched_rule": "desktop-packaging workflows (flatpak/snap/AppImage/dmg)"
     }
   },
   "phase_4_structured_llm": {

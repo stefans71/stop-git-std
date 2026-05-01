@@ -318,44 +318,44 @@ Sample: the 0 most recent merged PRs at scan time, plus flagged PRs.
 
 | Metric | Value | Note |
 |--------|-------|------|
-| Stars | 9,034 | None |
+| Stars | 9,034 |  |
 | Open issues | 313 | 0 security-tagged |
 | Open PRs | 100+ | 1 `Stale`-labeled (#2429 docs auth); many community PRs stale out |
-| Primary language | JavaScript/TypeScript | None |
+| Primary language | JavaScript/TypeScript |  |
 | License | MIT | Code license; ToS-violation risk is separate from license |
 | Created | 2022-01-12 | ~4 years |
 | Last pushed | 2026-04-19 | Day before scan |
-| Default branch | master | None |
-| Repo size | ~231 MB | None |
-| Total contributors | 100 | None |
+| Default branch | master |  |
+| Repo size | ~231 MB |  |
+| Total contributors | 100 |  |
 | Top contributor | adiwajshing 71.1% | Original author, now inactive |
 | Active maintainer | purpshell (18.4%) | Named in README; paid-support flow |
-| Top-2 concentration | 89.5% | None |
+| Top-2 concentration | 89.5% |  |
 | Solo-maintainer flag | FALSE | 71.1% < 80% threshold |
 | Formal releases | 42 | Mix of stable + rc |
 | Latest release | v7.0.0-rc.9 (2025-11-21) | 150 days before scan — F5 |
 | Latest stable | v6.7.21 (2025-11-06) | 165 days before scan |
-| Classic branch protection | OFF (HTTP 404) | None |
+| Classic branch protection | OFF (HTTP 404) |  |
 | Rulesets | 0 | No rulesets — F4 |
-| Rules on default branch | 0 | None |
-| CODEOWNERS | Absent | None |
+| Rules on default branch | 0 |  |
+| CODEOWNERS | Absent |  |
 | SECURITY.md | Absent | 4 years; F6 |
-| CONTRIBUTING | Absent | None |
-| CODE_OF_CONDUCT | Absent | None |
+| CONTRIBUTING | Absent |  |
+| CODE_OF_CONDUCT | Absent |  |
 | Community health | 50% | Median V1.2 catalog |
 | Workflows | 12 | Incl. Copilot code review + pr-comment.yml (pull_request_target) |
 | pull_request_target usage | 1 | pr-comment.yml — E9 |
 | SHA-pinned actions | 0 | Across 9 workflow files |
-| Tag-pinned actions | 25 | None |
+| Tag-pinned actions | 25 |  |
 | Dependabot config (.yml) | Absent | Workflow active in default mode |
 | Runtime dep CVEs | 14 (across 6 packages) | F3 (ws × 5, protobufjs × 4, request × 2) |
 | PR review rate (harness sample) | N/A (sample empty) | Harness gap — E8 |
 | PR merge rate (direct query, ~50 recent) | ~12% | Most closed PRs are closed-WITHOUT-merge |
-| Total merged PRs lifetime | 352 | None |
+| Total merged PRs lifetime | 352 |  |
 | Published security advisories | 0 | 4 years; 11/11 V1.2 silent-fix pattern |
 | Flagged security PRs (closed) | 6 | Incl. #1996 Vulnerability Fixes stale-closed — F2 |
 | Documented disclaimer | README lines 32-38 | Explicit ToS-risk acknowledgement — F0 |
-| OSSF Scorecard | Not indexed | None |
+| OSSF Scorecard | Not indexed |  |
 | Primary distribution | npm: `baileys` v7.0.0-rc.9 + `whatsapp-web-protobuf-extractor` v1.0.0 | Both verified on npm registry |
 
 ---

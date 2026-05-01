@@ -264,33 +264,33 @@ Sample: the 50 most recent merged PRs at scan time, plus flagged PRs. Dual revie
 | Open issues | 29 | 0 security-tagged |
 | Open PRs | 5 | All 5 by Dependabot — healthy dep-bump flow |
 | Primary language | Java | First Java V1.2 entry |
-| License | GPL-3.0 | None |
+| License | GPL-3.0 |  |
 | Created | 2014-06-28 | ~12 years |
 | Last pushed | 2026-04-19 | Day before scan |
-| Default branch | master | None |
+| Default branch | master |  |
 | Repo size | ~521 MB | Large — Java source + many release artifacts |
 | Total contributors | 36 | andrasfuchs 86.7% of top-6 |
 | Solo-maintainer flag | TRUE | 86.7% > 80% threshold |
 | Formal releases | 15 | v2.1.0 @ 2025-04-12 latest |
 | Release cadence | Stalled ~373 days | F3 |
-| Classic branch protection | OFF (HTTP 404) | None |
+| Classic branch protection | OFF (HTTP 404) |  |
 | Rulesets | 1 | Anti-destruction only (no review requirement) — F1 |
 | Rules on default branch | 2 | deletion + non_fast_forward |
-| CODEOWNERS | Absent | None |
+| CODEOWNERS | Absent |  |
 | SECURITY.md | Absent | Despite F0 RCE-class surface |
-| CONTRIBUTING | Present | None |
-| CODE_OF_CONDUCT | Present | None |
+| CONTRIBUTING | Present |  |
+| CODE_OF_CONDUCT | Present |  |
 | Community health | 75% | Above V1.2-catalog average |
 | Workflows | 17 | Includes 5 Gemini-AI workflows — F5 |
-| pull_request_target usage | 0 | None |
-| CodeQL SAST | Absent | None |
+| pull_request_target usage | 0 |  |
+| CodeQL SAST | Absent |  |
 | Dependabot | Enabled (gradle) | Active — F4 |
-| PR formal review rate (105 sample) | 9.5% | None |
+| PR formal review rate (105 sample) | 9.5% |  |
 | PR any-review rate (105 sample) | 32.4% | Partly Gemini-assisted — F5 |
-| Self-merge count (105 sample) | 19 (18%) | None |
+| Self-merge count (105 sample) | 19 (18%) |  |
 | Published security advisories | 0 | 12 years, zero — despite F0 |
 | Java ObjectInputStream imports | 35 files | Core data-persistence model — F0 |
-| OSSF Scorecard | Not indexed | None |
+| OSSF Scorecard | Not indexed |  |
 | Gradle deps | Not parsed | Gradle parsing not implemented — F6 |
 | Primary distribution | GitHub Releases JAR + MSI + Docker (ghcr.io) | Harness detected 'docker-local-build' fictitious — F6 |
 

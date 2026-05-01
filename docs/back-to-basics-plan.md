@@ -24,12 +24,35 @@ When the user says "continue" — start at the **next concrete action** under §
 **This block is your resumption packet.** It is the only thing you need to read after `/compact` to know what to do next. If something here is wrong or stale, fix it before proceeding.
 
 ### HEAD + branch
-- **HEAD:** `b9723f1` on `origin/main` (§Current state hygiene fixes on top of Phase 4 close `a31ff4b` on top of merge `c625309`). Feature branch `chore/template-side-derivation` deleted post-merge (local + remote).
-- **Tree:** clean.
+- **Branch:** `chore/calibration-rebuild-rerender` (Phase 5 work branch). About to commit Phase 5 commit 1.
+- **Pre-render tag:** `pre-calibration-rerender` set at `e6b0a3b` — rollback anchor before Phase 5 mutates committed scan outputs.
+- **`origin/main` HEAD:** `e6b0a3b`. Feature branch `chore/template-side-derivation` deleted post-merge.
 
 ### Phase + step
-- **Active phase:** Phase 4 — **COMPLETE + MERGED + PUSHED**. See plan §Phase 4 for the spec; this section's "Acceptance test outcomes" block records what landed.
-- **Step within phase:** N/A. **Next phase: Phase 5 — re-render all 27 catalog scans + diff. NOT STARTED. Owner-decision pause point.**
+- **Active phase:** Phase 5 — re-render 12 catalog scans (entries 16-27) + diff. **OWNER SIGN-OFF GRANTED on comparison doc.** About to land Phase 5 commit 1.
+- **Final scope:** 12 entries (16-27). Iteration history:
+  - Originally specified as "all 27 catalog scans"
+  - First correction: 16 entries (12-27) — entries 1-11 V2.4 hand-authored, no V1.2 form.json
+  - Second correction: 13 entries (15-27) — entries 12-14 are V2.5-preview Step G pilots, V1.1 phase_4
+  - Final correction: **12 entries (16-27)** — entry 15 (markitdown) has empty phase_4 scorecard_cells in form.json (LLM authored to .md sidecar)
+- **Owner decision on Phase 5 gate 6.3 backlog:** **(W) Defer.** 7 cells across 6 entries (ghostty/kamal/wezterm/freerouting Q3, WLED Q1+Q3, skills Q3) have advisory/LLM mismatches without override_reason. Phase 5 completion criteria specify `--report` clean on rendered files (✅ except pre-existing skills `<bucket>` issue) and `--parity` zero-warning (✅), not `--form` clean on bundles. Backlog documented in comparison doc; resolution belongs to Phase 6.
+- **Step within phase:** Phase 5 commit 1 ready (comparison doc + 24 re-rendered scans + 12 mutated bundles + helper scripts + compute.py defensive patches + test fixture patch). Phase 5 commit 2 (CLAUDE.md/REPO_MAP) follows. Then merge to main.
+
+### Acceptance test outcomes (12-entry final state)
+1. **Test suite:** ✅ 587/587 passing.
+2. **`--report` validator clean on rendered files:** ✅ 23/24 (1 pre-existing skills MD failure on literal `<bucket>` brackets — same failure at HEAD; not a Phase 5 regression).
+3. **`--parity` zero-warning:** ✅ on all 12 MD/HTML pairs.
+4. **`--form` validator on bundles:** documented as out-of-spec for Phase 5; 6 cells flagged as Phase 6 input in comparison doc per (W) defer decision.
+5. **Verdict shifts:** 0 (findings unchanged).
+6. **Cell shifts:** 10 (calibration v2 advisory differs from legacy on 10 cells across the 12 entries).
+7. **Redundant overrides cleared:** 3 (Kronos Q2, ghostty Q1, freerouting Q4 — LLM previously override-explained but new advisory matches LLM color naturally).
+
+### Phase 1.5 follow-ups surfaced by Phase 5
+1. **`docs/compute.py` defensive patches** — `_derive_signals_from_form` coerces naive datetime to UTC; `compute_solo_maintainer` None-safe on `contributions`. Bundled with Phase 5 commit 1.
+2. **Markitdown bundle** has phase_4 findings but empty scorecard_cells. Future scan-authoring template should require populating both.
+3. **Step G pilot bundles** (entries 12-14) need V1.1→V1.2 migration + Phase 4 re-authoring before they can flow through calibration v2.
+4. **Skills MD pre-existing validator failure** (literal `<bucket>` / `<name>` brackets). Validator's unclosed-tag check doesn't honor backtick code spans. Pre-existing; not a Phase 5 regression.
+5. **Gate 6.3 backlog (Phase 6 input)** — 6 cells need Phase 4 LLM re-authoring against calibrated advisory. Documented in `docs/calibration-rebuild-rerender-comparison.md` §"Phase 6 input".
 
 ### Commits done in Phase 4 (all on origin/main now)
 | SHA | One-line summary |
@@ -42,16 +65,29 @@ When the user says "continue" — start at the **next concrete action** under §
 | `97fbdbe` | **Commit 3**: author template optionalized + SCANNER-OPERATOR-GUIDE §8.5a + §06 dedup fix |
 | `c625309` | **Merge** of `chore/template-side-derivation` to `main` (no-ff) |
 
-### Next concrete action when work resumes (Phase 5)
-**Phase 5 — Re-render all 27 catalog scans + diff.** Per plan §Phase 5:
-- Branch: `chore/calibration-rebuild-rerender` from `main` at `c625309`
-- Pre-render tag: `pre-calibration-rerender` (set immediately before this phase since Phase 5 mutates committed scan outputs)
-- Deliverables:
-  - `docs/calibration-rebuild-rerender-comparison.md` — per scan: old verdict / new verdict / cell-color delta / rationale (one-line per scan)
-  - Re-rendered MD + HTML for all 27 scans → committed to `docs/scans/catalog/` REPLACING existing files (per cutover; old versions in git history)
-  - Updated `docs/scanner-catalog.md` table reflecting any verdict shifts
-- Pre-commit gate: owner reviews comparison doc and signs off on each verdict shift
-- Completion criteria: owner sign-off + 587+/587+ tests pass + validator clean on every re-rendered file + `--parity` zero-warning on every MD/HTML pair
+### Next concrete action — Phase 5 commit 1
+**Re-render entries 12-27 + comparison doc + catalog updates.** Per plan §Phase 5 (16-entry scope):
+
+**Pre-flight (do first):**
+- Copy `.scan-workspaces/markitdown/form.json` → `docs/scan-bundles/markitdown-<sha>.json` (entry 15 V2.5-preview bundle wasn't yet promoted to scan-bundles).
+
+**Inputs (16 V1.2 form.json bundles):**
+- 3 fixtures (entries 12-14): `tests/fixtures/{zustand,caveman,archon-subset}-form.json`
+- 1 wild V2.5-preview (entry 15): `docs/scan-bundles/markitdown-<sha>.json` (after pre-flight)
+- 12 wild V1.2 (entries 16-27): `docs/scan-bundles/{Baileys,Kronos,QuickLook,WLED,Xray-core,browser_terminal,freerouting,ghostty,kamal,kanata,skills,wezterm}-<sha>.json`
+
+**Deliverables:**
+- `docs/calibration-rebuild-rerender-comparison.md` — per entry 12-27: old verdict / new verdict / cell-color delta / one-line rationale. Entries 1-11 listed in a separate "not re-rendered (V2.4 era — no V1.2 bundle)" stub.
+- Re-rendered MD + HTML for entries 12-27 → REPLACE existing files in `docs/scans/catalog/`.
+- Updated `docs/scanner-catalog.md` reflecting any verdict shifts.
+
+**Pre-commit gate:** owner reviews comparison doc and signs off on each verdict shift.
+
+**Completion criteria for the phase (across both commits):** owner sign-off + 587+/587+ tests pass + validator clean on every re-rendered file + `--parity` zero-warning on every MD/HTML pair.
+
+### After Phase 5 commit 1 — Phase 5 commit 2
+- Update CLAUDE.md current-state paragraph to mark Phase 5 done + REPO_MAP.md catalog count if it changed.
+- Then merge `chore/calibration-rebuild-rerender` to `main`, push, update §Current state to mark Phase 5 complete, and stop. Don't start Phase 6.
 
 ### Acceptance test outcomes (per plan §Phase 4 Completion criteria)
 1. **Render skills bundle with REPO_VITALS=[], COVERAGE_DETAIL_ROWS=[], PR_SAMPLE_ROWS=[] zeroed:** ✅ produces helper-derived table content matching the canonical mechanical metrics from `phase_1_raw_capture`. §05 Repo vitals: 16 mechanical metrics match (Stars 47,917, Forks 3,900, License MIT, Created 2026-02-03, contributors, branch_protection 404, rulesets 0, CODEOWNERS absent, etc.). §06 Investigation coverage: 8 mechanical checks rendered cleanly (after §06 dedup fix in commit 3). §03 PR sample: PR #90 with title + self-merge concern (author/merger render `?` per Phase 1.5 gap).
@@ -180,24 +216,32 @@ Phase 0 audit, Phase 1 calibration design, Phase 2 board review, Phase 3 calibra
 
 ---
 
-### Phase 5 — Re-render all 27 catalog scans + diff
+### Phase 5 — Re-render 12 catalog scans (entries 16-27) + diff
 
 **Goal:** validate the new calibration against the existing catalog. Some verdicts may shift (intentional). We document each shift + owner reviews before commit.
 
+**Scope:** 12 entries (16-27) — V1.2 wild scans with complete `form.json` bundles (full phase_4 LLM authoring). Out-of-scope entries:
+- Entries 1-11: V2.4 era hand-authored against V1.1 schema, no V1.2 `form.json` exists.
+- Entries 12-14 (Step G pilots): authoritative phase_4 in `.board-review-temp/step-g-execution/*.json` (V1.1); would require schema-upgrade + Phase 4 re-authoring.
+- Entry 15 (markitdown): V1.2 form.json in `.scan-workspaces/markitdown/` has empty `phase_4_structured_llm.scorecard_cells` (LLM cells were authored to a `.md` sidecar bundle); re-rendering produces a Q2 regression.
+
 **Deliverables:**
-- `docs/calibration-rebuild-rerender-comparison.md` — for each scan: old verdict / new verdict / cell-color delta / rationale (one-line per scan).
-- Re-rendered MD + HTML for all 27 scans → committed to `docs/scans/catalog/` REPLACING the existing files (per the calibration cutover; old versions remain in git history).
-- Updated `docs/scanner-catalog.md` table reflecting any verdict shifts.
+- `docs/calibration-rebuild-rerender-comparison.md` — for each entry 16-27: old verdict / new verdict / cell-color delta / rationale (one-line per scan). Entries 1-15 listed in a separate "out of scope" block. Includes "Phase 6 input — gate 6.3 backlog" section documenting the 6 advisory/LLM mismatches that need Phase 4 re-authoring.
+- Re-rendered MD + HTML for entries 16-27 → committed to `docs/scans/catalog/` REPLACING the existing files (per the calibration cutover; old versions remain in git history).
+- `docs/phase_5_recompute.py` + `docs/phase_5_build_comparison.py` — one-shot migration scripts (kept in repo for traceability).
+- `docs/phase_5_comparison_data.json` — structured comparison data driving the doc.
+- `docs/compute.py` — defensive patches: `_derive_signals_from_form` coerces naive datetime to UTC, `compute_solo_maintainer` is None-safe on `contributions`. Both are general bug fixes surfaced by Phase 5 inputs.
+- `tests/test_validator_v2_rule_id.py` — `_minimal_v12_form()` strips v2 fields + normalizes advisory colors; required because Phase 5 mutates the ghostty bundle that this test uses as scaffold.
 
 **Pre-commit gate:** owner reviews the comparison doc and signs off on each verdict shift.
 
-**Branch:** `chore/calibration-rebuild-rerender` (separate from impl branch so the impl can land first).
+**Branch:** `chore/calibration-rebuild-rerender` from `main` at `e6b0a3b` (post-Phase 4 merge + §Current state hygiene). Pre-render tag `pre-calibration-rerender` set at the same SHA before any rerender work, since this phase mutates committed scan outputs.
 
 **Commits:**
 1. Add comparison doc + the re-rendered scan files + catalog updates in one cohesive commit.
 2. Update CLAUDE.md current-state paragraph + REPO_MAP.md catalog count if it changed.
 
-**Completion criteria:** owner signs off on the rerender comparison; 414+/414+ tests pass; validator clean on every re-rendered file; `--parity` zero-warning on every MD/HTML pair.
+**Completion criteria:** owner signs off on the rerender comparison; 587+/587+ tests pass; validator clean on every re-rendered file; `--parity` zero-warning on every MD/HTML pair.
 
 ---
 

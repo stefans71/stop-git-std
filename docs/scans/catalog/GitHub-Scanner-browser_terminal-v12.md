@@ -273,36 +273,36 @@ Sample: the 12 most recent merged PRs at scan time, plus flagged PRs. Dual revie
 | Metric | Value | Note |
 |--------|-------|------|
 | Stars | 10 | Very low — near-zero community audit |
-| Forks | — | None |
+| Forks | — |  |
 | Open issues | 1 | 0 security-tagged |
-| Open PRs | 0 | None |
+| Open PRs | 0 |  |
 | Primary language | Go | Plus TypeScript/JS in src/ extension frontend |
-| License | GPL-3.0 | None |
+| License | GPL-3.0 |  |
 | Created | 2023-04-14 | ~3 years |
 | Last pushed | 2026-04-03 | Active commits |
-| Default branch | main | None |
+| Default branch | main |  |
 | Total contributors | 2 (incl. dependabot) | BatteredBunny: 41 commits; dependabot[bot]: 12 |
 | Human contributors | 1 | Single maintainer |
 | Formal releases | 5 | Latest v1.4.7 on 2025-06-23 |
 | Release cadence | Stalled 10 months | Main has unshipped activity |
 | Release integrity | None | No .dgst / .sig / .sha256 / .asc |
-| Classic branch protection | OFF (HTTP 404) | None |
-| Rulesets | 0 | None |
-| Rules on default branch | 0 | None |
-| CODEOWNERS | Absent | None |
+| Classic branch protection | OFF (HTTP 404) |  |
+| Rulesets | 0 |  |
+| Rules on default branch | 0 |  |
+| CODEOWNERS | Absent |  |
 | SECURITY.md | Absent | Privileged tool (shell bridge) |
-| CONTRIBUTING | Absent | None |
-| Community health | 42% | None |
+| CONTRIBUTING | Absent |  |
+| Community health | 42% |  |
 | Workflows | 4 | Release × 2 + Dependabot + Dependency-Graph |
-| pull_request_target usage | 0 | None |
-| CodeQL SAST | Absent | None |
+| pull_request_target usage | 0 |  |
+| CodeQL SAST | Absent |  |
 | Dependabot | Enabled (gomod + npm + github-actions) | Multi-ecosystem |
 | PR formal review rate | 0.0% | 12-PR lifetime sample |
-| PR any-review rate | 0.0% | None |
+| PR any-review rate | 0.0% |  |
 | Self-merge count | 0 | Maintainer commits directly to main |
-| Published security advisories | 0 | None |
-| Open security issues | 0 | None |
-| OSSF Scorecard | Not indexed | None |
+| Published security advisories | 0 |  |
+| Open security issues | 0 |  |
+| OSSF Scorecard | Not indexed |  |
 | Runtime Go deps | 1 (creack/pty) | Very small attack surface |
 | npm deps (runtime) | 7 | Per harness parse of package.json |
 | osv.dev vulns | 1 (esbuild dev-server; not reachable) | Build-time only |

@@ -246,37 +246,37 @@ Sample: the 1 most recent merged PRs at scan time, plus flagged PRs. Dual review
 | Metric | Value | Note |
 |--------|-------|------|
 | Stars | 47,917 | Massively popular for a 3-month-old repo |
-| Forks | 3,900 | None |
+| Forks | 3,900 |  |
 | Open issues | 5 | Low; quickly triaged |
 | Open PRs | 0 | Maintainer-driven curation |
 | Primary language | Shell (per GitHub) — actually Markdown-canonical | GitHub heuristic misclassifies the 2 install scripts as primary |
-| License | MIT | None |
+| License | MIT |  |
 | Created | 2026-02-03 | ~3 months old |
 | Last pushed | 2026-04-30 | Active (scan day) |
-| Default branch | main | None |
+| Default branch | main |  |
 | Total contributors | 2 | Top-1 share 87.3% (mattpocock); 2nd is `TESTPERSONAL` test account |
 | Solo-maintainer flag | TRUE | 87.3% > 80% threshold |
 | Formal releases | 0 | Rolling-distribution model |
 | Latest release | — | No releases — F1 |
-| Classic branch protection | OFF (HTTP 404) | None |
-| Rulesets | 0 | None |
-| Rules on default branch | 0 | None |
-| CODEOWNERS | Absent | None |
+| Classic branch protection | OFF (HTTP 404) |  |
+| Rulesets | 0 |  |
+| Rules on default branch | 0 |  |
+| CODEOWNERS | Absent |  |
 | SECURITY.md | Absent | PR #67 proposing one closed without merge — F2 |
-| CONTRIBUTING | Absent | None |
-| Code of conduct | Absent | None |
-| Community health | 42% | None |
+| CONTRIBUTING | Absent |  |
+| Code of conduct | Absent |  |
+| Community health | 42% |  |
 | Workflows | 1 (Copilot reviewer bot) | No CI tests, no SAST, no Dependabot |
-| pull_request_target usage | 0 | None |
-| CodeQL SAST | Absent | None |
+| pull_request_target usage | 0 |  |
+| CodeQL SAST | Absent |  |
 | Dependabot config | Absent (.github/dependabot.yml missing) | No package manifests to scan anyway — markdown-only repo |
-| PR formal review rate (lifetime sample) | 0% (1/1 self-merged) | None |
-| PR any-review rate (lifetime sample) | 0% | None |
+| PR formal review rate (lifetime sample) | 0% (1/1 self-merged) |  |
+| PR any-review rate (lifetime sample) | 0% |  |
 | Self-merge count | 1 of 1 (100%) | Sample size N=1 — weak signal alone |
 | Total merged PRs (lifetime) | 1 | PR #90 'Add setup-matt-pocock-skills' |
 | Closed-without-merge PRs (sample) | 10+ (incl. #67 SECURITY.md, #28 [Security], #75 typo) | Maintainer-curated |
-| Published security advisories | 0 | None |
-| Open security issues | 0 | None |
+| Published security advisories | 0 |  |
+| Open security issues | 0 |  |
 | OSSF Scorecard | Not indexed | 404 |
 | SKILL.md files | 22 (1,815 lines total) | 12 promoted via plugin.json; 10 in personal/+deprecated/ |
 | CLAUDE.md size | 13 lines | Top-level repo conventions only |

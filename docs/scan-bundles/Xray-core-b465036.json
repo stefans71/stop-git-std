@@ -3662,6 +3662,12 @@
       "does_anyone_check_the_code": {
         "color": "red",
         "short_answer": "No",
+        "rule_id": "FALLBACK",
+        "auto_fire": false,
+        "short_answer_template_key": "q1.red.no_governance",
+        "template_vars": {
+          "formal": 2.3
+        },
         "signals": [
           {
             "id": "q1_formal_review_rate",
@@ -3686,16 +3692,19 @@
           {
             "id": "q1_is_solo_maintainer",
             "value": false
-          },
-          {
-            "id": "q1_governance_floor_override",
-            "value": true
           }
         ]
       },
       "do_they_fix_problems_quickly": {
         "color": "red",
         "short_answer": "No",
+        "rule_id": "FALLBACK",
+        "auto_fire": false,
+        "short_answer_template_key": "q2.red.many_open_or_old",
+        "template_vars": {
+          "open_security_issue_count": 0,
+          "cve_age": 88
+        },
         "signals": [
           {
             "id": "q2_open_security_issue_count",
@@ -3707,7 +3716,7 @@
           },
           {
             "id": "q2_oldest_open_security_item_age_days",
-            "value": 77
+            "value": 88
           },
           {
             "id": "q2_closed_fix_lag_days",
@@ -3718,6 +3727,14 @@
       "do_they_tell_you_about_problems": {
         "color": "amber",
         "short_answer": "Partly",
+        "rule_id": "FALLBACK",
+        "auto_fire": false,
+        "short_answer_template_key": "q3.amber.partial_disclosure",
+        "template_vars": {
+          "has_security_policy": true,
+          "has_contributing_guide": false,
+          "published_advisory_count": 0
+        },
         "signals": [
           {
             "id": "q3_has_security_policy",
@@ -3740,6 +3757,12 @@
       "is_it_safe_out_of_the_box": {
         "color": "amber",
         "short_answer": "Partly",
+        "rule_id": "FALLBACK",
+        "auto_fire": false,
+        "short_answer_template_key": "q4.amber.install_warns",
+        "template_vars": {
+          "trust_qualifier": "install path has friction signals"
+        },
         "signals": [
           {
             "id": "q4_all_channels_pinned",
@@ -3759,6 +3782,14 @@
           }
         ]
       }
+    },
+    "shape_classification": {
+      "category": "cli-binary",
+      "is_reverse_engineered": false,
+      "is_privileged_tool": true,
+      "is_solo_maintained": false,
+      "confidence": "high",
+      "matched_rule": "go + >=5 releases + publishable manifest"
     }
   },
   "phase_4_structured_llm": {

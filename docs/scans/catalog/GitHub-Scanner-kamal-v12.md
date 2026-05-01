@@ -216,34 +216,34 @@ Sample: the 50 most recent merged PRs at scan time. Dual review-rate metric on t
 
 | Metric | Value | Note |
 |--------|-------|------|
-| Stars | 14,101 | None |
-| Forks | — | None |
+| Stars | 14,101 |  |
+| Forks | — |  |
 | Open issues | 126 | 0 security-tagged |
-| Open PRs | 54 | None |
-| Primary language | Ruby | None |
-| License | MIT | None |
+| Open PRs | 54 |  |
+| Primary language | Ruby |  |
+| License | MIT |  |
 | Created | 2023-01-07 | ~3.3 years old |
 | Last pushed | 2026-04-15 | Active |
-| Default branch | main | None |
+| Default branch | main |  |
 | Total contributors | 100 | Top-2 (djmb + dhh) ~85% of top-6 share |
 | Formal releases | 71 | v2.11.0 @ 2026-03-18 latest |
 | Release cadence | Active semver | Regular releases across 3 years |
-| Classic branch protection | OFF (HTTP 404) | None |
+| Classic branch protection | OFF (HTTP 404) |  |
 | Rulesets | 1 | Org-level 'Copilot Reviews' — advisory SAST review |
 | Rules on default branch | 1 | copilot_code_review with review_on_push |
-| CODEOWNERS | Absent | None |
+| CODEOWNERS | Absent |  |
 | SECURITY.md | Absent | Privileged-tool surface |
-| CONTRIBUTING | Present | None |
-| Community health | 62% | None |
+| CONTRIBUTING | Present |  |
+| Community health | 62% |  |
 | Workflows | 5 | CI + Docker + Copilot + Dependabot + CodeQL |
-| pull_request_target usage | 0 | None |
+| pull_request_target usage | 0 |  |
 | CodeQL SAST | Enabled | Continuous SAST gate |
 | Dependabot | Enabled (github-actions only) | RubyGems ecosystem NOT tracked — F2 |
-| PR formal review rate (300 sample) | 4.7% | None |
-| PR any-review rate (300 sample) | 18.7% | None |
-| Self-merge count (300 sample) | 154 (51%) | None |
-| Published security advisories | 0 | None |
-| Open security issues | 0 | None |
+| PR formal review rate (300 sample) | 4.7% |  |
+| PR any-review rate (300 sample) | 18.7% |  |
+| Self-merge count (300 sample) | 154 (51%) |  |
+| Published security advisories | 0 |  |
+| Open security issues | 0 |  |
 | OSSF Scorecard | Not indexed (HTTP 404) | Coverage gap |
 | Runtime Ruby deps (from gemspec) | 10 | Harness parsed 0 — coverage gap |
 | Primary distribution | RubyGems (`gem install kamal`) | Harness detected only 'docker-local-build' — coverage gap |

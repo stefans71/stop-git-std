@@ -248,37 +248,37 @@ Sample: the 50 most recent merged PRs at scan time, plus flagged PRs. Dual revie
 
 | Metric | Value | Note |
 |--------|-------|------|
-| Stars | 7,179 | None |
+| Stars | 7,179 |  |
 | Open issues | 98 | 0 security-tagged |
-| Open PRs | 6 | None |
+| Open PRs | 6 |  |
 | Primary language | Rust | Second Rust V1.2 entry |
-| License | LGPL-3.0 | None |
+| License | LGPL-3.0 |  |
 | Created | 2022-04-18 | ~4 years |
 | Last pushed | 2026-04-19 | 1 day before scan |
-| Default branch | main | None |
+| Default branch | main |  |
 | Total contributors | 100 | jtroo 79% + ItayGarin 12% ~91% top-2 |
 | Solo-maintainer flag | FALSE | Top-1 at 79% — just below 80% threshold |
 | Formal releases | 58 | v1.12.0-prerelease-2 @ 2026-04-12 |
 | Release cadence | Active semver + prereleases | Latest 8 days before scan |
-| Classic branch protection | OFF (HTTP 404) | None |
-| Rulesets | 0 | None |
-| Rules on default branch | 0 | None |
-| CODEOWNERS | Absent | None |
+| Classic branch protection | OFF (HTTP 404) |  |
+| Rulesets | 0 |  |
+| Rules on default branch | 0 |  |
+| CODEOWNERS | Absent |  |
 | SECURITY.md | Absent | Privileged tool |
-| CONTRIBUTING | Absent | None |
-| Community health | 57% | None |
+| CONTRIBUTING | Absent |  |
+| Community health | 57% |  |
 | Workflows | 5 | Linux + macOS + Windows + build-everything + cargo-checks |
-| pull_request_target usage | 0 | None |
-| CodeQL SAST | Absent | None |
+| pull_request_target usage | 0 |  |
+| CodeQL SAST | Absent |  |
 | Dependabot | Absent | No dependabot.yml — F2 |
 | PR formal review rate (300 sample) | 44.0% | HIGHEST in V1.2 catalog |
-| PR any-review rate (300 sample) | 48.0% | None |
+| PR any-review rate (300 sample) | 48.0% |  |
 | Self-merge count (300 sample) | 117 (39%) | Maintainer direct-commits |
 | Published security advisories | 0 | 4 years, zero |
-| OSSF Scorecard | Not indexed | None |
+| OSSF Scorecard | Not indexed |  |
 | Cargo workspace | 12 sub-crates | Harness detected all 12 as channels — F5 |
 | osv.dev vulns | Not checked | Cargo parsing not implemented — F5 |
-| Primary distribution | cargo install kanata + GitHub Releases binaries + AUR + Homebrew + MS Store | None |
+| Primary distribution | cargo install kanata + GitHub Releases binaries + AUR + Homebrew + MS Store |  |
 | `cmd` feature flag | Opt-in (disabled by default) | Expands threat model when enabled — F4 |
 
 ---
