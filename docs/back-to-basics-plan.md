@@ -21,38 +21,70 @@ When the user says "continue" — start at the **next concrete action** under §
 
 ## § Current state (UPDATE AT EACH COMMIT — single source of truth)
 
-- **Last commit landing this plan:** `6657e59` on `main` (post-merge pointer cleanup; HEAD). Phase 3 merge landed at `9d33799` (no-ff merge of `chore/calibration-rebuild-impl`; 5 P3 commits + merge commit + cleanup commit pushed to origin/main). Feature branch deleted both locally and on origin.
-- **Active phase:** Phase 3 — **COMPLETE + MERGED + PUSHED**. Calibration v2 module landed (`docs/compute.py` `classify_shape` + `evaluate_q1/q2/q3/q4` + `compute_scorecard_cells_v2`). 565/565 tests passing (414 baseline + 151 net new). All 5 CONSOLIDATION §5 carry-forwards addressed. Implementation notes consolidated at `docs/calibration-impl-notes.md` (9 sections, all spec-deviations documented). **PAUSE POINT** for owner before Phase 4 (mechanical reformatting moves to template-side).
-- **Active step within phase:** N/A. Phase 3 deliverables all merged to `main` via `9d33799`:
-  - `4d7b847` P3.a — classify_shape + cross-shape modifier helpers + cell evaluators landed (12/12 §4 gate pass)
-  - `b51b6b8` P3.b/c — cell evaluator + orchestrator tests + privileged_tool drift doc
-  - `79f084a` P3.d/e — schema additions (rule_id, shape_classification) + validator gate v2.1
-  - `1688ec5` P3.f — regression suite (42 tests pinning 12-bundle outputs) + RULE-6 third sub-condition INERT + `docs/calibration-impl-notes.md`
-  - `e45f2e1` Phase 3 close — persistent-state updates (plan + CLAUDE.md + AUDIT_TRAIL + REPO_MAP). Pre-merge feature-branch tip; reachable via `9d33799^2`.
-  - `9d33799` Merge of `chore/calibration-rebuild-impl` to `main` (no-ff).
-  - `6657e59` Post-merge pointer cleanup (corrected HEAD pointers in plan + CLAUDE.md + AUDIT_TRAIL + REPO_MAP from feature-branch tip to merge SHA).
-- **Next concrete action when work resumes:** **start PHASE 4** — mechanical reformatting moves to template-side per plan §Phase 4. Recommended branch: `chore/template-side-derivation` from `main`. Deliverables: **3 helpers** (originally planned 4 — `derive_evidence_facts` dropped per grounded verification, see §Phase 4 "Why no derive_evidence_facts" note): `derive_repo_vitals(p1)` + `derive_coverage_detail(p1)` + `derive_pr_sample(p1)` in `docs/render-md.py` + `docs/render-html.py`; templates use derived data when phase_4 doesn't override. Helpers go in `render-md.py` as module-level functions exposed via `env.globals` (same pattern as existing `short_sha`, `fmt_int`). **Commit cadence per plan §Phase 4: 3 commits** — (1) add helpers + tests in `tests/test_render_md.py` + `tests/test_render_html.py` (no template changes; renders unchanged); (2) wire helpers into 3 templates (§03, §05, §06) with phase_4-override fallback (renders unchanged when LLM rows present); (3) update `docs/scan-authoring-template/author_phase_4.py.template` (sections marked optional/minimal) + `docs/SCANNER-OPERATOR-GUIDE.md`.
-- **Phase 3 outcome — override-reduction (per `docs/calibration-impl-notes.md` §6):**
-  - Pre-redesign: ~10 overrides across 12 V1.2 scans (~83% override rate)
-  - Post-redesign: 5 cells now rule-driven (no override required):
-    - ghostty Q1: RULE-1 (CODEOWNERS + ruleset + 4 rules-on-default)
-    - WLED Q1: RULE-2 (38% formal review)
-    - kanata Q1: RULE-2 (44% formal review)
-    - skills Q3: RULE-4 (HIGHEST-VALUE rule — sample-floor 90d + 1 lifetime PR)
-    - freerouting Q4: RULE-6 (35 ObjectInputStream + pcb topic auto-fire)
-  - **~50% override reduction → hits design hard-floor target (≤5/12 ~42%).**
-  - Stretch target (≤3/12) requires RULE-7/8/9 promotion — INERT pending V12x harness work per design promotion-gate semantics.
-- **Phase 3 spec deviations (consolidated at `docs/calibration-impl-notes.md`):**
-  - Heuristic refinements during §4 gate: 4 fixes (substring traps, JS/TS library default, Python-no-fingerprint catch)
-  - `is_privileged_tool`: 6/12 fire but with set difference vs design (ghostty miss, Xray-core extra) — both calls defensible
-  - RULE-6 third sub-condition (exec + has_unverified_install_path) INERT pending V12x-11 harness work
-  - kamal Q1 RULE-1 doesn't fire (no CODEOWNERS file in bundle — audit projection vs harness data mismatch)
-  - Kronos Q4 RULE-6 doesn't fire (deserialization.hit_count=0 — harness coverage gap; Phase 1.5 follow-up)
-- **Branch:** `main` (Phase 3 merged + pushed to origin at `9d33799`). Phase 4 will use a new branch — recommended `chore/template-side-derivation` per plan §Phase 4.
-- **Audit topline (preserved from Phase 0 — unchanged):**
-  - Dominant pattern: "OSS minimal-governance default" — 6 of 12 V1.2 scans hit. Q1=red NOT verdict-discriminating.
-  - Q3 similarly decoupled (skills + QuickLook are Caution despite Q3=red).
-  - Q4 IS the verdict-discriminator (5/5 Q4=red are Critical; 5/5 Caution have Q4=amber). Calibration v2 RULE-6 now drives some Q4=red deterministically (freerouting today; Kronos pending harness fix).
+**This block is your resumption packet.** It is the only thing you need to read after `/compact` to know what to do next. If something here is wrong or stale, fix it before proceeding.
+
+### HEAD + branch
+- **HEAD:** `4d7e98c` on `chore/template-side-derivation` (Phase 4 commit 1 landed; not yet pushed to origin).
+- **Branch base:** `c748d83` on `main` (post-/compact persistent-state consistency fix; pushed to origin/main).
+- **Tree:** clean.
+
+### Phase + step
+- **Active phase:** Phase 4 — mechanical reformatting moves to template-side. See plan §Phase 4 for the full spec.
+- **Step within phase:** Commit 1 done. **Next: Commit 2 (wire helpers into renderers + adjust templates).**
+
+### Commits done in Phase 4
+| SHA | One-line summary | Where |
+|---|---|---|
+| `740bed3` | Plan amendment: drop derive_evidence_facts (4→3 helpers) | `main` |
+| `c748d83` | Post-/compact persistent-state consistency fix | `main` |
+| `4d7e98c` | **Commit 1**: derivation helpers + 21 tests; no template changes | `chore/template-side-derivation` |
+
+(Plan amendment + consistency fix are pre-Phase-4 housekeeping on `main`; commit 1 is the first real Phase 4 work, on the feature branch.)
+
+### Commits remaining in Phase 4
+- **Commit 2 — Wire helpers into renderers + adjust templates.** Concrete deliverables:
+  - Import `derive_repo_vitals`, `derive_coverage_detail`, `derive_pr_sample` from `docs/render_helpers.py` in `docs/render-md.py` + `docs/render-html.py`.
+  - Expose them via `env.globals.update({...})` in both renderers (pattern: `short_sha`, `fmt_int`, `repo_age_years`).
+  - Modify 6 partial templates (§03 + §05 + §06; both `.md.j2` and `.html.j2` variants) to call helpers when `phase_4_structured_llm.<key>.rows` is empty. Fallback pattern:
+    ```jinja2
+    {% set llm_rows = form.phase_4_structured_llm.get('repo_vitals', {}).get('rows', []) %}
+    {% set vitals = llm_rows if llm_rows else derive_repo_vitals(form.phase_1_raw_capture) %}
+    ```
+  - Run full test suite — 586 must still pass.
+  - Render `tests/fixtures/zustand-form.json` through both renderers; output must be unchanged from current (LLM-authored data takes precedence).
+
+- **Commit 3 — Update authoring template + scan-workflow doc.** Concrete deliverables:
+  - `docs/scan-authoring-template/author_phase_4.py.template` — REPO_VITALS / COVERAGE_DETAIL_ROWS / PR_SAMPLE_ROWS marked optional with comment "template derives from phase_1 when empty."
+  - `docs/SCANNER-OPERATOR-GUIDE.md` — paragraph noting template-side derivation + which sections still need LLM authorship (§07 evidence stays LLM-only).
+  - Token-weight measurement: count author_phase_4.py.template lines + average chars before/after. Target: ~50% reduction.
+
+### Files to read before writing commit 2 code
+1. `docs/render_helpers.py` (the 3 helpers — verify signatures match what templates will call)
+2. `docs/render-md.py` lines 56-73 (`_build_env` — where new helpers get added to `env.globals`)
+3. `docs/render-html.py` lines 77-100 (`_build_env` — same pattern, second renderer)
+4. `docs/templates/partials/section_03.md.j2` (PR sample — has hybrid fallback at line 27 currently)
+5. `docs/templates/partials/section_05.md.j2` (repo vitals — 100% LLM-authored today, lines 1-13)
+6. `docs/templates/partials/section_06.md.j2` (coverage — has hybrid fallback at lines 22-26 currently)
+7. `docs/templates-html/partials/section_03.html.j2` + `section_05.html.j2` + `section_06.html.j2` (HTML mirrors)
+
+**Do NOT read** during commit 2: the audit (`docs/calibration-audit.md`), design doc (`docs/calibration-design-v2.md`), board archive, calibration-impl-notes, REPO_MAP. Those are reference material — irrelevant to the wire-in mechanics.
+
+### Acceptance test for commit 2 (verbatim from plan §Phase 4 Completion criteria)
+> re-rendering a recent V1.2 scan (e.g. skills) produces the same table content with the LLM authoring zero rows. Token-count delta on per-scan authoring should be measurable (target: ~50% reduction in author_phase_4.py token weight).
+
+For commit 2 specifically (not yet zeroing rows): re-render a fixture (zustand) with current LLM-authored data → output byte-identical to current (helpers don't fire because LLM rows present). The "LLM authoring zero rows" test runs after commit 3.
+
+### Known gotchas for commit 2
+1. **`note=None` rendering bug.** Helpers emit rows with `note=None`. Existing `section_05.md.j2:8` uses `{{ v.get('note', '') }}` — Jinja's `.get('note', '')` returns `None` (not `''`) when the key is *present* with a None value, then renders literal `"None"` in the cell. Fix: change template to `{{ v.get('note') or '' }}` (coalesce). Same pattern audit needed in §03 + §06.
+2. **`env.globals` wiring needed in BOTH renderers.** `render-md.py:64` + `render-html.py:85` both have `env.globals.update({...})` — add the 3 new helpers in each. Forgetting one means HTML renders break while MD passes (or vice versa).
+3. **`section_03.md.j2` fallback already references `author`/`merger`** (lines 30-32) — fields the V1.2 harness does NOT provide in `pr_review.prs`. Helper output uses different schema (number/title/formal_review/any_review/self_merge/security_flagged/merged_at). When wiring §03, decide: change template to use helper schema, or have the fallback table omit author/merger when missing. The Phase 1.5 follow-up to populate harness `author`/`merger` is documented in `docs/render_helpers.py::derive_pr_sample` docstring.
+4. **Helper module name has underscore (`render_helpers.py`)**; renderer modules have hyphens (`render-md.py`). Import via `from render_helpers import ...` works directly (no importlib needed). Tests already use `importlib` because they import the hyphen-named renderer modules.
+
+### Token budget note
+Each Phase step (one commit) should complete within **~200k tokens**. If you're approaching that limit, commit what's done, update §Current state to reflect the partial state, and stop for `/compact`. Do NOT push past the limit hoping to wrap up — context degrades rapidly past 200k and you'll make decisions you'd reject with a fresh context window.
+
+### What was finished before Phase 4 (high-level only; details in commit history)
+Phase 0 audit, Phase 1 calibration design, Phase 2 board review, Phase 3 calibration v2 implementation. All landed on origin/main. Phase 3 outcome detail in `docs/calibration-impl-notes.md`. Phase 3 commit list in `AUDIT_TRAIL.md`. **You should not need to read these to do Phase 4 work** — they are reference material, not resumption material.
 
 ---
 
