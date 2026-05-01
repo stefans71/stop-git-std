@@ -24,8 +24,8 @@ When the user asks to run a scan (says "scan", "scan <repo>", "investigate", "ch
 Then ask these questions interactively (one at a time, with defaults):
 
 **Q1: Output mode**
-- A: Both MD + HTML (default) — full audit trail
-- B: HTML only
+- A: Default — long-form MD + Simple Report HTML (the user-facing visual + paste-ready MD for any LLM)
+- B: + long-form HTML (auditor view; optional, not user-facing — see Operator Guide §8.6)
 - C: MD only — cheapest, paste into any LLM for "should I install this?" guidance
 
 **Q2: Execution mode — run it yourself or delegate?**
@@ -46,9 +46,9 @@ Show this table and let them pick (or pick for them if you can tell):
 | Tiny / new / pre-distribution | `GitHub-Scanner-archon-board-review.html` |
 | Not sure | Default to `GitHub-Scanner-fd.html` |
 
-**Q3a: Rendering pipeline — V2.4 (recommended) or V2.5-preview (Step G operators only)?**
-- **Workflow V2.4 (default, recommended):** LLM authors the MD + HTML reports directly from the findings-bundle. Proven on 10 completed catalog scans. Use this for anything that will enter the catalog or be shown to a user.
-- **Workflow V2.5-preview (production-cleared 2026-04-20):** Phase 1 gathered by `docs/phase_1_harness.py` (not by LLM) — runs V2.4 prompt Steps 1-8 + A/B/C end-to-end (gh api + OSSF Scorecard + osv.dev + gitleaks + PyPI/npm/crates.io/RubyGems registries + tarball extraction + local grep + README paste-scan). Then LLM authors Phase 4 findings + Phase 5 prose from bundle, `docs/render-md.py` + `docs/render-html.py` produce MD + HTML deterministically. Step G validated on 3 pinned shapes (catalog entries 12-14) + first wild scan on microsoft/markitdown (Python monorepo — entry 15) fired production-clearance 2026-04-20. See §8.8. Either V2.4 (LLM-authored MD/HTML) or V2.5-preview is acceptable for new scans; V2.5-preview is the right choice when structural parity or deterministic reproducibility matters.
+**Q3a: Rendering pipeline — V2.5-preview (default) or V2.4 (legacy)?**
+- **Workflow V2.5-preview (default, recommended; production-cleared 2026-04-20).** Phase 1 gathered by `docs/phase_1_harness.py` (not by LLM) — runs V2.4 prompt Steps 1-8 + A/B/C end-to-end (gh api + OSSF Scorecard + osv.dev + gitleaks + PyPI/npm/crates.io/RubyGems registries + tarball extraction + local grep + README paste-scan). LLM authors Phase 4 findings + Phase 5 prose into `form.json`. Phase 4 renderers — `docs/render-md.py` (long-form MD, canonical), `docs/render-simple.py` (Simple Report HTML, user-facing), and `docs/render-html.py` (long-form HTML, optional auditor view) — produce outputs deterministically. Step G validated on 3 pinned shapes (catalog entries 12-14) + first wild scan on microsoft/markitdown (Python monorepo — entry 15) fired production-clearance 2026-04-20. See Operator Guide §8.5 + §8.5b + §8.8.
+- **Workflow V2.4 (legacy — does NOT produce Simple Report).** LLM authors the long-form MD + long-form HTML reports directly from the findings-bundle. Proven on catalog entries 1-11. Does not produce a `form.json`, therefore cannot drive `render-simple.py`. Choose V2.4 only when re-rendering legacy V1.1 scans or when you specifically need LLM-authored long-form output and accept that no Simple Report will be produced.
 
 Then **execute the scan** following `docs/SCANNER-OPERATOR-GUIDE.md` (6-phase workflow).
 
@@ -84,15 +84,15 @@ Assemble the §8.3 handoff packet and delegate to a background agent. Template p
 
 When a scan finishes (validator clean on all output files), present these options:
 
-> **Scan complete.** `GitHub-Scanner-<repo>.md` and `.html` are ready. What would you like to do?
+> **Scan complete.** `GitHub-Scanner-<repo>-simple.html` and `GitHub-Scanner-<repo>.md` are ready. What would you like to do?
 >
-> 1. **View the report** — I'll open the HTML in your browser
-> 2. **"Should I install this?"** — I'll summarize the key risks and give you a yes/no recommendation based on the findings
+> 1. **View the report** — I'll open the Simple Report HTML in your browser
+> 2. **Want a detailed walkthrough?** I'll read the full MD analysis and walk you through what needs to happen to safely install.
 > 3. **Run another scan** — give me the next repo URL
 > 4. **Send to board review** — launch a 3-model review on this scan's quality
 > 5. **Update the catalog** — add this scan to `docs/scanner-catalog.md` and commit
 
-Wait for the user's choice. If they pick option 2, read the `.md` file and give a concise, actionable answer: overall risk level, the top 1-3 things they should know, and whether you'd recommend installing (with conditions if applicable).
+Wait for the user's choice. If they pick option 2, read the long-form `.md` file and walk through it conversationally: overall risk level, each calibrated finding in plain terms, what the action block recommends, and what specific conditions or pre-install steps would make installation safe (or whether you'd recommend they pick a different tool).
 
 ## Key rules
 

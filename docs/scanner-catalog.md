@@ -17,6 +17,8 @@ Column notes:
 
 > **Phase 5 calibration v2 rerender (2026-05-01).** Entries 16-27 (12 V1.2 wild scans) were re-rendered with `compute_scorecard_cells_v2()` advisory + Phase 4 template-side derivation. Zero verdict shifts (verdict reads stored findings; findings unchanged). 10 cell-level advisory shifts; 3 redundant overrides cleared. Entries 1-15 unchanged (V1.1-era, V2.4 hand-authored, or incomplete V1.2 bundle). See `docs/calibration-rebuild-rerender-comparison.md`.
 
+> **Phase 7 Simple Reports (2026-05-01).** Each V1.2 entry (16-27) now has a Simple Report companion at `docs/scans/catalog/GitHub-Scanner-<repo>-simple.{html,md}` rendered deterministically by `docs/render-simple.py` from the same `form.json` bundle. The Simple Report HTML is the **primary user-facing visual** going forward; the long-form MD remains the canonical LLM-paste target (validated 5/5 cold-fork match in Phase 6); long-form HTML stays as auditor view. V2.4 entries 1-11 do not yet have Simple Reports — would require a V2.4-bundle → form.json adapter (post-rebuild follow-up). See `docs/simple-report-concept.md` + Operator Guide §8.5b.
+
 | # | Repo | HEAD SHA | Date | Verdict | Scope axis | Shape / structural pattern | Methodology | Rendering pipeline | Artifacts |
 |---|---|---|---|---|---|---|---|---|---|
 | 1 | [JuliusBrussee/caveman](https://github.com/JuliusBrussee/caveman) | `c2ed24b` | 2026-04-16 | Critical (split) | Version · + Deployment · | Curl-pipe-from-main installer; solo maintainer; 12-day-old repo with 32k stars | `methodology-used: path-a` (continuous) | `v2.4` | [html](GitHub-Scanner-caveman.html) · [md](GitHub-Scanner-caveman.md) |

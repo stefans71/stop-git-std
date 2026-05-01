@@ -1,0 +1,25 @@
+# {{ repo_owner }}/{{ repo_name }} — Simple Report
+
+**Verdict: {{ verdict_md_glyph }} {{ verdict_label }}.** {{ verdict_headline }}
+
+{{ verdict_summary }}
+
+**Scanned:** {{ scan_date }} · main @ {{ short_sha }}{% if stars %} · {{ stars }} stars{% endif %}{% if license %} · {{ license }}{% endif %}{% if language %} · {{ language }}{% endif %}
+
+---
+
+## Trust scorecard
+
+{% for row in scorecard_rows %}- {{ row.md_glyph }} **{{ row.question }}** {{ row.answer }}
+{% endfor %}
+{% if top_findings %}## Top concerns
+
+{% for f in top_findings %}{{ loop.index }}. **[{{ f.severity_label }}] {{ f.title }}** {{ f.body }}
+
+{% endfor %}{% endif %}## What should I do?
+
+**{{ action_headline }}** {{ action_body }}
+
+---
+
+*stop-git-std · scanned {{ scan_date }} · [{{ repo_owner }}/{{ repo_name }}]({{ repo_url }})*

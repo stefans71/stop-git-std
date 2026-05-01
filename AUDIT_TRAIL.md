@@ -17,6 +17,37 @@ Canonical log of milestone commits with the verification state captured at commi
 
 ---
 
+## Checkpoint — 2026-05-01 (session 12) — Phase 6 + Phase 7 COMPLETE + MERGED → back-to-basics rebuild CLOSED
+
+**HEAD:** post-Phase-7 merge on `origin/main` (filled by post-merge §Current state update; precise SHA recorded in plan §Current state). Back-to-basics calibration rebuild Phases 0-7 all landed. Tree clean. **Plan complete.**
+
+**Phase 6 — MD calibration verification.** Branch `chore/calibration-md-verification` from `5d4ed3b` (Phase 5 close), merged `092b0a3` no-ff. 5 cold-fork consumer tests on rendered MD for catalog entries 16 ghostty / 26 Baileys / 27 skills / 20 browser_terminal / 24 freerouting. **Result: 5 of 5 match.** Pass bar (≥4) cleared.
+
+**Phase 7 — Simple Report HTML.** Branch `feat/simple-report` from post-Phase-6 main. Six commits:
+- `e7ce7af` — concept brief `docs/simple-report-concept.md` (329 lines authored from owner-supplied design intent via path γ).
+- `ddda083` — implementation: `docs/render-simple.py` + `docs/templates-simple/{simple-report.html.j2,simple-report.md.j2,simple-report.css}` (CSS = 251-line subset of 824-line scanner-design-system) + `tests/test_render_simple.py` (22 tests) + 3 representative sample scans (ghostty/Baileys/skills).
+- `fc36117` — §Current state for Phase 7 close (pre-final-decisions).
+- `3aa93e1` — workflow integration: 3 owner directives applied to CLAUDE.md (Q3a flip, Q1 reframe, post-scan options) + Operator Guide §4 + §8 Phase 4 contract (4a render-md REQUIRED / 4b render-simple REQUIRED / 4c render-html OPTIONAL / 4d re-run OPTIONAL) + concept doc §8 + §10 updates.
+- `293f04a` — batch-render 9 remaining V1.2 Simple Reports (Kronos, kamal, Xray-core, browser_terminal, wezterm, QuickLook, kanata, freerouting, WLED). Total 12 Simple Reports landed for catalog entries 16-27.
+- (this commit) — housekeeping (REPO_MAP, AUDIT_TRAIL, scanner-catalog) + §Current state PLAN COMPLETE.
+
+**Tests:** 609/609 passing.
+
+**Verdict distribution across the 12 V1.2 Simple Reports:** 7 Critical (Baileys, Kronos, WLED, Xray-core, browser_terminal, freerouting, kanata) + 5 Caution (QuickLook, ghostty, kamal, skills, wezterm). Verdicts unchanged from Phase 5 baseline (verdict-invariance — `compute_verdict` reads stored findings).
+
+**Workflow contract change (durable):** Phase 4 of the 6-phase scan workflow now produces {long-form MD canonical + Simple Report HTML user-facing} as REQUIRED outputs. Long-form HTML is OPTIONAL auditor view via Phase 4c `docs/render-html.py`. CLAUDE.md wizard Q3a default is now V2.5-preview (V2.4 marked legacy, no Simple Report).
+
+**Post-rebuild follow-up backlog** (queued, none blocking):
+- V2.4-bundle → form.json adapter (legacy entries 1-11 cannot produce Simple Reports without it).
+- Gate 6.3 backlog resolution (7 cells × 6 entries; option (b) `override_reason` or (c) Q3 softener).
+- Q3 FALLBACK regression on 5 entries.
+- Full-sentence scorecard short_answers (cosmetic; ship-as-fragmentary today).
+- Inline customization + light theme + print stylesheet + README badges (deferred design questions).
+
+**Verification:** 609/609 tests passing; all 12 V1.2 Simple Reports rendered cleanly; long-form Phase 5 deliverables unchanged.
+
+---
+
 ## Checkpoint — 2026-05-01 (session 10) — Phase 3 implementation COMPLETE + MERGED to main
 
 **HEAD:** `6657e59` on `origin/main` (post-merge pointer cleanup, on top of merge `9d33799`). Phase 3 merged via `9d33799` (no-ff merge of `chore/calibration-rebuild-impl`). 5 P3 commits + 1 merge commit + 1 cleanup commit pushed to origin. Feature branch `chore/calibration-rebuild-impl` deleted local + remote.
