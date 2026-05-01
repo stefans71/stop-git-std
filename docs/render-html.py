@@ -22,7 +22,17 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
+# Ensure sibling render_helpers.py is importable when this script runs
+# directly (cwd is repo root, not docs/).
+sys.path.insert(0, str(Path(__file__).parent))
+
 from jinja2 import Environment, FileSystemLoader, select_autoescape
+
+from render_helpers import (
+    derive_coverage_detail,
+    derive_pr_sample,
+    derive_repo_vitals,
+)
 
 ROOT = Path(__file__).parent
 TEMPLATE_DIR = ROOT / "templates-html"
@@ -96,6 +106,11 @@ def _build_env():
         "short_sha": short_sha,
         "fmt_int": fmt_int,
         "repo_age_years": repo_age_years,
+        # Phase 4 derivation helpers — templates fall back to these when
+        # phase_4_structured_llm doesn't supply rows.
+        "derive_repo_vitals": derive_repo_vitals,
+        "derive_coverage_detail": derive_coverage_detail,
+        "derive_pr_sample": derive_pr_sample,
     })
     return env
 

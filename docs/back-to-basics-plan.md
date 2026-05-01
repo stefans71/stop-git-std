@@ -24,13 +24,13 @@ When the user says "continue" — start at the **next concrete action** under §
 **This block is your resumption packet.** It is the only thing you need to read after `/compact` to know what to do next. If something here is wrong or stale, fix it before proceeding.
 
 ### HEAD + branch
-- **HEAD:** `4d7e98c` on `chore/template-side-derivation` (Phase 4 commit 1 landed; not yet pushed to origin).
+- **HEAD:** to-be-set-after-commit-2 on `chore/template-side-derivation` (pushed through `9a17a73`).
 - **Branch base:** `c748d83` on `main` (post-/compact persistent-state consistency fix; pushed to origin/main).
-- **Tree:** clean.
+- **Tree:** clean after commit 2.
 
 ### Phase + step
 - **Active phase:** Phase 4 — mechanical reformatting moves to template-side. See plan §Phase 4 for the full spec.
-- **Step within phase:** Commit 1 done. **Next: Commit 2 (wire helpers into renderers + adjust templates).**
+- **Step within phase:** Commits 1 + 2 done. **Next: Commit 3 (update authoring template + scan-workflow doc).**
 
 ### Commits done in Phase 4
 | SHA | One-line summary | Where |
@@ -38,47 +38,35 @@ When the user says "continue" — start at the **next concrete action** under §
 | `740bed3` | Plan amendment: drop derive_evidence_facts (4→3 helpers) | `main` |
 | `c748d83` | Post-/compact persistent-state consistency fix | `main` |
 | `4d7e98c` | **Commit 1**: derivation helpers + 21 tests; no template changes | `chore/template-side-derivation` |
-
-(Plan amendment + consistency fix are pre-Phase-4 housekeeping on `main`; commit 1 is the first real Phase 4 work, on the feature branch.)
+| `9a17a73` | Resumption-doc rewrite (strip CLAUDE.md, self-contained §Current state) | `chore/template-side-derivation` |
+| `<commit2>` | **Commit 2**: wire helpers into renderers + 6 templates; byte-identical when LLM rows present | `chore/template-side-derivation` |
 
 ### Commits remaining in Phase 4
-- **Commit 2 — Wire helpers into renderers + adjust templates.** Concrete deliverables:
-  - Import `derive_repo_vitals`, `derive_coverage_detail`, `derive_pr_sample` from `docs/render_helpers.py` in `docs/render-md.py` + `docs/render-html.py`.
-  - Expose them via `env.globals.update({...})` in both renderers (pattern: `short_sha`, `fmt_int`, `repo_age_years`).
-  - Modify 6 partial templates (§03 + §05 + §06; both `.md.j2` and `.html.j2` variants) to call helpers when `phase_4_structured_llm.<key>.rows` is empty. Fallback pattern:
-    ```jinja2
-    {% set llm_rows = form.phase_4_structured_llm.get('repo_vitals', {}).get('rows', []) %}
-    {% set vitals = llm_rows if llm_rows else derive_repo_vitals(form.phase_1_raw_capture) %}
-    ```
-  - Run full test suite — 586 must still pass.
-  - Render `tests/fixtures/zustand-form.json` through both renderers; output must be unchanged from current (LLM-authored data takes precedence).
-
 - **Commit 3 — Update authoring template + scan-workflow doc.** Concrete deliverables:
   - `docs/scan-authoring-template/author_phase_4.py.template` — REPO_VITALS / COVERAGE_DETAIL_ROWS / PR_SAMPLE_ROWS marked optional with comment "template derives from phase_1 when empty."
   - `docs/SCANNER-OPERATOR-GUIDE.md` — paragraph noting template-side derivation + which sections still need LLM authorship (§07 evidence stays LLM-only).
   - Token-weight measurement: count author_phase_4.py.template lines + average chars before/after. Target: ~50% reduction.
+  - Acceptance test (verbatim from plan §Phase 4 Completion criteria): re-render skills (or any V1.2 catalog scan) with `REPO_VITALS = []`, `COVERAGE_DETAIL_ROWS = []`, `PR_SAMPLE_ROWS = []` zeroed → output retains the table content (now helper-derived).
 
-### Files to read before writing commit 2 code
-1. `docs/render_helpers.py` (the 3 helpers — verify signatures match what templates will call)
-2. `docs/render-md.py` lines 56-73 (`_build_env` — where new helpers get added to `env.globals`)
-3. `docs/render-html.py` lines 77-100 (`_build_env` — same pattern, second renderer)
-4. `docs/templates/partials/section_03.md.j2` (PR sample — has hybrid fallback at line 27 currently)
-5. `docs/templates/partials/section_05.md.j2` (repo vitals — 100% LLM-authored today, lines 1-13)
-6. `docs/templates/partials/section_06.md.j2` (coverage — has hybrid fallback at lines 22-26 currently)
-7. `docs/templates-html/partials/section_03.html.j2` + `section_05.html.j2` + `section_06.html.j2` (HTML mirrors)
+### Files to read before writing commit 3 code
+1. `docs/scan-authoring-template/author_phase_4.py.template` (current — what gets stripped)
+2. `docs/SCANNER-OPERATOR-GUIDE.md` (search for sections that mention REPO_VITALS / repo vitals / PR sample / coverage detail authoring — note where the new "template derives" paragraph belongs)
+3. `docs/render_helpers.py` (so the operator-guide paragraph references the right helper names)
 
-**Do NOT read** during commit 2: the audit (`docs/calibration-audit.md`), design doc (`docs/calibration-design-v2.md`), board archive, calibration-impl-notes, REPO_MAP. Those are reference material — irrelevant to the wire-in mechanics.
+**Do NOT read** during commit 3: audit, design doc, board archive, calibration-impl-notes, REPO_MAP, individual catalog scans. Reference-only material.
 
-### Acceptance test for commit 2 (verbatim from plan §Phase 4 Completion criteria)
-> re-rendering a recent V1.2 scan (e.g. skills) produces the same table content with the LLM authoring zero rows. Token-count delta on per-scan authoring should be measurable (target: ~50% reduction in author_phase_4.py token weight).
+### Known gotchas for commit 3
+1. **The template's three sections must be marked OPTIONAL but not deleted.** The LLM should still be allowed to author them when they want shape-specific commentary (e.g. the "Massively popular for a 3-month-old repo" note on skills' Stars metric). Empty list `[]` triggers the helper fallback; populated list overrides.
+2. **Phase 1.5 follow-up gap to mention in operator guide:** harness `pr_review.prs` does NOT populate `author`/`merger` on V1.2 bundles. When the LLM zeroes PR_SAMPLE_ROWS, the derived table shows `?` for those columns. LLM should author rows when this matters.
+3. **Token-weight measurement should compare apples-to-apples** — count only the SECTION_LEADS, REPO_VITALS, COVERAGE_DETAIL_ROWS, PR_SAMPLE_ROWS lines + their default placeholders. Don't include the boilerplate comments or imports that don't change.
 
-For commit 2 specifically (not yet zeroing rows): re-render a fixture (zustand) with current LLM-authored data → output byte-identical to current (helpers don't fire because LLM rows present). The "LLM authoring zero rows" test runs after commit 3.
-
-### Known gotchas for commit 2
-1. **`note=None` rendering bug.** Helpers emit rows with `note=None`. Existing `section_05.md.j2:8` uses `{{ v.get('note', '') }}` — Jinja's `.get('note', '')` returns `None` (not `''`) when the key is *present* with a None value, then renders literal `"None"` in the cell. Fix: change template to `{{ v.get('note') or '' }}` (coalesce). Same pattern audit needed in §03 + §06.
-2. **`env.globals` wiring needed in BOTH renderers.** `render-md.py:64` + `render-html.py:85` both have `env.globals.update({...})` — add the 3 new helpers in each. Forgetting one means HTML renders break while MD passes (or vice versa).
-3. **`section_03.md.j2` fallback already references `author`/`merger`** (lines 30-32) — fields the V1.2 harness does NOT provide in `pr_review.prs`. Helper output uses different schema (number/title/formal_review/any_review/self_merge/security_flagged/merged_at). When wiring §03, decide: change template to use helper schema, or have the fallback table omit author/merger when missing. The Phase 1.5 follow-up to populate harness `author`/`merger` is documented in `docs/render_helpers.py::derive_pr_sample` docstring.
-4. **Helper module name has underscore (`render_helpers.py`)**; renderer modules have hyphens (`render-md.py`). Import via `from render_helpers import ...` works directly (no importlib needed). Tests already use `importlib` because they import the hyphen-named renderer modules.
+### Outcome of commit 2 (for resumption-after-/compact context)
+- 587 tests passing (added 1 V1.1 fixture-schema test on top of commit 1's 586)
+- All 3 fixtures × 2 formats (zustand, caveman, archon-subset; .md + .html) byte-identical before/after — confirms LLM-rows-present path unchanged
+- Fallback path verified: zeroing zustand's `repo_vitals.rows` / `coverage_detail.rows` / `pr_sample_review.rows` produces helper-derived content correctly
+- Note=None Jinja gotcha fixed in 2 locations (section_05 .md.j2 + .html.j2): `{{ v.get('note', '') }}` → `{{ v.get('note') or '' }}`
+- Helper schema-tolerance: `derive_pr_sample` now handles both V1.1 fixture schema (author/merger/any_review-bool) AND V1.2 harness schema (review_decision/any_review_count-int)
+- Helper schema EXTENDED to include author + merger fields (always present in dict, may be empty string on V1.2 harness data)
 
 ### Token budget note
 Each Phase step (one commit) should complete within **~200k tokens**. If you're approaching that limit, commit what's done, update §Current state to reflect the partial state, and stop for `/compact`. Do NOT push past the limit hoping to wrap up — context degrades rapidly past 200k and you'll make decisions you'd reject with a fresh context window.

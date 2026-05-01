@@ -1,11 +1,12 @@
-{% set vitals = form.phase_4_structured_llm.get('repo_vitals', {}).get('rows', []) %}
+{% set llm_vitals = form.phase_4_structured_llm.get('repo_vitals', {}).get('rows', []) %}
+{% set vitals = llm_vitals if llm_vitals else derive_repo_vitals(form.get('phase_1_raw_capture', {})) %}
 {% if vitals %}
 ## 05 · Repo vitals
 
 | Metric | Value | Note |
 |--------|-------|------|
 {% for v in vitals %}
-| {{ v.get('metric', '') }} | {{ v.get('value', '') }} | {{ v.get('note', '') }} |
+| {{ v.get('metric', '') }} | {{ v.get('value', '') }} | {{ v.get('note') or '' }} |
 {% endfor %}
 
 ---

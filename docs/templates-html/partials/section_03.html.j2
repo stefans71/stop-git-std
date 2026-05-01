@@ -13,13 +13,14 @@
   td-merge-fast for sub-24h merges (not tracked in fixture — omit)
 #}
 {% set pr = form.phase_1_raw_capture.get('pr_review', {}) or {} %}
-{% set sample = pr.get('prs', []) %}
 {% set review_summary = form.phase_4_structured_llm.get('pr_sample_review', {}) or {} %}
-{% set rows = review_summary.get('rows', []) %}
+{% set llm_rows = review_summary.get('rows', []) %}
+{% set derived_rows = [] if llm_rows else derive_pr_sample(form.get('phase_1_raw_capture', {})) %}
+{% set rows = llm_rows or derived_rows %}
 {% set target = form.target %}
-{% if sample or rows %}
-{% set flagged_count = rows | selectattr('flagged', 'equalto', true) | list | length %}
-{% set sample_total = rows | length if rows else sample | length %}
+{% if rows %}
+{% set flagged_count = llm_rows | selectattr('flagged', 'equalto', true) | list | length %}
+{% set sample_total = rows | length %}
   <details class="collapsible-section">
     <summary>
       <div class="section-header">
@@ -52,8 +53,8 @@
           </tr>
         </thead>
         <tbody>
-          {% if rows %}
-          {% for r in rows %}
+          {% if llm_rows %}
+          {% for r in llm_rows %}
           {% set pr_url = r.get('url') or 'https://github.com/' ~ target.owner ~ '/' ~ target.repo ~ '/pull/' ~ (r.get('number', '') | string) %}
           {% set reviewed_str = r.get('reviewed', '') | lower %}
           {% set reviewed_cls = 'td-reviewed-yes' if 'formal' in reviewed_str or 'approved' in reviewed_str else ('td-reviewed-rejected' if 'reject' in reviewed_str else 'td-reviewed-no') %}
@@ -66,21 +67,19 @@
             <td class="td-concern">{{ r.get('concern', '') }}</td>
           </tr>
           {% endfor %}
-          {% elif sample %}
-          {% for p in sample %}
-          {% set pr_url = 'https://github.com/' ~ target.owner ~ '/' ~ target.repo ~ '/pull/' ~ (p.get('number', '') | string) %}
-          {% set reviewed_cls = 'td-reviewed-yes' if p.get('any_review') else 'td-reviewed-no' %}
+          {% else %}
+          {% for r in derived_rows %}
+          {% set pr_url = 'https://github.com/' ~ target.owner ~ '/' ~ target.repo ~ '/pull/' ~ (r.get('number', '') | string) %}
+          {% set reviewed_cls = 'td-reviewed-yes' if r.get('formal_review') or r.get('any_review') else 'td-reviewed-no' %}
           <tr>
-            <td><a href="{{ pr_url }}">#{{ p.get('number', '') }}</a></td>
-            <td>&mdash;</td>
-            <td class="td-person">{{ p.get('author', '') }}</td>
-            <td class="td-person">{{ p.get('merger', '') }}</td>
-            <td class="{{ reviewed_cls }}">{{ p.get('formal_review') or ('yes' if p.get('any_review') else 'no') }}</td>
-            <td class="td-concern">{% if p.get('self_merge') %}<strong>Self-merge</strong>{% else %}&mdash;{% endif %}</td>
+            <td><a href="{{ pr_url }}">#{{ r.get('number', '') }}</a></td>
+            <td>{{ r.get('title') or '—' }}</td>
+            <td class="td-person">{{ r.get('author') or '?' }}</td>
+            <td class="td-person">{{ r.get('merger') or '?' }}</td>
+            <td class="{{ reviewed_cls }}">{{ r.get('formal_review') or ('yes' if r.get('any_review') else 'no') }}</td>
+            <td class="td-concern">{% if r.get('self_merge') %}<strong>Self-merge</strong>{% elif r.get('security_flagged') %}<strong>Security-flagged</strong>{% else %}&mdash;{% endif %}</td>
           </tr>
           {% endfor %}
-          {% else %}
-          <tr><td colspan="6"><em>No PRs flagged by security-keyword filter.</em></td></tr>
           {% endif %}
         </tbody>
       </table>

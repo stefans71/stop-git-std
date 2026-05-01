@@ -1,35 +1,43 @@
 {% set pr = form.phase_1_raw_capture.get('pr_review', {}) or {} %}
 {% set sample = pr.get('prs', []) %}
 {% set review_summary = form.phase_4_structured_llm.get('pr_sample_review', {}) or {} %}
-{% set rows = review_summary.get('rows', []) %}
-{% if sample or rows %}
+{% set llm_rows = review_summary.get('rows', []) %}
+{% set derived_rows = [] if llm_rows else derive_pr_sample(form.get('phase_1_raw_capture', {})) %}
+{% set rows = llm_rows or derived_rows %}
+{% if rows %}
 ## 03 · Suspicious code changes
 
 {% if review_summary.get('intro') %}
 > {{ review_summary.intro }}
 
-{% else %}
-{% set concern_count = rows | selectattr('flagged', 'equalto', true) | list | length %}
-{% set sample_total = rows | length if rows else sample | length %}
+{% elif llm_rows %}
+{% set concern_count = llm_rows | selectattr('flagged', 'equalto', true) | list | length %}
+{% set sample_total = llm_rows | length if llm_rows else sample | length %}
 > ✓ {{ concern_count }} security-concerning PRs · ℹ {{ sample_total }} recent merges sampled
+
+{% else %}
+{% set sec_count = derived_rows | selectattr('security_flagged', 'equalto', true) | list | length %}
+> ✓ {{ sec_count }} security-flagged PRs · ℹ {{ derived_rows | length }} recent merges sampled
 
 {% endif %}
 {% set formal = pr.get('formal_review_rate') %}
-Sample: the {{ sample|length }} most recent merged PRs at scan time{% if rows | selectattr('flagged', 'equalto', true) | list %}, plus flagged PRs{% endif %}.{% if formal is not none %} Dual review-rate metric on this sample: formal `reviewDecision` set on {{ formal }}% of sampled PRs.{% endif %}
+Sample: the {{ sample|length }} most recent merged PRs at scan time{% if llm_rows | selectattr('flagged', 'equalto', true) | list %}, plus flagged PRs{% endif %}.{% if formal is not none %} Dual review-rate metric on this sample: formal `reviewDecision` set on {{ formal }}% of sampled PRs.{% endif %}
 
-{% if rows %}
+{% if llm_rows %}
 | PR | What it did | Submitted by | Merged by | Reviewed? | Concern |
 |----|-------------|--------------|-----------|-----------|---------|
-{% for r in rows %}
+{% for r in llm_rows %}
 {% set pr_url = r.get('url') or 'https://github.com/' ~ form.target.owner ~ '/' ~ form.target.repo ~ '/pull/' ~ (r.get('number', '') | string) %}
 | [#{{ r.get('number', '') }}]({{ pr_url }}) | {{ r.get('what', '') }} | {{ r.get('author', '') }} | {{ r.get('merger', '') }} | {{ r.get('reviewed', '') }} | {{ r.get('concern', '') }} |
 {% endfor %}
 {% else %}
-| PR | Author | Merger | Formal review | Any review | Self-merge |
-|----|--------|--------|---------------|------------|------------|
-{% for p in sample %}
-{% set pr_url = 'https://github.com/' ~ form.target.owner ~ '/' ~ form.target.repo ~ '/pull/' ~ (p.get('number', '') | string) %}
-| [#{{ p.get('number', '') }}]({{ pr_url }}) | {{ p.get('author', '') }} | {{ p.get('merger', '') }} | {{ p.get('formal_review') or '—' }} | {{ 'yes' if p.get('any_review') else 'no' }} | {{ 'yes' if p.get('self_merge') else 'no' }} |
+| PR | What it did | Submitted by | Merged by | Reviewed? | Concern |
+|----|-------------|--------------|-----------|-----------|---------|
+{% for r in derived_rows %}
+{% set pr_url = 'https://github.com/' ~ form.target.owner ~ '/' ~ form.target.repo ~ '/pull/' ~ (r.get('number', '') | string) %}
+{% set reviewed_cell = r.get('formal_review') or ('yes' if r.get('any_review') else 'no') %}
+{% set concern_cell = 'Self-merge' if r.get('self_merge') else ('Security-flagged' if r.get('security_flagged') else '—') %}
+| [#{{ r.get('number', '') }}]({{ pr_url }}) | {{ r.get('title') or '—' }} | {{ r.get('author') or '?' }} | {{ r.get('merger') or '?' }} | {{ reviewed_cell }} | {{ concern_cell }} |
 {% endfor %}
 {% endif %}
 

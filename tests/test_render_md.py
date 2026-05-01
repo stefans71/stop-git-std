@@ -805,10 +805,22 @@ class TestDerivePRSample:
     def test_row_shape_matches_template_contract(self):
         p1 = _bundle("kamal-6a31d14")["phase_1_raw_capture"]
         rows = derive_pr_sample(p1)
-        required_keys = {"number", "title", "formal_review", "any_review",
+        required_keys = {"number", "title", "author", "merger",
+                         "formal_review", "any_review",
                          "self_merge", "security_flagged", "merged_at"}
         for r in rows:
             assert set(r.keys()) == required_keys, f"row shape drift: {r.keys()}"
+
+    def test_v11_fixture_schema_handled(self):
+        """V1.1 fixtures have author/merger/any_review (bool); V1.2 harness has
+        review_decision/any_review_count (int). Helper handles both."""
+        form = json.loads((REPO_ROOT / "tests" / "fixtures" / "zustand-form.json").read_text())
+        rows = derive_pr_sample(form["phase_1_raw_capture"])
+        assert len(rows) == 7
+        # V1.1 fixture has populated author/merger fields
+        assert rows[0]["author"] == "FelixEckl"
+        assert rows[0]["merger"] == "dai-shi"
+        assert isinstance(rows[0]["any_review"], bool)
 
     def test_any_review_is_bool_not_int(self):
         """Helper normalizes any_review_count (int) → any_review (bool)."""

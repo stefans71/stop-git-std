@@ -1,5 +1,6 @@
 {% set coverage = form.get('phase_3_computed', {}).get('coverage_status', {}).get('cells', []) %}
-{% set detail = form.phase_4_structured_llm.get('coverage_detail', {}).get('rows', []) %}
+{% set llm_detail = form.phase_4_structured_llm.get('coverage_detail', {}).get('rows', []) %}
+{% set detail = llm_detail if llm_detail else derive_coverage_detail(form.get('phase_1_raw_capture', {})) %}
 {% set monorepo = form.phase_4_structured_llm.get('coverage_detail', {}).get('monorepo') %}
 {% set pr_target = form.phase_4_structured_llm.get('coverage_detail', {}).get('pr_target_usage') %}
 {% set intro = form.phase_4_structured_llm.get('coverage_intro') %}

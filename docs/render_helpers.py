@@ -261,20 +261,20 @@ def derive_coverage_detail(p1: dict) -> list:
 def derive_pr_sample(p1: dict) -> list:
     """Produce mechanical PR sample rows from phase_1.pr_review.prs.
 
-    Returns: [{number, title, formal_review, any_review, self_merge,
-               security_flagged, merged_at}, ...]
+    Returns: [{number, title, author, merger, formal_review, any_review,
+               self_merge, security_flagged, merged_at}, ...]
 
-    Note: harness `pr_review.prs` does NOT currently include `author` or
-    `merger` fields (only `number`, `title`, `review_decision`,
-    `any_review_count`, `self_merge`, `merged_at`, `labels`,
-    `security_flagged`). The existing section_03.md.j2 fallback at lines
-    30-32 references `author`/`merger` and renders empty cells on V1.2
-    bundles — the LLM-authored enriched table is what currently saves it.
+    Schema-tolerant — handles two row shapes:
+      - V1.1 fixture rows: number, author, merger, formal_review (str|None),
+        any_review (bool), self_merge.
+      - V1.2 harness rows: number, title, review_decision, any_review_count
+        (int), self_merge, merged_at, labels, security_flagged.
 
-    Phase 1.5 follow-up: harness should populate author + merger so the
-    derived simple table matches what the LLM enriched table provides
-    structurally. Tracked alongside kamal CODEOWNERS gap + Kronos
-    pickle.load gap in docs/calibration-impl-notes.md §4-§5.
+    Phase 1.5 follow-up: V1.2 harness `pr_review.prs` does NOT populate
+    author or merger fields; on real bundles those columns render as ''.
+    Harness should populate them so the derived simple table matches the
+    LLM enriched table structurally. Tracked alongside kamal CODEOWNERS
+    gap + Kronos pickle.load gap in docs/calibration-impl-notes.md §4-§5.
     """
     p1 = _safe_dict(p1)
     pr_review = _safe_dict(p1.get("pr_review"))
@@ -284,11 +284,22 @@ def derive_pr_sample(p1: dict) -> list:
     for p in prs:
         if not isinstance(p, dict):
             continue
+        # any_review may be a bool (V1.1 fixture) or derived from any_review_count int (V1.2 harness)
+        if "any_review" in p:
+            any_review = bool(p.get("any_review"))
+        else:
+            any_review = bool(p.get("any_review_count", 0))
+        # formal_review may be already-stringified (V1.1 fixture) or live in review_decision (V1.2 harness)
+        formal_review = p.get("formal_review")
+        if formal_review is None:
+            formal_review = p.get("review_decision") or ""
         rows.append({
             "number": p.get("number"),
             "title": p.get("title", ""),
-            "formal_review": p.get("review_decision") or "",
-            "any_review": bool(p.get("any_review_count", 0)),
+            "author": p.get("author", ""),
+            "merger": p.get("merger", ""),
+            "formal_review": formal_review,
+            "any_review": any_review,
             "self_merge": bool(p.get("self_merge", False)),
             "security_flagged": bool(p.get("security_flagged", False)),
             "merged_at": _fmt_date(p.get("merged_at")),
