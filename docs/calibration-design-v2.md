@@ -121,6 +121,8 @@ Proposed 9-category enum, derived from grouping the existing `catalog_metadata.s
 
 The 9-category enum was derived from 12 V1.2 catalog scans — DeepSeek correctly notes this is tight evidence. Categories with n=1 representation in the current catalog (`embedded-firmware` = WLED only; `install-script-fetcher` = caveman only; `agent-skills-collection` = skills + gstack but gstack predates V1.2 schema) are **provisional** and the enum is expected to evolve as the catalog grows. Future scans that don't fit cleanly should: (a) classify as `other` with confidence="low", (b) trigger a deferred-ledger entry to revisit the enum, (c) NOT cause an emergency taxonomy change. The classifier remains deterministic; new categories require an explicit design revision, not an inference.
 
+**Provisional-to-stable promotion (added post-R2 per owner directive):** Provisional categories promote to stable at **n≥2 V1.2 scans classifying cleanly into the category**. Phase 3 implementation decides the tracking mechanism (a counter file, a derived-from-catalog computation, or annotation on each `ShapeClassification` result). Confidence-degradation rules (whether `classify_shape` should output lower confidence when landing on a provisional category) are also a Phase 3 implementation decision — not specified here.
+
 **Browser-extension boundary clarification (added post-R1 per owner directive responding to Codex's flag):**
 
 A browser-extension repo with a native messaging host (e.g., browser_terminal) classifies as **`desktop-application`**, not a separate `browser-extension` category. Reasoning: the browser extension is the install vector, but the native messaging host runs on the user's machine outside the browser sandbox — it's the actual execution surface. The user's threat model maps to "tool runs on my desktop," which is the desktop-application shape. A pure browser-extension with no native component would still classify as `desktop-application` since the browser is part of the user's desktop, but the modifier `is_privileged_tool` should fire when extension permissions are broad.
@@ -147,14 +149,19 @@ class ShapeClassification(NamedTuple):
     is_reverse_engineered: bool
     is_privileged_tool: bool
     is_solo_maintained: bool
-    confidence: str         # "high" / "medium" / "low" — degraded when no clear signal match
+    confidence: str         # DEBUG-ONLY (post-R2 directive). "high" / "medium" / "low".
+                            # No rule reads this. Tracked in form.json for audit
+                            # (correlation between low-confidence classifications and
+                            # override spikes). Wire to rule degradation only if a
+                            # future audit shows justifying evidence — speculative
+                            # engineering otherwise.
     matched_rule: str       # e.g. "agent_rule_files >= 3 + Markdown primary"
 
 def classify_shape(form: dict) -> ShapeClassification:
     """Classify a scan form into a shape category + cross-shape modifiers.
 
-    Reads from form.phase_1_raw_capture (primary inputs) +
-    form.phase_4_structured_llm.catalog_metadata.shape (LLM-authored hint, fallback).
+    Reads from form.phase_1_raw_capture ONLY (post-R1 directive — Phase 4
+    fallback dropped to preserve phase boundary).
 
     Returns a ShapeClassification for the rule table to consume.
     Deterministic — same form always produces same classification.
@@ -516,7 +523,9 @@ If projections hold: ~50% override reduction in this phase. Closer to the ~80% t
   - **Hard floor (gates Phase 1 acceptance):** override rate ≤5/12 scans (~42%) — achievable with firm rules (RULE-1, RULE-2, RULE-4, RULE-5, RULE-6) per §8 projection.
   - **Stretch target:** ≤3/12 scans (~25%) — auto-promotes to hard floor when **any 2 of V12x-7 / V12x-11 / V12x-12 harness signals land**, which unlocks RULE-7 / RULE-8 / RULE-9 promotion per their Q4 compound gates.
 
-  This ties the tighter target to the precondition that makes it achievable, rather than setting a fixed bar the design cannot clear today. Board: react to whether this staged floor is the right reframing, or propose an alternative (e.g., Codex's "remaining override classes" framing, where the count is types not raw count).
+  **Promotion semantics (added post-R2 per owner directive resolving Codex+Pragmatist convergent flag):** when the stretch target auto-promotes to hard floor, **it applies prospectively only.** Scans run after the promotion date are evaluated against the tighter ≤3/12 bar. Existing passing scans are NOT retroactively failed — they were correct at the calibration level they were evaluated under, and forcing re-validation would create churn for no safety gain. If a future audit wants to know whether older scans would pass the tighter bar, that's a diagnostic query against `docs/calibration-rebuild-rerender-comparison.md` (the migration record), NOT a gate.
+
+  **"Remaining override classes" framing (added post-R2 per owner directive on Codex's R3 carry-forward):** Codex proposed using the distribution of override TYPES (which `override_reason` enum values appear) as a complementary metric to the raw count. Owner directive: track it in the comparison doc as **diagnostic-only** — informs whether the next calibration push should target signal vocabulary, harness coverage, or threshold tuning. The hard floor remains the raw count (≤5/12 → ≤3/12). Class distribution does NOT gate Phase 1 acceptance.
 
 ---
 
@@ -545,6 +554,25 @@ The R1 round produced 3 SIGN OFF WITH NOTES + 1 DISSENT verdicts. All 3 agents c
 
 ---
 
+### Post-R2 owner directives (round 2 — applied 2026-05-01)
+
+R2 verdicts: 3-of-3 SIGN OFF WITH NOTES. DeepSeek moved DISSENT → conditional sign-off. Two cross-agent convergent items + Codex's 5 R3 carry-forwards. Owner adjudicated 7 R2 directives, all incorporated above:
+
+| # | Section | Change | Driver |
+|---|---|---|---|
+| 1 | §9 Q9 — Promotion semantics | When ≤3/12 stretch promotes to hard floor: applies **prospectively only**. Existing passing scans are NOT retroactively failed (correct at calibration level evaluated under). Diagnostic re-evaluation is a query against the comparison doc, not a gate | Codex + Pragmatist convergent |
+| 2 | §9 Q9 — "Remaining override classes" framing | Track in comparison doc as **diagnostic-only**. Hard floor remains raw count (≤5/12 → ≤3/12). Class distribution informs next calibration push direction; does NOT gate Phase 1 | Codex (R3 carry-forward) |
+| 3 | §3 — Provisional-to-stable promotion | Provisional categories promote to stable at **n≥2 V1.2 scans classifying cleanly**. Phase 3 implementation decides tracking mechanism (counter file / derived computation / annotation) | Codex + DeepSeek (R3 carry-forward) |
+| 4 | §10 — Phase 3 must resolve | New "Phase 3 must resolve" sub-section names 3 items intentionally NOT specified in design: provisional-vs-stable tracking mechanism, `is_privileged_tool` boundary cases, confidence-degradation rules | Codex (R3 carry-forward) + Pragmatist + DeepSeek |
+| 5 | §10 — `confidence` field | DEBUG-ONLY. No rule reads it. Tracked in form.json for audit (correlation between low-confidence classifications and override spikes). Wire to rule degradation only if a future audit shows justifying evidence | Pragmatist + DeepSeek convergent (Codex echoed) |
+| 6 | §10 — `rule_id` traceability | Made REQUIRED (changed from optional). Every cell evaluation must emit the rule_id that fired (RULE-1..RULE-10 or "FALLBACK"). Validator enforces presence | Codex (R3 carry-forward) |
+| 7 | §9 Q9 — ≥2-of-3 harness threshold | Confirmed: any 2 of {V12x-7, V12x-11, V12x-12} landing is the trigger for stretch promotion. This is the precondition that makes the tighter ceiling achievable | Codex (R3 carry-forward) |
+
+**R2-round items NOT changed** (despite agent flag):
+- DeepSeek's "3 enum categories with zero V1.2 evidence" concern (`agentic-platform`, `install-script-fetcher`, `specialized-domain-tool`) — kept; provisional-flag mechanism + n≥2 promotion is the response. (Note: `specialized-domain-tool` actually has 2 V1.2 scans — freerouting + Kronos; DeepSeek's count was off.)
+
+---
+
 ## §10 Implementation Sketch (Phase 3 preview — not part of this design's commit)
 
 For board context only; Phase 3 will produce its own implementation plan.
@@ -566,7 +594,12 @@ class CellEvaluation(NamedTuple):
     color: str
     short_answer_template_key: str
     template_vars: dict
-    rule_id: str               # which rule fired (e.g. "RULE-1")
+    rule_id: str               # REQUIRED (post-R2 directive — Codex's R3 carry-forward).
+                               # Which rule fired (e.g. "RULE-1"). When step 5 fallback
+                               # fires, rule_id = "FALLBACK". Every cell evaluation must
+                               # emit this — essential for audit, debugging, future
+                               # calibration work. Surfaced in form.json at
+                               # phase_3_advisory.scorecard_hints.<q>.rule_id.
     auto_fire: bool            # was this an immediate trip vs base-table evaluation
 
 def classify_shape(form: dict) -> ShapeClassification: ...
@@ -593,8 +626,16 @@ Existing 414 tests must continue to pass. New tests target +30-50.
 
 ### Schema additions (minimal)
 
-- `phase_3_advisory.scorecard_hints.<q>.rule_id` — string, optional. Records which rule fired (for traceability).
-- `phase_4_structured_llm.shape_classification` — object with `{category, is_reverse_engineered, is_privileged_tool, is_solo_maintained, confidence, matched_rule}`. Computed by Phase 3, frozen by Phase 4 LLM (which may override `category` with explanation).
+- `phase_3_advisory.scorecard_hints.<q>.rule_id` — string, **REQUIRED** (changed from optional post-R2). Records which rule fired (RULE-1 through RULE-10, or "FALLBACK" for step 5 fallback). Validator MUST enforce presence on every cell.
+- `phase_4_structured_llm.shape_classification` — object with `{category, is_reverse_engineered, is_privileged_tool, is_solo_maintained, confidence, matched_rule}`. Computed by Phase 3, frozen by Phase 4 LLM (which may override `category` with explanation). `confidence` is debug-only — no rule reads it.
+
+### Phase 3 must resolve (added post-R2 — items intentionally NOT specified in this design)
+
+These are implementation decisions the design defers to Phase 3 because they depend on what signals the harness actually exposes or what tracking mechanism the implementation prefers. The design names them so they're not forgotten:
+
+1. **Provisional-vs-stable category tracking mechanism** — counter file, derived-from-catalog computation, or annotation on each ShapeClassification result. Owner directive: criteria are simple (n≥2 V1.2 scans → promote to stable); implementation chooses the bookkeeping.
+2. **`is_privileged_tool` boundary cases** — browser extensions (broad permissions vs narrow), native messaging hosts (which permission scope), terminal emulators (SSH-handling vs not), shell extenders (path scope), embedded firmware (always privileged or shape-dependent). The §3 table already classifies known cases; Phase 3 codifies the decision boundary in the helper based on what `phase_1_raw_capture` actually exposes.
+3. **Confidence-degradation rules** — whether `classify_shape` should output lower confidence when landing on a provisional category (vs when lacking input signals vs when matching multiple rules). Owner directive: defer to Phase 3 + future audit data, do not pre-engineer.
 
 These are additive; no migration needed for V1.2 schema (round-trip stays clean if the new fields are absent — they're optional).
 
