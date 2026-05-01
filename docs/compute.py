@@ -1650,10 +1650,28 @@ def evaluate_q4(signals: dict, shape: ShapeClassification) -> CellEvaluation:
     has_critical_on_default_path_kw = bool(signals.get("has_critical_on_default_path"))
 
     # RULE-6 — Q4 auto-fire extension (FIRM; extends V13-3 C5)
-    # Three sub-conditions, any of which fires red:
-    #   - deserialization >= 3 + tool_loads_user_files (existing V13-3 C5)
-    #   - cmd_injection >= 1 + tool_loads_user_files (NEW)
-    #   - exec >= 1 + has_unverified_install_path (NEW)
+    #
+    # Design §5 spec'd 3 sub-conditions. Phase 3 implementation enables the
+    # first 2; the third (exec + has_unverified_install_path) is INERT
+    # pending harness work — see PHASE 3 IMPLEMENTATION DRIFT below.
+    #
+    #   - deserialization >= 3 + tool_loads_user_files (V13-3 C5; ENABLED)
+    #   - cmd_injection >= 1 + tool_loads_user_files (NEW; ENABLED)
+    #   - exec >= 1 + has_unverified_install_path (NEW; INERT pending V12x-11)
+    #
+    # PHASE 3 IMPLEMENTATION DRIFT — exec sub-condition deferred:
+    #   The third sub-condition over-fires on V1.2 catalog data because:
+    #   (a) `has_unverified_install_path` derived from artifact_verification.
+    #       verified is False on ~12/12 bundles (no SLSA provenance — common);
+    #   (b) `dangerous_primitives.exec.hit_count` >= 1 on most bundles
+    #       (exec keyword appears in many code patterns harmlessly).
+    #   Combined: rule fires on ghostty/kamal/QuickLook/wezterm/Baileys/Kronos
+    #   when none of those should auto-fire-red on Q4. The design's intent
+    #   for has_unverified_install_path was a tighter signal (curl-pipe-from-
+    #   main without checksum / no verified release channel) that the V12x-11
+    #   harness would emit. Until that lands, the exec sub-condition stays
+    #   INERT to avoid false positives. This matches the pattern used for
+    #   RULE-7/8/9 (compound promotion gate: evidence + harness signal).
     rule_6_fires = False
     rule_6_pattern = None
     rule_6_top_file = None
@@ -1668,11 +1686,12 @@ def evaluate_q4(signals: dict, shape: ShapeClassification) -> CellEvaluation:
         rule_6_pattern = "command injection"
         rule_6_hit_count = cmd_inj_hits
         rule_6_top_file = signals.get("cmd_injection_top_file") or ""
-    elif exec_hits >= 1 and has_unverified_install_path:
-        rule_6_fires = True
-        rule_6_pattern = "exec on unverified install path"
-        rule_6_hit_count = exec_hits
-        rule_6_top_file = signals.get("exec_top_file") or ""
+    # RULE-6 third sub-condition INERT — see drift note above.
+    # When V12x-11 harness signal lands, re-enable:
+    #   elif exec_hits >= 1 and has_unverified_install_path:
+    #       rule_6_fires = True
+    #       rule_6_pattern = "exec on unverified install path"
+    #       ...
 
     if rule_6_fires:
         return CellEvaluation(
@@ -1889,7 +1908,14 @@ def _derive_signals_from_form(form: dict) -> dict:
         "has_branch_protection": has_branch_protection_classic,
         "has_ruleset_protection": has_ruleset_protection,
         "rules_on_default_count": int(rules_on_default.get("count") or 0),
-        "has_codeowners": bool(codeowners.get("present") or codeowners.get("file_present")),
+        # V1.2 bundle codeowners shape: {found: bool, path, content, locations_checked}.
+        # Older shape used `present` / `file_present`. Accept all three keys for
+        # back-compat — bundle defines the canonical shape.
+        "has_codeowners": bool(
+            codeowners.get("found")
+            or codeowners.get("present")
+            or codeowners.get("file_present")
+        ),
         "has_codeql": bool(_safe_dict(p1.get("defensive_configs")).get("has_codeql")),
         "releases_count": int(_safe_dict(p1.get("releases")).get("count") or 0),
         # Q2 signals

@@ -488,17 +488,21 @@ class TestEvaluateQ4Rule6AutoFire:
         assert result.rule_id == "RULE-6"
         assert result.template_vars["primary_pattern"] == "command injection"
 
-    def test_exec_with_unverified_install_path_fires(self):
-        """RULE-6 NEW sub-condition: exec >= 1 + has_unverified_install_path."""
+    def test_exec_with_unverified_install_path_DOES_NOT_fire_inert(self):
+        """RULE-6 third sub-condition (exec + has_unverified_install_path) is
+        INERT pending V12x-11 harness work. Per Phase 3 implementation drift:
+        the sub-condition over-fires on V1.2 catalog because exec keyword is
+        too broad and has_unverified_install_path is True for ~12/12 bundles.
+        Re-enable when the harness emits a tighter has_unverified_install_path
+        signal (e.g., curl-pipe-from-main without checksum)."""
         signals = {
             "exec_hit_count": 2,
             "has_unverified_install_path": True,
             "exec_top_file": "install.sh",
         }
         result = evaluate_q4(signals, _shape())
-        assert result.color == "red"
-        assert result.rule_id == "RULE-6"
-        assert result.template_vars["primary_pattern"] == "exec on unverified install path"
+        # Falls through to FALLBACK (not RULE-6) — inert sub-condition
+        assert result.rule_id != "RULE-6"
 
     def test_deserialization_below_threshold_does_NOT_fire(self):
         """2 hits is below default threshold of 3 — no fire."""
