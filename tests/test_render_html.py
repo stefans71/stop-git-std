@@ -350,3 +350,34 @@ class TestShapeSpecific:
     def test_zustand_has_caution_verdict(self):
         out, _ = _render("zustand")
         assert "Caution" in out.lower() or "caution" in out
+
+
+# ---------------------------------------------------------------------------
+# Phase 4 — derivation helpers smoke tests (chore/template-side-derivation).
+# Verify the shared docs/render_helpers.py module loads + the 3 helpers exist.
+# Behavioral tests live in tests/test_render_md.py (single source of truth);
+# this file only verifies HTML-renderer-side accessibility for commit 2.
+# ---------------------------------------------------------------------------
+
+_helpers_spec = importlib.util.spec_from_file_location(
+    "render_helpers", REPO_ROOT / "docs" / "render_helpers.py"
+)
+_helpers = importlib.util.module_from_spec(_helpers_spec)
+_helpers_spec.loader.exec_module(_helpers)
+
+
+class TestDerivationHelpersAvailable:
+    """Smoke: helpers exist + are callable (full behavior tested in test_render_md.py)."""
+
+    def test_derive_repo_vitals_callable(self):
+        assert callable(_helpers.derive_repo_vitals)
+        # Empty input must not crash
+        assert isinstance(_helpers.derive_repo_vitals({}), list)
+
+    def test_derive_coverage_detail_callable(self):
+        assert callable(_helpers.derive_coverage_detail)
+        assert _helpers.derive_coverage_detail({}) == []
+
+    def test_derive_pr_sample_callable(self):
+        assert callable(_helpers.derive_pr_sample)
+        assert _helpers.derive_pr_sample({}) == []
