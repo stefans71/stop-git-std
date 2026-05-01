@@ -24,12 +24,15 @@ When the user says "continue" — start at the **next concrete action** under §
 **This block is your resumption packet.** It is the only thing you need to read after `/compact` to know what to do next. If something here is wrong or stale, fix it before proceeding.
 
 ### HEAD + branch
-- **HEAD:** `b9723f1` on `origin/main` (§Current state hygiene fixes on top of Phase 4 close `a31ff4b` on top of merge `c625309`). Feature branch `chore/template-side-derivation` deleted post-merge (local + remote).
+- **Branch:** `chore/calibration-rebuild-rerender` (Phase 5 work branch). Branched from `main` at `e6b0a3b`.
+- **Pre-render tag:** `pre-calibration-rerender` set at `e6b0a3b` — rollback anchor before Phase 5 mutates committed scan outputs.
+- **`origin/main` HEAD:** `e6b0a3b` (§Current state HEAD pointer self-update on top of `b9723f1` hygiene fixes on top of Phase 4 close `a31ff4b` on top of merge `c625309`). Feature branch `chore/template-side-derivation` deleted post-merge (local + remote).
 - **Tree:** clean.
 
 ### Phase + step
-- **Active phase:** Phase 4 — **COMPLETE + MERGED + PUSHED**. See plan §Phase 4 for the spec; this section's "Acceptance test outcomes" block records what landed.
-- **Step within phase:** N/A. **Next phase: Phase 5 — re-render all 27 catalog scans + diff. NOT STARTED. Owner-decision pause point.**
+- **Active phase:** Phase 5 — re-render 16 catalog scans (entries 12-27) + diff. **IN PROGRESS** on `chore/calibration-rebuild-rerender`.
+- **Scope clarification:** 16 entries, not 27 — entries 1-11 are V2.4 era hand-authored against V1.1 schema and have no V1.2 `form.json` to re-render through the calibration v2 pipeline. They remain unchanged on disk.
+- **Step within phase:** Phase 5 commit 1 — comparison doc + re-rendered scans + catalog updates.
 
 ### Commits done in Phase 4 (all on origin/main now)
 | SHA | One-line summary |
@@ -42,16 +45,29 @@ When the user says "continue" — start at the **next concrete action** under §
 | `97fbdbe` | **Commit 3**: author template optionalized + SCANNER-OPERATOR-GUIDE §8.5a + §06 dedup fix |
 | `c625309` | **Merge** of `chore/template-side-derivation` to `main` (no-ff) |
 
-### Next concrete action when work resumes (Phase 5)
-**Phase 5 — Re-render all 27 catalog scans + diff.** Per plan §Phase 5:
-- Branch: `chore/calibration-rebuild-rerender` from `main` at `c625309`
-- Pre-render tag: `pre-calibration-rerender` (set immediately before this phase since Phase 5 mutates committed scan outputs)
-- Deliverables:
-  - `docs/calibration-rebuild-rerender-comparison.md` — per scan: old verdict / new verdict / cell-color delta / rationale (one-line per scan)
-  - Re-rendered MD + HTML for all 27 scans → committed to `docs/scans/catalog/` REPLACING existing files (per cutover; old versions in git history)
-  - Updated `docs/scanner-catalog.md` table reflecting any verdict shifts
-- Pre-commit gate: owner reviews comparison doc and signs off on each verdict shift
-- Completion criteria: owner sign-off + 587+/587+ tests pass + validator clean on every re-rendered file + `--parity` zero-warning on every MD/HTML pair
+### Next concrete action — Phase 5 commit 1
+**Re-render entries 12-27 + comparison doc + catalog updates.** Per plan §Phase 5 (16-entry scope):
+
+**Pre-flight (do first):**
+- Copy `.scan-workspaces/markitdown/form.json` → `docs/scan-bundles/markitdown-<sha>.json` (entry 15 V2.5-preview bundle wasn't yet promoted to scan-bundles).
+
+**Inputs (16 V1.2 form.json bundles):**
+- 3 fixtures (entries 12-14): `tests/fixtures/{zustand,caveman,archon-subset}-form.json`
+- 1 wild V2.5-preview (entry 15): `docs/scan-bundles/markitdown-<sha>.json` (after pre-flight)
+- 12 wild V1.2 (entries 16-27): `docs/scan-bundles/{Baileys,Kronos,QuickLook,WLED,Xray-core,browser_terminal,freerouting,ghostty,kamal,kanata,skills,wezterm}-<sha>.json`
+
+**Deliverables:**
+- `docs/calibration-rebuild-rerender-comparison.md` — per entry 12-27: old verdict / new verdict / cell-color delta / one-line rationale. Entries 1-11 listed in a separate "not re-rendered (V2.4 era — no V1.2 bundle)" stub.
+- Re-rendered MD + HTML for entries 12-27 → REPLACE existing files in `docs/scans/catalog/`.
+- Updated `docs/scanner-catalog.md` reflecting any verdict shifts.
+
+**Pre-commit gate:** owner reviews comparison doc and signs off on each verdict shift.
+
+**Completion criteria for the phase (across both commits):** owner sign-off + 587+/587+ tests pass + validator clean on every re-rendered file + `--parity` zero-warning on every MD/HTML pair.
+
+### After Phase 5 commit 1 — Phase 5 commit 2
+- Update CLAUDE.md current-state paragraph to mark Phase 5 done + REPO_MAP.md catalog count if it changed.
+- Then merge `chore/calibration-rebuild-rerender` to `main`, push, update §Current state to mark Phase 5 complete, and stop. Don't start Phase 6.
 
 ### Acceptance test outcomes (per plan §Phase 4 Completion criteria)
 1. **Render skills bundle with REPO_VITALS=[], COVERAGE_DETAIL_ROWS=[], PR_SAMPLE_ROWS=[] zeroed:** ✅ produces helper-derived table content matching the canonical mechanical metrics from `phase_1_raw_capture`. §05 Repo vitals: 16 mechanical metrics match (Stars 47,917, Forks 3,900, License MIT, Created 2026-02-03, contributors, branch_protection 404, rulesets 0, CODEOWNERS absent, etc.). §06 Investigation coverage: 8 mechanical checks rendered cleanly (after §06 dedup fix in commit 3). §03 PR sample: PR #90 with title + self-merge concern (author/merger render `?` per Phase 1.5 gap).
@@ -180,24 +196,28 @@ Phase 0 audit, Phase 1 calibration design, Phase 2 board review, Phase 3 calibra
 
 ---
 
-### Phase 5 — Re-render all 27 catalog scans + diff
+### Phase 5 — Re-render 16 catalog scans (entries 12-27) + diff
 
 **Goal:** validate the new calibration against the existing catalog. Some verdicts may shift (intentional). We document each shift + owner reviews before commit.
 
+**Scope:** 16 entries (12-27) — only those with V1.2 `form.json` bundles. Entries 1-11 are V2.4-era hand-authored against V1.1 schema, so no `form.json` exists to re-render through the calibration v2 + template-side-derivation pipeline. They remain unchanged on disk; comparison doc notes them as "not re-rendered (V2.4 era — no V1.2 bundle)".
+
 **Deliverables:**
-- `docs/calibration-rebuild-rerender-comparison.md` — for each scan: old verdict / new verdict / cell-color delta / rationale (one-line per scan).
-- Re-rendered MD + HTML for all 27 scans → committed to `docs/scans/catalog/` REPLACING the existing files (per the calibration cutover; old versions remain in git history).
+- `docs/calibration-rebuild-rerender-comparison.md` — for each entry 12-27: old verdict / new verdict / cell-color delta / rationale (one-line per scan). Entries 1-11 listed in a separate stub block noting non-rerender.
+- Re-rendered MD + HTML for entries 12-27 → committed to `docs/scans/catalog/` REPLACING the existing files (per the calibration cutover; old versions remain in git history).
 - Updated `docs/scanner-catalog.md` table reflecting any verdict shifts.
+
+**Pre-flight:** copy `markitdown` form.json from `.scan-workspaces/markitdown/form.json` to `docs/scan-bundles/markitdown-<sha>.json` (entry 15 V2.5-preview wild scan — bundle wasn't yet promoted).
 
 **Pre-commit gate:** owner reviews the comparison doc and signs off on each verdict shift.
 
-**Branch:** `chore/calibration-rebuild-rerender` (separate from impl branch so the impl can land first).
+**Branch:** `chore/calibration-rebuild-rerender` from `main` at `e6b0a3b` (post-Phase 4 merge + §Current state hygiene). Pre-render tag `pre-calibration-rerender` set at the same SHA before any rerender work, since this phase mutates committed scan outputs.
 
 **Commits:**
 1. Add comparison doc + the re-rendered scan files + catalog updates in one cohesive commit.
 2. Update CLAUDE.md current-state paragraph + REPO_MAP.md catalog count if it changed.
 
-**Completion criteria:** owner signs off on the rerender comparison; 414+/414+ tests pass; validator clean on every re-rendered file; `--parity` zero-warning on every MD/HTML pair.
+**Completion criteria:** owner signs off on the rerender comparison; 587+/587+ tests pass; validator clean on every re-rendered file; `--parity` zero-warning on every MD/HTML pair.
 
 ---
 
