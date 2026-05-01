@@ -1042,7 +1042,22 @@ def _detect_privileged_tool(form: dict) -> bool:
 
     Topic-based detection from phase_1_raw_capture.repo_metadata.topics.
     Repos with empty topics (e.g. ghostty) may miss this detector; the override
-    mechanism is the safety net for those cases."""
+    mechanism is the safety net for those cases.
+
+    PHASE 3 IMPLEMENTATION DRIFT (vs design §3 expected table):
+      Design §3 listed 6 expected privileged_tool=True scans on V1.2 catalog:
+        ghostty, wezterm, kanata, QuickLook, WLED, browser_terminal.
+      This implementation produces 6 TRUE on the same catalog but with set
+      difference:
+        + Xray-core fires TRUE (vpn/proxy/tunnel topics — privileged daemon)
+        - ghostty fires FALSE (empty topics; can't detect terminal-emulator
+          shape from phase_1 alone)
+      Both calls are defensible: Xray-core IS privileged (network proxy
+      daemon, often runs as root for low-port binding); ghostty IS privileged
+      (terminal emulator handles SSH keys + shell history). The design table
+      was illustrative — topic-based detection inherently can't see
+      empty-topics repos. Phase 4 LLM override handles ghostty's case.
+      Tracked here so the deviation doesn't read as a bug six months from now."""
     p1 = _safe_dict(form.get("phase_1_raw_capture"))
     repo_meta = _safe_dict(p1.get("repo_metadata"))
     topics = _topic_set(repo_meta)
