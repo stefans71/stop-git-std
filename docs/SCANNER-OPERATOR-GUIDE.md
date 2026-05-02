@@ -163,7 +163,20 @@ find src -type f | wc -l
 
 **Goal:** populate the LLM's context with every piece of evidence the V2.4 prompt's finding rules depend on.
 
-The prompt's Step 1–Step 8 + Step A/B/C describe exactly which `gh api` calls and local greps are required. This guide does not repeat them — **follow the prompt**. What this guide captures is the **ordering discipline, what counts as evidence, and the common failure modes**.
+### 6.0 Pipeline selection — read this first
+
+**Default: Workflow V2.5-preview (production-cleared 2026-04-20).** Phase 2 evidence is gathered by `docs/phase_1_harness.py`, not by the LLM. The harness implements Steps 1–8 + A/B/C end-to-end (gh api + OSSF Scorecard + osv.dev + gitleaks + PyPI/npm/crates.io/RubyGems registries + tarball extraction + local grep + README paste-scan) and emits a single `form.json`. After the harness completes, **skip §6.1–§6.3 and §7 entirely** and proceed to §8.8 (Phase 4 V2.5-preview authoring) — the LLM authors `phase_4_structured_llm` + `phase_5_prose_llm` directly into the form. The fact/inference/synthesis separation §6.2/§7.2 enforces is preserved by schema phase boundaries (Phase 1 = facts, Phase 3 = computed, Phase 4 = structured LLM, Phase 5 = prose LLM).
+
+```bash
+# V2.5-preview Phase 2 — single command, no LLM-driven gh api calls
+python3 docs/phase_1_harness.py <owner/repo> --out /tmp/scan-<repo>/form.json
+```
+
+**Legacy: Workflow V2.4.** When re-rendering historical V1.1 scans, when you need LLM-authored long-form output without a Simple Report, or when CLAUDE.md Q3a explicitly selected V2.4, the LLM gathers evidence by hand following §6.1–§6.3 below and writes the bundle per §7. V2.4 does NOT produce a `form.json` and therefore cannot drive `render-simple.py`; outputs are long-form MD + long-form HTML only.
+
+The remainder of §6 (and §7) describes the V2.4 hand-gathering procedure. **Stop reading here if you're running V2.5-preview.**
+
+The V2.4 prompt's Step 1–Step 8 + Step A/B/C describe exactly which `gh api` calls and local greps are required. This guide does not repeat them — **follow the prompt**. What this guide captures is the **ordering discipline, what counts as evidence, and the common failure modes**.
 
 ### 6.1 Ordering discipline (1:1 with the V2.4 prompt)
 
@@ -294,6 +307,19 @@ If you catch yourself writing an interpretive verb in an evidence section, cut i
 - The bundle proposes the verdict (`critical` / `caution` / `clean`), scope axis (`Version ·` or `Deployment ·`), both audience-entry severities, all 4 scorecard cells with red/amber/green, and all finding severities.
 - Phase 4 transcribes these into the MD report and the HTML view — it does not re-derive them.
 - If Phase 4 disagrees with the bundle, that's a Phase 3 error to fix in the bundle, not a Phase 4 decision to improvise.
+
+### 7.5 V2.5-preview: skip the bundle entirely — author `form.json` directly
+
+§7.1–§7.4 describe the V2.4 hand-written `findings-bundle.md` flow. **Workflow V2.5-preview does not produce a bundle.** The harness's `phase_1_raw_capture` plus `compute.py`'s `phase_3_computed` + `phase_3_advisory` carry the same information that V2.4 puts in evidence sections + scorecard hints, in machine-readable form. The LLM authors `phase_4_structured_llm` + `phase_5_prose_llm` directly into `form.json`. The fact/inference/synthesis hygiene §7.2 enforces is preserved by the schema's phase boundaries.
+
+When running V2.5-preview, **read these instead of §7.1–§7.4**:
+
+- **`docs/scan-authoring-template/`** — three `.template` Python scripts that drive Phase 4/5/6 authoring (`build_form.py.template` runs Phase 3 compute; `author_phase_4.py.template` fills findings + evidence + scorecard cells + verdict exhibits + split axis; `author_phase_5_6.py.template` writes editorial caption + per-finding prose). The `README.md` in that directory contains the canonical 10-step workflow (workspace → harness → templates → render → validate → bundle promotion).
+- **`tests/fixtures/zustand-form.json`** — start by copying this and blanking out target-specific fields (per §8.8.3 step 1). It's tagged `authored-from-scan-data` in `provenance.json` — a template-for-shape, not evidence of pipeline correctness. `caveman-form.json` (curl-pipe installer) and `archon-subset-form.json` (agentic platform monorepo, 4-finding subset) are alternate shape exemplars.
+- **`docs/scan-schema.json` (V1.2, landed 2026-04-20)** — authoritative structure. Deltas vs V1.1: transformer deleted (schema adopts harness names + shapes); `phase_3_advisory.scorecard_hints` is the new top-level for compute-derived hints; `phase_4_structured_llm.scorecard_cells` is authoritative with `{rationale, edge_case, suggested_threshold_adjustment, computed_signal_refs, override_reason}`; 23-row `compute.SIGNAL_IDS` vocabulary with question-scoped prefix (`q1_` / `q2_` / `q3_` / `q4_` / `c20_`); 7-value `override_reason` enum. See §8.8 for the V1.2 changelog reference.
+- **`docs/compute.py::compute_scorecard_cells_v2()`** — orchestrates Phase 3 advisory (calibration v2; landed Phase 3 of back-to-basics rebuild). Calls `classify_shape(form)` first to pick a `ShapeClassification` (9 closed-enum categories + `other` fallback: `library-package`, `cli-binary`, `agent-skills-collection`, `agentic-platform` [stub — not yet detected], `web-application`, `desktop-application`, `embedded-firmware`, `install-script-fetcher`, `specialized-domain-tool`), then dispatches to per-cell evaluators (`evaluate_q1`/`q2`/`q3`/`q4`) which match against RULE-1..RULE-10 + FALLBACK and return `{color, matched_rule, rule_id, contributing_signals}`. Read this when authoring overrides — the `matched_rule` text in `phase_3_advisory.scorecard_hints[<cell>].matched_rule` tells you which rule fired and why; an override that disagrees should explain *what the rule missed* (not "the rule is wrong").
+
+The fact/inference/synthesis quick-reference (§7.3) still applies semantically — Phase 1 fields = facts, Phase 3 = compute-derived inference, Phase 4 structured = LLM inference under enum constraints, Phase 5 prose = synthesis. The phase-boundary contamination check (§8.8.3 Step 10) catches Phase-4 narrative leaks the same way §7.2 catches them in the V2.4 bundle.
 
 ---
 
