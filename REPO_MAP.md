@@ -345,12 +345,15 @@ Release status key:
 | `docs/validate-scanner-report.py` | Validator (`--report`, `--parity`, `--markdown`, `--form`, `--bundle`) |
 | `docs/compute.py` | Python compute for Phase 3 automatable fields |
 | `docs/phase_1_harness.py` | Phase 1 automated harness |
-| `docs/render-md.py` | V2.5-preview MD renderer (117-line Jinja2 shim) |
-| `docs/render-html.py` | V2.5-preview HTML renderer (135-line Jinja2 shim) |
+| `docs/render-md.py` | V2.5-preview Phase 4a long-form MD renderer (132-line Jinja2 shim) — REQUIRED |
+| `docs/render-simple.py` | **V2.5-preview Phase 4b Simple Report renderer (274 lines) — REQUIRED, user-facing** (Phase 7, 2026-05-01) |
+| `docs/render-html.py` | V2.5-preview Phase 4c long-form HTML renderer (150-line Jinja2 shim) — OPTIONAL auditor view |
 | `docs/compare-severity-distribution.py` | D-6 severity-distribution comparator |
 | `docs/scan-schema.json` | **V1.2** investigation form schema (V13-1 + V1.2.x signal widening) |
 | `docs/templates/` | V2.5-preview MD Jinja2 partials (14 files) |
 | `docs/templates-html/` | V2.5-preview HTML Jinja2 partials (14 files) |
+| `docs/templates-simple/` | **Simple Report templates: simple-report.html.j2 + simple-report.md.j2 + simple-report.css (251-line CSS subset of scanner-design-system.css)** (Phase 7, 2026-05-01) |
+| `docs/simple-report-concept.md` | **Phase 7 design brief — Simple Report visual + data contract spec** (Phase 7, 2026-05-01) |
 | `docs/scan-authoring-template/` | **NEW (session 8)** Per-scan Phase 4/5/6 authoring templates + README |
 | `docs/delegated-scan-template.md` | Delegated-mode scan handoff template (was `board-review-data/path-b-test-prompt.md`) |
 | `docs/board-review-pipeline-methodology.md` | Canonical 8/8/4 + 9-phase architecture record |
@@ -359,7 +362,7 @@ Release status key:
 | `docs/v13-1-override-telemetry-analysis.md` · `v13-3-analysis.md` · `v13-3-fp-dry-run.md` | Frozen telemetry analyses |
 | `docs/phase-1-checklist.md` | Step→field mapping for the harness |
 | `docs/CHANGELOG.md` | Prompt version history |
-| `tests/test_*.py` (9 files) | Test suite — 414/414 passing |
+| `tests/test_*.py` (15 files including `test_render_simple.py`) | Test suite — 609/609 passing |
 | `tests/fixtures/{zustand,caveman,archon-subset}-form.json` | Canonical V1.1/V1.2 form structural fixtures |
 | `tests/fixtures/provenance.json` | Fixture provenance ledger |
 
@@ -386,9 +389,10 @@ Release status key:
 
 | Path | Purpose |
 |---|---|
-| `docs/scans/catalog/GitHub-Scanner-<repo>.{md,html}` (27 scans × 2 formats; Archon-rerun-record .md only) | All catalog-referenced rendered scans |
+| `docs/scans/catalog/GitHub-Scanner-<repo>.{md,html}` (27 long-form pairs + 1 Archon-rerun-record + 12 V1.2 entries × 2 Simple Report files = ~78 catalog files total) | All catalog-referenced rendered scans (long-form + Simple Report variants) |
+| `docs/scans/catalog/GitHub-Scanner-<repo>-simple.{html,md}` (12 entries: 16-27) | **Phase 7 Simple Report HTML + MD pairs** (Phase 7, 2026-05-01) |
 | `docs/scans/catalog/README.md` | Index + designates `ghostty-v12` as the gold-standard exemplar |
-| `docs/scan-bundles/<repo>-<sha>.json` | Form.json bundles (durable per-scan record) |
+| `docs/scan-bundles/<repo>-<sha>.json` | Form.json bundles (durable per-scan record; V2.5-preview entries 12-27). V2.4-era entries 1-11 use `<repo>-<sha>.md` legacy bundle format in same dir. |
 | `docs/scanner-catalog.md` | Live 27-entry catalog table (mutates each scan) |
 
 ### 3.4 Governance / transparent dev (release-ready)

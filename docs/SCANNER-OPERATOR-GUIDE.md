@@ -674,18 +674,32 @@ Expect 1–3 iterations on HTML, 1–2 on MD. If you're past 4 iterations on eit
 
 **Goal:** the new scan is discoverable and the catalog is updated. Memory updates are optional and operator-specific.
 
-### 10.1 Phase 6a — required, repo-native catalog update
+### 10.1 Phase 6a — required, repo-native updates
 
-Update `docs/scanner-catalog.md` with the new scan's entry. This is the **public contract** — everything Phase 6 requires must go here. One row per scan with these fields:
+Four files **MUST** be updated before a scan is considered complete. Plus one **RECOMMENDED** convention update.
 
+#### REQUIRED — these gate "scan is done"
+
+**1. `docs/scanner-catalog.md`** — append one row for the new scan. Fields:
 - Repo (`owner/name` + short description)
 - HEAD SHA (short)
 - Scan date (UTC ISO date)
 - Verdict banner (`critical` / `caution` / `clean` + split-axis if present)
 - Scope axis (`Version ·` / `Deployment ·` / both)
 - Shape / structural pattern (for future shape-match lookups)
-- `methodology-used: path-a` | `path-b`
-- Links to the `.html` + `.md` artifacts
+- `methodology-used: continuous` | `delegated`
+- `rendering-pipeline: v2.4` | `v2.5-preview`
+- Links to the `.md`, `-simple.html`, and (if produced) `.html` artifacts
+
+**2. `docs/scan-bundles/<repo>-<short-sha>.json`** — copy the V2.5-preview `form.json` here (or the V2.4 `findings-bundle.md` for legacy scans). This is the durable per-scan source-of-truth that all renderers + future re-renders read from. Without it, the scan is non-reproducible.
+
+**3. `docs/v12-wild-scan-telemetry.md`** — append a row to §1 scan roster + update §2 override-enum distribution table for the new entry. If the scan introduces a new override pattern, also add to the relevant V12x backlog item table. This is what the comparator-calibration board reviews read; gaps here block future review cycles.
+
+**4. `AUDIT_TRAIL.md`** — add a checkpoint entry at the top with the new scan's HEAD SHA, scan date, verdict, and one-line summary. This is the recovery anchor used by `git reset --hard <checkpoint-sha>` if a regression appears.
+
+#### RECOMMENDED — convention but not enforced
+
+**5. `REPO_MAP.md` §2.2 Current state** — update the session entry + scan count if this scan changes the catalog totals or introduces a new shape. Skip if scan is a routine within-shape addition.
 
 If `docs/scanner-catalog.md` does not exist, create it using the scaffold (the current repo ships one as part of the V0.1 promotion).
 
