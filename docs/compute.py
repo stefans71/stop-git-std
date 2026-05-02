@@ -1109,6 +1109,93 @@ def _is_publishable_package_manifest(manifest_files: list) -> bool:
     return False
 
 
+# Backend-manifest filenames that distinguish a self-hostable platform's server
+# tier from npm-only frontends. Path lookup uses canonical backend directory
+# prefixes (server/, backend/, api/, services/server/) — broader prefixes risk
+# mis-classifying nested example/test fixtures.
+_AGENTIC_BACKEND_DIR_PREFIXES = ("server/", "backend/", "api/", "services/server/")
+_AGENTIC_BACKEND_MANIFEST_FILENAMES = frozenset({
+    "go.mod", "go.sum",
+    "pyproject.toml", "requirements.txt",
+    "gemfile", "cargo.toml",
+    "build.gradle", "pom.xml",
+})
+# Ecosystem labels that are NOT npm — used to detect cross-language monorepos.
+# Lower-case comparison; harness emits these mixed-case but `_monorepo_ecosystems`
+# normalizes before set membership.
+_NON_NPM_ECOSYSTEMS = frozenset({
+    "go", "python", "pypi",
+    "ruby", "rubygems",
+    "rust", "crates.io",
+    "java", "maven", "gradle",
+    "dotnet", "nuget",
+    "elixir", "hex",
+})
+
+
+def _monorepo_ecosystems(monorepo: dict) -> frozenset[str]:
+    """Return the lower-case set of ecosystem labels declared in
+    monorepo.inner_packages. Returns empty set when not a monorepo or the
+    inner_packages list is missing/empty."""
+    if not isinstance(monorepo, dict) or not monorepo.get("is_monorepo"):
+        return frozenset()
+    found = set()
+    for pkg in _safe_list(monorepo.get("inner_packages")):
+        if not isinstance(pkg, dict):
+            continue
+        eco = (pkg.get("ecosystem") or "").strip().lower()
+        if eco:
+            found.add(eco)
+    return frozenset(found)
+
+
+def _has_backend_manifest_under_server_dir(manifest_files: list) -> bool:
+    """True when a non-npm backend manifest (go.mod, pyproject.toml, etc.) is
+    located under a canonical backend directory (server/, backend/, api/,
+    services/server/). Used to discriminate agentic-platform monorepos
+    (multica-shape: TS frontend + Go server) from single-ecosystem monorepos
+    like Cargo workspaces (kanata, wezterm)."""
+    for entry in _safe_list(manifest_files):
+        if not isinstance(entry, dict):
+            continue
+        path = (entry.get("path") or "").lower()
+        if not path:
+            continue
+        for prefix in _AGENTIC_BACKEND_DIR_PREFIXES:
+            if path.startswith(prefix):
+                basename = path.rsplit("/", 1)[-1]
+                if basename in _AGENTIC_BACKEND_MANIFEST_FILENAMES:
+                    return True
+                break
+    return False
+
+
+def _has_npm_publish_manifest(manifest_files: list) -> bool:
+    """True when an npm-publishable `package.json` exists at the repo root or
+    inside `packages/<name>/` (npm workspace convention) or `apps/<name>/`
+    (turborepo convention) — i.e. on the npm-frontend tier, not buried under
+    a backend directory like `server/package.json`. Step 7.5 requires this
+    specifically (not generic publishable manifest), so a Go-primary repo
+    with `server/go.mod` plus a vestigial `package-lock.json` cannot
+    inadvertently land in agentic-platform."""
+    for entry in _safe_list(manifest_files):
+        if not isinstance(entry, dict):
+            continue
+        path = (entry.get("path") or "").lower()
+        if not path:
+            continue
+        basename = path.rsplit("/", 1)[-1]
+        if basename != "package.json":
+            continue
+        # Root package.json
+        if "/" not in path:
+            return True
+        # Any prefix that is NOT a backend dir is acceptable as the npm tier.
+        if not any(path.startswith(prefix) for prefix in _AGENTIC_BACKEND_DIR_PREFIXES):
+            return True
+    return False
+
+
 def classify_shape(form: dict) -> ShapeClassification:
     """Classify a scan form into a shape category + cross-shape modifiers.
 
@@ -1127,6 +1214,7 @@ def classify_shape(form: dict) -> ShapeClassification:
     deps = _safe_dict(p1.get("dependencies"))
     install_script = _safe_dict(p1.get("install_script_analysis"))
     releases = _safe_dict(p1.get("releases"))
+    monorepo = _safe_dict(p1.get("monorepo"))
     # V1.2 bundle shape: contributors = {top_contributors: [...], total_contributor_count: N}
     # Older shape was a bare list. Accept both for backward compatibility.
     contributors_raw = p1.get("contributors")
@@ -1146,6 +1234,7 @@ def classify_shape(form: dict) -> ShapeClassification:
         if isinstance(releases.get("count"), int)
         else len(_safe_list(releases.get("entries")))
     )
+    monorepo_ecos = _monorepo_ecosystems(monorepo)
 
     # Cross-shape modifiers (computed once, returned regardless of category)
     is_re = _detect_reverse_engineered(form)
@@ -1318,6 +1407,51 @@ def classify_shape(form: dict) -> ShapeClassification:
         )
 
     # ---------------------------------------------------------------------
+    # Step 7.5 — agentic-platform (multi-language self-hostable platform)
+    #
+    # Multica-shape: TS/JS frontend + Go (or Python/Ruby) backend co-located
+    # in a monorepo with a publishable npm manifest at the root. The
+    # combination distinguishes it from:
+    #   - cli-binary (Step 7)        — single-language CLI tool
+    #   - library-package (Step 8)   — npm publish without backend tier
+    #   - desktop-application        — GUI topic / packaging workflows
+    #   - single-ecosystem monorepos — Cargo/Lerna workspaces (kanata,
+    #                                  wezterm) — no non-npm backend
+    #
+    # Compound signal — high confidence requires ALL three of:
+    #   (a) monorepo with cross-language ecosystems (npm + non-npm)
+    #   (b) backend manifest under server/ | backend/ | api/ | services/server/
+    #   (c) publishable npm manifest on the frontend tier (root, packages/*,
+    #       or apps/* — NOT buried under a backend dir)
+    #
+    # (a) AND (c) without (b) yields medium confidence — the backend tier
+    # may live in a non-canonical directory (e.g. cmd/, internal/, src/api).
+    #
+    # The npm-publish leg (c) is required to distinguish from a Go-primary
+    # repo with vestigial JS lockfiles. Without (c), a backend-only project
+    # falls through to cli-binary or library-package per existing rules.
+    #
+    # First V1.2 hit: multica (entry 28 — TS+Go monorepo, server/go.mod +
+    # docker-compose.selfhost.yml + GHCR self-host). Catalog entry 11
+    # original V2.4 scan also classified as agentic-platform shape.
+    # Source diagnosis: docs/back-to-basics-plan.md §Current state
+    # "agentic-platform classifier branch" backlog item.
+    # ---------------------------------------------------------------------
+    has_cross_language_monorepo = bool(monorepo_ecos & _NON_NPM_ECOSYSTEMS) and "npm" in monorepo_ecos
+    if has_cross_language_monorepo and _has_npm_publish_manifest(manifest_files):
+        if _has_backend_manifest_under_server_dir(manifest_files):
+            return _result(
+                "agentic-platform",
+                confidence="high",
+                matched_rule="cross-language monorepo (npm + non-npm) + backend manifest under server/ + publishable npm",
+            )
+        return _result(
+            "agentic-platform",
+            confidence="medium",
+            matched_rule="cross-language monorepo (npm + non-npm) + publishable npm (backend dir non-canonical)",
+        )
+
+    # ---------------------------------------------------------------------
     # Step 8 — library-package (publishable manifest, no CLI/desktop fingerprint)
     #
     # Languages where package-manager-distributed library is the default
@@ -1332,11 +1466,13 @@ def classify_shape(form: dict) -> ShapeClassification:
         )
 
     # ---------------------------------------------------------------------
-    # Step 8 — agentic-platform / Step 9 — web-application
+    # Step 9 — web-application
     #
-    # No V1.2 catalog scans match these cleanly (postiz-app + Archon are
-    # V2.4-era and have .md bundles, not V1.2 .json). Heuristics deferred
-    # to first hit — fall through to other for now.
+    # No V1.2 catalog scan matches this cleanly (postiz-app + Archon are
+    # V2.4-era and have .md bundles, not V1.2 .json). Heuristic deferred
+    # to first hit — fall through to other for now. Candidate signal set
+    # when first hit arrives: docker-compose.yml present + single-ecosystem
+    # (npm only) + no agentic-platform multi-stack signal.
     # ---------------------------------------------------------------------
 
     # ---------------------------------------------------------------------
