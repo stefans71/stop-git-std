@@ -60,16 +60,18 @@ Follow phases 1-6 yourself. Read the Operator Guide for details on each phase. K
 
 Rendering-pipeline-specific files:
 
-**Workflow V2.4 (recommended):**
+**Workflow V2.4 (legacy):**
 - `docs/GitHub-Repo-Scan-Template.html` — HTML template with placeholders
 - `docs/scanner-design-system.css` — **MANDATORY** CSS (824 lines, copy verbatim into HTML `<style>` block — do NOT truncate or rewrite)
 
-**Workflow V2.5-preview (Step G only):**
-- `docs/scan-schema.json` — V1.1 schema (investigation form structure)
+**Workflow V2.5-preview (default):**
+- `docs/scan-schema.json` — V1.2 schema (investigation form structure)
 - `tests/fixtures/{zustand,caveman,archon-subset}-form.json` — example forms to mirror
-- `docs/render-md.py form.json --out GitHub-Scanner-<repo>.md`
-- `docs/render-html.py form.json --out GitHub-Scanner-<repo>.html`
-- See `docs/SCANNER-OPERATOR-GUIDE.md` §8.8 for the phase-to-prompt mapping + triple-warning gate + rollback contract.
+- `docs/render-md.py form.json --out GitHub-Scanner-<repo>.md` — Phase 4a (long-form MD, REQUIRED)
+- `docs/render-simple.py form.json --out-html GitHub-Scanner-<repo>-simple.html --out-md GitHub-Scanner-<repo>-simple.md` — **Phase 4b (Simple Report HTML, REQUIRED, user-facing)**
+- `docs/render-html.py form.json --out GitHub-Scanner-<repo>.html` — Phase 4c (long-form HTML, OPTIONAL auditor view)
+- `docs/templates-simple/` — Simple Report templates + 251-line CSS subset
+- See `docs/SCANNER-OPERATOR-GUIDE.md` §8.5 / §8.5b / §8.6 / §8.8 for phase-by-phase commands + the V2.5-preview triple-warning gate + rollback contract.
 
 ### Delegated-mode execution (legacy alias: Path B)
 Assemble the §8.3 handoff packet and delegate to a background agent. Template prompt at `docs/delegated-scan-template.md`. Adapt for the target repo + chosen reference scan + output mode + rendering pipeline. Monitor and verify when done.
@@ -96,8 +98,8 @@ Wait for the user's choice. If they pick option 2, read the long-form `.md` file
 
 ## Key rules
 
-- **MD is canonical.** In Workflow V2.4, Phase 4a produces MD first and Phase 4b derives HTML from it. In Workflow V2.5-preview, both are rendered from the same `form.json` (MD-canonical enforced by the shared form contract). In either pipeline, HTML may not add findings absent from MD — this is the contract the `--parity` validator mode gates.
+- **MD is canonical.** In Workflow V2.4, Phase 4a produces MD first and Phase 4b derives HTML from it. In Workflow V2.5-preview, three renderers consume the same `form.json`: `render-md.py` (long-form MD, canonical), `render-simple.py` (Simple Report HTML, user-facing), and `render-html.py` (long-form HTML, optional auditor view). The `--parity` validator gates long-form HTML against long-form MD; the Simple Report has its own parity test (`tests/test_render_simple.py::TestHtmlMdParity`).
 - **Facts, inference, synthesis are separate.** In the findings-bundle: evidence sections = facts only. Pattern recognition section = inference (tagged). Findings summary = synthesis (citing evidence). See Operator Guide §7.2 + §11. In V2.5-preview the same separation is enforced by the schema's phase boundaries (`phase_1_raw_capture` = facts, `phase_3_computed` + `phase_4_structured_llm` = inference, `phase_5_prose_llm` = synthesis; `phase_4b_computed` is the Python-derived verdict).
-- **Validator is the gate.** `python3 docs/validate-scanner-report.py --report <file>` must exit 0 on both MD and HTML. V2.5-preview additionally requires `--parity` zero errors AND zero warnings before Step G acceptance.
+- **Validator is the gate.** `python3 docs/validate-scanner-report.py --report <file>` must exit 0 on long-form MD (Phase 4a) and Simple Report HTML (Phase 4b). Long-form HTML (Phase 4c), if produced, also gates `--report`. V2.5-preview additionally requires `--parity` zero errors AND zero warnings on long-form MD/HTML pairs before Step G acceptance.
 - **head-sha.txt is the first durable artifact.** Write it before any gh api call. On Phase 4 success, copy findings-bundle to `docs/scan-bundles/`.
 - **Update the catalog** at `docs/scanner-catalog.md` after every completed scan. Include the `rendering-pipeline` column (values: `v2.4` or `v2.5-preview`) alongside the existing `methodology-used` flag.
