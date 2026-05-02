@@ -21,12 +21,14 @@ When the user says "continue" — start at the **next concrete action** under §
 
 ## § Current state — PLAN COMPLETE (back-to-basics calibration rebuild closed 2026-05-01)
 
-**This block is your resumption packet.** All 8 phases of the back-to-basics calibration rebuild (0 through 7) are landed on `origin/main`. There is no active phase. If you are resuming work, read the **Post-rebuild follow-up backlog** below for queued items and pick one to start. None of those items are urgent or blocking.
+**Last updated:** 2026-05-02T08:45:45Z
+
+**This block is your resumption packet.** All 8 phases of the back-to-basics calibration rebuild (0 through 7) are landed on `origin/main`. There is no active phase. **First post-rebuild wild scan landed 2026-05-02 (session 13): multica-ai/multica re-scan as catalog entry 28.** If you are resuming work, read the **Post-rebuild follow-up backlog** below for queued items and pick one to start. None of those items are urgent or blocking.
 
 ### HEAD + branch
-- **HEAD:** post-Phase-7 merge on `origin/main` (precise SHA recorded in `AUDIT_TRAIL.md` session 12 checkpoint).
+- **HEAD:** `48f4910` on `origin/main` at 2026-05-02T08:45:45Z (one-commit lag from this update; precise SHA after this commit recorded in `AUDIT_TRAIL.md` session 13 checkpoint).
 - **Pre-render tag:** `pre-calibration-rerender` preserved at `e6b0a3b` (Phase 5 rollback anchor).
-- **Tree:** clean.
+- **Tree:** clean (before this commit).
 
 ### What landed across the rebuild
 
@@ -40,8 +42,9 @@ When the user says "continue" — start at the **next concrete action** under §
 | 5 — Calibration v2 rerender | 12 V1.2 wild scans (entries 16-27) re-rendered; 0 verdict shifts; 10 advisory shifts; 3 redundant overrides cleared | `docs/calibration-rebuild-rerender-comparison.md` |
 | 6 — MD calibration verification | 5/5 cold-fork consumer match (pass bar ≥4); over-cautious + under-cautious failure modes both ruled out | `docs/calibration-rebuild-md-verification.md` |
 | 7 — Simple Report HTML | `docs/render-simple.py` + templates + 22 tests + 12 Simple Reports rendered; CLAUDE.md wizard flipped to V2.5-preview default; Operator Guide Phase 4 contract restated | `docs/simple-report-concept.md` + Operator Guide §8.5b |
+| **Post-rebuild — entry 28** | **multica re-scan @ 3df95c8** (V2.5-preview / continuous; re-scan of entry 11). Verdict Caution (split). 888888 Critical → Warning (APP_ENV gate landed in window between scans). Q2 `missing_qualitative_context` override (2nd consecutive use after skills entry 27). Shape misclassified as `library-package` — diagnosis logged for next session. | Commit `48f4910`; bundle `docs/scan-bundles/multica-3df95c8.json`; `AUDIT_TRAIL.md` session 13 |
 
-**Tests:** 609/609 passing. **Catalog:** 27 entries; entries 16-27 have Simple Reports (12 of 27); entries 1-15 do not (V2.4-bundle adapter is a follow-up).
+**Tests:** 609/609 passing. **Catalog:** 28 entries; entries 16-28 have Simple Reports (13 of 28); entries 1-15 do not (V2.4-bundle adapter is a follow-up).
 
 ### Workflow contract (durable, post-rebuild)
 
@@ -66,7 +69,14 @@ CLAUDE.md wizard:
 |---|---|---|---|
 | **#3** | Operator Guide §6 V2.5-preview pipeline-selection prelude | ~30 lines | Add §6.0 branch: V2.5-preview default → `python3 docs/phase_1_harness.py <owner/repo> --out form.json` then skip to §7. V2.4 legacy → continue with existing §6.1 ordering discipline. Cold-start audit found §6 still leads with V2.4 hand-gathering even though Q3a default is V2.5-preview. Low risk; additive. |
 | **#4** | Operator Guide §7 V2.5-preview authoring template cross-link | ~15 lines | Add §7.5 cross-linking `docs/scan-authoring-template/README.md` (per-scan workflow), `tests/fixtures/zustand-form.json` (populated reference), `docs/scan-schema.json` V1.2 (field requirements), `compute_scorecard_cells_v2()` in `docs/compute.py`. §7 currently describes V2.4 findings-bundle.md format only — V2.5-preview operators have no walkthrough for how to fill `phase_3_advisory` + `phase_4_structured_llm` + `phase_5_prose_llm` in form.json. Low risk; additive. |
-| **#6** | `docs/v12-wild-scan-telemetry.md` n=12 re-derivation | ~80 lines analytical work | §1 scan roster is at n=12 (skills entry 27 added) but §2 override-enum distribution + §3 cell distribution + §4 Q1/Q3 firing patterns + §9 V13-1 follow-up all still claim n=11 conclusions. §10 changelog explicitly flags that entry 27's `missing_qualitative_context` fire **invalidates §9's claim** "V13-1 taxonomy remains stable / catchall hasn't fired post-V13-1 relabel" — but the §9 text itself still asserts the old conclusion. Re-derivation requires re-reading 12 bundles + comparator-calibration judgment; deserves a clean session, not late-budget pressure. May surface new V13-3 follow-up triggers. (Header §11 reference stripped 2026-05-02 commit; analytical re-derivation deferred.) |
+| **#6** | `docs/v12-wild-scan-telemetry.md` n=13 re-derivation | ~80 lines analytical work | §1 scan roster is at n=13 (skills entry 27 + multica entry 28 added) but §2 override-enum distribution + §3 cell distribution + §4 Q1/Q3 firing patterns + §9 V13-1 follow-up all still claim n=11 conclusions. §10 changelog explicitly flags that entries 27 + 28's two consecutive `missing_qualitative_context` fires **invalidate §9's claim** "V13-1 taxonomy remains stable / catchall hasn't fired post-V13-1 relabel" — but the §9 text itself still asserts the old conclusion. Two consecutive fires with different drivers (skills = sample-floor degeneracy, multica = closed-within-window counter-signal) reinforce the case for either compute-signal expansion (V12x-15 + V12x-16 candidates) or sub-enum splitting. Re-derivation requires re-reading 13 bundles + comparator-calibration judgment; deserves a clean session, not late-budget pressure. May surface new V13-3 follow-up triggers. (Header §11 reference stripped 2026-05-02 commit; analytical re-derivation deferred.) |
+
+#### Next-session feature work (queued, none blocking)
+
+| Item | Status | Notes |
+|---|---|---|
+| **Scan-coverage one-liner for Simple Report template** | Approved, held | Add a single-line coverage summary to the Simple Report header so consumers know what the scan did NOT cover (e.g. "OSSF not indexed · gitleaks unavailable · Dependabot scope-restricted"). Owner-approved concept; held for next-session implementation. Touches `docs/templates-simple/simple-report.html.j2` + `docs/templates-simple/simple-report.md.j2` + `docs/render-simple.py` (derive coverage one-liner from `phase_4_structured_llm.coverage_gaps.entries`). Add tests to `tests/test_render_simple.py`. |
+| **agentic-platform classifier branch** | New (2026-05-02) | `classify_shape()` in `docs/compute.py` has `agentic-platform` in `SHAPE_CATEGORIES` enum but NO detection branch — comment at lines 1334-1340 says "deferred to first hit." Multica is the first V1.2 hit but lands in `library-package` (Step 8) because that step's `_is_publishable_package_manifest` check fires before any agentic-platform heuristic exists. **Recommended heuristic** (option 1 from session-13 diagnosis): compound signal — `docker-compose.selfhost*.yml` exists AND `server/` directory contains a non-npm backend manifest (`go.mod`/`go.sum`/`pyproject.toml`/`requirements.txt`) AND a publishable npm manifest exists. Insert as new **Step 7.5** between cli-binary (Step 7) and library-package (Step 8). Secondary heuristics (lower priority): README-phrase detection (`"managed agents"`/`"agent platform"`/`"agentic platform"`/`"multi-agent"`); GHCR image references in `.env.example`/compose; cross-language `monorepo.inner_packages` (npm + Go/Python/Ruby coexisting). Board review likely needed since this is calibration v2 scope and would shift judgment for any future scan landing in this bucket (postiz-app, Archon, future agentic-platform first-hits). Full diagnosis trace at end of 2026-05-02 session 13 transcript; key finding: multica's library-package match was technically defensible (publishable npm manifest exists) but the rule_id metadata reads "library-canonical shape" which mischaracterizes the assessment context. |
 
 #### Long-running follow-ups (no specific session queue; pick when triggered)
 
@@ -75,7 +85,7 @@ CLAUDE.md wizard:
 | **V2.4-bundle → form.json adapter** | Owner asks for Simple Reports on legacy entries 1-11 | Adapter must invent or hand-author the LLM-synthesized fields V2.4 doesn't emit (editorial_caption, scorecard short_answer, finding what_this_means, action_hint). Highest-payoff follow-up if reach matters. |
 | **Gate 6.3 backlog resolution** (7 cells × 6 entries) | Validator `--form` mode flags during a future scan | Resolution choice (b) add `override_reason` to Phase 4 cells, OR (c) soften calibration v2 Q3 rules (RULE-5-style softener). NOT (a) re-author — Phase 6 + 7 validated current MD reads correctly. |
 | **Q3 FALLBACK regression** (5 entries: ghostty, kamal, wezterm, freerouting, WLED) | Same trigger as gate 6.3 backlog | Address alongside it; same root cause. |
-| **Full-sentence scorecard short_answers** | Owner request, or repeated UX feedback that fragmentary `Partly — X` pairs read awkwardly | Re-author across 12 V1.2 bundles. Cosmetic polish. |
+| **Full-sentence scorecard short_answers** | Owner request, or repeated UX feedback that fragmentary `Partly — X` pairs read awkwardly | Re-author across 13 V1.2 bundles. Cosmetic polish. |
 | **Wizard option D Simple Report explicit** | If we ever want a "Simple-only" output mode (no long-form MD) | Currently option C MD-only is the cheapest path; D would be a `--no-md --simple-only` flag. Not pressing. |
 | **Visual polish + theming** | User feedback on Simple Reports | Light theme, print stylesheet, embeddable badge — all deferred design questions in concept doc §10. |
 | **`github-scan-package-V2/` refresh to V2.5+Phase-7** | OSS distribution is wanted | Stuck at 2026-04-17 V2.4 functionality. Missing render-md/simple/html.py, templates, schema V1.2, compute.py, harness, tests, simple-report-concept.md. Cold-start audit 2026-05-02 flagged. |
