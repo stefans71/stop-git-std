@@ -17,6 +17,49 @@ Canonical log of milestone commits with the verification state captured at commi
 
 ---
 
+## Checkpoint — 2026-05-02 (session 13) — First post-rebuild scan: multica re-scan (catalog entry 28)
+
+**HEAD:** TBD (filled by post-commit). Tree clean before commit; `docs/scan-bundles/multica-3df95c8.json` + 3 rendered outputs in `docs/scans/catalog/` + scanner-catalog.md row 28 + v12-wild-scan-telemetry.md §1 entry 28 + §10 changelog entry queued.
+
+**Scan target:** multica-ai/multica @ HEAD `3df95c84b8af6f26b6d4fe8ccfcaca74ee977cf1` (pushed 2026-05-01T21:27:22Z). **Re-scan of catalog entry 11** (V2.4 / delegated, 2026-04-19, HEAD `b8907dd`).
+
+**Pipeline:** V2.5-preview / continuous. All 6 phases ran in single session.
+- Phase 0: workspace + head-sha.txt (first durable artifact) at `/tmp/scan-multica/`.
+- Phase 1: `docs/phase_1_harness.py` — 28 fields populated.
+- Phase 2: sanity (SHA consistent, dates chronological, tarball nonempty).
+- Phase 3: `compute.py` — shape `library-package` (publishable npm manifest matched first; structurally agentic-platform — diagnosis owed); 4 advisory cells Q1=red Q2=red Q3=red Q4=amber via FALLBACK rules; C20 governance Warning.
+- Phase 4: 7 findings authored (5 Warning + 2 Info), 14 evidence entries, 4 scorecard cells (Q1 red ALIGN / Q2 amber OVERRIDE `missing_qualitative_context` / Q3 red ALIGN / Q4 amber ALIGN), split-axis split (cloud CLI vs self-host operator).
+- Phase 5: long-form MD (593 lines, 48 KB) + Simple HTML (356 lines, 17 KB self-contained) + Simple MD (32 lines, 2.6 KB) at `docs/scans/catalog/GitHub-Scanner-multica-v25preview*`.
+- Phase 6: validator clean — `--report` exit 0 on all 3 outputs; `--form` exit 0 with V1.2 schema CLEAN + gate 6.3 (1 override explained) + gate v2.1 (rule_id present).
+
+**Verdict:** **Caution (split — cloud CLI consumer vs self-host operator)**. Both Caution but self-host carries more config-discipline responsibility.
+
+**Verdict shifts vs prior 2026-04-19 entry 11:**
+- **888888 dev-verification-code Critical → Warning** (APP_ENV=production gate landed ~2026-04-18 in window between scans; closed issue #1304).
+- **New F1 Warning**: install.sh on macOS/Linux skips SHA256 verification on binary download; install.ps1 on Windows DOES verify checksums.txt — Windows/Unix asymmetry.
+- **New F2 Warning**: `protect-main-branch` ruleset declared since 2026-01-15 but `enforcement: disabled` — visible-but-toothless.
+- **New F4 Warning**: open issue #1114 (16d) `isBlockedEnvKey allows LD_PRELOAD/NODE_OPTIONS/HTTP_PROXY override via custom_env` — agent-execution privilege escalation, unaddressed since prior scan.
+- **Counter-signal**: 5 security issues closed in past 8 days (888888 #1304, shell.openExternal #1115, Hermes filterCustomArgs #1113, /health/realtime #1606, open-redirect #1116) — responsive but queue not shrinking.
+
+**Telemetry deltas:**
+- N=13/25 toward V13-3 broadened re-trigger (was 12).
+- 11 overrides across 13 wild scans (was 10/12).
+- `missing_qualitative_context` × 2 (was × 1) — second consecutive use after skills entry 27. Different driver (skills = sample-floor degeneracy at n=1 PR; multica = closed-within-window counter-signal invisible to compute). Solidifies the case that the enum value covers a real phenomenon class. New V12x backlog item (V12x-16) candidate: weight `closed_within_window` as a Q2 advisory counter-signal.
+- Shape misclassification noted: classify_shape() picked `library-package` (publishable npm manifest matched at Step 8) — multica is structurally `agentic-platform`. Diagnosis owed for next session.
+
+**Verification:** 609/609 tests still passing (no source changes). `--report` clean on all 3 outputs. `--form` 0 errors + gate 6.3 + gate v2.1 clean. Operator Guide + CLAUDE.md timestamp convention applied to all modified docs.
+
+**Files committed this session:**
+- `docs/scan-bundles/multica-3df95c8.json` (new — 291 KB; bundle preserved per durability rule).
+- `docs/scans/catalog/GitHub-Scanner-multica-v25preview.md` (new, 48 KB).
+- `docs/scans/catalog/GitHub-Scanner-multica-v25preview-simple.html` (new, 17 KB).
+- `docs/scans/catalog/GitHub-Scanner-multica-v25preview-simple.md` (new, 2.6 KB).
+- `docs/scanner-catalog.md` (entry 28 added; counts updated 27→28 / 16 v2.5-preview→17; changelog appended; **Last updated:** added).
+- `docs/v12-wild-scan-telemetry.md` (§1 roster entry 28; §10 changelog entry; header N=13; **Last updated:** updated).
+- `AUDIT_TRAIL.md` (this checkpoint).
+
+---
+
 ## Checkpoint — 2026-05-01 (session 12) — Phase 6 + Phase 7 COMPLETE + MERGED → back-to-basics rebuild CLOSED
 
 **HEAD:** post-Phase-7 merge on `origin/main` (filled by post-merge §Current state update; precise SHA recorded in plan §Current state). Back-to-basics calibration rebuild Phases 0-7 all landed. Tree clean. **Plan complete.**
