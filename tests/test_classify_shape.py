@@ -27,6 +27,9 @@ from compute import (
     _detect_reverse_engineered, _detect_privileged_tool,
     _has_desktop_packaging_workflows,
     _is_publishable_package_manifest,
+    _monorepo_ecosystems,
+    _has_backend_manifest_under_server_dir,
+    _has_npm_publish_manifest,
 )
 
 
@@ -423,13 +426,224 @@ class TestIsPublishablePackageManifest:
 
 
 # ===========================================================================
-# 12-bundle V1.2 catalog gate (CONSOLIDATION §5 carry-forward #4)
+# Step 7.5 — agentic-platform (helper + branch coverage)
+# ===========================================================================
+
+class TestMonorepoEcosystems:
+
+    def test_returns_empty_when_not_monorepo(self):
+        assert _monorepo_ecosystems({"is_monorepo": False, "inner_packages": []}) == frozenset()
+
+    def test_returns_empty_when_inner_packages_missing(self):
+        assert _monorepo_ecosystems({"is_monorepo": True}) == frozenset()
+
+    def test_returns_empty_for_none_input(self):
+        assert _monorepo_ecosystems(None) == frozenset()
+
+    def test_collects_unique_ecosystems_lowercase(self):
+        mr = {"is_monorepo": True, "inner_packages": [
+            {"ecosystem": "npm"}, {"ecosystem": "Go"}, {"ecosystem": "npm"},
+        ]}
+        assert _monorepo_ecosystems(mr) == frozenset({"npm", "go"})
+
+    def test_skips_non_dict_packages(self):
+        mr = {"is_monorepo": True, "inner_packages": [
+            "garbage-string-entry", {"ecosystem": "npm"},
+        ]}
+        assert _monorepo_ecosystems(mr) == frozenset({"npm"})
+
+
+class TestHasBackendManifestUnderServerDir:
+
+    def test_server_go_mod_matches(self):
+        assert _has_backend_manifest_under_server_dir([{"path": "server/go.mod"}]) is True
+
+    def test_backend_pyproject_matches(self):
+        assert _has_backend_manifest_under_server_dir([{"path": "backend/pyproject.toml"}]) is True
+
+    def test_api_requirements_matches(self):
+        assert _has_backend_manifest_under_server_dir([{"path": "api/requirements.txt"}]) is True
+
+    def test_services_server_gemfile_matches(self):
+        assert _has_backend_manifest_under_server_dir([{"path": "services/server/Gemfile"}]) is True
+
+    def test_root_go_mod_does_NOT_match(self):
+        """Root manifests are not server-tier — they're the project's own."""
+        assert _has_backend_manifest_under_server_dir([{"path": "go.mod"}]) is False
+
+    def test_npm_package_under_server_does_NOT_match(self):
+        """package.json is npm — not the cross-stack backend tier we're testing for."""
+        assert _has_backend_manifest_under_server_dir([{"path": "server/package.json"}]) is False
+
+    def test_packages_subdir_does_NOT_match(self):
+        """`packages/` is the npm-workspace convention, not a backend tier."""
+        assert _has_backend_manifest_under_server_dir([{"path": "packages/server/go.mod"}]) is False
+
+    def test_empty_list_returns_false(self):
+        assert _has_backend_manifest_under_server_dir([]) is False
+
+    def test_handles_non_dict_entries(self):
+        """Defensive — manifest_files entries should be dicts but harness drift may yield strings."""
+        assert _has_backend_manifest_under_server_dir(["server/go.mod"]) is False
+
+
+class TestHasNpmPublishManifest:
+
+    def test_root_package_json_matches(self):
+        assert _has_npm_publish_manifest([{"path": "package.json"}]) is True
+
+    def test_packages_subdir_matches(self):
+        """npm-workspace convention — packages/<name>/package.json is the frontend tier."""
+        assert _has_npm_publish_manifest([{"path": "packages/core/package.json"}]) is True
+
+    def test_apps_subdir_matches(self):
+        """turborepo convention — apps/<name>/package.json is part of the npm tier."""
+        assert _has_npm_publish_manifest([{"path": "apps/web/package.json"}]) is True
+
+    def test_server_package_json_does_NOT_match(self):
+        """A package.json buried under server/ is NOT the frontend tier."""
+        assert _has_npm_publish_manifest([{"path": "server/package.json"}]) is False
+
+    def test_backend_package_json_does_NOT_match(self):
+        assert _has_npm_publish_manifest([{"path": "backend/package.json"}]) is False
+
+    def test_lockfile_alone_does_NOT_match(self):
+        """package-lock.json is not a publish manifest."""
+        assert _has_npm_publish_manifest([{"path": "package-lock.json"}]) is False
+
+    def test_mixed_paths_one_root_one_backend(self):
+        """If the only valid root/non-backend manifest is present alongside a backend
+        npm placeholder, the root one wins."""
+        assert _has_npm_publish_manifest([
+            {"path": "server/package.json"},
+            {"path": "package.json"},
+        ]) is True
+
+    def test_handles_non_dict_entries(self):
+        assert _has_npm_publish_manifest(["package.json"]) is False
+
+
+class TestStep75AgenticPlatform:
+    """Compound signal: cross-language monorepo + publishable npm + (canonical
+    backend dir → high; non-canonical → medium)."""
+
+    def _agentic_form(self, *, with_server_dir: bool = True, lang: str = "TypeScript"):
+        manifests = [{"path": "package.json"}, {"path": "packages/core/package.json"}]
+        if with_server_dir:
+            manifests.append({"path": "server/go.mod"})
+            manifests.append({"path": "server/go.sum"})
+        return _make_form(
+            repo_metadata={"primary_language": lang, "topics": []},
+            dependencies={"manifest_files": manifests},
+            monorepo={"is_monorepo": True, "inner_packages": [
+                {"path": "packages/core", "ecosystem": "npm"},
+                {"path": "server", "ecosystem": "Go"},
+            ]},
+        )
+
+    def test_cross_language_monorepo_with_server_dir_high_confidence(self):
+        sc = classify_shape(self._agentic_form(with_server_dir=True))
+        assert sc.category == "agentic-platform"
+        assert sc.confidence == "high"
+        assert "npm + non-npm" in sc.matched_rule
+        assert "backend manifest under server/" in sc.matched_rule
+
+    def test_cross_language_monorepo_without_canonical_backend_dir_medium(self):
+        # Backend Go module is at root + cmd/, not under server/. The cross-language
+        # signal still fires, but at medium confidence.
+        form = self._agentic_form(with_server_dir=False)
+        # Push a non-canonical Go manifest path so the helper returns False.
+        form["phase_1_raw_capture"]["dependencies"]["manifest_files"].append(
+            {"path": "cmd/api/go.mod"}
+        )
+        sc = classify_shape(form)
+        assert sc.category == "agentic-platform"
+        assert sc.confidence == "medium"
+        assert "backend dir non-canonical" in sc.matched_rule
+
+    def test_python_backend_also_qualifies(self):
+        manifests = [{"path": "package.json"}, {"path": "server/pyproject.toml"}]
+        form = _make_form(
+            repo_metadata={"primary_language": "TypeScript", "topics": []},
+            dependencies={"manifest_files": manifests},
+            monorepo={"is_monorepo": True, "inner_packages": [
+                {"path": "frontend", "ecosystem": "npm"},
+                {"path": "server", "ecosystem": "Python"},
+            ]},
+        )
+        sc = classify_shape(form)
+        assert sc.category == "agentic-platform"
+        assert sc.confidence == "high"
+
+    def test_single_ecosystem_npm_monorepo_does_NOT_match(self):
+        """Lerna / pnpm-workspaces — single-ecosystem npm monorepo. NOT agentic-platform."""
+        form = _make_form(
+            repo_metadata={"primary_language": "TypeScript", "topics": []},
+            dependencies={"manifest_files": [{"path": "package.json"}, {"path": "packages/a/package.json"}]},
+            monorepo={"is_monorepo": True, "inner_packages": [
+                {"path": "packages/a", "ecosystem": "npm"},
+                {"path": "packages/b", "ecosystem": "npm"},
+            ]},
+        )
+        sc = classify_shape(form)
+        # Falls through to library-package via the publishable manifest catch-all.
+        assert sc.category == "library-package"
+
+    def test_cargo_workspace_does_NOT_match(self):
+        """Rust Cargo workspace — single-ecosystem (crates.io) monorepo, no cross-language signal."""
+        form = _make_form(
+            repo_metadata={"primary_language": "Rust", "topics": []},
+            dependencies={"manifest_files": [
+                {"path": "Cargo.toml"},
+                {"path": "crates/foo/Cargo.toml"},
+            ]},
+            releases={"count": 10, "entries": [{}] * 10},
+            monorepo={"is_monorepo": True, "inner_packages": [
+                {"path": "crates/foo", "ecosystem": "crates.io"},
+            ]},
+        )
+        sc = classify_shape(form)
+        # Rust + ≥5 releases + publishable manifest → cli-binary (Step 7), not agentic-platform.
+        assert sc.category == "cli-binary"
+
+    def test_non_monorepo_with_npm_does_NOT_match(self):
+        """Plain npm package, no monorepo — must continue to library-package."""
+        form = _make_form(
+            repo_metadata={"primary_language": "TypeScript", "topics": []},
+            dependencies={"manifest_files": [{"path": "package.json"}]},
+            monorepo={"is_monorepo": False, "inner_packages": []},
+        )
+        sc = classify_shape(form)
+        assert sc.category == "library-package"
+
+    def test_cross_language_monorepo_without_publishable_npm_does_NOT_match(self):
+        """If there's a Go backend + a non-publishable npm placeholder (e.g. lockfile only),
+        we should NOT call it agentic-platform — the npm-publish leg is a required signal.
+        Step 7.5 is skipped; the form falls through to Step 8 (library-package via Go's
+        publishable go.mod). The point of this test is the agentic-platform NEGATIVE."""
+        form = _make_form(
+            repo_metadata={"primary_language": "Go", "topics": []},
+            dependencies={"manifest_files": [
+                {"path": "server/go.mod"},
+                {"path": "package-lock.json"},  # lockfile only — not publishable
+            ]},
+            monorepo={"is_monorepo": True, "inner_packages": [
+                {"path": "server", "ecosystem": "Go"},
+                {"path": "frontend", "ecosystem": "npm"},
+            ]},
+        )
+        sc = classify_shape(form)
+        assert sc.category != "agentic-platform"
+
+
+# ===========================================================================
+# 13-bundle V1.2 catalog gate (CONSOLIDATION §5 carry-forward #4 + agentic-platform)
 # ===========================================================================
 
 class TestV12CatalogGate:
     """The §4 validation requirement: classify_shape() must produce the
-    expected category for each of the 12 V1.2 catalog scan bundles per the
-    design §3 table. This is a Phase 3 BLOCKER — must hit 12/12."""
+    expected category for each V1.2 catalog scan bundle per the design §3
+    table + the agentic-platform branch addition (entry 28 multica)."""
 
     EXPECTED_CATEGORIES = {
         'ghostty-dcc39dc.json':           'desktop-application',
@@ -444,6 +658,7 @@ class TestV12CatalogGate:
         'WLED-01328a6.json':              'embedded-firmware',
         'Baileys-8e5093c.json':           'library-package',
         'skills-b843cb5.json':            'agent-skills-collection',
+        'multica-3df95c8.json':           'agentic-platform',
     }
 
     @classmethod
@@ -459,7 +674,7 @@ class TestV12CatalogGate:
                 misses.append(f"{fn}: expected {expected}, got {sc.category} ({sc.matched_rule})")
         assert not misses, "Per-bundle classification misses:\n  " + "\n  ".join(misses)
 
-    def test_all_12_bundles_classify_to_known_category(self):
+    def test_all_bundles_classify_to_known_category(self):
         for fn in self.EXPECTED_CATEGORIES:
             form = self._load_form(fn)
             sc = classify_shape(form)
@@ -478,8 +693,31 @@ class TestV12CatalogGate:
         sc = classify_shape(form)
         assert sc.is_solo_maintained is True
 
+    def test_multica_agentic_platform_high_confidence(self):
+        """Regression: entry 28 multica is the first V1.2 hit for agentic-platform.
+        TS+Go monorepo with server/go.mod fires Step 7.5 high-confidence branch."""
+        form = self._load_form("multica-3df95c8.json")
+        sc = classify_shape(form)
+        assert sc.category == "agentic-platform"
+        assert sc.confidence == "high"
+        assert "npm + non-npm" in sc.matched_rule
+        assert "backend manifest under server/" in sc.matched_rule
+
+    def test_only_multica_classified_as_agentic_platform(self):
+        """No other V1.2 bundle should land in agentic-platform — protects against
+        accidental over-firing of the new Step 7.5 branch."""
+        for fn in self.EXPECTED_CATEGORIES:
+            if fn == "multica-3df95c8.json":
+                continue
+            form = self._load_form(fn)
+            sc = classify_shape(form)
+            assert sc.category != "agentic-platform", (
+                f"{fn} unexpectedly classified as agentic-platform "
+                f"(matched_rule: {sc.matched_rule})"
+            )
+
     def test_privileged_tool_distribution_reasonable(self):
-        """Audit expects ~6 of 12 V1.2 scans to flag is_privileged_tool.
+        """Audit expects ~6 of 13 V1.2 scans to flag is_privileged_tool.
         The detector uses topics; some misses (ghostty no topics) and false
         positives (Xray-core proxy/vpn topics fire) are acceptable."""
         count = 0
