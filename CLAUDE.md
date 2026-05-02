@@ -2,7 +2,7 @@
 
 An LLM-driven deep-dive investigation tool that produces security scan reports for GitHub repos. Not a static analyzer — YOU do the investigation via `gh` CLI, synthesize findings, and render HTML + MD reports.
 
-**Last updated:** 2026-05-02T04:53:41Z
+**Last updated:** 2026-05-02T14:12:06Z
 
 ## Active work (auto-resume on "continue")
 

@@ -21,12 +21,16 @@ When the user says "continue" — start at the **next concrete action** under §
 
 ## § Current state — PLAN COMPLETE (back-to-basics calibration rebuild closed 2026-05-01)
 
-**Last updated:** 2026-05-02T13:01:12Z
+**Last updated:** 2026-05-02T14:12:06Z
 
-**This block is your resumption packet.** All 8 phases of the back-to-basics calibration rebuild (0 through 7) are landed on `origin/main`. There is no active phase. **First post-rebuild wild scan landed 2026-05-02 (session 13): multica-ai/multica re-scan as catalog entry 28. Five next-session backlog items landed 2026-05-02 (session 14): doc cleanup #3, #4, #6 + scan-coverage one-liner + agentic-platform classifier branch.** If you are resuming work, read the **Post-rebuild follow-up backlog** below for remaining queued items and pick one to start. None of those items are urgent or blocking.
+**Status:** **PLAN COMPLETE.** All 8 phases of the back-to-basics calibration rebuild (0 through 7) landed on `origin/main`. All 5 session-14 queued items landed (doc cleanup #3 + #4 + #6, scan-coverage one-liner, agentic-platform classifier). 28 catalog entries; 13 V1.2 wild scans; 652/652 tests passing.
+
+**Next-session action — run a wild scan.** Pick a repo, say "scan `<owner/repo>`", follow the wizard. The pipeline is end-to-end validated (multica entry 28 was the smoke test on session 13; calibration v2 + Simple Report + classifier Step 7.5 all exercised cleanly). Wizard defaults: Q1 = long-form MD + Simple Report HTML; Q3a = V2.5-preview. After the scan completes, present the post-scan options (CLAUDE.md "After the scan completes" section).
+
+**Taxonomy-strain watch (read before next scan):** V13-3 broadened cadence at **13/25** toward N=25 trigger; **2/6 taxonomy-strain events fired** (skills entry 27 + multica entry 28 — both `missing_qualitative_context` Q2). **If a third `missing_qualitative_context` fire arrives with a new semantic driver** (i.e. distinct from sample-floor degeneracy + closed-within-window counter-signal), **escalate to board review immediately** rather than wait for N=25 — the catchall is then genuinely unbounded, not just under-split.
 
 ### HEAD + branch
-- **HEAD:** updated by this commit (precise SHA in `git log -1` immediately after; the commit BEFORE this update was `c1ae04d` — the agentic-platform classifier merge).
+- **HEAD:** updated by this commit (run `git log -1` after the close-out commit lands for the precise SHA; the commit immediately BEFORE this close-out was `e13ad9a` — the V12x-17 follow-on refresh).
 - **Pre-render tag:** `pre-calibration-rerender` preserved at `e6b0a3b` (Phase 5 rollback anchor).
 - **Tree:** clean (before this commit).
 
