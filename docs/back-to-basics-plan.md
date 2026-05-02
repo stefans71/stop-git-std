@@ -60,6 +60,16 @@ CLAUDE.md wizard:
 
 ### Post-rebuild follow-up backlog (NONE BLOCKING)
 
+#### Next-session doc cleanup (queued from 2026-05-02 cold-start audit)
+
+| # | Item | Scope | Notes |
+|---|---|---|---|
+| **#3** | Operator Guide §6 V2.5-preview pipeline-selection prelude | ~30 lines | Add §6.0 branch: V2.5-preview default → `python3 docs/phase_1_harness.py <owner/repo> --out form.json` then skip to §7. V2.4 legacy → continue with existing §6.1 ordering discipline. Cold-start audit found §6 still leads with V2.4 hand-gathering even though Q3a default is V2.5-preview. Low risk; additive. |
+| **#4** | Operator Guide §7 V2.5-preview authoring template cross-link | ~15 lines | Add §7.5 cross-linking `docs/scan-authoring-template/README.md` (per-scan workflow), `tests/fixtures/zustand-form.json` (populated reference), `docs/scan-schema.json` V1.2 (field requirements), `compute_scorecard_cells_v2()` in `docs/compute.py`. §7 currently describes V2.4 findings-bundle.md format only — V2.5-preview operators have no walkthrough for how to fill `phase_3_advisory` + `phase_4_structured_llm` + `phase_5_prose_llm` in form.json. Low risk; additive. |
+| **#6** | `docs/v12-wild-scan-telemetry.md` n=12 re-derivation | ~80 lines analytical work | §1 scan roster is at n=12 (skills entry 27 added) but §2 override-enum distribution + §3 cell distribution + §4 Q1/Q3 firing patterns + §9 V13-1 follow-up all still claim n=11 conclusions. §10 changelog explicitly flags that entry 27's `missing_qualitative_context` fire **invalidates §9's claim** "V13-1 taxonomy remains stable / catchall hasn't fired post-V13-1 relabel" — but the §9 text itself still asserts the old conclusion. Re-derivation requires re-reading 12 bundles + comparator-calibration judgment; deserves a clean session, not late-budget pressure. May surface new V13-3 follow-up triggers. (Header §11 reference stripped 2026-05-02 commit; analytical re-derivation deferred.) |
+
+#### Long-running follow-ups (no specific session queue; pick when triggered)
+
 | Item | Trigger to start | Notes |
 |---|---|---|
 | **V2.4-bundle → form.json adapter** | Owner asks for Simple Reports on legacy entries 1-11 | Adapter must invent or hand-author the LLM-synthesized fields V2.4 doesn't emit (editorial_caption, scorecard short_answer, finding what_this_means, action_hint). Highest-payoff follow-up if reach matters. |
@@ -68,6 +78,7 @@ CLAUDE.md wizard:
 | **Full-sentence scorecard short_answers** | Owner request, or repeated UX feedback that fragmentary `Partly — X` pairs read awkwardly | Re-author across 12 V1.2 bundles. Cosmetic polish. |
 | **Wizard option D Simple Report explicit** | If we ever want a "Simple-only" output mode (no long-form MD) | Currently option C MD-only is the cheapest path; D would be a `--no-md --simple-only` flag. Not pressing. |
 | **Visual polish + theming** | User feedback on Simple Reports | Light theme, print stylesheet, embeddable badge — all deferred design questions in concept doc §10. |
+| **`github-scan-package-V2/` refresh to V2.5+Phase-7** | OSS distribution is wanted | Stuck at 2026-04-17 V2.4 functionality. Missing render-md/simple/html.py, templates, schema V1.2, compute.py, harness, tests, simple-report-concept.md. Cold-start audit 2026-05-02 flagged. |
 
 ### Where to find detail
 - `docs/back-to-basics-plan.md` Phases 0-7 below — historical phase specs (read only if reconstructing what each phase was meant to deliver).

@@ -1,7 +1,7 @@
 # V1.2 Wild-Scan Telemetry — Cross-Scan Analysis
 
 **Scope:** Catalog entries 16–27 (12 V1.2-schema wild scans).
-**Date:** 2026-04-30 (entry 27 added in session 8; cross-scan tables below not yet re-derived for n=12 — they reflect the n=11 V13-3 trigger window. See §11 for entry-27-only deltas).
+**Date:** 2026-04-30 (entry 27 added in session 8; cross-scan tables below not yet re-derived for n=12 — they reflect the n=11 V13-3 trigger window. Entry-27-only deltas are captured in §10 Changelog until the n=12 re-derivation lands; see `docs/back-to-basics-plan.md` §Current state follow-up backlog item #6).
 **Status:** Living document — **V13-3 COMPARATOR-CALIBRATION TRIGGER FIRED at n=11** (entry 26 Baileys closed the counting window; the follow-up analysis is owed per CONSOLIDATION §8 deferred ledger). Re-trigger threshold for V13-3 follow-up is broadened cadence: N=25 V1.2 scans OR any of 6 taxonomy-strain events (currently 12/25; one taxonomy-strain candidate fires at entry 27 — first `missing_qualitative_context` use across all 12).
 **Related:** [V13-1 override-telemetry analysis](v13-1-override-telemetry-analysis.md) (covered the first 3 scans and drove the V1.2.x signal widening).
 
