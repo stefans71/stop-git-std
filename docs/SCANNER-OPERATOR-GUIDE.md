@@ -351,22 +351,26 @@ The guide previously described Path A (continuous) and Path B (delegated) in ter
 
 `context.md → brief (role-specific for Path B; operator's self-direction for Path A) → DRAFT/guide → V2.4 prompt → findings-bundle → template + reference scans`
 
-**Render order.** MD-first (Phase 4a) → HTML-from-MD (Phase 4b). Never render HTML first.
+**Render order.**
+- **V2.5-preview (default):** all three Phase 4 renderers (4a `render-md.py`, 4b `render-simple.py`, 4c `render-html.py` if produced) consume the same `form.json` and run independently — no cross-renderer ordering required. Run 4a + 4b at minimum (REQUIRED); add 4c if an auditor view is wanted.
+- **V2.4 (legacy):** MD-first (Phase 4a) → HTML-from-MD (Phase 4b). Never render HTML first.
 
-**Validation order.** MD validator pass → HTML validator pass. Iterate until both exit 0.
+**Validation order.**
+- **V2.5-preview:** validate long-form MD (Phase 4a, REQUIRED) + Simple Report HTML (Phase 4b, REQUIRED) + long-form HTML (Phase 4c, if produced). Iterate until all produced outputs exit 0 on `--report`.
+- **V2.4:** MD validator pass → HTML validator pass. Iterate until both exit 0.
 
 **Context-fallback rule.** If the operator's runtime context is smaller than the combined inputs:
 1. Elide the reference scan with the weakest shape match first.
 2. Trim the validator docs to command-examples only.
-3. As last resort, split the render into two calls — Phase 4a in call 1, Phase 4b in call 2 — passing the MD between them.
+3. **V2.4 only — last resort:** split the render into two calls — Phase 4a in call 1, Phase 4b in call 2 — passing the MD between them. (V2.5-preview renderers don't need this; each reads `form.json` directly.)
 
 ### 8.4 What the rendered output must contain
 
 The rendered output's required structural elements are specified by the V2.4 prompt (`repo-deep-dive-prompt.md` output-format section, lines ~1106–1490 — §"What Should I Do?", §"What We Found", §"Executable File Inventory", etc.). That spec is the **canonical output contract**.
 
 This contract can be realized via two rendering pipelines (see §8.1 / §8.8):
-- **Workflow V2.4 (the path exercised by all 10 catalog entries):** the LLM authors the MD + HTML directly from the findings-bundle, following the prompt's output-format section as a template.
-- **Workflow V2.5-preview (experimental, Step G validation in progress):** the LLM authors a `form.json` conforming to `docs/scan-schema.json` V1.1; the deterministic renderers `docs/render-md.py` + `docs/render-html.py` (with Jinja2 partials at `docs/templates/` + `docs/templates-html/`) produce the MD + HTML from the form.
+- **Workflow V2.4 (legacy — catalog entries 1-11):** the LLM authors the long-form MD + long-form HTML directly from the findings-bundle, following the prompt's output-format section as a template. Does not produce a `form.json` and therefore cannot drive `render-simple.py`.
+- **Workflow V2.5-preview (default, production-cleared 2026-04-20 — catalog entries 12-27):** the LLM authors a `form.json` conforming to `docs/scan-schema.json` V1.2; three deterministic renderers consume the same form: `docs/render-md.py` (long-form MD, Phase 4a, REQUIRED), `docs/render-simple.py` (Simple Report HTML + MD, Phase 4b, REQUIRED, user-facing), `docs/render-html.py` (long-form HTML, Phase 4c, OPTIONAL auditor view). Templates: `docs/templates/` (long-form MD partials) + `docs/templates-html/` (long-form HTML partials) + `docs/templates-simple/` (Simple Report templates + 251-line CSS subset).
 
 Both pipelines must produce output conforming to the prompt's output-format spec. The schema + renderers are an implementation of that spec, not a second competing spec. This guide does not duplicate the spec itself.
 
