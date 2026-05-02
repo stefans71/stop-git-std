@@ -21,16 +21,18 @@ When the user says "continue" — start at the **next concrete action** under §
 
 ## § Current state — PLAN COMPLETE (back-to-basics calibration rebuild closed 2026-05-01)
 
-**Last updated:** 2026-05-02T14:12:06Z
+**Last updated:** 2026-05-02T22:07:05Z
 
-**Status:** **PLAN COMPLETE.** All 8 phases of the back-to-basics calibration rebuild (0 through 7) landed on `origin/main`. All 5 session-14 queued items landed (doc cleanup #3 + #4 + #6, scan-coverage one-liner, agentic-platform classifier). 28 catalog entries; 13 V1.2 wild scans; 652/652 tests passing.
+**Status:** **PLAN COMPLETE.** All 8 phases of the back-to-basics calibration rebuild (0 through 7) landed on `origin/main`. **29 catalog entries; 14 V1.2 wild scans; 652/652 tests passing.** Latest entry: pbakaus/impeccable @ `444e4ac` (session 15) — multi-harness agent-skills + npm CLI + Chrome extension; Caution; first scan with two `missing_qualitative_context` overrides in a single form (Q2 + Q4).
 
-**Next-session action — run a wild scan.** Pick a repo, say "scan `<owner/repo>`", follow the wizard. The pipeline is end-to-end validated (multica entry 28 was the smoke test on session 13; calibration v2 + Simple Report + classifier Step 7.5 all exercised cleanly). Wizard defaults: Q1 = long-form MD + Simple Report HTML; Q3a = V2.5-preview. After the scan completes, present the post-scan options (CLAUDE.md "After the scan completes" section).
+**Next-session action — run a wild scan or pick a follow-up.** Pick a repo, say "scan `<owner/repo>`", follow the wizard. Wizard defaults: Q1 = long-form MD + Simple Report HTML; Q3a = V2.5-preview. The pipeline is end-to-end validated (multica entry 28 + impeccable entry 29 both exercised cleanly). After the scan completes, present the post-scan options (CLAUDE.md "After the scan completes" section).
 
-**Taxonomy-strain watch (read before next scan):** V13-3 broadened cadence at **13/25** toward N=25 trigger; **2/6 taxonomy-strain events fired** (skills entry 27 + multica entry 28 — both `missing_qualitative_context` Q2). **If a third `missing_qualitative_context` fire arrives with a new semantic driver** (i.e. distinct from sample-floor degeneracy + closed-within-window counter-signal), **escalate to board review immediately** rather than wait for N=25 — the catchall is then genuinely unbounded, not just under-split.
+**Taxonomy-strain watch (read before next scan):** V13-3 broadened cadence at **14/25** toward N=25 trigger; **3/6 taxonomy-strain events fired** (skills entry 27 + multica entry 28 + impeccable entry 29 — all `missing_qualitative_context` Q2). **The 3rd fire (impeccable) carries the SAME close-rate counter-signal driver as multica — NOT a new-driver escalation.** Driver tally: sample-floor degeneracy × 1 (skills); close-rate counter-signal × 2 (multica + impeccable). **If a fourth `missing_qualitative_context` fire arrives with a genuinely third-distinct semantic driver**, escalate to board review immediately rather than wait for N=25 — the catchall is then genuinely unbounded, not just under-split.
+
+**Shape-classifier strain noted (NEW):** impeccable (entry 29) misclassified as `library-package` — real shape is multi-harness agent-skills-collection (468 skill files across 13 harness directories). Same Step 2 too-strict gate that affects skills entry 27 (caught only by the secondary Markdown-canonical branch because skills is markdown-primary; impeccable's primary_language is JavaScript so neither branch fires). New backlog item V12x-18 captures the fix.
 
 ### HEAD + branch
-- **HEAD:** updated by this commit (run `git log -1` after the close-out commit lands for the precise SHA; the commit immediately BEFORE this close-out was `e13ad9a` — the V12x-17 follow-on refresh).
+- **HEAD:** updated by this commit (run `git log -1` after the close-out commit lands for the precise SHA; the commit immediately BEFORE this close-out was `71c1d6e` — the session-14 close-out).
 - **Pre-render tag:** `pre-calibration-rerender` preserved at `e6b0a3b` (Phase 5 rollback anchor).
 - **Tree:** clean (before this commit).
 
@@ -50,8 +52,9 @@ When the user says "continue" — start at the **next concrete action** under §
 | **Session 14 — doc cleanup #3 + #4 + #6** | Operator Guide §6.0 pipeline-selection prelude + §7.5 V2.5-preview authoring cross-link landed. Telemetry §2-§9 re-derived for n=13 (signal_vocabulary_gap modal share dropped 67%→55% as `missing_qualitative_context` fired twice; §5.2 silent-fix corrected 11/11→12/13; V13-3 deferred Item C9 contraindicated). | Commit `52c2b78`; telemetry §10 changelog n=13 entry |
 | **Session 14 — scan-coverage one-liner** | `docs/render-simple.py` `derive_coverage_oneliner()` helper + Simple Report `.hero-coverage` line gated by canonical-format parser; 12 new tests; multica's Simple Report re-rendered to show the live line. | Commit `8dfadea` |
 | **Session 14 — agentic-platform classifier (V12x-17)** | `classify_shape()` Step 7.5 branch lands the first detection rule for `agentic-platform`. Multica reclassified `library-package` → `agentic-platform` (high confidence); 12 other V1.2 bundles unchanged. 31 new tests in `tests/test_classify_shape.py`. Bundle `phase_3_advisory.shape_classification` refreshed. | Commits `f90e508` + merge `c1ae04d` |
+| **Session 15 — pbakaus/impeccable wild scan (entry 29)** | 14th V1.2 wild scan. Multi-harness agent-skills (468 skill files × 13 harness directories) + npm CLI + Chrome extension. Verdict Caution. **First scan with two `missing_qualitative_context` overrides in a single form** (Q2 close-rate counter-signal — same driver as multica; Q4 channel-count denominator misleading — 23/24 channels are test fixtures). Open #92 build-time RCE in build scripts via `new Function()`; 3-hop install supply chain via vercel-labs/skills. **Shape misclassified `library-package`** (real shape is agent-skills-collection — Step 2 too-strict gate; backlog item V12x-18 added). | Commit TBD (this checkpoint); bundle `docs/scan-bundles/impeccable-444e4ac.json`; `AUDIT_TRAIL.md` session 15 |
 
-**Tests:** 652/652 passing. **Catalog:** 28 entries; entries 16-28 have Simple Reports (13 of 28); entries 1-15 do not (V2.4-bundle adapter is a follow-up).
+**Tests:** 652/652 passing. **Catalog:** 29 entries; entries 16-29 have Simple Reports (14 of 29); entries 1-15 do not (V2.4-bundle adapter is a follow-up).
 
 ### Workflow contract (durable, post-rebuild)
 
@@ -95,6 +98,7 @@ CLAUDE.md wizard:
 | **Wizard option D Simple Report explicit** | If we ever want a "Simple-only" output mode (no long-form MD) | Currently option C MD-only is the cheapest path; D would be a `--no-md --simple-only` flag. Not pressing. |
 | **Visual polish + theming** | User feedback on Simple Reports | Light theme, print stylesheet, embeddable badge — all deferred design questions in concept doc §10. |
 | **`github-scan-package-V2/` refresh to V2.5+Phase-7** | OSS distribution is wanted | Stuck at 2026-04-17 V2.4 functionality. Missing render-md/simple/html.py, templates, schema V1.2, compute.py, harness, tests, simple-report-concept.md. Cold-start audit 2026-05-02 flagged. |
+| **V12x-18 — Step 2 agent-skills-collection heuristic too strict — manifest_files==0 rejects repos that ship skills + a CLI helper.** | When the next multi-harness skills + CLI repo appears (or when V12x-18 is prioritized as part of a calibration tightening pass) | Impeccable (entry 29) + skills (entry 27) both affected. Need a signal-ratio check: **if skill_files >> manifest_files, classify as agent-skills-collection regardless of npm manifest presence.** Specifically: if recursive-enumerated `<harness>/skills/**/*.md` file count exceeds publishable-manifest count by ≥10×, override Step 8's library-package match to agent-skills-collection. **Depends on F5 harness-recursion patch landing first** — without recursive enumeration of `<harness>/skills/`, the ratio cannot be computed. Tracked in telemetry §8 V12x-18. |
 
 ### Where to find detail
 - `docs/back-to-basics-plan.md` Phases 0-7 below — historical phase specs (read only if reconstructing what each phase was meant to deliver).

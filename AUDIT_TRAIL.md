@@ -17,6 +17,39 @@ Canonical log of milestone commits with the verification state captured at commi
 
 ---
 
+## Checkpoint — 2026-05-02 (session 15) — pbakaus/impeccable wild scan (catalog entry 29)
+
+**HEAD:** TBD (filled by post-commit). Tree clean before commit; `docs/scan-bundles/impeccable-444e4ac.json` + 3 rendered outputs in `docs/scans/catalog/` + scanner-catalog.md row 29 + v12-wild-scan-telemetry.md §1 entry 29 + §10 changelog entry + V12x-18 backlog row queued.
+
+**Scan target:** pbakaus/impeccable @ HEAD `444e4acad38a00ec4b837ce57e9b4ef561297450` (pushed 2026-05-02T19:01:43Z). **First scan of pbakaus/impeccable.** 14th wild V1.2-schema scan; second multi-harness skills entry after mattpocock/skills (entry 27); first scan that pairs a skills collection with a published npm CLI.
+
+**Scope:** continuous mode; long-form MD + Simple Report HTML + Simple Report MD (V2.5-preview pipeline; agent-skills-collection shape per user wizard pick at Q3, though `classify_shape()` returned `library-package` — see V12x-18 backlog item).
+
+**Form / outputs:**
+- `docs/scan-bundles/impeccable-444e4ac.json` — V1.2 form.json (14th V1.2 wild scan bundle); 6 findings (4 Warning + 2 Info), 12 evidence entries, verdict Caution. **Two Q-cell overrides** (first scan with two `missing_qualitative_context` fires): Q2 close-rate counter-signal + Q4 channel-count denominator misleading.
+- `docs/scans/catalog/GitHub-Scanner-impeccable.md` — long-form MD (Phase 4a, canonical, 474 lines; --markdown clean)
+- `docs/scans/catalog/GitHub-Scanner-impeccable-simple.html` — Simple Report HTML (Phase 4b, user-facing, 364 lines; --report clean: zero unclosed tags, zero XSS, zero placeholders)
+- `docs/scans/catalog/GitHub-Scanner-impeccable-simple.md` — Simple Report MD (Phase 4b, user-facing, 34 lines)
+
+**Verification at commit time:**
+- `python3 docs/validate-scanner-report.py --form docs/scan-bundles/impeccable-444e4ac.json` → CLEAN (V1.2 schema + gate 6.3 override-explained: 2 overrides all explained)
+- `python3 docs/validate-scanner-report.py --markdown docs/scans/catalog/GitHub-Scanner-impeccable.md` → CLEAN
+- `python3 docs/validate-scanner-report.py --report docs/scans/catalog/GitHub-Scanner-impeccable-simple.html` → CLEAN (all tags balanced)
+- `python3 -m pytest tests/ -q` → 652/652 passing
+
+**Notable observations:**
+- **Shape misclassification (NEW; same Step 2 too-strict gate as skills entry 27).** classify_shape() returned `library-package` (medium confidence, RULE-publishable-manifest). The dominant shape signal is multi-harness agent-skills collection (468 skill files across 13 harness directories vs single npm CLI). Step 2 agent-skills-collection branch was rejected by `manifest_files == 0` AND `executable_files == 0` AND `releases_count == 0` AND `primary_lang in {shell, markdown, ""}` — too strict. New V12x-18 backlog item: signal-ratio check (if `<harness>/skills/**/*.md` count exceeds publishable-manifest count by ≥10×, override Step 8's library-package match).
+- **3rd `missing_qualitative_context` Q2 fire** (skills + multica + impeccable) but **same close-rate driver as multica** — NOT a new-driver escalation under §9 watch language. Driver tally now: sample-floor degeneracy × 1; close-rate counter-signal × 2.
+- **First scan with TWO `missing_qualitative_context` overrides** in a single form (Q2 + Q4). Q4 fires on a denominator-misleading edge case (23 of 24 detected npm channels are test fixtures under `tests/framework-fixtures/`).
+- **Open #92 build-time RCE** (`new Function()` in 3 build scripts) sitting 22 days with authored fix-PR — affects contributors only (`scripts/` excluded from npm `files` whitelist), not consumers.
+- **Three-hop install supply chain** for skills: `npx impeccable skills install` → `npx skills add pbakaus/impeccable` → vercel-labs/skills npm CLI → GitHub. Alternative `skills update` fetches `impeccable.style/api/download/bundle/universal` over HTTPS with no signature verification.
+- **24,298 stars on a 5.5-month-old repo** — explosive growth; solo maintainer (96.9% pbakaus); 19/49 self-merges (38.8%); Tessl + Copilot CI present but not gating.
+- **14/14 V1.2 wild scans with 0 published GHSA** — silent-fix pattern catalog-wide.
+
+**Revert:** `git reset --hard <pre-commit-sha>` — drops the 5 catalog files (form bundle + 3 rendered + scanner-catalog row + telemetry §6/§9/§10 + AUDIT_TRAIL).
+
+---
+
 ## Checkpoint — 2026-05-02 (session 13) — First post-rebuild scan: multica re-scan (catalog entry 28)
 
 **HEAD:** TBD (filled by post-commit). Tree clean before commit; `docs/scan-bundles/multica-3df95c8.json` + 3 rendered outputs in `docs/scans/catalog/` + scanner-catalog.md row 28 + v12-wild-scan-telemetry.md §1 entry 28 + §10 changelog entry queued.
