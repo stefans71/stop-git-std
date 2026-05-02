@@ -29,7 +29,7 @@
     },
     "repo_metadata": {
       "name": "multica",
-      "description": "The open-source managed agents platform. Turn coding agents into real teammates \u2014 assign tasks, track progress, compound skills.",
+      "description": "The open-source managed agents platform. Turn coding agents into real teammates — assign tasks, track progress, compound skills.",
       "created_at": "2026-01-13T17:59:46Z",
       "pushed_at": "2026-05-01T21:27:22Z",
       "stargazer_count": 23547,
@@ -821,7 +821,7 @@
               "file": "src/apps/desktop/src/main/index.ts",
               "first_match": {
                 "line": 21,
-                "snippet": "// before any child_process.spawn / execFile call in the main process \u2014"
+                "snippet": "// before any child_process.spawn / execFile call in the main process —"
               }
             },
             {
@@ -872,14 +872,14 @@
               "file": "README.zh-CN.md",
               "first_match": {
                 "line": 56,
-                "snippet": "- **\u81ea\u4e3b\u6267\u884c** \u2014 \u8bbe\u7f6e\u540e\u65e0\u9700\u7ba1\u7406\u3002\u5b8c\u6574\u7684\u4efb\u52a1\u751f\u547d\u5468\u671f\u7ba1\u7406\uff08\u6392\u961f\u3001\u8ba4\u9886\u3001\u6267\u884c\u3001\u5b8c\u6210/\u5931\u8d25\uff09\uff0c\u901a\u8fc7 WebSocket \u5b9e\u65f6\u63a8\u9001\u8fdb\u5ea6\u3002"
+                "snippet": "- **自主执行** — 设置后无需管理。完整的任务生命周期管理（排队、认领、执行、完成/失败），通过 WebSocket 实时推送进度。"
               }
             },
             {
               "file": "README.md",
               "first_match": {
                 "line": 56,
-                "snippet": "- **Autonomous Execution** \u2014 set it and forget it. Full task lifecycle management (enqueue, claim, start, complete/fail)"
+                "snippet": "- **Autonomous Execution** — set it and forget it. Full task lifecycle management (enqueue, claim, start, complete/fail)"
               }
             },
             {
@@ -900,7 +900,7 @@
               "file": "SELF_HOSTING_ADVANCED.md",
               "first_match": {
                 "line": 93,
-                "snippet": "| `MULTICA_SERVER_URL` | `ws://localhost:8080/ws` | WebSocket URL for daemon \u2192 server connection |"
+                "snippet": "| `MULTICA_SERVER_URL` | `ws://localhost:8080/ws` | WebSocket URL for daemon → server connection |"
               }
             },
             {
@@ -977,21 +977,21 @@
               "file": "docs/product-overview.md",
               "first_match": {
                 "line": 481,
-                "snippet": "- **\u6d41\u5f0f\u54cd\u5e94**\uff1a\u901a\u8fc7 WebSocket \u5b9e\u65f6\u63a8\u9001"
+                "snippet": "- **流式响应**：通过 WebSocket 实时推送"
               }
             },
             {
               "file": "docs/docs-rewrite-plan.md",
               "first_match": {
                 "line": 95,
-                "snippet": "| 17 | **Realtime & Events** | WebSocket hub + room model + \u4e8b\u4ef6\u76ee\u5f55 | **40+ event types**\uff08\u6309\u547d\u540d\u7a7a\u95f4\u5206\uff1aissue:* / task:* / inbox:*"
+                "snippet": "| 17 | **Realtime & Events** | WebSocket hub + room model + 事件目录 | **40+ event types**（按命名空间分：issue:* / task:* / inbox:*"
               }
             },
             {
               "file": "docs/docs-outline.md",
               "first_match": {
                 "line": 684,
-                "snippet": "  - WebSocket event \u6e05\u5355\uff08v2 Realtime \u9875\uff09"
+                "snippet": "  - WebSocket event 清单（v2 Realtime 页）"
               }
             },
             {
@@ -4575,7 +4575,7 @@
         },
         {
           "number": 1954,
-          "title": "feat(channels): Phase 1 \u2014 multi-participant chat alongside the issue board (RFC #1920)",
+          "title": "feat(channels): Phase 1 — multi-participant chat alongside the issue board (RFC #1920)",
           "author": "prellr",
           "created_at": "2026-04-30T13:20:55Z"
         },
@@ -4665,13 +4665,13 @@
         },
         {
           "number": 1853,
-          "title": "feat(i18n): rollout \u2014 9/19 namespaces translated [WIP]",
+          "title": "feat(i18n): rollout — 9/19 namespaces translated [WIP]",
           "author": "NevilleQingNY",
           "created_at": "2026-04-29T09:31:19Z"
         },
         {
           "number": 1817,
-          "title": "feat(github): GitHub App integration for PR \u2194 issue linking",
+          "title": "feat(github): GitHub App integration for PR ↔ issue linking",
           "author": "Bohan-J",
           "created_at": "2026-04-29T06:11:52Z"
         },
@@ -4761,7 +4761,7 @@
         },
         {
           "number": 1714,
-          "title": "feat(chat): message interactions \u2014 floating timeline, scroll-to-bottom, and auto-scroll fixes",
+          "title": "feat(chat): message interactions — floating timeline, scroll-to-bottom, and auto-scroll fixes",
           "author": "SmallNew2003",
           "created_at": "2026-04-26T12:42:37Z"
         },
@@ -5127,7 +5127,7 @@
         },
         {
           "number": 1221,
-          "title": "feat(agent): per-agent MCP config \u2014 backend + UI",
+          "title": "feat(agent): per-agent MCP config — backend + UI",
           "author": "eliecer2000",
           "created_at": "2026-04-16T18:48:59Z"
         },
@@ -5409,7 +5409,7 @@
         },
         {
           "number": 756,
-          "title": "feat: scheduled tasks \u2014 cron-driven issue creation with UI",
+          "title": "feat: scheduled tasks — cron-driven issue creation with UI",
           "author": "sanjay3290",
           "created_at": "2026-04-12T04:34:15Z"
         },
@@ -5535,7 +5535,7 @@
         },
         {
           "number": 470,
-          "title": "feat(agentflow): add Agentflow MVP \u2014 scheduled agent tasks",
+          "title": "feat(agentflow): add Agentflow MVP — scheduled agent tasks",
           "author": "multica-eve",
           "created_at": "2026-04-07T10:05:26Z"
         },
@@ -5589,7 +5589,7 @@
         },
         {
           "number": 403,
-          "title": "feat(agent): implement Stage 4 \u2014 Direct Agent Integration",
+          "title": "feat(agent): implement Stage 4 — Direct Agent Integration",
           "author": "wali-reheman",
           "created_at": "2026-04-04T02:40:27Z"
         },
@@ -5709,7 +5709,7 @@
         },
         {
           "number": 1815,
-          "title": "feat(repos): Step 2 \u2014 project-scope repo binding + CLI + project settings UI",
+          "title": "feat(repos): Step 2 — project-scope repo binding + CLI + project settings UI",
           "closed_at": "2026-04-29T03:46:36Z"
         },
         {
@@ -5719,7 +5719,7 @@
         },
         {
           "number": 1808,
-          "title": "feat(agent): prompt stratification \u2014 shrink mandatory inline contract (BRI-59/60/64)",
+          "title": "feat(agent): prompt stratification — shrink mandatory inline contract (BRI-59/60/64)",
           "closed_at": "2026-04-28T23:33:46Z"
         },
         {
@@ -5744,7 +5744,7 @@
         },
         {
           "number": 1764,
-          "title": "docs: ADR 0001 \u2014 cross-workspace meta view",
+          "title": "docs: ADR 0001 — cross-workspace meta view",
           "closed_at": "2026-04-28T02:49:07Z"
         },
         {
@@ -5799,7 +5799,7 @@
         },
         {
           "number": 1683,
-          "title": "0426\u540c\u6b65\u793e\u533a\u5206\u652f",
+          "title": "0426同步社区分支",
           "closed_at": "2026-04-25T16:40:33Z"
         },
         {
@@ -6034,7 +6034,7 @@
         },
         {
           "number": 1190,
-          "title": "feat(agent): I3 \u2014 cancel task with sandbox stop and UI polish",
+          "title": "feat(agent): I3 — cancel task with sandbox stop and UI polish",
           "closed_at": "2026-04-16T13:26:15Z"
         },
         {
@@ -6099,7 +6099,7 @@
         },
         {
           "number": 1060,
-          "title": "fix(selfhost): remove hardcoded port defaults and prevent HTTP\u2192HTTPS redirect",
+          "title": "fix(selfhost): remove hardcoded port defaults and prevent HTTP→HTTPS redirect",
           "closed_at": "2026-04-15T06:39:14Z"
         },
         {
@@ -6175,11 +6175,11 @@
           "labels": [],
           "number": 1663,
           "state": "open",
-          "title": "[Security] v0.2.16: /auth/verify-code lacks brute-force protection \u2014 no lockout or backoff"
+          "title": "[Security] v0.2.16: /auth/verify-code lacks brute-force protection — no lockout or backoff"
         },
         {
           "author": "shaun0927",
-          "body_snippet": "### Deployment type\n\nSelf-hosted\n\n### What happened?\n\n`isBlockedEnvKey` in `server/internal/daemon/daemon.go` (v0.2.0, lines 1380\u20131388) only rejects `HOME`, `PATH`, `USER`, `SHELL`, `TERM`, `CODEX_HOME`, and anything prefixed with `MULTICA_`. Several well-known variables that lead to code execution ",
+          "body_snippet": "### Deployment type\n\nSelf-hosted\n\n### What happened?\n\n`isBlockedEnvKey` in `server/internal/daemon/daemon.go` (v0.2.0, lines 1380–1388) only rejects `HOME`, `PATH`, `USER`, `SHELL`, `TERM`, `CODEX_HOME`, and anything prefixed with `MULTICA_`. Several well-known variables that lead to code execution ",
           "created_at": "2026-04-16T01:25:26Z",
           "labels": [],
           "number": 1114,
@@ -6193,7 +6193,7 @@
           "labels": [],
           "number": 1667,
           "state": "open",
-          "title": "[Security] v0.2.16: Origin header not validated on state-changing requests \u2014 CSRF defense-in-depth gap"
+          "title": "[Security] v0.2.16: Origin header not validated on state-changing requests — CSRF defense-in-depth gap"
         }
       ],
       "open_issues_count": 219,
@@ -6220,13 +6220,13 @@
           "author": "FullStackPlayer",
           "closed_at": "2026-04-23T11:18:16Z",
           "number": 1331,
-          "title": "[Bug]: \u6bcf\u6b21\u7248\u672c\u5347\u7ea7\u90fd\u4f1a\u5728 selfhost \u8fd9\u91cc\u51fa\u95ee\u9898\uff0c\u54ce"
+          "title": "[Bug]: 每次版本升级都会在 selfhost 这里出问题，哎"
         },
         {
           "author": "songjiayang",
           "closed_at": "2026-04-14T09:18:32Z",
           "number": 694,
-          "title": "\u5e0c\u671b agent \u589e\u52a0 model \u914d\u7f6e\u53c2\u6570"
+          "title": "希望 agent 增加 model 配置参数"
         },
         {
           "author": "seepine",
@@ -6670,7 +6670,7 @@
         {
           "author": "NevilleQingNY",
           "date": "2026-04-29T10:29:46Z",
-          "message_first_line": "feat(chat): presence v4 \u2014 status pill, failure bubble, elapsed timing (#1856)",
+          "message_first_line": "feat(chat): presence v4 — status pill, failure bubble, elapsed timing (#1856)",
           "sha": "4ad0a0b",
           "security_keyword_match": false
         },
@@ -6880,7 +6880,7 @@
         {
           "author": "NevilleQingNY",
           "date": "2026-04-28T10:31:33Z",
-          "message_first_line": "revert(chat): Chat V2 \u2014 restore right-bottom floating drawer (#1580) (#1792)",
+          "message_first_line": "revert(chat): Chat V2 — restore right-bottom floating drawer (#1580) (#1792)",
           "sha": "01855f6",
           "security_keyword_match": false
         },
@@ -6950,7 +6950,7 @@
         {
           "author": "Bohan-J",
           "date": "2026-04-28T08:29:42Z",
-          "message_first_line": "Revert \"feat(issues): server-side filters incl. label, fixing pagination drop\u2026\" (#1779)",
+          "message_first_line": "Revert \"feat(issues): server-side filters incl. label, fixing pagination drop…\" (#1779)",
           "sha": "abd6989",
           "security_keyword_match": false
         },
@@ -7491,12 +7491,12 @@
       }
     },
     "shape_classification": {
-      "category": "library-package",
+      "category": "agentic-platform",
       "is_reverse_engineered": false,
       "is_privileged_tool": false,
       "is_solo_maintained": false,
-      "confidence": "medium",
-      "matched_rule": "publishable manifest, library-canonical shape"
+      "confidence": "high",
+      "matched_rule": "cross-language monorepo (npm + non-npm) + backend manifest under server/ + publishable npm"
     }
   },
   "phase_3_computed": {
@@ -7597,7 +7597,7 @@
           "threat_model_paths": [
             "other"
           ],
-          "threat_model_context": "The `MULTICA_DEV_VERIFICATION_CODE` environment variable, when set to a six-digit value (the docs use `888888` as the example), allows anyone who can request a verification code to log in as the requested email. The bypass is gated by `APP_ENV=production`: server/cmd/server/main.go:128 logs a warning and skips activation when production; auth.go:97-108 isDevVerificationCode() short-circuits to false in production. docker-compose.selfhost.yml pins `APP_ENV: ${APP_ENV:-production}` by default, so the out-of-the-box self-host posture is safe. The risk is operator error: an admin who sets APP_ENV to 'staging' or 'dev' (commonly done when running a private test instance) AND has MULTICA_DEV_VERIFICATION_CODE set, runs an instance where 888888 logs in as anyone. The 2026-04-19 prior scan flagged this as Critical at HEAD b8907dd; the APP_ENV gate has been added since (closed issue #1304 documents the fix). The current posture is Warning \u2014 defended by default, but the defense is one config flip away from being absent.",
+          "threat_model_context": "The `MULTICA_DEV_VERIFICATION_CODE` environment variable, when set to a six-digit value (the docs use `888888` as the example), allows anyone who can request a verification code to log in as the requested email. The bypass is gated by `APP_ENV=production`: server/cmd/server/main.go:128 logs a warning and skips activation when production; auth.go:97-108 isDevVerificationCode() short-circuits to false in production. docker-compose.selfhost.yml pins `APP_ENV: ${APP_ENV:-production}` by default, so the out-of-the-box self-host posture is safe. The risk is operator error: an admin who sets APP_ENV to 'staging' or 'dev' (commonly done when running a private test instance) AND has MULTICA_DEV_VERIFICATION_CODE set, runs an instance where 888888 logs in as anyone. The 2026-04-19 prior scan flagged this as Critical at HEAD b8907dd; the APP_ENV gate has been added since (closed issue #1304 documents the fix). The current posture is Warning — defended by default, but the defense is one config flip away from being absent.",
           "what_this_means": "Out-of-the-box Docker self-host is hardened. The 888888 master-code path only opens up if an operator deliberately turns off APP_ENV=production AND populates the dev code variable.",
           "what_this_does_not_mean": "Not the same finding the prior 2026-04-19 scan flagged as Critical. That scan caught the bypass before APP_ENV gating was in place. Current code requires explicit double-mistake (non-production env + dev code populated) to expose the bypass.",
           "duration_label": "Continuous",
@@ -7613,7 +7613,7 @@
           "kind": "Distribution",
           "rule_id": "F1",
           "title": "curl-pipe-from-main installer with no checksum verification on macOS/Linux (Windows installer DOES verify)",
-          "action_hint": "Prefer the Homebrew install path (`brew install multica-ai/tap/multica`) \u2014 formula-pinned and checksum-verified. If you must use the curl|bash path, download the script first and read it before piping to bash.",
+          "action_hint": "Prefer the Homebrew install path (`brew install multica-ai/tap/multica`) — formula-pinned and checksum-verified. If you must use the curl|bash path, download the script first and read it before piping to bash.",
           "evidence_refs": [
             "E6",
             "E7"
@@ -7623,8 +7623,8 @@
             "stale_token",
             "other"
           ],
-          "threat_model_context": "Two install paths in the README run shell from the network: `curl -fsSL .../main/scripts/install.sh | bash` and `irm .../main/scripts/install.ps1 | iex`. Both fetch from the `main` branch (no SHA or tag pin). Compromise paths: (a) any push to main that touches scripts/install.sh ships immediately to every new installer; (b) the install.sh binary-download step (lines 83-130) does NOT verify a SHA256 checksum \u2014 it scrapes the redirect on `releases/latest` to learn the tag, downloads the binary from `releases/download/<tag>/...`, and `mv`s it to /usr/local/bin without integrity check. install.ps1 by contrast (lines 195-213) downloads `checksums.txt` from the release and validates SHA256. Result: Windows users get checksum verification; Linux/macOS users do not. Either a release-asset replacement attack OR a redirect tampering OR a tag move bypasses no-pin install on Unix; on Windows the checksums.txt would catch it (assuming checksums.txt is itself trusted, which it is here only because GitHub Releases assets are append-only per release tag).",
-          "what_this_means": "On macOS/Linux, the installer trusts whatever binary lives at the release URL. There is no second-channel verification. On Windows, the installer adds a SHA256 check via checksums.txt \u2014 meaningfully tighter.",
+          "threat_model_context": "Two install paths in the README run shell from the network: `curl -fsSL .../main/scripts/install.sh | bash` and `irm .../main/scripts/install.ps1 | iex`. Both fetch from the `main` branch (no SHA or tag pin). Compromise paths: (a) any push to main that touches scripts/install.sh ships immediately to every new installer; (b) the install.sh binary-download step (lines 83-130) does NOT verify a SHA256 checksum — it scrapes the redirect on `releases/latest` to learn the tag, downloads the binary from `releases/download/<tag>/...`, and `mv`s it to /usr/local/bin without integrity check. install.ps1 by contrast (lines 195-213) downloads `checksums.txt` from the release and validates SHA256. Result: Windows users get checksum verification; Linux/macOS users do not. Either a release-asset replacement attack OR a redirect tampering OR a tag move bypasses no-pin install on Unix; on Windows the checksums.txt would catch it (assuming checksums.txt is itself trusted, which it is here only because GitHub Releases assets are append-only per release tag).",
+          "what_this_means": "On macOS/Linux, the installer trusts whatever binary lives at the release URL. There is no second-channel verification. On Windows, the installer adds a SHA256 check via checksums.txt — meaningfully tighter.",
           "what_this_does_not_mean": "Not evidence the installer has been tampered with. The asymmetry between install.sh and install.ps1 looks like a feature gap (Windows installer was hardened later) rather than malicious. The Homebrew path remains the lowest-risk install method because Homebrew formulae are tap-pinned and pull from a separate distribution channel with its own integrity checks.",
           "duration_label": "Continuous",
           "date_label": "Since installer scripts landed",
@@ -7638,7 +7638,7 @@
           "category": "governance/c20-spof",
           "kind": "Governance",
           "rule_id": "C20",
-          "title": "Branch-protection ruleset present-but-disabled, no CODEOWNERS, no enforced rules-on-default \u2014 visible-but-toothless governance posture",
+          "title": "Branch-protection ruleset present-but-disabled, no CODEOWNERS, no enforced rules-on-default — visible-but-toothless governance posture",
           "action_hint": "Read open security issues (4 as of scan) before pulling; treat any cherry-picked direct-to-main commit as ungated until the `protect-main-branch` ruleset enforcement flips on.",
           "evidence_refs": [
             "E1",
@@ -7648,12 +7648,12 @@
             "stale_token",
             "sloppy_review"
           ],
-          "threat_model_context": "All four canonical governance signals are negative: classic protection HTTP 404, ruleset count 1 BUT `enforcement: disabled`, rules-on-default 0, no CODEOWNERS at any of 4 standard paths. A ruleset named `protect-main-branch` was created 2026-01-15 but never enabled \u2014 it is visible-but-toothless. Org rulesets unknown (token scope). 84 contributors with the top contributor at 29.7% commit share \u2014 NOT solo-maintained, so the bus-factor angle is weaker than the 2026-04-19 scan suggested. The C20 governance computer fires Warning rather than Critical because there are no formal releases (the 'recent release amplifier' that promotes governance-SPOF to Critical for shipping-binaries shape is N/A here \u2014 multica ships via GHCR images and an as-yet-unpublished Homebrew tap, but no GitHub Releases at scan time). Risk path: a maintainer push to main (intentional or via stolen token) reaches `multica setup` users via the curl-pipe-from-main installer with no second-human gate.",
-          "what_this_means": "Multica has the governance scaffold (a ruleset entry exists) but enforcement is off. The visible ruleset reads as 'we know we should have protection' \u2014 the intent is documented; the enforcement is not.",
+          "threat_model_context": "All four canonical governance signals are negative: classic protection HTTP 404, ruleset count 1 BUT `enforcement: disabled`, rules-on-default 0, no CODEOWNERS at any of 4 standard paths. A ruleset named `protect-main-branch` was created 2026-01-15 but never enabled — it is visible-but-toothless. Org rulesets unknown (token scope). 84 contributors with the top contributor at 29.7% commit share — NOT solo-maintained, so the bus-factor angle is weaker than the 2026-04-19 scan suggested. The C20 governance computer fires Warning rather than Critical because there are no formal releases (the 'recent release amplifier' that promotes governance-SPOF to Critical for shipping-binaries shape is N/A here — multica ships via GHCR images and an as-yet-unpublished Homebrew tap, but no GitHub Releases at scan time). Risk path: a maintainer push to main (intentional or via stolen token) reaches `multica setup` users via the curl-pipe-from-main installer with no second-human gate.",
+          "what_this_means": "Multica has the governance scaffold (a ruleset entry exists) but enforcement is off. The visible ruleset reads as 'we know we should have protection' — the intent is documented; the enforcement is not.",
           "what_this_does_not_mean": "Not solo-maintained. 84 contributors have committed; top contributor share is 29.7%, well below the 80% solo threshold. The risk is a process gap, not a single-person SPOF.",
           "duration_label": "Continuous",
           "date_label": "Since repo created (2026-01-13); ruleset added 2026-01-15 disabled",
-          "how_to_fix": "Maintainer-side: flip the existing `protect-main-branch` ruleset enforcement from `disabled` to `active` and require \u22651 review on PRs to main. Add a CODEOWNERS file (even self-listed) so reviewers are auto-requested. Add SECURITY.md to declare a disclosure channel. Consumer-side: pin to a release tag in install paths (`MULTICA_SELFHOST_REF=v0.2.X` env var) once releases ship, rather than tracking main."
+          "how_to_fix": "Maintainer-side: flip the existing `protect-main-branch` ruleset enforcement from `disabled` to `active` and require ≥1 review on PRs to main. Add a CODEOWNERS file (even self-listed) so reviewers are auto-requested. Add SECURITY.md to declare a disclosure channel. Consumer-side: pin to a release tag in install paths (`MULTICA_SELFHOST_REF=v0.2.X` env var) once releases ship, rather than tracking main."
         },
         {
           "id": "F3",
@@ -7664,7 +7664,7 @@
           "kind": "Process",
           "rule_id": "F11",
           "title": "5.7% formal/any review rate over 300 closed PRs; 220 of 300 (73%) self-merged",
-          "action_hint": "Don't assume the next merged commit was reviewed by a second person \u2014 most aren't. Inspect security-relevant PR diffs directly when triaging an upgrade.",
+          "action_hint": "Don't assume the next merged commit was reviewed by a second person — most aren't. Inspect security-relevant PR diffs directly when triaging an upgrade.",
           "evidence_refs": [
             "E3"
           ],
@@ -7672,12 +7672,12 @@
             "stale_token",
             "sloppy_review"
           ],
-          "threat_model_context": "300-PR sample yields 5.7% formal review rate AND 5.7% any-review rate (formal === any in the sample, suggesting reviews-when-they-happen are formal approvals; the issue is they rarely happen). 220/300 self-merged (73%). 30 PRs in the sample carried security keywords. The combination \u2014 F2's missing enforcement + F3's de-facto self-merge norm \u2014 means most code reaching main has had no second-human read, including security-relevant changes. This is the operational shape of F2; it is itself a finding because the gap is observable in PR data (independent of the governance signals).",
-          "what_this_means": "When multica's main branch advances by a commit, the realistic expectation is 'someone on the team pushed this directly or self-merged a PR they opened minutes ago' \u2014 not 'a reviewer signed off.'",
+          "threat_model_context": "300-PR sample yields 5.7% formal review rate AND 5.7% any-review rate (formal === any in the sample, suggesting reviews-when-they-happen are formal approvals; the issue is they rarely happen). 220/300 self-merged (73%). 30 PRs in the sample carried security keywords. The combination — F2's missing enforcement + F3's de-facto self-merge norm — means most code reaching main has had no second-human read, including security-relevant changes. This is the operational shape of F2; it is itself a finding because the gap is observable in PR data (independent of the governance signals).",
+          "what_this_means": "When multica's main branch advances by a commit, the realistic expectation is 'someone on the team pushed this directly or self-merged a PR they opened minutes ago' — not 'a reviewer signed off.'",
           "what_this_does_not_mean": "Not evidence of intentional review-bypass. With 84 contributors and many small fix-PRs, self-merge norms can develop organically when CI is the primary gate. The risk is structural (no human gate), not behavioral.",
           "duration_label": "Continuous",
           "date_label": "Across 300-PR sample (recent ~2 weeks)",
-          "how_to_fix": "Maintainer-side: enabling the `protect-main-branch` ruleset (see F2 fix) closes both findings \u2014 required-review-on-PR forces formal review, blocks self-merge. Consumer-side: when picking an install pin, choose a tagged release rather than `main`-tracking once releases exist."
+          "how_to_fix": "Maintainer-side: enabling the `protect-main-branch` ruleset (see F2 fix) closes both findings — required-review-on-PR forces formal review, blocks self-merge. Consumer-side: when picking an install pin, choose a tagged release rather than `main`-tracking once releases exist."
         },
         {
           "id": "F4",
@@ -7696,7 +7696,7 @@
           "threat_model_paths": [
             "other"
           ],
-          "threat_model_context": "Open security issues at scan: #1114 (16d, no fix yet) \u2014 `isBlockedEnvKey allows LD_PRELOAD/NODE_OPTIONS/HTTP_PROXY override via custom_env`, a privilege-escalation in agent execution where a workspace can pass loader-overriding env vars to spawned agent CLIs; #1382 (12d) vague 'security vulnerability report' (labeled `question`); #1663 (7d) /auth/verify-code lacks brute-force protection (no lockout / backoff); #1667 (7d) Origin header not validated on state-changing requests (CSRF defense-in-depth gap). Counter-signal: the team closed FIVE security issues in the prior 8 days (2026-04-16 to 2026-04-24) \u2014 the 888888 self-host issue, shell.openExternal IPC URL-scheme bypass, Hermes filterCustomArgs bypass, /health/realtime metrics exposure, and open-redirect via ?next=. Pattern: responsive (5 closed in 8 days), but the queue is not shrinking (4 still open). The 16-day-old #1114 is the most concerning \u2014 privilege escalation in the core agent-execution flow, and unresolved past two weeks.",
+          "threat_model_context": "Open security issues at scan: #1114 (16d, no fix yet) — `isBlockedEnvKey allows LD_PRELOAD/NODE_OPTIONS/HTTP_PROXY override via custom_env`, a privilege-escalation in agent execution where a workspace can pass loader-overriding env vars to spawned agent CLIs; #1382 (12d) vague 'security vulnerability report' (labeled `question`); #1663 (7d) /auth/verify-code lacks brute-force protection (no lockout / backoff); #1667 (7d) Origin header not validated on state-changing requests (CSRF defense-in-depth gap). Counter-signal: the team closed FIVE security issues in the prior 8 days (2026-04-16 to 2026-04-24) — the 888888 self-host issue, shell.openExternal IPC URL-scheme bypass, Hermes filterCustomArgs bypass, /health/realtime metrics exposure, and open-redirect via ?next=. Pattern: responsive (5 closed in 8 days), but the queue is not shrinking (4 still open). The 16-day-old #1114 is the most concerning — privilege escalation in the core agent-execution flow, and unresolved past two weeks.",
           "what_this_means": "Multica's security backlog is short and active. The team fixes things on a one-to-two-week cadence. The open items are real (especially #1114), but none are unbounded-old.",
           "what_this_does_not_mean": "Not 'unresponsive maintainers.' The closed-issue list shows a team actively triaging and fixing security reports. The 4-open backlog is the working set, not a graveyard.",
           "duration_label": "Recent (past 16 days)",
@@ -7719,12 +7719,12 @@
           "threat_model_paths": [
             "other"
           ],
-          "threat_model_context": "osv.dev batch-lookup over 30 declared deps yielded one advisory: @tiptap/extension-link (GHSA-vhrc-hgrq-x75r \u2014 DOM XSS in tiptap's link extension). Single low-severity transitive vuln. Direct dep count: 322 runtime + 122 dev. The native Dependabot alerts API returned HTTP 403 (token scope `admin:org` required to read alerts) so the true alert state is unknown. No `.github/dependabot.yml` is present in the repo \u2014 Dependabot is not configured, even at the alert-only tier. SECURITY.md absent (E11).",
-          "what_this_means": "One known low-severity transitive XSS in tiptap. Not a structural finding \u2014 it's an upstream fix-and-bump. The absence of Dependabot config is a defensibility gap (no automatic alert channel).",
+          "threat_model_context": "osv.dev batch-lookup over 30 declared deps yielded one advisory: @tiptap/extension-link (GHSA-vhrc-hgrq-x75r — DOM XSS in tiptap's link extension). Single low-severity transitive vuln. Direct dep count: 322 runtime + 122 dev. The native Dependabot alerts API returned HTTP 403 (token scope `admin:org` required to read alerts) so the true alert state is unknown. No `.github/dependabot.yml` is present in the repo — Dependabot is not configured, even at the alert-only tier. SECURITY.md absent (E11).",
+          "what_this_means": "One known low-severity transitive XSS in tiptap. Not a structural finding — it's an upstream fix-and-bump. The absence of Dependabot config is a defensibility gap (no automatic alert channel).",
           "what_this_does_not_mean": "The 403 on the Dependabot alerts API is a token-scope issue, NOT evidence Dependabot is disabled at the org level. The true alert count is unknown from outside.",
           "duration_label": "Continuous",
           "date_label": "Until tiptap upstream patches",
-          "how_to_fix": "Maintainer-side: add `.github/dependabot.yml` enabling at minimum the npm ecosystem on the root + monorepo packages. Consumer-side: noop for now \u2014 single low-sev XSS in a UI library is not a deployment blocker."
+          "how_to_fix": "Maintainer-side: add `.github/dependabot.yml` enabling at minimum the npm ecosystem on the root + monorepo packages. Consumer-side: noop for now — single low-sev XSS in a UI library is not a deployment blocker."
         },
         {
           "id": "F6",
@@ -7741,7 +7741,7 @@
             "E13"
           ],
           "threat_model_paths": [],
-          "threat_model_context": "Coverage limitations independent of the repo: (1) OSSF Scorecard returned HTTP 404 \u2014 the repo is not yet indexed (4-month-old repos often aren't). (2) gitleaks was not available in the scan environment, so secrets-in-history were not scanned. (3) npm registry presence probe returned `unavailable` for all 10 declared @multica/* packages \u2014 likely they haven't been published to npm yet (registry-presence:'unavailable' is the harness's signal for either not-published or registry-probe-failed; manual `npm view multica` would disambiguate). (4) Dependabot alerts API 403 (admin scope). (5) Org rulesets API error (admin:org scope). These are scanner-side limitations, not findings about multica.",
+          "threat_model_context": "Coverage limitations independent of the repo: (1) OSSF Scorecard returned HTTP 404 — the repo is not yet indexed (4-month-old repos often aren't). (2) gitleaks was not available in the scan environment, so secrets-in-history were not scanned. (3) npm registry presence probe returned `unavailable` for all 10 declared @multica/* packages — likely they haven't been published to npm yet (registry-presence:'unavailable' is the harness's signal for either not-published or registry-probe-failed; manual `npm view multica` would disambiguate). (4) Dependabot alerts API 403 (admin scope). (5) Org rulesets API error (admin:org scope). These are scanner-side limitations, not findings about multica.",
           "what_this_means": "Some signals are 'unknown' rather than 'absent.' Specifically: secrets-in-git-history, true Dependabot alert count, org-level rulesets, and confirmation of npm package publication status.",
           "what_this_does_not_mean": "Not evidence anything is wrong with multica. Listed as Info so consumers know what the scan did NOT cover.",
           "duration_label": "Scan-time",
@@ -7754,17 +7754,17 @@
       "entries": [
         {
           "id": "E1",
-          "claim": "23,547 stars, 84 contributors, top contributor NevilleQingNY at 787 commits (29.7% share). Created 2026-01-13, pushed 2026-05-01 \u2014 4-month-old repo with active multi-contributor cadence.",
+          "claim": "23,547 stars, 84 contributors, top contributor NevilleQingNY at 787 commits (29.7% share). Created 2026-01-13, pushed 2026-05-01 — 4-month-old repo with active multi-contributor cadence.",
           "command": "gh api repos/multica-ai/multica + gh api repos/multica-ai/multica/contributors --jq '[.[]|{login,contributions}]'",
           "command_lang": "bash",
-          "result": "stargazer_count=23547, fork_count=2890, total_contributor_count=84. Top-1 share 29.7% \u2014 NOT solo (well below 80% threshold).",
+          "result": "stargazer_count=23547, fork_count=2890, total_contributor_count=84. Top-1 share 29.7% — NOT solo (well below 80% threshold).",
           "result_lang": "text",
           "result_truncated": false,
           "classification": "fact"
         },
         {
           "id": "E2",
-          "claim": "Branch protection: classic protection HTTP 404. One ruleset declared (`protect-main-branch`, id=11828157) but `enforcement: disabled` \u2014 visible-but-toothless. Zero rules-on-default. CODEOWNERS not present at any of 4 standard locations.",
+          "claim": "Branch protection: classic protection HTTP 404. One ruleset declared (`protect-main-branch`, id=11828157) but `enforcement: disabled` — visible-but-toothless. Zero rules-on-default. CODEOWNERS not present at any of 4 standard locations.",
           "command": "gh api repos/multica-ai/multica/branches/main/protection ; gh api repos/multica-ai/multica/rulesets",
           "command_lang": "bash",
           "result": "classic.status=404. rulesets.entries=[{name:'protect-main-branch', enforcement:'disabled'}], rulesets.count=1. rules_on_default.count=0. codeowners.found=False (checked CODEOWNERS, .github/CODEOWNERS, docs/CODEOWNERS, .gitlab/CODEOWNERS).",
@@ -7784,7 +7784,7 @@
         },
         {
           "id": "E4",
-          "claim": "Open security issues \u2014 4 total, oldest 16 days. #1114 (16d): isBlockedEnvKey allows LD_PRELOAD/NODE_OPTIONS/HTTP_PROXY override via custom_env (agent-execution privilege escalation). #1382 (12d): vague 'security vulnerability report' with question label. #1663 (7d): /auth/verify-code lacks brute-force protection. #1667 (7d): Origin header not validated on state-changing requests (CSRF defense gap).",
+          "claim": "Open security issues — 4 total, oldest 16 days. #1114 (16d): isBlockedEnvKey allows LD_PRELOAD/NODE_OPTIONS/HTTP_PROXY override via custom_env (agent-execution privilege escalation). #1382 (12d): vague 'security vulnerability report' with question label. #1663 (7d): /auth/verify-code lacks brute-force protection. #1667 (7d): Origin header not validated on state-changing requests (CSRF defense gap).",
           "command": "gh issue list --state open --search 'security' --limit 50",
           "command_lang": "bash",
           "result": "open_security_issues=4. Created dates: 1114=2026-04-16, 1382=2026-04-20, 1663+1667=2026-04-25. oldest_open_security_item_age_days=16.",
@@ -7814,7 +7814,7 @@
         },
         {
           "id": "E7",
-          "claim": "Checksum verification asymmetry: install.ps1 (Windows, line 195-213) downloads `checksums.txt` from the release and verifies SHA256 of the downloaded zip. install.sh (macOS/Linux, lines 83-130) downloads the binary tarball via redirect-scrape, runs `tar -xzf`, then `mv` to /usr/local/bin \u2014 NO checksum or signature verification.",
+          "claim": "Checksum verification asymmetry: install.ps1 (Windows, line 195-213) downloads `checksums.txt` from the release and verifies SHA256 of the downloaded zip. install.sh (macOS/Linux, lines 83-130) downloads the binary tarball via redirect-scrape, runs `tar -xzf`, then `mv` to /usr/local/bin — NO checksum or signature verification.",
           "command": "grep -n 'checksum\\|sha256\\|verify' src/scripts/install.sh src/scripts/install.ps1",
           "command_lang": "bash",
           "result": "install.ps1 has $checksumUrl + Invoke-WebRequest + SHA256 verify path. install.sh: zero checksum-related lines. Windows users get checksums; Unix users do not.",
@@ -7844,7 +7844,7 @@
         },
         {
           "id": "E10",
-          "claim": "10 npm package channels declared in package.json + workspace manifests (multica + 9 @multica/*: core, ui, desktop, views, eslint-config, tsconfig, docs). Harness reports `unavailable` for npm registry presence on all 10 \u2014 likely not yet published. Plus Homebrew tap (`multica-ai/tap/multica`) and a Go server binary built via GoReleaser.",
+          "claim": "10 npm package channels declared in package.json + workspace manifests (multica + 9 @multica/*: core, ui, desktop, views, eslint-config, tsconfig, docs). Harness reports `unavailable` for npm registry presence on all 10 — likely not yet published. Plus Homebrew tap (`multica-ai/tap/multica`) and a Go server binary built via GoReleaser.",
           "command": "registry probe via npm view + ls packages/*/package.json",
           "command_lang": "bash",
           "result": "10 npm channels declared, 0 verified on registry. 1 Homebrew tap declared, registry probe unavailable. Distribution channels verified ratio: 0/10.",
@@ -7854,7 +7854,7 @@
         },
         {
           "id": "E11",
-          "claim": "Dependencies: 322 runtime + 122 dev. osv.dev lookup over 30 deps yielded 1 advisory: `@tiptap/extension-link` GHSA-vhrc-hgrq-x75r (low-severity DOM XSS in tiptap link extension). Dependabot config (.github/dependabot.yml) NOT present. Dependabot alerts API returned HTTP 403 (admin scope required \u2014 true alert state unknown).",
+          "claim": "Dependencies: 322 runtime + 122 dev. osv.dev lookup over 30 deps yielded 1 advisory: `@tiptap/extension-link` GHSA-vhrc-hgrq-x75r (low-severity DOM XSS in tiptap link extension). Dependabot config (.github/dependabot.yml) NOT present. Dependabot alerts API returned HTTP 403 (admin scope required — true alert state unknown).",
           "command": "osv.dev batch query + cat .github/dependabot.yml",
           "command_lang": "bash",
           "result": "1 known transitive vuln. dependabot_config.present=False. dependabot_alerts.status=403. SECURITY.md not present.",
@@ -7874,7 +7874,7 @@
         },
         {
           "id": "E13",
-          "claim": "Coverage gaps: OSSF Scorecard returns HTTP 404 (repo not indexed \u2014 only 4 months old). gitleaks not installed in scan environment (cannot scan secrets-in-history). Dependabot alerts unknown (admin scope). Org rulesets unknown (admin:org scope).",
+          "claim": "Coverage gaps: OSSF Scorecard returns HTTP 404 (repo not indexed — only 4 months old). gitleaks not installed in scan environment (cannot scan secrets-in-history). Dependabot alerts unknown (admin scope). Org rulesets unknown (admin:org scope).",
           "command": "OSSF API + gitleaks --version + gh api dependabot",
           "command_lang": "bash",
           "result": "OSSF http_status=404. gitleaks.available=False. dependabot_alerts.status=403. org_rulesets.status=error.",
@@ -7902,22 +7902,22 @@
     },
     "section_leads": {
       "section_01": {
-        "pill_row": "23.5k\u2b50 \u00b7 NOASSERTION \u00b7 TS+Go monorepo \u00b7 5 warnings \u00b7 1 info \u00b7 caution",
-        "summary": "multica-ai/multica is a 4-month-old open-source agentic platform \u2014 assign coding tasks to AI agents the way you'd assign to a teammate. The repo is a pnpm + Turborepo TypeScript monorepo (apps/web Next.js, apps/desktop Electron, packages/{core,ui,views,eslint-config,tsconfig}) plus a Go server (server/) and a CLI binary built via GoReleaser. 84 contributors with the top contributor at 29.7% commit share \u2014 actively multi-maintainer. The verdict is Caution rather than Critical because (a) the previously-flagged 888888 self-host bypass has been APP_ENV-gated since ~2026-04-18 (closing the 2026-04-19 prior scan's Critical concern); (b) 5 security issues have been closed in the past 8 days, indicating active triage; (c) 0 pull_request_target workflows means no PR-target attack surface. The Caution applies primarily to install-path discipline (curl|bash on Unix without checksums), the visible-but-disabled branch-protection ruleset, and the 16-day-old open privesc report (#1114)."
+        "pill_row": "23.5k⭐ · NOASSERTION · TS+Go monorepo · 5 warnings · 1 info · caution",
+        "summary": "multica-ai/multica is a 4-month-old open-source agentic platform — assign coding tasks to AI agents the way you'd assign to a teammate. The repo is a pnpm + Turborepo TypeScript monorepo (apps/web Next.js, apps/desktop Electron, packages/{core,ui,views,eslint-config,tsconfig}) plus a Go server (server/) and a CLI binary built via GoReleaser. 84 contributors with the top contributor at 29.7% commit share — actively multi-maintainer. The verdict is Caution rather than Critical because (a) the previously-flagged 888888 self-host bypass has been APP_ENV-gated since ~2026-04-18 (closing the 2026-04-19 prior scan's Critical concern); (b) 5 security issues have been closed in the past 8 days, indicating active triage; (c) 0 pull_request_target workflows means no PR-target attack surface. The Caution applies primarily to install-path discipline (curl|bash on Unix without checksums), the visible-but-disabled branch-protection ruleset, and the 16-day-old open privesc report (#1114)."
       },
       "section_02": {
-        "pill_row": "F0 Warning \u00b7 F1 Warning \u00b7 F2 Warning \u00b7 F3 Warning \u00b7 F4 Warning \u00b7 F5 Info \u00b7 F6 Info",
+        "pill_row": "F0 Warning · F1 Warning · F2 Warning · F3 Warning · F4 Warning · F5 Info · F6 Info",
         "summary": null
       },
       "section_06": {
-        "pill_row": "Scorecard: Red \u00b7 Amber* \u00b7 Red \u00b7 Amber",
-        "summary": "**Asterisk on Q2** \u2014 calibration v2 advisory was red; Phase 4 overrode to amber on `missing_qualitative_context` because the team has closed 5 security issues in the past 8 days at roughly the same rate the open queue is being filed. The override is documented with `override_reason='missing_qualitative_context'` per Gate 6.3."
+        "pill_row": "Scorecard: Red · Amber* · Red · Amber",
+        "summary": "**Asterisk on Q2** — calibration v2 advisory was red; Phase 4 overrode to amber on `missing_qualitative_context` because the team has closed 5 security issues in the past 8 days at roughly the same rate the open queue is being filed. The override is documented with `override_reason='missing_qualitative_context'` per Gate 6.3."
       }
     },
     "split_axis_decision": {
       "should_split": true,
       "axis": "deployment",
-      "reasoning": "Multica has two distinct consumer profiles with materially different risk: (1) CLI-only consumer using the cloud (multica.ai/app) \u2014 the `multica setup` flow with Homebrew install, never touches the self-host bypass paths; (2) Self-host operator who runs `--with-server` and operates the Docker stack \u2014 exposed to the F0 APP_ENV configuration discipline + all the install-path concerns + open #1114 LD_PRELOAD bypass concerns. The verdicts diverge in degree (both Caution, but the self-host operator carries more responsibility for getting config right).",
+      "reasoning": "Multica has two distinct consumer profiles with materially different risk: (1) CLI-only consumer using the cloud (multica.ai/app) — the `multica setup` flow with Homebrew install, never touches the self-host bypass paths; (2) Self-host operator who runs `--with-server` and operates the Docker stack — exposed to the F0 APP_ENV configuration discipline + all the install-path concerns + open #1114 LD_PRELOAD bypass concerns. The verdicts diverge in degree (both Caution, but the self-host operator carries more responsibility for getting config right).",
       "entries": [
         {
           "audience": "Cloud CLI consumer (default `multica setup`)",
@@ -7934,8 +7934,8 @@
     "verdict_exhibits": {
       "groups": [
         {
-          "symbol": "\u26a0",
-          "headline": "Caution \u2014 5 Warning findings cluster around process gaps + install-path asymmetry",
+          "symbol": "⚠",
+          "headline": "Caution — 5 Warning findings cluster around process gaps + install-path asymmetry",
           "one_line_summary": "23.5k-star agentic-platform monorepo, 4 months old, 84 contributors but 5.7% review rate and 73% self-merge. Governance ruleset exists but enforcement is off. Curl-pipe installer skips checksums on Unix.",
           "items": [
             {
@@ -7956,18 +7956,18 @@
             },
             {
               "tag": "F4",
-              "claim": "4 open security issues (#1114 16-day LD_PRELOAD privesc); 5 fixed in past 8 days \u2014 responsive but not shrinking."
+              "claim": "4 open security issues (#1114 16-day LD_PRELOAD privesc); 5 fixed in past 8 days — responsive but not shrinking."
             }
           ]
         },
         {
-          "symbol": "\u2139",
-          "headline": "Info \u2014 F5 + F6 are upstream-tracking + scanner coverage notes",
+          "symbol": "ℹ",
+          "headline": "Info — F5 + F6 are upstream-tracking + scanner coverage notes",
           "one_line_summary": "1 known low-severity transitive XSS; OSSF/gitleaks/npm-registry coverage gaps logged.",
           "items": [
             {
               "tag": "F5",
-              "claim": "@tiptap/extension-link GHSA-vhrc-hgrq-x75r \u2014 single low-severity transitive vuln. No Dependabot config."
+              "claim": "@tiptap/extension-link GHSA-vhrc-hgrq-x75r — single low-severity transitive vuln. No Dependabot config."
             },
             {
               "tag": "F6",
@@ -7981,11 +7981,11 @@
       "selections": [
         {
           "evidence_id": "E2",
-          "reason": "F2 governance posture is the upstream cause of F3's review-rate signal. Flipping the existing `protect-main-branch` ruleset enforcement from `disabled` to `active` is the single highest-value remediation \u2014 would close F2 directly and most of F3 indirectly."
+          "reason": "F2 governance posture is the upstream cause of F3's review-rate signal. Flipping the existing `protect-main-branch` ruleset enforcement from `disabled` to `active` is the single highest-value remediation — would close F2 directly and most of F3 indirectly."
         },
         {
           "evidence_id": "E5",
-          "reason": "Counter-evidence to F4's open-backlog framing \u2014 5 security issues closed in past 8 days. Without E5, Q2 stays red; with E5, the team's responsiveness is visible and Q2 drops to amber with override_reason='missing_qualitative_context'."
+          "reason": "Counter-evidence to F4's open-backlog framing — 5 security issues closed in past 8 days. Without E5, Q2 stays red; with E5, the team's responsiveness is visible and Q2 drops to amber with override_reason='missing_qualitative_context'."
         },
         {
           "evidence_id": "E7",
@@ -8012,7 +8012,7 @@
           "type": "install_normally",
           "headline": "If using curl|bash on Unix, download and read install.sh first",
           "severity": "Info",
-          "non_technical": "The README's curl|bash path on macOS/Linux skips SHA256 verification on the downloaded binary. Mitigation: download the script, read it, then bash it \u2014 or just use Homebrew (step 1) where possible.",
+          "non_technical": "The README's curl|bash path on macOS/Linux skips SHA256 verification on the downloaded binary. Mitigation: download the script, read it, then bash it — or just use Homebrew (step 1) where possible.",
           "command": "curl -fsSL https://raw.githubusercontent.com/multica-ai/multica/main/scripts/install.sh -o /tmp/multica-install.sh && less /tmp/multica-install.sh && bash /tmp/multica-install.sh",
           "command_lang": "bash"
         },
@@ -8030,7 +8030,7 @@
           "type": "audit",
           "headline": "If wiring custom_env into agent runtimes, read open issue #1114",
           "severity": "Warning",
-          "non_technical": "Issue #1114 reports that the env-var allowlist for agent custom_env permits LD_PRELOAD/NODE_OPTIONS/HTTP_PROXY \u2014 which can let a workspace operator inject loader hooks into spawned agent CLIs. If your trust boundary includes 'workspace operators are not 100% trusted,' don't expose custom_env until #1114 lands.",
+          "non_technical": "Issue #1114 reports that the env-var allowlist for agent custom_env permits LD_PRELOAD/NODE_OPTIONS/HTTP_PROXY — which can let a workspace operator inject loader hooks into spawned agent CLIs. If your trust boundary includes 'workspace operators are not 100% trusted,' don't expose custom_env until #1114 lands.",
           "command": "gh issue view 1114 --repo multica-ai/multica",
           "command_lang": "bash"
         }
@@ -8046,7 +8046,7 @@
         },
         {
           "date": "2026-01-15",
-          "label": "Ruleset added \u2014 disabled",
+          "label": "Ruleset added — disabled",
           "tone": "negative",
           "note": "ruleset id 11828157 `protect-main-branch` created with `enforcement: disabled`. Never enabled in 4 months."
         },
@@ -8054,19 +8054,19 @@
           "date": "2026-04-16",
           "label": "Hermes filterCustomArgs bypass closed",
           "tone": "positive",
-          "note": "Issue #1113 closed \u2014 security fix landed on agent-arg sanitization."
+          "note": "Issue #1113 closed — security fix landed on agent-arg sanitization."
         },
         {
           "date": "2026-04-16",
           "label": "LD_PRELOAD privesc reported (open)",
           "tone": "negative",
-          "note": "Issue #1114 \u2014 isBlockedEnvKey allows LD_PRELOAD/NODE_OPTIONS/HTTP_PROXY override via custom_env. Still open at scan."
+          "note": "Issue #1114 — isBlockedEnvKey allows LD_PRELOAD/NODE_OPTIONS/HTTP_PROXY override via custom_env. Still open at scan."
         },
         {
           "date": "2026-04-17",
           "label": "shell.openExternal fix",
           "tone": "positive",
-          "note": "Issue #1115 closed \u2014 desktop IPC accepted any URL scheme; restricted."
+          "note": "Issue #1115 closed — desktop IPC accepted any URL scheme; restricted."
         },
         {
           "date": "2026-04-18",
@@ -8084,13 +8084,13 @@
           "date": "2026-04-24",
           "label": "/health/realtime restricted",
           "tone": "positive",
-          "note": "Issue #1606 closed \u2014 restricted to loopback unless REALTIME_METRICS_TOKEN set."
+          "note": "Issue #1606 closed — restricted to loopback unless REALTIME_METRICS_TOKEN set."
         },
         {
           "date": "2026-04-25",
           "label": "Brute-force + CSRF reports",
           "tone": "negative",
-          "note": "Issues #1663 + #1667 \u2014 both still open at scan."
+          "note": "Issues #1663 + #1667 — both still open at scan."
         },
         {
           "date": "2026-05-01",
@@ -8111,15 +8111,15 @@
     },
     "executable_file_inventory": {
       "lead": "multica is a TypeScript monorepo + Go server + Electron desktop. The execution surface fans across 3 runtimes: (1) Go binary `multica` CLI (~500 LOC of cmd/ + handler/ + daemon/ in server/); (2) Node.js apps/web (Next.js App Router); (3) Electron apps/desktop. Plus 2 install scripts (install.sh 462 lines, install.ps1 483 lines) that the README pipes through bash/iex.",
-      "layer1_summary": "Primary surface: Go server (server/ \u2014 cmd/server/main.go entrypoint + internal/handler + internal/daemon). Secondary surface: Next.js web app (apps/web). Tertiary surface: Electron desktop (apps/desktop). Distribution surface: scripts/install.sh (Unix), scripts/install.ps1 (Windows), Dockerfile + Dockerfile.web, docker-compose.selfhost.yml, .goreleaser.yml.",
+      "layer1_summary": "Primary surface: Go server (server/ — cmd/server/main.go entrypoint + internal/handler + internal/daemon). Secondary surface: Next.js web app (apps/web). Tertiary surface: Electron desktop (apps/desktop). Distribution surface: scripts/install.sh (Unix), scripts/install.ps1 (Windows), Dockerfile + Dockerfile.web, docker-compose.selfhost.yml, .goreleaser.yml.",
       "layer2_entries": [
         {
           "path": "scripts/install.sh",
           "kind": "installer",
           "runtime": "bash",
           "dangerous_calls": "curl-pipe-from-main; binary download via redirect-scrape; mv to /usr/local/bin without checksum (lines 83-130). git clone + git checkout in --with-server mode (lines 271-339).",
-          "network": "Yes \u2014 fetches binary tarballs from GitHub release CDN; clones repo for self-host mode.",
-          "notes": "set -euo pipefail (defensive). Detects OS/arch. Falls back to ~/.local/bin if /usr/local/bin not writable. NO checksum verification on binary download \u2014 the asymmetry vs install.ps1 is F1.",
+          "network": "Yes — fetches binary tarballs from GitHub release CDN; clones repo for self-host mode.",
+          "notes": "set -euo pipefail (defensive). Detects OS/arch. Falls back to ~/.local/bin if /usr/local/bin not writable. NO checksum verification on binary download — the asymmetry vs install.ps1 is F1.",
           "file_sha": null,
           "line_ranges": "1-462",
           "diff_anchor": null
@@ -8129,8 +8129,8 @@
           "kind": "installer",
           "runtime": "PowerShell",
           "dangerous_calls": "Invoke-Expression (`iex`) entry point per README. Invoke-WebRequest for binary + checksums. Expand-Archive to %LOCALAPPDATA%.",
-          "network": "Yes \u2014 fetches binary zip + checksums.txt from GitHub release CDN.",
-          "notes": "Verifies SHA256 against checksums.txt (lines 195-213). The Unix install.sh does not have this \u2014 F1 asymmetry.",
+          "network": "Yes — fetches binary zip + checksums.txt from GitHub release CDN.",
+          "notes": "Verifies SHA256 against checksums.txt (lines 195-213). The Unix install.sh does not have this — F1 asymmetry.",
           "file_sha": null,
           "line_ranges": "1-483",
           "diff_anchor": null
@@ -8140,7 +8140,7 @@
           "kind": "go-binary-entrypoint",
           "runtime": "Go runtime (compiled binary)",
           "dangerous_calls": "Configures HTTP server, JWT auth, agent runtime daemons. The 888888 dev-code env-var consumption is gated at line 128 by APP_ENV=production check.",
-          "network": "Yes \u2014 listens on :8080 by default; outbound to Resend (email), Google OAuth, optional S3.",
+          "network": "Yes — listens on :8080 by default; outbound to Resend (email), Google OAuth, optional S3.",
           "notes": "The APP_ENV=production gate at line 128 is the F0 defense. JWT_SECRET defaults to `change-me-in-production` if unset (warning logged). Generates JWT signing key per build.",
           "file_sha": null,
           "line_ranges": "1-200",
@@ -8150,7 +8150,7 @@
           "path": "server/internal/handler/auth.go",
           "kind": "auth-handler",
           "runtime": "Go runtime",
-          "dangerous_calls": "isDevVerificationCode() at line 97 \u2014 the 888888 path. Short-circuits to false in production (isProductionEnv check). Constant-time comparison at line 107.",
+          "dangerous_calls": "isDevVerificationCode() at line 97 — the 888888 path. Short-circuits to false in production (isProductionEnv check). Constant-time comparison at line 107.",
           "network": "Email-code send via Resend; verify-code endpoint accepts user-submitted codes.",
           "notes": "Open issue #1663 reports lack of brute-force protection on /auth/verify-code (no lockout/backoff). Open issue #1667 reports Origin-header CSRF defense gap.",
           "file_sha": null,
@@ -8161,7 +8161,7 @@
           "path": "docker-compose.selfhost.yml",
           "kind": "compose",
           "runtime": "Docker",
-          "dangerous_calls": "JWT_SECRET defaults to insecure literal if unset (line 44). APP_ENV pinned to 'production' by default (line 58 \u2014 F0 defense).",
+          "dangerous_calls": "JWT_SECRET defaults to insecure literal if unset (line 44). APP_ENV pinned to 'production' by default (line 58 — F0 defense).",
           "network": "Pulls ghcr.io/multica-ai/multica-{backend,web} images; tag default `latest` per .env.example.",
           "notes": "install.sh setup_server() generates a random JWT_SECRET via `openssl rand -hex 32` on first install (line 304), patching the insecure default at install time.",
           "file_sha": null,
@@ -8182,18 +8182,18 @@
     },
     "coverage_gaps": {
       "entries": [
-        "OSSF Scorecard \u2014 not_indexed: Repo not yet indexed by OSSF (4 months old). Will appear once the project crosses scorecard's discovery threshold.",
-        "Secrets-in-history (gitleaks) \u2014 not_available: gitleaks not installed in scan environment; install + re-run for git-history secret coverage.",
-        "Dependabot alert count \u2014 unknown: API returned HTTP 403 (admin scope required). Re-run with `gh auth refresh -s admin:org`.",
-        "Org rulesets \u2014 unknown: API errored (admin:org scope required). Re-run with elevated token to confirm whether an org-level ruleset enforces protection that the repo-level one does not.",
-        "npm registry status (10 packages) \u2014 unavailable: Harness reported `unavailable` for all 10 declared @multica/* packages. Likely not yet published \u2014 confirm with `npm view multica` and `npm view @multica/core`."
+        "OSSF Scorecard — not_indexed: Repo not yet indexed by OSSF (4 months old). Will appear once the project crosses scorecard's discovery threshold.",
+        "Secrets-in-history (gitleaks) — not_available: gitleaks not installed in scan environment; install + re-run for git-history secret coverage.",
+        "Dependabot alert count — unknown: API returned HTTP 403 (admin scope required). Re-run with `gh auth refresh -s admin:org`.",
+        "Org rulesets — unknown: API errored (admin:org scope required). Re-run with elevated token to confirm whether an org-level ruleset enforces protection that the repo-level one does not.",
+        "npm registry status (10 packages) — unavailable: Harness reported `unavailable` for all 10 declared @multica/* packages. Likely not yet published — confirm with `npm view multica` and `npm view @multica/core`."
       ]
     },
     "scorecard_cells": {
       "does_anyone_check_the_code": {
         "color": "red",
-        "short_answer": "No \u2014 5.7% review rate, 73% self-merge, branch-protection ruleset declared but enforcement disabled, no CODEOWNERS",
-        "rationale": "300-PR sample shows 5.7% formal review and 220/300 self-merges. The `protect-main-branch` ruleset exists (id 11828157, created 2026-01-15) but `enforcement: disabled` \u2014 the governance scaffold is visible without being active (E2, E3). With no CODEOWNERS at any of 4 standard paths, there is no automatic reviewer assignment. Aligned with library-package advisory (FALLBACK rule fires red on these signals).",
+        "short_answer": "No — 5.7% review rate, 73% self-merge, branch-protection ruleset declared but enforcement disabled, no CODEOWNERS",
+        "rationale": "300-PR sample shows 5.7% formal review and 220/300 self-merges. The `protect-main-branch` ruleset exists (id 11828157, created 2026-01-15) but `enforcement: disabled` — the governance scaffold is visible without being active (E2, E3). With no CODEOWNERS at any of 4 standard paths, there is no automatic reviewer assignment. Aligned with library-package advisory (FALLBACK rule fires red on these signals).",
         "edge_case": null,
         "suggested_threshold_adjustment": null,
         "computed_signal_refs": [
@@ -8207,10 +8207,10 @@
       },
       "do_they_fix_problems_quickly": {
         "color": "amber",
-        "short_answer": "Mixed \u2014 5 security issues closed in past 8 days (responsive), but 4 still open with oldest 16 days (privesc unaddressed)",
-        "rationale": "Calibration v2 advisory says red (4 open security items, oldest 16 days). Override to amber: counter-signal is strong \u2014 the team CLOSED 5 security issues in the prior 8 calendar days (888888 self-host, shell.openExternal, Hermes filterCustomArgs, /health/realtime exposure, open-redirect ?next=) \u2014 see E5. The fix rate roughly matches the open-arrival rate, indicating responsiveness rather than backlog growth. The unresolved #1114 LD_PRELOAD bypass (16 days) is the strongest dissent; without it, this would lean green.",
-        "edge_case": "Counter-signal \u2014 rapid security-issue close rate offsets open-side count.",
-        "suggested_threshold_adjustment": "Q2 calibration could weight 'closed_within_window' as a counter-signal \u2014 currently the open-side counts dominate even when the close-side is equally active.",
+        "short_answer": "Mixed — 5 security issues closed in past 8 days (responsive), but 4 still open with oldest 16 days (privesc unaddressed)",
+        "rationale": "Calibration v2 advisory says red (4 open security items, oldest 16 days). Override to amber: counter-signal is strong — the team CLOSED 5 security issues in the prior 8 calendar days (888888 self-host, shell.openExternal, Hermes filterCustomArgs, /health/realtime exposure, open-redirect ?next=) — see E5. The fix rate roughly matches the open-arrival rate, indicating responsiveness rather than backlog growth. The unresolved #1114 LD_PRELOAD bypass (16 days) is the strongest dissent; without it, this would lean green.",
+        "edge_case": "Counter-signal — rapid security-issue close rate offsets open-side count.",
+        "suggested_threshold_adjustment": "Q2 calibration could weight 'closed_within_window' as a counter-signal — currently the open-side counts dominate even when the close-side is equally active.",
         "computed_signal_refs": [
           "q2_open_security_issue_count",
           "q2_oldest_open_security_item_age_days"
@@ -8219,8 +8219,8 @@
       },
       "do_they_tell_you_about_problems": {
         "color": "red",
-        "short_answer": "No \u2014 no SECURITY.md, no published advisories, no Dependabot config; reporters use generic issues",
-        "rationale": "community_profile.has_security_policy=False; no SECURITY.md at root; no .github/dependabot.yml; published_advisory_count=0 (E11). Reporters submit security findings as ordinary GitHub issues with `[Security]` titles \u2014 they get triaged, but there is no documented disclosure channel or commitment to handling embargoed reports. Aligned with library-package advisory red.",
+        "short_answer": "No — no SECURITY.md, no published advisories, no Dependabot config; reporters use generic issues",
+        "rationale": "community_profile.has_security_policy=False; no SECURITY.md at root; no .github/dependabot.yml; published_advisory_count=0 (E11). Reporters submit security findings as ordinary GitHub issues with `[Security]` titles — they get triaged, but there is no documented disclosure channel or commitment to handling embargoed reports. Aligned with library-package advisory red.",
         "edge_case": null,
         "suggested_threshold_adjustment": null,
         "computed_signal_refs": [
@@ -8231,8 +8231,8 @@
       },
       "is_it_safe_out_of_the_box": {
         "color": "amber",
-        "short_answer": "Partly \u2014 Homebrew path is safe; curl|bash path on macOS/Linux skips checksum verification (Windows installer does verify); APP_ENV=production gate defends the 888888 path by default",
-        "rationale": "Three install paths with different safety profiles (E6, E7): Homebrew tap is formula-pinned + checksum-verified (low risk); curl|bash on Unix tracks main and skips SHA256 verification on the binary download (medium risk \u2014 F1); install.ps1 on Windows DOES verify checksums.txt. Self-host hardening: docker-compose.selfhost.yml pins APP_ENV=production by default, which disables the dev verification code path (E8 \u2014 F0 fix landed ~2026-04-18). Net: the default install path consumers will land on (Homebrew if present, else curl|bash) is medium-risk on Unix without operator action.",
+        "short_answer": "Partly — Homebrew path is safe; curl|bash path on macOS/Linux skips checksum verification (Windows installer does verify); APP_ENV=production gate defends the 888888 path by default",
+        "rationale": "Three install paths with different safety profiles (E6, E7): Homebrew tap is formula-pinned + checksum-verified (low risk); curl|bash on Unix tracks main and skips SHA256 verification on the binary download (medium risk — F1); install.ps1 on Windows DOES verify checksums.txt. Self-host hardening: docker-compose.selfhost.yml pins APP_ENV=production by default, which disables the dev verification code path (E8 — F0 fix landed ~2026-04-18). Net: the default install path consumers will land on (Homebrew if present, else curl|bash) is medium-risk on Unix without operator action.",
         "edge_case": null,
         "suggested_threshold_adjustment": null,
         "computed_signal_refs": [
@@ -8246,9 +8246,9 @@
     "catalog_metadata": {
       "category": "developer-tooling",
       "subcategory": "agentic-platform",
-      "short_description": "Open-source managed agents platform \u2014 assign coding tasks to AI agents (Claude Code, Codex, Hermes, etc.) via web/desktop dashboard. TS monorepo + Go server + Electron desktop, distributed via Homebrew + curl|bash + GHCR Docker images. By multica-ai (organization, 84 contributors).",
+      "short_description": "Open-source managed agents platform — assign coding tasks to AI agents (Claude Code, Codex, Hermes, etc.) via web/desktop dashboard. TS monorepo + Go server + Electron desktop, distributed via Homebrew + curl|bash + GHCR Docker images. By multica-ai (organization, 84 contributors).",
       "target_user": "Developer or small AI-native team adopting agent-managed task workflows. Cloud users hit `brew install multica-ai/tap/multica` then `multica setup`. Self-host operators run `curl ... install.sh | bash -s -- --with-server` then `multica setup self-host`.",
-      "shape": "Agentic platform (server + CLI + web + desktop). Multi-runtime: Go backend, Next.js web, Electron desktop, Node CLI. Closest V1.2 catalog comparator: none \u2014 first agentic-platform shape in V1.2 (Archon was V2.4-era). Calibration v2 classified as `library-package` due to publishable npm manifest, with Phase 4 overrides on Q2.",
+      "shape": "Agentic platform (server + CLI + web + desktop). Multi-runtime: Go backend, Next.js web, Electron desktop, Node CLI. Closest V1.2 catalog comparator: none — first agentic-platform shape in V1.2 (Archon was V2.4-era). Calibration v2 classified as `library-package` due to publishable npm manifest, with Phase 4 overrides on Q2.",
       "prior_scan_note": "Re-scan of multica-ai/multica. Catalog entry 11 was scanned 2026-04-19 at HEAD b8907dd (V2.4 / delegated, Caution split). Current scan: V2.5-preview at HEAD 3df95c8 (16 days later, +4 commits visible in PR cadence). Verdict still Caution; the 888888 dev-code Critical concern from prior scan is now Warning because APP_ENV gate landed (closed issue #1304, ~2026-04-18). Open #1114 LD_PRELOAD privesc is new vs prior scan."
     }
   },
@@ -8266,7 +8266,7 @@
   },
   "phase_5_prose_llm": {
     "editorial_caption": {
-      "text": "multica-ai/multica \u2014 23.5k-star open-source agentic platform (TS+Go monorepo, Electron desktop, GHCR self-host), 4 months old, 84 contributors. The 888888 dev-verification-code Critical from the 2026-04-19 prior scan is now Warning (APP_ENV=production gate landed ~2026-04-18). Active responsiveness \u2014 5 security issues closed in past 8 days. Open concerns: branch-protection ruleset declared but enforcement disabled (5.7% review rate, 73% self-merge), curl|bash installer skips SHA256 verification on macOS/Linux (Windows DOES verify), and #1114 LD_PRELOAD privesc on agent custom_env still open at 16 days. Caution."
+      "text": "multica-ai/multica — 23.5k-star open-source agentic platform (TS+Go monorepo, Electron desktop, GHCR self-host), 4 months old, 84 contributors. The 888888 dev-verification-code Critical from the 2026-04-19 prior scan is now Warning (APP_ENV=production gate landed ~2026-04-18). Active responsiveness — 5 security issues closed in past 8 days. Open concerns: branch-protection ruleset declared but enforcement disabled (5.7% review rate, 73% self-merge), curl|bash installer skips SHA256 verification on macOS/Linux (Windows DOES verify), and #1114 LD_PRELOAD privesc on agent custom_env still open at 16 days. Caution."
     },
     "per_finding_prose": {
       "entries": [
@@ -8275,30 +8275,30 @@
           "body_paragraphs": [
             "The 2026-04-19 prior scan flagged this as Critical: any operator running self-host with the dev verification code populated could log in as anyone via the literal `888888`. Since that scan, multica has added an APP_ENV=production gate in two places: server/cmd/server/main.go:128 logs a warning and skips activation when production; auth.go:97-108 isDevVerificationCode() short-circuits to false in production. Closed issue #1304 documents the fix.",
             "docker-compose.selfhost.yml pins `APP_ENV: ${APP_ENV:-production}` by default, so the out-of-the-box self-host posture is hardened. The remaining Warning-level risk is operator error: an admin who deliberately sets APP_ENV to non-production (commonly done when running a private test instance) AND populates MULTICA_DEV_VERIFICATION_CODE re-opens the bypass.",
-            "The mitigation is config discipline rather than code change. The defense is one config flip away from being absent \u2014 which is why this is Warning rather than OK. A maintainer-side hardening would gate the dev-code variable at build-time, so the production binary cannot enable it under any runtime configuration."
+            "The mitigation is config discipline rather than code change. The defense is one config flip away from being absent — which is why this is Warning rather than OK. A maintainer-side hardening would gate the dev-code variable at build-time, so the production binary cannot enable it under any runtime configuration."
           ]
         },
         {
           "finding_id": "F1",
           "body_paragraphs": [
             "Two install paths in the README run shell from the network. `curl -fsSL .../main/scripts/install.sh | bash` on macOS/Linux. `irm .../main/scripts/install.ps1 | iex` on Windows. Both fetch from the `main` branch (no SHA pin, no tag pin). install.sh's binary-download step (lines 83-130) scrapes the redirect on `releases/latest` to learn the tag, downloads the binary, and `mv`s it to /usr/local/bin without integrity check.",
-            "install.ps1 by contrast (lines 195-213) downloads `checksums.txt` from the release tag and validates SHA256 of the downloaded zip. Windows users get checksum verification; Linux/macOS users do not. The asymmetry reads as a feature gap (Windows installer was hardened later) rather than malicious \u2014 but it leaves the largest install audience (Unix) unverified.",
+            "install.ps1 by contrast (lines 195-213) downloads `checksums.txt` from the release tag and validates SHA256 of the downloaded zip. Windows users get checksum verification; Linux/macOS users do not. The asymmetry reads as a feature gap (Windows installer was hardened later) rather than malicious — but it leaves the largest install audience (Unix) unverified.",
             "The Homebrew install path (`brew install multica-ai/tap/multica`) sidesteps both. Homebrew formulae are tap-pinned and pull from a separate distribution channel with its own integrity checks. Whenever Homebrew is available, prefer it."
           ]
         },
         {
           "finding_id": "F2",
           "body_paragraphs": [
-            "All four canonical governance signals are negative. Classic protection HTTP 404. Ruleset count 1 \u2014 but `enforcement: disabled` on the only ruleset (`protect-main-branch`, id 11828157, created 2026-01-15 and never enabled). Rules-on-default 0. CODEOWNERS not present at any of 4 standard paths. Org rulesets unknown (token scope).",
-            "The presence of a disabled ruleset is the most informative signal \u2014 the maintainers KNOW they should have branch protection (they created the rule) but have not flipped enforcement on. Whether this is intentional (perhaps to avoid friction during the 4-month bootstrap) or oversight, the operational result is identical: every push to main reaches consumers with no second-human gate.",
-            "84 contributors with the top contributor at 29.7% commit share \u2014 multica is NOT solo-maintained, so the bus-factor angle is weaker than the prior scan's framing. The risk is procedural (no enforced gate), not single-person SPOF. The C20 governance computer fires Warning rather than Critical because there are no formal releases yet (the recent-release amplifier that promotes governance-SPOF to Critical is N/A; multica ships via GHCR images and an as-yet-unpublished Homebrew tap)."
+            "All four canonical governance signals are negative. Classic protection HTTP 404. Ruleset count 1 — but `enforcement: disabled` on the only ruleset (`protect-main-branch`, id 11828157, created 2026-01-15 and never enabled). Rules-on-default 0. CODEOWNERS not present at any of 4 standard paths. Org rulesets unknown (token scope).",
+            "The presence of a disabled ruleset is the most informative signal — the maintainers KNOW they should have branch protection (they created the rule) but have not flipped enforcement on. Whether this is intentional (perhaps to avoid friction during the 4-month bootstrap) or oversight, the operational result is identical: every push to main reaches consumers with no second-human gate.",
+            "84 contributors with the top contributor at 29.7% commit share — multica is NOT solo-maintained, so the bus-factor angle is weaker than the prior scan's framing. The risk is procedural (no enforced gate), not single-person SPOF. The C20 governance computer fires Warning rather than Critical because there are no formal releases yet (the recent-release amplifier that promotes governance-SPOF to Critical is N/A; multica ships via GHCR images and an as-yet-unpublished Homebrew tap)."
           ]
         },
         {
           "finding_id": "F3",
           "body_paragraphs": [
-            "300-PR sample yields 5.7% formal review rate, 5.7% any-review rate, and 220 of 300 PRs (73%) self-merged. Lifetime merged: 1,026 PRs. The `formal === any` equality is interesting \u2014 when reviews happen, they are formal approvals; the issue is they rarely happen.",
-            "30 of the 300 PRs in the sample carried security keywords (title or path). Combined with F2's missing enforcement, the operational shape is: most code reaching main has had no second-human read, including security-relevant changes. This is the lived consequence of F2 \u2014 a finding in its own right because the gap is observable in PR data independent of governance signals.",
+            "300-PR sample yields 5.7% formal review rate, 5.7% any-review rate, and 220 of 300 PRs (73%) self-merged. Lifetime merged: 1,026 PRs. The `formal === any` equality is interesting — when reviews happen, they are formal approvals; the issue is they rarely happen.",
+            "30 of the 300 PRs in the sample carried security keywords (title or path). Combined with F2's missing enforcement, the operational shape is: most code reaching main has had no second-human read, including security-relevant changes. This is the lived consequence of F2 — a finding in its own right because the gap is observable in PR data independent of governance signals.",
             "The fix is the same as F2: enabling the existing `protect-main-branch` ruleset with required-review-on-PR closes both findings. The maintainers have the scaffold; flipping enforcement on is a one-action change."
           ]
         },
@@ -8306,22 +8306,22 @@
           "finding_id": "F4",
           "body_paragraphs": [
             "Four security issues open at scan. The notable one is #1114 (16 days old): `isBlockedEnvKey allows LD_PRELOAD/NODE_OPTIONS/HTTP_PROXY override via custom_env`. The reporter walks through the agent-execution code path where workspace operators can pass loader-overriding env vars to spawned agent CLIs, escalating from workspace-operator privilege to whatever the agent CLI runs with. Unresolved past two weeks. The other three open items (#1382 vague report, #1663 brute-force protection, #1667 Origin/CSRF) are 7-12 days old.",
-            "Counter-signal: the team CLOSED FIVE security issues in the prior 8 days (2026-04-16 to 2026-04-24) \u2014 the 888888 self-host issue (#1304), shell.openExternal IPC URL-scheme bypass (#1115), Hermes filterCustomArgs bypass (#1113), /health/realtime metrics exposure (#1606), and open-redirect via ?next= (#1116). The fix rate roughly matches the open-arrival rate.",
-            "Pattern: responsive (5 closed in 8 days), but the queue is not shrinking. This is the operational shape of an active small-team project under active security-research scrutiny \u2014 the scrutiny is real (probably from the prior scan + community attention to agentic platforms), and the team is keeping up. The scorecard's Q2 advisory says red on the open-side count alone; the override to amber reflects the close-side counter-signal."
+            "Counter-signal: the team CLOSED FIVE security issues in the prior 8 days (2026-04-16 to 2026-04-24) — the 888888 self-host issue (#1304), shell.openExternal IPC URL-scheme bypass (#1115), Hermes filterCustomArgs bypass (#1113), /health/realtime metrics exposure (#1606), and open-redirect via ?next= (#1116). The fix rate roughly matches the open-arrival rate.",
+            "Pattern: responsive (5 closed in 8 days), but the queue is not shrinking. This is the operational shape of an active small-team project under active security-research scrutiny — the scrutiny is real (probably from the prior scan + community attention to agentic platforms), and the team is keeping up. The scorecard's Q2 advisory says red on the open-side count alone; the override to amber reflects the close-side counter-signal."
           ]
         },
         {
           "finding_id": "F5",
           "body_paragraphs": [
-            "osv.dev batch lookup over 30 declared deps yielded one advisory: @tiptap/extension-link GHSA-vhrc-hgrq-x75r (DOM XSS in tiptap link extension). Single low-severity transitive vuln in a UI library \u2014 not a deployment blocker, just a fix-and-bump waiting on upstream tiptap.",
-            "Defensibility gap: no `.github/dependabot.yml` is present. Even at the alert-only tier, Dependabot is not configured. The native Dependabot alerts API returned HTTP 403 (admin scope required) so the true alert state inside the maintainer view is unknown \u2014 but the absence of a config file means there's no automated bump-PR pipeline."
+            "osv.dev batch lookup over 30 declared deps yielded one advisory: @tiptap/extension-link GHSA-vhrc-hgrq-x75r (DOM XSS in tiptap link extension). Single low-severity transitive vuln in a UI library — not a deployment blocker, just a fix-and-bump waiting on upstream tiptap.",
+            "Defensibility gap: no `.github/dependabot.yml` is present. Even at the alert-only tier, Dependabot is not configured. The native Dependabot alerts API returned HTTP 403 (admin scope required) so the true alert state inside the maintainer view is unknown — but the absence of a config file means there's no automated bump-PR pipeline."
           ]
         },
         {
           "finding_id": "F6",
           "body_paragraphs": [
-            "Five coverage limitations independent of the repo: OSSF Scorecard returned HTTP 404 (repo not yet indexed; will appear once Scorecard's discovery threshold is crossed). gitleaks not installed in the scan environment, so secrets-in-history were not scanned. Dependabot alerts API 403 (admin scope). Org rulesets API errored (admin:org scope). npm registry presence probe `unavailable` for all 10 declared @multica/* packages \u2014 likely they haven't been published to npm yet, but the harness can't disambiguate that from registry-probe-failed.",
-            "Re-running with admin-scoped GitHub token + gitleaks installed + manual `npm view multica` would close all five gaps. None of these are findings about multica \u2014 they're scanner-side limits that consumers should know about so they can request a wider re-scan if needed."
+            "Five coverage limitations independent of the repo: OSSF Scorecard returned HTTP 404 (repo not yet indexed; will appear once Scorecard's discovery threshold is crossed). gitleaks not installed in the scan environment, so secrets-in-history were not scanned. Dependabot alerts API 403 (admin scope). Org rulesets API errored (admin:org scope). npm registry presence probe `unavailable` for all 10 declared @multica/* packages — likely they haven't been published to npm yet, but the harness can't disambiguate that from registry-probe-failed.",
+            "Re-running with admin-scoped GitHub token + gitleaks installed + manual `npm view multica` would close all five gaps. None of these are findings about multica — they're scanner-side limits that consumers should know about so they can request a wider re-scan if needed."
           ]
         }
       ]
@@ -8343,5 +8343,5 @@
     "findings": []
   },
   "schema_version": "1.2",
-  "$comment": "V2.5-preview scan of multica-ai/multica @ 3df95c8 \u2014 re-scan of catalog entry 11"
+  "$comment": "V2.5-preview scan of multica-ai/multica @ 3df95c8 — re-scan of catalog entry 11"
 }

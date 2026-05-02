@@ -21,12 +21,12 @@ When the user says "continue" — start at the **next concrete action** under §
 
 ## § Current state — PLAN COMPLETE (back-to-basics calibration rebuild closed 2026-05-01)
 
-**Last updated:** 2026-05-02T08:45:45Z
+**Last updated:** 2026-05-02T13:01:12Z
 
-**This block is your resumption packet.** All 8 phases of the back-to-basics calibration rebuild (0 through 7) are landed on `origin/main`. There is no active phase. **First post-rebuild wild scan landed 2026-05-02 (session 13): multica-ai/multica re-scan as catalog entry 28.** If you are resuming work, read the **Post-rebuild follow-up backlog** below for queued items and pick one to start. None of those items are urgent or blocking.
+**This block is your resumption packet.** All 8 phases of the back-to-basics calibration rebuild (0 through 7) are landed on `origin/main`. There is no active phase. **First post-rebuild wild scan landed 2026-05-02 (session 13): multica-ai/multica re-scan as catalog entry 28. Five next-session backlog items landed 2026-05-02 (session 14): doc cleanup #3, #4, #6 + scan-coverage one-liner + agentic-platform classifier branch.** If you are resuming work, read the **Post-rebuild follow-up backlog** below for remaining queued items and pick one to start. None of those items are urgent or blocking.
 
 ### HEAD + branch
-- **HEAD:** `48f4910` on `origin/main` at 2026-05-02T08:45:45Z (one-commit lag from this update; precise SHA after this commit recorded in `AUDIT_TRAIL.md` session 13 checkpoint).
+- **HEAD:** updated by this commit (precise SHA in `git log -1` immediately after; the commit BEFORE this update was `c1ae04d` — the agentic-platform classifier merge).
 - **Pre-render tag:** `pre-calibration-rerender` preserved at `e6b0a3b` (Phase 5 rollback anchor).
 - **Tree:** clean (before this commit).
 
@@ -42,9 +42,12 @@ When the user says "continue" — start at the **next concrete action** under §
 | 5 — Calibration v2 rerender | 12 V1.2 wild scans (entries 16-27) re-rendered; 0 verdict shifts; 10 advisory shifts; 3 redundant overrides cleared | `docs/calibration-rebuild-rerender-comparison.md` |
 | 6 — MD calibration verification | 5/5 cold-fork consumer match (pass bar ≥4); over-cautious + under-cautious failure modes both ruled out | `docs/calibration-rebuild-md-verification.md` |
 | 7 — Simple Report HTML | `docs/render-simple.py` + templates + 22 tests + 12 Simple Reports rendered; CLAUDE.md wizard flipped to V2.5-preview default; Operator Guide Phase 4 contract restated | `docs/simple-report-concept.md` + Operator Guide §8.5b |
-| **Post-rebuild — entry 28** | **multica re-scan @ 3df95c8** (V2.5-preview / continuous; re-scan of entry 11). Verdict Caution (split). 888888 Critical → Warning (APP_ENV gate landed in window between scans). Q2 `missing_qualitative_context` override (2nd consecutive use after skills entry 27). Shape misclassified as `library-package` — diagnosis logged for next session. | Commit `48f4910`; bundle `docs/scan-bundles/multica-3df95c8.json`; `AUDIT_TRAIL.md` session 13 |
+| **Post-rebuild — entry 28** (session 13) | **multica re-scan @ 3df95c8** (V2.5-preview / continuous; re-scan of entry 11). Verdict Caution (split). 888888 Critical → Warning (APP_ENV gate landed in window between scans). Q2 `missing_qualitative_context` override (2nd consecutive use after skills entry 27). | Commit `48f4910`; bundle `docs/scan-bundles/multica-3df95c8.json`; `AUDIT_TRAIL.md` session 13 |
+| **Session 14 — doc cleanup #3 + #4 + #6** | Operator Guide §6.0 pipeline-selection prelude + §7.5 V2.5-preview authoring cross-link landed. Telemetry §2-§9 re-derived for n=13 (signal_vocabulary_gap modal share dropped 67%→55% as `missing_qualitative_context` fired twice; §5.2 silent-fix corrected 11/11→12/13; V13-3 deferred Item C9 contraindicated). | Commit `52c2b78`; telemetry §10 changelog n=13 entry |
+| **Session 14 — scan-coverage one-liner** | `docs/render-simple.py` `derive_coverage_oneliner()` helper + Simple Report `.hero-coverage` line gated by canonical-format parser; 12 new tests; multica's Simple Report re-rendered to show the live line. | Commit `8dfadea` |
+| **Session 14 — agentic-platform classifier (V12x-17)** | `classify_shape()` Step 7.5 branch lands the first detection rule for `agentic-platform`. Multica reclassified `library-package` → `agentic-platform` (high confidence); 12 other V1.2 bundles unchanged. 31 new tests in `tests/test_classify_shape.py`. Bundle `phase_3_advisory.shape_classification` refreshed. | Commits `f90e508` + merge `c1ae04d` |
 
-**Tests:** 609/609 passing. **Catalog:** 28 entries; entries 16-28 have Simple Reports (13 of 28); entries 1-15 do not (V2.4-bundle adapter is a follow-up).
+**Tests:** 652/652 passing. **Catalog:** 28 entries; entries 16-28 have Simple Reports (13 of 28); entries 1-15 do not (V2.4-bundle adapter is a follow-up).
 
 ### Workflow contract (durable, post-rebuild)
 
@@ -63,20 +66,19 @@ CLAUDE.md wizard:
 
 ### Post-rebuild follow-up backlog (NONE BLOCKING)
 
-#### Next-session doc cleanup (queued from 2026-05-02 cold-start audit)
+#### Cleared in session 14 (2026-05-02 — all merged to `origin/main`)
 
-| # | Item | Scope | Notes |
-|---|---|---|---|
-| **#3** | Operator Guide §6 V2.5-preview pipeline-selection prelude | ~30 lines | Add §6.0 branch: V2.5-preview default → `python3 docs/phase_1_harness.py <owner/repo> --out form.json` then skip to §7. V2.4 legacy → continue with existing §6.1 ordering discipline. Cold-start audit found §6 still leads with V2.4 hand-gathering even though Q3a default is V2.5-preview. Low risk; additive. |
-| **#4** | Operator Guide §7 V2.5-preview authoring template cross-link | ~15 lines | Add §7.5 cross-linking `docs/scan-authoring-template/README.md` (per-scan workflow), `tests/fixtures/zustand-form.json` (populated reference), `docs/scan-schema.json` V1.2 (field requirements), `compute_scorecard_cells_v2()` in `docs/compute.py`. §7 currently describes V2.4 findings-bundle.md format only — V2.5-preview operators have no walkthrough for how to fill `phase_3_advisory` + `phase_4_structured_llm` + `phase_5_prose_llm` in form.json. Low risk; additive. |
-| **#6** | `docs/v12-wild-scan-telemetry.md` n=13 re-derivation | ~80 lines analytical work | §1 scan roster is at n=13 (skills entry 27 + multica entry 28 added) but §2 override-enum distribution + §3 cell distribution + §4 Q1/Q3 firing patterns + §9 V13-1 follow-up all still claim n=11 conclusions. §10 changelog explicitly flags that entries 27 + 28's two consecutive `missing_qualitative_context` fires **invalidate §9's claim** "V13-1 taxonomy remains stable / catchall hasn't fired post-V13-1 relabel" — but the §9 text itself still asserts the old conclusion. Two consecutive fires with different drivers (skills = sample-floor degeneracy, multica = closed-within-window counter-signal) reinforce the case for either compute-signal expansion (V12x-15 + V12x-16 candidates) or sub-enum splitting. Re-derivation requires re-reading 13 bundles + comparator-calibration judgment; deserves a clean session, not late-budget pressure. May surface new V13-3 follow-up triggers. (Header §11 reference stripped 2026-05-02 commit; analytical re-derivation deferred.) |
-
-#### Next-session feature work (queued, none blocking)
-
-| Item | Status | Notes |
+| Was | Landed in | Notes |
 |---|---|---|
-| **Scan-coverage one-liner for Simple Report template** | Approved, held | Add a single-line coverage summary to the Simple Report header so consumers know what the scan did NOT cover (e.g. "OSSF not indexed · gitleaks unavailable · Dependabot scope-restricted"). Owner-approved concept; held for next-session implementation. Touches `docs/templates-simple/simple-report.html.j2` + `docs/templates-simple/simple-report.md.j2` + `docs/render-simple.py` (derive coverage one-liner from `phase_4_structured_llm.coverage_gaps.entries`). Add tests to `tests/test_render_simple.py`. |
-| **agentic-platform classifier branch** | New (2026-05-02) | `classify_shape()` in `docs/compute.py` has `agentic-platform` in `SHAPE_CATEGORIES` enum but NO detection branch — comment at lines 1334-1340 says "deferred to first hit." Multica is the first V1.2 hit but lands in `library-package` (Step 8) because that step's `_is_publishable_package_manifest` check fires before any agentic-platform heuristic exists. **Recommended heuristic** (option 1 from session-13 diagnosis): compound signal — `docker-compose.selfhost*.yml` exists AND `server/` directory contains a non-npm backend manifest (`go.mod`/`go.sum`/`pyproject.toml`/`requirements.txt`) AND a publishable npm manifest exists. Insert as new **Step 7.5** between cli-binary (Step 7) and library-package (Step 8). Secondary heuristics (lower priority): README-phrase detection (`"managed agents"`/`"agent platform"`/`"agentic platform"`/`"multi-agent"`); GHCR image references in `.env.example`/compose; cross-language `monorepo.inner_packages` (npm + Go/Python/Ruby coexisting). Board review likely needed since this is calibration v2 scope and would shift judgment for any future scan landing in this bucket (postiz-app, Archon, future agentic-platform first-hits). Full diagnosis trace at end of 2026-05-02 session 13 transcript; key finding: multica's library-package match was technically defensible (publishable npm manifest exists) but the rule_id metadata reads "library-canonical shape" which mischaracterizes the assessment context. |
+| Doc cleanup #3 — Operator Guide §6 V2.5-preview pipeline prelude | `52c2b78` | §6.0 added in front of §6.1; V2.5-preview default → run harness, skip to §7; V2.4 legacy → continue with §6.1. |
+| Doc cleanup #4 — Operator Guide §7 V2.5-preview authoring cross-link | `52c2b78` | §7.5 cross-links `docs/scan-authoring-template/`, `tests/fixtures/zustand-form.json`, `docs/scan-schema.json` V1.2, `compute_scorecard_cells_v2()`. |
+| Doc cleanup #6 — telemetry §2-§9 n=13 re-derivation | `52c2b78` | All cross-scan tables refreshed against the 13 form.json bundles. signal_vocabulary_gap 67%→55%; Q4 67%→45%; §5.2 silent-fix 11/11→12/13 corrected; §9 V13-3 Item C9 contraindicated; V12x-15 + V12x-16 + V12x-17 added. |
+| Scan-coverage one-liner for Simple Report | `8dfadea` | `derive_coverage_oneliner()` + `.hero-coverage` template div + 12 new tests. Strict canonical-format parser; multica's Simple Report shows the live line; ghostty + others gracefully omit when entries are free-prose. |
+| agentic-platform classifier branch (V12x-17) | `f90e508` + merge `c1ae04d` | Step 7.5 between cli-binary and library-package. Compound signal: cross-language monorepo + canonical backend dir + npm-publish-frontend. Multica reclassified high-confidence; 12 other bundles unchanged. 31 new tests. |
+
+#### Remaining queued items (none blocking)
+
+(empty — pick from Long-running follow-ups below or run more wild scans)
 
 #### Long-running follow-ups (no specific session queue; pick when triggered)
 
