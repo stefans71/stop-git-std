@@ -2,6 +2,8 @@
 
 An LLM-driven deep-dive investigation tool that produces security scan reports for GitHub repos. Not a static analyzer — YOU do the investigation via `gh` CLI, synthesize findings, and render HTML + MD reports.
 
+**Last updated:** 2026-05-02T04:53:41Z
+
 ## Active work (auto-resume on "continue")
 
 Read **`docs/back-to-basics-plan.md` §Current state** for where we are, what's next, and what's blocked.
@@ -92,7 +94,7 @@ When a scan finishes (validator clean on all output files), present these option
 > 2. **Want a detailed walkthrough?** I'll read the full MD analysis and walk you through what needs to happen to safely install.
 > 3. **Run another scan** — give me the next repo URL
 > 4. **Send to board review** — launch a 3-model review on this scan's quality
-> 5. **Update the catalog** — add this scan to `docs/scanner-catalog.md` and commit
+> 5. **Update the catalog + telemetry** — add row to `docs/scanner-catalog.md`, copy `form.json` to `docs/scan-bundles/`, append override telemetry to `docs/v12-wild-scan-telemetry.md`, add checkpoint to `AUDIT_TRAIL.md`, and commit
 
 Wait for the user's choice. If they pick option 2, read the long-form `.md` file and walk through it conversationally: overall risk level, each calibrated finding in plain terms, what the action block recommends, and what specific conditions or pre-install steps would make installation safe (or whether you'd recommend they pick a different tool).
 
@@ -103,3 +105,10 @@ Wait for the user's choice. If they pick option 2, read the long-form `.md` file
 - **Validator is the gate.** `python3 docs/validate-scanner-report.py --report <file>` must exit 0 on long-form MD (Phase 4a) and Simple Report HTML (Phase 4b). Long-form HTML (Phase 4c), if produced, also gates `--report`. V2.5-preview additionally requires `--parity` zero errors AND zero warnings on long-form MD/HTML pairs before Step G acceptance.
 - **head-sha.txt is the first durable artifact.** Write it before any gh api call. On Phase 4 success, copy findings-bundle to `docs/scan-bundles/`.
 - **Update the catalog** at `docs/scanner-catalog.md` after every completed scan. Include the `rendering-pipeline` column (values: `v2.4` or `v2.5-preview`) alongside the existing `methodology-used` flag.
+
+## Timestamp convention
+
+- **Every commit:** run `date -u +"%Y-%m-%dT%H:%M:%SZ"` and include the output in the commit message.
+- **Every doc created or modified:** add or update a `**Last updated:**` line near the top with the UTC timestamp from the same `date -u` command.
+- **§Current state updates:** include the timestamp in the HEAD line so the resumption packet has a verifiable date.
+- This provides verifiable timestamps independent of session numbering. Never rely on your internal sense of time — always run the command.
