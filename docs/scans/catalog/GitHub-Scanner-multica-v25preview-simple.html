@@ -116,6 +116,13 @@ a:hover { text-decoration: underline; }
   display: flex; flex-wrap: wrap; gap: 0.5rem 1.25rem;
 }
 .hero-meta .sep { color: var(--text-muted); }
+.hero-coverage {
+  font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-muted);
+  margin-top: 0.5rem; line-height: 1.5;
+}
+.hero-coverage .hero-coverage-label {
+  text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-secondary);
+}
 
 /* ─── Verdict banner ───────────────────────────────────── */
 .verdict-section { padding: 1.5rem 0 2rem; }
@@ -279,6 +286,7 @@ a:hover { text-decoration: underline; }
       <span class="sep">·</span><span>NOASSERTION</span>
       <span class="sep">·</span><span>TypeScript</span>
     </div>
+    <div class="hero-coverage"><span class="hero-coverage-label">scan coverage gaps:</span> OSSF not indexed · gitleaks unavailable · Dependabot unknown · org rulesets unknown · npm registry status unavailable</div>
   </div>
 
   <div class="verdict-section">

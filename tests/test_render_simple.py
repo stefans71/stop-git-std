@@ -303,6 +303,112 @@ class TestFirstSentence:
         assert len(result) <= 101
 
 
+class TestDeriveCoverageOneliner:
+    """Coverage one-liner — only canonical-format entries render; free-prose skipped."""
+
+    def test_canonical_multica_format(self):
+        # The five entries from the multica scan (entry 28) are the canonical reference.
+        p4 = {"coverage_gaps": {"entries": [
+            "OSSF Scorecard — not_indexed: Repo not yet indexed by OSSF.",
+            "Secrets-in-history (gitleaks) — not_available: gitleaks not installed.",
+            "Dependabot alert count — unknown: API returned HTTP 403.",
+            "Org rulesets — unknown: API errored.",
+            "npm registry status (10 packages) — unavailable: Harness reported unavailable.",
+        ]}}
+        result = _render.derive_coverage_oneliner(p4)
+        assert result == "OSSF not indexed · gitleaks unavailable · Dependabot unknown · org rulesets unknown · npm registry status unavailable"
+
+    def test_free_prose_entries_skipped_silently(self):
+        # skills + WLED + kanata + wezterm legacy entries are LLM free-prose without the
+        # canonical `<area> — <status>: <remediation>` shape — must produce empty string,
+        # not garbled output.
+        p4 = {"coverage_gaps": {"entries": [
+            "Harness `code_patterns.agent_rule_files` does not recursively enumerate files. The actual prompt-injection surface (22 files, 1,815 lines) was not scanned.",
+            "Distribution-channel detection found 0 channels. The actual install paths are: (1) npx via vercel-labs CLI; (2) Claude Code plugin marketplace; (3) git clone + scripts/link-skills.sh.",
+        ]}}
+        assert _render.derive_coverage_oneliner(p4) == ""
+
+    def test_empty_entries_returns_empty_string(self):
+        assert _render.derive_coverage_oneliner({}) == ""
+        assert _render.derive_coverage_oneliner({"coverage_gaps": {}}) == ""
+        assert _render.derive_coverage_oneliner({"coverage_gaps": {"entries": []}}) == ""
+
+    def test_none_p4_safe(self):
+        assert _render.derive_coverage_oneliner(None) == ""
+
+    def test_max_entries_caps_one_liner(self):
+        entries = [f"Area{i} — unknown: detail" for i in range(10)]
+        result = _render.derive_coverage_oneliner({"coverage_gaps": {"entries": entries}}, max_entries=3)
+        assert result.count(" · ") == 2  # 3 parts joined by 2 separators
+        assert "Area0" in result and "Area2" in result and "Area3" not in result
+
+    def test_long_area_skipped(self):
+        # Areas exceeding max_area_chars are dropped — protects against pseudo-canonical
+        # entries where the LLM wrote a long sentence as the "area" half.
+        p4 = {"coverage_gaps": {"entries": [
+            "OSSF Scorecard — not_indexed: short is fine",
+            "A very long area name that exceeds the canonical short-token bound — unknown: rest",
+        ]}}
+        result = _render.derive_coverage_oneliner(p4, max_area_chars=20)
+        assert result == "OSSF not indexed"
+
+    def test_long_status_skipped(self):
+        p4 = {"coverage_gaps": {"entries": [
+            "OSSF Scorecard — this is a very long status token here and there: detail follows",
+            "Dependabot alert count — unknown: short detail",
+        ]}}
+        result = _render.derive_coverage_oneliner(p4, max_status_chars=15)
+        assert result == "Dependabot unknown"
+
+    def test_status_normalization(self):
+        p4 = {"coverage_gaps": {"entries": [
+            "OSSF Scorecard — not_indexed: detail",
+            "Secrets — not_available: detail",
+            "Org — scope_restricted: detail",
+        ]}}
+        result = _render.derive_coverage_oneliner(p4)
+        assert "not indexed" in result
+        assert "unavailable" in result
+        assert "scope-restricted" in result
+
+    def test_area_short_alias_applied(self):
+        p4 = {"coverage_gaps": {"entries": [
+            "OSSF Scorecard — not_indexed: detail",
+            "Secrets-in-history (gitleaks) — not_available: detail",
+            "Dependabot alert count — unknown: detail",
+            "Org rulesets — unknown: detail",
+        ]}}
+        result = _render.derive_coverage_oneliner(p4)
+        assert result == "OSSF not indexed · gitleaks unavailable · Dependabot unknown · org rulesets unknown"
+
+    def test_template_renders_line_when_present(self):
+        # Multica bundle has canonical entries — HTML and MD must include the line.
+        form = _load(REPO_ROOT / "docs" / "scan-bundles" / "multica-3df95c8.json")
+        html = _render.render_html(form)
+        md = _render.render_md(form)
+        assert "scan coverage gaps:" in html.lower()
+        assert "Scan coverage gaps:" in md
+        assert "OSSF not indexed" in html
+        assert "OSSF not indexed" in md
+
+    def test_template_omits_line_when_empty(self):
+        # ghostty bundle has free-prose entries that all skip — the line must NOT render.
+        form = _load(GHOSTTY)
+        ctx = _render.build_context(form)
+        assert ctx["coverage_oneliner"] == ""
+        html = _render.render_html(form)
+        md = _render.render_md(form)
+        # The literal label string must not appear when there's nothing to show.
+        assert "scan coverage gaps:" not in html.lower()
+        assert "Scan coverage gaps:" not in md
+
+    def test_html_class_present_when_rendered(self):
+        form = _load(REPO_ROOT / "docs" / "scan-bundles" / "multica-3df95c8.json")
+        html = _render.render_html(form)
+        assert 'class="hero-coverage"' in html
+        assert 'class="hero-coverage-label"' in html
+
+
 if __name__ == "__main__":
     import pytest
     sys.exit(pytest.main([__file__, "-v"]))

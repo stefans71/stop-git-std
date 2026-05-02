@@ -6,6 +6,8 @@ multica-ai/multica — 23.5k-star open-source agentic platform (TS+Go monorepo, 
 
 **Scanned:** 2026-05-02 · main @ 3df95c8 · 23,547 stars · NOASSERTION · TypeScript
 
+**Scan coverage gaps:** OSSF not indexed · gitleaks unavailable · Dependabot unknown · org rulesets unknown · npm registry status unavailable
+
 ---
 
 ## Trust scorecard

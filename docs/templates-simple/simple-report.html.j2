@@ -34,6 +34,9 @@
       <span class="sep">·</span><span>{{ language }}</span>
       {%- endif %}
     </div>
+    {%- if coverage_oneliner %}
+    <div class="hero-coverage"><span class="hero-coverage-label">scan coverage gaps:</span> {{ coverage_oneliner }}</div>
+    {%- endif %}
   </div>
 
   <div class="verdict-section">

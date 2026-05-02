@@ -5,7 +5,9 @@
 {{ verdict_summary }}
 
 **Scanned:** {{ scan_date }} · main @ {{ short_sha }}{% if stars %} · {{ stars }} stars{% endif %}{% if license %} · {{ license }}{% endif %}{% if language %} · {{ language }}{% endif %}
-
+{% if coverage_oneliner %}
+**Scan coverage gaps:** {{ coverage_oneliner }}
+{% endif %}
 ---
 
 ## Trust scorecard

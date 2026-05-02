@@ -114,6 +114,76 @@ def pick_top_findings(findings_block: dict, n: int = 3) -> list:
     return [pair[1] for pair in indexed[:n]]
 
 
+# Area + status normalizers for the coverage one-liner. Keys are matched against
+# the leading `<area>` token of each coverage_gaps entry; missing keys fall through
+# to the raw token (with parenthetical aside stripped if it overflows).
+_COVERAGE_AREA_SHORT = {
+    "OSSF Scorecard": "OSSF",
+    "Secrets-in-history (gitleaks)": "gitleaks",
+    "Dependabot alert count": "Dependabot",
+    "Dependabot alerts": "Dependabot",
+    "Org rulesets": "org rulesets",
+}
+_COVERAGE_STATUS_SHORT = {
+    "not_indexed": "not indexed",
+    "not_available": "unavailable",
+    "scope_restricted": "scope-restricted",
+}
+
+
+def _normalize_coverage_area(area: str) -> str:
+    short = _COVERAGE_AREA_SHORT.get(area)
+    if short:
+        return short
+    if len(area) > 28 and "(" in area:
+        return area.split("(", 1)[0].strip()
+    return area
+
+
+def _normalize_coverage_status(status: str) -> str:
+    s = (status or "").strip().rstrip(".,;:")
+    return _COVERAGE_STATUS_SHORT.get(s, s)
+
+
+def derive_coverage_oneliner(
+    p4: dict, *, max_entries: int = 5, max_area_chars: int = 35, max_status_chars: int = 28,
+) -> str:
+    """Build a terse '<area> <status> · ...' one-liner from coverage_gaps.entries.
+
+    Only consumes entries in the canonical harness/V13-style format
+    `"<area> — <status>: <remediation>"` where `<area>` and `<status>` are short
+    tokens. Free-prose entries (LLM-authored long sentences without the canonical
+    structure) are skipped silently — the result is "" when no canonical entries
+    exist, so the template omits the line entirely rather than rendering garbage.
+    """
+    entries = ((p4 or {}).get("coverage_gaps", {}) or {}).get("entries") or []
+    parts = []
+    for raw in entries:
+        if not isinstance(raw, str) or not raw.strip():
+            continue
+        if " — " in raw:
+            area, _, rest = raw.partition(" — ")
+        elif " - " in raw:
+            area, _, rest = raw.partition(" - ")
+        else:
+            continue  # No canonical separator — skip (likely free-prose entry).
+        area_short = _normalize_coverage_area(area.strip())
+        if not area_short or len(area_short) > max_area_chars:
+            continue
+        if ":" not in rest:
+            continue  # No `<status>: <remediation>` shape — skip.
+        status_token = rest.split(":", 1)[0].strip()
+        if not status_token or len(status_token) > max_status_chars:
+            continue
+        status = _normalize_coverage_status(status_token)
+        parts.append(f"{area_short} {status}")
+    if not parts:
+        return ""
+    if len(parts) > max_entries:
+        parts = parts[:max_entries]
+    return " · ".join(parts)
+
+
 # ─── Build template context ─────────────────────────────────────────
 def build_context(form: dict) -> dict:
     target = form.get("target", {}) or {}
@@ -229,6 +299,7 @@ def build_context(form: dict) -> dict:
         "action_class": ACTION_CLASS[verdict_level],
         "action_headline": ACTION_HEADLINE[verdict_level],
         "action_body": action_body,
+        "coverage_oneliner": derive_coverage_oneliner(p4),
     }
 
 
