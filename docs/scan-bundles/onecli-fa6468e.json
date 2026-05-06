@@ -1,0 +1,4364 @@
+{
+  "$comment": "onecli/onecli V1.2 wild scan \u2014 15th wild V1.2 scan; credential-vault for AI agents (TypeScript monorepo, npm + curl-pipe installer). 2,093 stars, ~2 months old, 1 dominant maintainer.",
+  "schema_version": "V1.2",
+  "_meta": {
+    "scanner_version": "V2.5-preview",
+    "prompt_version": "V2.4",
+    "scan_started_at": "2026-05-06T11:03:33.594196+00:00",
+    "model": "claude-opus-4-7 (via Claude Code)",
+    "scan_status": "completed",
+    "scan_completed_at": "2026-05-06T11:20:01.500919Z"
+  },
+  "target": {
+    "owner": "onecli",
+    "repo": "onecli",
+    "full_name": "onecli/onecli",
+    "url": "https://github.com/onecli/onecli"
+  },
+  "scanner_integrity": {
+    "injection_matches": 0,
+    "actionable_count": 0,
+    "findings": []
+  },
+  "phase_1_raw_capture": {
+    "pre_flight": {
+      "head_sha": "fa6468e4711bc283f26b11e68c0ce8dc6a799010",
+      "default_branch": "main",
+      "tarball_extracted": false,
+      "tarball_file_count": null,
+      "symlinks_stripped": null,
+      "api_rate_limit": {
+        "limit": 5000,
+        "remaining": 4995,
+        "reset": 1778068549,
+        "used": 5
+      }
+    },
+    "repo_metadata": {
+      "name": "onecli",
+      "description": "Open-source credential vault, give your AI agents access to services without exposing keys.",
+      "created_at": "2026-03-08T10:38:52Z",
+      "pushed_at": "2026-05-06T08:19:49Z",
+      "stargazer_count": 2093,
+      "fork_count": 104,
+      "archived": false,
+      "fork": false,
+      "has_issues_enabled": true,
+      "primary_language": "TypeScript",
+      "topics": [
+        "ai-agents",
+        "cli",
+        "mcp",
+        "nanoclaw",
+        "nodejs",
+        "openclaw",
+        "postgres",
+        "rust",
+        "secret-management",
+        "security",
+        "security-tools",
+        "vault"
+      ],
+      "license_spdx": "Apache-2.0",
+      "default_branch": "main",
+      "open_issues_count": 21,
+      "size_kb": 5420
+    },
+    "contributors": {
+      "top_contributors": [
+        {
+          "contributions": 170,
+          "login": "guyb1"
+        },
+        {
+          "contributions": 24,
+          "login": "johnnyfish"
+        },
+        {
+          "contributions": 2,
+          "login": "christian-oudard"
+        },
+        {
+          "contributions": 2,
+          "login": "mbravorus"
+        },
+        {
+          "contributions": 1,
+          "login": "abergs"
+        },
+        {
+          "contributions": 1,
+          "login": "AvnerCohen"
+        }
+      ],
+      "total_contributor_count": 15
+    },
+    "maintainer_accounts": {
+      "accounts": [
+        {
+          "bio": "Connect GitHub to OneCLI so AI agents can manage repos, issues, and PRs on your behalf.",
+          "company": null,
+          "created_at": "2026-02-24T13:09:57Z",
+          "followers": 25,
+          "login": "onecli",
+          "public_repos": 5,
+          "type": "Organization",
+          "role": "owner"
+        },
+        {
+          "bio": null,
+          "company": null,
+          "created_at": "2014-02-13T21:08:30Z",
+          "followers": 77,
+          "login": "guyb1",
+          "public_repos": 25,
+          "type": "User",
+          "role": "contributor",
+          "contributions": 170
+        },
+        {
+          "bio": "Founder of https://chartdb.io \ud83e\udde2\ud83d\udc68\ud83c\udffb\u200d\ud83d\udcbb\u2661 \r\nChartDB \ud83d\udc18",
+          "company": "ChartDB",
+          "created_at": "2014-11-19T20:38:44Z",
+          "followers": 77,
+          "login": "johnnyfish",
+          "public_repos": 33,
+          "type": "User",
+          "role": "contributor",
+          "contributions": 24
+        },
+        {
+          "bio": null,
+          "company": null,
+          "created_at": "2009-09-08T15:30:25Z",
+          "followers": 50,
+          "login": "christian-oudard",
+          "public_repos": 117,
+          "type": "User",
+          "role": "contributor",
+          "contributions": 2
+        },
+        {
+          "bio": null,
+          "company": null,
+          "created_at": "2011-01-31T23:06:35Z",
+          "followers": 17,
+          "login": "mbravorus",
+          "public_repos": 58,
+          "type": "User",
+          "role": "contributor",
+          "contributions": 2
+        },
+        {
+          "bio": null,
+          "company": "Bitwarden",
+          "created_at": "2010-08-07T20:34:59Z",
+          "followers": 165,
+          "login": "abergs",
+          "public_repos": 123,
+          "type": "User",
+          "role": "contributor",
+          "contributions": 1
+        }
+      ]
+    },
+    "ossf_scorecard": {
+      "queried": true,
+      "indexed": false,
+      "http_status": 404,
+      "overall_score": null,
+      "checks": [],
+      "raw_response": null
+    },
+    "community_profile": {
+      "health_percentage": 75,
+      "has_code_of_conduct": true,
+      "has_contributing": true,
+      "has_security_policy": false,
+      "license_spdx": "Apache-2.0"
+    },
+    "branch_protection": {
+      "classic": {
+        "status": 404
+      },
+      "rulesets": {
+        "entries": [
+          {
+            "id": 13642592,
+            "name": "main",
+            "target": "branch",
+            "source_type": "Repository",
+            "source": "onecli/onecli",
+            "enforcement": "active",
+            "node_id": "RRS_lACqUmVwb3NpdG9yec5GFtA8zgDQK2A",
+            "_links": {
+              "self": {
+                "href": "https://api.github.com/repos/onecli/onecli/rulesets/13642592"
+              },
+              "html": {
+                "href": "https://github.com/onecli/onecli/rules/13642592"
+              }
+            },
+            "created_at": "2026-03-08T20:01:02.605Z",
+            "updated_at": "2026-04-28T14:30:00.951Z"
+          }
+        ],
+        "count": 1
+      },
+      "rules_on_default": {
+        "entries": [
+          {
+            "type": "deletion",
+            "ruleset_source_type": "Repository",
+            "ruleset_source": "onecli/onecli",
+            "ruleset_id": 13642592
+          },
+          {
+            "type": "non_fast_forward",
+            "ruleset_source_type": "Repository",
+            "ruleset_source": "onecli/onecli",
+            "ruleset_id": 13642592
+          },
+          {
+            "type": "pull_request",
+            "parameters": {
+              "required_approving_review_count": 0,
+              "dismiss_stale_reviews_on_push": false,
+              "required_reviewers": [],
+              "require_code_owner_review": false,
+              "require_last_push_approval": false,
+              "required_review_thread_resolution": false,
+              "allowed_merge_methods": [
+                "squash"
+              ]
+            },
+            "ruleset_source_type": "Repository",
+            "ruleset_source": "onecli/onecli",
+            "ruleset_id": 13642592
+          },
+          {
+            "type": "required_status_checks",
+            "parameters": {
+              "strict_required_status_checks_policy": true,
+              "do_not_enforce_on_create": false,
+              "required_status_checks": [
+                {
+                  "context": "Rust",
+                  "integration_id": 15368
+                },
+                {
+                  "context": "Lint & Format",
+                  "integration_id": 15368
+                },
+                {
+                  "context": "Build & Type Check",
+                  "integration_id": 15368
+                }
+              ]
+            },
+            "ruleset_source_type": "Repository",
+            "ruleset_source": "onecli/onecli",
+            "ruleset_id": 13642592
+          }
+        ],
+        "count": 4
+      },
+      "owner_type": "Organization",
+      "org_rulesets": {
+        "status": "error",
+        "entries": []
+      }
+    },
+    "codeowners": {
+      "found": false,
+      "path": null,
+      "content": null,
+      "locations_checked": [
+        "CODEOWNERS",
+        ".github/CODEOWNERS",
+        "docs/CODEOWNERS",
+        ".gitlab/CODEOWNERS"
+      ]
+    },
+    "releases": {
+      "entries": [
+        {
+          "tag_name": "v1.21.0",
+          "published_at": "2026-05-05T17:03:18Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "guyb1"
+        },
+        {
+          "tag_name": "v1.20.0",
+          "published_at": "2026-05-05T12:25:26Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "guyb1"
+        },
+        {
+          "tag_name": "v1.19.1",
+          "published_at": "2026-05-03T08:10:03Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "guyb1"
+        },
+        {
+          "tag_name": "v1.19.0",
+          "published_at": "2026-05-01T08:28:44Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "guyb1"
+        },
+        {
+          "tag_name": "v1.18.6",
+          "published_at": "2026-04-27T14:57:03Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "guyb1"
+        },
+        {
+          "tag_name": "v1.18.5",
+          "published_at": "2026-04-27T13:53:10Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "guyb1"
+        },
+        {
+          "tag_name": "v1.18.4",
+          "published_at": "2026-04-27T12:24:24Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "guyb1"
+        },
+        {
+          "tag_name": "v1.18.3",
+          "published_at": "2026-04-26T16:53:04Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "guyb1"
+        },
+        {
+          "tag_name": "v1.18.2",
+          "published_at": "2026-04-22T10:38:05Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "guyb1"
+        },
+        {
+          "tag_name": "v1.18.1",
+          "published_at": "2026-04-20T06:54:52Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "guyb1"
+        },
+        {
+          "tag_name": "v1.18.0",
+          "published_at": "2026-04-16T14:45:40Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "guyb1"
+        },
+        {
+          "tag_name": "v1.17.0",
+          "published_at": "2026-04-16T08:10:58Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "guyb1"
+        },
+        {
+          "tag_name": "v1.16.0",
+          "published_at": "2026-04-14T14:22:33Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "guyb1"
+        },
+        {
+          "tag_name": "v1.15.1",
+          "published_at": "2026-04-10T06:24:22Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "guyb1"
+        },
+        {
+          "tag_name": "v1.15.0",
+          "published_at": "2026-04-09T20:04:12Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "guyb1"
+        },
+        {
+          "tag_name": "v1.14.2",
+          "published_at": "2026-04-08T14:10:05Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "guyb1"
+        },
+        {
+          "tag_name": "v1.14.1",
+          "published_at": "2026-04-06T17:34:20Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "guyb1"
+        },
+        {
+          "tag_name": "v1.14.0",
+          "published_at": "2026-04-06T16:16:37Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "guyb1"
+        },
+        {
+          "tag_name": "v1.13.0",
+          "published_at": "2026-04-06T11:45:13Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "guyb1"
+        },
+        {
+          "tag_name": "v1.12.1",
+          "published_at": "2026-04-05T12:57:57Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "guyb1"
+        },
+        {
+          "tag_name": "v1.12.0",
+          "published_at": "2026-04-03T18:42:20Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "guyb1"
+        },
+        {
+          "tag_name": "v1.11.0",
+          "published_at": "2026-04-02T14:14:41Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "guyb1"
+        },
+        {
+          "tag_name": "v1.10.0",
+          "published_at": "2026-03-31T16:01:32Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "guyb1"
+        },
+        {
+          "tag_name": "v1.9.0",
+          "published_at": "2026-03-31T13:17:50Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "guyb1"
+        },
+        {
+          "tag_name": "v1.8.0",
+          "published_at": "2026-03-30T09:04:31Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "guyb1"
+        },
+        {
+          "tag_name": "v1.7.2",
+          "published_at": "2026-03-26T20:17:52Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "guyb1"
+        },
+        {
+          "tag_name": "v1.7.1",
+          "published_at": "2026-03-26T19:09:57Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "guyb1"
+        },
+        {
+          "tag_name": "v1.7.0",
+          "published_at": "2026-03-25T18:34:33Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "guyb1"
+        },
+        {
+          "tag_name": "v1.6.0",
+          "published_at": "2026-03-25T09:31:09Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "guyb1"
+        },
+        {
+          "tag_name": "v1.5.5",
+          "published_at": "2026-03-24T11:54:01Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "guyb1"
+        },
+        {
+          "tag_name": "v1.5.4",
+          "published_at": "2026-03-23T19:43:14Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "guyb1"
+        },
+        {
+          "tag_name": "v1.5.3",
+          "published_at": "2026-03-23T14:36:27Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "guyb1"
+        },
+        {
+          "tag_name": "v1.5.2",
+          "published_at": "2026-03-23T13:34:20Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "guyb1"
+        },
+        {
+          "tag_name": "v1.5.1",
+          "published_at": "2026-03-23T11:11:17Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "guyb1"
+        },
+        {
+          "tag_name": "v1.5.0",
+          "published_at": "2026-03-22T19:56:53Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "guyb1"
+        },
+        {
+          "tag_name": "v1.4.2",
+          "published_at": "2026-03-22T13:34:21Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "guyb1"
+        },
+        {
+          "tag_name": "v1.4.1",
+          "published_at": "2026-03-20T19:34:40Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "guyb1"
+        },
+        {
+          "tag_name": "v1.4.0",
+          "published_at": "2026-03-20T19:24:30Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "guyb1"
+        },
+        {
+          "tag_name": "v1.3.0",
+          "published_at": "2026-03-19T16:41:26Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "guyb1"
+        },
+        {
+          "tag_name": "v1.2.1",
+          "published_at": "2026-03-19T15:39:49Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "guyb1"
+        },
+        {
+          "tag_name": "v1.2.0",
+          "published_at": "2026-03-18T16:03:09Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "guyb1"
+        },
+        {
+          "tag_name": "v1.1.6",
+          "published_at": "2026-03-16T12:40:07Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "guyb1"
+        },
+        {
+          "tag_name": "v1.1.5",
+          "published_at": "2026-03-16T10:15:34Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "guyb1"
+        },
+        {
+          "tag_name": "v1.1.4",
+          "published_at": "2026-03-15T13:29:28Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "guyb1"
+        },
+        {
+          "tag_name": "v1.1.3",
+          "published_at": "2026-03-15T12:40:07Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "guyb1"
+        },
+        {
+          "tag_name": "v1.1.2",
+          "published_at": "2026-03-12T14:48:53Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "guyb1"
+        },
+        {
+          "tag_name": "v1.1.1",
+          "published_at": "2026-03-12T14:21:12Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "guyb1"
+        },
+        {
+          "tag_name": "v1.1.0",
+          "published_at": "2026-03-12T13:19:02Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "guyb1"
+        },
+        {
+          "tag_name": "v1.0.3",
+          "published_at": "2026-03-12T07:51:42Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "guyb1"
+        },
+        {
+          "tag_name": "v1.0.2",
+          "published_at": "2026-03-11T23:01:39Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "guyb1"
+        },
+        {
+          "tag_name": "v1.0.1",
+          "published_at": "2026-03-11T21:54:20Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "guyb1"
+        },
+        {
+          "tag_name": "v1.0.0",
+          "published_at": "2026-03-11T18:50:42Z",
+          "prerelease": false,
+          "draft": false,
+          "author": "guyb1"
+        }
+      ],
+      "total_count": 52
+    },
+    "security_advisories": {
+      "count": 0,
+      "entries": []
+    },
+    "workflows": {
+      "entries": [
+        {
+          "name": "CI",
+          "path": ".github/workflows/ci.yml",
+          "state": "active"
+        },
+        {
+          "name": "Publish",
+          "path": ".github/workflows/publish.yml",
+          "state": "active"
+        },
+        {
+          "name": "Release",
+          "path": ".github/workflows/release.yml",
+          "state": "active"
+        },
+        {
+          "name": "Copilot code review",
+          "path": "dynamic/copilot-pull-request-reviewer/copilot-pull-request-reviewer",
+          "state": "active"
+        }
+      ],
+      "count": 4,
+      "pull_request_target_count": 0
+    },
+    "workflow_contents": {
+      "entries": [
+        {
+          "path": ".github/workflows/publish.yml",
+          "content_lines": 118,
+          "sha_pinned_actions_count": 0,
+          "tag_pinned_actions_count": 10,
+          "has_pull_request_target": false,
+          "permissions_block_present": false
+        },
+        {
+          "path": ".github/workflows/ci.yml",
+          "content_lines": 109,
+          "sha_pinned_actions_count": 0,
+          "tag_pinned_actions_count": 5,
+          "has_pull_request_target": false,
+          "permissions_block_present": false
+        },
+        {
+          "path": ".github/workflows/release.yml",
+          "content_lines": 21,
+          "sha_pinned_actions_count": 0,
+          "tag_pinned_actions_count": 1,
+          "has_pull_request_target": false,
+          "permissions_block_present": true
+        }
+      ]
+    },
+    "code_patterns": {
+      "agent_rule_files": [
+        {
+          "path": "extract/onecli-fa6468e4711bc283f26b11e68c0ce8dc6a799010/CLAUDE.md",
+          "kind": "claude",
+          "line_count": 158,
+          "ci_amplified": false
+        },
+        {
+          "path": "extract/onecli-fa6468e4711bc283f26b11e68c0ce8dc6a799010/.agents/skills/vercel-react-best-practices/AGENTS.md",
+          "kind": "agents",
+          "line_count": 2906,
+          "ci_amplified": false
+        }
+      ],
+      "readme_paste_blocks": {
+        "scanned": true,
+        "entries": [],
+        "entries_count": 0
+      },
+      "dangerous_primitives": {
+        "scanned": true,
+        "exec": {
+          "hit_count": 1,
+          "files": [
+            {
+              "file": "extract/onecli-fa6468e4711bc283f26b11e68c0ce8dc6a799010/docs/nanoclaw-integration.md",
+              "first_match": {
+                "line": 38,
+                "snippet": "await exec(\"docker\", [...args, \"agent-image:latest\"]);"
+              }
+            }
+          ]
+        },
+        "deserialization": {
+          "hit_count": 0,
+          "files": []
+        },
+        "network": {
+          "hit_count": 21,
+          "files": [
+            {
+              "file": "extract/onecli-fa6468e4711bc283f26b11e68c0ce8dc6a799010/CHANGELOG.md",
+              "first_match": {
+                "line": 21,
+                "snippet": "* add OpenAI secret type, WebSocket proxy, and SecretInput component ([#244](https://github.com/onecli/onecli/issues/244"
+              }
+            },
+            {
+              "file": "extract/onecli-fa6468e4711bc283f26b11e68c0ce8dc6a799010/docs/vault-integration.md",
+              "first_match": {
+                "line": 35,
+                "snippet": "The gateway establishes an encrypted Noise protocol session with your Bitwarden app through a WebSocket relay."
+              }
+            },
+            {
+              "file": "extract/onecli-fa6468e4711bc283f26b11e68c0ce8dc6a799010/.agents/skills/vercel-react-best-practices/AGENTS.md",
+              "first_match": {
+                "line": 1179,
+                "snippet": "    fetch(\"/api/users\")"
+              }
+            },
+            {
+              "file": "extract/onecli-fa6468e4711bc283f26b11e68c0ce8dc6a799010/.agents/skills/vercel-react-best-practices/rules/client-swr-dedup.md",
+              "first_match": {
+                "line": 18,
+                "snippet": "    fetch(\"/api/users\")"
+              }
+            },
+            {
+              "file": "extract/onecli-fa6468e4711bc283f26b11e68c0ce8dc6a799010/apps/gateway/Cargo.toml",
+              "first_match": {
+                "line": 29,
+                "snippet": "# WebSocket upstream TLS root certificates"
+              }
+            },
+            {
+              "file": "extract/onecli-fa6468e4711bc283f26b11e68c0ce8dc6a799010/apps/gateway/src/gateway/websocket.rs",
+              "first_match": {
+                "line": 1,
+                "snippet": "//! WebSocket proxy: detect upgrade requests, inject credentials into the"
+              }
+            },
+            {
+              "file": "extract/onecli-fa6468e4711bc283f26b11e68c0ce8dc6a799010/apps/gateway/src/gateway/mitm.rs",
+              "first_match": {
+                "line": 123,
+                "snippet": "                                        warn!(host = %host, error = %e, \"WebSocket handler failed\");"
+              }
+            },
+            {
+              "file": "extract/onecli-fa6468e4711bc283f26b11e68c0ce8dc6a799010/apps/web/src/hooks/use-vault-status.ts",
+              "first_match": {
+                "line": 25,
+                "snippet": "      const resp = await fetch(`${GATEWAY_URL}/api/vault/${provider}/status`, {"
+              }
+            },
+            {
+              "file": "extract/onecli-fa6468e4711bc283f26b11e68c0ce8dc6a799010/apps/web/src/app/(dashboard)/layout.tsx",
+              "first_match": {
+                "line": 39,
+                "snippet": "      const res = await fetch(\"/api/auth/session\");"
+              }
+            },
+            {
+              "file": "extract/onecli-fa6468e4711bc283f26b11e68c0ce8dc6a799010/apps/web/src/app/(connect)/app-connect/_components/credentials-flow.tsx",
+              "first_match": {
+                "line": 113,
+                "snippet": "      const resp = await fetch(`/api/apps/${app.id}/connect`, {"
+              }
+            },
+            {
+              "file": "extract/onecli-fa6468e4711bc283f26b11e68c0ce8dc6a799010/apps/web/src/lib/home-redirect.ts",
+              "first_match": {
+                "line": 2,
+                "snippet": "  await fetch(\"/api/auth/session\");"
+              }
+            },
+            {
+              "file": "extract/onecli-fa6468e4711bc283f26b11e68c0ce8dc6a799010/apps/web/src/lib/gateway-invalidate.ts",
+              "first_match": {
+                "line": 23,
+                "snippet": "  fetch(`${GATEWAY_URL}/api/cache/invalidate`, {"
+              }
+            },
+            {
+              "file": "extract/onecli-fa6468e4711bc283f26b11e68c0ce8dc6a799010/apps/web/src/lib/auth/login-content.tsx",
+              "first_match": {
+                "line": 19,
+                "snippet": "        const res = await fetch(\"/api/auth/session\");"
+              }
+            },
+            {
+              "file": "extract/onecli-fa6468e4711bc283f26b11e68c0ce8dc6a799010/apps/web/src/lib/services/migrate-export-service.ts",
+              "first_match": {
+                "line": 155,
+                "snippet": "  const response = await fetch(`${CLOUD_URL}/api/migrate/import`, {"
+              }
+            },
+            {
+              "file": "extract/onecli-fa6468e4711bc283f26b11e68c0ce8dc6a799010/apps/web/src/lib/actions/gateway-cache.ts",
+              "first_match": {
+                "line": 37,
+                "snippet": "    await fetch(`${API_URL}/api/cache/invalidate`, {"
+              }
+            },
+            {
+              "file": "extract/onecli-fa6468e4711bc283f26b11e68c0ce8dc6a799010/apps/web/src/lib/actions/secrets.ts",
+              "first_match": {
+                "line": 134,
+                "snippet": "    const res = await fetch(\"https://api.anthropic.com/v1/models\", {"
+              }
+            },
+            {
+              "file": "extract/onecli-fa6468e4711bc283f26b11e68c0ce8dc6a799010/apps/web/src/lib/apps/todoist.ts",
+              "first_match": {
+                "line": 35,
+                "snippet": "      const tokenRes = await fetch("
+              }
+            },
+            {
+              "file": "extract/onecli-fa6468e4711bc283f26b11e68c0ce8dc6a799010/apps/web/src/lib/apps/vertex-ai.ts",
+              "first_match": {
+                "line": 43,
+                "snippet": "  const tokenRes = await fetch(GOOGLE_TOKEN_URL, {"
+              }
+            },
+            {
+              "file": "extract/onecli-fa6468e4711bc283f26b11e68c0ce8dc6a799010/apps/web/src/lib/apps/github.ts",
+              "first_match": {
+                "line": 74,
+                "snippet": "      const tokenRes = await fetch("
+              }
+            },
+            {
+              "file": "extract/onecli-fa6468e4711bc283f26b11e68c0ce8dc6a799010/apps/web/src/lib/apps/google-oauth.ts",
+              "first_match": {
+                "line": 38,
+                "snippet": "  const tokenRes = await fetch(\"https://oauth2.googleapis.com/token\", {"
+              }
+            }
+          ]
+        },
+        "secrets": {
+          "hit_count": 4,
+          "files": [
+            {
+              "file": "extract/onecli-fa6468e4711bc283f26b11e68c0ce8dc6a799010/apps/web/src/lib/apps/todoist.ts",
+              "first_match": {
+                "line": 133,
+                "snippet": "      clientSecret: \"TODOIST_CLIENT_SECRET\","
+              }
+            },
+            {
+              "file": "extract/onecli-fa6468e4711bc283f26b11e68c0ce8dc6a799010/apps/web/src/lib/apps/github.ts",
+              "first_match": {
+                "line": 156,
+                "snippet": "      clientSecret: \"GITHUB_CLIENT_SECRET\","
+              }
+            },
+            {
+              "file": "extract/onecli-fa6468e4711bc283f26b11e68c0ce8dc6a799010/apps/web/src/lib/apps/google-oauth.ts",
+              "first_match": {
+                "line": 126,
+                "snippet": "  clientSecret: \"GOOGLE_CLIENT_SECRET\","
+              }
+            },
+            {
+              "file": "extract/onecli-fa6468e4711bc283f26b11e68c0ce8dc6a799010/apps/web/src/lib/apps/atlassian-oauth.ts",
+              "first_match": {
+                "line": 114,
+                "snippet": "  clientSecret: \"ATLASSIAN_CLIENT_SECRET\","
+              }
+            }
+          ]
+        },
+        "vendor_keys": {
+          "hit_count": 0,
+          "files": []
+        },
+        "tls_cors": {
+          "hit_count": 1,
+          "files": [
+            {
+              "file": "extract/onecli-fa6468e4711bc283f26b11e68c0ce8dc6a799010/scripts/install.sh",
+              "first_match": {
+                "line": 35,
+                "snippet": "# Never 0.0.0.0 \u2014 that would expose services to the network."
+              }
+            }
+          ]
+        },
+        "sql_injection": {
+          "hit_count": 0,
+          "files": []
+        },
+        "cmd_injection": {
+          "hit_count": 0,
+          "files": []
+        },
+        "auth_bypass": {
+          "hit_count": 1,
+          "files": [
+            {
+              "file": "extract/onecli-fa6468e4711bc283f26b11e68c0ce8dc6a799010/apps/gateway/src/auth.rs",
+              "first_match": {
+                "line": 189,
+                "snippet": "    validation.validate_exp = false;"
+              }
+            }
+          ]
+        },
+        "path_traversal": {
+          "hit_count": 0,
+          "files": []
+        },
+        "archive_unsafe": {
+          "hit_count": 0,
+          "files": []
+        },
+        "ssrf": {
+          "hit_count": 0,
+          "files": []
+        },
+        "xss": {
+          "hit_count": 2,
+          "files": [
+            {
+              "file": "extract/onecli-fa6468e4711bc283f26b11e68c0ce8dc6a799010/.agents/skills/vercel-react-best-practices/AGENTS.md",
+              "first_match": {
+                "line": 2001,
+                "snippet": "        dangerouslySetInnerHTML={{"
+              }
+            },
+            {
+              "file": "extract/onecli-fa6468e4711bc283f26b11e68c0ce8dc6a799010/.agents/skills/vercel-react-best-practices/rules/rendering-hydration-no-flicker.md",
+              "first_match": {
+                "line": 53,
+                "snippet": "        dangerouslySetInnerHTML={{"
+              }
+            }
+          ]
+        },
+        "weak_crypto": {
+          "hit_count": 0,
+          "files": []
+        },
+        "debug_flags": {
+          "hit_count": 3,
+          "files": [
+            {
+              "file": "extract/onecli-fa6468e4711bc283f26b11e68c0ce8dc6a799010/apps/web/next.config.js",
+              "first_match": {
+                "line": 12,
+                "snippet": "      ? `${isCloud && process.env.NODE_ENV !== \"development\" ? \"https\" : \"http\"}://${process.env.API_BASE_URL}`"
+              }
+            },
+            {
+              "file": "extract/onecli-fa6468e4711bc283f26b11e68c0ce8dc6a799010/apps/web/src/app/setup-error/page.tsx",
+              "first_match": {
+                "line": 6,
+                "snippet": "const isDev = NODE_ENV === \"development\";"
+              }
+            },
+            {
+              "file": "extract/onecli-fa6468e4711bc283f26b11e68c0ce8dc6a799010/apps/web/src/lib/env.ts",
+              "first_match": {
+                "line": 107,
+                "snippet": "export const NODE_ENV = process.env.NODE_ENV ?? \"development\";"
+              }
+            }
+          ]
+        }
+      },
+      "executable_files": [
+        {
+          "path": "extract/onecli-fa6468e4711bc283f26b11e68c0ce8dc6a799010/scripts/install.sh",
+          "kind": "shell-installer",
+          "runtime": "bash",
+          "line_count": 200,
+          "file_sha": "617db7b44cf2",
+          "has_network_call": true,
+          "has_env_var_pattern": true
+        },
+        {
+          "path": "extract/onecli-fa6468e4711bc283f26b11e68c0ce8dc6a799010/docker/Dockerfile",
+          "kind": "container-build",
+          "runtime": "docker",
+          "line_count": 108,
+          "file_sha": "a19c54dd58dd",
+          "has_network_call": true,
+          "has_env_var_pattern": false
+        }
+      ],
+      "install_hooks": []
+    },
+    "prompt_injection_scan": {
+      "scanned_files": [
+        "extract/onecli-fa6468e4711bc283f26b11e68c0ce8dc6a799010/CLAUDE.md",
+        "extract/onecli-fa6468e4711bc283f26b11e68c0ce8dc6a799010/.agents/skills/vercel-react-best-practices/AGENTS.md"
+      ],
+      "injection_signals": [],
+      "signal_count": 0,
+      "scan_method": "tarball"
+    },
+    "dependencies": {
+      "manifest_files": [
+        {
+          "path": "extract/onecli-fa6468e4711bc283f26b11e68c0ce8dc6a799010/pnpm-lock.yaml",
+          "ecosystem": "npm"
+        },
+        {
+          "path": "extract/onecli-fa6468e4711bc283f26b11e68c0ce8dc6a799010/package.json",
+          "ecosystem": "npm"
+        },
+        {
+          "path": "extract/onecli-fa6468e4711bc283f26b11e68c0ce8dc6a799010/packages/db/package.json",
+          "ecosystem": "npm"
+        },
+        {
+          "path": "extract/onecli-fa6468e4711bc283f26b11e68c0ce8dc6a799010/packages/eslint-config/package.json",
+          "ecosystem": "npm"
+        },
+        {
+          "path": "extract/onecli-fa6468e4711bc283f26b11e68c0ce8dc6a799010/packages/ui/package.json",
+          "ecosystem": "npm"
+        },
+        {
+          "path": "extract/onecli-fa6468e4711bc283f26b11e68c0ce8dc6a799010/packages/typescript-config/package.json",
+          "ecosystem": "npm"
+        },
+        {
+          "path": "extract/onecli-fa6468e4711bc283f26b11e68c0ce8dc6a799010/apps/gateway/Cargo.toml",
+          "ecosystem": "crates.io"
+        },
+        {
+          "path": "extract/onecli-fa6468e4711bc283f26b11e68c0ce8dc6a799010/apps/gateway/Cargo.lock",
+          "ecosystem": "crates.io"
+        },
+        {
+          "path": "extract/onecli-fa6468e4711bc283f26b11e68c0ce8dc6a799010/apps/gateway/package.json",
+          "ecosystem": "npm"
+        },
+        {
+          "path": "extract/onecli-fa6468e4711bc283f26b11e68c0ce8dc6a799010/apps/web/package.json",
+          "ecosystem": "npm"
+        }
+      ],
+      "runtime": [
+        {
+          "name": "@prisma/client",
+          "ecosystem": "npm",
+          "pinning": "^6.9.0"
+        },
+        {
+          "name": "@radix-ui/react-avatar",
+          "ecosystem": "npm",
+          "pinning": "^1.1.11"
+        },
+        {
+          "name": "@radix-ui/react-checkbox",
+          "ecosystem": "npm",
+          "pinning": "^1.1.4"
+        },
+        {
+          "name": "@radix-ui/react-collapsible",
+          "ecosystem": "npm",
+          "pinning": "^1.1.12"
+        },
+        {
+          "name": "@radix-ui/react-dialog",
+          "ecosystem": "npm",
+          "pinning": "^1.1.15"
+        },
+        {
+          "name": "@radix-ui/react-dropdown-menu",
+          "ecosystem": "npm",
+          "pinning": "^2.1.16"
+        },
+        {
+          "name": "@radix-ui/react-label",
+          "ecosystem": "npm",
+          "pinning": "^2.1.8"
+        },
+        {
+          "name": "@radix-ui/react-scroll-area",
+          "ecosystem": "npm",
+          "pinning": "^1.2.10"
+        },
+        {
+          "name": "@radix-ui/react-separator",
+          "ecosystem": "npm",
+          "pinning": "^1.1.8"
+        },
+        {
+          "name": "@radix-ui/react-slot",
+          "ecosystem": "npm",
+          "pinning": "^1.2.4"
+        },
+        {
+          "name": "@radix-ui/react-switch",
+          "ecosystem": "npm",
+          "pinning": "^1.2.6"
+        },
+        {
+          "name": "@radix-ui/react-tooltip",
+          "ecosystem": "npm",
+          "pinning": "^1.2.8"
+        },
+        {
+          "name": "class-variance-authority",
+          "ecosystem": "npm",
+          "pinning": "^0.7.1"
+        },
+        {
+          "name": "clsx",
+          "ecosystem": "npm",
+          "pinning": "^2.1.1"
+        },
+        {
+          "name": "input-otp",
+          "ecosystem": "npm",
+          "pinning": "^1.4.2"
+        },
+        {
+          "name": "lucide-react",
+          "ecosystem": "npm",
+          "pinning": "^0.562.0"
+        },
+        {
+          "name": "next-themes",
+          "ecosystem": "npm",
+          "pinning": "^0.4.6"
+        },
+        {
+          "name": "radix-ui",
+          "ecosystem": "npm",
+          "pinning": "^1.4.3"
+        },
+        {
+          "name": "react",
+          "ecosystem": "npm",
+          "pinning": "^19.2.0"
+        },
+        {
+          "name": "react-dom",
+          "ecosystem": "npm",
+          "pinning": "^19.2.0"
+        },
+        {
+          "name": "sonner",
+          "ecosystem": "npm",
+          "pinning": "^2.0.7"
+        },
+        {
+          "name": "tailwind-merge",
+          "ecosystem": "npm",
+          "pinning": "^3.4.0"
+        },
+        {
+          "name": "tw-animate-css",
+          "ecosystem": "npm",
+          "pinning": "^1.4.0"
+        },
+        {
+          "name": "vaul",
+          "ecosystem": "npm",
+          "pinning": "^1.1.2"
+        },
+        {
+          "name": "@aws-amplify/adapter-nextjs",
+          "ecosystem": "npm",
+          "pinning": "^1.7.2"
+        },
+        {
+          "name": "@aws-sdk/client-kms",
+          "ecosystem": "npm",
+          "pinning": "^3.1014.0"
+        },
+        {
+          "name": "@aws-sdk/client-secrets-manager",
+          "ecosystem": "npm",
+          "pinning": "^3.1014.0"
+        },
+        {
+          "name": "@onecli/db",
+          "ecosystem": "npm",
+          "pinning": "range/other"
+        },
+        {
+          "name": "@onecli/ui",
+          "ecosystem": "npm",
+          "pinning": "range/other"
+        },
+        {
+          "name": "aws-amplify",
+          "ecosystem": "npm",
+          "pinning": "^6.16.2"
+        },
+        {
+          "name": "input-otp",
+          "ecosystem": "npm",
+          "pinning": "^1.4.2"
+        },
+        {
+          "name": "ioredis",
+          "ecosystem": "npm",
+          "pinning": "^5.10.1"
+        },
+        {
+          "name": "lucide-react",
+          "ecosystem": "npm",
+          "pinning": "^0.562.0"
+        },
+        {
+          "name": "nanoid",
+          "ecosystem": "npm",
+          "pinning": "^5.1.9"
+        },
+        {
+          "name": "next",
+          "ecosystem": "npm",
+          "pinning": "16.1.0"
+        },
+        {
+          "name": "next-auth",
+          "ecosystem": "npm",
+          "pinning": "5.0.0-beta.30"
+        },
+        {
+          "name": "next-themes",
+          "ecosystem": "npm",
+          "pinning": "^0.4.6"
+        },
+        {
+          "name": "pino",
+          "ecosystem": "npm",
+          "pinning": "^10.3.1"
+        },
+        {
+          "name": "posthog-js",
+          "ecosystem": "npm",
+          "pinning": "^1.364.1"
+        },
+        {
+          "name": "qrcode",
+          "ecosystem": "npm",
+          "pinning": "^1.5.4"
+        },
+        {
+          "name": "react",
+          "ecosystem": "npm",
+          "pinning": "^19.2.0"
+        },
+        {
+          "name": "react-dom",
+          "ecosystem": "npm",
+          "pinning": "^19.2.0"
+        },
+        {
+          "name": "sonner",
+          "ecosystem": "npm",
+          "pinning": "^2.0.7"
+        },
+        {
+          "name": "stripe",
+          "ecosystem": "npm",
+          "pinning": "^20.4.0"
+        },
+        {
+          "name": "zod",
+          "ecosystem": "npm",
+          "pinning": "^4.3.6"
+        }
+      ],
+      "runtime_count": 45,
+      "dev": [
+        {
+          "name": "dotenv-cli",
+          "ecosystem": "npm",
+          "pinning": "^11.0.0"
+        },
+        {
+          "name": "husky",
+          "ecosystem": "npm",
+          "pinning": "^9.1.7"
+        },
+        {
+          "name": "lint-staged",
+          "ecosystem": "npm",
+          "pinning": "^16.3.1"
+        },
+        {
+          "name": "prettier",
+          "ecosystem": "npm",
+          "pinning": "^3.7.4"
+        },
+        {
+          "name": "prettier-plugin-tailwindcss",
+          "ecosystem": "npm",
+          "pinning": "^0.7.2"
+        },
+        {
+          "name": "turbo",
+          "ecosystem": "npm",
+          "pinning": "^2.8.3"
+        },
+        {
+          "name": "typescript",
+          "ecosystem": "npm",
+          "pinning": "5.9.2"
+        },
+        {
+          "name": "@onecli/typescript-config",
+          "ecosystem": "npm",
+          "pinning": "range/other"
+        },
+        {
+          "name": "@types/node",
+          "ecosystem": "npm",
+          "pinning": "^22.15.3"
+        },
+        {
+          "name": "prisma",
+          "ecosystem": "npm",
+          "pinning": "^6.9.0"
+        },
+        {
+          "name": "typescript",
+          "ecosystem": "npm",
+          "pinning": "5.9.2"
+        },
+        {
+          "name": "@eslint/js",
+          "ecosystem": "npm",
+          "pinning": "^9.39.1"
+        },
+        {
+          "name": "eslint",
+          "ecosystem": "npm",
+          "pinning": "^9.39.1"
+        },
+        {
+          "name": "eslint-config-next",
+          "ecosystem": "npm",
+          "pinning": "^16.2.1"
+        },
+        {
+          "name": "eslint-config-prettier",
+          "ecosystem": "npm",
+          "pinning": "^10.1.1"
+        },
+        {
+          "name": "eslint-plugin-only-warn",
+          "ecosystem": "npm",
+          "pinning": "^1.1.0"
+        },
+        {
+          "name": "eslint-plugin-react",
+          "ecosystem": "npm",
+          "pinning": "^7.37.5"
+        },
+        {
+          "name": "eslint-plugin-react-hooks",
+          "ecosystem": "npm",
+          "pinning": "^7.0.0"
+        },
+        {
+          "name": "eslint-plugin-turbo",
+          "ecosystem": "npm",
+          "pinning": "^2.7.1"
+        },
+        {
+          "name": "globals",
+          "ecosystem": "npm",
+          "pinning": "^16.5.0"
+        },
+        {
+          "name": "typescript",
+          "ecosystem": "npm",
+          "pinning": "^5.9.2"
+        },
+        {
+          "name": "typescript-eslint",
+          "ecosystem": "npm",
+          "pinning": "^8.50.0"
+        },
+        {
+          "name": "@onecli/eslint-config",
+          "ecosystem": "npm",
+          "pinning": "range/other"
+        },
+        {
+          "name": "@onecli/typescript-config",
+          "ecosystem": "npm",
+          "pinning": "range/other"
+        },
+        {
+          "name": "@tailwindcss/postcss",
+          "ecosystem": "npm",
+          "pinning": "^4.1.18"
+        },
+        {
+          "name": "@types/node",
+          "ecosystem": "npm",
+          "pinning": "^22.15.3"
+        },
+        {
+          "name": "@types/react",
+          "ecosystem": "npm",
+          "pinning": "19.2.2"
+        },
+        {
+          "name": "@types/react-dom",
+          "ecosystem": "npm",
+          "pinning": "19.2.2"
+        },
+        {
+          "name": "eslint",
+          "ecosystem": "npm",
+          "pinning": "^9.39.1"
+        },
+        {
+          "name": "tailwindcss",
+          "ecosystem": "npm",
+          "pinning": "^4.1.18"
+        },
+        {
+          "name": "typescript",
+          "ecosystem": "npm",
+          "pinning": "5.9.2"
+        },
+        {
+          "name": "@onecli/eslint-config",
+          "ecosystem": "npm",
+          "pinning": "range/other"
+        },
+        {
+          "name": "@onecli/typescript-config",
+          "ecosystem": "npm",
+          "pinning": "range/other"
+        },
+        {
+          "name": "@tailwindcss/postcss",
+          "ecosystem": "npm",
+          "pinning": "^4.1.18"
+        },
+        {
+          "name": "@types/node",
+          "ecosystem": "npm",
+          "pinning": "^22.15.3"
+        },
+        {
+          "name": "@types/qrcode",
+          "ecosystem": "npm",
+          "pinning": "^1.5.6"
+        },
+        {
+          "name": "@types/react",
+          "ecosystem": "npm",
+          "pinning": "19.2.2"
+        },
+        {
+          "name": "@types/react-dom",
+          "ecosystem": "npm",
+          "pinning": "19.2.2"
+        },
+        {
+          "name": "eslint",
+          "ecosystem": "npm",
+          "pinning": "^9.39.1"
+        },
+        {
+          "name": "pino-pretty",
+          "ecosystem": "npm",
+          "pinning": "^13.1.3"
+        },
+        {
+          "name": "tailwindcss",
+          "ecosystem": "npm",
+          "pinning": "^4.1.18"
+        },
+        {
+          "name": "typescript",
+          "ecosystem": "npm",
+          "pinning": "5.9.2"
+        }
+      ],
+      "dev_count": 42,
+      "dependabot_alerts": {
+        "status": 403,
+        "alerts_count": null,
+        "note": "admin scope required; falling back to osv.dev"
+      },
+      "osv_lookups": [
+        {
+          "name": "@prisma/client",
+          "ecosystem": "npm",
+          "vulns_count": 0,
+          "vulns_summary": []
+        },
+        {
+          "name": "@radix-ui/react-avatar",
+          "ecosystem": "npm",
+          "vulns_count": 0,
+          "vulns_summary": []
+        },
+        {
+          "name": "@radix-ui/react-checkbox",
+          "ecosystem": "npm",
+          "vulns_count": 0,
+          "vulns_summary": []
+        },
+        {
+          "name": "@radix-ui/react-collapsible",
+          "ecosystem": "npm",
+          "vulns_count": 0,
+          "vulns_summary": []
+        },
+        {
+          "name": "@radix-ui/react-dialog",
+          "ecosystem": "npm",
+          "vulns_count": 0,
+          "vulns_summary": []
+        },
+        {
+          "name": "@radix-ui/react-dropdown-menu",
+          "ecosystem": "npm",
+          "vulns_count": 0,
+          "vulns_summary": []
+        },
+        {
+          "name": "@radix-ui/react-label",
+          "ecosystem": "npm",
+          "vulns_count": 0,
+          "vulns_summary": []
+        },
+        {
+          "name": "@radix-ui/react-scroll-area",
+          "ecosystem": "npm",
+          "vulns_count": 0,
+          "vulns_summary": []
+        },
+        {
+          "name": "@radix-ui/react-separator",
+          "ecosystem": "npm",
+          "vulns_count": 0,
+          "vulns_summary": []
+        },
+        {
+          "name": "@radix-ui/react-slot",
+          "ecosystem": "npm",
+          "vulns_count": 0,
+          "vulns_summary": []
+        },
+        {
+          "name": "@radix-ui/react-switch",
+          "ecosystem": "npm",
+          "vulns_count": 0,
+          "vulns_summary": []
+        },
+        {
+          "name": "@radix-ui/react-tooltip",
+          "ecosystem": "npm",
+          "vulns_count": 0,
+          "vulns_summary": []
+        },
+        {
+          "name": "class-variance-authority",
+          "ecosystem": "npm",
+          "vulns_count": 0,
+          "vulns_summary": []
+        },
+        {
+          "name": "clsx",
+          "ecosystem": "npm",
+          "vulns_count": 0,
+          "vulns_summary": []
+        },
+        {
+          "name": "input-otp",
+          "ecosystem": "npm",
+          "vulns_count": 0,
+          "vulns_summary": []
+        },
+        {
+          "name": "lucide-react",
+          "ecosystem": "npm",
+          "vulns_count": 0,
+          "vulns_summary": []
+        },
+        {
+          "name": "next-themes",
+          "ecosystem": "npm",
+          "vulns_count": 0,
+          "vulns_summary": []
+        },
+        {
+          "name": "radix-ui",
+          "ecosystem": "npm",
+          "vulns_count": 0,
+          "vulns_summary": []
+        },
+        {
+          "name": "react",
+          "ecosystem": "npm",
+          "vulns_count": 2,
+          "vulns_summary": [
+            "GHSA-g53w-52xc-2j85",
+            "GHSA-hg79-j56m-fxgv"
+          ]
+        },
+        {
+          "name": "react-dom",
+          "ecosystem": "npm",
+          "vulns_count": 1,
+          "vulns_summary": [
+            "GHSA-mvjj-gqq2-p4hw"
+          ]
+        },
+        {
+          "name": "sonner",
+          "ecosystem": "npm",
+          "vulns_count": 0,
+          "vulns_summary": []
+        },
+        {
+          "name": "tailwind-merge",
+          "ecosystem": "npm",
+          "vulns_count": 0,
+          "vulns_summary": []
+        },
+        {
+          "name": "tw-animate-css",
+          "ecosystem": "npm",
+          "vulns_count": 0,
+          "vulns_summary": []
+        },
+        {
+          "name": "vaul",
+          "ecosystem": "npm",
+          "vulns_count": 0,
+          "vulns_summary": []
+        },
+        {
+          "name": "@aws-amplify/adapter-nextjs",
+          "ecosystem": "npm",
+          "vulns_count": 0,
+          "vulns_summary": []
+        },
+        {
+          "name": "@aws-sdk/client-kms",
+          "ecosystem": "npm",
+          "vulns_count": 0,
+          "vulns_summary": []
+        },
+        {
+          "name": "@aws-sdk/client-secrets-manager",
+          "ecosystem": "npm",
+          "vulns_count": 0,
+          "vulns_summary": []
+        },
+        {
+          "name": "@onecli/db",
+          "ecosystem": "npm",
+          "vulns_count": 0,
+          "vulns_summary": []
+        },
+        {
+          "name": "@onecli/ui",
+          "ecosystem": "npm",
+          "vulns_count": 0,
+          "vulns_summary": []
+        },
+        {
+          "name": "aws-amplify",
+          "ecosystem": "npm",
+          "vulns_count": 0,
+          "vulns_summary": []
+        }
+      ],
+      "dependabot_config": {
+        "present": false,
+        "ecosystems_tracked": [],
+        "raw_snippet": null
+      }
+    },
+    "pr_review": {
+      "total_closed_prs": 208,
+      "sample_size": 208,
+      "total_merged_lifetime": 208,
+      "prs": [
+        {
+          "number": 252,
+          "title": "fix: include hostname in injection cache key (#251)",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2026-05-06T08:19:14Z",
+          "labels": [
+            "bug"
+          ],
+          "security_flagged": false
+        },
+        {
+          "number": 250,
+          "title": "fix: center dashboard content and unify page widths",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": true,
+          "merged_at": "2026-05-05T17:01:27Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 249,
+          "title": "feat: generic OAuth interface, and credential resolution",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": true,
+          "merged_at": "2026-05-05T16:47:09Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 248,
+          "title": "chore(main): release 1.21.0",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": true,
+          "merged_at": "2026-05-05T17:03:00Z",
+          "labels": [
+            "autorelease: tagged"
+          ],
+          "security_flagged": false
+        },
+        {
+          "number": 247,
+          "title": "feat: cloud-only apps framework, credential headers, and user provisioning",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": true,
+          "merged_at": "2026-05-05T13:13:29Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 246,
+          "title": "feat: support ONECLI_VERSION env var in install script",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2026-05-05T12:23:35Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 245,
+          "title": "fix: GitHub config to clarify OAuth App credentials",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": true,
+          "merged_at": "2026-05-04T10:17:03Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 244,
+          "title": "feat: add OpenAI secret type, WebSocket proxy, and SecretInput rewrite",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": true,
+          "merged_at": "2026-05-03T18:04:50Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 243,
+          "title": "chore: fix rust build",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": true,
+          "merged_at": "2026-05-03T17:39:32Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 242,
+          "title": "feat: add Todoist app integration",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": true,
+          "merged_at": "2026-05-03T15:35:02Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 241,
+          "title": "fix: split Secrets tab into Custom/LLMs, swap logo, fix settings redirect",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": true,
+          "merged_at": "2026-05-03T15:13:33Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 240,
+          "title": "chore: sync gateway telemetry, secrets UI, and trial budget schema",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": true,
+          "merged_at": "2026-05-03T15:01:12Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 239,
+          "title": "chore(main): release 1.20.0",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": true,
+          "merged_at": "2026-05-05T12:25:09Z",
+          "labels": [
+            "autorelease: tagged"
+          ],
+          "security_flagged": false
+        },
+        {
+          "number": 237,
+          "title": "fix: inject OAuth bearer on Google batch endpoints",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2026-05-03T08:07:57Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 233,
+          "title": "refactor: service layer cleanup",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": true,
+          "merged_at": "2026-05-01T16:45:35Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 232,
+          "title": "refactor: consolidate turbopack aliases",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": true,
+          "merged_at": "2026-05-01T16:30:28Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 231,
+          "title": "chore(main): release 1.19.1",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": true,
+          "merged_at": "2026-05-03T08:09:49Z",
+          "labels": [
+            "autorelease: tagged"
+          ],
+          "security_flagged": false
+        },
+        {
+          "number": 230,
+          "title": "fix: resolve mobile layout issues and update session handling",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": true,
+          "merged_at": "2026-05-01T15:52:04Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 227,
+          "title": "feat: make app and gateway ports configurable for multi-user hosts",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2026-05-03T12:20:18Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 226,
+          "title": "chore: ci",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": true,
+          "merged_at": "2026-04-28T14:50:44Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 225,
+          "title": "chore: ci",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": true,
+          "merged_at": "2026-04-28T14:30:09Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 224,
+          "title": "feat: add Vertex AI integration with ADC import and token endpoint interception",
+          "review_decision": "",
+          "any_review_count": 1,
+          "self_merge": false,
+          "merged_at": "2026-04-30T15:30:52Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 222,
+          "title": "feat: add Jira and Confluence app integrations",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": true,
+          "merged_at": "2026-04-28T12:50:56Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 221,
+          "title": "feat: add YouTube app integration",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": true,
+          "merged_at": "2026-04-28T11:55:14Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 220,
+          "title": "chore: alignments to project structures",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": true,
+          "merged_at": "2026-04-28T10:06:46Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 218,
+          "title": "fix: harden secret param injection -security, UX, and correctness",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": true,
+          "merged_at": "2026-04-27T21:27:08Z",
+          "labels": [],
+          "security_flagged": true
+        },
+        {
+          "number": 217,
+          "title": "fix: secret dialog examples and overflow",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": true,
+          "merged_at": "2026-04-27T20:10:01Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 216,
+          "title": "chore(main): release 1.19.0",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": true,
+          "merged_at": "2026-05-01T08:28:30Z",
+          "labels": [
+            "autorelease: tagged"
+          ],
+          "security_flagged": false
+        },
+        {
+          "number": 214,
+          "title": "fix: detect postgres port conflict in installer",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": true,
+          "merged_at": "2026-04-27T18:31:44Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 212,
+          "title": "chore(main): release 1.18.6",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2026-04-27T14:56:44Z",
+          "labels": [
+            "autorelease: tagged"
+          ],
+          "security_flagged": false
+        },
+        {
+          "number": 211,
+          "title": "fix: add version field to health endpoint",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": true,
+          "merged_at": "2026-04-27T14:54:30Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 210,
+          "title": "chore(main): release 1.18.5",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2026-04-27T13:52:53Z",
+          "labels": [
+            "autorelease: tagged"
+          ],
+          "security_flagged": false
+        },
+        {
+          "number": 209,
+          "title": "fix: revert PR #201 and #206 to restore v1.18.2 behavior",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": true,
+          "merged_at": "2026-04-27T13:50:58Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 208,
+          "title": "Revert/to v1.18.2",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": true,
+          "merged_at": "2026-04-27T13:43:09Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 207,
+          "title": "chore(main): release 1.18.4",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": false,
+          "merged_at": "2026-04-27T12:24:08Z",
+          "labels": [
+            "autorelease: tagged"
+          ],
+          "security_flagged": false
+        },
+        {
+          "number": 206,
+          "title": "fix: bind installer API to loopback so fresh bare-metal installs can \u2026",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": true,
+          "merged_at": "2026-04-27T12:22:28Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 204,
+          "title": "fix: improve gateway telemetry, app connections, and dashboard header",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": true,
+          "merged_at": "2026-04-26T16:48:22Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 202,
+          "title": "chore(main): release 1.18.3",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": true,
+          "merged_at": "2026-04-26T16:52:53Z",
+          "labels": [
+            "autorelease: tagged"
+          ],
+          "security_flagged": false
+        },
+        {
+          "number": 201,
+          "title": "fix: restrict local mode session auth to loopback requests",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": true,
+          "merged_at": "2026-04-24T17:43:31Z",
+          "labels": [],
+          "security_flagged": true
+        },
+        {
+          "number": 200,
+          "title": "chore(main): release 1.18.2",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": true,
+          "merged_at": "2026-04-22T10:37:51Z",
+          "labels": [
+            "autorelease: tagged"
+          ],
+          "security_flagged": false
+        },
+        {
+          "number": 199,
+          "title": "fix: mobile layout fixes, gateway response handling and deploy UX improvements",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": true,
+          "merged_at": "2026-04-22T10:33:04Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 197,
+          "title": "chore(main): release 1.18.1",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": true,
+          "merged_at": "2026-04-20T06:54:35Z",
+          "labels": [
+            "autorelease: tagged"
+          ],
+          "security_flagged": false
+        },
+        {
+          "number": 196,
+          "title": "fix: sync shared changes - deploy pages, migration export, schema updates",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": true,
+          "merged_at": "2026-04-20T06:51:47Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 194,
+          "title": "feat: add secret injection in query parameters",
+          "review_decision": "",
+          "any_review_count": 8,
+          "self_merge": false,
+          "merged_at": "2026-04-27T19:46:25Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 190,
+          "title": "chore(main): release 1.18.0",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": true,
+          "merged_at": "2026-04-16T14:45:17Z",
+          "labels": [
+            "autorelease: tagged"
+          ],
+          "security_flagged": false
+        },
+        {
+          "number": 189,
+          "title": "feat: add \"Request an app\" card to apps grid",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": true,
+          "merged_at": "2026-04-16T09:56:26Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 188,
+          "title": "chore(main): release 1.17.0",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": true,
+          "merged_at": "2026-04-16T08:10:40Z",
+          "labels": [
+            "autorelease: tagged"
+          ],
+          "security_flagged": false
+        },
+        {
+          "number": 187,
+          "title": "feat: multi-account connections, credential_not_found and access_restricted",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": true,
+          "merged_at": "2026-04-16T06:59:58Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 186,
+          "title": "feat: credential_not_found for unknown hosts, MITM all authenticated traffic",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": true,
+          "merged_at": "2026-04-14T14:16:56Z",
+          "labels": [],
+          "security_flagged": false
+        },
+        {
+          "number": 185,
+          "title": "feat: access_restricted for selective mode, ResolvedRules struct, gateway cache auth",
+          "review_decision": "",
+          "any_review_count": 0,
+          "self_merge": true,
+          "merged_at": "2026-04-14T10:07:42Z",
+          "labels": [],
+          "security_flagged": true
+        }
+      ],
+      "formal_review_rate": 0.0,
+      "any_review_rate": 1.4,
+      "self_merge_count": 179,
+      "security_flagged_count": 3,
+      "security_flagged_numbers": [
+        5,
+        9,
+        11,
+        33,
+        52,
+        61,
+        71,
+        88,
+        118,
+        184,
+        185,
+        201,
+        218
+      ]
+    },
+    "open_prs": {
+      "entries": [
+        {
+          "number": 253,
+          "title": "chore(main): release 1.21.1",
+          "author": "guyb1",
+          "created_at": "2026-05-06T08:19:50Z"
+        },
+        {
+          "number": 234,
+          "title": "ci: add SBOM crypto audit to block unapproved crypto dependencies",
+          "author": "hisgarden",
+          "created_at": "2026-05-01T18:11:46Z"
+        },
+        {
+          "number": 154,
+          "title": "feat: add anonymous install/update telemetry with dashboard opt-out",
+          "author": "johnnyfish",
+          "created_at": "2026-04-05T09:36:33Z"
+        },
+        {
+          "number": 149,
+          "title": "feat: structured audit logging with agent and secret attribution",
+          "author": "johnthompson-ybor",
+          "created_at": "2026-04-03T13:40:07Z"
+        },
+        {
+          "number": 113,
+          "title": "feat: add 1Password vault provider integration",
+          "author": "yaniv-golan",
+          "created_at": "2026-03-25T22:32:55Z"
+        }
+      ],
+      "count": 5
+    },
+    "closed_not_merged_prs": {
+      "entries": [
+        {
+          "number": 195,
+          "title": "fix: stop auto-creating httpbin demo secret for new accounts",
+          "closed_at": "2026-04-17T15:41:41Z"
+        },
+        {
+          "number": 193,
+          "title": "Feature: gh enterprise connection",
+          "closed_at": "2026-04-17T14:19:28Z"
+        },
+        {
+          "number": 184,
+          "title": "Security fixes",
+          "closed_at": "2026-04-13T00:02:55Z"
+        },
+        {
+          "number": 147,
+          "title": "fix: check HTTP status on OAuth token exchange before parsing response",
+          "closed_at": "2026-04-24T13:56:42Z"
+        },
+        {
+          "number": 125,
+          "title": "feat: add oauth2 secret type with auto-refreshing access tokens",
+          "closed_at": "2026-04-06T01:28:47Z"
+        },
+        {
+          "number": 120,
+          "title": "feat(gateway): add OAuth token support for Anthropic API",
+          "closed_at": "2026-03-27T22:25:09Z"
+        }
+      ],
+      "count": 6
+    },
+    "issues_and_commits": {
+      "open_security_issues": [],
+      "open_issues_count": 16,
+      "closed_issues": [
+        {
+          "author": "paps",
+          "closed_at": "2026-04-02T14:10:46Z",
+          "number": 131,
+          "title": "`docker-compose.yml` binds ports on `0.0.0.0`, services exposed publicly by default"
+        }
+      ],
+      "closed_issues_count": 1,
+      "recent_commits": [
+        {
+          "author": "johnnyfish",
+          "date": "2026-05-06T08:19:14Z",
+          "message_first_line": "fix: include hostname in injection cache key (#251) (#252)",
+          "sha": "fa6468e",
+          "security_keyword_match": true
+        },
+        {
+          "author": "guyb1",
+          "date": "2026-05-05T17:03:00Z",
+          "message_first_line": "chore(main): release 1.21.0 (#248)",
+          "sha": "9d05e3a",
+          "security_keyword_match": false
+        },
+        {
+          "author": "guyb1",
+          "date": "2026-05-05T17:01:26Z",
+          "message_first_line": "fix: center dashboard content and unify page widths (#250)",
+          "sha": "31b78d1",
+          "security_keyword_match": true
+        },
+        {
+          "author": "guyb1",
+          "date": "2026-05-05T16:47:08Z",
+          "message_first_line": "feat: generic OAuth interface, pro app badges, and credential resolution (#249)",
+          "sha": "ed2474f",
+          "security_keyword_match": false
+        },
+        {
+          "author": "guyb1",
+          "date": "2026-05-05T13:13:28Z",
+          "message_first_line": "feat: add cloud-only apps framework, credential header injection, and user provisioning schema (#247)",
+          "sha": "16dfe1a",
+          "security_keyword_match": true
+        },
+        {
+          "author": "guyb1",
+          "date": "2026-05-05T12:25:09Z",
+          "message_first_line": "chore(main): release 1.20.0 (#239)",
+          "sha": "1abba98",
+          "security_keyword_match": false
+        },
+        {
+          "author": "gavrielc",
+          "date": "2026-05-05T12:23:35Z",
+          "message_first_line": "feat: support ONECLI_VERSION env var in install script (#246)",
+          "sha": "197d2f9",
+          "security_keyword_match": false
+        },
+        {
+          "author": "guyb1",
+          "date": "2026-05-04T10:17:03Z",
+          "message_first_line": "fix: GitHub config to clarify OAuth App credentials (#245)",
+          "sha": "6ba8ae3",
+          "security_keyword_match": true
+        },
+        {
+          "author": "guyb1",
+          "date": "2026-05-03T18:04:50Z",
+          "message_first_line": "feat: add OpenAI secret type, WebSocket proxy, and SecretInput component (#244)",
+          "sha": "a740187",
+          "security_keyword_match": false
+        },
+        {
+          "author": "guyb1",
+          "date": "2026-05-03T17:39:31Z",
+          "message_first_line": "chore: fix rust build (#243)",
+          "sha": "ce542c1",
+          "security_keyword_match": true
+        },
+        {
+          "author": "guyb1",
+          "date": "2026-05-03T15:35:02Z",
+          "message_first_line": "feat: add Todoist app integration (#242)",
+          "sha": "8accd63",
+          "security_keyword_match": false
+        },
+        {
+          "author": "guyb1",
+          "date": "2026-05-03T15:13:32Z",
+          "message_first_line": "fix: split Secrets tab into Custom/LLMs, swap logo to PNG, fix settings redirect (#241)",
+          "sha": "b73c8a3",
+          "security_keyword_match": true
+        },
+        {
+          "author": "guyb1",
+          "date": "2026-05-03T15:01:11Z",
+          "message_first_line": "chore: sync gateway telemetry, secrets UI, and trial budget schema (#240)",
+          "sha": "bbfe44f",
+          "security_keyword_match": false
+        },
+        {
+          "author": "cfis",
+          "date": "2026-05-03T12:20:18Z",
+          "message_first_line": "feat: make app and gateway ports configurable for multi-user hosts (#227)",
+          "sha": "ea4118e",
+          "security_keyword_match": false
+        },
+        {
+          "author": "guyb1",
+          "date": "2026-05-03T08:09:48Z",
+          "message_first_line": "chore(main): release 1.19.1 (#231)",
+          "sha": "5973d8c",
+          "security_keyword_match": false
+        },
+        {
+          "author": "johnnyfish",
+          "date": "2026-05-03T08:07:56Z",
+          "message_first_line": "fix: inject OAuth bearer on Google batch endpoints (#237)",
+          "sha": "5fa436d",
+          "security_keyword_match": true
+        },
+        {
+          "author": "guyb1",
+          "date": "2026-05-01T16:45:34Z",
+          "message_first_line": "refactor: clean up service layer \u2014 add validateOrgName, remove use server (#233)",
+          "sha": "c24a7ac",
+          "security_keyword_match": false
+        },
+        {
+          "author": "guyb1",
+          "date": "2026-05-01T16:30:27Z",
+          "message_first_line": "refactor: merge nav-items + settings-nav-items and deploy-page + deploy-new-page aliases (#232)",
+          "sha": "c69ac0d",
+          "security_keyword_match": false
+        },
+        {
+          "author": "guyb1",
+          "date": "2026-05-01T15:52:03Z",
+          "message_first_line": "fix: resolve mobile layout issues and update session handling (#230)",
+          "sha": "bca6873",
+          "security_keyword_match": true
+        },
+        {
+          "author": "guyb1",
+          "date": "2026-05-01T08:28:29Z",
+          "message_first_line": "chore(main): release 1.19.0 (#216)",
+          "sha": "72610fc",
+          "security_keyword_match": false
+        },
+        {
+          "author": "fbricon",
+          "date": "2026-04-30T15:30:52Z",
+          "message_first_line": "feat: add Vertex AI integration with ADC import and token endpoint interception (#224)",
+          "sha": "3832ac6",
+          "security_keyword_match": false
+        },
+        {
+          "author": "guyb1",
+          "date": "2026-04-28T14:50:43Z",
+          "message_first_line": "chore: ci (#226)",
+          "sha": "d7bed5e",
+          "security_keyword_match": false
+        },
+        {
+          "author": "guyb1",
+          "date": "2026-04-28T14:30:09Z",
+          "message_first_line": "chore: ci (#225)",
+          "sha": "5291e9b",
+          "security_keyword_match": false
+        },
+        {
+          "author": "guyb1",
+          "date": "2026-04-28T12:50:55Z",
+          "message_first_line": "feat: add Jira and Confluence app integrations with Atlassian OAuth (#222)",
+          "sha": "0b7cd8e",
+          "security_keyword_match": false
+        },
+        {
+          "author": "guyb1",
+          "date": "2026-04-28T11:55:14Z",
+          "message_first_line": "feat: add YouTube app integration for playlist management (#221)",
+          "sha": "5c43421",
+          "security_keyword_match": false
+        },
+        {
+          "author": "guyb1",
+          "date": "2026-04-28T10:06:46Z",
+          "message_first_line": "chore: alignments to project structures (#220)",
+          "sha": "2b5ca0a",
+          "security_keyword_match": false
+        },
+        {
+          "author": "guyb1",
+          "date": "2026-04-27T21:27:08Z",
+          "message_first_line": "fix: harden secret param injection \u2014 security, UX, and correctness (#218)",
+          "sha": "aa5941b",
+          "security_keyword_match": true
+        },
+        {
+          "author": "johnnyfish",
+          "date": "2026-04-27T20:10:01Z",
+          "message_first_line": "fix: secret dialog examples and overflow (#217)",
+          "sha": "e3ce339",
+          "security_keyword_match": true
+        },
+        {
+          "author": "jeffmaury",
+          "date": "2026-04-27T19:46:25Z",
+          "message_first_line": "feat: add secret injection in query parameters (#194)",
+          "sha": "0956ec6",
+          "security_keyword_match": true
+        },
+        {
+          "author": "johnnyfish",
+          "date": "2026-04-27T18:31:43Z",
+          "message_first_line": "fix: detect postgres port conflict in installer (#214)",
+          "sha": "6c6017c",
+          "security_keyword_match": true
+        },
+        {
+          "author": "guyb1",
+          "date": "2026-04-27T14:56:43Z",
+          "message_first_line": "chore(main): release 1.18.6 (#212)",
+          "sha": "db22405",
+          "security_keyword_match": false
+        },
+        {
+          "author": "johnnyfish",
+          "date": "2026-04-27T14:54:29Z",
+          "message_first_line": "fix: add version to health endpoint and dashboard user menu (#211)",
+          "sha": "126ed12",
+          "security_keyword_match": true
+        },
+        {
+          "author": "guyb1",
+          "date": "2026-04-27T13:52:53Z",
+          "message_first_line": "chore(main): release 1.18.5 (#210)",
+          "sha": "0f35d39",
+          "security_keyword_match": false
+        },
+        {
+          "author": "johnnyfish",
+          "date": "2026-04-27T13:50:57Z",
+          "message_first_line": "fix: roll back loopback session auth (#201) and installer bind-host change (#206) (#209)",
+          "sha": "e854fe5",
+          "security_keyword_match": true
+        },
+        {
+          "author": "johnnyfish",
+          "date": "2026-04-27T13:43:08Z",
+          "message_first_line": "Revert/to v1.18.2 (#208)",
+          "sha": "edd6116",
+          "security_keyword_match": false
+        },
+        {
+          "author": "guyb1",
+          "date": "2026-04-27T12:24:07Z",
+          "message_first_line": "chore(main): release 1.18.4 (#207)",
+          "sha": "ab22313",
+          "security_keyword_match": false
+        },
+        {
+          "author": "johnnyfish",
+          "date": "2026-04-27T12:22:27Z",
+          "message_first_line": "fix: bind installer API to loopback so fresh bare-metal installs can auth (#206)",
+          "sha": "6bde3d4",
+          "security_keyword_match": true
+        },
+        {
+          "author": "guyb1",
+          "date": "2026-04-26T16:52:52Z",
+          "message_first_line": "chore(main): release 1.18.3 (#202)",
+          "sha": "f92b2bd",
+          "security_keyword_match": false
+        },
+        {
+          "author": "guyb1",
+          "date": "2026-04-26T16:48:21Z",
+          "message_first_line": "fix: improve gateway telemetry, app connections, and dashboard header (#204)",
+          "sha": "7a374eb",
+          "security_keyword_match": true
+        },
+        {
+          "author": "johnnyfish",
+          "date": "2026-04-24T17:43:30Z",
+          "message_first_line": "fix: restrict local mode session auth to loopback requests (#201)",
+          "sha": "81d4352",
+          "security_keyword_match": true
+        },
+        {
+          "author": "guyb1",
+          "date": "2026-04-22T10:37:50Z",
+          "message_first_line": "chore(main): release 1.18.2 (#200)",
+          "sha": "5be3875",
+          "security_keyword_match": false
+        },
+        {
+          "author": "guyb1",
+          "date": "2026-04-22T10:33:03Z",
+          "message_first_line": "fix: mobile layout fixes, Slack channel support, and deploy UX improvements (#199)",
+          "sha": "8054787",
+          "security_keyword_match": true
+        },
+        {
+          "author": "guyb1",
+          "date": "2026-04-20T06:54:35Z",
+          "message_first_line": "chore(main): release 1.18.1 (#197)",
+          "sha": "dfdf976",
+          "security_keyword_match": false
+        },
+        {
+          "author": "guyb1",
+          "date": "2026-04-20T06:51:47Z",
+          "message_first_line": "fix: sync shared changes - deploy pages, migration export, schema updates (#196)",
+          "sha": "1747791",
+          "security_keyword_match": true
+        },
+        {
+          "author": "guyb1",
+          "date": "2026-04-16T14:45:17Z",
+          "message_first_line": "chore(main): release 1.18.0 (#190)",
+          "sha": "7a3f355",
+          "security_keyword_match": false
+        },
+        {
+          "author": "guyb1",
+          "date": "2026-04-16T09:56:25Z",
+          "message_first_line": "feat: add \"Request an app\" card to apps grid (#189)",
+          "sha": "0137ea4",
+          "security_keyword_match": false
+        },
+        {
+          "author": "guyb1",
+          "date": "2026-04-16T08:10:40Z",
+          "message_first_line": "chore(main): release 1.17.0 (#188)",
+          "sha": "58ab346",
+          "security_keyword_match": false
+        },
+        {
+          "author": "guyb1",
+          "date": "2026-04-16T06:59:58Z",
+          "message_first_line": "feat: multi-account connections, credential_not_found and access_restricted responses (#187)",
+          "sha": "8624335",
+          "security_keyword_match": false
+        },
+        {
+          "author": "guyb1",
+          "date": "2026-04-14T14:22:16Z",
+          "message_first_line": "chore(main): release 1.16.0 (#179)",
+          "sha": "3fcf64a",
+          "security_keyword_match": false
+        },
+        {
+          "author": "guyb1",
+          "date": "2026-04-14T14:16:55Z",
+          "message_first_line": "feat: credential_not_found for unknown hosts, MITM all authenticated traffic, auth-related 400 handling (#186)",
+          "sha": "8cd44ce",
+          "security_keyword_match": true
+        },
+        {
+          "author": "guyb1",
+          "date": "2026-04-14T10:07:42Z",
+          "message_first_line": "feat: broaden access_restricted to cover secrets and app connections, add ResolvedRules struct, improve gateway cache auth (#185)",
+          "sha": "b6492a4",
+          "security_keyword_match": true
+        },
+        {
+          "author": "guyb1",
+          "date": "2026-04-11T16:59:55Z",
+          "message_first_line": "fix: resolve injection and policy rules per request instead of freezing at CONNECT time (#178)",
+          "sha": "19d159f",
+          "security_keyword_match": true
+        },
+        {
+          "author": "guyb1",
+          "date": "2026-04-10T06:24:08Z",
+          "message_first_line": "chore(main): release 1.15.1 (#176)",
+          "sha": "5495af2",
+          "security_keyword_match": false
+        },
+        {
+          "author": "guyb1",
+          "date": "2026-04-10T06:20:59Z",
+          "message_first_line": "fix: approval refinements \u2014 agent identifier, body streaming, guard cleanup (#175)",
+          "sha": "a468bb6",
+          "security_keyword_match": true
+        },
+        {
+          "author": "guyb1",
+          "date": "2026-04-09T20:03:58Z",
+          "message_first_line": "chore(main): release 1.15.0 (#174)",
+          "sha": "3b128c3",
+          "security_keyword_match": false
+        },
+        {
+          "author": "guyb1",
+          "date": "2026-04-09T20:01:31Z",
+          "message_first_line": "feat: add manual approval policy action for gateway requests (#172)",
+          "sha": "632ccab",
+          "security_keyword_match": false
+        },
+        {
+          "author": "guyb1",
+          "date": "2026-04-09T19:52:46Z",
+          "message_first_line": "fix: remove NEXTAUTH_SECRET fallback that forced OAuth mode (#173)",
+          "sha": "b602f1b",
+          "security_keyword_match": true
+        },
+        {
+          "author": "guyb1",
+          "date": "2026-04-08T14:09:45Z",
+          "message_first_line": "chore(main): release 1.14.2 (#171)",
+          "sha": "9101bf1",
+          "security_keyword_match": false
+        },
+        {
+          "author": "guyb1",
+          "date": "2026-04-08T13:58:59Z",
+          "message_first_line": "fix: refactor gateway, add unconnected app response, centralize env vars (#170)",
+          "sha": "2290c50",
+          "security_keyword_match": true
+        },
+        {
+          "author": "guyb1",
+          "date": "2026-04-06T17:34:07Z",
+          "message_first_line": "chore(main): release 1.14.1 (#169)",
+          "sha": "e22d0aa",
+          "security_keyword_match": false
+        },
+        {
+          "author": "guyb1",
+          "date": "2026-04-06T17:32:22Z",
+          "message_first_line": "fix: add env defaults check and loading skeletons for connect URL param (#168)",
+          "sha": "9e84f3e",
+          "security_keyword_match": true
+        },
+        {
+          "author": "guyb1",
+          "date": "2026-04-06T16:16:25Z",
+          "message_first_line": "chore(main): release 1.14.0 (#165)",
+          "sha": "7498885",
+          "security_keyword_match": false
+        },
+        {
+          "author": "guyb1",
+          "date": "2026-04-06T16:13:25Z",
+          "message_first_line": "fix: add GET /api/apps/[provider] route with setup hint (#167)",
+          "sha": "28db4c3",
+          "security_keyword_match": true
+        },
+        {
+          "author": "guyb1",
+          "date": "2026-04-06T16:02:00Z",
+          "message_first_line": "feat: add loading skeletons, fix content flash, and URL-driven connect (#166)",
+          "sha": "dc7e607",
+          "security_keyword_match": true
+        },
+        {
+          "author": "guyb1",
+          "date": "2026-04-06T12:43:03Z",
+          "message_first_line": "fix: add loading skeletons and prefetch tab routes for instant navigation (#164)",
+          "sha": "aa00bce",
+          "security_keyword_match": true
+        },
+        {
+          "author": "guyb1",
+          "date": "2026-04-06T12:04:39Z",
+          "message_first_line": "chore: upgrade workflows (#163)",
+          "sha": "9d85b67",
+          "security_keyword_match": false
+        },
+        {
+          "author": "guyb1",
+          "date": "2026-04-06T11:44:59Z",
+          "message_first_line": "chore(main): release 1.13.0 (#161)",
+          "sha": "bebadcd",
+          "security_keyword_match": false
+        },
+        {
+          "author": "guyb1",
+          "date": "2026-04-06T11:30:45Z",
+          "message_first_line": "refactor: unify REST API under /api/apps/:provider (#162)",
+          "sha": "efedce1",
+          "security_keyword_match": false
+        },
+        {
+          "author": "johnnyfish",
+          "date": "2026-04-06T08:03:04Z",
+          "message_first_line": "fix: autofill secret name from Anthropic key type (#156)",
+          "sha": "8c4e2a3",
+          "security_keyword_match": true
+        },
+        {
+          "author": "johnnyfish",
+          "date": "2026-04-06T07:38:28Z",
+          "message_first_line": "feat: add /api/apps REST routes for CLI app connections (#160)",
+          "sha": "8e68d35",
+          "security_keyword_match": false
+        },
+        {
+          "author": "guyb1",
+          "date": "2026-04-05T16:52:34Z",
+          "message_first_line": "chore: show ONECLI_URL in install script output (#159)",
+          "sha": "e1df30e",
+          "security_keyword_match": false
+        },
+        {
+          "author": "guyb1",
+          "date": "2026-04-05T12:57:46Z",
+          "message_first_line": "chore(main): release 1.12.1 (#152)",
+          "sha": "353d296",
+          "security_keyword_match": false
+        },
+        {
+          "author": "guyb1",
+          "date": "2026-04-05T12:55:34Z",
+          "message_first_line": "chore: add Get Started dialog and refactor demo secret seeding (#158)",
+          "sha": "b120225",
+          "security_keyword_match": false
+        },
+        {
+          "author": "guyb1",
+          "date": "2026-04-05T12:31:40Z",
+          "message_first_line": "fix: pre-fill secret name with \"Anthropic Token\" for anthropic type (#157)",
+          "sha": "86444e0",
+          "security_keyword_match": true
+        },
+        {
+          "author": "guyb1",
+          "date": "2026-04-05T09:52:33Z",
+          "message_first_line": "chore: move install script to repo and improve docker compose (#155)",
+          "sha": "163c83a",
+          "security_keyword_match": false
+        },
+        {
+          "author": "guyb1",
+          "date": "2026-04-05T09:35:49Z",
+          "message_first_line": "fix: configurable bind host for Docker port bindings (#153)",
+          "sha": "97a36d1",
+          "security_keyword_match": true
+        },
+        {
+          "author": "johnnyfish",
+          "date": "2026-04-04T09:49:26Z",
+          "message_first_line": "fix: encrypt Bitwarden vault session state at rest in connection_data (#146)",
+          "sha": "e6de1e6",
+          "security_keyword_match": true
+        },
+        {
+          "author": "guyb1",
+          "date": "2026-04-03T18:42:07Z",
+          "message_first_line": "chore(main): release 1.12.0 (#151)",
+          "sha": "d84c4ce",
+          "security_keyword_match": false
+        },
+        {
+          "author": "lawrence3699",
+          "date": "2026-04-03T18:39:26Z",
+          "message_first_line": "fix: add missing error handling in OAuth token exchange and credential decryption (#148)",
+          "sha": "d9e70c6",
+          "security_keyword_match": true
+        },
+        {
+          "author": "mbravorus",
+          "date": "2026-04-03T18:19:48Z",
+          "message_first_line": "fix(gateway): add GATEWAY_SKIP_VERIFY_HOSTS for selective TLS skip (#145)",
+          "sha": "962d948",
+          "security_keyword_match": true
+        },
+        {
+          "author": "guyb1",
+          "date": "2026-04-03T17:58:20Z",
+          "message_first_line": "feat: add HTTP proxy support alongside HTTPS (#150)",
+          "sha": "ec24fba",
+          "security_keyword_match": false
+        },
+        {
+          "author": "guyb1",
+          "date": "2026-04-02T14:14:23Z",
+          "message_first_line": "chore(main): release 1.11.0 (#141)",
+          "sha": "211b6d5",
+          "security_keyword_match": false
+        },
+        {
+          "author": "mbravorus",
+          "date": "2026-04-02T14:10:44Z",
+          "message_first_line": "chore: onecli binding on 0.0.0.0 (#144)",
+          "sha": "26535ad",
+          "security_keyword_match": false
+        },
+        {
+          "author": "johnnyfish",
+          "date": "2026-04-02T10:46:39Z",
+          "message_first_line": "fix: update README quick start to lead with install script (#143)",
+          "sha": "6deed12",
+          "security_keyword_match": true
+        },
+        {
+          "author": "guyb1",
+          "date": "2026-04-01T13:12:49Z",
+          "message_first_line": "feat: add 11 Google Workspace apps and inline BYOC config dialog (#140)",
+          "sha": "82c717a",
+          "security_keyword_match": false
+        },
+        {
+          "author": "guyb1",
+          "date": "2026-03-31T16:01:16Z",
+          "message_first_line": "chore(main): release 1.10.0 (#137)",
+          "sha": "19868b3",
+          "security_keyword_match": false
+        },
+        {
+          "author": "guyb1",
+          "date": "2026-03-31T15:59:50Z",
+          "message_first_line": "feat: unified credential access dialog and always-visible connect button (#138)",
+          "sha": "0b20830",
+          "security_keyword_match": false
+        },
+        {
+          "author": "guyb1",
+          "date": "2026-03-31T14:31:48Z",
+          "message_first_line": "feat: add Google Drive app integration with path-prefix routing (#136)",
+          "sha": "4745147",
+          "security_keyword_match": false
+        },
+        {
+          "author": "guyb1",
+          "date": "2026-03-31T13:17:36Z",
+          "message_first_line": "chore(main): release 1.9.0 (#132)",
+          "sha": "f1973a4",
+          "security_keyword_match": false
+        },
+        {
+          "author": "guyb1",
+          "date": "2026-03-31T12:01:28Z",
+          "message_first_line": "feat: add Google Calendar app integration and rename google to gmail (#135)",
+          "sha": "64e080c",
+          "security_keyword_match": false
+        },
+        {
+          "author": "guyb1",
+          "date": "2026-03-30T17:49:54Z",
+          "message_first_line": "feat: add Resend integration and API key connection type (#133)",
+          "sha": "86010ef",
+          "security_keyword_match": false
+        },
+        {
+          "author": "guyb1",
+          "date": "2026-03-30T14:13:50Z",
+          "message_first_line": "feat: add Gmail app with OAuth token refresh and BYOC support (#130)",
+          "sha": "41c2a83",
+          "security_keyword_match": false
+        },
+        {
+          "author": "guyb1",
+          "date": "2026-03-30T09:04:17Z",
+          "message_first_line": "chore(main): release 1.8.0 (#126)",
+          "sha": "a9baff5",
+          "security_keyword_match": false
+        },
+        {
+          "author": "johnnyfish",
+          "date": "2026-03-29T20:49:39Z",
+          "message_first_line": "fix: handle app-configure postMessage and suppress body hydration warning (#128)",
+          "sha": "6c22837",
+          "security_keyword_match": true
+        },
+        {
+          "author": "guyb1",
+          "date": "2026-03-29T16:23:41Z",
+          "message_first_line": "feat: app connections with OAuth flow and gateway credential injection (#127)",
+          "sha": "aa8ec62",
+          "security_keyword_match": true
+        },
+        {
+          "author": "chiplay",
+          "date": "2026-03-29T15:56:54Z",
+          "message_first_line": "feat: add google_oauth secret type with form-body injection (#123)",
+          "sha": "b99798b",
+          "security_keyword_match": true
+        },
+        {
+          "author": "guyb1",
+          "date": "2026-03-29T07:58:03Z",
+          "message_first_line": "chore: switch to official eslint-config-next and add missing lint rules (#124)",
+          "sha": "a6c4fb7",
+          "security_keyword_match": false
+        },
+        {
+          "author": "guyb1",
+          "date": "2026-03-26T20:17:38Z",
+          "message_first_line": "chore(main): release 1.7.2 (#119)",
+          "sha": "2d732b2",
+          "security_keyword_match": false
+        },
+        {
+          "author": "guyb1",
+          "date": "2026-03-26T20:15:47Z",
+          "message_first_line": "fix: add API key auth to gateway and server-side cache invalidation (#118)",
+          "sha": "70fdfa8",
+          "security_keyword_match": true
+        },
+        {
+          "author": "guyb1",
+          "date": "2026-03-26T19:09:42Z",
+          "message_first_line": "chore(main): release 1.7.1 (#114)",
+          "sha": "33a46e0",
+          "security_keyword_match": false
+        }
+      ]
+    },
+    "distribution_channels": {
+      "channels": [
+        {
+          "name": "npm-onecli-cloud",
+          "type": "package_manager",
+          "package": "onecli-cloud",
+          "install_command": "npm install onecli-cloud",
+          "pinned": false,
+          "install_path_verified": true,
+          "artifact_verified": false,
+          "ecosystem": "npm",
+          "note": "Registered in extract/onecli-fa6468e4711bc283f26b11e68c0ce8dc6a799010/package.json"
+        },
+        {
+          "name": "npm-@onecli/db",
+          "type": "package_manager",
+          "package": "@onecli/db",
+          "install_command": "npm install @onecli/db",
+          "pinned": false,
+          "install_path_verified": true,
+          "artifact_verified": false,
+          "ecosystem": "npm",
+          "note": "Registered in extract/onecli-fa6468e4711bc283f26b11e68c0ce8dc6a799010/packages/db/package.json"
+        },
+        {
+          "name": "npm-@onecli/eslint-config",
+          "type": "package_manager",
+          "package": "@onecli/eslint-config",
+          "install_command": "npm install @onecli/eslint-config",
+          "pinned": false,
+          "install_path_verified": true,
+          "artifact_verified": false,
+          "ecosystem": "npm",
+          "note": "Registered in extract/onecli-fa6468e4711bc283f26b11e68c0ce8dc6a799010/packages/eslint-config/package.json"
+        },
+        {
+          "name": "npm-@onecli/ui",
+          "type": "package_manager",
+          "package": "@onecli/ui",
+          "install_command": "npm install @onecli/ui",
+          "pinned": false,
+          "install_path_verified": true,
+          "artifact_verified": false,
+          "ecosystem": "npm",
+          "note": "Registered in extract/onecli-fa6468e4711bc283f26b11e68c0ce8dc6a799010/packages/ui/package.json"
+        },
+        {
+          "name": "npm-@onecli/typescript-config",
+          "type": "package_manager",
+          "package": "@onecli/typescript-config",
+          "install_command": "npm install @onecli/typescript-config",
+          "pinned": false,
+          "install_path_verified": true,
+          "artifact_verified": false,
+          "ecosystem": "npm",
+          "note": "Registered in extract/onecli-fa6468e4711bc283f26b11e68c0ce8dc6a799010/packages/typescript-config/package.json"
+        },
+        {
+          "name": "crates-onecli-gateway",
+          "type": "package_manager",
+          "package": "onecli-gateway",
+          "install_command": "cargo install onecli-gateway",
+          "pinned": false,
+          "install_path_verified": true,
+          "artifact_verified": false,
+          "ecosystem": "crates.io",
+          "note": "Registered in extract/onecli-fa6468e4711bc283f26b11e68c0ce8dc6a799010/apps/gateway/Cargo.toml"
+        },
+        {
+          "name": "npm-@onecli/gateway",
+          "type": "package_manager",
+          "package": "@onecli/gateway",
+          "install_command": "npm install @onecli/gateway",
+          "pinned": false,
+          "install_path_verified": true,
+          "artifact_verified": false,
+          "ecosystem": "npm",
+          "note": "Registered in extract/onecli-fa6468e4711bc283f26b11e68c0ce8dc6a799010/apps/gateway/package.json"
+        },
+        {
+          "name": "npm-@onecli/web",
+          "type": "package_manager",
+          "package": "@onecli/web",
+          "install_command": "npm install @onecli/web",
+          "pinned": false,
+          "install_path_verified": true,
+          "artifact_verified": false,
+          "ecosystem": "npm",
+          "note": "Registered in extract/onecli-fa6468e4711bc283f26b11e68c0ce8dc6a799010/apps/web/package.json"
+        }
+      ]
+    },
+    "artifact_verification": {
+      "per_channel": [
+        {
+          "channel": "npm-onecli-cloud",
+          "method": "npm-registry-presence",
+          "result": "unavailable"
+        },
+        {
+          "channel": "npm-@onecli/db",
+          "method": "npm-registry-presence",
+          "result": "unavailable"
+        },
+        {
+          "channel": "npm-@onecli/eslint-config",
+          "method": "npm-registry-presence",
+          "result": "unavailable"
+        },
+        {
+          "channel": "npm-@onecli/ui",
+          "method": "npm-registry-presence",
+          "result": "unavailable"
+        },
+        {
+          "channel": "npm-@onecli/typescript-config",
+          "method": "npm-registry-presence",
+          "result": "unavailable"
+        },
+        {
+          "channel": "crates-onecli-gateway",
+          "method": "crates-io-presence",
+          "result": "unavailable"
+        },
+        {
+          "channel": "npm-@onecli/gateway",
+          "method": "npm-registry-presence",
+          "result": "unavailable"
+        },
+        {
+          "channel": "npm-@onecli/web",
+          "method": "npm-registry-presence",
+          "result": "unavailable"
+        }
+      ]
+    },
+    "install_script_analysis": {
+      "scripts": [
+        {
+          "file": "README.md",
+          "snippet": "curl -fsSL https://onecli.sh/install | sh",
+          "network": true,
+          "tracks_main_branch": false,
+          "sha_pinned": false,
+          "tag_pinned": false
+        },
+        {
+          "file": "README.md",
+          "snippet": "curl -fsSL https://onecli.sh/install | sh` starts everything (app + PostgreSQL)",
+          "network": true,
+          "tracks_main_branch": false,
+          "sha_pinned": false,
+          "tag_pinned": false
+        }
+      ]
+    },
+    "gitleaks": {
+      "available": false,
+      "ran": false,
+      "findings_count": null,
+      "findings": [],
+      "note": "gitleaks not installed; install to cover secrets-in-history"
+    },
+    "windows_patterns": {
+      "hits": [],
+      "hit_count": 0
+    },
+    "monorepo": {
+      "is_monorepo": true,
+      "inner_packages": [
+        {
+          "path": "extract/onecli-fa6468e4711bc283f26b11e68c0ce8dc6a799010",
+          "name": "onecli-fa6468e4711bc283f26b11e68c0ce8dc6a799010",
+          "ecosystem": "npm",
+          "manifest_count": 2
+        },
+        {
+          "path": "extract/onecli-fa6468e4711bc283f26b11e68c0ce8dc6a799010/packages/db",
+          "name": "db",
+          "ecosystem": "npm",
+          "manifest_count": 1
+        },
+        {
+          "path": "extract/onecli-fa6468e4711bc283f26b11e68c0ce8dc6a799010/packages/eslint-config",
+          "name": "eslint-config",
+          "ecosystem": "npm",
+          "manifest_count": 1
+        },
+        {
+          "path": "extract/onecli-fa6468e4711bc283f26b11e68c0ce8dc6a799010/packages/ui",
+          "name": "ui",
+          "ecosystem": "npm",
+          "manifest_count": 1
+        },
+        {
+          "path": "extract/onecli-fa6468e4711bc283f26b11e68c0ce8dc6a799010/packages/typescript-config",
+          "name": "typescript-config",
+          "ecosystem": "npm",
+          "manifest_count": 1
+        },
+        {
+          "path": "extract/onecli-fa6468e4711bc283f26b11e68c0ce8dc6a799010/apps/gateway",
+          "name": "gateway",
+          "ecosystem": "crates.io",
+          "manifest_count": 3
+        },
+        {
+          "path": "extract/onecli-fa6468e4711bc283f26b11e68c0ce8dc6a799010/apps/web",
+          "name": "web",
+          "ecosystem": "npm",
+          "manifest_count": 1
+        }
+      ],
+      "lifecycle_script_hits": []
+    },
+    "defensive_configs": {
+      "entries": [
+        {
+          "file": ".github/dependabot.yml",
+          "type": "dependabot",
+          "present": false
+        },
+        {
+          "file": "SECURITY.md",
+          "type": "security-policy",
+          "present": false
+        }
+      ]
+    },
+    "batch_merge_detection": {
+      "detected": false,
+      "pr_groups": []
+    },
+    "coverage_affirmations": {
+      "prompt_injection_scan_completed": true,
+      "windows_surface_coverage": "scanned",
+      "distribution_channels_verified": "0/8",
+      "gitleaks_available": false,
+      "gitleaks_explanation": "gitleaks not installed; install to cover secrets-in-history"
+    }
+  },
+  "phase_2_validation": {
+    "sha_consistent": true,
+    "required_fields_complete": true,
+    "dates_chronological": true,
+    "tarball_nonempty": false,
+    "validation_passed": true,
+    "validation_errors": []
+  },
+  "phase_3_computed": {
+    "c20_severity": {
+      "no_classic_protection": true,
+      "no_rulesets": false,
+      "no_rules_on_default": false,
+      "no_codeowners": true,
+      "has_recent_release_30d": true,
+      "ships_executable_code": true,
+      "result": null
+    },
+    "solo_maintainer": {
+      "top_contributor_share": 0.85,
+      "is_solo": true,
+      "verbatim_sentence": "Note: guyb1 accounts for 85% of all commits. This is a solo-maintainer project \u2014 all governance findings should be read in that context."
+    },
+    "exhibit_grouping": {
+      "total_findings": 0,
+      "threshold_met": false,
+      "exhibits": []
+    },
+    "boundary_cases": {
+      "cases": []
+    },
+    "coverage_status": {
+      "cells": [
+        {
+          "name": "Tarball extraction",
+          "status": "blocked",
+          "detail": "None files"
+        },
+        {
+          "name": "OSSF Scorecard",
+          "status": "not_indexed",
+          "detail": "Repo not indexed by OSSF"
+        },
+        {
+          "name": "osv.dev",
+          "status": "not_queried",
+          "detail": ""
+        },
+        {
+          "name": "Secrets-in-history (gitleaks)",
+          "status": "not_available",
+          "detail": "gitleaks not installed"
+        },
+        {
+          "name": "API rate budget",
+          "status": "ok",
+          "detail": "4995/5000 remaining"
+        },
+        {
+          "name": "Dependabot alerts",
+          "status": "unknown",
+          "detail": "Unknown"
+        }
+      ]
+    },
+    "methodology": {
+      "scanner_version": "V2.5-preview",
+      "prompt_version": "V2.4",
+      "guide_version": "V0.2"
+    }
+  },
+  "phase_3_advisory": {
+    "scorecard_hints": {
+      "does_anyone_check_the_code": {
+        "color": "red",
+        "short_answer": "No",
+        "signals": [
+          {
+            "id": "q1_formal_review_rate",
+            "value": 0
+          },
+          {
+            "id": "q1_any_review_rate",
+            "value": 1.4
+          },
+          {
+            "id": "q1_has_branch_protection",
+            "value": false
+          },
+          {
+            "id": "q1_has_ruleset_protection",
+            "value": true
+          },
+          {
+            "id": "q1_has_codeowners",
+            "value": false
+          },
+          {
+            "id": "q1_is_solo_maintainer",
+            "value": true
+          },
+          {
+            "id": "q1_governance_floor_override",
+            "value": false
+          }
+        ]
+      },
+      "do_they_fix_problems_quickly": {
+        "color": "green",
+        "short_answer": "Yes",
+        "signals": [
+          {
+            "id": "q2_open_security_issue_count",
+            "value": 0
+          },
+          {
+            "id": "q2_oldest_open_cve_pr_age_days",
+            "value": null
+          },
+          {
+            "id": "q2_oldest_open_security_item_age_days",
+            "value": null
+          },
+          {
+            "id": "q2_closed_fix_lag_days",
+            "value": null
+          }
+        ]
+      },
+      "do_they_tell_you_about_problems": {
+        "color": "amber",
+        "short_answer": "Partly",
+        "signals": [
+          {
+            "id": "q3_has_security_policy",
+            "value": false
+          },
+          {
+            "id": "q3_has_contributing_guide",
+            "value": true
+          },
+          {
+            "id": "q3_published_advisory_count",
+            "value": 0
+          },
+          {
+            "id": "q3_has_silent_fixes",
+            "value": false
+          }
+        ]
+      },
+      "is_it_safe_out_of_the_box": {
+        "color": "amber",
+        "short_answer": "Partly",
+        "signals": [
+          {
+            "id": "q4_all_channels_pinned",
+            "value": false
+          },
+          {
+            "id": "q4_artifact_verified",
+            "value": false
+          },
+          {
+            "id": "q4_has_critical_on_default_path",
+            "value": false
+          },
+          {
+            "id": "q4_has_warning_on_install_path",
+            "value": false
+          }
+        ]
+      }
+    }
+  },
+  "phase_4_structured_llm": {
+    "findings": {
+      "entries": [
+        {
+          "id": "F0",
+          "severity": "Warning",
+          "provenance": "rule-applied",
+          "rule_id": "F11",
+          "status": "ongoing",
+          "category": "governance/solo-maintainer",
+          "kind": "Governance",
+          "title": "Solo maintainer (85.0% commit share) on a 2-month-old credential vault with no CODEOWNERS and 15 total contributors",
+          "duration_label": "Continuous since repo creation (2026-03-08)",
+          "date_label": "Since 2026-03-08",
+          "action_hint": "If you self-host, pin the Docker image to a specific tag (`ONECLI_VERSION=1.21.0`) rather than `latest`, review the source for the version you're running, and treat OneCLI as a single-trust-anchor service \u2014 compromise of one maintainer credential reaches every secret you've stored.",
+          "evidence_refs": [
+            "E1",
+            "E2",
+            "E3"
+          ],
+          "threat_model_paths": [
+            "stale_token",
+            "session_compromise"
+          ],
+          "threat_model_context": "guyb1 holds 85.0% of contributions; johnnyfish (ChartDB founder, second contributor) holds 12.0%. The `onecli` GitHub org was created 2026-02-24 and the repo on 2026-03-08 \u2014 about 2 months before scan. No CODEOWNERS file is present at any of the four standard locations. An active branch ruleset on `main` exists but does not enforce required-reviewer count. Across 208 sampled merged PRs, the formal-review rate is 0.0% (no `reviewDecision` set on any). The blast radius if guyb1's GitHub credentials are compromised is the entire credential-vault product: malicious changes to `apps/gateway/src/inject.rs` (credential injection logic), `apps/gateway/src/crypto.rs` (encryption), or the published Docker image would propagate to every self-hosted OneCLI instance pulling `latest` (the install-script default). 2,093 stars in 2 months indicates a non-trivial install base.",
+          "what_this_means": "The structural human-review gate between maintainer code changes and the published Docker image is essentially the maintainer's own discipline. The repo has CI checks (Rust clippy, TypeScript type-check, Prisma migration drift) but no required human reviewer. For a tool that brokers API keys to AI agents, this is a meaningful structural gap regardless of maintainer intent.",
+          "what_this_does_not_mean": "Not evidence of malicious behavior or maintainer negligence. The maintainer ships defensive patterns (audit logging via `withAudit`, defensive bind-host detection in the installer, a fast 1-day fix on issue #131 0.0.0.0 binding) and uses well-audited crypto (ring + AES-256-GCM). The finding is structural \u2014 about the absence of a second-human review gate on a high-stakes product \u2014 not about guyb1 or johnnyfish.",
+          "how_to_fix": "Maintainer-side: add `.github/CODEOWNERS` with `* @guyb1 @johnnyfish` (or whatever set of trusted reviewers); update the `main` ruleset to require \u22651 approving review from CODEOWNERS for PRs; consider requiring 2 approvals for changes under `apps/gateway/src/{crypto.rs,inject.rs,vault/,auth.rs}` (the credential-handling code path). Consumer-side: pin Docker image tags (`ONECLI_VERSION=1.21.0`), don't use `latest`; review release notes before bumping; consider treating OneCLI as you'd treat any 2-month-old self-hosted secrets manager (additional network isolation, scoped service accounts upstream)."
+        },
+        {
+          "id": "F1",
+          "severity": "Warning",
+          "provenance": "observed",
+          "status": "ongoing",
+          "category": "governance/process",
+          "kind": "Governance",
+          "title": "Active branch ruleset on `main` does not enforce required-reviewer count \u2014 0.0% formal review rate across 208 merged PRs, observed self-merge pattern in recent sample",
+          "duration_label": "Continuous since repo creation",
+          "date_label": "Since 2026-03-08",
+          "action_hint": "Treat any 'review' the dashboard shows on a PR as advisory only \u2014 across the full corpus, no PR has a GitHub `reviewDecision` field set. If you're auditing a specific commit, look at the actual diff, not review counts.",
+          "evidence_refs": [
+            "E2",
+            "E3"
+          ],
+          "threat_model_paths": [
+            "sloppy_review"
+          ],
+          "threat_model_context": "208 merged PRs in 2 months with 0% formal-review rate is dominantly a function of solo maintenance \u2014 guyb1 self-merges most PRs (4 of the 5 most-recent merged PRs, including #247 'cloud-only apps framework, credential header injection, user provisioning schema' which directly touches the credential data path, and #249 'generic OAuth interface, and credential resolution' which adds new credential-resolution logic). The `any_review_rate` of 1.4 (review events per merged PR) reflects copilot/CI automated comments, not human approvals. The active ruleset on `main` (id 13642592, enforcement=active) appears to enforce status checks (CI must pass) but not required reviewers \u2014 otherwise the formal_review_rate would not be 0.0%. PR #234 (open 5 days as of scan) proposes adding an SBOM crypto audit to CI to block unapproved crypto dependencies \u2014 a healthy hardening direction, but its sit-in-queue duration is itself a process signal.",
+          "what_this_means": "Self-merge is the primary merge mode. Code that touches the credential data path (encryption, gateway injection, vault integration) is being shipped to consumers without a structural second-pair-of-eyes step beyond CI lint/type/test. CI does run Rust clippy + TypeScript type-check + lint + Prisma migration drift on every PR (`.github/workflows/ci.yml`), so syntactic correctness is gated; semantic / design / threat-model review is not.",
+          "what_this_does_not_mean": "Not evidence of bad code \u2014 the PRs in the recent sample look reasonable in title and the project does ship visible defensive patterns. The finding is process-level. Also not the same as 'no protection at all' \u2014 the ruleset prevents direct pushes to `main` without going through a PR, which is a meaningful step beyond `impeccable` (entry 29) which had no protection at all.",
+          "how_to_fix": "Maintainer-side: amend the ruleset to require \u22651 approving review (and add CODEOWNERS as a hard requirement on credential-handling files); merge PR #234 (SBOM crypto audit) so crypto-dependency additions are gated. Consumer-side: not directly actionable \u2014 read this finding alongside F0, treat the trust posture as 'maintainer judgment + automated CI', and pin to known-good releases."
+        },
+        {
+          "id": "F2",
+          "severity": "Warning",
+          "provenance": "observed",
+          "status": "ongoing",
+          "category": "supply-chain/installer-pinning",
+          "kind": "Supply chain",
+          "title": "`curl|sh` installer downloads `docker-compose.yml` from `main` (mutable) and pins the Docker image to `latest` (mutable) \u2014 no SHA / tag pin / signature verification",
+          "duration_label": "Continuous (install-path design)",
+          "date_label": "Continuous",
+          "action_hint": "Don't use `curl -fsSL https://onecli.sh/install | sh`. Instead clone the repo at a specific tag, set `ONECLI_VERSION=1.21.0`, run `docker compose -f docker/docker-compose.yml up -d --wait` manually.",
+          "evidence_refs": [
+            "E4",
+            "E9"
+          ],
+          "threat_model_paths": [
+            "other",
+            "stale_token"
+          ],
+          "threat_model_context": "Three trust anchors are mutable in the documented install path: (1) `https://onecli.sh/install` (third-party domain, content depends on whoever controls onecli.sh DNS + hosting); (2) `https://raw.githubusercontent.com/onecli/onecli/main/docker/docker-compose.yml` \u2014 tracks `main`, so any commit to main can change what new installs pull; (3) `ghcr.io/onecli/onecli:latest` \u2014 Docker tag is mutable, points to whatever the most recent CI publish workflow pushed. None of the three has a documented checksum, GPG signature, Sigstore attestation, or SLSA provenance. The `publish.yml` workflow does build multi-arch images and emits digest manifests, but does not run `cosign sign` or `slsa-github-generator`. Compromise of any of the three trust anchors (DNS for onecli.sh, GitHub credentials for guyb1, GHCR push token) reaches consumers running `curl|sh` or pulling `latest`. Compensating: the install script itself is defensively-coded (binds to 127.0.0.1 / docker0 IP, refuses 0.0.0.0; checks for port conflicts; validates Docker daemon is running). Past closed issue #131 (closed 2026-04-02) corrected a real 0.0.0.0-binding bug, showing the maintainer responds to security feedback within ~days.",
+          "what_this_means": "If you take the documented happy path (`curl|sh` \u2192 pull `latest`), you are trusting the maintainer to control three mutable surfaces (DNS, main branch, latest tag) for the lifetime of your install. There is no point-in-time pinning to verify a commit/version against. Bumping is the same operation as installing: re-run `curl|sh`.",
+          "what_this_does_not_mean": "Not evidence of an active supply-chain compromise \u2014 this is the trust topology of the documented install path. Many self-hosted OSS tools follow this same pattern (`curl|sh`, `latest` tag); calling it out as a Warning here reflects the high stakes of a credential vault, not a uniquely-bad install design. Also: setting `ONECLI_VERSION=<tag>` before piping does pin the Docker tag (the install script exports it as an env var), and using the manual `git clone + docker compose up` path avoids the onecli.sh redirect entirely.",
+          "how_to_fix": "Maintainer-side: emit a SHA-256 checksum of `docker-compose.yml` per release (publish to a separate stable URL or include in the release notes); sign Docker images with `cosign` via `slsa-github-generator` or `cosign sign-blob`; document a verified-install path in README. Consumer-side: clone at a tag (`git clone --depth 1 -b v1.21.0 https://github.com/onecli/onecli`), pin `ONECLI_VERSION=1.21.0` in your environment, run `docker compose -f docker/docker-compose.yml up -d`."
+        },
+        {
+          "id": "F3",
+          "severity": "Warning",
+          "provenance": "observed",
+          "status": "ongoing",
+          "category": "design-risk/MITM-trust-surface",
+          "kind": "Design risk",
+          "title": "Gateway requires installing a OneCLI-generated CA certificate as a trusted root \u2014 all of an agent's outbound HTTPS traffic flows through the gateway in cleartext at the proxy",
+          "duration_label": "By design",
+          "date_label": "Continuous",
+          "action_hint": "Run the gateway in a tightly-scoped network namespace or container; never install the OneCLI CA cert on a developer machine that also browses the web; treat the gateway host as a machine that holds the decryption keys to everything every agent talks to.",
+          "evidence_refs": [
+            "E5",
+            "E6",
+            "E10"
+          ],
+          "threat_model_paths": [
+            "session_compromise",
+            "other"
+          ],
+          "threat_model_context": "OneCLI's design requires the gateway to MITM-intercept HTTPS traffic from agents in order to inject credentials at request time. To do this, the gateway generates a CA cert (`rcgen 0.13`) and the agent must trust it as a root authority \u2014 otherwise outbound HTTPS calls from the agent fail TLS validation. Once trusted, every HTTPS call the agent makes (not just calls to APIs you've configured for credential injection \u2014 every HTTPS call, period) is decrypted by the gateway, parsed in cleartext, potentially mutated, then re-encrypted with the gateway's own client connection upstream. The gateway host therefore sees: every URL the agent visits, every header (including ones you didn't ask the gateway to inject), every request body, every response. AES-256-GCM decryption of stored credentials is solid (`ring 0.17`, audited primitive); the trust risk is not 'crypto is wrong' but 'the gateway expands the trust surface beyond what its UI suggests'. The Bitwarden integration uses the `ap-*` v0.9.0 crates (Bitwarden's Noise-based Agent Access protocol), which is a separate authenticated channel \u2014 vault credentials fetched via that path are not stored in OneCLI's Postgres but injected on demand from Bitwarden.",
+          "what_this_means": "Compromise of the OneCLI gateway host (RCE via a future CVE, container escape, supply-chain compromise via F2, or misconfigured network exposure) gives an attacker visibility into all traffic from every agent that trusts its CA. This is a much bigger trust surface than 'attacker steals stored API keys' \u2014 it includes session cookies, OAuth tokens issued at runtime, request bodies (which often contain secrets the gateway wasn't asked to manage), and arbitrary inter-service chatter.",
+          "what_this_does_not_mean": "Not a cryptographic vulnerability \u2014 the AES-256-GCM key handling and Noise-based Bitwarden channel are well-implemented. Not unique to OneCLI \u2014 any HTTP-MITM credential gateway (Bytewax Wormhole, Doppler's local proxy mode, internal corporate egress proxies) has the same trust topology. The finding is to surface the design implication: deploying OneCLI is a meaningful expansion of the blast radius beyond 'a place to put my API keys'.",
+          "how_to_fix": "Maintainer-side: document the MITM trust model prominently in SECURITY.md (or README) with explicit guidance on network isolation, CA-cert scoping (per-process trust, not system-wide), and audit-log review; ship example systemd / Docker network policies for least-privilege gateway deployments. Consumer-side: deploy the gateway in a dedicated container/VM with no other workloads; install the CA cert only into the agent's trust store (not the system trust store); enable egress-traffic logging on the gateway host itself; rotate the CA periodically; if available in your environment, use process-level network policy (e.g. eBPF-based netns isolation) so only the agent processes can route through the gateway."
+        },
+        {
+          "id": "F4",
+          "severity": "Info",
+          "provenance": "observed",
+          "status": "ongoing",
+          "category": "disclosure/no-public-channel",
+          "kind": "Disclosure",
+          "title": "No SECURITY.md, no published GHSA, no `.github/dependabot.yml` \u2014 security disclosure channel absent on a credential vault",
+          "duration_label": "Continuous since repo creation",
+          "date_label": "Continuous",
+          "action_hint": "Subscribe to the repo's commit feed and release notes if you self-host. Don't expect Dependabot alerts to fire when a security fix ships.",
+          "evidence_refs": [
+            "E7"
+          ],
+          "threat_model_paths": [
+            "other"
+          ],
+          "threat_model_context": "0 published GHSAs, no SECURITY.md, no `.github/dependabot.yml`. The project has handled at least one real security issue (#131 0.0.0.0 binding, closed 2026-04-02) but did not publish a GHSA for it. The community profile is otherwise 75% complete: CoC, CONTRIBUTING.md, Apache-2.0 LICENSE all present. OSSF Scorecard returned 404 \u2014 not yet indexed by OSSF discovery \u2014 which is typical for repos under ~3 months old. From a downstream consumer's perspective, when a real security fix ships in a future release, the npm advisory database doesn't know about it (no GHSA), Dependabot doesn't notify (no advisory feed), and security-monitoring tools have no signal beyond the GitHub release feed itself.",
+          "what_this_means": "Security fixes are likely to ship \u2014 the maintainer demonstrably responds to security feedback (#131 in ~days) \u2014 but the notification channel for downstream consumers is absent. You'll find out about a security-relevant fix by reading commits / release notes, not by getting a Dependabot alert.",
+          "what_this_does_not_mean": "Not evidence that vulnerabilities are being hidden \u2014 the maintainer's process for security-issue handling appears responsive, and the codebase is 100% public. The finding is about disclosure machinery, not about transparency.",
+          "how_to_fix": "Maintainer-side: add `SECURITY.md` with a coordinated-disclosure email + expected response time; add `.github/dependabot.yml` for the npm + cargo + GitHub-Actions ecosystems; for #131 (0.0.0.0 binding) consider filing a retroactive GHSA so the npm package consumers (if any) get backfilled into the advisory feed. Consumer-side: subscribe to releases (`gh repo view onecli/onecli --web` \u2192 Watch \u2192 Releases only); set up a monitor on the `v*` tag pattern; check the release notes for keywords like 'security:', 'fix:', 'CVE-' before bumping."
+        },
+        {
+          "id": "F5",
+          "severity": "Info",
+          "provenance": "observed",
+          "status": "ongoing",
+          "category": "scanner-coverage/agentic-platform",
+          "kind": "Scanner coverage",
+          "title": "Scanner coverage gaps: gitleaks not installed on host, OSSF Scorecard not indexed, Dependabot alerts behind admin scope \u2014 secret-scan and governance signals are partial",
+          "duration_label": "Open scanner gap",
+          "date_label": "Continuous",
+          "action_hint": "If you're sensitive to secrets-in-history risk, run `gitleaks detect --source [clone]` locally before self-hosting. The scan's 'no leaked secrets' result reflects only what the harness could check.",
+          "evidence_refs": [
+            "E7"
+          ],
+          "threat_model_paths": [],
+          "threat_model_context": "Three coverage gaps are stacked: (1) gitleaks (secrets-in-git-history scanner) is not installed on the scanner host, so this scan reports 0 secrets via regex-grep over the working tree only \u2014 it has not scanned the git history; (2) OSSF Scorecard returned HTTP 404 (repo not indexed by OSSF discovery \u2014 typical for repos under ~3 months old); (3) Dependabot alerts API returned HTTP 403 (admin scope required); the harness fell back to osv.dev which queried 9 manifests and returned 0 advisories. None of these gaps are evidence of vulnerability \u2014 they are gaps in scanner coverage that the consumer should close manually if their threat model demands it. Same gitleaks-unavailable gap was documented for catalog entry 29 (impeccable).",
+          "what_this_means": "The scan's 'secrets clean' and 'no known dependency vulnerabilities' findings are based on partial coverage. A consumer who wants stronger guarantees should run gitleaks locally and check the GitHub Security Advisories and Dependabot alerts panels themselves (which require admin access on the repo or a fork).",
+          "what_this_does_not_mean": "Not evidence of a vulnerability in onecli/onecli. The gap is in the scanner harness.",
+          "how_to_fix": "Scanner-side (V1.2.x): install gitleaks on the scanner host so secrets-in-history is covered; document the OSSF 404 result as 'repo too new' rather than ambiguous-failure; add an explicit 'is_repo_under_90_days' computed field so calibration rules can suppress OSSF-based RED for new repos. Consumer-side: clone the repo locally and run `gitleaks detect --source .` to cover the secrets-in-history axis; manually skim recent commits for security-keyword commits."
+        }
+      ]
+    },
+    "evidence": {
+      "entries": [
+        {
+          "id": "E1",
+          "classification": "fact",
+          "claim": "guyb1 holds 85.0% of contribution share on a 2-month-old credential vault. The org `onecli` was created 2026-02-24 (~2.5 months before scan); the repo was created 2026-03-08. johnnyfish (founder of ChartDB) is second contributor at 12.0%. No CODEOWNERS file is present.",
+          "command": "gh api repos/onecli/onecli/contributors --jq 'sort_by(-.contributions) | [.[0:5][] | {login, contributions}]'",
+          "command_lang": "bash",
+          "result": "Top contributors: guyb1 (170 contributions, 85.0%), johnnyfish (24, 12.0%), christian-oudard (2), mbravorus (2), abergs (1). Total contributors: 15. CODEOWNERS check: not found in any of CODEOWNERS, .github/CODEOWNERS, docs/CODEOWNERS, .gitlab/CODEOWNERS.",
+          "result_lang": "text",
+          "result_truncated": false
+        },
+        {
+          "id": "E2",
+          "classification": "fact",
+          "claim": "Branch protection: classic protection HTTP 404 (no rule), but an active ruleset on `main` exists (id 13642592, target=branch, enforcement=active, source=Repository). However the ruleset does not enforce required-reviewer count: formal review rate over 208 sampled merged PRs is 0.0%, any-review rate is 1.4 (sum of review counts / total) \u2014 i.e. about 1.4 review events per merged PR on average across the corpus, but with no `reviewDecision` set on any sampled PR.",
+          "command": "gh api repos/onecli/onecli/branches/main/protection ; gh api repos/onecli/onecli/rulesets ; gh api graphql --paginate -f query='...closed pulls...' --jq '[formal/any review rates]'",
+          "command_lang": "bash",
+          "result": "branch_protection.classic.status = 404. branch_protection.rulesets.entries = 1 ruleset (active enforcement). pr_review.{total_closed_prs: 208, total_merged_lifetime: 208, formal_review_rate: 0.0, any_review_rate: 1.4, self_merge_count: not-explicitly-counted-but-observed-across-sample, security_flagged_count: 0}.",
+          "result_lang": "text",
+          "result_truncated": false
+        },
+        {
+          "id": "E3",
+          "classification": "fact",
+          "claim": "PR sample shows the 5 most-recent merged PRs (out of 208 lifetime) all have `review_decision = \"\"` (empty), `any_review_count = 0`, and a mix of self-merge (4 of 5) vs other-merger. Across the entire 208-PR sample, self-merges and 0-review-count PRs are the dominant pattern. PR #234 (open since 2026-05-01) is `ci: add SBOM crypto audit to block unapproved crypto dependencies` \u2014 a PR proposing crypto-supply-chain hardening \u2014 open ~5 days at scan date.",
+          "command": "gh api graphql -f query='[closedPRs first:20]' --jq '.data.repository.pullRequests.nodes[]'",
+          "command_lang": "bash",
+          "result": "Recent merged PRs (first 5 of 208): #252 (johnnyfish-merged hostname-cache fix, 0 reviews); #250 (guyb1 self-merged dashboard layout, 0 reviews); #249 (guyb1 self-merged generic OAuth interface + credential resolution, 0 reviews); #248 (guyb1 self-merged release-please tag, 0 reviews); #247 (guyb1 self-merged 'cloud-only apps framework, credential header injection, user provisioning schema', 0 reviews). Open PRs: 5 (including #234 SBOM crypto audit, open 5d, hisgarden-authored).",
+          "result_lang": "text",
+          "result_truncated": false
+        },
+        {
+          "id": "E4",
+          "classification": "fact",
+          "claim": "Installer at `scripts/install.sh` (also served as `https://onecli.sh/install`) downloads `docker-compose.yml` from the `main` branch (mutable), and the compose file pins the OneCLI image to `ONECLI_VERSION:-latest` (also mutable). There is no SHA-256 checksum of the compose file, no GPG signature, no Sigstore attestation. The script does run defensively in other respects: it explicitly binds Docker ports to `127.0.0.1` (or `docker0` IP on Linux) \u2014 never `0.0.0.0` \u2014 and exits if it cannot determine a safe bind host. Past closed issue #131 (closed 2026-04-02) was 'docker-compose.yml binds ports on 0.0.0.0, services exposed publicly by default' \u2014 fixed.",
+          "command": "cat scripts/install.sh ; cat docker/docker-compose.yml ; gh issue list -R onecli/onecli --state closed --search 'docker-compose'",
+          "command_lang": "bash",
+          "result": "install.sh:73 \u2014 `COMPOSE_URL=\"https://raw.githubusercontent.com/onecli/onecli/main/docker/docker-compose.yml\"` (tracks main, no tag). install.sh:140 \u2014 `ONECLI_VERSION=\"${ONECLI_VERSION:-latest}\"`. docker-compose.yml:23 \u2014 `image: ghcr.io/onecli/onecli:${ONECLI_VERSION:-latest}`. install.sh:39-77 \u2014 `detect_bind_host()` returns 127.0.0.1 / WSL loopback / docker0 bridge IP, never 0.0.0.0. Closed issue #131 (2026-04-02): 0.0.0.0 binding fixed.",
+          "result_lang": "text",
+          "result_truncated": false
+        },
+        {
+          "id": "E5",
+          "classification": "fact",
+          "claim": "The gateway uses MITM HTTPS interception by design. README.md L43-46 documents: 'Rust gateway: fast, memory-safe HTTP gateway with MITM interception for HTTPS'. The gateway generates its own CA certificate via the `rcgen` crate and agents must install it as a trusted root for HTTPS interception to work. Cargo.toml L24 declares `rcgen = \"0.13\"` (certificate generation), L17-19 declares `tokio-rustls`/`rustls`/`rustls-pemfile` (TLS termination). `apps/gateway/src/ca.rs` and `connect.rs` implement the CA + the CONNECT-method MITM proxy.",
+          "command": "ls apps/gateway/src/ ; grep -nE 'rcgen|MITM|interception' apps/gateway/Cargo.toml README.md",
+          "command_lang": "bash",
+          "result": "apps/gateway/src/: approval.rs apps.rs auth.rs ca.rs cache.rs cloud cloud_apps.rs connect.rs crypto.rs db.rs gateway gateway.rs inject.rs main.rs policy.rs telemetry.rs telemetry_core.rs vault. Cargo.toml: rcgen = \"0.13\". README.md L43: 'Rust gateway: fast, memory-safe HTTP gateway with MITM interception for HTTPS'.",
+          "result_lang": "text",
+          "result_truncated": false
+        },
+        {
+          "id": "E6",
+          "classification": "fact",
+          "claim": "Encryption uses AES-256-GCM via `ring 0.17` (an audited crypto library; same primitive used by rustls transitively). Format `{iv_b64}:{authTag_b64}:{ciphertext_b64}` matches the Node.js `CryptoService` for Rust\u2194Node compatibility. Key handling: OSS edition auto-generates a 32-byte random key on first container start (`docker/entrypoint.sh:18-26`) and persists it to `/app/data/secret-encryption-key` with mode 600; Cloud edition uses AWS KMS via the `cloud` Cargo feature flag. The `.env.example` ships a placeholder string `SECRET_ENCRYPTION_KEY=change-me-to-secure-key` \u2014 but that string is not valid base64 of 32 bytes, so if a user copies `.env.example` to `.env` without changing it, `crypto.rs::CryptoService::from_base64_key()` rejects with `bail!(\"SECRET_ENCRYPTION_KEY must be exactly 32 bytes\")` (fail-closed at boot, not silent compromise).",
+          "command": "head -150 apps/gateway/src/crypto.rs ; cat docker/entrypoint.sh ; cat .env.example",
+          "command_lang": "bash",
+          "result": "crypto.rs:30-50 \u2014 AES-256-GCM with `ring::aead::AES_256_GCM`, 32-byte key length enforced, 12-byte IV, 16-byte auth tag. entrypoint.sh:18 \u2014 `if [ \"$NEXT_PUBLIC_EDITION\" != \"cloud\" ] && [ -z \"$SECRET_ENCRYPTION_KEY\" ]; then ... head -c 32 /dev/urandom | base64 > \"$SECRET_KEY_FILE\"; chmod 600 \"$SECRET_KEY_FILE\"; fi`. .env.example:23 \u2014 `SECRET_ENCRYPTION_KEY=change-me-to-secure-key`.",
+          "result_lang": "text",
+          "result_truncated": false
+        },
+        {
+          "id": "E7",
+          "classification": "fact",
+          "claim": "No SECURITY.md is present at repo root. community_profile.has_security_policy = false; security_advisories.count = 0 (no published GHSAs). community profile is otherwise 75% complete: CoC + CONTRIBUTING.md + Apache-2.0 LICENSE present. No `.github/dependabot.yml` is present. The Phase 1 harness's gitleaks step did not run because gitleaks is not installed on the scanner host (coverage gap; not evidence of leaked secrets). OSSF Scorecard returned HTTP 404 (repo not yet indexed by OSSF discovery \u2014 typical for repos under ~3 months old).",
+          "command": "ls -la SECURITY.md .github/SECURITY.md 2>&1 ; gh api repos/onecli/onecli/community/profile --jq '{health_percentage,has_security_policy}' ; gh api repos/onecli/onecli/security-advisories --jq 'length'",
+          "command_lang": "bash",
+          "result": "SECURITY.md / .github/SECURITY.md: not present. community_profile: {health_percentage: 75, has_security_policy: false, has_code_of_conduct: true, has_contributing: true}. security_advisories: 0. ossf_scorecard: {queried: true, indexed: false, http_status: 404}.",
+          "result_lang": "text",
+          "result_truncated": false
+        },
+        {
+          "id": "E8",
+          "classification": "fact",
+          "claim": "The Next.js side ships `apps/web/src/lib/services/audit-service.ts` (referenced from CLAUDE.md L66-93) and an explicit `withAudit` pattern for state-changing operations. CLAUDE.md prescribes auditing all CREATE/UPDATE/DELETE/REGENERATE actions on AGENT/SECRET/RULE/API_KEY entities, with explicit guidance to never include sensitive values (tokens, secrets, passwords) in audit metadata. The published 1.21.0 release (2026-05-05) shipped the `feat: cloud-only apps framework, credential headers, and user provisioning` PR (#247) and `feat: generic OAuth interface, and credential resolution` PR (#249). Release cadence: 52 releases in ~2 months.",
+          "command": "grep -nE 'withAudit|AUDIT_ACTIONS|AUDIT_SERVICES' apps/web/src/lib/services/audit-service.ts ; gh api repos/onecli/onecli/releases --jq '. | length'",
+          "command_lang": "bash",
+          "result": "CLAUDE.md L66-93 prescribes withAudit pattern; AUDIT_ACTIONS = {CREATE, UPDATE, DELETE, REGENERATE}; AUDIT_SERVICES = {AGENT, SECRET, RULE, API_KEY}; metadata guidance explicitly forbids tokens/secrets/passwords. Releases: 52 in lifetime (2026-03-08 to 2026-05-05). Latest: v1.21.0 (2026-05-05).",
+          "result_lang": "text",
+          "result_truncated": false
+        },
+        {
+          "id": "E9",
+          "classification": "fact",
+          "claim": "Distribution channels detected: 4 npm packages (`onecli-cloud` private workspace root; `@onecli/db`, `@onecli/eslint-config`, `@onecli/ui` \u2014 internal monorepo packages) plus the GHCR Docker image `ghcr.io/onecli/onecli:${ONECLI_VERSION}`. None of the npm packages have `pinned: true` or `artifact_verified: true` \u2014 they are internal workspace packages, not consumer-facing distributables (the consumer-facing entrypoint is the Docker image). The Docker image is built and published by .github/workflows/publish.yml on every `v*` tag push (multi-arch amd64+arm64), with cosign-style digest reuse but no Sigstore signature attestation.",
+          "command": "find . -name 'package.json' -not -path './node_modules/*' -exec jq -r '.name' {} + ; head -80 .github/workflows/publish.yml",
+          "command_lang": "bash",
+          "result": "package.json names: onecli-cloud (root, private), @onecli/db (packages/db), @onecli/eslint-config (packages/eslint-config), @onecli/ui (packages/ui), @onecli/typescript-config (packages/typescript-config). Workflow `publish.yml` builds linux/amd64 + linux/arm64 to ghcr.io/onecli/onecli with `docker/build-push-action@v7` and emits multi-arch manifest. No `cosign sign` or `slsa-github-generator` step.",
+          "result_lang": "text",
+          "result_truncated": false
+        },
+        {
+          "id": "E10",
+          "classification": "fact",
+          "claim": "The Rust gateway depends on 4 unusual `ap-*` v0.9.0 crates: `ap-client`, `ap-proxy-client`, `ap-proxy-protocol`, `ap-noise` \u2014 these implement Bitwarden's Agent Access protocol (Noise-based authenticated channel for vault credential injection). The Cargo.toml `cloud` feature gates AWS KMS, AWS config, and Redis. The `prompt_injection_scan` step ran over 2 root agent-rule files (CLAUDE.md, .agents/skills/vercel-react-best-practices/AGENTS.md) and found 0 injection signals. `skills-lock.json` pins 5 skill collections (vercel-labs/skills, anthropics/skills, leonardomso/rust-skills, vercel-labs/agent-skills \u00d7 2) by SHA-256 computed hash.",
+          "command": "cat apps/gateway/Cargo.toml ; cat skills-lock.json ; find .agents/ -name 'SKILL.md' -o -name 'AGENTS.md' | head",
+          "command_lang": "bash",
+          "result": "Cargo.toml: ap-client = '0.9.0', ap-proxy-client = '0.9.0', ap-proxy-protocol = '0.9.0', ap-noise = '0.9.0' (Bitwarden Agent Access protocol). [features] cloud = ['dep:aws-sdk-kms', 'dep:aws-config', 'dep:redis']. skills-lock.json: 5 skills with computedHash (SHA-256). prompt_injection_scan: 0 signals across 2 scanned files.",
+          "result_lang": "text",
+          "result_truncated": false
+        }
+      ]
+    },
+    "general_vuln_severity": {
+      "assessments": [
+        {
+          "finding_id": "F3",
+          "severity_assessment": "Warning",
+          "rationale": "MITM-by-design is not a vuln per se but expands the gateway-host blast radius beyond stored secrets to all agent HTTPS traffic. For a credential vault, this is meaningful enough to surface as Warning rather than Info."
+        }
+      ]
+    },
+    "section_actions": {
+      "entries": [
+        {
+          "section": "verdict",
+          "action": "Caution \u2014 pin the version, isolate the gateway host, treat OneCLI as a single-purpose secrets appliance"
+        }
+      ]
+    },
+    "section_leads": {
+      "section_01": {
+        "pill_row": "Caution \u2022 Solo maintainer \u2022 0% formal review \u2022 MITM-by-design \u2022 0 GHSA",
+        "summary": "A 2-month-old credential vault that brokers API keys to AI agents via an HTTPS-MITM gateway. 2,093 stars; solo-maintained by guyb1 (85% commit share). Encryption (AES-256-GCM via ring) is solid; the rest of the trust surface is large \u2014 install path is unpinned on three trust anchors, the gateway MITM design means installing OneCLI's CA expands the trust surface beyond stored API keys to all agent traffic."
+      },
+      "section_02": {
+        "pill_row": "F0 governance \u2022 F1 0% formal review \u2022 F2 unpinned install \u2022 F3 MITM trust surface \u2022 F4 disclosure \u2022 F5 scanner gaps",
+        "summary": "Six findings: 4 Warning + 2 Info. F0\u2013F3 cluster around the same root: a fast-growing solo-maintained credential vault with no structural review gate, a `curl|sh` install on three mutable trust anchors, and a MITM-by-design architecture. F4 is a disclosure-channel gap. F5 is a scanner-side coverage gap (gitleaks/OSSF/Dependabot)."
+      },
+      "section_03": {
+        "pill_row": "2,093 stars \u2022 104 forks \u2022 ~2 months old \u2022 Apache-2.0 \u2022 85% solo",
+        "summary": "Created 2026-03-08 (org 2026-02-24). Single dominant maintainer (guyb1, 85%); johnnyfish (ChartDB founder) at 12%. No CODEOWNERS. Active ruleset on main but no required-reviewer rule. 0.0% formal review rate over 208 merged PRs. Recent self-merges include credential-resolution code paths."
+      },
+      "section_04": {
+        "pill_row": "GHCR Docker image \u2022 curl|sh installer \u2022 main-tracking compose \u2022 latest tag",
+        "summary": "One consumer-facing channel: the `ghcr.io/onecli/onecli` Docker image. Documented install path (`curl|sh`) trusts three mutable anchors: onecli.sh DNS, the main branch (compose URL), and the `latest` Docker tag. No SHA / signature / SLSA attestation. Manual install via `git clone -b v1.21.0` + `docker compose up` avoids the onecli.sh DNS dependency."
+      },
+      "section_06": {
+        "pill_row": "OSSF 404 \u2022 Dependabot 403 \u2022 gitleaks unavailable \u2022 Q4 signal gap",
+        "summary": "OSSF Scorecard returned 404 (repo not indexed; under ~3 months old). Dependabot alerts gated by admin scope (osv.dev fallback ran 9 manifest lookups, 0 advisories). gitleaks not installed on scanner host. Q4 signal-vocabulary gap recorded for the MITM-by-design trust-surface posture; tracked as a V1.2.x candidate."
+      }
+    },
+    "split_axis_decision": {
+      "should_split": false,
+      "reasoning": "Single verdict applies \u2014 Caution. There is one consumer use case (self-host the gateway) and one evaluation context (do the governance + install + design risks meet your bar). The action_steps split by what to verify before vs after install, which is sufficient."
+    },
+    "verdict_exhibits": {
+      "groups": [
+        {
+          "symbol": "\u26a0",
+          "headline": "Caution \u2014 F0..F3 cluster around solo-maintained credential-vault on a 2-month-old repo with mutable install path and MITM-by-design trust expansion",
+          "one_line_summary": "Encryption is solid; governance is solo + 0% formal-review across 208 PRs; install path is unpinned on three trust anchors; the gateway's MITM design means the host sees all agent traffic. Safe to evaluate in isolation; risky to put on the trust path of high-stakes agents until the governance gap closes.",
+          "items": [
+            {
+              "tag": "F0",
+              "claim": "guyb1 85% commit share; 15 contributors; no CODEOWNERS; 2-month-old credential vault. Single-key compromise reaches every secret stored."
+            },
+            {
+              "tag": "F1",
+              "claim": "0.0% formal review rate over 208 merged PRs. Active ruleset on main but no required-reviewer rule. Recent self-merges include credential-resolution code paths."
+            },
+            {
+              "tag": "F2",
+              "claim": "`curl|sh` installer + tracks `main` for compose file + `latest` Docker tag. Three mutable trust anchors. No SHA / signature / SLSA attestation."
+            },
+            {
+              "tag": "F3",
+              "claim": "Gateway MITM-intercepts all HTTPS via a generated CA cert. Trust surface = every URL the agent visits, not just the configured-credential APIs."
+            },
+            {
+              "tag": "F4",
+              "claim": "No SECURITY.md, no GHSA published, no dependabot.yml. Consumers don't get alerts when a security fix ships."
+            }
+          ]
+        }
+      ]
+    },
+    "priority_evidence": {
+      "selections": []
+    },
+    "threat_models": {
+      "per_finding": [
+        {
+          "finding_id": "F0",
+          "threat_model_paths": [
+            "stale_token",
+            "session_compromise"
+          ],
+          "narrative": "Compromise of guyb1's GitHub credentials (stolen token, hijacked session, OAuth-app abuse) lets an attacker push to `main` with no second-human gate. The malicious commit ships to the `latest` Docker image on the next CI publish workflow run, and propagates to consumers running `curl|sh` (via the install script's `pull latest` step) within hours. 2,093 stars suggests a non-trivial install base; the secrets stored in any compromised instance are exfiltrable via decrypted credential injection at request time."
+        },
+        {
+          "finding_id": "F1",
+          "threat_model_paths": [
+            "sloppy_review"
+          ],
+          "narrative": "Attacker submits a PR that subtly modifies credential-handling logic (e.g. `apps/gateway/src/inject.rs::apply_injections()` to log injected credentials, or `apps/gateway/src/crypto.rs` to log decrypted plaintext to a debug channel). Self-merge with CI-passed but no human review allows the PR to land. Variant: attacker proposes a 'small refactor' that introduces a side-channel."
+        },
+        {
+          "finding_id": "F2",
+          "threat_model_paths": [
+            "other",
+            "stale_token"
+          ],
+          "narrative": "Path A \u2014 DNS hijack of onecli.sh: attacker substitutes the install script consumers fetch via `curl|sh`; the substituted script can do anything (install a backdoored compose file, fetch a different image). Path B \u2014 push to onecli/onecli `main`: the harness compose URL points to `main` so any commit changes what new installs receive; existing installs are not affected. Path C \u2014 GHCR push token compromise: attacker pushes a malicious `latest` tag; consumers pulling on next restart receive the malicious image."
+        },
+        {
+          "finding_id": "F3",
+          "threat_model_paths": [
+            "session_compromise",
+            "other"
+          ],
+          "narrative": "RCE on the gateway host (or container escape, or supply-chain compromise via F2) gives an attacker access to (a) the AES-256-GCM master key in `/app/data/secret-encryption-key`, (b) Postgres-stored encrypted secrets, (c) live decrypted-credential traffic to upstreams, and (d) all other HTTPS traffic from any agent that trusts the OneCLI CA. The CA-cert install means the trust scope of compromise is bigger than 'OneCLI's own data' \u2014 it includes session cookies, OAuth tokens issued at runtime, and request bodies for any service the agent calls."
+        },
+        {
+          "finding_id": "F4",
+          "threat_model_paths": [
+            "other"
+          ],
+          "narrative": "Not an attack path \u2014 a notification-channel gap. Downstream consequence: when a real security fix lands in a future release (e.g. a hypothetical bug in `apps/gateway/src/crypto.rs`), no GHSA is published, so Dependabot doesn't notify; npm advisory database doesn't pick it up; consumers running an older OneCLI image continue running it indefinitely unless they manually monitor the release feed."
+        },
+        {
+          "finding_id": "F5",
+          "threat_model_paths": [],
+          "narrative": "Scanner-side coverage gaps; no threat path against the repo under scan."
+        }
+      ]
+    },
+    "action_steps": {
+      "entries": [
+        {
+          "step": 1,
+          "type": "verify",
+          "severity": "OK",
+          "headline": "Don't use `curl|sh`. Pin to a specific tag and clone the repo.",
+          "non_technical": "The default install command (`curl -fsSL https://onecli.sh/install | sh`) trusts three mutable anchors (DNS for onecli.sh, the `main` branch, and the `latest` Docker tag). For a credential vault, pin to a specific release tag and verify the commit before bringing the gateway up.",
+          "command": "git clone --depth 1 -b v1.21.0 https://github.com/onecli/onecli && cd onecli && git rev-parse HEAD && export ONECLI_VERSION=1.21.0 && docker compose -f docker/docker-compose.yml up -d --wait",
+          "command_lang": "bash"
+        },
+        {
+          "step": 2,
+          "type": "audit",
+          "severity": "OK",
+          "headline": "Review the credential-handling files at the version you're running",
+          "non_technical": "If you're shipping OneCLI to production, read `apps/gateway/src/{crypto.rs,inject.rs,auth.rs}` and `apps/gateway/src/vault/` at the tag you cloned \u2014 these are the files that touch your secrets. The codebase is reasonably small (Rust gateway is ~3-5k lines) so a one-time audit is feasible.",
+          "command": "git checkout v1.21.0 && wc -l apps/gateway/src/{crypto.rs,inject.rs,auth.rs} && ls apps/gateway/src/vault/",
+          "command_lang": "bash"
+        },
+        {
+          "step": 3,
+          "type": "audit",
+          "severity": "OK",
+          "headline": "Isolate the gateway: the host sees every URL your agent visits",
+          "non_technical": "The OneCLI gateway works by MITM-intercepting HTTPS. To do that, your agent must trust OneCLI's CA certificate. Once installed, all of the agent's outbound HTTPS traffic flows through the gateway in cleartext \u2014 not just the calls you've configured for credential injection. Run the gateway in a dedicated container or VM, install the CA cert only into the agent's process / user trust store (not system-wide), and treat the gateway host as a single-purpose secrets host.",
+          "command": "# After install, OneCLI generates the CA cert in /app/data/. Limit who can read it: docker exec onecli ls -la /app/data/ ; # On your agent host, install the CA cert ONLY for the agent's user, not system-wide:",
+          "command_lang": "bash"
+        },
+        {
+          "step": 4,
+          "type": "verify",
+          "severity": "OK",
+          "headline": "Subscribe to repo releases \u2014 Dependabot won't notify you about OneCLI fixes",
+          "non_technical": "There's no SECURITY.md, no published GHSA, and no dependabot.yml \u2014 security fixes ship silently from the consumer's perspective. Subscribe to the GitHub repo's releases feed (or RSS) to catch fixes as they land. Watch for `security:` or `fix:` prefixes in commit messages and PR titles.",
+          "command": "gh api repos/onecli/onecli/releases --jq '.[0:3][] | {tag_name, published_at, name, body: (.body | .[0:200])}'",
+          "command_lang": "bash"
+        },
+        {
+          "step": 5,
+          "type": "audit",
+          "severity": "OK",
+          "headline": "Run gitleaks against the clone to cover secrets-in-history",
+          "non_technical": "The scanner harness on this scan host doesn't have gitleaks installed, so the `0 secrets` finding reflects only working-tree regex-grep, not full git-history scan. If you're cloning OneCLI to self-host it, run gitleaks once locally to cover the history axis yourself \u2014 takes ~30 seconds.",
+          "command": "gitleaks detect --source . --no-git --report-format json",
+          "command_lang": "bash"
+        }
+      ]
+    },
+    "timeline_events": {
+      "entries": []
+    },
+    "capability_assessments": {
+      "per_file": []
+    },
+    "executable_file_inventory": {
+      "lead": "The Phase 1 harness's executable-file detector enumerated workflow files and a small set of scripts. The security-relevant binaries below come from inspection of `apps/gateway/src/`, `scripts/`, `docker/`, and the GitHub Actions workflows. The published artifact is the GHCR Docker image, which contains the Rust gateway binary + the Next.js standalone bundle; `scripts/install.sh` is consumer-fetched via `curl|sh`.",
+      "layer1_summary": "6 executables of consequence: `apps/gateway/src/crypto.rs` (AES-256-GCM encryption \u2014 F3 trust anchor), `apps/gateway/src/inject.rs` (credential header/query injection at request time), `apps/gateway/src/auth.rs` (JWT/cookie/API-key gateway auth \u2014 `local` mode skips JWT validation), `apps/gateway/src/connect.rs` + `ca.rs` (CONNECT-method MITM proxy + CA cert generation \u2014 F3), `scripts/install.sh` (curl|sh installer \u2014 F2), `docker/entrypoint.sh` (auto-generates encryption key on first start). Plus 3 GitHub Actions workflows (`ci.yml`, `publish.yml`, `release.yml`).",
+      "layer2_entries": [
+        {
+          "path": "apps/gateway/src/crypto.rs",
+          "kind": "Rust module \u2014 encryption / decryption",
+          "runtime": "Rust release binary in Docker image",
+          "dangerous_calls": "ring::aead::AES_256_GCM (audited primitive); SystemRandom for IV generation",
+          "network": "None directly",
+          "notes": "Implements CryptoService::{from_env, from_base64_key, decrypt, encrypt}. Format `{iv}:{authTag}:{ciphertext}` matches Node.js CryptoService. Key length enforced (32 bytes); fail-closed on bad input. ~150 lines.",
+          "file_sha": null,
+          "line_ranges": null,
+          "diff_anchor": null
+        },
+        {
+          "path": "apps/gateway/src/inject.rs",
+          "kind": "Rust module \u2014 credential injection at request time",
+          "runtime": "Rust release binary in Docker image",
+          "dangerous_calls": "HeaderName::from_bytes / HeaderValue::from_str (input-validated); base64 decode of Proxy-Authorization",
+          "network": "Reads agent token from Proxy-Authorization header; applies SetHeader/ReplaceHeader/RemoveHeader/SetParam injections to forwarded request",
+          "notes": "F0 + F1 blast-radius epicenter \u2014 modifications here directly affect what credentials are injected into agent traffic. Self-merged PRs in the recent sample (#247, #249) touched this code path. ~200 lines.",
+          "file_sha": null,
+          "line_ranges": null,
+          "diff_anchor": null
+        },
+        {
+          "path": "apps/gateway/src/auth.rs",
+          "kind": "Rust module \u2014 gateway HTTP auth (browser sessions + API keys)",
+          "runtime": "Rust release binary in Docker image",
+          "dangerous_calls": "jsonwebtoken::decode (HS256 validation against NEXTAUTH_SECRET when AUTH_MODE=oauth)",
+          "network": "Reads session cookies / Authorization header; queries Postgres for user/project resolution",
+          "notes": "AUTH_MODE=local SKIPS JWT validation entirely \u2014 looks up the 'local-admin' user directly. Fine for single-user dev; a misconfiguration risk if shipped to a multi-user host. Documented in .env.example. ~150 lines.",
+          "file_sha": null,
+          "line_ranges": null,
+          "diff_anchor": null
+        },
+        {
+          "path": "apps/gateway/src/connect.rs",
+          "kind": "Rust module \u2014 CONNECT-method MITM proxy",
+          "runtime": "Rust release binary in Docker image",
+          "dangerous_calls": "rcgen for cert generation; tokio-rustls TLS termination",
+          "network": "Accepts CONNECT requests from agents; terminates TLS with generated leaf cert (signed by the gateway's CA); re-encrypts upstream",
+          "notes": "F3 epicenter \u2014 this is the file that implements the MITM design. CA cert is generated once and persisted to /app/data/. ~unknown lines (not opened in this scan).",
+          "file_sha": null,
+          "line_ranges": null,
+          "diff_anchor": null
+        },
+        {
+          "path": "scripts/install.sh",
+          "kind": "POSIX shell \u2014 curl|sh installer (consumer-fetched)",
+          "runtime": "sh on macOS / Linux / WSL",
+          "dangerous_calls": "Downloads and writes docker-compose.yml; runs docker compose pull + up",
+          "network": "GET https://raw.githubusercontent.com/onecli/onecli/main/docker/docker-compose.yml ; docker pull ghcr.io/onecli/onecli:${ONECLI_VERSION}",
+          "notes": "F2 epicenter. Defensively coded for bind-host detection (127.0.0.1 / docker0 / WSL loopback; refuses 0.0.0.0). 220 lines.",
+          "file_sha": null,
+          "line_ranges": null,
+          "diff_anchor": null
+        },
+        {
+          "path": "docker/entrypoint.sh",
+          "kind": "POSIX shell \u2014 Docker container entrypoint",
+          "runtime": "sh inside the OneCLI container",
+          "dangerous_calls": "Writes encryption key to /app/data/secret-encryption-key (mode 600) on first start if SECRET_ENCRYPTION_KEY env var is empty",
+          "network": "Runs `prisma migrate deploy` against the configured DATABASE_URL",
+          "notes": "Auto-generates 32-byte random key from /dev/urandom on first start in OSS mode; Cloud mode uses AWS KMS via env var. AUTH_MODE selection happens at container start (not build time). ~50 lines.",
+          "file_sha": null,
+          "line_ranges": null,
+          "diff_anchor": null
+        }
+      ],
+      "closing_note": "The published artifact is the GHCR Docker image (`ghcr.io/onecli/onecli:${ONECLI_VERSION}`) which contains the Rust gateway binary + the Next.js standalone bundle. The 4 internal npm workspace packages (`@onecli/{db,ui,eslint-config,typescript-config}`) are not separately distributed. The Bitwarden integration depends on `ap-*` v0.9.0 crates from crates.io which were not opened in this scan."
+    },
+    "pr_sample_review": {
+      "intro": "Sample = 208 closed PRs in lifetime (208 merged, 0 closed without merge over the GraphQL sample window). Formal-review rate (GitHub `reviewDecision` set on at least one review) = 0.0% across the sample \u2014 no merged PR has a formal review decision recorded. Any-review rate = 1.4 (review events per merged PR, averaged) \u2014 most of these are GitHub Copilot CI comments, not human reviewers. Self-merge is the dominant merge mode. The active ruleset on `main` (id 13642592) enforces status checks (CI must pass) but not required-reviewer count. A representative sample of recent PRs:",
+      "rows": [
+        {
+          "number": 252,
+          "url": "https://github.com/onecli/onecli/pull/252",
+          "what": "fix: include hostname in injection cache key (#251) (#252)",
+          "author": "(merged by) johnnyfish",
+          "merger": "johnnyfish",
+          "reviewed": "No formal decision; 0 review events",
+          "concern": "Touches injection cache (security-relevant); no human reviewer",
+          "flagged": false
+        },
+        {
+          "number": 250,
+          "url": "https://github.com/onecli/onecli/pull/250",
+          "what": "fix: center dashboard content and unify page widths",
+          "author": "guyb1",
+          "merger": "guyb1",
+          "reviewed": "No formal decision; 0 review events",
+          "concern": "Self-merge on cosmetic dashboard change; not security-relevant",
+          "flagged": false
+        },
+        {
+          "number": 249,
+          "url": "https://github.com/onecli/onecli/pull/249",
+          "what": "feat: generic OAuth interface, and credential resolution",
+          "author": "guyb1",
+          "merger": "guyb1",
+          "reviewed": "No formal decision; 0 review events",
+          "concern": "Self-merge on credential-resolution code path; should have had a reviewer",
+          "flagged": true
+        },
+        {
+          "number": 247,
+          "url": "https://github.com/onecli/onecli/pull/247",
+          "what": "feat: cloud-only apps framework, credential headers, and user provisioning",
+          "author": "guyb1",
+          "merger": "guyb1",
+          "reviewed": "No formal decision; 0 review events",
+          "concern": "Self-merge on credential-header injection logic; high blast radius",
+          "flagged": true
+        },
+        {
+          "number": 246,
+          "url": "https://github.com/onecli/onecli/pull/246",
+          "what": "feat: support ONECLI_VERSION env var in install script",
+          "author": "gavrielc",
+          "merger": "gavrielc",
+          "reviewed": "No formal decision; 0 review events",
+          "concern": "External contribution touching install-script trust path; merged with no formal review",
+          "flagged": false
+        },
+        {
+          "number": 234,
+          "url": "https://github.com/onecli/onecli/pull/234",
+          "what": "ci: add SBOM crypto audit to block unapproved crypto dependencies (OPEN, 5 days)",
+          "author": "hisgarden",
+          "merger": "(open)",
+          "reviewed": "Pending; OPEN",
+          "concern": "Hardening PR sitting in queue; merging would close a real gap (F1)",
+          "flagged": false
+        },
+        {
+          "number": 131,
+          "url": "https://github.com/onecli/onecli/issues/131",
+          "what": "[ISSUE] docker-compose.yml binds ports on 0.0.0.0, services exposed publicly by default (CLOSED 2026-04-02)",
+          "author": "paps",
+          "merger": "(fix self-merged by guyb1)",
+          "reviewed": "Closed within days of report",
+          "concern": "Real security issue handled responsively; demonstrates fix-quickly behavior (Q2 = green)",
+          "flagged": true
+        }
+      ]
+    },
+    "repo_vitals": {
+      "rows": [
+        {
+          "metric": "Repo",
+          "value": "onecli/onecli"
+        },
+        {
+          "metric": "Stars / Forks",
+          "value": "2,093 / 104"
+        },
+        {
+          "metric": "Created",
+          "value": "2026-03-08 (~2 months old at scan time)"
+        },
+        {
+          "metric": "Org created",
+          "value": "2026-02-24 (~2.5 months old)"
+        },
+        {
+          "metric": "License",
+          "value": "Apache-2.0"
+        },
+        {
+          "metric": "Primary language",
+          "value": "TypeScript (apps/web) + Rust (apps/gateway)"
+        },
+        {
+          "metric": "HEAD SHA",
+          "value": "fa6468e4711bc283f26b11e68c0ce8dc6a799010"
+        },
+        {
+          "metric": "Latest published version",
+          "value": "v1.21.0 (2026-05-05) \u2014 GHCR Docker image `ghcr.io/onecli/onecli`"
+        },
+        {
+          "metric": "Default branch",
+          "value": "main"
+        },
+        {
+          "metric": "Top contributor share",
+          "value": "85.0% (guyb1)"
+        },
+        {
+          "metric": "Total contributors",
+          "value": "15"
+        },
+        {
+          "metric": "Closed PRs sampled",
+          "value": "208 (all merged in lifetime)"
+        },
+        {
+          "metric": "PR formal review rate",
+          "value": "0.0%"
+        },
+        {
+          "metric": "PR any-review rate",
+          "value": "1.4 (review events / merged PR average)"
+        },
+        {
+          "metric": "Branch protection",
+          "value": "Active ruleset on main (id 13642592, enforcement=active); classic protection 404; no required-reviewer rule"
+        },
+        {
+          "metric": "CODEOWNERS",
+          "value": "Not present (checked CODEOWNERS, .github/CODEOWNERS, docs/CODEOWNERS, .gitlab/CODEOWNERS)"
+        },
+        {
+          "metric": "Published GHSA / SECURITY.md / dependabot.yml",
+          "value": "0 / absent / absent"
+        },
+        {
+          "metric": "OSSF Scorecard",
+          "value": "Not indexed (HTTP 404 \u2014 repo too new)"
+        },
+        {
+          "metric": "Distribution channels",
+          "value": "GHCR Docker image (consumer-facing); 4 internal npm workspace packages"
+        },
+        {
+          "metric": "Open security-tagged issues",
+          "value": "0"
+        },
+        {
+          "metric": "Open PRs",
+          "value": "5 (incl. #234 SBOM crypto audit, 5d open; #149 structured audit logging; #113 1Password integration)"
+        },
+        {
+          "metric": "Releases lifetime",
+          "value": "52 (cadence: ~1 release every 1-2 days)"
+        },
+        {
+          "metric": "Encryption",
+          "value": "AES-256-GCM via ring 0.17 (audited primitive); key auto-generated to /app/data/secret-encryption-key (mode 600) on OSS first-start; AWS KMS on Cloud feature flag"
+        },
+        {
+          "metric": "Bitwarden integration",
+          "value": "Via ap-{client,proxy-client,proxy-protocol,noise} v0.9.0 crates (Bitwarden Agent Access protocol)"
+        }
+      ]
+    },
+    "coverage_detail": {
+      "rows": [
+        {
+          "check": "Phase 1 harness",
+          "result": "phase_1_harness.py V0.2 (gh api + OSSF + osv.dev + tarball extraction; gitleaks unavailable; Dependabot alerts gated by admin scope)"
+        },
+        {
+          "check": "Phase 1 raw fields populated",
+          "result": "28 of 28"
+        },
+        {
+          "check": "Tarball file count",
+          "result": "507 files (extract); 0 symlinks stripped"
+        },
+        {
+          "check": "Phase 3 compute",
+          "result": "compute.py V2 calibration (classify_shape() + compute_scorecard_cells_v2() + compute_c20_severity + compute_solo_maintainer)"
+        },
+        {
+          "check": "Phase 3 shape classification",
+          "result": "agentic-platform (medium confidence) \u2014 cross-language monorepo (npm + non-npm Rust) + publishable npm + backend-dir-non-canonical. solo_maintainer=true (85.0% top-share)"
+        },
+        {
+          "check": "Phase 3 advisory\u2192Phase 4 overrides",
+          "result": "1 cell (Q4 amber\u2192amber with `signal_vocabulary_gap` override \u2014 Q4 rubric does not yet have a `q4_design_requires_root_trust` signal for MITM-by-design / CA-cert-install posture)"
+        },
+        {
+          "check": "OSSF Scorecard",
+          "result": "Not indexed (HTTP 404, repo too new)"
+        },
+        {
+          "check": "Dependabot alerts",
+          "result": "Unavailable (HTTP 403 admin scope); osv.dev fallback queried 9 manifests, 0 advisories"
+        },
+        {
+          "check": "gitleaks (secrets-in-history)",
+          "result": "Unavailable (gitleaks not installed on scanner host); working-tree regex-grep returned 0 signals"
+        },
+        {
+          "check": "Prompt-injection scan",
+          "result": "2 root agent-rule files scanned (CLAUDE.md + .agents/skills/vercel-react-best-practices/AGENTS.md); 0 injection signals"
+        },
+        {
+          "check": "Distribution channels detected",
+          "result": "1 consumer-facing (GHCR Docker image, multi-arch amd64+arm64); 4 internal npm workspace packages (not separately distributed); install path = `curl|sh` (mutable on 3 trust anchors per F2)"
+        },
+        {
+          "check": "Crypto primitive review",
+          "result": "AES-256-GCM via ring 0.17 (audited); fail-closed on bad key; format compatible with Node.js CryptoService"
+        },
+        {
+          "check": "Architecture",
+          "result": "Rust gateway with MITM HTTPS interception via rcgen-generated CA; Next.js dashboard; Postgres backing store; Bitwarden integration via ap-* v0.9.0 crates"
+        }
+      ]
+    },
+    "coverage_gaps": {
+      "entries": [
+        "OSSF Scorecard \u2014 not indexed: Scorecard API returned HTTP 404 (repo created 2026-03-08, ~2 months old; not yet picked up by OSSF discovery). Governance signals derived from raw `gh api` data.",
+        "Dependabot alert count \u2014 unavailable: GitHub API returned HTTP 403 (admin scope required). Fell back to osv.dev \u2014 queried 9 manifests across npm + Cargo lock and returned 0 advisories. No security advisories visible from the project's own panel, but consumers without admin would also be blocked from this view.",
+        "Secrets-in-history (gitleaks) \u2014 unavailable: gitleaks is not installed on the scanner host. The 0-secrets harness result reflects only regex-grep over working-tree file content, not full git-history scan. Same gap as catalog entry 29 (impeccable). Consumer should run `gitleaks detect --source [clone]` locally if their threat model demands it.",
+        "MITM-design threat-surface \u2014 coverage gap: Phase 3 compute does not have a `q4_design_requires_root_trust` signal, so the architectural-trust-surface implication of the OneCLI MITM design is captured in F3 prose but not in the Q4 scorecard cell. Override recorded as `signal_vocabulary_gap` in `is_it_safe_out_of_the_box`. Tracked as V1.2.x candidate.",
+        "Bitwarden Agent Access protocol verification \u2014 scope-restricted: the `ap-*` v0.9.0 crates (`ap-client`, `ap-proxy-client`, `ap-proxy-protocol`, `ap-noise`) are pulled from crates.io. The Phase 1 harness does not currently fingerprint cargo-registry artifacts the way it does for npm. Tracked as scanner-coverage gap."
+      ]
+    },
+    "scorecard_cells": {
+      "does_anyone_check_the_code": {
+        "color": "red",
+        "short_answer": "No \u2014 0.0% formal review rate over 208 PRs; active ruleset on main but no required-reviewer rule; no CODEOWNERS; recent self-merges include credential-resolution + cloud-apps PRs",
+        "rationale": "Phase 3 advisory says RED (FALLBACK) on the agentic-platform shape. Calibrated answer agrees with RED. 208 PRs merged in 2 months with `formal_review_rate = 0.0%` is a clear-cut governance signal: the active ruleset on `main` (E2) does not enforce required-reviewer count, and no CODEOWNERS file exists. F0 + F1 are the calibrated-narrative findings. No override needed.",
+        "computed_signal_refs": [
+          "q1_formal_review_rate",
+          "q1_any_review_rate",
+          "q1_has_branch_protection",
+          "q1_has_ruleset_protection",
+          "q1_has_codeowners"
+        ]
+      },
+      "do_they_fix_problems_quickly": {
+        "color": "green",
+        "short_answer": "Yes \u2014 closed issue #131 (0.0.0.0 binding) was fixed within days; 0 open security-tagged issues at scan time",
+        "rationale": "Phase 3 advisory says GREEN (FALLBACK). Calibrated answer agrees with GREEN. The repo has 1 historical security-tagged closed issue (#131 0.0.0.0 binding) which was fixed within days, and 0 open security-tagged issues at scan time. PR #234 (SBOM crypto audit, 5 days open) is a hardening PR, not a vulnerability waiting to be patched. No override needed.",
+        "computed_signal_refs": [
+          "q2_open_security_issue_count",
+          "q2_oldest_open_cve_pr_age_days",
+          "q2_oldest_open_security_item_age_days",
+          "q2_closed_fix_lag_days"
+        ]
+      },
+      "do_they_tell_you_about_problems": {
+        "color": "red",
+        "short_answer": "No \u2014 no SECURITY.md, no published GHSAs, no .github/dependabot.yml; consumers won't get Dependabot alerts when a fix ships",
+        "rationale": "Phase 3 advisory says RED (FALLBACK). Calibrated answer agrees with RED. Per E7: 0 published advisories, no SECURITY.md, no dependabot.yml. The maintainer fixes issues quickly (Q2 = green) but doesn't publish them via the GHSA channel \u2014 from a consumer-monitoring perspective, the disclosure channel is absent. F4 is the calibrated-narrative finding.",
+        "computed_signal_refs": [
+          "q3_has_security_policy",
+          "q3_has_contributing_guide",
+          "q3_published_advisory_count",
+          "q3_has_silent_fixes"
+        ]
+      },
+      "is_it_safe_out_of_the_box": {
+        "color": "amber",
+        "short_answer": "Partly \u2014 encryption is solid (AES-256-GCM via ring), but the documented install path (`curl|sh` + `latest` Docker tag + main-tracking compose URL) is unpinned, and the gateway's MITM design expands trust surface significantly",
+        "rationale": "Phase 3 advisory says AMBER (FALLBACK). Calibrated answer agrees with AMBER but adds the MITM design-risk dimension via override. The crypto handling is sound (E6 \u2014 ring 0.17, AES-256-GCM, fail-closed on bad keys), but the install path is mutable on three trust anchors (F2 \u2014 onecli.sh DNS, main branch, latest tag) and the gateway's MITM-by-design posture (F3 \u2014 installing a CA cert means decrypting all agent traffic) is a meaningful trust expansion that 'is_it_safe_out_of_the_box' as defined in the rubric does not currently capture (the rubric's `q4_has_critical_on_default_path` and `q4_has_warning_on_install_path` signals are about install-script behavior, not architectural-trust-surface). The override is recorded so future rule evolution captures architectural design-risk as a Q4 input.",
+        "edge_case": "The Q4 rubric currently does not have a signal for 'service requires installing a CA cert / does MITM by design'. This is the first scan in the V1.2 corpus where MITM-by-design is the dominant Q4 risk (rather than installer-script issues). Logging as a `signal_vocabulary_gap` candidate: add a `q4_design_requires_root_trust` signal (CA-cert install required, kernel module, root daemon, etc.) and update the FALLBACK rule to escalate Q4 to red when the signal is true AND the repo is < 6 months old AND solo-maintained.",
+        "override_reason": "signal_vocabulary_gap",
+        "computed_signal_refs": [
+          "q4_all_channels_pinned",
+          "q4_artifact_verified",
+          "q4_has_critical_on_default_path",
+          "q4_has_warning_on_install_path"
+        ],
+        "suggested_threshold_adjustment": "Add `q4_design_requires_root_trust` to the Q4 signal set. Sources: CA-cert install in README, kernel-module distribution, root-daemon install, system-wide LD_PRELOAD. Couple with shape \u00d7 maturity modifiers: agentic-platform + < 6mo + solo-maintained + design_requires_root_trust \u2192 red. Tracked as a V1.2.x candidate."
+      }
+    },
+    "catalog_metadata": {
+      "category": "developer-tooling",
+      "subcategory": "credential-vault",
+      "shape": "Agentic-platform monorepo: Rust HTTP gateway (`apps/gateway`) that does MITM TLS interception of outbound agent traffic, paired with a Next.js dashboard (`apps/web`), Postgres storage, and a Bitwarden integration via `ap-*` v0.9.0 crates. Two editions: OSS (single-binary Docker image, AES-256-GCM with file-backed key) and Cloud (paid, uses AWS KMS + Stripe + Cognito \u2014 feature-flagged in Cargo.toml). Distribution: GHCR Docker image + 4 npm packages (`onecli-cloud`, `@onecli/{db,ui,eslint-config}`) + curl-pipe installer at `https://onecli.sh/install`.",
+      "short_description": "OneCLI is a credential-vault gateway for AI agents. You store API keys (OpenAI, Anthropic, Stripe, GitHub, etc.) in OneCLI; agents make HTTP calls through the gateway; the gateway intercepts outbound HTTPS via a generated CA certificate, matches request host+path against injection rules, decrypts the matching credential from AES-256-GCM storage, and rewrites the request headers/query before forwarding upstream. Agents see only placeholder keys (e.g. `FAKE_KEY`); the gateway swaps in `REAL_KEY` at request time.",
+      "target_user": "Developer or platform-team operator running multiple AI agents that need access to many third-party APIs, who wants to avoid baking credentials into each agent. Two install paths: (1) `curl -fsSL https://onecli.sh/install | sh` \u2014 pipe-from-net installer that downloads `docker-compose.yml` from the `main` branch (no SHA pin) and boots the all-in-one Docker image; (2) `git clone && docker compose -f docker/docker-compose.yml up` for manual review. Local dev mode skips JWT validation entirely (`AUTH_MODE=local`); OAuth mode (`AUTH_MODE=oauth`) validates NextAuth session cookies.",
+      "prior_scan_note": "First scan of onecli/onecli. 15th wild V1.2-schema scan after markitdown 15, ghostty 16, Kronos 17, kamal 18, Xray-core 19, browser_terminal 20, wezterm 21, QuickLook 22, kanata 23, freerouting 24, WLED 25, Baileys 26, skills 27, multica 28, impeccable 29."
+    }
+  },
+  "phase_4b_computed": {
+    "verdict": {
+      "level": "Caution",
+      "computed_from_findings": [
+        "F0",
+        "F1",
+        "F2",
+        "F3"
+      ]
+    }
+  },
+  "phase_5_prose_llm": {
+    "editorial_caption": {
+      "text": "onecli/onecli \u2014 a 2-month-old, 2,093-star credential vault for AI agents. The architecture is a Rust gateway (`apps/gateway`) that does HTTPS MITM interception via a generated CA cert, paired with a Next.js dashboard (`apps/web`) and a Postgres store. Encryption is AES-256-GCM via the audited `ring` crate. Solo-maintained (guyb1 85%), 0.0% formal review rate across 208 merged PRs, no CODEOWNERS, no SECURITY.md, no published GHSAs. Distribution: `curl -fsSL https://onecli.sh/install | sh` pulls a `latest`-tagged Docker image and a compose file from `main` \u2014 three mutable trust anchors. The MITM design means installing OneCLI's CA on an agent host puts the gateway on the trust path of every HTTPS call the agent makes, not just the calls you've configured for credential injection. Past security feedback (#131 0.0.0.0 binding) was handled responsively (closed in days). Issue queue is currently clean (0 open security-tagged); PR #234 (SBOM crypto audit) is sitting open for 5 days. Verdict: Caution \u2014 encryption is solid, governance is solo + unstructured, install path is unpinned, MITM design expands trust surface significantly. Safe to evaluate in isolation; pin the version, isolate the host, and treat OneCLI as a single-purpose secrets-handling appliance \u2014 not a casual install on a developer machine."
+    },
+    "per_finding_prose": {
+      "entries": [
+        {
+          "finding_id": "F0",
+          "body_paragraphs": [
+            "guyb1 holds 85.0% of contribution share on a credential vault that's about 2 months old at scan time. Total contributor count is 15; the second contributor (johnnyfish, founder of ChartDB) holds 12.0%, and the remaining ~3% is spread across 13 community PR authors. No CODEOWNERS file is present at any of the four standard locations checked. The active ruleset on `main` (id 13642592, enforcement=active) prevents direct pushes to main but does not enforce required-reviewer count: `formal_review_rate = 0.0%` across 208 sampled merged PRs.",
+            "The blast radius if guyb1's GitHub credentials are compromised is the entire credential-vault product. Code paths that handle secrets \u2014 `apps/gateway/src/inject.rs` (credential header/query injection at request time), `apps/gateway/src/crypto.rs` (AES-256-GCM encryption/decryption), `apps/gateway/src/vault/` (Bitwarden integration) \u2014 can be modified and shipped to consumers via the next CI publish workflow run on tag push. Consumers running `latest` (the install-script default) pull the new image on next restart. 2,093 stars in 2 months indicates a non-trivial install base; each install holds the API keys its operator chose to store.",
+            "Compensating signals: the project ships visible defensive patterns (`withAudit` on every state-changing operation, defensive bind-host detection in the installer, AES-256-GCM via the audited `ring` crate, fail-closed key handling). Past security feedback (issue #131 0.0.0.0 binding, closed 2026-04-02) was handled within days. The finding is structural \u2014 about the absence of a second-human review gate on a high-stakes product \u2014 not about the maintainer's intent or competence. Adding `.github/CODEOWNERS` and amending the ruleset to require \u22651 approving review would close it without any code change."
+          ]
+        },
+        {
+          "finding_id": "F1",
+          "body_paragraphs": [
+            "Across 208 sampled merged PRs (the entire merged-PR population at scan time), the `reviewDecision` field is empty on every single one \u2014 `formal_review_rate = 0.0%`. The `any_review_rate` of 1.4 reflects review-event count averaged across PRs (most of these appear to be GitHub Copilot CI comments, not human approvals). The 5 most-recent merged PRs show this pattern in detail: #252 (johnnyfish-merged, 0 reviews), #250 (guyb1 self-merged, 0 reviews), #249 (guyb1 self-merged 'generic OAuth interface, and credential resolution', 0 reviews), #247 (guyb1 self-merged 'cloud-only apps framework, credential header injection, and user provisioning schema', 0 reviews), #246 (gavrielc external-merged 'support ONECLI_VERSION env var in install script', 0 reviews).",
+            "Two of the recent self-merges (#247 and #249) directly touch credential-handling code paths. These are the highest-stakes changes in the codebase and are the changes most in need of a structural second-pair-of-eyes step. The CI workflow does run (Rust clippy, TypeScript check-types, lint, Prisma migration drift) on every PR \u2014 so syntactic correctness and basic type safety are gated \u2014 but no semantic / threat-model / design review is structurally required.",
+            "Compensating: the active ruleset is meaningfully different from no protection at all (it prevents direct pushes to main, so all changes go through a PR with CI). PR #234 'ci: add SBOM crypto audit to block unapproved crypto dependencies' is open and would close a real supply-chain gap when merged. The fix is process-side: amend the ruleset to require \u22651 approving review and add CODEOWNERS as a hard requirement on credential-handling files."
+          ]
+        },
+        {
+          "finding_id": "F2",
+          "body_paragraphs": [
+            "The README's quick-start command is `curl -fsSL https://onecli.sh/install | sh`. Reading the install script (also at `scripts/install.sh` in the repo) reveals three mutable trust anchors in the documented happy path: (1) `https://onecli.sh/install` (third-party domain serving the script); (2) `https://raw.githubusercontent.com/onecli/onecli/main/docker/docker-compose.yml` \u2014 tracks the `main` branch, so any commit to main changes what new installs receive; (3) `ghcr.io/onecli/onecli:${ONECLI_VERSION:-latest}` \u2014 the Docker tag is mutable, points to whatever the most recent `publish.yml` workflow pushed.",
+            "None of the three has a documented checksum, GPG signature, Sigstore attestation, or SLSA provenance. The `publish.yml` workflow does build multi-arch images (linux/amd64 + linux/arm64) with digest manifests, but does not run `cosign sign` or `slsa-github-generator`. Compensating: the install script itself is defensively coded \u2014 it binds Docker ports to 127.0.0.1 / WSL loopback / docker0 IP and refuses 0.0.0.0; checks that Docker daemon is running; checks for port conflicts before starting. Past closed issue #131 (0.0.0.0 binding, closed 2026-04-02) corrected a real hardening miss.",
+            "Setting `ONECLI_VERSION=[tag]` in the environment before piping does pin the Docker tag (the install script exports it as an env var consumed by `docker compose pull`). Using the manual path (`git clone --depth 1 -b v1.21.0 && cd onecli && docker compose -f docker/docker-compose.yml up`) avoids the onecli.sh DNS dependency entirely. For a credential vault, that manual path is the safer choice."
+          ]
+        },
+        {
+          "finding_id": "F3",
+          "body_paragraphs": [
+            "OneCLI's documented design requires the gateway to MITM-intercept HTTPS traffic from agents in order to inject credentials at request time. README.md L43-46 says: 'Rust gateway: fast, memory-safe HTTP gateway with MITM interception for HTTPS'. The mechanism: the gateway generates a CA certificate (`rcgen 0.13`); the agent must trust it as a root authority; the gateway then accepts CONNECT-method requests, terminates TLS with a leaf cert signed by its CA, parses the cleartext request, applies any matching credential-injection rule, and re-encrypts to the upstream.",
+            "Once the CA is trusted, every HTTPS call the agent makes is decrypted at the gateway \u2014 not just the calls you've configured for credential injection. The gateway therefore sees: every URL the agent visits, every header (including session cookies and OAuth tokens issued at runtime), every request body (which may contain secrets the gateway wasn't asked to manage), and every response. The trust expansion compared to 'a place to put my API keys' is significant: compromise of the gateway host (RCE via a future CVE, container escape, supply-chain compromise via F2, misconfigured network exposure) yields visibility into all traffic from every agent that trusts its CA, not just the secrets you stored.",
+            "The crypto handling for stored secrets is solid: AES-256-GCM via `ring 0.17`, 32-byte key length enforced, fail-closed on bad input. The Bitwarden integration via `ap-*` v0.9.0 crates (Noise-based authenticated channel) is a separate trust path \u2014 vault credentials fetched that way are not stored in OneCLI's Postgres but injected on demand. The finding is not 'crypto is wrong' but 'the gateway expands the trust surface beyond what its UI suggests'. The mitigation is operational, not architectural: deploy the gateway in a dedicated container or VM; install the CA cert only into the agent's user / process trust store, not system-wide; treat the gateway host as a single-purpose secrets appliance."
+          ]
+        },
+        {
+          "finding_id": "F4",
+          "body_paragraphs": [
+            "0 GitHub Security Advisories have been published despite the project handling at least one real security issue (#131 0.0.0.0 binding, closed 2026-04-02 in ~days from report). No SECURITY.md exists at the repo root or under `.github/`, so there's no documented coordinated-disclosure channel \u2014 the maintainer's de facto channel is GitHub Issues (which is public from the moment a report is filed). No `.github/dependabot.yml` exists either, so dependency patches arrive via manual PR rather than automated bot.",
+            "From a downstream consumer's perspective: when a real security fix lands in a future OneCLI release (e.g. a hypothetical bug in `apps/gateway/src/crypto.rs` or an upstream dependency vulnerability), no GHSA is published, so the npm advisory database doesn't pick it up; Dependabot doesn't notify; security-monitoring tools that consume GHSA feeds have no signal. You learn about security fixes by reading commits or release notes manually. The fixes themselves ARE transparent (issues + commits + PRs are public); the gap is in the notification channel that pushes signals to consumers.",
+            "Maintainer-side fix: add `SECURITY.md` with a coordinated-disclosure email and expected response window; add `.github/dependabot.yml` for the `npm`, `cargo`, and `github-actions` ecosystems; for #131 specifically, file a retroactive GHSA so the GHCR-image consumer feed can backfill. Consumer-side: subscribe to releases via `gh repo view onecli/onecli --web` \u2192 Watch \u2192 Releases-only; periodically check for `security:` / `fix:` / `CVE-` keywords in release notes."
+          ]
+        },
+        {
+          "finding_id": "F5",
+          "body_paragraphs": [
+            "Three scanner-coverage gaps are stacked on this scan: gitleaks (secrets-in-history) is unavailable on the scanner host so the secret-scan reflects only working-tree regex-grep, not full git history; OSSF Scorecard returned HTTP 404 because the repo is not indexed by OSSF discovery (typical for repos under ~3 months old); Dependabot alerts API returned HTTP 403 because the scanner's token lacks admin scope, and the harness fell back to osv.dev (9 manifest queries, 0 advisories returned).",
+            "None of these gaps are evidence of vulnerability \u2014 they are coverage gaps that the consumer should close manually if their threat model demands stronger guarantees. The gitleaks gap is the same gap previously documented for catalog entry 29 (impeccable). The OSSF 404 result could be made non-ambiguous by adding an explicit `is_repo_under_90_days` computed field so calibration rules can suppress OSSF-based color shifts for new repos.",
+            "There's also a Q4 signal-vocabulary gap (separately recorded as the override on the `is_it_safe_out_of_the_box` cell): the rubric currently does not have a `q4_design_requires_root_trust` signal for MITM-by-design / kernel-module / system-wide-CA-trust postures. F3's trust-surface analysis is captured in prose but not in the cell-level signal set. Tracked as a V1.2.x candidate \u2014 first wild scan in the V1.2 corpus where MITM-by-design is the dominant Q4 risk."
+          ]
+        }
+      ]
+    }
+  },
+  "phase_6_assembly": {
+    "assembled": true
+  },
+  "scan_sign_off": {
+    "approved_for_release": true
+  }
+}

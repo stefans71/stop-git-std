@@ -17,6 +17,40 @@ Canonical log of milestone commits with the verification state captured at commi
 
 ---
 
+## Checkpoint — 2026-05-06 (session 16) — onecli/onecli wild scan (catalog entry 30)
+
+**HEAD:** TBD (filled by post-commit). Tree clean before commit; `docs/scan-bundles/onecli-fa6468e.json` + 3 rendered outputs in `docs/scans/catalog/` + scanner-catalog.md row 30 + v12-wild-scan-telemetry.md §1 entry 30 + §6 shape table refresh (agentic-platform 1→2) + §8 V12x-19 row + §10 changelog entry queued.
+
+**Scan target:** onecli/onecli @ HEAD `fa6468e4711bc283f26b11e68c0ce8dc6a799010` (pushed 2026-05-06T08:19:49Z). **First scan of onecli/onecli.** 15th wild V1.2-schema scan; first credential-vault / agent-secrets-broker shape entry in the catalog.
+
+**Scope:** continuous mode; long-form MD + Simple Report HTML + Simple Report MD (V2.5-preview pipeline; agentic-platform shape per `classify_shape()` Step 7.5 — medium confidence, second hit after multica entry 28).
+
+**Form / outputs:**
+- `docs/scan-bundles/onecli-fa6468e.json` — V1.2 form.json (15th V1.2 wild scan bundle); 6 findings (4 Warning + 2 Info), 10 evidence entries, verdict Caution. **One Q-cell override**: Q4 `signal_vocabulary_gap` — first wild V1.2 scan to fire on a Q4 design-risk dimension (MITM-by-design / CA-cert-trust posture).
+- `docs/scans/catalog/GitHub-Scanner-onecli.md` — long-form MD (Phase 4a, canonical, 472 lines; --report clean)
+- `docs/scans/catalog/GitHub-Scanner-onecli-simple.html` — Simple Report HTML (Phase 4b, user-facing, 364 lines; --report clean: zero unclosed tags, zero XSS, zero placeholders)
+- `docs/scans/catalog/GitHub-Scanner-onecli-simple.md` — Simple Report MD (Phase 4b, user-facing, 34 lines)
+
+**Verification at commit time:**
+- `python3 docs/validate-scanner-report.py --report docs/scans/catalog/GitHub-Scanner-onecli.md` → CLEAN
+- `python3 docs/validate-scanner-report.py --report docs/scans/catalog/GitHub-Scanner-onecli-simple.html` → CLEAN
+- `python3 docs/validate-scanner-report.py --report docs/scans/catalog/GitHub-Scanner-onecli-simple.md` → CLEAN
+- `jsonschema` against `docs/scan-schema.json` V1.2 → CLEAN (gate 6.3 override-explained: 1 override explained)
+
+**Notable observations:**
+- **First credential-vault / agent-secrets-broker shape** in V1.2 catalog. Architecture: Rust HTTP gateway (`apps/gateway`) does **MITM HTTPS interception** via a `rcgen 0.13`-generated CA certificate that agents must trust as a root authority. Encryption is AES-256-GCM via `ring 0.17` (audited primitive). OSS edition auto-generates a 32-byte key on first start to `/app/data/secret-encryption-key` (mode 600); Cloud edition uses AWS KMS via Cargo `cloud` feature flag. Bitwarden integration via `ap-{client,proxy-client,proxy-protocol,noise}` v0.9.0 crates (Bitwarden Agent Access protocol — separate Noise-based authenticated channel).
+- **First Q4 `signal_vocabulary_gap` fire on a design-risk dimension.** Phase 3 advisory amber FALLBACK is factually correct on installer signals (no pinned channels, no artifact verification) but does not capture the architectural-trust-surface implication of MITM-by-design / CA-cert-install posture. Once the agent trusts the CA, every HTTPS call the agent makes is decrypted by the gateway — not just calls to APIs configured for credential injection. New V12x-19 backlog item logged.
+- **Shape correctly classified `agentic-platform`** (medium confidence) on first attempt — cross-language TS+Rust monorepo (`monorepo.inner_packages` includes both npm and Cargo) + publishable npm at root + backend dir non-canonical (Rust gateway lives at `apps/gateway`, npm packages at `apps/web` + `packages/{db,ui,eslint-config}`). Second `agentic-platform` hit after multica (entry 28). §6 shape table updated 1→2.
+- **Active branch ruleset on main** (id 13642592, enforcement=active) — meaningfully different from impeccable entry 29's no-protection posture — but ruleset does not enforce required-reviewer count: 0.0% formal review rate over 208 sampled merged PRs (entire merged-lifetime population), `any_review_rate=1.4` (CI-comment-driven, not human approvals).
+- **2,093 stars on a 2-month-old credential vault**, solo-maintained (guyb1 85.0%; johnnyfish — ChartDB founder — 12.0%; 15 contributors). Org `onecli` created 2026-02-24; repo created 2026-03-08 (~2 months before scan).
+- **`curl|sh` installer trusts three mutable anchors** — onecli.sh DNS, the `main` branch (compose URL), and `latest` Docker tag (no SHA / cosign / SLSA attestation). Install script is otherwise defensively coded (refuses 0.0.0.0 bind, validates Docker, checks port conflicts; past closed issue #131 0.0.0.0-binding bug fixed in days).
+- **15/15 V1.2 wild scans with 0 published GHSA** — silent-fix pattern catalog-wide. No SECURITY.md / no `.github/dependabot.yml` despite responsive past-fix history.
+- **V13-3 cadence: 15/25 + 3/6 strain** (onecli's Q4 `signal_vocabulary_gap` is a new-driver-class observation, NOT a 4th `missing_qualitative_context` taxonomy-strain fire — the §9 watch language is specifically about `missing_qualitative_context` accumulation).
+
+**Revert:** `git reset --hard <pre-commit-sha>` — drops the 6 catalog files (form bundle + 3 rendered + scanner-catalog row 30 + telemetry §1/§6/§8/§10 + AUDIT_TRAIL).
+
+---
+
 ## Checkpoint — 2026-05-02 (session 15) — pbakaus/impeccable wild scan (catalog entry 29)
 
 **HEAD:** TBD (filled by post-commit). Tree clean before commit; `docs/scan-bundles/impeccable-444e4ac.json` + 3 rendered outputs in `docs/scans/catalog/` + scanner-catalog.md row 29 + v12-wild-scan-telemetry.md §1 entry 29 + §10 changelog entry + V12x-18 backlog row queued.
